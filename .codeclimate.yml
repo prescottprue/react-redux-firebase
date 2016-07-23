@@ -1,0 +1,16 @@
+languages:
+  JavaScript: true
+
+exclude_paths:
+- "lib/**"
+- "test/**"
+- "example/**"
+- "LICENSE"
+- "LICENSE.md"
+- "README.md"
+- "package.json"
+
+engines:
+  duplication:
+    enabled: true
+    exclude_fingerprints:
