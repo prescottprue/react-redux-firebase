@@ -1,1 +1,4 @@
 example/**
+coverage/**
+node_modules/**
+*.spec.js

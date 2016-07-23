@@ -1,5 +1,15 @@
-# redux-react-firebase
-Use Firebase with React and Redux in ES6
+# redux-firebasev3
+
+[![NPM version][npm-image]][npm-url]
+[![NPM downloads][npm-downloads-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+[![Dependency Status][daviddm-image]][daviddm-url]
+[![Code Coverage][coverage-image]][coverage-url]
+[![Code Climate][climate-image]][climate-url]
+[![License][license-image]][license-url]
+[![Code Style][code-style-image]][code-style-url]
+
+> Use Firebase with React and Redux in ES6
 
 ## Features
 - Integrated into redux
@@ -98,3 +108,24 @@ You can see a complete example [here](example)
 ## Contributors
 - [Tiberiu Craciun](https://github.com/tiberiuc)
 - [Rahav Lussto](https://github.com/RahavLussato)
+- [Prescott Prue](https://github.com/prescottprue)
+- [Justin Handley](https://github.com/justinhandley)
+
+[npm-image]: https://img.shields.io/npm/v/redux-firebasev3.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/redux-firebasev3
+[npm-downloads-image]: https://img.shields.io/npm/dm/redux-firebasev3.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/prescottprue/redux-firebasev3/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/prescottprue/redux-firebasev3
+[daviddm-image]: https://img.shields.io/david/prescottprue/redux-firebasev3.svg?style=flat-square
+[daviddm-url]: https://david-dm.org/prescottprue/redux-firebasev3
+[climate-image]: https://img.shields.io/codeclimate/github/prescottprue/redux-firebasev3.svg?style=flat-square
+[climate-url]: https://codeclimate.com/github/prescottprue/redux-firebasev3
+[coverage-image]: https://img.shields.io/codecov/c/github/prescottprue/redux-firebasev3.svg?style=flat-square
+[coverage-url]: https://codecov.io/gh/prescottprue/redux-firebasev3
+[license-image]: https://img.shields.io/npm/l/redux-firebasev3.svg?style=flat-square
+[license-url]: https://github.com/prescottprue/redux-firebasev3/blob/master/LICENSE
+[code-style-image]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
+[code-style-url]: http://standardjs.com/
+
+[gitter-image]: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
+[gitter-url]: https://gitter.im/prescottprue/redux-firebasev3
