@@ -9,7 +9,8 @@ export default (config) => {
     const store = next(reducer, initialState)
 
     const {dispatch} = store
-
+    console.log('firebase initialize:', config)
+    if (!config.databaseURL) throw new Error('Firebase Database URL is required')
     try {
       Firebase.initializeApp(config)
     } catch (err) {
