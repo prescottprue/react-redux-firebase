@@ -18,7 +18,7 @@ const initialState = fromJS({
 
 const pathToArr = path => path.split(/\//).filter(p => !!p)
 
-export default (state = initialState, action) => {
+export default (state = initialState, action = {}) => {
   const {path} = action
   let pathArr
   let retVal
