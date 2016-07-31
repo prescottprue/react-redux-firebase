@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for source/compose.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">source/</a> compose.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">32.14% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>18/56</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">66.67% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>12/18</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">13.33% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>2/15</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">11.11% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>3/27</span>
+      </div>
+      <div class='fl pad1y'>
+        <span class="strong">7 statements, 6 branches</span>
+        <span class="quiet">Ignored</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Firebase from 'firebase'
+import * as Actions from './actions'
+&nbsp;
+export default <span class="fstat-no" title="function not covered" >(config) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  r</span>eturn <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >n</span></span>ext =&gt; <span class="fstat-no" title="function not covered" >(reducer, initialState) =&gt; <span class="cstat-no" title="statement not covered" >{</span></span>
+<span class="cstat-no" title="statement not covered" >    c</span>onst defaultConfig = {
+      userProfile: null
+    }
+<span class="cstat-no" title="statement not covered" >    c</span>onst store = next(reducer, initialState)
+&nbsp;
+    const {dispatch} = store
+<span class="cstat-no" title="statement not covered" >    c</span>onsole.log('firebase initialize:', config)
+<span class="cstat-no" title="statement not covered" >    if (!config.databaseURL) <span class="cstat-no" title="statement not covered" >t</span></span>hrow new Error('Firebase Database URL is required')
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      F</span>irebase.initializeApp(config)
+    } catch (err) {
+      // console.warn('Firebase error:', err)
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    c</span>onst ref = Firebase.database().ref()
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    c</span>onst configs = Object.assign({}, defaultConfig, config)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    c</span>onst firebase = Object.defineProperty(Firebase, '_', {
+      value: {
+        watchers: {},
+        config: configs,
+        authUid: null
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
+    })
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    c</span>onst set = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>path, value, onComplete) =&gt; ref.child(path).set(value, onComplete)
+<span class="cstat-no" title="statement not covered" >    c</span>onst push = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>path, value, onComplete) =&gt; ref.child(path).push(value, onComplete)
+<span class="cstat-no" title="statement not covered" >    c</span>onst remove = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>path, onComplete) =&gt; ref.child(path).remove(onComplete)
+<span class="cstat-no" title="statement not covered" >    c</span>onst watchEvent = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>eventName, eventPath) =&gt; Actions.watchEvent(firebase, dispatch, eventName, eventPath, true)
+<span class="cstat-no" title="statement not covered" >    c</span>onst unWatchEvent = <span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span></span>eventName, eventPath, queryId = undefined) =&gt; Actions.unWatchEvent(firebase, eventName, eventPath, queryId)
+<span class="cstat-no" title="statement not covered" >    c</span>onst login = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >c</span></span>redentials =&gt; Actions.login(dispatch, firebase, credentials)
+<span class="cstat-no" title="statement not covered" >    c</span>onst logout = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>) =&gt; Actions.logout(dispatch, firebase)
+<span class="cstat-no" title="statement not covered" >    c</span>onst createUser = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>credentials, profile) =&gt; Actions.createUser(dispatch, firebase, credentials, profile)
+<span class="cstat-no" title="statement not covered" >    c</span>onst resetPassword = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>credentials) =&gt; Actions.resetPassword(dispatch, firebase, credentials)
+<span class="cstat-no" title="statement not covered" >    c</span>onst changePassword = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>credentials) =&gt; Actions.changePassword(dispatch, firebase, credentials)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    f</span>irebase.helpers = {
+      set, push, remove,
+      createUser,
+      login, logout,
+      resetPassword, changePassword,
+      watchEvent, unWatchEvent
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    A</span>ctions.init(dispatch, firebase)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    s</span>tore.firebase = firebase
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    r</span>eturn store
+  }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Jul 31 2016 03:08:55 GMT-0700 (PDT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

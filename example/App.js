@@ -1,8 +1,8 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Provider } from 'react-redux'
-import {connect} from 'react-redux'
-import {firebase, helpers} from '../source'
-import _ from 'lodash'
+import { connect } from 'react-redux'
+import { firebase, helpers } from '../source'
+import { map } from 'lodash'
 
 
 const {isLoaded, isEmpty, dataToJS} = helpers
@@ -49,9 +49,9 @@ class Todos extends Component {
 
     const todosList = (!isLoaded(todos)) ?
                           'Loading'
-                        : (isEmpty(todos)) ? 
-                               'Todo list is emtpy' 
-                             : _.map(todos, (todo, id) => (<TodoItem key={id} id={id} todo={todo}/>) )
+                        : (isEmpty(todos)) ?
+                               'Todo list is emtpy'
+                             : map(todos, (todo, id) => (<TodoItem key={id} id={id} todo={todo}/>) )
 
     return (
       <div>
@@ -79,5 +79,3 @@ export default class App extends Component {
   }
 
 }
-
-

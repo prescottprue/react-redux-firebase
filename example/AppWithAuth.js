@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import { Provider } from 'react-redux'
 import {connect} from 'react-redux'
 import {firebase, helpers} from '../redux-react-firebase'
-import _ from 'lodash'
+import { map } from 'lodash'
 
 
 const {isLoaded, isEmpty,  dataToJS, pathToJS} = helpers
@@ -52,7 +52,7 @@ class Todos extends Component {
                           'Loading'
                         : (isEmpty(todos)) ?
                                 'Todo list is empty'
-                              : _.map(todos, (todo, id) => (<TodoItem key={id} id={id} todo={todo}/>) )
+                              : map(todos, (todo, id) => (<TodoItem key={id} id={id} todo={todo}/>) )
 
 
     const name = profile ? profile.name : ''
@@ -306,5 +306,3 @@ export default class AppWithAuth extends React.Component {
   }
 
 }
-
-

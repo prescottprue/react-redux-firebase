@@ -25,7 +25,7 @@ there are helpers for dealing with data ( see helpers )
 Add firebase to redux
 
 #### Arguments
-- `FIREBASE_URL` Firebase URL to connect to
+- `FIREBASE_URL` Firebase Config Object containing `databaseURL`, `apiKey`, `authDomain`, and `storageBucket`
 - `options` Object with the options
 
 #### Options
@@ -35,7 +35,7 @@ Add firebase to redux
   userProfile: String // path where user profiles are stored
 }
 ```
-if `userProfile` is specified then onAuth will listen for values in `${userProfile}/${auth.id}` and wil be stored into `store.state.firebase.profile`
+if `userProfile` is specified then onAuth will listen for values in `${userProfile}/${auth.id}` and will be stored into `store.state.firebase.profile`
 
 `userProfile` is required if auto creation of a profile in `createUser` is needed
 
@@ -117,7 +117,7 @@ queries support
 ])
 ```
 
-or 
+or
 
 ```
 @firebase([

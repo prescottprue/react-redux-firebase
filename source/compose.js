@@ -6,16 +6,16 @@ export default (config) => {
     const defaultConfig = {
       userProfile: null
     }
+
     const store = next(reducer, initialState)
 
     const {dispatch} = store
-    console.log('firebase initialize:', config)
+
     if (!config.databaseURL) throw new Error('Firebase Database URL is required')
+
     try {
       Firebase.initializeApp(config)
-    } catch (err) {
-      console.warn('Firebase error:', err)
-    }
+    } catch (err) {}
 
     const ref = Firebase.database().ref()
 
@@ -30,8 +30,7 @@ export default (config) => {
       writable: true,
       enumerable: true,
       configurable: true
-    });
-
+    })
 
     const set = (path, value, onComplete) => ref.child(path).set(value, onComplete)
     const push = (path, value, onComplete) => ref.child(path).push(value, onComplete)
