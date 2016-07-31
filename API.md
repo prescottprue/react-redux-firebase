@@ -26,7 +26,7 @@ Add firebase to redux
 
 #### Arguments
 - `FIREBASE_URL` Firebase Config Object containing `databaseURL`, `apiKey`, `authDomain`, and `storageBucket`
-- `options` Object with the options
+- `options` Object with the options (including `userProfile`)
 
 #### Options
 1. Auto load user profile when authenticate

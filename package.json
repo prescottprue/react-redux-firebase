@@ -1,8 +1,9 @@
 {
   "name": "redux-firebasev3",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Use Firebase version 3 with React and Redux in ES6",
   "main": "build/index.js",
+  "jsnext:main": "source/index.js",
   "scripts": {
     "build": "babel source --out-dir build",
     "build-dev": "babel source --out-dir build --watch --source-maps inline",
@@ -37,15 +38,16 @@
   "keywords": [
     "firebase",
     "redux",
-    "react"
+    "react",
+    "babel"
   ],
   "dependencies": {
     "es6-promise": "^3.2.1",
     "immutable": "^3.7.6"
   },
   "peerDependencies": {
-    "firebase": "^3.2.1",
-    "lodash": "^4.14.1",
+    "firebase": "^3.0.0",
+    "lodash": "*",
     "react": "^0.14.6 || ^15.0.0",
     "react-redux": "^4.0.6",
     "redux": "^3.0.5"
