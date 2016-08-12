@@ -22,7 +22,7 @@
 
 ## Install
 ```
-$ npm install --save redux-react-firebase
+$ npm install --save redux-firebasev3
 ```
 
 ## Use
@@ -31,7 +31,7 @@ Include redux-react-firebase in your store
 
 ```javascript
 import {createStore, combineReducers, compose} from 'redux'
-import {reduxReactFirebase, firebaseStateReducer} from 'redux-react-firebase'
+import {reduxReactFirebase, firebaseStateReducer} from 'redux-firebasev3'
 
 const rootReducer = combineReducers({
   firebase: firebaseStateReducer
@@ -101,7 +101,6 @@ See [API](API.md)
 You can see a complete example [here](example)
 
 ## In the future
-- Add support for new  Firebase version ( lib ver 3.x )
 - Ideas are welcome :)
 
 ## Contributors
