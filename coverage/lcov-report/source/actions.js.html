@@ -805,10 +805,10 @@ export const watchEvent = <span class="fstat-no" title="function not covered" >(
 <span class="cstat-no" title="statement not covered" >  c</span>onst runQuery = <span class="fstat-no" title="function not covered" >(q, e, p) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    q</span>.on(e, <span class="fstat-no" title="function not covered" >snapshot =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      l</span>et data = (e === 'child_removed') ? undefined : snapshot.val()
-<span class="cstat-no" title="statement not covered" >      c</span>onst resultPath = dest || (e === 'value') ? p : p + '/' + snapshot.key()
+<span class="cstat-no" title="statement not covered" >      c</span>onst resultPath = dest || (e === 'value') ? p : p + '/' + snapshot.key
 <span class="cstat-no" title="statement not covered" >      if (dest &amp;&amp; e !== 'child_removed') {</span>
 <span class="cstat-no" title="statement not covered" >        d</span>ata = {
-          _id: snapshot.key(),
+          _id: snapshot.key,
           val: snapshot.val()
         }
       }

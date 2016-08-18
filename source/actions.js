@@ -1,11 +1,13 @@
 
 import {
+    START,
     SET,
     SET_PROFILE,
     LOGIN,
     LOGOUT,
     LOGIN_ERROR,
-    NO_VALUE
+    NO_VALUE,
+    INIT_BY_PATH
 } from './constants'
 
 import { Promise } from 'es6-promise'
@@ -30,7 +32,6 @@ const getWatcherCount = (firebase, event, path, queryId = undefined) => {
 }
 
 const getQueryIdFromPath = (path) => {
-  const origPath = path
   let pathSplitted = path.split('#')
   path = pathSplitted[0]
 
@@ -44,12 +45,11 @@ const getQueryIdFromPath = (path) => {
   }).filter(q => q) : undefined
 
   return (queryId && queryId.length > 0)
-    ? queryId[0]
-    : ((isQuery) ? origPath : undefined)
+    ? queryId[0] : undefined
 }
 
-const unsetWatcher = (firebase, event, path, queryId = undefined) => {
-  let id = queryId || getQueryIdFromPath(path)
+const unsetWatcher = (firebase, dispatch, event, path, queryId = undefined) => {
+  let id = (queryId) ? event + ':/' + queryId : getWatchPath(event, path)
   path = path.split('#')[0]
 
   if (!id) {
@@ -60,13 +60,17 @@ const unsetWatcher = (firebase, event, path, queryId = undefined) => {
     delete firebase._.watchers[id]
     if (event !== 'first_child') {
       firebase.database().ref().child(path).off(event)
+      dispatch({
+        type: INIT_BY_PATH,
+        path
+      })
     }
   } else if (firebase._.watchers[id]) {
     firebase._.watchers[id]--
   }
 }
 
-export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent = false) => {
+export const watchEvent = (firebase, dispatch, event, path, dest) => {
   let isQuery = false
   let queryParams = []
   let queryId = getQueryIdFromPath(path)
@@ -82,14 +86,11 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
   const counter = getWatcherCount(firebase, event, watchPath, queryId)
 
   if (counter > 0) {
-    if (onlyLastEvent) {
-      // listen only to last query on same path
-      if (queryId) {
-        unsetWatcher(firebase, event, path, queryId)
+    if (queryId) {
+        unsetWatcher(firebase, dispatch, event, path, queryId)
       } else {
         return
       }
-    }
   }
 
   setWatcher(firebase, event, watchPath, queryId)
@@ -100,6 +101,9 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
       if (snapshot.val() === null) {
         dispatch({
           type: NO_VALUE,
+          timestamp: Date.now(),
+          requesting : false,
+          requested : true,
           path
         })
       }
@@ -162,35 +166,48 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
   }
 
   const runQuery = (q, e, p) => {
+      dispatch({
+        type: START,
+        timestamp: Date.now(),
+        requesting : true,
+        requested : false,
+        path
+      })
+  
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
-      const resultPath = dest || (e === 'value') ? p : p + '/' + snapshot.key()
+      const resultPath = dest || (e === 'value') ? p : p + '/' + snapshot.key
+      const rootPath = dest || path
       if (dest && e !== 'child_removed') {
         data = {
-          _id: snapshot.key(),
+          _id: snapshot.key,
           val: snapshot.val()
         }
       }
       dispatch({
-        type: SET,
-        path: resultPath,
-        data,
-        snapshot
-      })
+          type: SET,
+          path : resultPath,
+          rootPath,
+          data,
+          timestamp: Date.now(),
+          requesting : false,
+          requested : true,
+          snapshot
+        })
     })
   }
 
   runQuery(query, event, path)
 }
 
-export const unWatchEvent = (firebase, event, path, queryId = undefined) =>
-    unsetWatcher(firebase, event, path, queryId)
+export const unWatchEvent = (firebase, dispatch, event, path, queryId = undefined) =>
+    unsetWatcher(firebase, dispatch, event, path, queryId)
 
 export const watchEvents = (firebase, dispatch, events) =>
     events.forEach(event => watchEvent(firebase, dispatch, event.name, event.path))
 
-export const unWatchEvents = (firebase, events) =>
-    events.forEach(event => unWatchEvent(firebase, event.name, event.path))
+export const unWatchEvents = (firebase, dispatch, events) =>
+    events.forEach(event => unWatchEvent(firebase, dispatch, event.name, event.path))
 
 const dispatchLoginError = (dispatch, authError) =>
     dispatch({
@@ -228,11 +245,41 @@ const watchUserProfile = (dispatch, firebase) => {
   }
 }
 
-export const login = (dispatch, firebase, {email, password}) => {
-  dispatchLoginError(dispatch, null)
-  return firebase.auth()
-    .signInWithEmailAndPassword(email, password)
-}
+export const login = (dispatch, firebase, credentials) => {
+  return new Promise( (resolve, reject) => {
+    dispatchLoginError(dispatch, null);
+
+    const handler = (err, authData) => {
+      if(err){
+        dispatchLoginError(dispatch, err)
+        return reject(err)
+      }
+      resolve(authData)
+    };
+
+    const {token, provider, type, email, password} = credentials;
+
+    if(provider) {
+
+      if(token) {
+        return firebase.auth().signInWithCredential( provider, token)
+      }
+
+      const  auth = (type === 'popup') ?
+          firebase.auth().signInWithPopup
+          : firebase.auth().signInWithRedirect;
+
+      return auth(provider)
+
+    }
+
+    if(token) {
+      return firebase.auth().signInWithCustomToken(token)
+    }
+
+    return firebase.auth().signInWithEmailAndPassword(email, password)
+  })
+};
 
 export const init = (dispatch, firebase) => {
   firebase.auth().onAuthStateChanged(authData => {

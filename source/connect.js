@@ -83,8 +83,8 @@ export default (dataOrFn = []) => WrappedComponent => {
     }
 
     componentWillUnmount () {
-      const {firebase} = this.context.store
-      unWatchEvents(firebase, this._firebaseEvents)
+      const {firebase, dispatch} = this.context.store
+      unWatchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
     render () {
@@ -98,9 +98,7 @@ export default (dataOrFn = []) => WrappedComponent => {
     }
   }
   FirebaseConnect.contextTypes = {
-    store: function () {
-      return PropTypes.object.isRequired
-    }
+    store: PropTypes.object.isRequired
   }
   return FirebaseConnect
 }
