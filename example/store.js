@@ -1,5 +1,5 @@
 import {createStore, combineReducers, compose} from 'redux'
-import {reduxReactFirebase, firebaseStateReducer} from '../source'
+import {reduxFirebase, firebaseStateReducer} from '../source'
 
 const rootReducer = combineReducers({
   firebase: firebaseStateReducer
@@ -13,7 +13,7 @@ const fbConfig = {
 }
 
 const createStoreWithFirebase = compose(
-    reduxReactFirebase(fbConfig, { userProfile: 'users' }),
+  reduxFirebase(fbConfig, { userProfile: 'users' }),
 )(createStore)
 
 

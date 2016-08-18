@@ -1,13 +1,19 @@
 language: node_js
 
 node_js:
-  - v6
+  - "6"
 
 branches:
   only:
     - master
 
-script: npm run test && npm run test:cov
+script:
+  - npm run lint:fix
+  - npm run test:cov
+
+cache:
+  directories:
+  - $HOME/.npm
 
 addons:
   code_climate:

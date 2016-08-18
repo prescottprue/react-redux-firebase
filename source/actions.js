@@ -1,4 +1,3 @@
-
 import {
     START,
     SET,
@@ -87,10 +86,10 @@ export const watchEvent = (firebase, dispatch, event, path, dest) => {
 
   if (counter > 0) {
     if (queryId) {
-        unsetWatcher(firebase, dispatch, event, path, queryId)
-      } else {
-        return
-      }
+      unsetWatcher(firebase, dispatch, event, path, queryId)
+    } else {
+      return
+    }
   }
 
   setWatcher(firebase, event, watchPath, queryId)
@@ -102,8 +101,8 @@ export const watchEvent = (firebase, dispatch, event, path, dest) => {
         dispatch({
           type: NO_VALUE,
           timestamp: Date.now(),
-          requesting : false,
-          requested : true,
+          requesting: false,
+          requested: true,
           path
         })
       }
@@ -166,14 +165,14 @@ export const watchEvent = (firebase, dispatch, event, path, dest) => {
   }
 
   const runQuery = (q, e, p) => {
-      dispatch({
-        type: START,
-        timestamp: Date.now(),
-        requesting : true,
-        requested : false,
-        path
-      })
-  
+    dispatch({
+      type: START,
+      timestamp: Date.now(),
+      requesting: true,
+      requested: false,
+      path
+    })
+
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
       const resultPath = dest || (e === 'value') ? p : p + '/' + snapshot.key
@@ -185,15 +184,15 @@ export const watchEvent = (firebase, dispatch, event, path, dest) => {
         }
       }
       dispatch({
-          type: SET,
-          path : resultPath,
-          rootPath,
-          data,
-          timestamp: Date.now(),
-          requesting : false,
-          requested : true,
-          snapshot
-        })
+        type: SET,
+        path: resultPath,
+        rootPath,
+        data,
+        timestamp: Date.now(),
+        requesting: false,
+        requested: true,
+        snapshot
+      })
     })
   }
 
@@ -246,40 +245,30 @@ const watchUserProfile = (dispatch, firebase) => {
 }
 
 export const login = (dispatch, firebase, credentials) => {
-  return new Promise( (resolve, reject) => {
-    dispatchLoginError(dispatch, null);
+  return new Promise((resolve, reject) => {
+    dispatchLoginError(dispatch, null)
 
-    const handler = (err, authData) => {
-      if(err){
-        dispatchLoginError(dispatch, err)
-        return reject(err)
-      }
-      resolve(authData)
-    };
+    const {token, provider, type, email, password} = credentials
 
-    const {token, provider, type, email, password} = credentials;
-
-    if(provider) {
-
-      if(token) {
-        return firebase.auth().signInWithCredential( provider, token)
+    if (provider) {
+      if (token) {
+        return firebase.auth().signInWithCredential(provider, token)
       }
 
-      const  auth = (type === 'popup') ?
-          firebase.auth().signInWithPopup
-          : firebase.auth().signInWithRedirect;
+      const auth = (type === 'popup')
+          ? firebase.auth().signInWithPopup
+          : firebase.auth().signInWithRedirect
 
       return auth(provider)
-
     }
 
-    if(token) {
+    if (token) {
       return firebase.auth().signInWithCustomToken(token)
     }
 
     return firebase.auth().signInWithEmailAndPassword(email, password)
   })
-};
+}
 
 export const init = (dispatch, firebase) => {
   firebase.auth().onAuthStateChanged(authData => {

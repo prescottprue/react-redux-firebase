@@ -1,9 +1,14 @@
 {
   "name": "redux-firebasev3",
-  "version": "0.1.0",
-  "description": "Use Firebase version 3 with React and Redux in ES6",
+  "version": "0.1.1",
+  "description": "Use Firebase version 3 with Redux",
   "main": "build/index.js",
+  "module": "source/index.js",
   "jsnext:main": "source/index.js",
+  "files": [
+    "build",
+    "source"
+  ],
   "scripts": {
     "build": "babel source --out-dir build",
     "build-dev": "babel source --out-dir build --watch --source-maps inline",
@@ -18,12 +23,18 @@
   },
   "contributors": [
     {
-      "name": "Tiberiu Craciun",
-      "email": "tibi@happysoft.ro"
+      "name": "Prescott Prue",
+      "email": "scott@prue.io",
+      "url": "https://github.com/prescottprue"
     },
     {
-      "name": "Prescott Prue",
-      "email": "scott@prue.io"
+      "name": "Rahav Lussato",
+      "url": "https://github.com/RahavLussato"
+    },
+    {
+      "name": "Tiberiu Craciun",
+      "email": "tibi@happysoft.ro",
+      "url": "https://github.com/tiberiuc"
     }
   ],
   "license": "MIT",

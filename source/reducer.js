@@ -21,78 +21,77 @@ const initialState = fromJS({
 const pathToArr = path => path.split(/\//).filter(p => !!p)
 
 export default (state = initialState, action = {}) => {
-  const {path} = action
+  const { path } = action
+  var { requesting, requested, timestamp } = action
   let pathArr
   let retVal
 
   switch (action.type) {
 
     case START:
-      var {requesting, requested} = action;
       pathArr = pathToArr(path)
 
-      retVal = (requesting !== undefined) ?
-          state.setIn(['requesting', ...pathArr], fromJS(requesting))
+      retVal = (requesting !== undefined)
+          ? state.setIn(['requesting', ...pathArr], fromJS(requesting))
           : state.deleteIn(['requesting', ...pathArr])
 
-      retVal = (requested !== undefined) ?
-          retVal.setIn(['requested', ...pathArr], fromJS(requested))
+      retVal = (requested !== undefined)
+          ? retVal.setIn(['requested', ...pathArr], fromJS(requested))
           : retVal.deleteIn(['requested', ...pathArr])
 
-      return retVal;
-      
+      return retVal
+
     case SET:
-      var {data, snapshot, timestamp, requesting, requested, rootPath} = action;
+      var { data, snapshot, rootPath } = action
       pathArr = pathToArr(path)
       let rootPathArr = pathToArr(rootPath)
 
-      retVal = (data !== undefined) ?
-          state.setIn(['data', ...pathArr], fromJS(data))
+      retVal = (data !== undefined)
+          ? state.setIn(['data', ...pathArr], fromJS(data))
           : state.deleteIn(['data', ...pathArr])
 
-      retVal = (snapshot !== undefined) ?
-          retVal.setIn(['snapshot', ...pathArr], fromJS(snapshot))
+      retVal = (snapshot !== undefined)
+          ? retVal.setIn(['snapshot', ...pathArr], fromJS(snapshot))
           : retVal.deleteIn(['snapshot', ...pathArr])
 
-      retVal = (timestamp !== undefined) ?
-          retVal.setIn(['timestamp', ...rootPathArr], fromJS(timestamp))
+      retVal = (timestamp !== undefined)
+          ? retVal.setIn(['timestamp', ...rootPathArr], fromJS(timestamp))
           : retVal.deleteIn(['timestamp', ...rootPathArr])
 
-      retVal = (requesting !== undefined) ?
-          retVal.setIn(['requesting', ...rootPathArr], fromJS(requesting))
+      retVal = (requesting !== undefined)
+          ? retVal.setIn(['requesting', ...rootPathArr], fromJS(requesting))
           : retVal.deleteIn(['requesting', ...rootPathArr])
 
-      retVal = (requested !== undefined) ?
-          retVal.setIn(['requested', ...rootPathArr], fromJS(requested))
+      retVal = (requested !== undefined)
+          ? retVal.setIn(['requested', ...rootPathArr], fromJS(requested))
           : retVal.deleteIn(['requested', ...rootPathArr])
 
-      return retVal;
+      return retVal
 
     case NO_VALUE:
-      var {timestamp, requesting, requested} = action
       pathArr = pathToArr(path)
       retVal = state.setIn(['data', ...pathArr], fromJS({}))
       retVal = retVal.setIn(['snapshot', ...pathArr], fromJS({}))
 
-      retVal = (timestamp !== undefined) ?
-          retVal.setIn(['timestamp', ...pathArr], fromJS(timestamp))
+      retVal = (timestamp !== undefined)
+          ? retVal.setIn(['timestamp', ...pathArr], fromJS(timestamp))
           : retVal.deleteIn(['timestamp', ...pathArr])
 
-      retVal = (requesting !== undefined) ?
-          retVal.setIn(['requesting', ...pathArr], fromJS(requesting))
+      retVal = (requesting !== undefined)
+          ? retVal.setIn(['requesting', ...pathArr], fromJS(requesting))
           : retVal.deleteIn(['requesting', ...pathArr])
 
-      retVal = (requested !== undefined) ?
-          retVal.setIn(['requested', ...pathArr], fromJS(requested))
+      retVal = (requested !== undefined)
+          ? retVal.setIn(['requested', ...pathArr], fromJS(requested))
           : retVal.deleteIn(['requested', ...pathArr])
 
-      return retVal;
+      return retVal
 
     case INIT_BY_PATH:
       pathArr = pathToArr(path)
       retVal = state.deleteIn(['data', ...pathArr])
-      //keep the prev snapshot until it will override by the new one
-      //retVal = retVal.deleteIn(['snapshot', ...pathArr])
+      // keep the prev snapshot until it will override by the new one
+      // retVal = retVal.deleteIn(['snapshot', ...pathArr])
       retVal = retVal.deleteIn(['timestamp', ...pathArr])
       retVal = retVal.deleteIn(['requesting', ...pathArr])
       retVal = retVal.deleteIn(['requested', ...pathArr])
@@ -100,7 +99,7 @@ export default (state = initialState, action = {}) => {
       return retVal
 
     case SET_PROFILE:
-      const {profile} = action
+      const { profile } = action
       return (profile !== undefined)
         ? state.setIn(['profile'], fromJS(profile))
         : state.deleteIn(['profile'])

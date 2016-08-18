@@ -28,6 +28,9 @@ exports.default = function () {
   var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
   var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
   var path = action.path;
+  var requesting = action.requesting;
+  var requested = action.requested;
+  var timestamp = action.timestamp;
 
   var pathArr = void 0;
   var retVal = void 0;
@@ -35,9 +38,6 @@ exports.default = function () {
   switch (action.type) {
 
     case _constants.START:
-      var requesting = action.requesting;
-      var requested = action.requested;
-
       pathArr = pathToArr(path);
 
       retVal = requesting !== undefined ? state.setIn(['requesting'].concat(_toConsumableArray(pathArr)), (0, _immutable.fromJS)(requesting)) : state.deleteIn(['requesting'].concat(_toConsumableArray(pathArr)));
@@ -49,9 +49,6 @@ exports.default = function () {
     case _constants.SET:
       var data = action.data;
       var snapshot = action.snapshot;
-      var timestamp = action.timestamp;
-      var requesting = action.requesting;
-      var requested = action.requested;
       var rootPath = action.rootPath;
 
       pathArr = pathToArr(path);
@@ -70,10 +67,6 @@ exports.default = function () {
       return retVal;
 
     case _constants.NO_VALUE:
-      var timestamp = action.timestamp;
-      var requesting = action.requesting;
-      var requested = action.requested;
-
       pathArr = pathToArr(path);
       retVal = state.setIn(['data'].concat(_toConsumableArray(pathArr)), (0, _immutable.fromJS)({}));
       retVal = retVal.setIn(['snapshot'].concat(_toConsumableArray(pathArr)), (0, _immutable.fromJS)({}));
@@ -89,8 +82,8 @@ exports.default = function () {
     case _constants.INIT_BY_PATH:
       pathArr = pathToArr(path);
       retVal = state.deleteIn(['data'].concat(_toConsumableArray(pathArr)));
-      //keep the prev snapshot until it will override by the new one
-      //retVal = retVal.deleteIn(['snapshot', ...pathArr])
+      // keep the prev snapshot until it will override by the new one
+      // retVal = retVal.deleteIn(['snapshot', ...pathArr])
       retVal = retVal.deleteIn(['timestamp'].concat(_toConsumableArray(pathArr)));
       retVal = retVal.deleteIn(['requesting'].concat(_toConsumableArray(pathArr)));
       retVal = retVal.deleteIn(['requested'].concat(_toConsumableArray(pathArr)));

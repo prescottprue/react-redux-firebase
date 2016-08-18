@@ -1,6 +1,7 @@
 # Dependency directory
 node_modules
 build
+coverage
 
 # Logs
 *.log

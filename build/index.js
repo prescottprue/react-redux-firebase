@@ -24,5 +24,6 @@ module.exports = {
   firebase: _connect2.default,
   firebaseStateReducer: _reducer2.default,
   reduxReactFirebase: _compose2.default,
+  reduxFirebase: _compose2.default,
   helpers: helpers
 };

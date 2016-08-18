@@ -41,7 +41,7 @@ export const dataToJS = (data, path, notSetValue) => {
 }
 
 export const customToJS = (data, path, custom, notSetValue) => {
-  if(!(data && data.getIn)) {
+  if (!(data && data.getIn)) {
     return notSetValue
   }
 
@@ -49,7 +49,7 @@ export const customToJS = (data, path, custom, notSetValue) => {
 
   const pathArr = customPath.split(/\//).slice(1)
 
-  if(data.getIn) {
+  if (data.getIn) {
     return toJS(data.getIn(pathArr, notSetValue))
   }
 

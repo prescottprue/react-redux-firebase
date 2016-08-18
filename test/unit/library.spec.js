@@ -12,6 +12,9 @@ describe('redux-firebasev3', () => {
     it('reduxReactFirebase', () => {
       expect(src).to.respondTo('reduxReactFirebase')
     })
+    it('reduxFirebase', () => {
+      expect(src).to.respondTo('reduxFirebase')
+    })
     it('helpers', () => {
       expect(src).to.have.property('helpers')
     })

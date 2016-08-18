@@ -30,27 +30,32 @@ $ npm install --save redux-firebasev3
 Include redux-react-firebase in your store
 
 ```javascript
-import {createStore, combineReducers, compose} from 'redux'
-import {reduxReactFirebase, firebaseStateReducer} from 'redux-firebasev3'
+import { createStore, combineReducers, compose } from 'redux'
+import { reduxFirebase, firebaseStateReducer } from 'redux-firebasev3'
 
+// Add Firebase to reducers
 const rootReducer = combineReducers({
   firebase: firebaseStateReducer
 })
+
+// Firebase config
 const config = {
   apiKey: '<your-api-key>',
   authDomain: '<your-auth-domain>',
   databaseURL: '<your-database-url>',
   storageBucket: '<your-storage-bucket>'
 }
+
+// Function to create store
 const createStoreWithFirebase = compose(
-    reduxReactFirebase(config, { userProfile: 'users' }),
+  reduxFirebase(config, { userProfile: 'users' }),
 )(createStore)
 
-
-store = createStoreWithFirebase(rootReducer, initialState)
+// Create store with reducers and initial state
+const store = createStoreWithFirebase(rootReducer, initialState)
 ```
 
-In the components
+In components:
 ```javascript
 import React, {Component, PropTypes} from 'react'
 import {connect} from 'react-redux'

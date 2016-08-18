@@ -262,14 +262,6 @@ var login = exports.login = function login(dispatch, firebase, credentials) {
   return new _es6Promise.Promise(function (resolve, reject) {
     dispatchLoginError(dispatch, null);
 
-    var handler = function handler(err, authData) {
-      if (err) {
-        dispatchLoginError(dispatch, err);
-        return reject(err);
-      }
-      resolve(authData);
-    };
-
     var token = credentials.token;
     var provider = credentials.provider;
     var type = credentials.type;
@@ -278,7 +270,6 @@ var login = exports.login = function login(dispatch, firebase, credentials) {
 
 
     if (provider) {
-
       if (token) {
         return firebase.auth().signInWithCredential(provider, token);
       }
