@@ -1,0 +1,26 @@
+.SignupForm {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-size: 1.4rem;
+  &-Submit {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    width: 30%;
+    min-width: 192px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1.75rem;
+  }
+}

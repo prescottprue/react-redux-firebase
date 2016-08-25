@@ -76,7 +76,7 @@ var unsetWatcher = function unsetWatcher(firebase, dispatch, event, path) {
   }
 };
 
-var watchEvent = exports.watchEvent = function watchEvent(firebase, dispatch, event, path, dest) {
+var watchEvent = exports.watchEvent = function watchEvent(firebase, dispatch, event, path, dest, onlyLastEvent) {
   var isQuery = false;
   var queryParams = [];
   var queryId = getQueryIdFromPath(path);
@@ -92,10 +92,13 @@ var watchEvent = exports.watchEvent = function watchEvent(firebase, dispatch, ev
   var counter = getWatcherCount(firebase, event, watchPath, queryId);
 
   if (counter > 0) {
-    if (queryId) {
-      unsetWatcher(firebase, dispatch, event, path, queryId);
-    } else {
-      return;
+    if (onlyLastEvent) {
+      // listen only to last query on same path
+      if (queryId) {
+        unsetWatcher(firebase, event, path, queryId);
+      } else {
+        return;
+      }
     }
   }
 

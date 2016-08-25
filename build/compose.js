@@ -16,7 +16,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = function (config) {
+exports.default = function (config, otherConfig) {
   return function (next) {
     return function (reducer, initialState) {
       var defaultConfig = {
@@ -36,7 +36,7 @@ exports.default = function (config) {
 
       var ref = _firebase2.default.database().ref();
 
-      var configs = Object.assign({}, defaultConfig, config);
+      var configs = Object.assign({}, defaultConfig, config, otherConfig);
 
       var firebase = Object.defineProperty(_firebase2.default, '_', {
         value: {

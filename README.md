@@ -25,9 +25,29 @@
 $ npm install --save redux-firebasev3
 ```
 
+## Before Use
+
+### Peer Dependencies
+
+Install peer dependencies: `npm i --save redux react-redux`
+
+### Decorators
+This library is meant to be used with decorators. In order to enable this functionality, you will most likley need to install a plugin (depending on your build setup). For webpack and babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
+
+1. run `npm i --save-dev babel-plugin-transform-decorators-legacy`
+2. Add the following line to your `.babelrc`:
+```
+{
+    "plugins": ["transform-decorators-legacy"]
+}
+```
+
+
+
 ## Use
 
-Include redux-react-firebase in your store
+Include reduxFirebase in your store compose function:
+
 
 ```javascript
 import { createStore, combineReducers, compose } from 'redux'
@@ -46,7 +66,7 @@ const config = {
   storageBucket: '<your-storage-bucket>'
 }
 
-// Function to create store
+// Add redux Firebase to compose
 const createStoreWithFirebase = compose(
   reduxFirebase(config, { userProfile: 'users' }),
 )(createStore)
@@ -59,20 +79,22 @@ In components:
 ```javascript
 import React, {Component, PropTypes} from 'react'
 import {connect} from 'react-redux'
-import {firebase, helpers} from 'redux-react-firebase'
+import {firebase, helpers} from 'redux-firebasev3'
 
 const {isLoaded, isEmpty, dataToJS} = helpers
 
 @firebase( [
-  'todos'
+  '/todos'
 ])
 @connect(
   ({firebase}) => ({
-    todos: dataToJS(firebase, 'todos'),
+    todos: dataToJS(firebase, '/todos'),
   })
 )
 class Todos extends Component {
-
+  static propTypes = {
+    todos: PropTypes.object
+  }
   render() {
     const {firebase, todos} = this.props;
 
@@ -102,16 +124,26 @@ class Todos extends Component {
 ## API
 See [API](API.md)
 
-## Example
-You can see a complete example [here](example)
+## Examples
+
+You can see a complete examples [here](examples)
+
+### [Simple Example](examples/simple)
+
+A simple example that is the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command. Shows a list of todo items
+
+### [Material Example](examples/material)
+
+An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command. Shows a list of todo items
+
 
 ## In the future
 - Ideas are welcome :)
 
 ## Contributors
+- [Prescott Prue](https://github.com/prescottprue)
 - [Tiberiu Craciun](https://github.com/tiberiuc)
 - [Rahav Lussto](https://github.com/RahavLussato)
-- [Prescott Prue](https://github.com/prescottprue)
 - [Justin Handley](https://github.com/justinhandley)
 
 [npm-image]: https://img.shields.io/npm/v/redux-firebasev3.svg?style=flat-square

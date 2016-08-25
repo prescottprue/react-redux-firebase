@@ -1,7 +1,7 @@
 import Firebase from 'firebase'
 import * as Actions from './actions'
 
-export default (config) => {
+export default (config, otherConfig) => {
   return next => (reducer, initialState) => {
     const defaultConfig = {
       userProfile: null
@@ -19,7 +19,7 @@ export default (config) => {
 
     const ref = Firebase.database().ref()
 
-    const configs = Object.assign({}, defaultConfig, config)
+    const configs = Object.assign({}, defaultConfig, config, otherConfig)
 
     const firebase = Object.defineProperty(Firebase, '_', {
       value: {

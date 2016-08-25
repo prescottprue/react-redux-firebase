@@ -1,0 +1,49 @@
+.Signup {
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2rem;
+  width: 100%;
+  min-height: 530px;
+  background-color: inherit;
+  &-Panel {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    padding: 1rem;
+    width: 30%;
+    min-width: 250px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  &-Login {
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  &-Login-Label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: $mediumGray;
+    font-weight: 400;
+  }
+  &-Login-Link {
+   margin-top: .4rem;
+   &:hover {
+     color: $materialBlue;
+   }
+  }
+  &-Progress {
+    margin-top: 5rem;
+  }
+}
