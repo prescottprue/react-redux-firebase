@@ -1,5 +1,5 @@
 {
-  "name": "create-react-app",
+  "name": "simple-redux-firebasev3-example",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
@@ -52,8 +52,7 @@
     "react-router": "^2.7.0",
     "react-router-redux": "^4.0.5",
     "redux": "^3.4.0",
-    "redux-firebasev3": "0.1.0",
-    "redux-thunk": "^2.1.0"
+    "redux-firebasev3": "0.1.2"
   },
   "scripts": {
     "start": "node ./scripts/start.js",

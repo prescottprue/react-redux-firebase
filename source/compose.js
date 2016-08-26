@@ -10,11 +10,14 @@ export default (config, otherConfig) => {
     const store = next(reducer, initialState)
 
     const {dispatch} = store
+    const {apiKey, authDomain, databaseURL, storageBucket} = config
 
-    if (!config.databaseURL) throw new Error('Firebase Database URL is required')
+    if (!databaseURL) throw new Error('Firebase databaseURL is required')
+    if (!authDomain) throw new Error('Firebase authDomain is required')
+    if (!apiKey) throw new Error('Firebase apiKey is required')
 
     try {
-      Firebase.initializeApp(config)
+      Firebase.initializeApp({apiKey, authDomain, databaseURL, storageBucket})
     } catch (err) {}
 
     const ref = Firebase.database().ref()
@@ -35,8 +38,8 @@ export default (config, otherConfig) => {
     const set = (path, value, onComplete) => ref.child(path).set(value, onComplete)
     const push = (path, value, onComplete) => ref.child(path).push(value, onComplete)
     const remove = (path, onComplete) => ref.child(path).remove(onComplete)
-    const watchEvent = (eventName, eventPath) => Actions.watchEvent(firebase, dispatch, eventName, eventPath)
-    const unWatchEvent = (eventName, eventPath, queryId = undefined) => Actions.unWatchEvent(firebase, dispatch, eventName, eventPath, queryId)
+    const watchEvent = (eventName, eventPath) => Actions.watchEvent(firebase, dispatch, eventName, eventPath, true)
+    const unWatchEvent = (eventName, eventPath, queryId = undefined) => Actions.unWatchEvent(firebase, eventName, eventPath, queryId)
     const login = credentials => Actions.login(dispatch, firebase, credentials)
     const logout = () => Actions.logout(dispatch, firebase)
     const createUser = (credentials, profile) => Actions.createUser(dispatch, firebase, credentials, profile)

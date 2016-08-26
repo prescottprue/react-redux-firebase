@@ -1,13 +1,11 @@
 import {fromJS} from 'immutable'
 import {
-  START,
   SET,
   SET_PROFILE,
   LOGIN,
   LOGOUT,
   LOGIN_ERROR,
-  NO_VALUE,
-  INIT_BY_PATH
+  NO_VALUE
 } from './constants'
 
 const initialState = fromJS({
@@ -21,50 +19,23 @@ const initialState = fromJS({
 const pathToArr = path => path.split(/\//).filter(p => !!p)
 
 export default (state = initialState, action = {}) => {
-  const { path } = action
-  var { requesting, requested, timestamp } = action
+  const {path} = action
   let pathArr
   let retVal
 
   switch (action.type) {
 
-    case START:
-      pathArr = pathToArr(path)
-
-      retVal = (requesting !== undefined)
-          ? state.setIn(['requesting', ...pathArr], fromJS(requesting))
-          : state.deleteIn(['requesting', ...pathArr])
-
-      retVal = (requested !== undefined)
-          ? retVal.setIn(['requested', ...pathArr], fromJS(requested))
-          : retVal.deleteIn(['requested', ...pathArr])
-
-      return retVal
-
     case SET:
-      var { data, snapshot, rootPath } = action
+      const {data, snapshot} = action
       pathArr = pathToArr(path)
-      let rootPathArr = pathToArr(rootPath)
 
       retVal = (data !== undefined)
-          ? state.setIn(['data', ...pathArr], fromJS(data))
-          : state.deleteIn(['data', ...pathArr])
+        ? state.setIn(['data', ...pathArr], fromJS(data))
+        : state.deleteIn(['data', ...pathArr])
 
       retVal = (snapshot !== undefined)
-          ? retVal.setIn(['snapshot', ...pathArr], fromJS(snapshot))
-          : retVal.deleteIn(['snapshot', ...pathArr])
-
-      retVal = (timestamp !== undefined)
-          ? retVal.setIn(['timestamp', ...rootPathArr], fromJS(timestamp))
-          : retVal.deleteIn(['timestamp', ...rootPathArr])
-
-      retVal = (requesting !== undefined)
-          ? retVal.setIn(['requesting', ...rootPathArr], fromJS(requesting))
-          : retVal.deleteIn(['requesting', ...rootPathArr])
-
-      retVal = (requested !== undefined)
-          ? retVal.setIn(['requested', ...rootPathArr], fromJS(requested))
-          : retVal.deleteIn(['requested', ...rootPathArr])
+        ? retVal.setIn(['snapshot', ...pathArr], fromJS(snapshot))
+        : retVal.deleteIn(['snapshot', ...pathArr])
 
       return retVal
 
@@ -72,34 +43,10 @@ export default (state = initialState, action = {}) => {
       pathArr = pathToArr(path)
       retVal = state.setIn(['data', ...pathArr], fromJS({}))
       retVal = retVal.setIn(['snapshot', ...pathArr], fromJS({}))
-
-      retVal = (timestamp !== undefined)
-          ? retVal.setIn(['timestamp', ...pathArr], fromJS(timestamp))
-          : retVal.deleteIn(['timestamp', ...pathArr])
-
-      retVal = (requesting !== undefined)
-          ? retVal.setIn(['requesting', ...pathArr], fromJS(requesting))
-          : retVal.deleteIn(['requesting', ...pathArr])
-
-      retVal = (requested !== undefined)
-          ? retVal.setIn(['requested', ...pathArr], fromJS(requested))
-          : retVal.deleteIn(['requested', ...pathArr])
-
-      return retVal
-
-    case INIT_BY_PATH:
-      pathArr = pathToArr(path)
-      retVal = state.deleteIn(['data', ...pathArr])
-      // keep the prev snapshot until it will override by the new one
-      // retVal = retVal.deleteIn(['snapshot', ...pathArr])
-      retVal = retVal.deleteIn(['timestamp', ...pathArr])
-      retVal = retVal.deleteIn(['requesting', ...pathArr])
-      retVal = retVal.deleteIn(['requested', ...pathArr])
-
       return retVal
 
     case SET_PROFILE:
-      const { profile } = action
+      const {profile} = action
       return (profile !== undefined)
         ? state.setIn(['profile'], fromJS(profile))
         : state.deleteIn(['profile'])
@@ -110,9 +57,6 @@ export default (state = initialState, action = {}) => {
         authError: null,
         profile: null,
         data: {},
-        timestamp: {},
-        requesting: false,
-        requested: false,
         snapshot: {}
       })
 

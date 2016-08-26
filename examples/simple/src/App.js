@@ -20,18 +20,19 @@ export default class App extends Component {
     todos: PropTypes.object
   }
   render () {
-    console.log('props:', this.props)
+    const { firebase, todos } = this.props
+
     const handleAdd = () => {
       const {newTodo} = this.refs
       firebase.push('/todos', { text:newTodo.value, done:false })
       newTodo.value = ''
     }
-    const { todos } = this.props
-    const todosList = (!isLoaded(todos)) ?
-                          'Loading'
-                        : (isEmpty(todos)) ?
-                               'Todo list is emtpy'
-                             : map(todos, (todo, id) => (<TodoItem key={id} id={id} todo={todo}/>) )
+
+    const todosList = (!isLoaded(todos))
+                        ? 'Loading'
+                        : (isEmpty(todos))
+                          ? 'Todo list is emtpy'
+                          : map(todos, (todo, id) => (<TodoItem key={id} id={id} todo={todo}/>))
     return (
       <div className="App">
         <div className="App-header">

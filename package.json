@@ -1,6 +1,6 @@
 {
   "name": "redux-firebasev3",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Use Firebase version 3 with Redux",
   "main": "build/index.js",
   "module": "source/index.js",
@@ -54,8 +54,8 @@
   ],
   "dependencies": {
     "es6-promise": "^3.2.1",
-    "immutable": "^3.7.6",
     "firebase": "^3.3.0",
+    "immutable": "^3.7.6",
     "lodash": "*"
   },
   "peerDependencies": {
