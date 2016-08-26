@@ -10,6 +10,11 @@
 
 > Use Firebase with React and Redux in ES6
 
+## Demo
+
+View deployed version of Simple Example [here](https://redux-firebasev3.firebaseapp.com/)
+
+
 ## Features
 - Integrated into redux
 - Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed`
@@ -77,11 +82,11 @@ const store = createStoreWithFirebase(rootReducer, initialState)
 
 In components:
 ```javascript
-import React, {Component, PropTypes} from 'react'
-import {connect} from 'react-redux'
-import {firebase, helpers} from 'redux-firebasev3'
+import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { firebase, helpers } from 'redux-firebasev3'
 
-const {isLoaded, isEmpty, dataToJS} = helpers
+const { isLoaded, isEmpty, dataToJS } = helpers
 
 @firebase( [
   '/todos'
@@ -93,17 +98,30 @@ const {isLoaded, isEmpty, dataToJS} = helpers
 )
 class Todos extends Component {
   static propTypes = {
-    todos: PropTypes.object
+    todos: PropTypes.object,
+    firebase: PropTypes.object
   }
+
   render() {
-    const {firebase, todos} = this.props;
+    const { firebase, todos } = this.props;
 
+    // Add a new todo to firebase
+    const handleAdd = () => {
+      const {newTodo} = this.refs
+      firebase.push('/todos', { text:newTodo.value, done:false })
+      newTodo.value = ''
+    }
 
-    const todosList = (!isLoaded(todos)) ?
-                          'Loading'
-                        : (isEmpty(todos) ) ?
-                              'Todo list is empty'
-                            : _.map(todos, (todo, id) => (<TodoItem key={id} id={id} todo={todo}/>) )
+    // Build Todos list if todos exist and are loaded
+    const todosList = !isLoaded(todos)
+                        ? 'Loading'
+                        : isEmpty(todos)
+                          ? 'Todo list is empty'
+                          : Object.keys(todos).map(
+                              (key, id) => (
+                                <TodoItem key={key} id={id} todo={todos[key]}/>
+                              )
+                            )
 
     return (
       <div>
@@ -112,7 +130,9 @@ class Todos extends Component {
           {todosList}
         </ul>
         <input type="text" ref="newTodo" />
-        <button onClick={handleAdd}>Add</button>
+        <button onClick={handleAdd}>
+          Add
+        </button>
       </div>
     )
   }
@@ -124,27 +144,40 @@ class Todos extends Component {
 ## API
 See [API](API.md)
 
-## Examples
+## [Examples](examples)
 
-You can see a complete examples [here](examples)
+#### [Simple Example](examples/simple)
 
-### [Simple Example](examples/simple)
+A simple example that is the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command. Shows a list of todo items and allows you to add to them. This is what is deployed to [redux-firebasev3.firebaseapp.com](https://redux-firebasev3.firebaseapp.com/).
 
-A simple example that is the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command. Shows a list of todo items
+#### [Material Example](examples/material)
 
-### [Material Example](examples/material)
+An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command. Shows a list of todo items and allows you to add to them.
 
-An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command. Shows a list of todo items
+
+## Generator
+
+[generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) uses redux-firebasev3 when opting to include redux
 
 
 ## In the future
+- Improved file/folder structure
+- Docs/Examples Page
+- Redux Form Example
+- More Unit Tests/Coverage
 - Ideas are welcome :)
+
 
 ## Contributors
 - [Prescott Prue](https://github.com/prescottprue)
 - [Tiberiu Craciun](https://github.com/tiberiuc)
 - [Rahav Lussto](https://github.com/RahavLussato)
 - [Justin Handley](https://github.com/justinhandley)
+
+
+## Thanks
+
+Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase), which this project is originally forked from (git history still in project).
 
 [npm-image]: https://img.shields.io/npm/v/redux-firebasev3.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/redux-firebasev3

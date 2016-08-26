@@ -21,7 +21,7 @@ in firebase store objects can have this values
 
 there are helpers for dealing with data ( see helpers )
 
-### `reduxReactFirebase(FIREBASE_URL, options)`
+### `reduxFirebase(FIREBASE_URL, options)`
 Add firebase to redux
 
 #### Arguments
@@ -29,7 +29,7 @@ Add firebase to redux
 - `options` Object with the options (including `userProfile`)
 
 #### Options
-1. Auto load user profile when authenticate
+1. Auto load user profile when authenticated
 ```javascript
 {
   userProfile: String // path where user profiles are stored
