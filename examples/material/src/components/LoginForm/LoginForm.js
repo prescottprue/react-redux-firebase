@@ -6,6 +6,7 @@ import './LoginForm.css'
 import TextField from 'material-ui/TextField'
 
 const buttonStyle = { width: '100%' }
+const fieldStyle = { width: '80%' }
 
 export default class LoginForm extends Component {
 
@@ -14,17 +15,26 @@ export default class LoginForm extends Component {
     onLogin: PropTypes.func
   }
 
+  state = {
+    errors: { email: null, password: null }
+  }
+
   render () {
-    const { account } = this.props
+    const { account, onLogin } = this.props
+    const { errors } = this.state
     return (
-      <form className='LoginForm' onSubmit={this.props.onLogin}>
+      <form className='LoginForm' onSubmit={onLogin}>
         <TextField
           floatingLabelText='Email'
           name="email"
+          errorText={errors.email}
+          style={fieldStyle}
         />
         <TextField
           floatingLabelText='Password'
           name='password'
+          errorText={errors.password}
+          style={fieldStyle}
         />
         <div className='LoginForm-Submit'>
           <RaisedButton

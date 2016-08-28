@@ -10,65 +10,65 @@
   width: 100%;
   margin: .2rem;
   flex-grow: 1;
-  &-Submit {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    width: 30%;
-    min-width: 192px;
-    margin-top: 1.5rem;
-    text-align: center;
-    color: $linkBlue;
-    align-items: center;
-    flex-direction: column;
-  }
-  &-Options {
-    margin-top: 2rem;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 80%;
-  }
-  &-Remember {
-    display: flex;
-    flex-direction: row;
-    flex-basis: 50%;
-  }
-  &-Recover-Link {
-    display: inline;
-    font-size: .8rem;
-    color: $linkBlue;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-  &-Progress {
-    margin-top: 5rem;
-  }
-  @media screen and (max-width: 958px){
-    &-Recover-Link {
-      font-size: 1rem;
-    }
-    &-Options {
-      flex-direction: column;
-    }
-    &-Remember {
-      display: none;
-    }
-  }
-  @media screen and (max-width: 1000px){
-    &-Options {
-      flex-direction: column;
-    }
-    &-Remember {
-      display: none;
-    }
-  }
+}
+.LoginForm-Submit {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  width: 30%;
+  min-width: 192px;
+  margin-top: 1.5rem;
+  text-align: center;
+  color: $linkBlue;
+  align-items: center;
+  flex-direction: column;
+}
+.LoginForm-Options {
+  margin-top: 2rem;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+}
+.LoginForm-Remember {
+  display: flex;
+  flex-direction: row;
+  flex-basis: 50%;
+}
+.LoginForm-Recover-Link {
+  display: inline;
+  font-size: .8rem;
+  color: $linkBlue;
+}
+.LoginForm-Recover-Link:hover {
+  text-decoration: underline;
+}
+.LoginForm-Progress {
+  margin-top: 5rem;
+}
+@media screen and (max-width: 958px){
+.LoginForm-Recover-Link {
+  font-size: 1rem;
+}
+.LoginForm-Options {
+  flex-direction: column;
+}
+.LoginForm-Remember {
+  display: none;
+}
+}
+@media screen and (max-width: 1000px){
+.LoginForm-Options {
+  flex-direction: column;
+}
+.LoginForm-Remember {
+  display: none;
+}
 }

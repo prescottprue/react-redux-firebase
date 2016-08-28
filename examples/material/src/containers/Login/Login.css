@@ -11,46 +11,46 @@
   width: 100%;
   font-weight: 400;
   padding-top: 1.5rem;
-  &-Panel {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.25rem;
-    width: 30%;
-    min-width: 250px;
-    min-height: 270px;
-  }
-  &-Or {
-    margin-top: .5rem;
-    margin-bottom: .5rem;
-  }
-  &-Signup {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1rem;
-    &-Link {
-      color: $linkBlue;
-      font-size: 1.2rem;
-      &:hover {
-        color: $materialBlue;
-      }
-    }
-    &-Label {
-      font-size: 1rem;
-      font-weight: bold;
-      color: #979797;
-      font-weight: 400;
-    }
-  }
+}
+.Login-Panel {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  width: 30%;
+  min-width: 250px;
+  min-height: 270px;
+}
+.Login-Or {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+.Login-Signup {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.Login-Signup-Link {
+  color: $linkBlue;
+  font-size: 1.2rem;
+}
+.Login-Signup-Link :hover {
+  color: $materialBlue;
+}
+.Login-Signup-Label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #979797;
+  font-weight: 400;
 }

@@ -6,44 +6,44 @@
   display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding-top: 2rem;
   width: 100%;
   min-height: 530px;
   background-color: inherit;
-  &-Panel {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    padding: 1rem;
-    width: 30%;
-    min-width: 250px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  &-Login {
-    display: flex;
-    flex-direction:column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2rem;
-  }
-  &-Login-Label {
-    font-size: 1rem;
-    font-weight: bold;
-    color: $mediumGray;
-    font-weight: 400;
-  }
-  &-Login-Link {
-   margin-top: .4rem;
-   &:hover {
-     color: $materialBlue;
-   }
-  }
-  &-Progress {
-    margin-top: 5rem;
-  }
+}
+.Signup-Login {
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+.Signup-Panel {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  padding: 1rem;
+  width: 30%;
+  min-width: 250px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.Signup-Login-Label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: $mediumGray;
+  font-weight: 400;
+}
+.Signup-Login-Link {
+ margin-top: .4rem;
+ .Signup:hover {
+   color: $materialBlue;
+ }
+}
+.Signup-Progress {
+  margin-top: 5rem;
 }

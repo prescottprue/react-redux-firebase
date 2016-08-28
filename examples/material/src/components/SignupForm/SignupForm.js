@@ -30,6 +30,7 @@ export default class SignupForm extends Component {
    * @description Fire onLoginClick function provided to component when login is clicked
    */
   handleSignup = e => {
+    console.log('handle signup called:', e)
     e.preventDefault()
     let newAccountData = this.state
     if (this.requireInputs()) {
@@ -38,6 +39,7 @@ export default class SignupForm extends Component {
       this.props.onSignup(newAccountData)
     }
   }
+
   /**
    * @function requireInputs
    * @description Confirm that all required inputs have values
@@ -64,54 +66,31 @@ export default class SignupForm extends Component {
     }
     return true
   }
-  /**
-   * @function handleInputChange
-   * @description Update the state with the values from the form inputs.
-   * @fires context#setState
-   */
-  handleInputChange = (name, e) => {
-    e.preventDefault()
-    this.setState({
-      [name]: e.target.value
-    })
-  }
-
-  /**
-   * @function handlePrivateChange
-   * @description Store private values.
-   * @fires context#setState
-   */
-  handlePrivateChange = (name, e) => {
-    e.preventDefault()
-    this[name] = e.target.value
-  }
 
   googleSignup = () => {
-    this.props.onSignup('google')
+    this.props.onSignup({provider: 'google', type: 'popup'})
   }
 
   render () {
+    const { errors } = this.state
     return (
       <form className='SignupForm' onSubmit={this.handleSignup}>
         <TextField
           hintText='username'
           floatingLabelText='Username'
-          onChange={this.handleInputChange.bind(this, 'username')}
-          errorText={this.state.errors.username}
+          errorText={errors.username}
           style={fieldStyle}
         />
         <TextField
           hintText='email'
           floatingLabelText='Email'
-          onChange={this.handleInputChange.bind(this, 'email')}
-          errorText={this.state.errors.email}
+          errorText={errors.email}
           style={fieldStyle}
         />
         <TextField
           hintText='password'
           floatingLabelText='Password'
-          onChange={this.handlePrivateChange.bind(this, 'password')}
-          errorText={this.state.errors.password}
+          errorText={errors.password}
           style={fieldStyle}
           type='password'
         />
@@ -120,7 +99,6 @@ export default class SignupForm extends Component {
             label='Sign Up'
             secondary
             type='submit'
-            disabled={this.props.account && this.props.account.isFetching}
             style={buttonStyle}
           />
         </div>

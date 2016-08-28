@@ -7,7 +7,7 @@ import Login from './containers/Login/Login'
 import NotFound from './containers/NotFound/NotFound'
 import Signup from './containers/Signup/Signup'
 
-export default function (history) {
+export default function (history, store) {
   return (
     <Router history={history}>
       <Route path='/' component={App}>

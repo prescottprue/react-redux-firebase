@@ -30,10 +30,6 @@ export default class Signup extends Component {
     authError: PropTypes.object
   }
 
-  static contextTypes = {
-    router: React.PropTypes.object.isRequired
-  }
-
   state = {
     errors: { username: null, password: null },
     snackCanOpen: false
@@ -54,16 +50,9 @@ export default class Signup extends Component {
       snackCanOpen: false
     })
 
-  handleSignup = (signupData) => {
-    console.log('handle signup:', signupData, this.props.firebase)
-    const {email, password, username} = signupData
-    this.props.firebase.createUser({ email, password }, { username })
-  }
-
-  providerSignup = provider => {
+  handleSignup = ({ email, password, username }) => {
     this.setState({ snackCanOpen: true })
-    this.props.signup(provider)
-    event({ category: 'User', action: 'Provider Signup', value: provider })
+    this.props.firebase.createUser({ email, password }, { username })
   }
 
   render () {
@@ -91,10 +80,10 @@ export default class Signup extends Component {
           <Link className='Signup-Login-Link' to='/login'>Login</Link>
         </div>
         {
-          authError ?
+          authError !== null && this.state.snackCanOpen ?
             <Snackbar
-              open={authError !== null && this.state.snackCanOpen}
-              message={authError || 'Signup error'}
+              open={authError && this.state.snackCanOpen}
+              message={authError ? authError.message : 'Signup error'}
               action='close'
               autoHideDuration={3000}
               onRequestClose={this.handleSnackClose}

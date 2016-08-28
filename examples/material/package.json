@@ -50,13 +50,13 @@
   },
   "dependencies": {
     "material-ui": "^0.15.4",
-    "react": "^15.3.1",
-    "react-dom": "^15.3.1",
-    "react-redux": "^4.4.5",
-    "react-router": "^2.7.0",
-    "react-router-redux": "^4.0.5",
+    "react": "0.14.7",
+    "react-dom": "0.14.7",
+    "react-redux": "2.1.2",
+    "react-router": "2.0.0-rc6",
+    "react-router-redux": "3.0.0",
     "react-tap-event-plugin": "^1.0.0",
-    "redux": "^3.5.2",
+    "redux": "3.4.0",
     "redux-firebasev3": "0.1.2"
   },
   "scripts": {

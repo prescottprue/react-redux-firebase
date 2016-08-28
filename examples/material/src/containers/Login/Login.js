@@ -24,17 +24,16 @@ const { pathToJS } = helpers
 export default class Login extends Component {
 
   static propTypes = {
-    account: PropTypes.object,
-    firebase: PropTypes.object.isRequired
+    account: PropTypes.object
   }
 
   state = {
     snackCanOpen: false
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.account.username) {
-      this.context.router.push(`/${nextProps.account.username}`)
+  componentWillReceiveProps ({ account }) {
+    if (account.username) {
+      this.context.router.push(`/${account.username}`)
     }
   }
 
@@ -76,13 +75,18 @@ export default class Login extends Component {
             Sign Up
           </Link>
         </div>
-        <Snackbar
-          open={typeof authError !== 'undefined' && this.state.snackCanOpen}
-          message={authError || 'Error'}
-          action='close'
-          autoHideDuration={3000}
-          onRequestClose={this.handleRequestClose}
-        />
+        {
+          authError && authError.message
+          ? <Snackbar
+              open={typeof authError !== 'undefined' && this.state.snackCanOpen}
+              message={authError || 'Error'}
+              action='close'
+              autoHideDuration={3000}
+              onRequestClose={this.handleRequestClose}
+            />
+          : null
+        }
+
       </div>
     )
   }

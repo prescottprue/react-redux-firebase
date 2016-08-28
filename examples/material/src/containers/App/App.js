@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
 // Components
@@ -13,24 +12,15 @@ import './App.css'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
-import { firebase, helpers } from 'redux-firebasev3'
-const { pathToJS } = helpers
-
-@firebase()
-@connect(
-  // Map state to props
-  ({firebase}) => ({
-    account: pathToJS(firebase, 'profile')
-  })
-)
 export default class Main extends Component {
 
   static childContextTypes = {
-    muiTheme: React.PropTypes.object
+    muiTheme: PropTypes.object,
   }
 
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    store: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired
   }
 
   static propTypes = {
