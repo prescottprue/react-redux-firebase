@@ -80,7 +80,7 @@ nesting with connect from redux
 )
 @connect(
   (state, props) => ({
-    todo: dataToJs(state.firebase, `todos/${props.id}`)
+    todo: dataToJS(state.firebase, `todos/${props.id}`)
   })
 )
 ```
@@ -90,7 +90,7 @@ nesting with connect from redux and do a firebase query that depend on data from
 @connect(
   state => ({
     currentTodo: state.myStore.currentTodo,
-    todo: dataToJs(state.firebase, `todos/${state.myStore.currentTodo}`)
+    todo: dataToJS(state.firebase, `todos/${state.myStore.currentTodo}`)
   })
 )
 @firebase(
