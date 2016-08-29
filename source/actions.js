@@ -232,6 +232,10 @@ export const login = (dispatch, firebase, {email, password}) => {
   dispatchLoginError(dispatch, null)
   return firebase.auth()
     .signInWithEmailAndPassword(email, password)
+    .catch(err => {
+      dispatchLoginError(dispatch, err)
+      return Promise.reject(err)
+    })
 }
 
 export const init = (dispatch, firebase) => {
@@ -264,35 +268,56 @@ export const createUser = (dispatch, firebase, { email, password }, profile) =>
       return reject('Email and Password are Required')
     }
     firebase.auth()
-    .createUserWithEmailAndPassword(email, password)
-    .then((userData) => {
-      if (profile && firebase._.config.userProfile) {
-        firebase.database().ref().child(`${firebase._.config.userProfile}/${userData.uid}`).set(profile)
-      }
-      login(dispatch, firebase, { email, password })
-        .then(() => resolve(userData.uid))
-        .catch(err => reject(err))
-    })
-    .catch((err) => {
-      dispatchLoginError(dispatch, err)
-      reject(err)
-    })
+      .createUserWithEmailAndPassword(email, password)
+      .then((userData) => {
+        // Save profile to userProfile path if available
+        if (profile && firebase._.config.userProfile) {
+          firebase.database()
+            .ref()
+            .child(`${firebase._.config.userProfile}/${userData.uid}`)
+            .set(profile)
+            .catch(err => {
+              dispatchLoginError(dispatch, err)
+              reject(err)
+            })
+        }
+        login(dispatch, firebase, { email, password })
+          .then(() => resolve(userData.uid))
+          .catch(err => {
+            if (err) {
+              switch (err.code) {
+                case 'auth/user-not-found':
+                  dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
+                  break
+                default:
+                  dispatchLoginError(dispatch, err)
+              }
+            }
+            reject(err || new Error('The specified user account does not exist.'))
+          })
+      })
+      .catch((err) => {
+        dispatchLoginError(dispatch, err)
+        reject(err)
+      })
   })
 
 export const resetPassword = (dispatch, firebase, email) => {
   dispatchLoginError(dispatch, null)
-  return firebase.auth().sendPasswordResetEmail(email).catch((err) => {
-    if (err) {
-      switch (err.code) {
-        case 'INVALID_USER':
-          dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
-          break
-        default:
-          dispatchLoginError(dispatch, err)
+  return firebase.auth()
+    .sendPasswordResetEmail(email)
+    .catch((err) => {
+      if (err) {
+        switch (err.code) {
+          case 'INVALID_USER':
+            dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
+            break
+          default:
+            dispatchLoginError(dispatch, err)
+        }
+        return
       }
-      return
-    }
-  })
+    })
 }
 
 export default { watchEvents, unWatchEvents, init, logout, createUser, resetPassword }
