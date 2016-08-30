@@ -96,14 +96,19 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
 
   if (event === 'first_child') {
     // return
-    return firebase.database().ref().child(path).orderByKey().limitToFirst(1).once('value', snapshot => {
-      if (snapshot.val() === null) {
-        dispatch({
-          type: NO_VALUE,
-          path
-        })
-      }
-    })
+    return firebase.database()
+      .ref()
+      .child(path)
+      .orderByKey()
+      .limitToFirst(1)
+      .once('value', snapshot => {
+        if (snapshot.val() === null) {
+          dispatch({
+            type: NO_VALUE,
+            path
+          })
+        }
+      })
   }
 
   let query = firebase.database().ref().child(path)
@@ -219,16 +224,20 @@ const watchUserProfile = (dispatch, firebase) => {
   const userProfile = firebase._.config.userProfile
   unWatchUserProfile(firebase)
   if (firebase._.config.userProfile) {
-    firebase._.profileWatch = firebase.database().ref().child(`${userProfile}/${authUid}`).on('value', snap => {
-      dispatch({
-        type: SET_PROFILE,
-        profile: snap.val()
+    firebase._.profileWatch = firebase.database()
+      .ref()
+      .child(`${userProfile}/${authUid}`)
+      .on('value', snap => {
+        dispatch({
+          type: SET_PROFILE,
+          profile: snap.val()
+        })
       })
-    })
   }
 }
 
-export const getMethodAndParams = ({email, password, provider, type, token}) => {
+// Get correct login method and params
+const getLoginMethodAndParams = ({email, password, provider, type, token}) => {
   if (provider) {
     if (token) {
       return {
@@ -247,7 +256,6 @@ export const getMethodAndParams = ({email, password, provider, type, token}) => 
       params: [ provider ]
     }
   }
-
   if (token) {
     return {
       method: 'signInWithCustomToken',
@@ -262,10 +270,8 @@ export const getMethodAndParams = ({email, password, provider, type, token}) => 
 
 export const login = (dispatch, firebase, credentials) => {
   dispatchLoginError(dispatch, null)
-  const { method, params } = getMethodAndParams(credentials)
-  console.log('calling:', { method, params }, firebase.auth()[method], ...params)
-  const auth = firebase.auth()
-  return auth[method](...params)
+  const { method, params } = getLoginMethodAndParams(credentials)
+  return firebase.auth()[method](...params)
     .catch(err => {
       dispatchLoginError(dispatch, err)
       return Promise.reject(err)
@@ -289,7 +295,7 @@ export const init = (dispatch, firebase) => {
 
 export const logout = (dispatch, firebase) => {
   firebase.auth().signOut()
-  dispatch({type: LOGOUT})
+  dispatch({ type: LOGOUT })
   firebase._.authUid = null
   unWatchUserProfile(firebase)
 }
