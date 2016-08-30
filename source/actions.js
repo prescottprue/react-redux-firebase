@@ -228,10 +228,44 @@ const watchUserProfile = (dispatch, firebase) => {
   }
 }
 
-export const login = (dispatch, firebase, {email, password}) => {
+export const getMethodAndParams = ({email, password, provider, type, token}) => {
+  if (provider) {
+    if (token) {
+      return {
+        method: 'signInWithCredential',
+        params: [ provider, token ]
+      }
+    }
+    if (type === 'popup') {
+      return {
+        method: 'signInWithPopup',
+        params: [ provider ]
+      }
+    }
+    return {
+      method: 'signInWithRedirect',
+      params: [ provider ]
+    }
+  }
+
+  if (token) {
+    return {
+      method: 'signInWithCustomToken',
+      params: [ token ]
+    }
+  }
+  return {
+    method: 'signInWithEmailAndPassword',
+    params: [ email, password ]
+  }
+}
+
+export const login = (dispatch, firebase, credentials) => {
   dispatchLoginError(dispatch, null)
-  return firebase.auth()
-    .signInWithEmailAndPassword(email, password)
+  const { method, params } = getMethodAndParams(credentials)
+  console.log('calling:', { method, params }, firebase.auth()[method], ...params)
+  const auth = firebase.auth()
+  return auth[method](...params)
     .catch(err => {
       dispatchLoginError(dispatch, err)
       return Promise.reject(err)
