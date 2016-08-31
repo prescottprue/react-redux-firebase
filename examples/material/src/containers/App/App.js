@@ -50,6 +50,7 @@ export default class Main extends Component {
       <div className='App'>
         <Navbar
           account={this.props.account}
+          onNameClick={() => this.context.route.push('/')}
           onMenuClick={this.handleClick}
           onLogoutClick={this.handleLogout}
         />

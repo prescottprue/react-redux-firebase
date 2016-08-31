@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
 
 // Components
 import LoginForm from '../../components/LoginForm/LoginForm'
@@ -32,7 +31,7 @@ export default class Login extends Component {
   }
 
   componentWillReceiveProps ({ account }) {
-    if (account.username) {
+    if (account && account.username) {
       this.context.router.push(`/${account.username}`)
     }
   }
@@ -67,26 +66,17 @@ export default class Login extends Component {
         <Paper className='Login-Panel'>
           <LoginForm onLogin={this.handleLogin} />
         </Paper>
-        <div className='Login-Signup'>
-          <span className='Login-Signup-Label'>
-            Need an account?
-          </span>
-          <Link className='Login-Signup-Link' to='/signup'>
-            Sign Up
-          </Link>
-        </div>
         {
           authError && authError.message
           ? <Snackbar
-              open={typeof authError !== 'undefined' && this.state.snackCanOpen}
-              message={authError || 'Error'}
+              open={authError && this.state.snackCanOpen}
+              message={authError.message || 'Error'}
               action='close'
               autoHideDuration={3000}
               onRequestClose={this.handleRequestClose}
             />
           : null
         }
-
       </div>
     )
   }

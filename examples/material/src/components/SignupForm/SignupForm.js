@@ -30,7 +30,6 @@ export default class SignupForm extends Component {
    * @description Fire onLoginClick function provided to component when login is clicked
    */
   handleSignup = e => {
-    console.log('handle signup called:', e)
     e.preventDefault()
     let newAccountData = this.state
     if (this.requireInputs()) {
@@ -79,18 +78,21 @@ export default class SignupForm extends Component {
           hintText='username'
           floatingLabelText='Username'
           errorText={errors.username}
+          onChange={({ target }) => { this.setState({username: target.value}) }}
           style={fieldStyle}
         />
         <TextField
           hintText='email'
           floatingLabelText='Email'
           errorText={errors.email}
+          onChange={({ target }) => { this.setState({email: target.value}) }}
           style={fieldStyle}
         />
         <TextField
           hintText='password'
           floatingLabelText='Password'
           errorText={errors.password}
+          onChange={({ target }) => { this.setState({password: target.value}) }}
           style={fieldStyle}
           type='password'
         />

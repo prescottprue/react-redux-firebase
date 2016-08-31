@@ -1,0 +1,17 @@
+.Todo {
+  margin: 1rem;
+
+}
+.Todo-Input {
+  margin: 1rem;
+}
+
+.Todo-Button {
+  margin: 1rem;
+}
+.TodoItem-Text {
+  font-size: 1.4rem;
+}
+.TodoItem-Owner {
+  font-size: .8rem;
+}

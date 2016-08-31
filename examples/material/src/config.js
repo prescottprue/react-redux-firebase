@@ -4,4 +4,8 @@ export const firebase = {
   databaseURL: 'https://redux-firebasev3.firebaseio.com'
 }
 
-export default { firebase }
+export const fbPaths = {
+  userProfile: '/users'
+}
+
+export default { firebase, fbPaths }

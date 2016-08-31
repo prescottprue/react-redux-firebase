@@ -7,6 +7,7 @@
 [![Code Coverage][coverage-image]][coverage-url]
 [![License][license-image]][license-url]
 [![Code Style][code-style-image]][code-style-url]
+[![Discord][discord-image]][discord-url]
 
 > Use Firebase with React and Redux in ES6
 
@@ -141,8 +142,8 @@ class Todos extends Component {
 
 ```
 
-## API
-See [API](API.md)
+## [API](https://prescottprue.gitbooks.io/redux-firebasev3/content/)
+See [API Docs](https://prescottprue.gitbooks.io/redux-firebasev3/content/)
 
 ## [Examples](examples)
 
@@ -162,8 +163,8 @@ An example that user Material UI built on top of the output of [create-react-app
 
 ## In the future
 - Improved file/folder structure
-- Docs/Examples Page
 - Redux Form Example
+- Rules Error Handling
 - More Unit Tests/Coverage
 - Ideas are welcome :)
 
@@ -177,7 +178,7 @@ An example that user Material UI built on top of the output of [create-react-app
 
 ## Thanks
 
-Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase), which this project is originally forked from (git history still in project).
+Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase), which this project is heavily based on.
 
 [npm-image]: https://img.shields.io/npm/v/redux-firebasev3.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/redux-firebasev3
@@ -194,6 +195,7 @@ Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [r
 [license-url]: https://github.com/prescottprue/redux-firebasev3/blob/master/LICENSE
 [code-style-image]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
 [code-style-url]: http://standardjs.com/
-
+[discord-image]: https://img.shields.io/badge/discord-%20redux%20firebase-join.svg?style=flat-square
+[discord-url]: https://discord.gg/aeE6ewN
 [gitter-image]: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
 [gitter-url]: https://gitter.im/prescottprue/redux-firebasev3

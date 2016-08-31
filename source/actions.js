@@ -5,7 +5,9 @@ import {
     LOGIN,
     LOGOUT,
     LOGIN_ERROR,
-    NO_VALUE
+    NO_VALUE,
+    AUTHENTICATION_INIT_STARTED,
+    AUTHENTICATION_INIT_FINISHED
 } from './constants'
 
 import { Promise } from 'es6-promise'
@@ -373,6 +375,8 @@ export const login = (dispatch, firebase, credentials) => {
  * @param {Function} dispatch - Action dispatch function
  */
 export const init = (dispatch, firebase) => {
+  dispatch({ type: AUTHENTICATION_INIT_STARTED })
+
   firebase.auth().onAuthStateChanged(authData => {
     if (!authData) {
       return dispatch({ type: LOGOUT })
@@ -383,6 +387,7 @@ export const init = (dispatch, firebase) => {
 
     dispatchLogin(dispatch, authData)
   })
+  dispatch({ type: AUTHENTICATION_INIT_FINISHED })
 
   firebase.auth().currentUser
 }

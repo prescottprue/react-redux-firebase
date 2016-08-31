@@ -5,13 +5,16 @@ import {
   LOGIN,
   LOGOUT,
   LOGIN_ERROR,
-  NO_VALUE
+  NO_VALUE,
+  AUTHENTICATION_INIT_STARTED,
+  AUTHENTICATION_INIT_FINISHED
 } from './constants'
 
 const initialState = fromJS({
   auth: undefined,
   authError: undefined,
   profile: undefined,
+  isLoading: false,
   data: {},
   snapshot: {}
 })
@@ -56,6 +59,7 @@ export default (state = initialState, action = {}) => {
         auth: null,
         authError: null,
         profile: null,
+        isLoading: false,
         data: {},
         snapshot: {}
       })
@@ -69,6 +73,15 @@ export default (state = initialState, action = {}) => {
               .setIn(['authError'], action.authError)
               .setIn(['auth'], null)
               .setIn(['profile'], null)
+
+    // case AUTHENTICATION_INIT_STARTED:
+    //   return state.setIn(['isLoading'], true) // state.setIn not a function
+
+    case AUTHENTICATION_INIT_STARTED:
+      return Object.assign({}, state, { isLoading: true })
+
+    case AUTHENTICATION_INIT_FINISHED:
+      return Object.assign({}, state, { isLoading: false })
 
     default:
       return state

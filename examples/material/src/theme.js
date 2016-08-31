@@ -1,6 +1,6 @@
 import {
-  blueGrey100, blueGrey500, blueGrey700,
-  pinkA200, tealA100, lightBlue500,
+  blueGrey100, lightBlue500,
+  pinkA200, tealA100, tealA600, tealA800,
   grey900, white, grey400, darkBlack
 } from 'material-ui/styles/colors'
 import {fade} from 'material-ui/utils/colorManipulator'
@@ -12,8 +12,8 @@ export default {
   zIndex: zIndex,
   fontFamily: 'Roboto, sans-serif',
   palette: {
-    primary1Color: blueGrey500,
-    primary2Color: blueGrey700,
+    primary1Color: tealA600,
+    primary2Color: tealA800,
     primary3Color: blueGrey100,
     accent1Color: pinkA200,
     accent2Color: tealA100,

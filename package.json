@@ -1,6 +1,6 @@
 {
   "name": "redux-firebasev3",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Use Firebase version 3 with Redux",
   "main": "build/index.js",
   "module": "source/index.js",

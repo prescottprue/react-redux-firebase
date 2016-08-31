@@ -21,11 +21,4 @@
 }
 .Navbar-Main-Menu {
   margin-top: 6px;
-  button {
-    span {
-      font-weight: 300;
-      text-decoration: none;
-      color: $navbarText;
-    }
-  }
 }

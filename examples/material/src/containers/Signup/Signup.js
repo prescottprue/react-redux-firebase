@@ -35,6 +35,12 @@ export default class Signup extends Component {
     snackCanOpen: false
   }
 
+  componentWillReceiveProps ({ account }) {
+    if (account && account.username) {
+      this.context.router.push(`/${account.username}`)
+    }
+  }
+
   handleSnackClose = () => {
     this.setState({
       snackCanOpen: false
