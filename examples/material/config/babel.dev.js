@@ -19,7 +19,7 @@ module.exports = {
     require.resolve('babel-plugin-transform-class-properties'),
     // { ...todo, completed: true }
     require.resolve('babel-plugin-transform-object-rest-spread'),
-
+    // @ decorators
     require.resolve('babel-plugin-transform-decorators-legacy'),
 
     // Polyfills the runtime needed for generators

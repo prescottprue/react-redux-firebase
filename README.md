@@ -13,7 +13,7 @@
 
 ## Demo
 
-View deployed version of Simple Example [here](https://redux-firebasev3.firebaseapp.com/)
+View deployed version of Material Example [here](https://redux-firebasev3.firebaseapp.com/)
 
 
 ## Features
