@@ -12,6 +12,13 @@ import { Promise } from 'es6-promise'
 
 const getWatchPath = (event, path) => event + ':' + ((path.substring(0, 1) === '/') ? '' : '/') + path
 
+/**
+ * @description Set a new watcher
+ * @param {Object} firebase - Internal firebase object
+ * @param {String} event - Type of event to watch for
+ * @param {String} path - Path to watch with watcher
+ * @param {String} queryId - Id of query
+ */
 const setWatcher = (firebase, event, path, queryId = undefined) => {
   const id = (queryId) ? event + ':/' + queryId : getWatchPath(event, path)
 
@@ -24,11 +31,22 @@ const setWatcher = (firebase, event, path, queryId = undefined) => {
   return firebase._.watchers[id]
 }
 
+/**
+ * @description Get count of currently attached watchers
+ * @param {Object} firebase - Internal firebase object
+ * @param {String} event - Type of event to watch for
+ * @param {String} path - Path to watch with watcher
+ * @param {String} queryId - Id of query
+ */
 const getWatcherCount = (firebase, event, path, queryId = undefined) => {
   const id = (queryId) ? event + ':/' + queryId : getWatchPath(event, path)
   return firebase._.watchers[id]
 }
 
+/**
+ * @description Get query id from query path
+ * @param {String} path - Path from which to get query id
+ */
 const getQueryIdFromPath = (path) => {
   const origPath = path
   let pathSplitted = path.split('#')
@@ -48,6 +66,13 @@ const getQueryIdFromPath = (path) => {
     : ((isQuery) ? origPath : undefined)
 }
 
+/**
+ * @description Remove/Unset a watcher
+ * @param {Object} firebase - Internal firebase object
+ * @param {String} event - Type of event to watch for
+ * @param {String} path - Path to watch with watcher
+ * @param {String} queryId - Id of query
+ */
 const unsetWatcher = (firebase, event, path, queryId = undefined) => {
   let id = queryId || getQueryIdFromPath(path)
   path = path.split('#')[0]
@@ -66,6 +91,15 @@ const unsetWatcher = (firebase, event, path, queryId = undefined) => {
   }
 }
 
+/**
+ * @description Watch a specific event type
+ * @param {Object} firebase - Internal firebase object
+ * @param {Function} dispatch - Action dispatch function
+ * @param {String} event - Type of event to watch for
+ * @param {String} path - Path to watch with watcher
+ * @param {String} dest
+ * @param {Boolean} onlyLastEvent - Whether or not to listen to only the last event
+ */
 export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent = false) => {
   let isQuery = false
   let queryParams = []
@@ -164,10 +198,10 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
   const runQuery = (q, e, p) => {
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
-      const resultPath = dest || (e === 'value') ? p : p + '/' + snapshot.key()
+      const resultPath = dest || (e === 'value') ? p : p + '/' + snapshot.key
       if (dest && e !== 'child_removed') {
         data = {
-          _id: snapshot.key(),
+          _id: snapshot.key,
           val: snapshot.val()
         }
       }
@@ -183,21 +217,48 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
   runQuery(query, event, path)
 }
 
+/**
+ * @description Remove watcher from an event
+ * @param {Object} firebase - Internal firebase object
+ * @param {String} event - Event for which to remove the watcher
+ * @param {String} path - Path of watcher to remove
+ */
 export const unWatchEvent = (firebase, event, path, queryId = undefined) =>
     unsetWatcher(firebase, event, path, queryId)
 
+/**
+ * @description Add watchers to a list of events
+ * @param {Object} firebase - Internal firebase object
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Array} events - List of events for which to add watchers
+ */
 export const watchEvents = (firebase, dispatch, events) =>
     events.forEach(event => watchEvent(firebase, dispatch, event.name, event.path))
 
+/**
+ * @description Remove watchers from a list of events
+ * @param {Object} firebase - Internal firebase object
+ * @param {Array} events - List of events for which to remove watchers
+ */
 export const unWatchEvents = (firebase, events) =>
     events.forEach(event => unWatchEvent(firebase, event.name, event.path))
 
+/**
+ * @description Dispatch login error action
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} authError - Error object
+ */
 const dispatchLoginError = (dispatch, authError) =>
     dispatch({
       type: LOGIN_ERROR,
       authError
     })
 
+/**
+ * @description Dispatch login action
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} auth - Auth data object
+ */
 const dispatchLogin = (dispatch, auth) =>
     dispatch({
       type: LOGIN,
@@ -205,6 +266,10 @@ const dispatchLogin = (dispatch, auth) =>
       authError: null
     })
 
+/**
+ * @description Remove listener from user profile
+ * @param {Object} firebase - Internal firebase object
+ */
 const unWatchUserProfile = (firebase) => {
   const authUid = firebase._.authUid
   const userProfile = firebase._.config.userProfile
@@ -214,6 +279,11 @@ const unWatchUserProfile = (firebase) => {
   }
 }
 
+/**
+ * @description Watch user profile
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ */
 const watchUserProfile = (dispatch, firebase) => {
   const authUid = firebase._.authUid
   const userProfile = firebase._.config.userProfile
@@ -228,6 +298,15 @@ const watchUserProfile = (dispatch, firebase) => {
   }
 }
 
+/**
+ * @description Get correct login method and params order based on provided credentials
+ * @param {Object} credentials - Login credentials
+ * @param {String} credentials.email - Email to login with (only needed for email login)
+ * @param {String} credentials.password - Password to login with (only needed for email login)
+ * @param {String} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
+ * @param {String} credentials.type - Popup or redirect (only needed for 3rd party provider login)
+ * @param {String} credentials.token - Custom or provider token
+ */
 export const getMethodAndParams = ({email, password, provider, type, token}) => {
   if (provider) {
     if (token) {
@@ -260,22 +339,36 @@ export const getMethodAndParams = ({email, password, provider, type, token}) => 
   }
 }
 
+/**
+ * @description Login with errors dispatched
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} credentials - Login credentials
+ * @param {Object} credentials.email - Email to login with (only needed for email login)
+ * @param {Object} credentials.password - Password to login with (only needed for email login)
+ * @param {Object} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
+ * @param {Object} credentials.type - Popup or redirect (only needed for 3rd party provider login)
+ * @param {Object} credentials.token - Custom or provider token
+ */
 export const login = (dispatch, firebase, credentials) => {
   dispatchLoginError(dispatch, null)
   const { method, params } = getMethodAndParams(credentials)
-  console.log('calling:', { method, params }, firebase.auth()[method], ...params)
-  const auth = firebase.auth()
-  return auth[method](...params)
+  return firebase.auth()[method](...params)
     .catch(err => {
       dispatchLoginError(dispatch, err)
       return Promise.reject(err)
     })
 }
 
+/**
+ * @description Initialize authentication state change listener that
+ * watches user profile and dispatches login action
+ * @param {Function} dispatch - Action dispatch function
+ */
 export const init = (dispatch, firebase) => {
   firebase.auth().onAuthStateChanged(authData => {
     if (!authData) {
-      return dispatch({type: LOGOUT})
+      return dispatch({ type: LOGOUT })
     }
 
     firebase._.authUid = authData.uid
@@ -287,20 +380,34 @@ export const init = (dispatch, firebase) => {
   firebase.auth().currentUser
 }
 
+/**
+ * @description Logout of firebase and dispatch logout event
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ */
 export const logout = (dispatch, firebase) => {
   firebase.auth().signOut()
-  dispatch({type: LOGOUT})
+  dispatch({ type: LOGOUT })
   firebase._.authUid = null
   unWatchUserProfile(firebase)
 }
 
+/**
+ * @description Create a new user in auth and add an account to userProfile root
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} credentials - Login credentials
+ * @return {Promise}
+ */
 export const createUser = (dispatch, firebase, { email, password }, profile) =>
   new Promise((resolve, reject) => {
     dispatchLoginError(dispatch, null)
+
     if (!email || !password) {
       dispatchLoginError(dispatch, new Error('Email and Password are required to create user'))
       return reject('Email and Password are Required')
     }
+
     firebase.auth()
       .createUserWithEmailAndPassword(email, password)
       .then((userData) => {
@@ -315,6 +422,8 @@ export const createUser = (dispatch, firebase, { email, password }, profile) =>
               reject(err)
             })
         }
+
+        // Login to newly created account
         login(dispatch, firebase, { email, password })
           .then(() => resolve(userData.uid))
           .catch(err => {
@@ -327,7 +436,7 @@ export const createUser = (dispatch, firebase, { email, password }, profile) =>
                   dispatchLoginError(dispatch, err)
               }
             }
-            reject(err || new Error('The specified user account does not exist.'))
+            reject(err)
           })
       })
       .catch((err) => {
@@ -336,6 +445,13 @@ export const createUser = (dispatch, firebase, { email, password }, profile) =>
       })
   })
 
+/**
+ * @description Send password reset email to provided email
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {String} email - Email to send recovery email to
+ * @return {Promise}
+ */
 export const resetPassword = (dispatch, firebase, email) => {
   dispatchLoginError(dispatch, null)
   return firebase.auth()
@@ -349,7 +465,7 @@ export const resetPassword = (dispatch, firebase, email) => {
           default:
             dispatchLoginError(dispatch, err)
         }
-        return
+        return Promise.reject(err)
       }
     })
 }
