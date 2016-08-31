@@ -130,14 +130,19 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
 
   if (event === 'first_child') {
     // return
-    return firebase.database().ref().child(path).orderByKey().limitToFirst(1).once('value', snapshot => {
-      if (snapshot.val() === null) {
-        dispatch({
-          type: NO_VALUE,
-          path
-        })
-      }
-    })
+    return firebase.database()
+      .ref()
+      .child(path)
+      .orderByKey()
+      .limitToFirst(1)
+      .once('value', snapshot => {
+        if (snapshot.val() === null) {
+          dispatch({
+            type: NO_VALUE,
+            path
+          })
+        }
+      })
   }
 
   let query = firebase.database().ref().child(path)
@@ -289,12 +294,15 @@ const watchUserProfile = (dispatch, firebase) => {
   const userProfile = firebase._.config.userProfile
   unWatchUserProfile(firebase)
   if (firebase._.config.userProfile) {
-    firebase._.profileWatch = firebase.database().ref().child(`${userProfile}/${authUid}`).on('value', snap => {
-      dispatch({
-        type: SET_PROFILE,
-        profile: snap.val()
+    firebase._.profileWatch = firebase.database()
+      .ref()
+      .child(`${userProfile}/${authUid}`)
+      .on('value', snap => {
+        dispatch({
+          type: SET_PROFILE,
+          profile: snap.val()
+        })
       })
-    })
   }
 }
 
@@ -307,7 +315,7 @@ const watchUserProfile = (dispatch, firebase) => {
  * @param {String} credentials.type - Popup or redirect (only needed for 3rd party provider login)
  * @param {String} credentials.token - Custom or provider token
  */
-export const getMethodAndParams = ({email, password, provider, type, token}) => {
+const getLoginMethodAndParams = ({email, password, provider, type, token}) => {
   if (provider) {
     if (token) {
       return {
@@ -326,7 +334,6 @@ export const getMethodAndParams = ({email, password, provider, type, token}) => 
       params: [ provider ]
     }
   }
-
   if (token) {
     return {
       method: 'signInWithCustomToken',
@@ -352,7 +359,7 @@ export const getMethodAndParams = ({email, password, provider, type, token}) => 
  */
 export const login = (dispatch, firebase, credentials) => {
   dispatchLoginError(dispatch, null)
-  const { method, params } = getMethodAndParams(credentials)
+  const { method, params } = getLoginMethodAndParams(credentials)
   return firebase.auth()[method](...params)
     .catch(err => {
       dispatchLoginError(dispatch, err)
