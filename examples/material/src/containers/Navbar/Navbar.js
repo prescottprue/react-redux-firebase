@@ -9,29 +9,33 @@ import FlatButton from 'material-ui/FlatButton'
 import Avatar from 'material-ui/Avatar'
 
 const stockPhotoUrl = 'https://s3.amazonaws.com/kyper-cdn/img/User.png'
-const originSettings = { horizontal: 'right', vertical: 'top' }
+const originSettings = { horizontal: 'right', vertical: 'bottom' }
 const buttonStyle = { color: 'white' }
 const avatarSize = 50
 
+// redux/firebase
+import { connect } from 'react-redux'
+import { firebase, helpers } from 'redux-firebasev3'
+const { pathToJS } = helpers
+
+@firebase()
+@connect(
+  // Map state to props
+  ({firebase}) => ({
+    authError: pathToJS(firebase, 'authError'),
+    account: pathToJS(firebase, 'profile')
+  })
+)
 export default class Navbar extends Component {
 
   static propTypes = {
     account: PropTypes.object,
-    onMenuClick: PropTypes.func,
-    onLogoutClick: PropTypes.func
+    firebase: PropTypes.object
   }
 
-  selectItem = (item) => {
-    if (item === 'logout' && this.props.onLogoutClick) {
-      return this.props.onLogoutClick()
-    }
-    if (this.props.onMenuClick) {
-      this.props.onMenuClick(item)
-    }
-  }
 
   render () {
-    const { account } = this.props
+    const { account, router } = this.props
 
     const iconButton = (
       <Avatar
@@ -46,12 +50,12 @@ export default class Navbar extends Component {
         <FlatButton
           label='Sign Up'
           style={buttonStyle}
-          onClick={() => this.selectItem('signup')}
+          onClick={() => router.push('/signup')}
         />
         <FlatButton
           label='Login'
           style={buttonStyle}
-          onClick={() => this.selectItem('login')}
+          onClick={() => router.push('/login')}
         />
       </div>
     )
@@ -61,18 +65,23 @@ export default class Navbar extends Component {
         iconButtonElement={iconButton}
         targetOrigin={originSettings}
         anchorOrigin={originSettings}
-        onChange={this.selectItem}
       >
-        <MenuItem primaryText='Account' value='account' />
-        <MenuItem primaryText='About' value='about' />
-        <MenuItem primaryText='Sign out' value='logout' />
+        <MenuItem
+          primaryText='Account'
+          value='account'
+          onClick={() => router.push('/signup')}
+        />
+        <MenuItem
+          primaryText='Sign out'
+          value='logout'
+        />
       </IconMenu>
     ) : mainMenu
 
     return (
       <AppBar
         title={
-          <Link to='/' style={{color: 'white'}}>
+          <Link to='/' style={buttonStyle}>
             redux-firebasev3
           </Link>
         }

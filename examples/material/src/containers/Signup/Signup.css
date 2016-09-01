@@ -44,6 +44,9 @@
    color: $materialBlue;
  }
 }
+.Signup-Providers {
+  margin-top: 2rem;
+}
 .Signup-Progress {
   margin-top: 5rem;
 }

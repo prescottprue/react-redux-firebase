@@ -5,12 +5,15 @@ import {
     LOGIN,
     LOGOUT,
     LOGIN_ERROR,
+    UNAUTHORIZED_ERROR,
     NO_VALUE,
     AUTHENTICATION_INIT_STARTED,
     AUTHENTICATION_INIT_FINISHED
 } from './constants'
 
 import { Promise } from 'es6-promise'
+
+import { capitalize } from 'lodash'
 
 const getWatchPath = (event, path) => event + ':' + ((path.substring(0, 1) === '/') ? '' : '/') + path
 
@@ -262,6 +265,16 @@ const dispatchLoginError = (dispatch, authError) =>
     })
 
 /**
+ * @description Dispatch login error action
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} authError - Error object
+ */
+const dispatchUnauthorizedError = (dispatch, authError) =>
+    dispatch({
+      type: UNAUTHORIZED_ERROR,
+      authError
+    })
+/**
  * @description Dispatch login action
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} auth - Auth data object
@@ -317,7 +330,7 @@ const watchUserProfile = (dispatch, firebase) => {
  * @param {String} credentials.type - Popup or redirect (only needed for 3rd party provider login)
  * @param {String} credentials.token - Custom or provider token
  */
-const getLoginMethodAndParams = ({email, password, provider, type, token}) => {
+const getLoginMethodAndParams = ({email, password, provider, type, token}, firebase) => {
   if (provider) {
     if (token) {
       return {
@@ -325,15 +338,17 @@ const getLoginMethodAndParams = ({email, password, provider, type, token}) => {
         params: [ provider, token ]
       }
     }
+    const authProvider = new firebase.auth[`${capitalize(provider)}AuthProvider`]
+    authProvider.addScope('email')
     if (type === 'popup') {
       return {
         method: 'signInWithPopup',
-        params: [ provider ]
+        params: [ authProvider ]
       }
     }
     return {
       method: 'signInWithRedirect',
-      params: [ provider ]
+      params: [ authProvider ]
     }
   }
   if (token) {
@@ -346,27 +361,6 @@ const getLoginMethodAndParams = ({email, password, provider, type, token}) => {
     method: 'signInWithEmailAndPassword',
     params: [ email, password ]
   }
-}
-
-/**
- * @description Login with errors dispatched
- * @param {Function} dispatch - Action dispatch function
- * @param {Object} firebase - Internal firebase object
- * @param {Object} credentials - Login credentials
- * @param {Object} credentials.email - Email to login with (only needed for email login)
- * @param {Object} credentials.password - Password to login with (only needed for email login)
- * @param {Object} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
- * @param {Object} credentials.type - Popup or redirect (only needed for 3rd party provider login)
- * @param {Object} credentials.token - Custom or provider token
- */
-export const login = (dispatch, firebase, credentials) => {
-  dispatchLoginError(dispatch, null)
-  const { method, params } = getLoginMethodAndParams(credentials)
-  return firebase.auth()[method](...params)
-    .catch(err => {
-      dispatchLoginError(dispatch, err)
-      return Promise.reject(err)
-    })
 }
 
 /**
@@ -392,6 +386,76 @@ export const init = (dispatch, firebase) => {
   firebase.auth().currentUser
 }
 
+export const createUserProfile = (dispatch, firebase, userData, profile) => {
+  // Check for user's profile at userProfile path if provided
+  if (!firebase._.config.userProfile) {
+    return Promise.resolve(userData)
+  }
+  return firebase.database()
+    .ref()
+    .child(`${firebase._.config.userProfile}/${userData.uid}`)
+    .once('value')
+    .then(profileSnap => {
+      // Return Profile if it exists
+      if (profileSnap && profileSnap.val && profileSnap.val() !== null) {
+        return profileSnap.val()
+      }
+      // TODO: Update profile if different then existing
+      // Set profile if one does not already exist
+      return profileSnap.ref.set(profile)
+        .then(() => userData.uid)
+        .catch(err => {
+          // Error setting profile
+          dispatchUnauthorizedError(dispatch, err)
+          return Promise.reject(err)
+        })
+    })
+    .catch(err => {
+      // Error reading user profile
+      dispatchUnauthorizedError(dispatch, err)
+      return Promise.reject(err)
+    })
+}
+
+/**
+ * @description Login with errors dispatched
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} credentials - Login credentials
+ * @param {Object} credentials.email - Email to login with (only needed for email login)
+ * @param {Object} credentials.password - Password to login with (only needed for email login)
+ * @param {Object} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
+ * @param {Object} credentials.type - Popup or redirect (only needed for 3rd party provider login)
+ * @param {Object} credentials.token - Custom or provider token
+ */
+export const login = (dispatch, firebase, credentials) => {
+  dispatchLoginError(dispatch, null)
+  const { method, params } = getLoginMethodAndParams(credentials, firebase)
+  return firebase.auth()[method](...params)
+    .then((userData) => {
+      // For email auth return uid (createUser is used for creating a profile)
+      if (userData.email) return userData.uid
+      // Create profile when logging in with external provider
+      const { user } = userData
+      return createUserProfile(
+        dispatch,
+        firebase,
+        user,
+        Object.assign(
+          {},
+          {
+            email: user.email,
+            providerData: user.providerData
+          }
+        )
+      )
+    })
+    .catch(err => {
+      dispatchLoginError(dispatch, err)
+      return Promise.reject(err)
+    })
+}
+
 /**
  * @description Logout of firebase and dispatch logout event
  * @param {Function} dispatch - Action dispatch function
@@ -411,51 +475,38 @@ export const logout = (dispatch, firebase) => {
  * @param {Object} credentials - Login credentials
  * @return {Promise}
  */
-export const createUser = (dispatch, firebase, { email, password }, profile) =>
-  new Promise((resolve, reject) => {
-    dispatchLoginError(dispatch, null)
+export const createUser = (dispatch, firebase, { email, password }, profile) => {
+  dispatchLoginError(dispatch, null)
 
-    if (!email || !password) {
-      dispatchLoginError(dispatch, new Error('Email and Password are required to create user'))
-      return reject('Email and Password are Required')
-    }
+  if (!email || !password) {
+    dispatchLoginError(dispatch, new Error('Email and Password are required to create user'))
+    return Promise.reject('Email and Password are Required')
+  }
 
-    firebase.auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((userData) => {
-        // Save profile to userProfile path if available
-        if (profile && firebase._.config.userProfile) {
-          firebase.database()
-            .ref()
-            .child(`${firebase._.config.userProfile}/${userData.uid}`)
-            .set(profile)
-            .catch(err => {
-              dispatchLoginError(dispatch, err)
-              reject(err)
-            })
-        }
-
-        // Login to newly created account
-        login(dispatch, firebase, { email, password })
-          .then(() => resolve(userData.uid))
-          .catch(err => {
-            if (err) {
-              switch (err.code) {
-                case 'auth/user-not-found':
-                  dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
-                  break
-                default:
-                  dispatchLoginError(dispatch, err)
-              }
+  return firebase.auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then((userData) => {
+      // Login to newly created account
+      login(dispatch, firebase, { email, password })
+        .then(() => createUserProfile(dispatch, firebase, userData, profile))
+        .catch(err => {
+          if (err) {
+            switch (err.code) {
+              case 'auth/user-not-found':
+                dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
+                break
+              default:
+                dispatchLoginError(dispatch, err)
             }
-            reject(err)
-          })
-      })
-      .catch((err) => {
-        dispatchLoginError(dispatch, err)
-        reject(err)
-      })
-  })
+          }
+          return Promise.reject(err)
+        })
+    })
+    .catch((err) => {
+      dispatchLoginError(dispatch, err)
+      return Promise.reject(err)
+    })
+}
 
 /**
  * @description Send password reset email to provided email

@@ -1,6 +1,6 @@
 {
   "name": "redux-firebasev3",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Use Firebase version 3 with Redux",
   "main": "build/index.js",
   "module": "source/index.js",
@@ -24,8 +24,13 @@
   "contributors": [
     {
       "name": "Prescott Prue",
-      "email": "scott@prue.io",
+      "email": "sprue.dev@gmail.com",
       "url": "https://github.com/prescottprue"
+    },
+    {
+      "name": "Marshall",
+      "email": "mmoutenot@gmail.com",
+      "url": "https://github.com/mmoutenot"
     },
     {
       "name": "Rahav Lussato",

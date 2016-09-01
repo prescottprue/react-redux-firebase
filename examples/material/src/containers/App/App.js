@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
 // Components
-import Navbar from '../../components/Navbar/Navbar'
+import Navbar from '../Navbar/Navbar'
 
-// Styling
+// Themeing/Styling
 import Theme from '../../theme'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import './App.css'
 
 // Tap Plugin
@@ -24,36 +24,19 @@ export default class Main extends Component {
   }
 
   static propTypes = {
-    account: PropTypes.object,
-    children: PropTypes.object,
-    hydrateUser: PropTypes.func,
-    logout: PropTypes.func
+    children: PropTypes.object
   }
 
-  getChildContext = () => {
-    return {
+  getChildContext = () => (
+    {
       muiTheme: getMuiTheme(Theme)
     }
-  }
-
-  handleClick = loc => {
-    this.context.router.push(`/${loc}`)
-  }
-
-  handleLogout = () => {
-    this.props.logout()
-    this.context.router.push('/')
-  }
+  )
 
   render () {
     return (
       <div className='App'>
-        <Navbar
-          account={this.props.account}
-          onNameClick={() => this.context.route.push('/')}
-          onMenuClick={this.handleClick}
-          onLogoutClick={this.handleLogout}
-        />
+        <Navbar router={this.context.router}/>
         {this.props.children}
       </div>
     )

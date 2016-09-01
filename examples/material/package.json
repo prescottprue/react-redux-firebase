@@ -52,6 +52,7 @@
     "material-ui": "^0.15.4",
     "react": "0.14.7",
     "react-dom": "0.14.7",
+    "react-google-button": "^0.1.0",
     "react-redux": "2.1.2",
     "react-router": "2.0.0-rc6",
     "react-router-redux": "3.0.0",

@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
-import { capitalize } from 'lodash'
 
 import './SignupForm.css'
 
@@ -25,50 +24,18 @@ export default class SignupForm extends Component {
       name: null
     })
 
-  /**
-   * @function handleSignup
-   * @description Fire onLoginClick function provided to component when login is clicked
-   */
   handleSignup = e => {
     e.preventDefault()
-    let newAccountData = this.state
-    if (this.requireInputs()) {
-      newAccountData.password = this.password
-      newAccountData.confirm = this.confirm
-      this.props.onSignup(newAccountData)
+    const { username, email, password, errors } = this.state
+    if (!username || !email || !password) {
+      if (!username) errors.username = 'Username Is Required'
+      if (!email) errors.email = 'Username Is Required'
+      if (!password) errors.password = 'Username Is Required'
+      return this.setState({ errors })
     }
+    this.props.onSignup(this.state)
   }
 
-  /**
-   * @function requireInputs
-   * @description Confirm that all required inputs have values
-   * @return {Boolean}
-   */
-  requireInputs = () => {
-    const requiredInputs = [
-      {name: 'username', val: this.state.username},
-      {name: 'email', val: this.state.email},
-      {name: 'name', val: this.state.name},
-      {name: 'password', val: this.password},
-      {name: 'confirm', val: this.confirm}
-    ]
-    const firstError = find(requiredInputs, (input) => {
-      if (!input.val || input.val === '') {
-        return true
-      }
-    })
-    if (firstError) {
-      let errors = {}
-      errors[firstError.name] = `${capitalize(firstError.name)} is required`
-      this.setState({ errors })
-      return false
-    }
-    return true
-  }
-
-  googleSignup = () => {
-    this.props.onSignup({provider: 'google', type: 'popup'})
-  }
 
   render () {
     const { errors } = this.state

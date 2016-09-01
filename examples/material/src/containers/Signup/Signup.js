@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
+import GoogleButton from 'react-google-button'
 
 // Components
 import SignupForm from '../../components/SignupForm/SignupForm'
@@ -31,20 +32,14 @@ export default class Signup extends Component {
   }
 
   state = {
-    errors: { username: null, password: null },
-    snackCanOpen: false
+    snackCanOpen: false,
+    errors: { username: null, password: null }
   }
 
-  componentWillReceiveProps ({ account }) {
+  componentWillReceiveProps ({ account, history }) {
     if (account && account.username) {
-      this.context.router.push(`/${account.username}`)
+      history.push(`/${account.username}`)
     }
-  }
-
-  handleSnackClose = () => {
-    this.setState({
-      snackCanOpen: false
-    })
   }
 
   reset = () =>
@@ -52,17 +47,22 @@ export default class Signup extends Component {
       errors: {},
       username: null,
       email: null,
-      name: null,
-      snackCanOpen: false
+      name: null
     })
 
   handleSignup = ({ email, password, username }) => {
     this.setState({ snackCanOpen: true })
-    this.props.firebase.createUser({ email, password }, { username })
+    this.props.firebase.createUser({ email, password }, { username, email })
+  }
+
+  googleLogin = () => {
+    this.setState({ snackCanOpen: true })
+    this.props.firebase.login({ provider: 'google', type: 'popup' })
   }
 
   render () {
     const { account, authError } = this.props
+    const { snackCanOpen } = this.state
 
     if (account && account.isFetching) {
       return (
@@ -79,20 +79,24 @@ export default class Signup extends Component {
         <Paper className='Signup-Panel'>
           <SignupForm onSignup={this.handleSignup} />
         </Paper>
+        <div className='Signup-Providers'>
+          <GoogleButton onClick={this.googleLogin} />
+        </div>
         <div className='Signup-Login'>
           <span className='Signup-Login-Label'>
             Already have an account?
           </span>
-          <Link className='Signup-Login-Link' to='/login'>Login</Link>
+          <Link className='Signup-Login-Link' to='/login'>
+            Login
+          </Link>
         </div>
         {
-          authError !== null && this.state.snackCanOpen ?
+          authError && authError.message && snackCanOpen ?
             <Snackbar
-              open={authError && this.state.snackCanOpen}
+              open={authError && !!authError.message}
               message={authError ? authError.message : 'Signup error'}
               action='close'
               autoHideDuration={3000}
-              onRequestClose={this.handleSnackClose}
             /> : null
         }
       </div>

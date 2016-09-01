@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
+import GoogleButton from 'react-google-button'
 
 // Components
 import LoginForm from '../../components/LoginForm/LoginForm'
@@ -7,8 +7,11 @@ import Paper from 'material-ui/Paper'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
 
+// Styling
 import './Login.css'
 
+// redux/firebase
+import { connect } from 'react-redux'
 import { firebase, helpers } from 'redux-firebasev3'
 const { pathToJS } = helpers
 
@@ -26,31 +29,26 @@ export default class Login extends Component {
     account: PropTypes.object
   }
 
-  state = {
-    snackCanOpen: false
-  }
-
-  componentWillReceiveProps ({ account }) {
+  componentWillReceiveProps ({ account, history }) {
     if (account && account.username) {
-      this.context.router.push(`/${account.username}`)
+      history.push(`/${account.username}`)
     }
   }
 
-  handleRequestClose = () =>
-    this.setState({
-      snackCanOpen: false
-    })
-
-  handleLogin = loginData => {
-    this.setState({
-      snackCanOpen: true
-    })
+  handleLogin = (loginData) => {
+    this.setState({ snackCanOpen: true })
     this.props.firebase.login(loginData)
+  }
+
+  googleLogin = () => {
+    this.setState({ snackCanOpen: true })
+    this.props.firebase.login({ provider: 'google', type: 'popup' })
   }
 
   render () {
     const { account, authError } = this.props
 
+    // Loading spinner
     if (account && account.isFetching) {
       return (
         <div className='Login'>
@@ -66,13 +64,19 @@ export default class Login extends Component {
         <Paper className='Login-Panel'>
           <LoginForm onLogin={this.handleLogin} />
         </Paper>
+        <div>
+          <span>or</span>
+        </div>
+        <div className='Login-Providers'>
+          <GoogleButton onClick={this.googleLogin} />
+        </div>
         {
           authError && authError.message
           ? <Snackbar
-              open={authError && this.state.snackCanOpen}
+              open={authError && !!authError.message}
               message={authError.message || 'Error'}
               action='close'
-              autoHideDuration={3000}
+              autoHideDuration={4000}
               onRequestClose={this.handleRequestClose}
             />
           : null
