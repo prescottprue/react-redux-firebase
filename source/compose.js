@@ -44,6 +44,9 @@ export default (config, otherConfig) =>
     const push = (path, value, onComplete) =>
       ref.child(path).push(value, onComplete)
 
+    const update = (path, value, onComplete) =>
+      ref.child(path).update(value, onComplete)
+
     const remove = (path, onComplete) =>
       ref.child(path).remove(onComplete)
 
@@ -66,7 +69,7 @@ export default (config, otherConfig) =>
       Actions.resetPassword(dispatch, firebase, credentials)
 
     firebase.helpers = {
-      set, push, remove,
+      set, push, remove, update,
       login, logout,
       createUser, resetPassword,
       watchEvent, unWatchEvent
