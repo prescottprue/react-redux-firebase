@@ -39,9 +39,13 @@ export default (state = initialState, action = {}) => {
         ? state.setIn(['data', ...pathArr], fromJS(data))
         : state.deleteIn(['data', ...pathArr])
 
-      retVal = (snapshot !== undefined)
-        ? retVal.setIn(['snapshot', ...pathArr], fromJS(snapshot))
-        : retVal.deleteIn(['snapshot', ...pathArr])
+      // TODO: Come up with a better way to handle storing snapshot
+      // Catches invalid keyPath error https://github.com/prescottprue/redux-firebasev3/issues/28
+      try {
+        retVal = (snapshot !== undefined)
+          ? retVal.setIn(['snapshot', ...pathArr], fromJS(snapshot))
+          : retVal.deleteIn(['snapshot', ...pathArr])
+      } catch (err) {}
 
       return retVal
 

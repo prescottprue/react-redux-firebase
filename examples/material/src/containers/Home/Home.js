@@ -18,13 +18,21 @@ const { isLoaded, pathToJS, dataToJS } = helpers
   ({firebase}) => ({
     todos: dataToJS(firebase, 'todos'),
     profile: pathToJS(firebase, 'profile'),
-    auth: pathToJS(firebase, 'auth'),
+    auth: pathToJS(firebase, 'auth')
   })
 )
 export default class Home extends Component {
 
   static propTypes = {
-    todos: PropTypes.object
+    todos: PropTypes.object,
+    firebase: PropTypes.shape({
+      set: PropTypes.func.isRequired,
+      remove: PropTypes.func.isRequired
+    }),
+    auth: PropTypes.shape({
+      uid: PropTypes.string
+    }),
+    profile: PropTypes.object
   }
 
   toggleDone = (todo, id) => {
@@ -49,7 +57,7 @@ export default class Home extends Component {
     return (
       <div className="Home">
         <div className="Home-Info">
-          from  
+          from
           <span className="Home-Url">
             <a href="https://redux-firebasev3.firebaseio.com/">
               redux-firebasev3.firebaseio.com

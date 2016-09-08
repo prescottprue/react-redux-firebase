@@ -1,10 +1,11 @@
 import React, { PropTypes, Component } from 'react'
-import logo from './logo.svg';
+import logo from './logo.svg'
 import './App.css'
-import { connect } from 'react-redux'
-import { firebase, helpers } from 'redux-firebasev3'
 import { map } from 'lodash'
 
+// redux/firebase
+import { connect } from 'react-redux'
+import { firebase, helpers } from 'redux-firebasev3'
 const { isLoaded, isEmpty, pathToJS, dataToJS } = helpers
 import TodoItem from './TodoItem'
 
@@ -17,14 +18,17 @@ import TodoItem from './TodoItem'
 )
 export default class App extends Component {
   static propTypes = {
-    todos: PropTypes.object
+    todos: PropTypes.object,
+    firebase: PropTypes.shape({
+      push: PropTypes.func.isRequired
+    })
   }
   render () {
     const { firebase, todos } = this.props
 
     const handleAdd = () => {
-      const {newTodo} = this.refs
-      firebase.push('/todos', { text:newTodo.value, done:false })
+      const { newTodo } = this.refs
+      firebase.push('/todos', { text: newTodo.value, done: false })
       newTodo.value = ''
     }
 
@@ -32,7 +36,9 @@ export default class App extends Component {
                         ? 'Loading'
                         : (isEmpty(todos))
                           ? 'Todo list is emtpy'
-                          : map(todos, (todo, id) => (<TodoItem key={id} id={id} todo={todo}/>))
+                          : map(todos, (todo, id) => (
+                              <TodoItem key={id} id={id} todo={todo} />
+                            ))
     return (
       <div className="App">
         <div className="App-header">

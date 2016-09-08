@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react'
-import {watchEvents, unWatchEvents} from './actions'
+import React, { PropTypes } from 'react'
+import { watchEvents, unWatchEvents } from './actions/query'
 
 const defaultEvent = {
   path: '',

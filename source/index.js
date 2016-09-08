@@ -6,6 +6,7 @@ import * as helpers from './helpers'
 
 module.exports = {
   firebase: connect,
+  firebaseConnect: connect,
   firebaseStateReducer: reducer,
   reduxReactFirebase: compose,
   reduxFirebase: compose,

@@ -20,20 +20,27 @@ const { pathToJS } = helpers
   // Map state to props
   ({firebase}) => ({
     authError: pathToJS(firebase, 'authError'),
-    account: pathToJS(firebase, 'profile')
+    profile: pathToJS(firebase, 'profile')
   })
 )
 export default class Login extends Component {
 
   static propTypes = {
-    account: PropTypes.object
+    profile: PropTypes.object,
+    authError: PropTypes.shape({
+      message: PropTypes.string.isRequired
+    }),
+    firebase: PropTypes.shape({
+      login: PropTypes.func.isRequired
+    })
   }
 
-  componentWillReceiveProps ({ account, history }) {
-    if (account && account.username) {
-      history.push(`/${account.username}`)
-    }
-  }
+  // Redirect when logged in
+  // componentWillReceiveProps ({ profile, history }) {
+  //   if (profile && profile.username) {
+  //     history.push(`/cars`)
+  //   }
+  // }
 
   handleLogin = (loginData) => {
     this.setState({ snackCanOpen: true })
@@ -46,10 +53,10 @@ export default class Login extends Component {
   }
 
   render () {
-    const { account, authError } = this.props
+    const { profile, authError } = this.props
 
     // Loading spinner
-    if (account && account.isFetching) {
+    if (profile && profile.isFetching) {
       return (
         <div className='Login'>
           <div className='Login-Progress'>
