@@ -7,7 +7,7 @@
 [![Code Coverage][coverage-image]][coverage-url]
 [![License][license-image]][license-url]
 [![Code Style][code-style-image]][code-style-url]
-[![Discord][discord-image]][discord-url]
+[![Discord][gitter-image]][gitter-url]
 
 > Use Firebase with React and Redux in ES6
 
@@ -195,7 +195,7 @@ Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [r
 [license-url]: https://github.com/prescottprue/redux-firebasev3/blob/master/LICENSE
 [code-style-image]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
 [code-style-url]: http://standardjs.com/
-[discord-image]: https://img.shields.io/badge/discord-%20redux%20firebase-join.svg?style=flat-square
-[discord-url]: https://discord.gg/aeE6ewN
+[gitter-image]: https://img.shields.io/gitter/room/redux-firebase/gitter.svg?style=flat-square
+[gitter-url]: https://gitter.im/redux-firebase/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link
 [gitter-image]: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
 [gitter-url]: https://gitter.im/prescottprue/redux-firebasev3
