@@ -120,7 +120,7 @@ const getLoginMethodAndParams = ({email, password, provider, type, token}, fireb
         params: [ provider, token ]
       }
     }
-    const authProvider = new firebase.auth[`${capitalize(provider)}AuthProvider`]
+    const authProvider = new firebase.auth[`${capitalize(provider)}AuthProvider`]()
     authProvider.addScope('email')
     if (type === 'popup') {
       return {

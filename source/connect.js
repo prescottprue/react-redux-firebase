@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes, Component } from 'react'
 import { watchEvents, unWatchEvents } from './actions/query'
 
 const defaultEvent = {
@@ -57,7 +57,7 @@ const getEventsFromDefinition = def => flatMap(def.map(path => {
 }))
 
 export default (dataOrFn = []) => WrappedComponent => {
-  class FirebaseConnect extends React.Component {
+  class FirebaseConnect extends Component {
 
     constructor (props, context) {
       super(props, context)

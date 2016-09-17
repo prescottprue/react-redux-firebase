@@ -6,8 +6,8 @@ import { reduxReactFirebase } from 'redux-firebasev3'
 
 export default function configureStore (initialState, history) {
   const createStoreWithMiddleware = compose(
-    reduxReactFirebase(fbConfig, { userProfile: 'users' }),
-    // reduxFirebase(fbConfig, { userProfile: 'users' })  // >= v0.1.1
+    reduxReactFirebase(fbConfig, { userProfile: 'users', enableLogging: false }),
+    // reduxFirebase(fbConfig, { userProfile: 'users', enableLogging: false })  // >= v0.1.1
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
   )(createStore)
   const store = createStoreWithMiddleware(rootReducer)

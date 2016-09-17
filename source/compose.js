@@ -4,7 +4,8 @@ import { authActions, queryActions } from './actions'
 export default (config, otherConfig) =>
   next => (reducer, initialState) => {
     const defaultConfig = {
-      userProfile: null
+      userProfile: null,
+      enableLogging: false
     }
 
     const store = next(reducer, initialState)
@@ -17,15 +18,21 @@ export default (config, otherConfig) =>
     if (!authDomain) throw new Error('Firebase authDomain is required')
     if (!apiKey) throw new Error('Firebase apiKey is required')
 
+    // Combine all configs
+    const configs = Object.assign({}, defaultConfig, config, otherConfig)
+
     // Initialize Firebase
     try {
       Firebase.initializeApp({apiKey, authDomain, databaseURL, storageBucket})
     } catch (err) {}
 
-    const ref = Firebase.database().ref()
+    // TODO: Handle firebasev2 logging
+    // Enable Logging based on config
+    if (configs.enableLogging) {
+      Firebase.database.enableLogging(configs.enableLogging)
+    }
 
-    // Combine all configs
-    const configs = Object.assign({}, defaultConfig, config, otherConfig)
+    const ref = Firebase.database().ref()
 
     const firebase = Object.defineProperty(Firebase, '_', {
       value: {

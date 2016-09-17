@@ -8,7 +8,7 @@ export default function configureStore (initialState, history) {
   const reduxRouterMiddleware = syncHistory(history)
   const createStoreWithMiddleware = compose(
     applyMiddleware(reduxRouterMiddleware),
-    reduxFirebase(fbConfig, { userProfile: 'users' }),
+    reduxFirebase(fbConfig, { userProfile: 'users', enableLogging: false }),
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
   )(createStore)
   const store = createStoreWithMiddleware(rootReducer, initialState)
