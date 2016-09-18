@@ -3,7 +3,8 @@ import { firebase } from 'redux-firebasev3'
 
 import './Todo.css'
 
-class TodoItem extends Component {
+@firebase()
+export default class TodoItem extends Component {
   static propTypes = {
     todo: PropTypes.object,
     id: PropTypes.string
@@ -34,4 +35,3 @@ class TodoItem extends Component {
     )
   }
 }
-export default firebase()(TodoItem)

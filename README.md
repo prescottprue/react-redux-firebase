@@ -7,9 +7,9 @@
 [![Code Coverage][coverage-image]][coverage-url]
 [![License][license-image]][license-url]
 [![Code Style][code-style-image]][code-style-url]
-[![Discord][gitter-image]][gitter-url]
+[![Gitter][gitter-image]][gitter-url]
 
-> Use Firebase with React and Redux in ES6
+> Higher Order Component (HOC) for using Firebase with React and Redux
 
 ## Demo
 
@@ -18,6 +18,7 @@ View deployed version of Material Example [here](https://redux-firebasev3.fireba
 
 ## Features
 - Integrated into redux
+- Firebase v3+ support
 - Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed`
 - queries support ( `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo` right now )
 - Automatic binding/unbinding
@@ -38,7 +39,10 @@ $ npm install --save redux-firebasev3
 Install peer dependencies: `npm i --save redux react-redux`
 
 ### Decorators
-This library is meant to be used with decorators. In order to enable this functionality, you will most likley need to install a plugin (depending on your build setup). For webpack and babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
+
+Though they are optional, it is highly recommended that you used decorators with this library. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
+
+In order to enable this functionality, you will most likely need to install a plugin (depending on your build setup). For Webpack and Babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
 
 1. run `npm i --save-dev babel-plugin-transform-decorators-legacy`
 2. Add the following line to your `.babelrc`:
@@ -47,8 +51,6 @@ This library is meant to be used with decorators. In order to enable this functi
     "plugins": ["transform-decorators-legacy"]
 }
 ```
-
-
 
 ## Use
 
@@ -86,8 +88,13 @@ In components:
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { firebase, helpers } from 'redux-firebasev3'
-
 const { isLoaded, isEmpty, dataToJS } = helpers
+
+// Can be used if firebase is used elsewhere
+// import { firebaseConnect } from 'redux-firebasev3'
+// @firebaseConnect( [
+//   '/todos'
+// ])
 
 @firebase( [
   '/todos'
@@ -137,8 +144,22 @@ class Todos extends Component {
       </div>
     )
   }
-
 }
+export default Todos
+```
+
+Alternatively, if you choose not to use decorators:
+
+```javascript
+
+const wrappedTodos = firebase([
+  '/todos'
+])(Todos)
+export default connect(
+  ({firebase}) => ({
+    todos: dataToJS(firebase, '/todos'),
+  })
+)(wrappedTodos)
 
 ```
 
@@ -149,11 +170,15 @@ See [API Docs](https://prescottprue.gitbooks.io/redux-firebasev3/content/)
 
 #### [Simple Example](examples/simple)
 
-A simple example that is the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command. Shows a list of todo items and allows you to add to them. This is what is deployed to [redux-firebasev3.firebaseapp.com](https://redux-firebasev3.firebaseapp.com/).
+A simple example that was created using [create-react-app](https://github.com/facebookincubator/create-react-app)'s. Shows a list of todo items and allows you to add to them.
+
+#### [Decorators Example](examples/decorators)
+
+The simple example implemented using decorators built from the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command. Shows a list of todo items and allows you to add to them.
 
 #### [Material Example](examples/material)
 
-An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command. Shows a list of todo items and allows you to add to them.
+An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command.  Shows a list of todo items and allows you to add to them. This is what is deployed to [redux-firebasev3.firebaseapp.com](https://redux-firebasev3.firebaseapp.com/).
 
 
 ## Generator
@@ -162,19 +187,16 @@ An example that user Material UI built on top of the output of [create-react-app
 
 
 ## In the future
-- Improved file/folder structure
 - Redux Form Example
-- Rules Error Handling
 - More Unit Tests/Coverage
 - Ideas are welcome :)
-
 
 ## Contributors
 - [Prescott Prue](https://github.com/prescottprue)
 - [Tiberiu Craciun](https://github.com/tiberiuc)
+- [Bojhan](https://github.com/Bojhan)
 - [Rahav Lussto](https://github.com/RahavLussato)
 - [Justin Handley](https://github.com/justinhandley)
-
 
 ## Thanks
 

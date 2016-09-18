@@ -1,14 +1,22 @@
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes, Component } from 'react'
 import logo from './logo.svg'
 import './App.css'
+import { map } from 'lodash'
 import TodoItem from './TodoItem'
 
-//redux/firebase
+// redux/firebase
 import { connect } from 'react-redux'
 import { firebase, helpers } from 'redux-firebasev3'
 const { isLoaded, isEmpty, pathToJS, dataToJS } = helpers
 
-class App extends Component {
+@firebase(['/todos'])
+@connect(
+  ({firebase}) => ({
+    todos: dataToJS(firebase, '/todos'),
+    profile: pathToJS(firebase, 'profile')
+  })
+)
+export default class App extends Component {
   static propTypes = {
     todos: PropTypes.object,
     firebase: PropTypes.shape({
@@ -28,8 +36,8 @@ class App extends Component {
                         ? 'Loading'
                         : (isEmpty(todos))
                           ? 'Todo list is empty'
-                          : Object.keys(todos).map((key) => (
-                              <TodoItem key={key} id={key} todo={todos[key]} />
+                          : map(todos, (todo, id) => (
+                              <TodoItem key={id} id={id} todo={todo} />
                             ))
     return (
       <div className="App">
@@ -56,12 +64,3 @@ class App extends Component {
     )
   }
 }
-const fbWrappedComponent = firebase(['/todos'])(App)
-
-export default connect(
-  ({firebase}) => ({
-    todos: dataToJS(firebase, 'todos'),
-    profile: pathToJS(firebase, 'profile'),
-    auth: pathToJS(firebase, 'auth')
-  })
-)(fbWrappedComponent)
