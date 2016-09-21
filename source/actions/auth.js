@@ -167,14 +167,9 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
     .child(`${firebase._.config.userProfile}/${userData.uid}`)
     .once('value')
     .then(profileSnap => {
-      // Return Profile if it exists
-      if (profileSnap && profileSnap.val && profileSnap.val() !== null) {
-        return profileSnap.val()
-      }
-      // TODO: Update profile if different then existing
-      // Set profile if one does not already exist
-      return profileSnap.ref.set(profile)
-        .then(() => userData.uid)
+      // Update the profile
+      return profileSnap.ref.update(profile)
+        .then(() => profile)
         .catch(err => {
           // Error setting profile
           dispatchUnauthorizedError(dispatch, err)
