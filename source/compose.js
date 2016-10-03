@@ -98,7 +98,8 @@ export default (config, otherConfig) =>
       createUser,
       resetPassword,
       watchEvent,
-      unWatchEvent
+      unWatchEvent,
+      storage: () => Firebase.storage()
     }
 
     authActions.init(dispatch, firebase)

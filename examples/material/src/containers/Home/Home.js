@@ -13,7 +13,10 @@ import Subheader from 'material-ui/Subheader'
 import { firebase, helpers } from 'redux-firebasev3'
 const { isLoaded, pathToJS, dataToJS } = helpers
 
-@firebase(['/todos'])
+@firebase([
+  '/todos'
+  // { type: 'once', path: '/todos' } // for loading once instead of binding
+])
 @connect(
   ({firebase}) => ({
     todos: dataToJS(firebase, 'todos'),

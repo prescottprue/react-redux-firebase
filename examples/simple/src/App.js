@@ -17,7 +17,6 @@ class App extends Component {
   }
   render () {
     const { firebase, todos } = this.props
-
     const handleAdd = () => {
       const { newTodo } = this.refs
       firebase.push('/todos', { text: newTodo.value, done: false })
@@ -56,7 +55,10 @@ class App extends Component {
     )
   }
 }
-const fbWrappedComponent = firebase(['/todos'])(App)
+const fbWrappedComponent = firebase([
+  '/todos',
+  // { type: 'once', path: '/todos' } // for loading once instead of binding
+])(App)
 
 export default connect(
   ({firebase}) => ({

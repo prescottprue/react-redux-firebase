@@ -98,6 +98,7 @@ const { isLoaded, isEmpty, dataToJS } = helpers
 
 @firebase( [
   '/todos'
+  // { type: 'once', path: '/todos' } // for loading once instead of binding
 ])
 @connect(
   ({firebase}) => ({

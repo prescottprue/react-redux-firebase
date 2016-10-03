@@ -1,4 +1,3 @@
-
 import connect from './connect'
 import compose from './compose'
 import reducer from './reducer'
