@@ -6,6 +6,7 @@ import LoginForm from '../../components/LoginForm/LoginForm'
 import Paper from 'material-ui/Paper'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
+import RaisedButton from 'material-ui/RaisedButton'
 
 // Styling
 import './Login.css'
@@ -47,9 +48,9 @@ export default class Login extends Component {
     this.props.firebase.login(loginData)
   }
 
-  googleLogin = () => {
+  providerLogin = (provider) => {
     this.setState({ snackCanOpen: true })
-    this.props.firebase.login({ provider: 'google', type: 'popup' })
+    this.props.firebase.login({ provider, type: 'redirect' })
   }
 
   render () {
@@ -75,7 +76,13 @@ export default class Login extends Component {
           <span>or</span>
         </div>
         <div className='Login-Providers'>
-          <GoogleButton onClick={this.googleLogin} />
+          <GoogleButton onClick={() => this.providerLogin('google')} />
+        </div>
+        <div className='Login-Providers'>
+          <RaisedButton
+            label="Sign in with Github"
+            onClick={() => this.providerLogin('github')}
+          />
         </div>
         {
           authError && authError.message

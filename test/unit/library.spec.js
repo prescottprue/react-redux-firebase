@@ -1,5 +1,5 @@
 /* global describe expect it */
-import src from '../../source'
+import src from '../../src'
 
 describe('redux-firebasev3', () => {
   describe('exports', () => {
@@ -17,6 +17,7 @@ describe('redux-firebasev3', () => {
     })
     it('helpers', () => {
       expect(src).to.have.property('helpers')
+      expect(src.helpers).to.be.an.object
     })
   })
 })

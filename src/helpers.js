@@ -84,4 +84,4 @@ export const isEmpty = data => {
   return !(data && size(data))
 }
 
-export default { pathToJS, dataToJS, snapshotToJS, isLoaded, isEmpty }
+export default { toJS, pathToJS, dataToJS, snapshotToJS, customToJS, isLoaded, isEmpty }

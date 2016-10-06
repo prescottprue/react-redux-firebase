@@ -1,6 +1,7 @@
 # Dependency directory
 node_modules
-build
+examples/**/node_modules
+dist
 coverage
 
 # Logs

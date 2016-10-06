@@ -8,6 +8,7 @@ import SignupForm from '../../components/SignupForm/SignupForm'
 import Paper from 'material-ui/Paper'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
+import RaisedButton from 'material-ui/RaisedButton'
 
 // Styles
 import './Signup.css'
@@ -55,9 +56,10 @@ export default class Signup extends Component {
     this.props.firebase.createUser({ email, password }, { username, email })
   }
 
-  googleLogin = () => {
+  providerLogin = (provider) => {
     this.setState({ snackCanOpen: true })
-    this.props.firebase.login({ provider: 'google', type: 'popup' })
+    // type: 'popup may also be used'
+    this.props.firebase.login({ provider, type: 'redirect' })
   }
 
   render () {
@@ -80,7 +82,13 @@ export default class Signup extends Component {
           <SignupForm onSignup={this.handleSignup} />
         </Paper>
         <div className='Signup-Providers'>
-          <GoogleButton onClick={this.googleLogin} />
+          <GoogleButton onClick={() => this.providerLogin('google')} />
+        </div>
+        <div className='Signup-Providers'>
+          <RaisedButton
+            label="Sign in with Github"
+            onClick={() => this.providerLogin('github')}
+          />
         </div>
         <div className='Signup-Login'>
           <span className='Signup-Login-Label'>

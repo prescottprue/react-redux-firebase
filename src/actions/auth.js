@@ -10,7 +10,7 @@ import {
 
 import { Promise } from 'es6-promise'
 
-import { capitalize, omit } from 'lodash'
+import { capitalize, omit, isArray, isString } from 'lodash'
 import jwtDecode from 'jwt-decode'
 
 const defaultJWTKeys = [
@@ -115,6 +115,18 @@ const watchUserProfile = (dispatch, firebase) => {
   }
 }
 
+const addScopesToProvider = (provider, scopes) => {
+  // TODO: Verify scopes are valid before adding
+  if (isArray(scopes)) {
+    scopes.forEach(scope => {
+      provider.addScope(scope)
+    })
+  }
+  if (isString(scopes)) {
+    provider.addScope(scopes)
+  }
+}
+
 /**
  * @description Get correct login method and params order based on provided credentials
  * @param {Object} credentials - Login credentials
@@ -124,7 +136,7 @@ const watchUserProfile = (dispatch, firebase) => {
  * @param {String} credentials.type - Popup or redirect (only needed for 3rd party provider login)
  * @param {String} credentials.token - Custom or provider token
  */
-const getLoginMethodAndParams = ({email, password, provider, type, token}, firebase) => {
+const getLoginMethodAndParams = ({email, password, provider, type, token, scopes}, firebase) => {
   if (provider) {
     if (token) {
       return {
@@ -132,8 +144,12 @@ const getLoginMethodAndParams = ({email, password, provider, type, token}, fireb
         params: [ provider, token ]
       }
     }
+    console.debug('auth provider: ', `${capitalize(provider)}AuthProvider`)
     const authProvider = new firebase.auth[`${capitalize(provider)}AuthProvider`]()
     authProvider.addScope('email')
+    if (scopes) {
+      addScopesToProvider(authProvider, scopes)
+    }
     if (type === 'popup') {
       return {
         method: 'signInWithPopup',
@@ -196,7 +212,15 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
  */
 export const login = (dispatch, firebase, credentials) => {
   dispatchLoginError(dispatch, null)
-  const { method, params } = getLoginMethodAndParams(credentials, firebase)
+  let { method, params } = getLoginMethodAndParams(credentials, firebase)
+
+  // Handle multiple methods of sign in with redirect
+  if (method === 'signInWithRedirect') {
+    firebase.auth().signInWithRedirect(...params)
+    method = 'getRedirectResult'
+    params = null
+  }
+
   return firebase.auth()[method](...params)
     .then((userData) => {
       // For email auth return uid (createUser is used for creating a profile)
@@ -267,7 +291,7 @@ export const createUser = (dispatch, firebase, { email, password, signIn }, prof
   return firebase.auth()
     .createUserWithEmailAndPassword(email, password)
     .then((userData) =>
-      // Login to newly created account if signIn
+      // Login to newly created account if signIn flag is true
       firebase.auth().currentUser || (!!signIn && signIn === false)
         ? createUserProfile(dispatch, firebase, userData, profile)
         : login(dispatch, firebase, { email, password })

@@ -1,21 +1,21 @@
 {
   "name": "redux-firebasev3",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A Higher Order Component to use Firebase version 3 with Redux",
-  "main": "build/index.js",
-  "module": "source/index.js",
-  "jsnext:main": "source/index.js",
+  "main": "dist/index.js",
+  "module": "src/index.js",
+  "jsnext:main": "src/index.js",
   "files": [
-    "build",
-    "source"
+    "dist",
+    "src"
   ],
   "scripts": {
-    "build": "babel source --out-dir build",
-    "build-dev": "babel source --out-dir build --watch --source-maps inline",
+    "build": "babel src --out-dir dist",
+    "build-dev": "babel src --out-dir dist --watch --src-maps inline",
     "watch": "npm run build -- --watch",
-    "clean": "rimraf build",
+    "clean": "rimraf dist",
     "prepublish": "npm run clean && npm run build",
-    "lint": "eslint source/**",
+    "lint": "eslint src/**",
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha -R spec --compilers js:babel-core/register ./test/setup.js ./test/**/*.spec.js",
     "test:cov": "babel-node $(npm bin)/isparta cover --report lcov ./node_modules/mocha/bin/_mocha -- ./test/** --recursive",
@@ -59,17 +59,18 @@
   "keywords": [
     "firebase",
     "redux",
+    "redux-firebase",
     "react",
     "babel",
     "hoc",
     "higher-order"
   ],
   "dependencies": {
-    "es6-promise": "^4.0.3",
+    "es6-promise": "^4.0.5",
     "firebase": "^3.4.1",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.1.0",
-    "lodash": "^4.16.2"
+    "lodash": "^4.16.3"
   },
   "peerDependencies": {
     "react": "^0.14.6 || ^15.0.0",
@@ -100,7 +101,7 @@
   "npmName": "redux-firebasev3",
   "npmFileMap": [
     {
-      "basePath": "/build/",
+      "basePath": "/dist/",
       "files": [
         "*.js"
       ]
