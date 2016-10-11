@@ -1,7 +1,9 @@
 import {
-    SET,
-    NO_VALUE
+  SET,
+  NO_VALUE
 } from '../constants'
+
+import { map, filter, isString, isObject } from 'lodash'
 
 const getWatchPath = (event, path) =>
   event + ':' + ((path.substring(0, 1) === '/') ? '' : '/') + path
@@ -163,27 +165,27 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
           query = query.orderByChild(param[1])
           break
         case 'limitToFirst':
-          query = query.limitToFirst(parseInt(param[1]))
+          query = query.limitToFirst(parseInt(param[1], 10))
           break
         case 'limitToLast':
-          query = query.limitToLast(parseInt(param[1]))
+          query = query.limitToLast(parseInt(param[1], 10))
           break
         case 'equalTo':
-          let equalToParam = !doNotParse ? parseInt(param[1]) || param[1] : param[1]
+          let equalToParam = !doNotParse ? parseInt(param[1], 10) || param[1] : param[1]
           equalToParam = equalToParam === 'null' ? null : equalToParam
           query = param.length === 3
             ? query.equalTo(equalToParam, param[2])
             : query.equalTo(equalToParam)
           break
         case 'startAt':
-          let startAtParam = !doNotParse ? parseInt(param[1]) || param[1] : param[1]
+          let startAtParam = !doNotParse ? parseInt(param[1], 10) || param[1] : param[1]
           startAtParam = startAtParam === 'null' ? null : startAtParam
           query = param.length === 3
             ? query.startAt(startAtParam, param[2])
             : query.startAt(startAtParam)
           break
         case 'endAt':
-          let endAtParam = !doNotParse ? parseInt(param[1]) || param[1] : param[1]
+          let endAtParam = !doNotParse ? parseInt(param[1], 10) || param[1] : param[1]
           endAtParam = endAtParam === 'null' ? null : endAtParam
           query = param.length === 3
             ? query.endAt(endAtParam, param[2])
@@ -194,35 +196,89 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
       } })
   }
 
-  const runQuery = (q, e, p) => {
-    if (e === 'once') {
-      q.once('value').then(snapshot => {
-        dispatch({
-          type: SET,
-          path: p,
-          data: snapshot.val()
-        })
-      })
-    } else {
-      q.on(e, snapshot => {
-        let data = (e === 'child_removed') ? undefined : snapshot.val()
-        const resultPath = dest || (e === 'value') ? p : p + '/' + snapshot.key
-        if (dest && e !== 'child_removed') {
-          data = {
-            _id: snapshot.key,
-            val: snapshot.val()
-          }
+  const runQuery = (q, e, p, params) => {
+    q.on(e, snapshot => {
+      let data = (e === 'child_removed') ? undefined : snapshot.val()
+      const resultPath = dest || (e === 'value') ? p : p + '/' + snapshot.key
+
+      if (dest && e !== 'child_removed') {
+        data = {
+          _id: snapshot.key,
+          val: snapshot.val()
         }
-        dispatch({
+      }
+
+      const populates = filter(params, (param) => params.indexOf('populate'))
+          .map(p => p.split('=')[1])
+
+      // Dispatch standard if no populates
+      if (!populates || !populates.length) {
+        return dispatch({
           type: SET,
           path: resultPath,
-          data
+          data,
+          snapshot
         })
+      }
+
+      // TODO: Handle object based populates
+      // TODO: Handle multiple populates
+      // Handle First Populate
+      const populate = populates[0]
+      const listToPopulate = snapshot.val()
+      const paramToPopulate = populate.split(':')[0]
+      const populateRoot = populate.split(':')[1]
+      const populateKey = populate.split(':')[2]
+      const listRef = firebase.database().ref().child(populateRoot)
+
+      // Create list of promises (one for each population)
+      const promises = map(listToPopulate, (item, key) => {
+        if (!item[paramToPopulate]) {
+          return Object.assign(item, { _key: key })
+        }
+        return !isString(item[paramToPopulate])
+            // Parameter to be populated is not an id
+            ? Promise.reject(`Population id is not a string.\n Type: ${typeof item[paramToPopulate]}\n Id: ${JSON.stringify(item[paramToPopulate])}`)
+            : listRef.child(item[paramToPopulate])
+                .once('value')
+                .then(snap =>
+                  // Handle population value not existing
+                  !snap.val()
+                    ? item[paramToPopulate]
+                    // Handle population value (object/string)
+                    : isObject(snap.val())
+                      // Handle selecting of a specific value within object
+                      ? (populateKey && snap.val()[populateKey])
+                        // Return value at populate key
+                        ? snap.val()[populateKey]
+                        // Return object with snap and key attached
+                        : Object.assign(
+                            snap.val(),
+                            { _snap: snap, _key: snap.key }
+                          )
+                      // Return value (string, number or bool)
+                      : snap.val()
+
+                )
+                .then((populatedList) => {
+                  const newItem = item
+                  newItem[paramToPopulate] = populatedList
+                  return Object.assign(newItem, { _key: key })
+                })
       })
-    }
+
+      Promise.all(promises)
+        .then((list) => {
+          dispatch({
+            type: SET,
+            path: resultPath,
+            data: list
+          })
+        })
+    })
   }
 
-  runQuery(query, event, path)
+  runQuery(query, event, path, queryParams)
 }
 
 /**

@@ -26,7 +26,6 @@ export default (config, otherConfig) =>
       Firebase.initializeApp({apiKey, authDomain, databaseURL, storageBucket})
     } catch (err) {}
 
-    // TODO: Handle firebasev2 logging
     // Enable Logging based on config
     if (configs.enableLogging) {
       Firebase.database.enableLogging(configs.enableLogging)

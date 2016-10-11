@@ -1,28 +1,15 @@
 import {
-    SET_PROFILE,
-    LOGIN,
-    LOGOUT,
-    LOGIN_ERROR,
-    UNAUTHORIZED_ERROR,
-    AUTHENTICATION_INIT_STARTED,
-    AUTHENTICATION_INIT_FINISHED
+  SET_PROFILE,
+  LOGIN,
+  LOGOUT,
+  LOGIN_ERROR,
+  UNAUTHORIZED_ERROR,
+  AUTHENTICATION_INIT_STARTED,
+  AUTHENTICATION_INIT_FINISHED,
+  defaultJWTKeys
 } from '../constants'
-
-import { Promise } from 'es6-promise'
-
 import { capitalize, omit, isArray, isString } from 'lodash'
 import jwtDecode from 'jwt-decode'
-
-const defaultJWTKeys = [
-  'aud',
-  'auth_time',
-  'exp',
-  'firebase',
-  'iat',
-  'iss',
-  'sub',
-  'user_id'
-]
 
 /**
  * @description Dispatch login error action
@@ -30,10 +17,10 @@ const defaultJWTKeys = [
  * @param {Object} authError - Error object
  */
 const dispatchLoginError = (dispatch, authError) =>
-    dispatch({
-      type: LOGIN_ERROR,
-      authError
-    })
+  dispatch({
+    type: LOGIN_ERROR,
+    authError
+  })
 
 /**
  * @description Dispatch login error action
@@ -41,21 +28,22 @@ const dispatchLoginError = (dispatch, authError) =>
  * @param {Object} authError - Error object
  */
 const dispatchUnauthorizedError = (dispatch, authError) =>
-    dispatch({
-      type: UNAUTHORIZED_ERROR,
-      authError
-    })
+  dispatch({
+    type: UNAUTHORIZED_ERROR,
+    authError
+  })
+
 /**
  * @description Dispatch login action
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} auth - Auth data object
  */
 const dispatchLogin = (dispatch, auth) =>
-    dispatch({
-      type: LOGIN,
-      auth,
-      authError: null
-    })
+  dispatch({
+    type: LOGIN,
+    auth,
+    authError: null
+  })
 
 /**
  * @description Initialize authentication state change listener that
@@ -88,7 +76,10 @@ const unWatchUserProfile = (firebase) => {
   const authUid = firebase._.authUid
   const userProfile = firebase._.config.userProfile
   if (firebase._.profileWatch) {
-    firebase.database().ref().child(`${userProfile}/${authUid}`).off('value', firebase._.profileWatch)
+    firebase.database()
+      .ref()
+      .child(`${userProfile}/${authUid}`)
+      .off('value', firebase._.profileWatch)
     firebase._.profileWatch = null
   }
 }
@@ -144,7 +135,6 @@ const getLoginMethodAndParams = ({email, password, provider, type, token, scopes
         params: [ provider, token ]
       }
     }
-    console.debug('auth provider: ', `${capitalize(provider)}AuthProvider`)
     const authProvider = new firebase.auth[`${capitalize(provider)}AuthProvider`]()
     authProvider.addScope('email')
     if (scopes) {
@@ -173,31 +163,29 @@ const getLoginMethodAndParams = ({email, password, provider, type, token, scopes
   }
 }
 
-export const createUserProfile = (dispatch, firebase, userData, profile) => {
+export const createUserProfile = (dispatch, firebase, userData, profile) =>
   // Check for user's profile at userProfile path if provided
-  if (!firebase._.config.userProfile) {
-    return Promise.resolve(userData)
-  }
-  return firebase.database()
+  !firebase._.config.userProfile
+    ? Promise.resolve(userData)
+    : firebase.database()
     .ref()
     .child(`${firebase._.config.userProfile}/${userData.uid}`)
     .once('value')
-    .then(profileSnap => {
+    .then(profileSnap =>
       // Update the profile
-      return profileSnap.ref.update(profile)
+      profileSnap.ref.update(profile)
         .then(() => profile)
         .catch(err => {
           // Error setting profile
           dispatchUnauthorizedError(dispatch, err)
           return Promise.reject(err)
         })
-    })
+    )
     .catch(err => {
       // Error reading user profile
       dispatchUnauthorizedError(dispatch, err)
       return Promise.reject(err)
     })
-}
 
 /**
  * @description Login with errors dispatched
@@ -214,15 +202,11 @@ export const login = (dispatch, firebase, credentials) => {
   dispatchLoginError(dispatch, null)
   let { method, params } = getLoginMethodAndParams(credentials, firebase)
 
-  // Handle multiple methods of sign in with redirect
-  if (method === 'signInWithRedirect') {
-    firebase.auth().signInWithRedirect(...params)
-    method = 'getRedirectResult'
-    params = null
-  }
-
   return firebase.auth()[method](...params)
     .then((userData) => {
+      // Handle null response from getRedirectResult before redirect has happen
+      if (!userData) return Promise.resolve(null)
+
       // For email auth return uid (createUser is used for creating a profile)
       if (userData.email) return userData.uid
 

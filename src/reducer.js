@@ -1,4 +1,4 @@
-import {fromJS} from 'immutable'
+import { fromJS } from 'immutable'
 import {
   SET,
   SET_PROFILE,
@@ -33,7 +33,6 @@ export default (state = initialState, action = {}) => {
     case SET:
       const { data } = action
       pathArr = pathToArr(path)
-
       retVal = (data !== undefined)
         ? state.setIn(['data', ...pathArr], fromJS(data))
         : state.deleteIn(['data', ...pathArr])

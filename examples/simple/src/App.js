@@ -3,7 +3,7 @@ import logo from './logo.svg'
 import './App.css'
 import TodoItem from './TodoItem'
 
-//redux/firebase
+// redux/firebase
 import { connect } from 'react-redux'
 import { firebase, helpers } from 'redux-firebasev3'
 const { isLoaded, isEmpty, pathToJS, dataToJS } = helpers
@@ -17,6 +17,7 @@ class App extends Component {
   }
   render () {
     const { firebase, todos } = this.props
+
     const handleAdd = () => {
       const { newTodo } = this.refs
       firebase.push('/todos', { text: newTodo.value, done: false })
@@ -28,19 +29,19 @@ class App extends Component {
                         : (isEmpty(todos))
                           ? 'Todo list is empty'
                           : Object.keys(todos).map((key) => (
-                              <TodoItem key={key} id={key} todo={todos[key]} />
-                            ))
+                            <TodoItem key={key} id={key} todo={todos[key]} />
+                          ))
     return (
-      <div className="App">
-        <div className="App-header">
+      <div className='App'>
+        <div className='App-header'>
           <h2>redux-firebasev3 demo</h2>
-          <img src={logo} className="App-logo" alt="logo" />
+          <img src={logo} className='App-logo' alt='logo' />
         </div>
-        <div className="App-todos">
+        <div className='App-todos'>
           <h4>
             Loaded From
-            <span className="App-Url">
-              <a href="https://redux-firebasev3.firebaseio.com/">
+            <span className='App-Url'>
+              <a href='https://redux-firebasev3.firebaseio.com/'>
                 redux-firebasev3.firebaseio.com
               </a>
             </span>
@@ -48,7 +49,7 @@ class App extends Component {
           <h4>Todos List</h4>
           {todosList}
           <h4>New Todo</h4>
-          <input type="text" ref="newTodo" />
+          <input type='text' ref='newTodo' />
           <button onClick={handleAdd}>Add</button>
         </div>
       </div>
@@ -56,8 +57,11 @@ class App extends Component {
   }
 }
 const fbWrappedComponent = firebase([
-  '/todos',
+  '/todos'
   // { type: 'once', path: '/todos' } // for loading once instead of binding
+  // '/todos#populate=owner:displayNames' // for populating owner parameter from id into string loaded from /displayNames root
+  // '/todos#populate=owner:users' // for populating owner parameter from id to user object loaded from /users root
+  // '/todos#populate=owner:users:displayName' // for populating owner parameter from id within to displayName string from user object within users root
 ])(App)
 
 export default connect(

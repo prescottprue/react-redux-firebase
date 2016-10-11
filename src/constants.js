@@ -1,7 +1,17 @@
-
 const prefix = '@@reactReduxFirebase/'
 
-module.exports = {
+export const defaultJWTKeys = [
+  'aud',
+  'auth_time',
+  'exp',
+  'firebase',
+  'iat',
+  'iss',
+  'sub',
+  'user_id'
+]
+
+export const actionTypes = {
   START: `${prefix}START`,
   SET: `${prefix}SET`,
   SET_PROFILE: `${prefix}SET_PROFILE`,
@@ -13,4 +23,14 @@ module.exports = {
   INIT_BY_PATH: `${prefix}INIT_BY_PATH`,
   AUTHENTICATION_INIT_STARTED: `${prefix}AUTHENTICATION_INIT_STARTED`,
   AUTHENTICATION_INIT_FINISHED: `${prefix}AUTHENTICATION_INIT_FINISHED`
+}
+
+export default {
+  defaultJWTKeys,
+  ...actionTypes
+}
+
+module.exports = {
+  defaultJWTKeys,
+  ...actionTypes
 }

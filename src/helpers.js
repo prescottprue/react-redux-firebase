@@ -1,4 +1,4 @@
-import {size, map} from 'lodash'
+import { size, map } from 'lodash'
 
 const fixPath = path => ((path.substring(0, 1) === '/') ? '' : '/') + path
 

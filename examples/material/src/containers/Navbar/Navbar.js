@@ -60,7 +60,7 @@ export default class Navbar extends Component {
       </div>
     )
 
-    const rightMenu = account && account.username ? (
+    const rightMenu = account && account.email ? (
       <IconMenu
         iconButtonElement={iconButton}
         targetOrigin={originSettings}
@@ -69,7 +69,7 @@ export default class Navbar extends Component {
         <MenuItem
           primaryText='Account'
           value='account'
-          onClick={() => router.push('/signup')}
+          onClick={() => router.push('/account')}
         />
         <MenuItem
           primaryText='Sign out'
