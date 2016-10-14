@@ -9,7 +9,7 @@
 [![Code Style][code-style-image]][code-style-url]
 [![Gitter][gitter-image]][gitter-url]
 
-> Higher Order Component (HOC) for using Firebase with React and Redux
+> React bindings for Firebase and Redux Higher Order Component (HOC) for using Firebase with React and Redux
 
 ## Demo
 
@@ -18,18 +18,19 @@ View deployed version of Material Example [here](https://redux-firebasev3.fireba
 
 ## Features
 - Integrated into redux
-- Firebase v3+ support
-- Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed`
+- Population capability (similar to JOIN)
+- Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed` )
 - queries support ( `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo` right now )
 - Automatic binding/unbinding
 - Declarative decorator syntax for React components
-- Support for nested props
+- Firebase v3+ support
+- Support for updating and nested props
 - Out of the box support for authentication (with auto load user profile)
 - Lots of helper functions
 
 ## Install
-```
-$ npm install --save react-redux-firebase
+```bash
+npm install --save react-redux-firebase
 ```
 
 ## Before Use
@@ -41,6 +42,23 @@ Install peer dependencies: `npm i --save redux react-redux`
 ### Decorators
 
 Though they are optional, it is highly recommended that you used decorators with this library. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
+
+A side by side comparison using [react-redux](https://github.com/reactjs/react-redux)'s `connect` function/HOC is the best way to illustrate the difference:
+
+```javascript
+class SomeComponent extends Component {
+
+}
+export default connect()(SomeComponent)
+```
+vs.
+
+```javascript
+@connect()
+export default class SomeComponent extends Component {
+
+}
+```
 
 In order to enable this functionality, you will most likely need to install a plugin (depending on your build setup). For Webpack and Babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
 

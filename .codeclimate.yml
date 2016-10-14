@@ -4,13 +4,8 @@ languages:
 exclude_paths:
 - "lib/**"
 - "test/**"
-- "example/**"
+- "examples/**"
 - "LICENSE"
 - "LICENSE.md"
 - "README.md"
 - "package.json"
-
-engines:
-  duplication:
-    enabled: true
-    exclude_fingerprints:
