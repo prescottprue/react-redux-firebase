@@ -1,4 +1,4 @@
-# redux-firebasev3
+# react-redux-firebase
 
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][npm-downloads-image]][npm-url]
@@ -29,7 +29,7 @@ View deployed version of Material Example [here](https://redux-firebasev3.fireba
 
 ## Install
 ```
-$ npm install --save redux-firebasev3
+$ npm install --save react-redux-firebase
 ```
 
 ## Before Use
@@ -59,7 +59,7 @@ Include reduxFirebase in your store compose function:
 
 ```javascript
 import { createStore, combineReducers, compose } from 'redux'
-import { reduxFirebase, firebaseStateReducer } from 'redux-firebasev3'
+import { reduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
 
 // Add Firebase to reducers
 const rootReducer = combineReducers({
@@ -87,11 +87,11 @@ In components:
 ```javascript
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { firebase, helpers } from 'redux-firebasev3'
+import { firebase, helpers } from 'react-redux-firebase'
 const { isLoaded, isEmpty, dataToJS } = helpers
 
 // Can be used if firebase is used elsewhere
-// import { firebaseConnect } from 'redux-firebasev3'
+// import { firebaseConnect } from 'react-redux-firebase'
 // @firebaseConnect( [
 //   '/todos'
 // ])
@@ -164,8 +164,8 @@ export default connect(
 
 ```
 
-## [API](https://prescottprue.gitbooks.io/redux-firebasev3/content/)
-See [API Docs](https://prescottprue.gitbooks.io/redux-firebasev3/content/)
+## [API](https://prescottprue.gitbooks.io/react-redux-firebase/content/)
+See [API Docs](https://prescottprue.gitbooks.io/react-redux-firebase/content/)
 
 ## [Examples](examples)
 
@@ -179,12 +179,12 @@ The simple example implemented using decorators built from the output of [create
 
 #### [Material Example](examples/material)
 
-An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command.  Shows a list of todo items and allows you to add to them. This is what is deployed to [redux-firebasev3.firebaseapp.com](https://redux-firebasev3.firebaseapp.com/).
+An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command.  Shows a list of todo items and allows you to add to them. This is what is deployed to [react-redux-firebase.firebaseapp.com](https://react-redux-firebase.firebaseapp.com/).
 
 
 ## Generator
 
-[generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) uses redux-firebasev3 when opting to include redux
+[generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) uses react-redux-firebase when opting to include redux
 
 
 ## In the future
@@ -203,22 +203,22 @@ An example that user Material UI built on top of the output of [create-react-app
 
 Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase), which this project is heavily based on.
 
-[npm-image]: https://img.shields.io/npm/v/redux-firebasev3.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/redux-firebasev3
-[npm-downloads-image]: https://img.shields.io/npm/dm/redux-firebasev3.svg?style=flat-square
-[travis-image]: https://img.shields.io/travis/prescottprue/redux-firebasev3/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/prescottprue/redux-firebasev3
-[daviddm-image]: https://img.shields.io/david/prescottprue/redux-firebasev3.svg?style=flat-square
-[daviddm-url]: https://david-dm.org/prescottprue/redux-firebasev3
-[climate-image]: https://img.shields.io/codeclimate/github/prescottprue/redux-firebasev3.svg?style=flat-square
-[climate-url]: https://codeclimate.com/github/prescottprue/redux-firebasev3
-[coverage-image]: https://img.shields.io/codecov/c/github/prescottprue/redux-firebasev3.svg?style=flat-square
-[coverage-url]: https://codecov.io/gh/prescottprue/redux-firebasev3
-[license-image]: https://img.shields.io/npm/l/redux-firebasev3.svg?style=flat-square
-[license-url]: https://github.com/prescottprue/redux-firebasev3/blob/master/LICENSE
+[npm-image]: https://img.shields.io/npm/v/react-redux-firebase.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/react-redux-firebase
+[npm-downloads-image]: https://img.shields.io/npm/dm/react-redux-firebase.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/prescottprue/react-redux-firebase/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/prescottprue/react-redux-firebase
+[daviddm-image]: https://img.shields.io/david/prescottprue/react-redux-firebase.svg?style=flat-square
+[daviddm-url]: https://david-dm.org/prescottprue/react-redux-firebase
+[climate-image]: https://img.shields.io/codeclimate/github/prescottprue/react-redux-firebase.svg?style=flat-square
+[climate-url]: https://codeclimate.com/github/prescottprue/react-redux-firebase
+[coverage-image]: https://img.shields.io/codecov/c/github/prescottprue/react-redux-firebase.svg?style=flat-square
+[coverage-url]: https://codecov.io/gh/prescottprue/react-redux-firebase
+[license-image]: https://img.shields.io/npm/l/react-redux-firebase.svg?style=flat-square
+[license-url]: https://github.com/prescottprue/react-redux-firebase/blob/master/LICENSE
 [code-style-image]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
 [code-style-url]: http://standardjs.com/
 [gitter-image]: https://img.shields.io/gitter/room/redux-firebase/gitter.svg?style=flat-square
 [gitter-url]: https://gitter.im/redux-firebase/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link
 [gitter-image]: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
-[gitter-url]: https://gitter.im/prescottprue/redux-firebasev3
+[gitter-url]: https://gitter.im/prescottprue/react-redux-firebase
