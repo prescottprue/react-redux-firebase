@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { watchEvents, unWatchEvents } from './actions/query'
+import { isEqual } from 'lodash'
 
 const defaultEvent = {
   path: '',
@@ -78,18 +79,34 @@ export default (dataOrFn = []) => WrappedComponent => {
       const { firebase, dispatch } = this.context.store
 
       const linkFn = ensureCallable(dataOrFn)
-      const data = linkFn(this.props, firebase)
+      this.originalData = linkFn(this.props, firebase)
 
       const { ref, helpers, storage, database, auth } = firebase
       this.firebase = { ref, storage, database, auth, ...helpers }
 
-      this._firebaseEvents = getEventsFromDefinition(data)
+      this._firebaseEvents = getEventsFromDefinition(this.originalData)
       watchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
     componentWillUnmount () {
-      const {firebase} = this.context.store
+      const { firebase } = this.context.store
       unWatchEvents(firebase, this._firebaseEvents)
+    }
+
+    componentWillReceiveProps (np) {
+      const { firebase, dispatch } = this.context.store
+      const linkFn = ensureCallable(dataOrFn)
+      const data = linkFn(np, firebase)
+
+      // Handle a data parameter having changed
+      if (!isEqual(data, this.originalData)) {
+        // UnWatch all current events
+        unWatchEvents(firebase, this._firebaseEvents)
+        // Get watch events from new data
+        this._firebaseEvents = getEventsFromDefinition(data)
+        // Watch new events
+        watchEvents(firebase, dispatch, this._firebaseEvents)
+      }
     }
 
     render () {

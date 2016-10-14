@@ -237,6 +237,6 @@ Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [r
 [code-style-image]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
 [code-style-url]: http://standardjs.com/
 [gitter-image]: https://img.shields.io/gitter/room/redux-firebase/gitter.svg?style=flat-square
-[gitter-url]: https://gitter.im/redux-firebase/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link
+[gitter-url]: https://gitter.im/redux-firebase/Lobby
 [gitter-image]: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
 [gitter-url]: https://gitter.im/prescottprue/react-redux-firebase
