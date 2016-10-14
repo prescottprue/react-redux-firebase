@@ -5,7 +5,7 @@ describe('redux-firebasev3', () => {
   describe('exports', () => {
     it('firebase', () => {
       expect(src).to.respondTo('firebase')
-    });
+    })
     it('firebaseStateReducer', () => {
       expect(src).to.respondTo('firebaseStateReducer')
     })

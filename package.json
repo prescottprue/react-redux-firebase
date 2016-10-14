@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0",
   "description": "A Higher Order Component to use Firebase version 3 with Redux",
   "main": "dist/index.js",
   "module": "src/index.js",
