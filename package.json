@@ -68,7 +68,7 @@
     "react-redux-firebase"
   ],
   "dependencies": {
-    "firebase": "^3.4.1",
+    "firebase": "^3.5.0",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.1.0",
     "lodash": "^4.16.4"

@@ -197,6 +197,15 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
   }
 
   const runQuery = (q, e, p, params) => {
+    // Handle once queries
+    if (e === 'once') {
+      return q.once('value')
+        .then(snapshot =>
+          dispatch({ type: SET, path, data: snapshot.val() })
+        )
+    }
+
+    // Handle all other queries
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
       const resultPath = dest || (e === 'value') ? p : p + '/' + snapshot.key
@@ -208,8 +217,10 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
         }
       }
 
-      const populates = filter(params, (param) => params.indexOf('populate'))
-          .map(p => p.split('=')[1])
+      // Get list of populates
+      const populates = filter(params, param =>
+        params.indexOf('populate') !== -1
+      ).map(p => p.split('=')[1])
 
       // Dispatch standard if no populates
       if (!populates || !populates.length) {
