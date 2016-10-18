@@ -1,5 +1,5 @@
 {
-  "name": "redux-firebasev3-decorators-example",
+  "name": "react-redux-firebase-decorators-example",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
@@ -52,7 +52,7 @@
     "react-router": "^2.7.0",
     "react-router-redux": "^4.0.5",
     "redux": "^3.4.0",
-    "redux-firebasev3": "*"
+    "react-redux-firebase": "*"
   },
   "scripts": {
     "start": "node ./scripts/start.js",

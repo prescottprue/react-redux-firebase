@@ -5,7 +5,7 @@ import TodoItem from './TodoItem'
 
 // redux/firebase
 import { connect } from 'react-redux'
-import { firebase, helpers } from 'redux-firebasev3'
+import { firebase, helpers } from 'react-redux-firebase'
 const { isLoaded, isEmpty, pathToJS, dataToJS } = helpers
 
 class App extends Component {
@@ -34,15 +34,15 @@ class App extends Component {
     return (
       <div className='App'>
         <div className='App-header'>
-          <h2>redux-firebasev3 demo</h2>
+          <h2>react-redux-firebase demo</h2>
           <img src={logo} className='App-logo' alt='logo' />
         </div>
         <div className='App-todos'>
           <h4>
             Loaded From
             <span className='App-Url'>
-              <a href='https://redux-firebasev3.firebaseio.com/'>
-                redux-firebasev3.firebaseio.com
+              <a href='https://react-redux-firebase.firebaseio.com/'>
+                react-redux-firebase.firebaseio.com
               </a>
             </span>
           </h4>

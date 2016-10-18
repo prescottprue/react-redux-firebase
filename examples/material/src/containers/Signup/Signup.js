@@ -13,8 +13,8 @@ import RaisedButton from 'material-ui/RaisedButton'
 // Styles
 import './Signup.css'
 
-// redux-firebasev3
-import { firebase, helpers } from 'redux-firebasev3'
+// react-redux-firebase
+import { firebase, helpers } from 'react-redux-firebase'
 const { pathToJS } = helpers
 
 @firebase()

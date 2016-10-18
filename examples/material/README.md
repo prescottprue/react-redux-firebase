@@ -2,7 +2,7 @@
 
 ## Local Development
 
-1. Clone repo: `git@github.com:prescottprue/redux-firebasev3.git`
+1. Clone repo: `git@github.com:prescottprue/react-redux-firebase.git`
 2. Install dependencies: `npm install`
 3. Run dev server `npm start`
 
