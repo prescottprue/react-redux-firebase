@@ -198,7 +198,7 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
 
   const runQuery = (q, e, p, params) => {
     if (e === 'once') {
-      q.once('value').then(snapshot => dispatch({ type: SET, path, data: snapshot.val()}))
+      q.once('value').then(snapshot => dispatch({type: SET, path, data: snapshot.val()}))
       return;
     }
 
