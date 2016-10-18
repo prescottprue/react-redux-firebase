@@ -1,7 +1,7 @@
 /* global describe expect it */
 import src from '../../src'
 
-describe('redux-firebasev3', () => {
+describe('module', () => {
   describe('exports', () => {
     it('firebase', () => {
       expect(src).to.respondTo('firebase')
