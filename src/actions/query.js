@@ -108,7 +108,7 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
     queryParams = pathSplitted[1].split('&')
   }
 
-  const watchPath = (!dest) ? path : path + '@' + dest
+  const watchPath = (!dest) ? path : `${path}@${dest}`
   const counter = getWatcherCount(firebase, event, watchPath, queryId)
 
   if (counter > 0) {
@@ -146,7 +146,7 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
   if (isQuery) {
     let doNotParse = false
 
-    queryParams.forEach((param) => {
+    queryParams.forEach(param => {
       param = param.split('=')
       switch (param[0]) {
         case 'orderByValue':
