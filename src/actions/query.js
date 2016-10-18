@@ -247,9 +247,15 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
         if (!item[paramToPopulate]) {
           return Object.assign(item, { _key: key })
         }
+
+        // TODO: Handle populating a list
         return !isString(item[paramToPopulate])
             // Parameter to be populated is not an id
-            ? Promise.reject(`Population id is not a string.\n Type: ${typeof item[paramToPopulate]}\n Id: ${JSON.stringify(item[paramToPopulate])}`)
+            ? Promise.reject(`
+                Population id is not a string.\n
+                Type: ${typeof item[paramToPopulate]}\n
+                Id: ${JSON.stringify(item[paramToPopulate])}
+              `)
             : listRef.child(item[paramToPopulate])
                 .once('value')
                 .then(snap =>
