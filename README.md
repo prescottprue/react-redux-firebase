@@ -18,15 +18,15 @@ View deployed version of Material Example [here](https://redux-firebasev3.fireba
 
 ## Features
 - Integrated into redux
-- Population capability (similar to JOIN)
+- Support for updating and nested props
+- Population capability (similar to mongoose's `populate` or SQL's `JOIN`)
+- Out of the box support for authentication (with auto load user profile)
+- Firebase Storage Support
 - Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed` )
 - queries support ( `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo` right now )
 - Automatic binding/unbinding
 - Declarative decorator syntax for React components
 - Firebase v3+ support
-- Support for updating and nested props
-- Out of the box support for authentication (with auto load user profile)
-- Lots of helper functions
 
 ## Install
 ```bash
@@ -141,14 +141,14 @@ class Todos extends Component {
 
     // Build Todos list if todos exist and are loaded
     const todosList = !isLoaded(todos)
-                        ? 'Loading'
-                        : isEmpty(todos)
-                          ? 'Todo list is empty'
-                          : Object.keys(todos).map(
-                              (key, id) => (
-                                <TodoItem key={key} id={id} todo={todos[key]}/>
-                              )
-                            )
+      ? 'Loading'
+      : isEmpty(todos)
+        ? 'Todo list is empty'
+        : Object.keys(todos).map(
+            (key, id) => (
+              <TodoItem key={key} id={id} todo={todos[key]}/>
+            )
+          )
 
     return (
       <div>
@@ -204,7 +204,6 @@ An example that user Material UI built on top of the output of [create-react-app
 
 [generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) uses react-redux-firebase when opting to include redux
 
-
 ## In the future
 - Redux Form Example
 - More Unit Tests/Coverage
@@ -238,5 +237,3 @@ Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [r
 [code-style-url]: http://standardjs.com/
 [gitter-image]: https://img.shields.io/gitter/room/redux-firebase/gitter.svg?style=flat-square
 [gitter-url]: https://gitter.im/redux-firebase/Lobby
-[gitter-image]: https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square
-[gitter-url]: https://gitter.im/prescottprue/react-redux-firebase
