@@ -9,8 +9,8 @@ const textFieldStyle = { width: '60%' }
 const buttonStyle = { 'marginTop': '2rem', width: '20%' }
 const defaultUserImageUrl = 'https://s3.amazonaws.com/kyper-cdn/img/User.png'
 
-// redux-firebasev3
-import { firebase, helpers } from 'redux-firebasev3'
+// react-redux-firebase
+import { firebase, helpers } from 'react-redux-firebase'
 const { dataToJS, pathToJS } = helpers
 
 @firebase()

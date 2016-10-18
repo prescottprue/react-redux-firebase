@@ -1,7 +1,7 @@
 import { createStore, compose } from 'redux'
 import rootReducer from './reducer'
 import { firebase as fbConfig } from './config'
-import { reduxFirebase } from 'redux-firebase'
+import { reduxFirebase } from 'react-redux-firebase'
 
 export default function configureStore (initialState, history) {
   const createStoreWithMiddleware = compose(

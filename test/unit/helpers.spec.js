@@ -1,6 +1,7 @@
 /* global describe expect it */
 import helpers from '../../src/helpers'
-const exampleData = { data: { some: 'data' }}
+const exampleData = { data: { some: 'data' } }
+
 describe('helpers', () => {
   it('toJS', () => {
     describe('exists', () => {

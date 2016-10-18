@@ -3,6 +3,7 @@
   "plugins": [
     "es6-promise",
     "add-module-exports",
-    "lodash"
+    "lodash",
+    "transform-decorators-legacy"
   ]
 }

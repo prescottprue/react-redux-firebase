@@ -10,7 +10,7 @@ import { List } from 'material-ui/List'
 import Paper from 'material-ui/Paper'
 import Subheader from 'material-ui/Subheader'
 
-import { firebase, helpers } from 'redux-firebasev3'
+import { firebase, helpers } from 'react-redux-firebase'
 const { isLoaded, pathToJS, dataToJS } = helpers
 
 @firebase([
@@ -73,8 +73,8 @@ export default class Home extends Component {
         <div className='Home-Info'>
           from
           <span className='Home-Url'>
-            <a href='https://redux-firebasev3.firebaseio.com/'>
-              redux-firebasev3.firebaseio.com
+            <a href='https://react-redux-firebase.firebaseio.com/'>
+              react-redux-firebase.firebaseio.com
             </a>
           </span>
         </div>

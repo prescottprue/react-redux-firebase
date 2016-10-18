@@ -15,7 +15,7 @@ const avatarSize = 50
 
 // redux/firebase
 import { connect } from 'react-redux'
-import { firebase, helpers } from 'redux-firebasev3'
+import { firebase, helpers } from 'react-redux-firebase'
 const { pathToJS } = helpers
 
 @firebase()
@@ -82,7 +82,7 @@ export default class Navbar extends Component {
       <AppBar
         title={
           <Link to='/' style={buttonStyle}>
-            redux-firebasev3
+            react-redux-firebase
           </Link>
         }
         className='Navbar'

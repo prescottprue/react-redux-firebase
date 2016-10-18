@@ -1,7 +1,7 @@
 import { createStore, compose } from 'redux'
 import rootReducer from '../reducers'
 import { firebase as fbConfig } from '../config'
-import { reduxReactFirebase } from 'redux-firebasev3' // >= v0.1.0
+import { reduxReactFirebase } from 'react-redux-firebase' // >= v0.1.0
 // import { reduxFirebase } from 'redux-firebase' // >= v0.1.1
 
 export default function configureStore (initialState, history) {

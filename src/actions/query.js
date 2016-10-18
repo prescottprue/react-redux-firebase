@@ -6,7 +6,7 @@ import {
 import { map, filter, isString, isObject } from 'lodash'
 
 const getWatchPath = (event, path) =>
-  event + ':' + ((path.substring(0, 1) === '/') ? '' : '/') + path
+  `${event}:${((path.substring(0, 1) === '/') ? '' : '/')}${path}`
 
 /**
  * @description Set a new watcher
@@ -16,7 +16,7 @@ const getWatchPath = (event, path) =>
  * @param {String} queryId - Id of query
  */
 const setWatcher = (firebase, event, path, queryId = undefined) => {
-  const id = (queryId) ? event + ':/' + queryId : getWatchPath(event, path)
+  const id = queryId ? `${event}:/${queryId}` : getWatchPath(event, path)
 
   if (firebase._.watchers[id]) {
     firebase._.watchers[id]++
@@ -35,7 +35,7 @@ const setWatcher = (firebase, event, path, queryId = undefined) => {
  * @param {String} queryId - Id of query
  */
 const getWatcherCount = (firebase, event, path, queryId = undefined) => {
-  const id = (queryId) ? event + ':/' + queryId : getWatchPath(event, path)
+  const id = queryId ? `${event}:/${queryId}` : getWatchPath(event, path)
   return firebase._.watchers[id]
 }
 
@@ -108,7 +108,7 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
     queryParams = pathSplitted[1].split('&')
   }
 
-  const watchPath = (!dest) ? path : path + '@' + dest
+  const watchPath = !dest ? path : `${path}@${dest}`
   const counter = getWatcherCount(firebase, event, watchPath, queryId)
 
   if (counter > 0) {
@@ -146,7 +146,7 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
   if (isQuery) {
     let doNotParse = false
 
-    queryParams.forEach((param) => {
+    queryParams.forEach(param => {
       param = param.split('=')
       switch (param[0]) {
         case 'orderByValue':
@@ -197,14 +197,18 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
   }
 
   const runQuery = (q, e, p, params) => {
+    // Handle once queries
     if (e === 'once') {
-      q.once('value').then(snapshot => dispatch({type: SET, path, data: snapshot.val()}))
-      return;
+      return q.once('value')
+        .then(snapshot =>
+          dispatch({ type: SET, path, data: snapshot.val() })
+        )
     }
 
+    // Handle all other queries
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
-      const resultPath = dest || (e === 'value') ? p : p + '/' + snapshot.key
+      const resultPath = dest || (e === 'value') ? p : `${p}/${snapshot.key}`
 
       if (dest && e !== 'child_removed') {
         data = {
@@ -213,8 +217,10 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
         }
       }
 
-      const populates = filter(params, (param) => params.indexOf('populate') > -1)
-          .map(p => p.split('=')[1])
+      // Get list of populates
+      const populates = filter(params, param =>
+        params.indexOf('populate') !== -1
+      ).map(p => p.split('=')[1])
 
       // Dispatch standard if no populates
       if (!populates || !populates.length) {
@@ -241,9 +247,15 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
         if (!item[paramToPopulate]) {
           return Object.assign(item, { _key: key })
         }
+
+        // TODO: Handle populating a list
         return !isString(item[paramToPopulate])
             // Parameter to be populated is not an id
-            ? Promise.reject(`Population id is not a string.\n Type: ${typeof item[paramToPopulate]}\n Id: ${JSON.stringify(item[paramToPopulate])}`)
+            ? Promise.reject(`
+                Population id is not a string.\n
+                Type: ${typeof item[paramToPopulate]}\n
+                Id: ${JSON.stringify(item[paramToPopulate])}
+              `)
             : listRef.child(item[paramToPopulate])
                 .once('value')
                 .then(snap =>
@@ -302,7 +314,9 @@ export const unWatchEvent = (firebase, event, path, queryId = undefined) =>
  * @param {Array} events - List of events for which to add watchers
  */
 export const watchEvents = (firebase, dispatch, events) =>
-    events.forEach(event => watchEvent(firebase, dispatch, event.name, event.path))
+    events.forEach(event =>
+      watchEvent(firebase, dispatch, event.name, event.path)
+    )
 
 /**
  * @description Remove watchers from a list of events
@@ -310,6 +324,8 @@ export const watchEvents = (firebase, dispatch, events) =>
  * @param {Array} events - List of events for which to remove watchers
  */
 export const unWatchEvents = (firebase, events) =>
-    events.forEach(event => unWatchEvent(firebase, event.name, event.path))
+    events.forEach(event =>
+      unWatchEvent(firebase, event.name, event.path)
+    )
 
 export default { watchEvents, unWatchEvents }

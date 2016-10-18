@@ -1,5 +1,5 @@
 {
-  "name": "redux-firebasev3-material-example",
+  "name": "react-redux-firebase-material-example",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
@@ -58,7 +58,7 @@
     "react-router-redux": "3.0.0",
     "react-tap-event-plugin": "^1.0.0",
     "redux": "3.4.0",
-    "redux-firebasev3": "*"
+    "react-redux-firebase": "*"
   },
   "scripts": {
     "start": "node ./scripts/start.js",
