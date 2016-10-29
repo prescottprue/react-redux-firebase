@@ -248,6 +248,23 @@ export const addTodo = (newTodo) =>
 
 [generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) uses react-redux-firebase when opting to include redux
 
+## FAQ
+
+1. How is this different than [`redux-react-firebase`](https://github.com/tiberiuc/redux-react-firebase)?
+
+This library was actually originally forked from redux-react-firebase, but adds extended functionality such as:
+* populate functionality
+* profileDecorator - change format of profile stored on Firebase
+* getFirebase - access to firebase that fires actions
+* capability for thunk integration - using `getFirebase` and `thunk.withExtraArgument`
+
+Bottom line: The auth of redux-react-firebase was absent when functionality was needed by me and others, so this library was created.
+
+2. Why use redux if I have Firebase?
+
+This isn't a super quick answer, so I wrote up [a medium article to explain](https://medium.com/@prescottprue/firebase-with-redux-82d04f8675b9)
+
+
 ## Contributors
 - [Prescott Prue](https://github.com/prescottprue)
 - [Tiberiu Craciun](https://github.com/tiberiuc)
