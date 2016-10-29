@@ -172,8 +172,9 @@ export const createUserProfile = (dispatch, firebase, userData, profile) =>
     .child(`${firebase._.config.userProfile}/${userData.uid}`)
     .once('value')
     .then(profileSnap =>
-      // Update the profile
-      profileSnap.ref.update(profile)
+      !firebase._.config.updateProfileOnLogin && profileSnap.val() !== null
+        ? profile
+        : profileSnap.ref.update(profile) // Update the profile
         .then(() => profile)
         .catch(err => {
           // Error setting profile

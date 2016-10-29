@@ -6,7 +6,8 @@ export default (config, otherConfig) => next =>
   (reducer, initialState) => {
     const defaultConfig = {
       userProfile: null,
-      enableLogging: false
+      enableLogging: false,
+      updateProfileOnLogin: true
     }
 
     const store = next(reducer, initialState)
