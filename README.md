@@ -199,15 +199,71 @@ The simple example implemented using decorators built from the output of [create
 
 An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command.  Shows a list of todo items and allows you to add to them. This is what is deployed to [react-redux-firebase.firebaseapp.com](https://react-redux-firebase.firebaseapp.com/).
 
+## Using with `redux-thunk`
+If you user using `redux-thunk`, make sure to set up your thunk middleware using it's redux-thunk's `withExtraArgument` method so that firebase is available within your actions. Here is an example `createStore` function that adds `getFirebase` as third argument along with a thunk that uses it:
+
+createStore:
+
+```javascript
+import { applyMiddleware, compose, createStore } from 'redux';
+import thunk from 'redux-thunk';
+import { reduxReactFirebase } from 'react-redux-firebase';
+import makeRootReducer from './reducers';
+import { getFirebase } from 'react-redux-firebase';
+
+const fbConfig = {} // your firebase config
+
+const store = createStore(
+  makeRootReducer(),
+  initialState,
+  compose(
+    applyMiddleware([
+      thunk.withExtraArgument(getFirebase) // Pass getFirebase function as extra argument
+    ]),
+    reduxReactFirebase(fbConfig, { userProfile: 'users', enableLogging: false })
+  )
+);
+
+```
+Action:
+
+```javascript
+const sendNotification = (payload) => {
+  type: NOTIFICATION,
+  payload
+}
+export const addTodo = (newTodo) =>
+  (dispatch, getState, getFirebase) => {
+    const firebase = getFirebase()
+    firebase
+      .push('todos', newTodo)
+      .then(() => {
+        dispatch(sendNotification('Todo Added'))
+      })
+  };
+
+```
 
 ## Generator
 
 [generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) uses react-redux-firebase when opting to include redux
 
-## In the future
-- Redux Form Example
-- More Unit Tests/Coverage
-- Ideas are welcome :)
+## FAQ
+
+1. How is this different than [`redux-react-firebase`](https://github.com/tiberiuc/redux-react-firebase)?
+
+This library was actually originally forked from redux-react-firebase, but adds extended functionality such as:
+* populate functionality
+* profileDecorator - change format of profile stored on Firebase
+* getFirebase - access to firebase that fires actions
+* capability for thunk integration - using `getFirebase` and `thunk.withExtraArgument`
+
+Bottom line: The auth of redux-react-firebase was absent when functionality was needed by me and others, so this library was created.
+
+2. Why use redux if I have Firebase?
+
+This isn't a super quick answer, so I wrote up [a medium article to explain](https://medium.com/@prescottprue/firebase-with-redux-82d04f8675b9)
+
 
 ## Contributors
 - [Prescott Prue](https://github.com/prescottprue)

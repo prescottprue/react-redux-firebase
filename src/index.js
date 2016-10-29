@@ -1,5 +1,5 @@
 import connect from './connect'
-import compose from './compose'
+import compose, { getFirebase } from './compose'
 import reducer from './reducer'
 import * as helpers from './helpers'
 
@@ -9,5 +9,6 @@ module.exports = {
   firebaseStateReducer: reducer,
   reduxReactFirebase: compose,
   reduxFirebase: compose,
+  getFirebase,
   helpers
 }

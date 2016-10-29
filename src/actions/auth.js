@@ -8,7 +8,7 @@ import {
   AUTHENTICATION_INIT_FINISHED,
   defaultJWTKeys
 } from '../constants'
-import { capitalize, omit, isArray, isString } from 'lodash'
+import { capitalize, omit, isArray, isString, isFunction } from 'lodash'
 import jwtDecode from 'jwt-decode'
 
 /**
@@ -172,8 +172,9 @@ export const createUserProfile = (dispatch, firebase, userData, profile) =>
     .child(`${firebase._.config.userProfile}/${userData.uid}`)
     .once('value')
     .then(profileSnap =>
-      // Update the profile
-      profileSnap.ref.update(profile)
+      !firebase._.config.updateProfileOnLogin && profileSnap.val() !== null
+        ? profile
+        : profileSnap.ref.update(profile) // Update the profile
         .then(() => profile)
         .catch(err => {
           // Error setting profile
@@ -204,11 +205,13 @@ export const login = (dispatch, firebase, credentials) => {
 
   return firebase.auth()[method](...params)
     .then((userData) => {
-      // Handle null response from getRedirectResult before redirect has happen
+      // Handle null response from getRedirectResult before redirect has happened
       if (!userData) return Promise.resolve(null)
 
       // For email auth return uid (createUser is used for creating a profile)
       if (userData.email) return userData.uid
+
+      const { profileDecorator } = firebase._.config
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
       if (method === 'signInWithCustomToken') {
@@ -216,27 +219,40 @@ export const login = (dispatch, firebase, credentials) => {
         const { stsTokenManager: { accessToken }, uid } = userData.toJSON()
         const jwtData = jwtDecode(accessToken)
         const extraJWTData = omit(jwtData, defaultJWTKeys)
+
+        // Handle profile decorator
+        const profileData = profileDecorator && isFunction(profileDecorator)
+          ? profileDecorator(Object.assign(userData.toJSON(), extraJWTData))
+          : extraJWTData
+
         return createUserProfile(
           dispatch,
           firebase,
           { uid },
-          extraJWTData
+          profileData
         )
       }
 
       // Create profile when logging in with external provider
       const { user } = userData
+
+      // Handle profile decorator
+      const profileData = profileDecorator && isFunction(profileDecorator)
+        ? profileDecorator(user)
+        : Object.assign(
+          {},
+          {
+            email: user.email,
+            displayName: user.providerData[0].displayName || user.email,
+            providerData: user.providerData
+          }
+        )
+
       return createUserProfile(
         dispatch,
         firebase,
         user,
-        Object.assign(
-          {},
-          {
-            email: user.email,
-            providerData: user.providerData
-          }
-        )
+        profileData
       )
     })
     .catch(err => {

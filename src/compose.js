@@ -1,11 +1,13 @@
 import Firebase from 'firebase'
 import { authActions, queryActions } from './actions'
+let firebaseInstance
 
-export default (config, otherConfig) =>
-  next => (reducer, initialState) => {
+export default (config, otherConfig) => next =>
+  (reducer, initialState) => {
     const defaultConfig = {
       userProfile: null,
-      enableLogging: false
+      enableLogging: false,
+      updateProfileOnLogin: true
     }
 
     const store = next(reducer, initialState)
@@ -104,6 +106,16 @@ export default (config, otherConfig) =>
     authActions.init(dispatch, firebase)
 
     store.firebase = firebase
+    firebaseInstance = firebase
 
     return store
   }
+
+// Expose Firebase instance
+export const getFirebase = () => {
+  if (!firebaseInstance) {
+    console.error('Firebase instance does not yet exist. Check your compose function.')
+    return null
+  }
+  return firebaseInstance
+}
