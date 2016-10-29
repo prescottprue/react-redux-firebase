@@ -19,13 +19,14 @@ View deployed version of Material Example [here](https://redux-firebasev3.fireba
 ## Features
 - Integrated into redux
 - Support for updating and nested props
-- Population capability (similar to mongoose's `populate` or SQL's `JOIN`)
+- [Population capability](https://prescottprue.gitbooks.io/react-redux-firebase/content/populate.html) (similar to mongoose's `populate` or SQL's `JOIN`)
 - Out of the box support for authentication (with auto load user profile)
 - Firebase Storage Support
 - Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed` )
 - queries support ( `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo` right now )
 - Automatic binding/unbinding
 - Declarative decorator syntax for React components
+- [`redux-thunk`](https://github.com/gaearon/redux-thunk) Integration
 - Firebase v3+ support
 
 ## Install
@@ -207,9 +208,8 @@ createStore:
 ```javascript
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { reduxReactFirebase } from 'react-redux-firebase';
+import { reduxReactFirebase, getFirebase } from 'react-redux-firebase';
 import makeRootReducer from './reducers';
-import { getFirebase } from 'react-redux-firebase';
 
 const fbConfig = {} // your firebase config
 
@@ -252,17 +252,24 @@ export const addTodo = (newTodo) =>
 
 1. How is this different than [`redux-react-firebase`](https://github.com/tiberiuc/redux-react-firebase)?
 
-This library was actually originally forked from redux-react-firebase, but adds extended functionality such as:
-* populate functionality
-* profileDecorator - change format of profile stored on Firebase
-* getFirebase - access to firebase that fires actions
-* capability for thunk integration - using `getFirebase` and `thunk.withExtraArgument`
+  This library was actually originally forked from redux-react-firebase, but adds extended functionality such as:
+  * [populate functionality](https://prescottprue.gitbooks.io/react-redux-firebase/content/populate.html) (similar to mongoDB or SQL JOIN)
+  * [`profileDecorator`](https://prescottprue.gitbooks.io/react-redux-firebase/content/config.html) - change format of profile stored on Firebase
+  * [`getFirebase`](https://prescottprue.gitbooks.io/react-redux-firebase/content/thunks.html) - access to firebase instance that fires actions when methods are called
+  * [capability for thunk integration](https://prescottprue.gitbooks.io/react-redux-firebase/content/thunks.html) - using `getFirebase` and `thunk.withExtraArgument`
+  * [access to firebase's `storage`](https://prescottprue.gitbooks.io/react-redux-firebase/content/storage.html) method
+  * `uniqueSet` method helper for only setting if location doesn't already exist
 
-Bottom line: The auth of redux-react-firebase was absent when functionality was needed by me and others, so this library was created.
+  #### Well why not combine?
+  I am in the process of writing up an article comparing the two, including the difference in defaults/utils. Maybe a section should be included in the docs as well?
 
-2. Why use redux if I have Firebase?
+  Also, I have been talking to the author of redux-react-firebase about combining, but we are not sure that the users of both want that at this point. Join us on [the redux-firebase gitter](https://gitter.im/redux-firebase/Lobby) if you haven't already since a ton of this type of discussion goes on there.
 
-This isn't a super quick answer, so I wrote up [a medium article to explain](https://medium.com/@prescottprue/firebase-with-redux-82d04f8675b9)
+  **Bottom line:** The author of redux-react-firebase was absent when functionality was needed by me and others, so this library was created.
+
+2. Why use redux if I have Firebase to store state?
+
+  This isn't a super quick answer, so I wrote up [a medium article to explain](https://medium.com/@prescottprue/firebase-with-redux-82d04f8675b9)
 
 
 ## Contributors
