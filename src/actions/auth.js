@@ -10,6 +10,7 @@ import {
 } from '../constants'
 import { capitalize, omit, isArray, isString, isFunction } from 'lodash'
 import jwtDecode from 'jwt-decode'
+import { promisesForPopulate } from '../utils'
 
 /**
  * @description Dispatch login error action
@@ -83,29 +84,7 @@ const unWatchUserProfile = (firebase) => {
     firebase._.profileWatch = null
   }
 }
-const promisesForPopulate = (firebase, profile, populateString) => {
-  const paramToPopulate = populateString.split(':')[0]
-  const populateRoot = populateString.split(':')[1]
-  let idList = profile[paramToPopulate]
-  if (isString(profile[paramToPopulate])) {
-    idList = profile[paramToPopulate].split(',')
-  }
-  return Promise.all(
-    idList.map(itemId =>
-      firebase.database()
-       .ref()
-       .child(populateRoot)
-       .child(itemId)
-       .once('value')
-       .then(snap => snap.val() || itemId)
-    )).then(data => {
-      const populatedObj = {}
-      idList.forEach(item => populatedObj)
-      populatedObj[paramToPopulate] = data
-      return populatedObj
-    }
-  )
-}
+
 /**
  * @description Watch user profile
  * @param {Function} dispatch - Action dispatch function
@@ -134,13 +113,21 @@ const watchUserProfile = (dispatch, firebase) => {
             : firebase._.config.profileParamsToPopulate.split(',')
 
           // Convert each populate string in array into an array of once query promises
-          Promise.all(paramsToPopulate.map(p => promisesForPopulate(firebase, snap.val(), p)))
-            .then((data) => {
-              dispatch({
-                type: SET_PROFILE,
-                profile: Object.assign(snap.val(), data.reduce((a, b) => Object.assign(a, b)))
-              })
+          Promise.all(
+            paramsToPopulate.map(p =>
+              promisesForPopulate(firebase, snap.val(), p)
+            )
+          )
+          .then(data => {
+            // Dispatch action with profile combined with populated parameters
+            dispatch({
+              type: SET_PROFILE,
+              profile: Object.assign(
+                snap.val(), // profile
+                data.reduce((a, b) => Object.assign(a, b)) // populated profile parameters
+              )
             })
+          })
         }
       })
   }
@@ -212,8 +199,9 @@ export const createUserProfile = (dispatch, firebase, userData, profile) =>
     .child(`${firebase._.config.userProfile}/${userData.uid}`)
     .once('value')
     .then(profileSnap =>
+      // update profile only if doesn't exist or if set by config
       !firebase._.config.updateProfileOnLogin && profileSnap.val() !== null
-        ? profile
+        ? profileSnap.val()
         : profileSnap.ref.update(profile) // Update the profile
         .then(() => profile)
         .catch(err => {
@@ -312,6 +300,7 @@ export const logout = (dispatch, firebase) => {
   dispatch({ type: LOGOUT })
   firebase._.authUid = null
   unWatchUserProfile(firebase)
+  return Promise.resolve(firebase)
 }
 
 /**
@@ -336,7 +325,7 @@ export const createUser = (dispatch, firebase, { email, password, signIn }, prof
       firebase.auth().currentUser || (!!signIn && signIn === false)
         ? createUserProfile(dispatch, firebase, userData, profile)
         : login(dispatch, firebase, { email, password })
-            .then(() => createUserProfile(dispatch, firebase, userData, profile))
+            .then(() => createUserProfile(dispatch, firebase, userData, profile || { email }))
             .catch(err => {
               if (err) {
                 switch (err.code) {
