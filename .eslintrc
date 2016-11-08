@@ -19,8 +19,5 @@
   },
   "rules": {
     "semi" : [2, "never"],
-    "max-len": "off",
-    "generator-star-spacing": 0,
-    "babel/generator-star-spacing": 1
   }
 }

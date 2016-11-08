@@ -83,7 +83,29 @@ const unWatchUserProfile = (firebase) => {
     firebase._.profileWatch = null
   }
 }
-
+const promisesForPopulate = (firebase, profile, populateString) => {
+  const paramToPopulate = populateString.split(':')[0]
+  const populateRoot = populateString.split(':')[1]
+  let idList = profile[paramToPopulate]
+  if (isString(profile[paramToPopulate])) {
+    idList = profile[paramToPopulate].split(',')
+  }
+  return Promise.all(
+    idList.map(itemId =>
+      firebase.database()
+       .ref()
+       .child(populateRoot)
+       .child(itemId)
+       .once('value')
+       .then(snap => snap.val() || itemId)
+    )).then(data => {
+      const populatedObj = {}
+      idList.forEach(item => populatedObj)
+      populatedObj[paramToPopulate] = data
+      return populatedObj
+    }
+  )
+}
 /**
  * @description Watch user profile
  * @param {Function} dispatch - Action dispatch function
@@ -93,15 +115,33 @@ const watchUserProfile = (dispatch, firebase) => {
   const authUid = firebase._.authUid
   const userProfile = firebase._.config.userProfile
   unWatchUserProfile(firebase)
+
   if (firebase._.config.userProfile) {
     firebase._.profileWatch = firebase.database()
       .ref()
       .child(`${userProfile}/${authUid}`)
       .on('value', snap => {
-        dispatch({
-          type: SET_PROFILE,
-          profile: snap.val()
-        })
+        const { profileParamsToPopulate } = firebase._.config
+        if (!profileParamsToPopulate || (!isArray(profileParamsToPopulate) && !isString(profileParamsToPopulate))) {
+          dispatch({
+            type: SET_PROFILE,
+            profile: snap.val()
+          })
+        } else {
+          // Handle string and array for profileParamsToPopulate config option
+          const paramsToPopulate = isArray(firebase._.config.profileParamsToPopulate)
+            ? firebase._.config.profileParamsToPopulate
+            : firebase._.config.profileParamsToPopulate.split(',')
+
+          // Convert each populate string in array into an array of once query promises
+          Promise.all(paramsToPopulate.map(p => promisesForPopulate(firebase, snap.val(), p)))
+            .then((data) => {
+              dispatch({
+                type: SET_PROFILE,
+                profile: Object.assign(snap.val(), data.reduce((a, b) => Object.assign(a, b)))
+              })
+            })
+        }
       })
   }
 }
@@ -244,6 +284,7 @@ export const login = (dispatch, firebase, credentials) => {
           {
             email: user.email,
             displayName: user.providerData[0].displayName || user.email,
+            avatarUrl: user.providerData[0].photoURL,
             providerData: user.providerData
           }
         )
