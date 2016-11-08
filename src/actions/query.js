@@ -219,7 +219,7 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
 
       // Get list of populates
       const populates = filter(params, param =>
-        params.indexOf('populate') !== -1
+        param.indexOf('populate') !== -1
       ).map(p => p.split('=')[1])
 
       // Dispatch standard if no populates
