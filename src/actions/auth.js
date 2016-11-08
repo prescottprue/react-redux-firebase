@@ -10,6 +10,7 @@ import {
 } from '../constants'
 import { capitalize, omit, isArray, isString, isFunction } from 'lodash'
 import jwtDecode from 'jwt-decode'
+import { promisesForPopulate } from '../utils'
 
 /**
  * @description Dispatch login error action
@@ -93,15 +94,41 @@ const watchUserProfile = (dispatch, firebase) => {
   const authUid = firebase._.authUid
   const userProfile = firebase._.config.userProfile
   unWatchUserProfile(firebase)
+
   if (firebase._.config.userProfile) {
     firebase._.profileWatch = firebase.database()
       .ref()
       .child(`${userProfile}/${authUid}`)
       .on('value', snap => {
-        dispatch({
-          type: SET_PROFILE,
-          profile: snap.val()
-        })
+        const { profileParamsToPopulate } = firebase._.config
+        if (!profileParamsToPopulate || (!isArray(profileParamsToPopulate) && !isString(profileParamsToPopulate))) {
+          dispatch({
+            type: SET_PROFILE,
+            profile: snap.val()
+          })
+        } else {
+          // Handle string and array for profileParamsToPopulate config option
+          const paramsToPopulate = isArray(firebase._.config.profileParamsToPopulate)
+            ? firebase._.config.profileParamsToPopulate
+            : firebase._.config.profileParamsToPopulate.split(',')
+
+          // Convert each populate string in array into an array of once query promises
+          Promise.all(
+            paramsToPopulate.map(p =>
+              promisesForPopulate(firebase, snap.val(), p)
+            )
+          )
+          .then(data => {
+            // Dispatch action with profile combined with populated parameters
+            dispatch({
+              type: SET_PROFILE,
+              profile: Object.assign(
+                snap.val(), // profile
+                data.reduce((a, b) => Object.assign(a, b)) // populated profile parameters
+              )
+            })
+          })
+        }
       })
   }
 }
@@ -172,8 +199,9 @@ export const createUserProfile = (dispatch, firebase, userData, profile) =>
     .child(`${firebase._.config.userProfile}/${userData.uid}`)
     .once('value')
     .then(profileSnap =>
+      // update profile only if doesn't exist or if set by config
       !firebase._.config.updateProfileOnLogin && profileSnap.val() !== null
-        ? profile
+        ? profileSnap.val()
         : profileSnap.ref.update(profile) // Update the profile
         .then(() => profile)
         .catch(err => {
@@ -244,6 +272,7 @@ export const login = (dispatch, firebase, credentials) => {
           {
             email: user.email,
             displayName: user.providerData[0].displayName || user.email,
+            avatarUrl: user.providerData[0].photoURL,
             providerData: user.providerData
           }
         )
@@ -271,6 +300,7 @@ export const logout = (dispatch, firebase) => {
   dispatch({ type: LOGOUT })
   firebase._.authUid = null
   unWatchUserProfile(firebase)
+  return Promise.resolve(firebase)
 }
 
 /**
@@ -295,7 +325,7 @@ export const createUser = (dispatch, firebase, { email, password, signIn }, prof
       firebase.auth().currentUser || (!!signIn && signIn === false)
         ? createUserProfile(dispatch, firebase, userData, profile)
         : login(dispatch, firebase, { email, password })
-            .then(() => createUserProfile(dispatch, firebase, userData, profile))
+            .then(() => createUserProfile(dispatch, firebase, userData, profile || { email }))
             .catch(err => {
               if (err) {
                 switch (err.code) {
