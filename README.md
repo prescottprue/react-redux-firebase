@@ -9,7 +9,7 @@
 [![Code Style][code-style-image]][code-style-url]
 [![Gitter][gitter-image]][gitter-url]
 
-> React bindings for Firebase and Redux Higher Order Component (HOC) for using Firebase with React and Redux
+> Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 
 ## Demo
 
