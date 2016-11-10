@@ -108,9 +108,9 @@ const watchUserProfile = (dispatch, firebase) => {
           })
         } else {
           // Handle string and array for profileParamsToPopulate config option
-          const paramsToPopulate = isArray(firebase._.config.profileParamsToPopulate)
-            ? firebase._.config.profileParamsToPopulate
-            : firebase._.config.profileParamsToPopulate.split(',')
+          const paramsToPopulate = isArray(profileParamsToPopulate)
+            ? profileParamsToPopulate
+            : profileParamsToPopulate.split(',')
 
           // Convert each populate string in array into an array of once query promises
           Promise.all(

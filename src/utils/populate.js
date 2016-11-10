@@ -1,6 +1,6 @@
-import { filter } from 'lodash'
+import { filter, isString } from 'lodash'
 
-export const getPopulateObject = (str) => {
+export const getQueryObject = (str) => {
   let pathArray = str.split('#')
   const path = pathArray[0]
   const params = pathArray[1].split('&')
@@ -15,4 +15,35 @@ export const getPopulateObject = (str) => {
   // { path: '', populates: [ { child: '', root: '' } ] }
 }
 
-export default { getPopulateObject }
+/**
+ * @description Create an array of promises for population
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} originalObj - Object to have parameter populated
+ * @param {Object} populateString - String containg population data
+ */
+export const promisesForPopulate = (firebase, originalObj, populateString) => {
+  const paramToPopulate = populateString.split(':')[0]
+  const populateRoot = populateString.split(':')[1]
+  let idList = originalObj[paramToPopulate]
+  // Handle string list for population
+  if (isString(originalObj[paramToPopulate])) {
+    idList = originalObj[paramToPopulate].split(',')
+  }
+  return Promise.all(
+    idList.map(itemId =>
+      firebase.database()
+       .ref()
+       .child(populateRoot)
+       .child(itemId)
+       .once('value')
+       .then(snap => snap.val() || itemId)
+    )).then(data => {
+      const populatedObj = {}
+      idList.forEach(item => populatedObj)
+      populatedObj[paramToPopulate] = data
+      return populatedObj
+    }
+  )
+}
+
+export default { getQueryObject, promisesForPopulate }

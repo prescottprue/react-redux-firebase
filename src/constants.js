@@ -25,12 +25,19 @@ export const actionTypes = {
   AUTHENTICATION_INIT_FINISHED: `${prefix}AUTHENTICATION_INIT_FINISHED`
 }
 
+const defaultEvent = {
+  path: '',
+  type: 'value'
+}
+
 export default {
   defaultJWTKeys,
+  defaultEvent,
   ...actionTypes
 }
 
 module.exports = {
   defaultJWTKeys,
+  defaultEvent,
   ...actionTypes
 }
