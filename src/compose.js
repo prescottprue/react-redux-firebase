@@ -113,6 +113,7 @@ export default (config, otherConfig) => next =>
 
 // Expose Firebase instance
 export const getFirebase = () => {
+  // TODO: Handle recieveing config and creating firebase instance if it doesn't exist
   if (!firebaseInstance) {
     console.error('Firebase instance does not yet exist. Check your compose function.')
     return null
