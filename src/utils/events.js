@@ -9,13 +9,13 @@ import { getPopulates } from './populate'
 export const getEventsFromInput = paths =>
   flatMap(paths, (path) => {
     if (isString(path)) {
-      console.log('is string', path)
       const pathObj = { path, type: 'value' }
       if (getPopulates(path)) {
         pathObj.populates = getPopulates(path)
       }
       return [ pathObj ]
     }
+
     if (isArray(path)) {
       // TODO: Handle input other than array with string
       // TODO: Handle populates within array
@@ -27,10 +27,12 @@ export const getEventsFromInput = paths =>
         { type: 'child_changed', path: path[0] }
       ]
     }
+
     if (isObject(path)) {
       // TODO: Check for type/name and path
       return [ path ]
     }
+
     throw new Error(`Invalid Path Definition: ${path}. Only strings, objects, and arrays accepted.`)
   })
 

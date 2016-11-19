@@ -27,7 +27,7 @@ export default (dataOrFn = []) => WrappedComponent => {
       this.firebase = { ref, storage, database, auth, ...helpers }
 
       this._firebaseEvents = getEventsFromInput(this.originalData)
-      console.log('firebase events', this._firebaseEvents)
+
       watchEvents(firebase, dispatch, this._firebaseEvents)
     }
 

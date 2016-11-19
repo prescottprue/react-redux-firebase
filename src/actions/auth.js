@@ -81,7 +81,7 @@ export const init = (dispatch, firebase) => {
  * @description Remove listener from user profile
  * @param {Object} firebase - Internal firebase object
  */
-const unWatchUserProfile = (firebase) => {
+export const unWatchUserProfile = (firebase) => {
   const authUid = firebase._.authUid
   const userProfile = firebase._.config.userProfile
   if (firebase._.profileWatch) {
@@ -162,7 +162,7 @@ const addScopesToProvider = (provider, scopes) => {
  * @param {String} credentials.type - Popup or redirect (only needed for 3rd party provider login)
  * @param {String} credentials.token - Custom or provider token
  */
-const getLoginMethodAndParams = ({email, password, provider, type, token, scopes}, firebase) => {
+export const getLoginMethodAndParams = ({email, password, provider, type, token, scopes}, firebase) => {
   if (provider) {
     if (token) {
       return {

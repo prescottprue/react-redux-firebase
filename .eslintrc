@@ -19,5 +19,6 @@
   },
   "rules": {
     "semi" : [2, "never"],
+    "no-console": "error"
   }
 }

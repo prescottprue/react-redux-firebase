@@ -54,7 +54,6 @@ const getQueryIdFromPath = (path) => {
       return splittedParam[1]
     }
   }).filter(q => q) : undefined
-
   return (queryId && queryId.length > 0)
     ? queryId[0]
     : ((isQuery) ? origPath : undefined)
@@ -97,7 +96,7 @@ const unsetWatcher = (firebase, event, path, queryId = undefined) => {
 export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent = false) => {
   let isQuery = false
   let queryParams = []
-  let queryId = getQueryIdFromPath(path)
+  let queryId = getQueryIdFromPath(path) // undefined if not a query
 
   if (queryId) {
     let pathSplitted = path.split('#')
@@ -191,7 +190,8 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
           break
         default:
           break
-      } })
+      }
+    })
   }
 
   const runQuery = (q, e, p, params) => {

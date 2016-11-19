@@ -1,4 +1,4 @@
-import { filter, isString } from 'lodash'
+import { filter, isString, isObject } from 'lodash'
 
 export const getPopulateObj = (str) => {
   // TODO: Handle already object
@@ -12,6 +12,9 @@ export const getPopulateObj = (str) => {
  * @param {String} pathString - Internal firebase object
  */
 export const getPopulates = (str) => {
+  if (isObject(str) && str.populates) {
+    return str.populates
+  }
   const pathArray = str.split('#')
   // No Param Values after #
   if (!pathArray[1]) {
