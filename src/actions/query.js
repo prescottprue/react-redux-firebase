@@ -315,7 +315,7 @@ export const unWatchEvent = (firebase, event, path, queryId = undefined) =>
  */
 export const watchEvents = (firebase, dispatch, events) =>
     events.forEach(event =>
-      watchEvent(firebase, dispatch, event.name, event.path)
+      watchEvent(firebase, dispatch, event.type, event.path)
     )
 
 /**
@@ -325,7 +325,7 @@ export const watchEvents = (firebase, dispatch, events) =>
  */
 export const unWatchEvents = (firebase, events) =>
     events.forEach(event =>
-      unWatchEvent(firebase, event.name, event.path)
+      unWatchEvent(firebase, event.type, event.path)
     )
 
 export default { watchEvents, unWatchEvents }

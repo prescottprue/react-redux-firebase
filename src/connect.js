@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { isEqual } from 'lodash'
 import { watchEvents, unWatchEvents } from './actions/query'
-import { getEventsFromDefinition, createCallable } from './utils'
+import { getEventsFromInput, createCallable } from './utils'
 
 export default (dataOrFn = []) => WrappedComponent => {
   class FirebaseConnect extends Component {
@@ -19,13 +19,15 @@ export default (dataOrFn = []) => WrappedComponent => {
     componentWillMount () {
       const { firebase, dispatch } = this.context.store
 
-      const linkFn = createCallable(dataOrFn)
-      this.originalData = linkFn(this.props, firebase)
+      // Allow function to be passed
+      const inputAsFunc = createCallable(dataOrFn)
+      this.originalData = inputAsFunc(this.props, firebase)
 
       const { ref, helpers, storage, database, auth } = firebase
       this.firebase = { ref, storage, database, auth, ...helpers }
 
-      this._firebaseEvents = getEventsFromDefinition(this.originalData)
+      this._firebaseEvents = getEventsFromInput(this.originalData)
+      console.log('firebase events', this._firebaseEvents)
       watchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
@@ -36,15 +38,15 @@ export default (dataOrFn = []) => WrappedComponent => {
 
     componentWillReceiveProps (np) {
       const { firebase, dispatch } = this.context.store
-      const linkFn = createCallable(dataOrFn)
-      const data = linkFn(np, firebase)
+      const inputAsFunc = createCallable(dataOrFn)
+      const data = inputAsFunc(np, firebase)
 
       // Handle a data parameter having changed
       if (!isEqual(data, this.originalData)) {
         // UnWatch all current events
         unWatchEvents(firebase, this._firebaseEvents)
         // Get watch events from new data
-        this._firebaseEvents = getEventsFromDefinition(data)
+        this._firebaseEvents = getEventsFromInput(data)
         // Watch new events
         watchEvents(firebase, dispatch, this._firebaseEvents)
       }
