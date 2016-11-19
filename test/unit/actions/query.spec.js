@@ -105,7 +105,7 @@ describe('query actions', () => {
       expect(watchEvents).to.be.a.function
     })
     it('runs given basic params', () => {
-      watchEvents(firebase, () => {}, [{name: 'once', path: 'test'}])
+      watchEvents(firebase, () => {}, [{type: 'once', path: 'test'}])
     })
   })
   describe('unWatchEvents', () => {
@@ -113,7 +113,7 @@ describe('query actions', () => {
       expect(unWatchEvents).to.be.a.function
     })
     it('runs given basic params', () => {
-      unWatchEvents(firebase, [{name: 'value', path: 'test'}])
+      unWatchEvents(firebase, [{type: 'value', path: 'test'}])
     })
   })
 })

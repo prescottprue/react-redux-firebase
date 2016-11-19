@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable'
-import {
+import { actionTypes } from './constants'
+const {
   SET,
   SET_PROFILE,
   LOGIN,
@@ -9,7 +10,7 @@ import {
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
   UNAUTHORIZED_ERROR
-} from './constants'
+} = actionTypes
 
 const emptyState = {
   auth: undefined,

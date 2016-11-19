@@ -14,7 +14,7 @@
     "lint": "eslint src/**",
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha -R spec --compilers js:babel-core/register ./test/setup.js ./test/**/*.spec.js",
-    "test:cov": "babel-node $(npm bin)/isparta cover --report lcov ./node_modules/mocha/bin/_mocha -- ./test/** --recursive",
+    "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./test/** --report lcov --recursive --compilers js:babel-register --require babel-polyfill",
     "codecov": "cat coverage/*/lcov.info | codecov",
     "prepush": "npm run lint:fix"
   },
@@ -70,6 +70,7 @@
     "eslint-plugin-react": "^6.4.1",
     "eslint-plugin-standard": "^2.0.1",
     "isparta": "^4.0.0",
+    "istanbul": "^1.1.0-alpha.1",
     "jsdom": "^9.8.3",
     "mocha": "^3.1.2",
     "react-addons-test-utils": "^15.3.2",
