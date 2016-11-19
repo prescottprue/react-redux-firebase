@@ -9,6 +9,11 @@ import { getEventsFromDefinition } from './events'
 export const createCallable = f =>
   isFunction(f) ? f : () => f
 
+export {
+  promisesForPopulate,
+  getEventsFromDefinition
+}
+
 export default {
   createCallable,
   promisesForPopulate,

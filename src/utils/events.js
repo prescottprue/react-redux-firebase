@@ -1,34 +1,45 @@
 import { filter, flatMap } from 'lodash'
 import { defaultEvent } from '../constants'
 
+export const getPopulateObj = (str) => {
+  // console.log('getPopulateObj', str)
+  const strArray = str.split(':')
+  // TODO: Handle already object
+  return { child: strArray[0], root: strArray[1] }
+}
+
 /**
  * @description Create an array of promises for population
  * @param {Object} firebase - Internal firebase object
  * @param {Object} originalObj - Object to have parameter populated
  * @param {Object} populateString - String containg population data
  */
-export const getQueryObject = (str) => {
-  let pathArray = str.split('#')
-  const path = pathArray[0]
+export const getPopulates = (str) => {
+  const pathArray = str.split('#')
+  if (!pathArray[1]) {
+    return {}
+  }
   const params = pathArray[1].split('&')
-  console.log('path, params', { path, params })
   // Get list of populates
   const populates = filter(params, param =>
     param.indexOf('populate') !== -1
   ).map(p => p.split('=')[1])
-  console.log('populates', { path, populates })
-  return { path, populates }
+  return populates.map(getPopulateObj)
 }
 
 const transformEvent = event => Object.assign({}, defaultEvent, event)
 
-const createEvents = ({type, path}) => {
+const createEvents = ({type, path, populates}) => {
+  if (!populates) {
+    populates = getPopulates(path)
+  }
+  // console.log('create events:', { type, path, populates })
   switch (type) {
     case 'once':
-      return [{name: 'once', path}]
+      return [{name: 'once', path, populates}]
 
     case 'value':
-      return [{name: 'value', path}]
+      return [{name: 'value', path, populates}]
 
     case 'all':
       return [
