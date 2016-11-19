@@ -1,9 +1,7 @@
-import {
-  SET,
-  NO_VALUE
-} from '../constants'
-
 import { map, filter, isString, isObject } from 'lodash'
+import { actionTypes } from '../constants'
+
+const { SET, NO_VALUE } = actionTypes
 
 const getWatchPath = (event, path) =>
   `${event}:${((path.substring(0, 1) === '/') ? '' : '/')}${path}`

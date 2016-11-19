@@ -1,16 +1,18 @@
-import {
+import { capitalize, omit, isArray, isString, isFunction } from 'lodash'
+import jwtDecode from 'jwt-decode'
+
+import { actionTypes, defaultJWTKeys } from '../constants'
+import { promisesForPopulate } from '../utils'
+
+const {
   SET_PROFILE,
   LOGIN,
   LOGOUT,
   LOGIN_ERROR,
   UNAUTHORIZED_ERROR,
   AUTHENTICATION_INIT_STARTED,
-  AUTHENTICATION_INIT_FINISHED,
-  defaultJWTKeys
-} from '../constants'
-import { capitalize, omit, isArray, isString, isFunction } from 'lodash'
-import jwtDecode from 'jwt-decode'
-import { promisesForPopulate } from '../utils'
+  AUTHENTICATION_INIT_FINISHED
+} = actionTypes
 
 /**
  * @description Dispatch login error action
@@ -63,10 +65,16 @@ export const init = (dispatch, firebase) => {
     watchUserProfile(dispatch, firebase)
 
     dispatchLogin(dispatch, authData)
+
+    // Run onAuthStateChanged if it exists in config
+    if (firebase._.config.onAuthStateChanged) {
+      firebase._.config.onAuthStateChanged(authData, firebase)
+    }
   })
-  dispatch({ type: AUTHENTICATION_INIT_FINISHED })
 
   firebase.auth().currentUser
+
+  dispatch({ type: AUTHENTICATION_INIT_FINISHED })
 }
 
 /**

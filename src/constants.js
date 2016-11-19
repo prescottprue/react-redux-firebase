@@ -27,10 +27,10 @@ export const actionTypes = {
 
 export default {
   defaultJWTKeys,
-  ...actionTypes
+  actionTypes
 }
 
 module.exports = {
   defaultJWTKeys,
-  ...actionTypes
+  actionTypes
 }
