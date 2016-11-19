@@ -115,16 +115,9 @@ const watchUserProfile = (dispatch, firebase) => {
             profile: snap.val()
           })
         } else {
-          // Handle string and array for profileParamsToPopulate config option
-          const paramsToPopulate = isArray(profileParamsToPopulate)
-            ? profileParamsToPopulate
-            : profileParamsToPopulate.split(',')
-
           // Convert each populate string in array into an array of once query promises
           Promise.all(
-            paramsToPopulate.map(p =>
-              promisesForPopulate(firebase, snap.val(), p)
-            )
+            promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
           )
           .then(data => {
             // Dispatch action with profile combined with populated parameters
