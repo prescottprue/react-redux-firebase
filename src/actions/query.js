@@ -88,16 +88,16 @@ const unsetWatcher = (firebase, event, path, queryId = undefined) => {
  * @description Watch a specific event type
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
- * @param {String} event - Type of event to watch for
+ * @param {String} event - Type of event to watch for (defaults to value)
  * @param {String} path - Path to watch with watcher
  * @param {String} dest
  * @param {Boolean} onlyLastEvent - Whether or not to listen to only the last event
  */
-export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent = false) => {
+export const watchEvent = (firebase, dispatch, event = 'value', path, dest, onlyLastEvent = false) => {
   let isQuery = false
   let queryParams = []
   let queryId = getQueryIdFromPath(path) // undefined if not a query
-
+  // console.log({ event, path, dest })
   if (queryId) {
     let pathSplitted = path.split('#')
     path = pathSplitted[0]
@@ -122,7 +122,6 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
   setWatcher(firebase, event, watchPath, queryId)
 
   if (event === 'first_child') {
-    // return
     return firebase.database()
       .ref()
       .child(path)
@@ -199,10 +198,13 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
     if (e === 'once') {
       return q.once('value')
         .then(snapshot =>
-          dispatch({ type: SET, path, data: snapshot.val() })
+          dispatch({
+            type: SET,
+            path,
+            data: snapshot.val()
+          })
         )
     }
-
     // Handle all other queries
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
@@ -217,7 +219,9 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
 
       // Get list of populates
       const populates = getPopulates(params)
-      // Dispatch standard if no populates
+      // console.log('populates:', { populates, params })
+
+      // Dispatch standard event if no populates exists
       if (!populates) {
         return dispatch({
           type: SET,
@@ -226,7 +230,9 @@ export const watchEvent = (firebase, dispatch, event, path, dest, onlyLastEvent 
           snapshot
         })
       }
-      // console.log('populates before promises', populates)
+
+      // TODO: Allow setting of unpopulated data before starting population through config
+
       promisesForPopulate(firebase, data, params)
         .then((list) => {
           dispatch({
