@@ -93,11 +93,14 @@ const unsetWatcher = (firebase, event, path, queryId = undefined) => {
  * @param {String} dest
  * @param {Boolean} onlyLastEvent - Whether or not to listen to only the last event
  */
-export const watchEvent = (firebase, dispatch, event = 'value', path, dest, onlyLastEvent = false) => {
+export const watchEvent = (firebase, dispatch, { type, path }, dest, onlyLastEvent = false) => {
   let isQuery = false
   let queryParams = []
   let queryId = getQueryIdFromPath(path) // undefined if not a query
   // console.log({ event, path, dest })
+  if (!type) {
+    type = 'value'
+  }
   if (queryId) {
     let pathSplitted = path.split('#')
     path = pathSplitted[0]
@@ -106,20 +109,20 @@ export const watchEvent = (firebase, dispatch, event = 'value', path, dest, only
   }
 
   const watchPath = !dest ? path : `${path}@${dest}`
-  const counter = getWatcherCount(firebase, event, watchPath, queryId)
+  const counter = getWatcherCount(firebase, type, watchPath, queryId)
 
   if (counter > 0) {
     if (onlyLastEvent) {
       // listen only to last query on same path
       if (queryId) {
-        unsetWatcher(firebase, event, path, queryId)
+        unsetWatcher(firebase, type, path, queryId)
       } else {
         return
       }
     }
   }
 
-  setWatcher(firebase, event, watchPath, queryId)
+  setWatcher(firebase, type, watchPath, queryId)
 
   if (event === 'first_child') {
     return firebase.database()
@@ -244,7 +247,7 @@ export const watchEvent = (firebase, dispatch, event = 'value', path, dest, only
     })
   }
 
-  runQuery(query, event, path, queryParams)
+  runQuery(query, type, path, queryParams)
 }
 
 /**
@@ -264,7 +267,7 @@ export const unWatchEvent = (firebase, event, path, queryId = undefined) =>
  */
 export const watchEvents = (firebase, dispatch, events) =>
     events.forEach(event =>
-      watchEvent(firebase, dispatch, event.type, event.path)
+      watchEvent(firebase, dispatch, event)
     )
 
 /**

@@ -32,6 +32,13 @@ export const getPopulates = (params) => {
   return populates.map(getPopulateObj)
 }
 
+/**
+ * @description Create an array of promises for population of an object or list
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} populate - Object containing root to be populate
+ * @param {Object} populate.root - Firebase root path from which to load populate item
+ * @param {String} id - String id
+ */
 export const getPopulateChild = (firebase, populate, id) =>
   firebase.database()
    .ref()
