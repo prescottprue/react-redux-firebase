@@ -4,7 +4,9 @@ import {
   isArray,
   isObject,
   map,
-  keyBy
+  get,
+  forEach,
+  set
 } from 'lodash'
 
 /**
@@ -12,14 +14,13 @@ import {
  * @param {String|Object} str - String or Object to standardize into populate object
  */
 export const getPopulateObj = (str) => {
-  // TODO: Handle non-string
   const strArray = str.split(':')
   return { child: strArray[0], root: strArray[1] }
 }
 
 /**
- * @description Get array of populates query params
- * @param {String} pathString - Internal firebase object
+ * @description Get array of populates from list of query params
+ * @param {Array} queryParams - Query parameters from which to get populates
  */
 export const getPopulates = (params) => {
   const populates = filter(params, param =>
@@ -57,43 +58,51 @@ export const getPopulateChild = (firebase, populate, id) =>
  */
 export const promisesForPopulate = (firebase, originalData, populates) => {
   // TODO: Handle multiple populates
-  const firstPopulate = populates[0]
   // TODO: Handle single object based populates
+  // TODO: Handle selecting of parameter to populate with (i.e. displayName of users/user)
+  const firstPopulate = populates[0]
   // Loop over each object in list
-  const promisesArray = map(originalData, (d, key) => {
+  let promisesArray = []
+  forEach(originalData, (d, key) => {
+    // TODO: Handle input of [] within child (notating parameter for whole list)
     // Get value of parameter to be populated (key or list of keys)
-    const idOrList = d[firstPopulate.child]
-    // Child to be populated does not exist
+    const idOrList = get(d, `${firstPopulate.child}`)
+
+    // Parameter/child to be populated does not exist
     if (!idOrList) {
-      return Object.assign({}, d, { key })
+      return
     }
+
     // Parameter is single ID
     if (isString(idOrList)) {
-      return getPopulateChild(firebase, firstPopulate, idOrList)
+      return promisesArray.push(
+        getPopulateChild(firebase, firstPopulate, idOrList)
         .then((v) =>
-          // return item with child parameter populated
-          Object.assign({}, d, { [firstPopulate.child]: v, key })
+          // replace parameter with loaded object
+          set(originalData, `${key}.${firstPopulate.child}`, v)
         )
+      )
     }
+
     // Parameter is a list of ids
     if (isArray(idOrList)) {
       // Create single promise that includes a promise for each child
-      return Promise.all(
-        map(idOrList, (id) =>
-          getPopulateChild(firebase, firstPopulate, id)
+      return promisesArray.push(
+        Promise.all(
+          map(idOrList, (id) =>
+            getPopulateChild(firebase, firstPopulate, id)
+          )
         )
-      )
-      // TODO: Handle selecting of parameter to populate with (i.e. displayName of users/user)
-      // return item with child parameter replaced with populated list
-      .then((v) =>
-        Object.assign({}, d, { [firstPopulate.child]: v, key })
+        // replace parameter with populated list
+        .then((v) =>
+          set(originalData, `${key}.${firstPopulate.child}`, v)
+        )
       )
     }
   })
 
-  return Promise.all(promisesArray)
-    // TODO: Look into returning originalData with values injected instead of using keyBy
-    .then(d => keyBy(d, 'key'))
+  // Return original data after population promises run
+  return Promise.all(promisesArray).then(d => originalData)
 }
 
 export default { promisesForPopulate }

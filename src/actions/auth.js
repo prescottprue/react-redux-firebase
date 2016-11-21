@@ -19,7 +19,7 @@ const {
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} authError - Error object
  */
-const dispatchLoginError = (dispatch, authError) =>
+export const dispatchLoginError = (dispatch, authError) =>
   dispatch({
     type: LOGIN_ERROR,
     authError
@@ -30,7 +30,7 @@ const dispatchLoginError = (dispatch, authError) =>
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} authError - Error object
  */
-const dispatchUnauthorizedError = (dispatch, authError) =>
+export const dispatchUnauthorizedError = (dispatch, authError) =>
   dispatch({
     type: UNAUTHORIZED_ERROR,
     authError
@@ -41,7 +41,7 @@ const dispatchUnauthorizedError = (dispatch, authError) =>
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} auth - Auth data object
  */
-const dispatchLogin = (dispatch, auth) =>
+export const dispatchLogin = (dispatch, auth) =>
   dispatch({
     type: LOGIN,
     auth,
@@ -98,7 +98,7 @@ export const unWatchUserProfile = (firebase) => {
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  */
-const watchUserProfile = (dispatch, firebase) => {
+export const watchUserProfile = (dispatch, firebase) => {
   const authUid = firebase._.authUid
   const userProfile = firebase._.config.userProfile
   unWatchUserProfile(firebase)
@@ -134,7 +134,7 @@ const watchUserProfile = (dispatch, firebase) => {
   }
 }
 
-const addScopesToProvider = (provider, scopes) => {
+export const addScopesToProvider = (provider, scopes) => {
   // TODO: Verify scopes are valid before adding
   if (isArray(scopes)) {
     scopes.forEach(scope => {
@@ -191,6 +191,13 @@ export const getLoginMethodAndParams = ({email, password, provider, type, token,
   }
 }
 
+/**
+ * @description Login with errors dispatched
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} userData - User data object (response from authenticating)
+ * @param {Object} profile - Profile data to place in new profile
+ */
 export const createUserProfile = (dispatch, firebase, userData, profile) =>
   // Check for user's profile at userProfile path if provided
   !firebase._.config.userProfile
