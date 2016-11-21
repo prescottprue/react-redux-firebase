@@ -1,5 +1,5 @@
 import { actionTypes } from '../constants'
-import { getPopulates, promisesForPopulate } from '../utils/populate'
+import { promisesForPopulate } from '../utils/populate'
 
 const { SET, NO_VALUE } = actionTypes
 
@@ -93,7 +93,7 @@ const unsetWatcher = (firebase, event, path, queryId = undefined) => {
  * @param {String} dest
  * @param {Boolean} onlyLastEvent - Whether or not to listen to only the last event
  */
-export const watchEvent = (firebase, dispatch, { type, path }, dest, onlyLastEvent = false) => {
+export const watchEvent = (firebase, dispatch, { type, path, populates }, dest, onlyLastEvent = false) => {
   let isQuery = false
   let queryParams = []
   let queryId = getQueryIdFromPath(path) // undefined if not a query
@@ -220,10 +220,6 @@ export const watchEvent = (firebase, dispatch, { type, path }, dest, onlyLastEve
         }
       }
 
-      // Get list of populates
-      const populates = getPopulates(params)
-      // console.log('populates:', { populates, params })
-
       // Dispatch standard event if no populates exists
       if (!populates) {
         return dispatch({
@@ -236,7 +232,7 @@ export const watchEvent = (firebase, dispatch, { type, path }, dest, onlyLastEve
 
       // TODO: Allow setting of unpopulated data before starting population through config
 
-      promisesForPopulate(firebase, data, params)
+      promisesForPopulate(firebase, data, populates)
         .then((list) => {
           dispatch({
             type: SET,

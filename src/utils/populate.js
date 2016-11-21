@@ -55,8 +55,7 @@ export const getPopulateChild = (firebase, populate, id) =>
  * @param {Object} originalObj - Object to have parameter populated
  * @param {Object} populateString - String containg population data
  */
-export const promisesForPopulate = (firebase, originalData, params) => {
-  const populates = getPopulates(params)
+export const promisesForPopulate = (firebase, originalData, populates) => {
   // TODO: Handle multiple populates
   const firstPopulate = populates[0]
   // TODO: Handle single object based populates
