@@ -26,7 +26,8 @@ View deployed version of Material Example [here](https://redux-firebasev3.fireba
 - queries support ( `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo` right now )
 - Automatic binding/unbinding
 - Declarative decorator syntax for React components
-- [`redux-thunk`](https://github.com/gaearon/redux-thunk) Integration
+- [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [redux-observable](https://redux-observable.js.org/) integrations
+- Action Types and other Constants exported for external use (such as in redux-observable)
 - Firebase v3+ support
 
 ## Install
@@ -78,7 +79,7 @@ Include reduxFirebase in your store compose function:
 
 ```javascript
 import { createStore, combineReducers, compose } from 'redux'
-import { reduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
+import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
 
 // Add Firebase to reducers
 const rootReducer = combineReducers({
@@ -95,7 +96,7 @@ const config = {
 
 // Add redux Firebase to compose
 const createStoreWithFirebase = compose(
-  reduxFirebase(config, { userProfile: 'users' }),
+  reactReduxFirebase(config, { userProfile: 'users' }),
 )(createStore)
 
 // Create store with reducers and initial state
@@ -106,21 +107,16 @@ In components:
 ```javascript
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { firebase, helpers } from 'react-redux-firebase'
+import { firebaseConnect, helpers } from 'react-redux-firebase'
 const { isLoaded, isEmpty, dataToJS } = helpers
 
-// Can be used if firebase is used elsewhere
-// import { firebaseConnect } from 'react-redux-firebase'
-// @firebaseConnect( [
-//   '/todos'
-// ])
-
-@firebase( [
+@firebaseConnect( [
   '/todos'
   // { type: 'once', path: '/todos' } // for loading once instead of binding
 ])
 @connect(
-  ({firebase}) => ({
+  ({ firebase }) => ({
+    // Connect todos prop to firebase todos
     todos: dataToJS(firebase, '/todos'),
   })
 )
@@ -172,7 +168,7 @@ Alternatively, if you choose not to use decorators:
 
 ```javascript
 
-const wrappedTodos = firebase([
+const wrappedTodos = firebaseConnect([
   '/todos'
 ])(Todos)
 export default connect(
@@ -201,14 +197,14 @@ The simple example implemented using decorators built from the output of [create
 An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command.  Shows a list of todo items and allows you to add to them. This is what is deployed to [react-redux-firebase.firebaseapp.com](https://react-redux-firebase.firebaseapp.com/).
 
 ## Using with `redux-thunk`
-If you user using `redux-thunk`, make sure to set up your thunk middleware using it's redux-thunk's `withExtraArgument` method so that firebase is available within your actions. Here is an example `createStore` function that adds `getFirebase` as third argument along with a thunk that uses it:
+If you are using `redux-thunk`, make sure to set up your thunk middleware using it's redux-thunk's `withExtraArgument` method so that firebase is available within your actions. Here is an example `createStore` function that adds `getFirebase` as third argument along with a thunk that uses it:
 
 createStore:
 
 ```javascript
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { reduxReactFirebase, getFirebase } from 'react-redux-firebase';
+import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
 import makeRootReducer from './reducers';
 
 const fbConfig = {} // your firebase config
@@ -220,7 +216,7 @@ const store = createStore(
     applyMiddleware([
       thunk.withExtraArgument(getFirebase) // Pass getFirebase function as extra argument
     ]),
-    reduxReactFirebase(fbConfig, { userProfile: 'users', enableLogging: false })
+    reactReduxFirebase(fbConfig, { userProfile: 'users', enableLogging: false })
   )
 );
 
@@ -244,6 +240,24 @@ export const addTodo = (newTodo) =>
 
 ```
 
+## Using with `redux-observable`
+If you are using `redux-observable`, make sure to set up your redux-observable middleware so that firebase is available within your epics. Here is an example `combineEpics` function that adds `getFirebase` as third argument along with an epic that uses it:
+
+```javascript
+import { getFirebase } from 'react-redux-firebase'
+import { combineEpics } from 'redux-observable'
+
+const rootEpic = (...args) =>
+  combineEpics(somethingEpic, epic2)(..args, getFirebase)
+
+// then later in your epics
+const somethingEpic = (action$, store, getFirebase) =>
+  action$.ofType(SOMETHING)
+    .map(() =>
+      getFirebase().push('somePath/onFirebase', { some: 'data' })
+    )
+```
+
 ## Generator
 
 [generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) uses react-redux-firebase when opting to include redux
@@ -256,21 +270,20 @@ export const addTodo = (newTodo) =>
   * [populate functionality](https://prescottprue.gitbooks.io/react-redux-firebase/content/populate.html) (similar to mongoDB or SQL JOIN)
   * [`profileDecorator`](https://prescottprue.gitbooks.io/react-redux-firebase/content/config.html) - change format of profile stored on Firebase
   * [`getFirebase`](https://prescottprue.gitbooks.io/react-redux-firebase/content/thunks.html) - access to firebase instance that fires actions when methods are called
-  * [capability for thunk integration](https://prescottprue.gitbooks.io/react-redux-firebase/content/thunks.html) - using `getFirebase` and `thunk.withExtraArgument`
+  * [integrations](https://prescottprue.gitbooks.io/react-redux-firebase/content/thunks.html) for [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org) - using `getFirebase`
   * [access to firebase's `storage`](https://prescottprue.gitbooks.io/react-redux-firebase/content/storage.html) method
   * `uniqueSet` method helper for only setting if location doesn't already exist
+  * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)
+  * Action Types and other Constants are exposed for external usage (such as `redux-observable`)
 
   #### Well why not combine?
-  I am in the process of writing up an article comparing the two, including the difference in defaults/utils. Maybe a section should be included in the docs as well?
-
-  Also, I have been talking to the author of redux-react-firebase about combining, but we are not sure that the users of both want that at this point. Join us on [the redux-firebase gitter](https://gitter.im/redux-firebase/Lobby) if you haven't already since a ton of this type of discussion goes on there.
+  I have been talking to the author of [redux-react-firebase]() about combining, but we are not sure that the users of both want that at this point. Join us on [the redux-firebase gitter](https://gitter.im/redux-firebase/Lobby) if you haven't already since a ton of this type of discussion goes on there.
 
   **Bottom line:** The author of redux-react-firebase was absent when functionality was needed by me and others, so this library was created.
 
 2. Why use redux if I have Firebase to store state?
 
   This isn't a super quick answer, so I wrote up [a medium article to explain](https://medium.com/@prescottprue/firebase-with-redux-82d04f8675b9)
-
 
 ## Contributors
 - [Prescott Prue](https://github.com/prescottprue)
@@ -281,7 +294,7 @@ export const addTodo = (newTodo) =>
 
 ## Thanks
 
-Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase), which this project is heavily based on.
+Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase), which this project was originally based on.
 
 [npm-image]: https://img.shields.io/npm/v/react-redux-firebase.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/react-redux-firebase

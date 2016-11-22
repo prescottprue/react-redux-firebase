@@ -3,14 +3,14 @@ import { authActions, queryActions } from './actions'
 let firebaseInstance
 
 export default (config, otherConfig) => next =>
-  (reducer, initialState) => {
+  (reducer, initialState, middleware) => {
     const defaultConfig = {
       userProfile: null,
       enableLogging: false,
       updateProfileOnLogin: true
     }
 
-    const store = next(reducer, initialState)
+    const store = next(reducer, initialState, middleware)
     const { dispatch } = store
 
     const { apiKey, authDomain, databaseURL, storageBucket } = config

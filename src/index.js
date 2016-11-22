@@ -9,6 +9,7 @@ export default {
   firebaseConnect: connect,
   firebaseStateReducer: reducer,
   reduxReactFirebase: compose,
+  reactReduxFirebase: compose,
   reduxFirebase: compose,
   constants,
   actionTypes,
