@@ -70,8 +70,8 @@ export default (config, otherConfig) => next =>
           return ref.child(path).set(value, onComplete)
         })
 
-    const watchEvent = (eventName, eventPath) =>
-      queryActions.watchEvent(firebase, dispatch, eventName, eventPath, true)
+    const watchEvent = (type, path) =>
+      queryActions.watchEvent(firebase, dispatch, { type, path }, true)
 
     const unWatchEvent = (eventName, eventPath, queryId = undefined) =>
       queryActions.unWatchEvent(firebase, eventName, eventPath, queryId)
@@ -106,7 +106,7 @@ export default (config, otherConfig) => next =>
     authActions.init(dispatch, firebase)
 
     store.firebase = firebase
-    firebaseInstance = firebase
+    firebaseInstance = Object.assign({}, firebase, firebase.helpers)
 
     return store
   }
@@ -115,7 +115,7 @@ export default (config, otherConfig) => next =>
 export const getFirebase = () => {
   // TODO: Handle recieveing config and creating firebase instance if it doesn't exist
   if (!firebaseInstance) {
-    console.error('Firebase instance does not yet exist. Check your compose function.')
+    console.error('Firebase instance does not yet exist. Check your compose function.') // eslint-disable-line no-console
     return null
   }
   return firebaseInstance

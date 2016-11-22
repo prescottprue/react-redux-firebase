@@ -1,7 +1,9 @@
 export const firebase = {
   apiKey: 'AIzaSyCTUERDM-Pchn_UDTsfhVPiwM4TtNIxots',
-  authDomain: 'react-redux-firebase.firebaseapp.com',
-  databaseURL: 'https://react-redux-firebase.firebaseio.com'
+  authDomain: 'redux-firebasev3.firebaseapp.com',
+  databaseURL: 'https://redux-firebasev3.firebaseio.com',
+  storageBucket: 'redux-firebasev3.appspot.com',
+  messagingSenderId: '823357791673'
 }
 
 export default { firebase }
