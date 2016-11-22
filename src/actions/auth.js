@@ -1,8 +1,9 @@
-import { capitalize, omit, isArray, isString, isFunction } from 'lodash'
+import { omit, isArray, isString, isFunction } from 'lodash'
 import jwtDecode from 'jwt-decode'
 
 import { actionTypes, defaultJWTKeys } from '../constants'
-import { promisesForPopulate } from '../utils'
+import { promisesForPopulate } from '../utils/populate'
+import { getLoginMethodAndParams } from '../utils/auth'
 
 const {
   SET_PROFILE,
@@ -134,63 +135,6 @@ export const watchUserProfile = (dispatch, firebase) => {
   }
 }
 
-export const addScopesToProvider = (provider, scopes) => {
-  // TODO: Verify scopes are valid before adding
-  if (isArray(scopes)) {
-    scopes.forEach(scope => {
-      provider.addScope(scope)
-    })
-  }
-  if (isString(scopes)) {
-    provider.addScope(scopes)
-  }
-}
-
-/**
- * @description Get correct login method and params order based on provided credentials
- * @param {Object} credentials - Login credentials
- * @param {String} credentials.email - Email to login with (only needed for email login)
- * @param {String} credentials.password - Password to login with (only needed for email login)
- * @param {String} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
- * @param {String} credentials.type - Popup or redirect (only needed for 3rd party provider login)
- * @param {String} credentials.token - Custom or provider token
- */
-export const getLoginMethodAndParams = ({email, password, provider, type, token, scopes}, firebase) => {
-  if (provider) {
-    if (token) {
-      return {
-        method: 'signInWithCredential',
-        params: [ provider, token ]
-      }
-    }
-    const authProvider = new firebase.auth[`${capitalize(provider)}AuthProvider`]()
-    authProvider.addScope('email')
-    if (scopes) {
-      addScopesToProvider(authProvider, scopes)
-    }
-    if (type === 'popup') {
-      return {
-        method: 'signInWithPopup',
-        params: [ authProvider ]
-      }
-    }
-    return {
-      method: 'signInWithRedirect',
-      params: [ authProvider ]
-    }
-  }
-  if (token) {
-    return {
-      method: 'signInWithCustomToken',
-      params: [ token ]
-    }
-  }
-  return {
-    method: 'signInWithEmailAndPassword',
-    params: [ email, password ]
-  }
-}
-
 /**
  * @description Login with errors dispatched
  * @param {Function} dispatch - Action dispatch function
@@ -237,7 +181,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) =>
  */
 export const login = (dispatch, firebase, credentials) => {
   dispatchLoginError(dispatch, null)
-  let { method, params } = getLoginMethodAndParams(credentials, firebase)
+  let { method, params } = getLoginMethodAndParams(firebase, credentials)
 
   return firebase.auth()[method](...params)
     .then((userData) => {
@@ -378,4 +322,16 @@ export const resetPassword = (dispatch, firebase, email) => {
     })
 }
 
-export default { init, logout, createUser, resetPassword }
+export default {
+  dispatchLoginError,
+  dispatchUnauthorizedError,
+  dispatchLogin,
+  unWatchUserProfile,
+  watchUserProfile,
+  init,
+  createUserProfile,
+  login,
+  logout,
+  createUser,
+  resetPassword
+}

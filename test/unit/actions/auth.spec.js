@@ -6,8 +6,6 @@ import {
   init,
   unWatchUserProfile,
   watchUserProfile,
-  addScopesToProvider,
-  getLoginMethodAndParams,
   createUserProfile,
   login,
   logout,
@@ -38,9 +36,6 @@ const firebase = {
   auth: () => ({
     onAuthStateChanged: () => {
 
-    },
-    GoogleAuthProvider: () => {
-      return new Object
     },
     signOut: () => Promise.resolve(),
     createUserWithEmailAndPassword: () => Promise.resolve(),
@@ -78,22 +73,6 @@ describe('Actions: Auth', () => {
   describe('watchUserProfile', () => {
     it('calls profile unwatch', () => {
       expect(watchUserProfile(dispatch, firebase))
-    })
-  })
-  describe('addScopesToProvider', () => {
-    it('adds scopes', () => {
-      expect(addScopesToProvider(dispatch, firebase))
-    })
-  })
-  describe('getLoginMethodAndParams', () => {
-    // Skipped due to capatalize and auth provider function
-    it.skip('handles google provider', () => {
-      expect(getLoginMethodAndParams({ provider: 'google' }, firebase)).to.include.keys('method')
-    })
-  })
-  describe('createUserProfile', () => {
-    it('creates valid profile', () => {
-      expect(createUserProfile(dispatch, firebase, { uid: '1' }, { }))
     })
   })
   describe('login', () => {

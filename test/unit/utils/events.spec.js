@@ -1,7 +1,7 @@
 /* global describe expect it beforeEach */
 import { getEventsFromInput } from '../../../src/utils/events'
 
-describe('Events Utils', () => {
+describe('Utils: Events', () => {
   describe('getEventsFromInput', () => {
     it('handles null path array', () => {
       expect(getEventsFromInput()).to.be.an.array

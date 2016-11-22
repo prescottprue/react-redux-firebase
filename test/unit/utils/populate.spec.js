@@ -14,11 +14,10 @@ const firebase = {
     })
   })
 }
-describe('Populate Util', () => {
+describe('Utils: Populate', () => {
   describe('promisesForPopulate', () => {
     it('handles null path array', () => {
       expect(promisesForPopulate(firebase, {uid: '123123'}, 'uid:users'))
     })
   })
-
 })
