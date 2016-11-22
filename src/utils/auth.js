@@ -3,7 +3,7 @@ import { capitalize, isArray, isString } from 'lodash'
 export const createAuthProvider = (firebase, providerName, scopes) => {
   // TODO: Verify provider
   // TODO: Verify scopes are valid before adding
-  const provider = new firebase.auth[`${capitalize(provider)}AuthProvider`]()
+  const provider = new firebase.auth[`${capitalize(providerName)}AuthProvider`]()
   provider.addScope('email')
   if (scopes) {
     if (isArray(scopes)) {
