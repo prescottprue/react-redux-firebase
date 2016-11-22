@@ -1,23 +1,26 @@
-import {
+import { omit, isArray, isString, isFunction } from 'lodash'
+import jwtDecode from 'jwt-decode'
+
+import { actionTypes, defaultJWTKeys } from '../constants'
+import { promisesForPopulate } from '../utils/populate'
+import { getLoginMethodAndParams } from '../utils/auth'
+
+const {
   SET_PROFILE,
   LOGIN,
   LOGOUT,
   LOGIN_ERROR,
   UNAUTHORIZED_ERROR,
   AUTHENTICATION_INIT_STARTED,
-  AUTHENTICATION_INIT_FINISHED,
-  defaultJWTKeys
-} from '../constants'
-import { capitalize, omit, isArray, isString, isFunction } from 'lodash'
-import jwtDecode from 'jwt-decode'
-import { promisesForPopulate } from '../utils'
+  AUTHENTICATION_INIT_FINISHED
+} = actionTypes
 
 /**
  * @description Dispatch login error action
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} authError - Error object
  */
-const dispatchLoginError = (dispatch, authError) =>
+export const dispatchLoginError = (dispatch, authError) =>
   dispatch({
     type: LOGIN_ERROR,
     authError
@@ -28,7 +31,7 @@ const dispatchLoginError = (dispatch, authError) =>
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} authError - Error object
  */
-const dispatchUnauthorizedError = (dispatch, authError) =>
+export const dispatchUnauthorizedError = (dispatch, authError) =>
   dispatch({
     type: UNAUTHORIZED_ERROR,
     authError
@@ -39,7 +42,7 @@ const dispatchUnauthorizedError = (dispatch, authError) =>
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} auth - Auth data object
  */
-const dispatchLogin = (dispatch, auth) =>
+export const dispatchLogin = (dispatch, auth) =>
   dispatch({
     type: LOGIN,
     auth,
@@ -63,17 +66,23 @@ export const init = (dispatch, firebase) => {
     watchUserProfile(dispatch, firebase)
 
     dispatchLogin(dispatch, authData)
+
+    // Run onAuthStateChanged if it exists in config
+    if (firebase._.config.onAuthStateChanged) {
+      firebase._.config.onAuthStateChanged(authData, firebase)
+    }
   })
-  dispatch({ type: AUTHENTICATION_INIT_FINISHED })
 
   firebase.auth().currentUser
+
+  dispatch({ type: AUTHENTICATION_INIT_FINISHED })
 }
 
 /**
  * @description Remove listener from user profile
  * @param {Object} firebase - Internal firebase object
  */
-const unWatchUserProfile = (firebase) => {
+export const unWatchUserProfile = (firebase) => {
   const authUid = firebase._.authUid
   const userProfile = firebase._.config.userProfile
   if (firebase._.profileWatch) {
@@ -90,7 +99,7 @@ const unWatchUserProfile = (firebase) => {
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  */
-const watchUserProfile = (dispatch, firebase) => {
+export const watchUserProfile = (dispatch, firebase) => {
   const authUid = firebase._.authUid
   const userProfile = firebase._.config.userProfile
   unWatchUserProfile(firebase)
@@ -107,16 +116,9 @@ const watchUserProfile = (dispatch, firebase) => {
             profile: snap.val()
           })
         } else {
-          // Handle string and array for profileParamsToPopulate config option
-          const paramsToPopulate = isArray(firebase._.config.profileParamsToPopulate)
-            ? firebase._.config.profileParamsToPopulate
-            : firebase._.config.profileParamsToPopulate.split(',')
-
           // Convert each populate string in array into an array of once query promises
           Promise.all(
-            paramsToPopulate.map(p =>
-              promisesForPopulate(firebase, snap.val(), p)
-            )
+            promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
           )
           .then(data => {
             // Dispatch action with profile combined with populated parameters
@@ -133,63 +135,13 @@ const watchUserProfile = (dispatch, firebase) => {
   }
 }
 
-const addScopesToProvider = (provider, scopes) => {
-  // TODO: Verify scopes are valid before adding
-  if (isArray(scopes)) {
-    scopes.forEach(scope => {
-      provider.addScope(scope)
-    })
-  }
-  if (isString(scopes)) {
-    provider.addScope(scopes)
-  }
-}
-
 /**
- * @description Get correct login method and params order based on provided credentials
- * @param {Object} credentials - Login credentials
- * @param {String} credentials.email - Email to login with (only needed for email login)
- * @param {String} credentials.password - Password to login with (only needed for email login)
- * @param {String} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
- * @param {String} credentials.type - Popup or redirect (only needed for 3rd party provider login)
- * @param {String} credentials.token - Custom or provider token
+ * @description Login with errors dispatched
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} userData - User data object (response from authenticating)
+ * @param {Object} profile - Profile data to place in new profile
  */
-const getLoginMethodAndParams = ({email, password, provider, type, token, scopes}, firebase) => {
-  if (provider) {
-    if (token) {
-      return {
-        method: 'signInWithCredential',
-        params: [ provider, token ]
-      }
-    }
-    const authProvider = new firebase.auth[`${capitalize(provider)}AuthProvider`]()
-    authProvider.addScope('email')
-    if (scopes) {
-      addScopesToProvider(authProvider, scopes)
-    }
-    if (type === 'popup') {
-      return {
-        method: 'signInWithPopup',
-        params: [ authProvider ]
-      }
-    }
-    return {
-      method: 'signInWithRedirect',
-      params: [ authProvider ]
-    }
-  }
-  if (token) {
-    return {
-      method: 'signInWithCustomToken',
-      params: [ token ]
-    }
-  }
-  return {
-    method: 'signInWithEmailAndPassword',
-    params: [ email, password ]
-  }
-}
-
 export const createUserProfile = (dispatch, firebase, userData, profile) =>
   // Check for user's profile at userProfile path if provided
   !firebase._.config.userProfile
@@ -229,7 +181,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) =>
  */
 export const login = (dispatch, firebase, credentials) => {
   dispatchLoginError(dispatch, null)
-  let { method, params } = getLoginMethodAndParams(credentials, firebase)
+  let { method, params } = getLoginMethodAndParams(firebase, credentials)
 
   return firebase.auth()[method](...params)
     .then((userData) => {
@@ -370,4 +322,16 @@ export const resetPassword = (dispatch, firebase, email) => {
     })
 }
 
-export default { init, logout, createUser, resetPassword }
+export default {
+  dispatchLoginError,
+  dispatchUnauthorizedError,
+  dispatchLogin,
+  unWatchUserProfile,
+  watchUserProfile,
+  init,
+  createUserProfile,
+  login,
+  logout,
+  createUser,
+  resetPassword
+}

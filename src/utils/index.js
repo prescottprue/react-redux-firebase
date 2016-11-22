@@ -1,32 +1,20 @@
-import { isString } from 'lodash'
+import { isFunction } from 'lodash'
+import { promisesForPopulate } from './populate'
+import { getEventsFromInput } from './events'
 
 /**
- * @description Watch user profile
- * @param {Function} dispatch - Action dispatch function
- * @param {Object} firebase - Internal firebase object
+ * @description Create a function if not already one
+ * @param {Function|Object|Array|String} Callable function or value of return for new function
  */
-export const promisesForPopulate = (firebase, profile, populateString) => {
-  const paramToPopulate = populateString.split(':')[0]
-  const populateRoot = populateString.split(':')[1]
-  let idList = profile[paramToPopulate]
-  if (isString(profile[paramToPopulate])) {
-    idList = profile[paramToPopulate].split(',')
-  }
-  return Promise.all(
-    idList.map(itemId =>
-      firebase.database()
-       .ref()
-       .child(populateRoot)
-       .child(itemId)
-       .once('value')
-       .then(snap => snap.val() || itemId)
-    )).then(data => {
-      const populatedObj = {}
-      idList.forEach(item => populatedObj)
-      populatedObj[paramToPopulate] = data
-      return populatedObj
-    }
-  )
+export const createCallable = f => isFunction(f) ? f : () => f
+
+export {
+  promisesForPopulate,
+  getEventsFromInput
 }
 
-export default { promisesForPopulate }
+export default {
+  createCallable,
+  promisesForPopulate,
+  getEventsFromInput
+}

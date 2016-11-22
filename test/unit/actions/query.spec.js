@@ -15,31 +15,31 @@ const testFbConfig = {
   authDomain
 }
 let firebase
-describe('query actions', () => {
-  describe('watchEvent', () => {
-    beforeEach(() => {
-      // TODO: Set up a firebase (real for now, fake later) and store (for dispatch)
-      // Initialize Firebase
-      try {
-        Firebase.initializeApp(testFbConfig)
-      } catch (err) {}
+describe('Actions: Query', () => {
+  beforeEach(() => {
+    // TODO: Set up a firebase (real for now, fake later) and store (for dispatch)
+    // Initialize Firebase
+    try {
+      Firebase.initializeApp(testFbConfig)
+    } catch (err) {}
 
-      firebase = Object.defineProperty(Firebase, '_', {
-        value: {
-          watchers: {},
-          config: testFbConfig,
-          authUid: null
-        },
-        writable: true,
-        enumerable: true,
-        configurable: true
-      })
+    firebase = Object.defineProperty(Firebase, '_', {
+      value: {
+        watchers: {},
+        config: testFbConfig,
+        authUid: null
+      },
+      writable: true,
+      enumerable: true,
+      configurable: true
     })
+  })
+  describe('watchEvent', () => {
     it('is exported', () => {
       expect(watchEvent).to.be.a.function
     })
     it('runs given basic params', () => {
-      watchEvent(firebase, () => {}, 'once', 'projects', 'projects')
+      watchEvent(firebase, () => {}, { type: 'once', path: 'projects' }, 'projects', 'projects')
     })
 
     describe.skip('populate', () => {
@@ -105,7 +105,7 @@ describe('query actions', () => {
       expect(watchEvents).to.be.a.function
     })
     it('runs given basic params', () => {
-      watchEvents(firebase, () => {}, [{name: 'once', path: 'test'}])
+      watchEvents(firebase, () => {}, [{type: 'once', path: 'test'}])
     })
   })
   describe('unWatchEvents', () => {
@@ -113,7 +113,7 @@ describe('query actions', () => {
       expect(unWatchEvents).to.be.a.function
     })
     it('runs given basic params', () => {
-      unWatchEvents(firebase, [{name: 'value', path: 'test'}])
+      unWatchEvents(firebase, [{type: 'value', path: 'test'}])
     })
   })
 })

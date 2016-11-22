@@ -2,6 +2,7 @@
 import helpers from '../../src/helpers'
 const exampleData = { data: { some: 'data' } }
 
+// TODO: Use immutable object so functions exist on object
 describe('helpers', () => {
   it('toJS', () => {
     describe('exists', () => {
