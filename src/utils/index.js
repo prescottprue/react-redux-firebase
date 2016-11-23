@@ -1,5 +1,4 @@
 import { isFunction } from 'lodash'
-import { promisesForPopulate } from './populate'
 import { getEventsFromInput } from './events'
 
 /**
@@ -9,12 +8,10 @@ import { getEventsFromInput } from './events'
 export const createCallable = f => isFunction(f) ? f : () => f
 
 export {
-  promisesForPopulate,
   getEventsFromInput
 }
 
 export default {
   createCallable,
-  promisesForPopulate,
   getEventsFromInput
 }

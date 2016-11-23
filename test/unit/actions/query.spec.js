@@ -1,95 +1,46 @@
 /* global describe expect it beforeEach */
+import queryAction from '../../../src/actions/query'
 import {
   watchEvent,
   unWatchEvent,
   watchEvents,
   unWatchEvents
 } from '../../../src/actions/query'
-import Firebase from 'firebase'
-const apiKey = 'AIzaSyCTUERDM-Pchn_UDTsfhVPiwM4TtNIxots'
-const authDomain = 'redux-firebasev3.firebaseapp.com'
-const databaseURL = 'https://redux-firebasev3.firebaseio.com'
-const testFbConfig = {
-  databaseURL,
-  apiKey,
-  authDomain
+import {
+  unsetWatcher
+} from '../../../src/utils/query'
+let spy, unWatch
+const dispatch = () => {
+
 }
-let firebase
 describe('Actions: Query', () => {
   beforeEach(() => {
-    // TODO: Set up a firebase (real for now, fake later) and store (for dispatch)
-    // Initialize Firebase
-    try {
-      Firebase.initializeApp(testFbConfig)
-    } catch (err) {}
-
-    firebase = Object.defineProperty(Firebase, '_', {
-      value: {
-        watchers: {},
-        config: testFbConfig,
-        authUid: null
-      },
-      writable: true,
-      enumerable: true,
-      configurable: true
-    })
+    spy = sinon.spy(dispatch)
   })
   describe('watchEvent', () => {
     it('is exported', () => {
       expect(watchEvent).to.be.a.function
     })
     it('runs given basic params', () => {
-      watchEvent(firebase, () => {}, { type: 'once', path: 'projects' }, 'projects', 'projects')
+      return watchEvent(firebase, dispatch, { type: 'once', path: 'projects' }, 'projects')
+        .then((snap) => {
+          expect(snap).to.be.an.object
+        })
     })
-
-    describe.skip('populate', () => {
-      it('populates id with string', () => {
-        // TODO: Confirm that SET action is dispatched with populated data
-      })
-      it('populates id with object', () => {
-        // TODO: Confirm that SET action is dispatched with populated data
-      })
-      it('handles invalid population id', () => {
-        // TODO: Confirm that SET action is dispatched with populated data
-      })
+    it('runs given first_child', () => {
+      return watchEvent(firebase, dispatch, { type: 'first_child', path: 'projects' }, 'projects')
+        .then((snap) => {
+          expect(snap).to.be.an.object
+        })
     })
-    describe.skip('query types', () => {
-      it('once query', () => {
-        // TODO: Test that SET action is dispatched with data
-      })
-      it('on query', () => {
-        // TODO: Confirm that stubbed version of firebase is called
-        // TODO: Confirm that SET action is dispatched correctly
-      })
+    it('runs value query', () => {
+      expect(watchEvent(firebase, dispatch, { type: 'value', path: 'projects' }, 'projects'))
     })
-    describe.skip('filters', () => {
-      it('orderByValue', () => {
-
-      })
-      it('orderByPriority', () => {
-
-      })
-      it('orderByKey', () => {
-
-      })
-      it('orderByChild', () => {
-
-      })
-      it('limitToFirst', () => {
-
-      })
-      it('limitToLast', () => {
-
-      })
-      it('equalTo', () => {
-
-      })
-      it('startAt', () => {
-
-      })
-      it('endAt', () => {
-
-      })
+    it('handles populates', () => {
+      expect(watchEvent(firebase, dispatch, { type: 'value', path: 'projects', populates: [{ child: 'uid', root: 'users' }] }, 'projects'))
+    })
+    it('throws for null type', () => {
+      expect(() => watchEvent(firebase, dispatch, { path: 'projects' }, 'projects')).to.Throw
     })
   })
   describe('unWatchEvent', () => {
@@ -97,7 +48,7 @@ describe('Actions: Query', () => {
       expect(unWatchEvent).to.be.a.function
     })
     it('runs given basic params', () => {
-      unWatchEvent(firebase, () => {}, 'once', 'projects', 'projects')
+      expect(unWatchEvent(firebase, 'once', 'projects')).to.be.a.function
     })
   })
   describe('watchEvents', () => {
@@ -105,7 +56,10 @@ describe('Actions: Query', () => {
       expect(watchEvents).to.be.a.function
     })
     it('runs given basic params', () => {
-      watchEvents(firebase, () => {}, [{type: 'once', path: 'test'}])
+      const events = [{type: 'once', path: 'test'}]
+      spy = sinon.spy(events, 'forEach')
+      watchEvents(firebase, dispatch, events)
+      expect(spy).to.be.calledOnce
     })
   })
   describe('unWatchEvents', () => {
@@ -113,7 +67,16 @@ describe('Actions: Query', () => {
       expect(unWatchEvents).to.be.a.function
     })
     it('runs given basic params', () => {
-      unWatchEvents(firebase, [{type: 'value', path: 'test'}])
+      const events = [{type: 'value', path: 'test'}]
+      spy = sinon.spy(events, 'forEach')
+      unWatchEvents(firebase, events)
+      expect(spy).to.be.calledOnce
+    })
+    it('throws for bad type', () => {
+      const events = [{type: '', path: 'test'}]
+      spy = sinon.spy(events, 'forEach')
+      unWatchEvents(firebase, events)
+      expect(spy).to.Throw
     })
   })
 })

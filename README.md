@@ -26,8 +26,8 @@ View deployed version of Material Example [here](https://redux-firebasev3.fireba
 - queries support ( `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo` right now )
 - Automatic binding/unbinding
 - Declarative decorator syntax for React components
-- [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [redux-observable](https://redux-observable.js.org/) integrations
-- Action Types and other Constants exported for external use (such as in redux-observable)
+- [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/) integrations
+- Action Types and other Constants exported for external use (such as in `redux-observable`)
 - Firebase v3+ support
 
 ## Install

@@ -37,7 +37,7 @@ const firebase = {
     onAuthStateChanged: () => {
 
     },
-    signOut: () => Promise.resolve(),
+    signOut: () => {},
     createUserWithEmailAndPassword: () => Promise.resolve(),
     sendPasswordResetEmail: () => Promise.resolve()
   })
@@ -83,7 +83,7 @@ describe('Actions: Auth', () => {
   })
   describe('logout', () => {
     it('logs user out of Firebase', () => {
-      expect(logout(dispatch, firebase))
+      expect(logout(dispatch, firebase)).to.eventually.be.fullfilled
     })
   })
   describe('createUser', () => {
@@ -93,7 +93,7 @@ describe('Actions: Auth', () => {
   })
   describe('resetPassword', () => {
     it('calls to reset user password', () => {
-      expect(resetPassword(dispatch, firebase, 'test@test.com'))
+      expect(resetPassword(dispatch, firebase, 'test@test.com')).to.eventually.be.fulfilled
     })
   })
 })
