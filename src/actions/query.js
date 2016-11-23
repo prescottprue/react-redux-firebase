@@ -1,67 +1,13 @@
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from '../utils/populate'
-import { getQueryIdFromPath, applyParamsToQuery } from '../utils/query'
+import {
+  applyParamsToQuery,
+  getWatcherCount,
+  setWatcher,
+  unsetWatcher
+} from '../utils/query'
 
-const { SET, NO_VALUE } = actionTypes
-
-const getWatchPath = (event, path) =>
-  `${event}:${((path.substring(0, 1) === '/') ? '' : '/')}${path}`
-
-/**
- * @description Set a new watcher
- * @param {Object} firebase - Internal firebase object
- * @param {String} event - Type of event to watch for
- * @param {String} path - Path to watch with watcher
- * @param {String} queryId - Id of query
- */
-const setWatcher = (firebase, event, path, queryId = undefined) => {
-  const id = queryId ? `${event}:/${queryId}` : getWatchPath(event, path)
-
-  if (firebase._.watchers[id]) {
-    firebase._.watchers[id]++
-  } else {
-    firebase._.watchers[id] = 1
-  }
-
-  return firebase._.watchers[id]
-}
-
-/**
- * @description Get count of currently attached watchers
- * @param {Object} firebase - Internal firebase object
- * @param {String} event - Type of event to watch for
- * @param {String} path - Path to watch with watcher
- * @param {String} queryId - Id of query
- */
-const getWatcherCount = (firebase, event, path, queryId = undefined) => {
-  const id = queryId ? `${event}:/${queryId}` : getWatchPath(event, path)
-  return firebase._.watchers[id]
-}
-
-/**
- * @description Remove/Unset a watcher
- * @param {Object} firebase - Internal firebase object
- * @param {String} event - Type of event to watch for
- * @param {String} path - Path to watch with watcher
- * @param {String} queryId - Id of query
- */
-const unsetWatcher = (firebase, event, path, queryId = undefined) => {
-  let id = queryId || getQueryIdFromPath(path)
-  path = path.split('#')[0]
-
-  if (!id) {
-    id = getWatchPath(event, path)
-  }
-
-  if (firebase._.watchers[id] <= 1) {
-    delete firebase._.watchers[id]
-    if (event !== 'first_child') {
-      firebase.database().ref().child(path).off(event)
-    }
-  } else if (firebase._.watchers[id]) {
-    firebase._.watchers[id]--
-  }
-}
+const { SET, NO_VALUE, ERROR } = actionTypes
 
 /**
  * @description Watch a specific event type
@@ -102,6 +48,12 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
             path
           })
         }
+        return snapshot
+      }, (err) => {
+        dispatch({
+          type: ERROR,
+          payload: err
+        })
       })
   }
 
@@ -115,16 +67,25 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
     // Handle once queries
     if (e === 'once') {
       return q.once('value')
-        .then(snapshot =>
+        .then(snapshot => {
+          if (snapshot.val() !== null) {
+            dispatch({
+              type: SET,
+              path,
+              data: snapshot.val()
+            })
+          }
+          return snapshot
+        }, (err) => {
           dispatch({
-            type: SET,
-            path,
-            data: snapshot.val()
+            type: ERROR,
+            payload: err
           })
-        )
+        })
     }
     // Handle all other queries
-    // TODO: Handle onError of query (i.e. security errors)
+
+    /* istanbul ignore next: is run by tests but doesn't show in coverage */
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
       const resultPath = dest || (e === 'value') ? p : `${p}/${snapshot.key}`
@@ -156,10 +117,15 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
             data: list
           })
         })
+    }, (err) => {
+      dispatch({
+        type: ERROR,
+        payload: err
+      })
     })
   }
 
-  runQuery(query, type, path, queryParams)
+  return runQuery(query, type, path, queryParams)
 }
 
 /**

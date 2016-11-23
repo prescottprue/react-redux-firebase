@@ -4,51 +4,55 @@ const exampleData = { data: { some: 'data' } }
 
 // TODO: Use immutable object so functions exist on object
 describe('helpers', () => {
-  it('toJS', () => {
-    describe('exists', () => {
+  describe('toJS', () => {
+    it('exists', () => {
       expect(helpers).to.respondTo('toJS')
     })
-    describe('handles non-immutable data', () => {
+    it('handles non-immutable data', () => {
       expect(helpers.toJS(exampleData)).to.equal(exampleData)
     })
   })
-  it('pathToJS', () => {
-    describe('exists', () => {
+  describe('pathToJS', () => {
+    it('exists', () => {
       expect(helpers).to.respondTo('pathToJS')
     })
-    describe('passes notSetValue', () => {
+    it('passes notSetValue', () => {
       expect(helpers.pathToJS(exampleData, '/some', exampleData))
         .to
         .equal(exampleData)
     })
   })
-  it('dataToJS', () => {
-    describe('exists', () => {
+  describe('dataToJS', () => {
+    it('exists', () => {
       expect(helpers).to.respondTo('dataToJS')
     })
-    describe('passes notSetValue', () => {
+    it('passes notSetValue', () => {
       expect(helpers.dataToJS(exampleData, '/some', exampleData))
         .to
         .equal(exampleData)
     })
   })
-  it('snapshotToJS', () => {
+  describe('snapshotToJS', () => {
     expect(helpers).to.respondTo('snapshotToJS')
   })
-  it('customToJS', () => {
-    describe('exists', () => {
+  describe('customToJS', () => {
+    it('exists', () => {
       expect(helpers).to.respondTo('customToJS')
     })
-    describe('passes notSetValue', () => {
+    it('passes notSetValue', () => {
       expect(helpers.customToJS(exampleData, '/some', 'some', exampleData))
         .to
         .equal(exampleData)
     })
   })
-  it('isLoaded', () => {
-    expect(helpers).to.respondTo('isLoaded')
+  describe('isLoaded', () => {
+    it('exists', () => {
+      expect(helpers).to.respondTo('isLoaded')
+    })
   })
-  it('isEmpty', () => {
-    expect(helpers).to.respondTo('isEmpty')
+  describe('isEmpty', () => {
+    it('exists', () => {
+      expect(helpers).to.respondTo('isEmpty')
+    })
   })
 })
