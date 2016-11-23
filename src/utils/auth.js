@@ -1,5 +1,5 @@
 import { capitalize, isArray, isString } from 'lodash'
-
+import { supportedAuthProviders } from '../constants'
 /**
  * @description Get correct login method and params order based on provided credentials
  * @param {Object} firebase - Internal firebase object
@@ -7,8 +7,11 @@ import { capitalize, isArray, isString } from 'lodash'
  * @param {Array|String} scopes - List of scopes to add to auth provider
  */
 export const createAuthProvider = (firebase, providerName, scopes) => {
-  // TODO: Verify providerName
   // TODO: Verify scopes are valid before adding
+  // Verify providerName is valid
+  if (supportedAuthProviders.indexOf(providerName) === -1) {
+    throw new Error(`${providerName} is not a valid Auth Provider`)
+  }
   const provider = new firebase.auth[`${capitalize(providerName)}AuthProvider`]()
   provider.addScope('email')
   if (scopes) {

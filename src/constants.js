@@ -26,12 +26,22 @@ export const actionTypes = {
   AUTHENTICATION_INIT_FINISHED: `${prefix}AUTHENTICATION_INIT_FINISHED`
 }
 
+// List of all external auth providers that are supported (firebase's email/anonymous included by default)
+export const supportedAuthProviders = [
+  'google',
+  'github',
+  'twitter',
+  'facebook'
+]
+
 export default {
   defaultJWTKeys,
-  actionTypes
+  actionTypes,
+  supportedAuthProviders
 }
 
 module.exports = {
   defaultJWTKeys,
-  actionTypes
+  actionTypes,
+  supportedAuthProviders
 }
