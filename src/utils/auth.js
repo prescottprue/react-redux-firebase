@@ -9,7 +9,7 @@ import { supportedAuthProviders } from '../constants'
 export const createAuthProvider = (firebase, providerName, scopes) => {
   // TODO: Verify scopes are valid before adding
   // Verify providerName is valid
-  if (supportedAuthProviders.indexOf(providerName) === -1) {
+  if (supportedAuthProviders.indexOf(providerName.toLowerCase()) === -1) {
     throw new Error(`${providerName} is not a valid Auth Provider`)
   }
   const provider = new firebase.auth[`${capitalize(providerName)}AuthProvider`]()
