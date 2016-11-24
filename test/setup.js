@@ -22,13 +22,17 @@ var fbConfig = global.fbConfig = {
   storageBucket: 'redux-firebasev3.appspot.com',
   messagingSenderId: '823357791673'
 }
-Firebase.initializeApp(fbConfig)
+// Swallow firebase reinitialize error (useful when using watch)
+try {
+  Firebase.initializeApp(fbConfig)
+} catch (err) {}
+
 global.firebase = Object.defineProperty(Firebase, '_', {
   value: {
     watchers: {},
-    authUid: null
+    authUid: null,
+    config: Object.assign({}, fbConfig, { userProfile: 'users' })
   },
-  config: fbConfig,
   writable: true,
   enumerable: true,
   configurable: true

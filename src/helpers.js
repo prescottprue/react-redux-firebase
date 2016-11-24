@@ -25,7 +25,7 @@ export const pathToJS = (data, path, notSetValue) => {
 }
 
 export const dataToJS = (data, path, notSetValue) => {
-  if (!(data && data.getIn)) {
+  if (!data) {
     return notSetValue
   }
 
