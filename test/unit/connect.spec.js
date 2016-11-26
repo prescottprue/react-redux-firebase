@@ -41,23 +41,6 @@ describe('Connect', () => {
       : prev
   }
 
-  it('throws for invalid databaseURL', () => {
-    const createStoreWithMiddleware = compose(
-      reduxFirebase({}, { userProfile: 'users' }),
-      typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
-    )(createStore)
-
-    expect(createStoreWithMiddleware).to.throw(Error)
-  })
-
-  it('throws for invalid authDomain', () => {
-    const createStoreWithMiddleware = compose(
-      reduxFirebase({ databaseURL }, { userProfile: 'users' }),
-      typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
-    )(createStore)
-
-    expect(createStoreWithMiddleware).to.throw(Error)
-  })
 
   it('should receive the store in the context', () => {
     const createStoreWithMiddleware = compose(
@@ -80,8 +63,10 @@ describe('Connect', () => {
     )
 
     const container = TestUtils.findRenderedComponentWithType(tree, Container)
+    container.setState({
+      testState: 'somethingElse'
+    })
     expect(container.context.store).to.equal(store)
   })
-
 
 })

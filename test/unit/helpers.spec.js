@@ -78,15 +78,23 @@ describe('Helpers:', () => {
       expect(helpers).to.respondTo('snapshotToJS')
     })
     it('passes notSetValue', () => {
-      expect(helpers.snapshotToJS({}, '/some', exampleData))
+      const fakeState = { }
+      expect(helpers.snapshotToJS(fakeState, '/some', exampleData))
         .to
-        .equal(exampleData)
+        .equal(fakeState)
     })
     it('gets data from state', () => {
       const path = 'some'
       expect(helpers.snapshotToJS(exampleState, path, exampleData))
         .to
         .equal(exampleData.snapshot[path])
+    })
+    it('returns snapshot for non-immutable', () => {
+      const path = 'some'
+      const fakeState = { }
+      expect(helpers.snapshotToJS(fakeState, path, exampleData))
+        .to
+        .equal(fakeState)
     })
   })
 

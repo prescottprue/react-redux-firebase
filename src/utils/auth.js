@@ -1,5 +1,6 @@
 import { capitalize, isArray, isString } from 'lodash'
 import { supportedAuthProviders } from '../constants'
+
 /**
  * @description Get correct login method and params order based on provided credentials
  * @param {Object} firebase - Internal firebase object
