@@ -26,7 +26,7 @@ describe('Actions: Query', () => {
         .then((snap) => {
           expect(snap).to.be.an.object
         })
-    })
+    }, 4000)
     it('runs given first_child', () => {
       return watchEvent(firebase, dispatch, { type: 'first_child', path: 'projects' }, 'projects')
         .then((snap) => {
