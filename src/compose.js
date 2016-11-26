@@ -114,9 +114,9 @@ export default (config, otherConfig) => next =>
 // Expose Firebase instance
 export const getFirebase = () => {
   // TODO: Handle recieveing config and creating firebase instance if it doesn't exist
+  /* istanbul ignore next: Firebase instance always exists during tests */
   if (!firebaseInstance) {
-    console.error('Firebase instance does not yet exist. Check your compose function.') // eslint-disable-line no-console
-    return null
+    throw new Error('Firebase instance does not yet exist. Check your compose function.') // eslint-disable-line no-console
   }
   return firebaseInstance
 }

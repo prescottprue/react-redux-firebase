@@ -12,6 +12,7 @@ describe('Utils: Populate', () => {
       expect(getPopulateObj('some:value')).to.have.keys('child', 'root')
     })
   })
+
   describe('getPopulates', () => {
     it('no populates', () => {
       expect(getPopulates(['orderByPriority']))
@@ -20,20 +21,32 @@ describe('Utils: Populate', () => {
       expect(getPopulates(['populate=uid:users']))
     })
   })
+
   describe('getPopulateChild', () => {
     it('gets child', () => {
-      expect(getPopulateChild(Firebase, {child: 'uid', root: 'users'}, '123123')).to.be.fulfilled
+      expect(getPopulateChild(Firebase, {child: 'uid', root: 'users'}, '123123'))
+        .to.be.fulfilled
     })
   })
+
   describe('promisesForPopulate', () => {
     it('none existant child', () => {
-      expect(promisesForPopulate(Firebase, {uid: '123123'}, [{child: 'random', root: 'users'}]))
+      return promisesForPopulate(Firebase, {uid: '123123'}, [{child: 'random', root: 'users'}])
+        .then((v) => {
+          expect(v).to.have.keys('uid')
+        })
     })
     it('string populate', () => {
-      expect(promisesForPopulate(Firebase, { 1: { uid: '123123' } }, [{child: 'uid', root: 'users'}]))
+      return promisesForPopulate(Firebase, { 1: { owner: 'Iq5b0qK2NtgggT6U3bU6iZRGyma2' } }, [{child: 'owner', root: 'users'}])
+        .then((v) => {
+          expect(v['1'].owner).to.have.keys('displayName', 'email', 'providerData')
+        })
     })
     it('array populate', () => {
-      expect(promisesForPopulate(Firebase, { 1: { collaborators: ['123123', '123'] } }, [{child: 'collaborators', root: 'users'}]))
+      return promisesForPopulate(Firebase, { 1: { collaborators: ['Iq5b0qK2NtgggT6U3bU6iZRGyma2', '123'] } }, [{child: 'collaborators', root: 'users'}])
+        .then((v) => {
+          expect(v['1'].collaborators[0]).to.have.keys('displayName', 'email', 'providerData')
+        })
     })
   })
 })

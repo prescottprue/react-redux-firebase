@@ -76,10 +76,10 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
       if (isString(idOrList)) {
         return promisesArray.push(
           getPopulateChild(firebase, p, idOrList)
-          .then((v) =>
-            // replace parameter with loaded object
-            set(originalData, `${key}.${p.child}`, v)
-          )
+            .then((v) =>
+              // replace parameter with loaded object
+              set(originalData, `${key}.${p.child}`, v)
+            )
         )
       }
 

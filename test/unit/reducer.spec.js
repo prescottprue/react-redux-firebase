@@ -10,10 +10,10 @@ const emptyState = {
   data: {}
 }
 const intializedState = { isInitializing: true, data: {} }
-const noError = {"authError":null}
+const noError = { authError: null }
 const noAuth = { auth: null, profile: null }
 const exampleData = { some: 'data' }
-const externalState = {data: { asdfasdf: {} }}
+const externalState = { data: { asdfasdf: {} } }
 const exampleState = fromJS({})
 const exampleEmptyState = fromJS(emptyState)
 
@@ -94,7 +94,13 @@ describe('reducer', () => {
           exampleState,
           { type: actionTypes.LOGOUT }
         ).toJS())
-      ).to.equal(JSON.stringify({"auth":null,"authError":null,"profile":null,"isLoading":false,"data":{}}))
+      ).to.equal(JSON.stringify({
+        auth: null,
+        authError: null,
+        profile: null,
+        isLoading:false,
+        data:{}
+      }))
     })
   })
 
@@ -138,7 +144,11 @@ describe('reducer', () => {
           exampleState,
           { type: actionTypes.AUTHENTICATION_INIT_FINISHED }
         ).toJS())
-      ).to.equal(JSON.stringify(exampleState.setIn(['isInitializing'], false).toJS()))
+      ).to.equal(
+        JSON.stringify(
+          exampleState.setIn(['isInitializing'], false).toJS()
+        )
+      )
     })
   })
 
@@ -150,7 +160,11 @@ describe('reducer', () => {
           exampleState,
           { type: actionTypes.UNAUTHORIZED_ERROR, authError }
         ).toJS())
-      ).to.equal(JSON.stringify(exampleState.setIn(['authError'], authError).toJS()))
+      ).to.equal(
+        JSON.stringify(
+          exampleState.setIn(['authError'], authError).toJS()
+        )
+      )
     })
   })
 })

@@ -267,7 +267,7 @@ export const createUser = (dispatch, firebase, { email, password, signIn }, prof
 
   if (!email || !password) {
     dispatchLoginError(dispatch, new Error('Email and Password are required to create user'))
-    return Promise.reject('Email and Password are Required')
+    return Promise.reject(new Error('Email and Password are Required'))
   }
 
   return firebase.auth()
@@ -311,7 +311,7 @@ export const resetPassword = (dispatch, firebase, email) => {
     .catch((err) => {
       if (err) {
         switch (err.code) {
-          case 'INVALID_USER':
+          case 'auth/user-not-found':
             dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
             break
           default:

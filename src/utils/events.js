@@ -56,7 +56,7 @@ export const getEventsFromInput = paths =>
     }
 
     if (isObject(path)) {
-      if (!path) {
+      if (!path.path) {
         throw new Error('Path is a required parameter within definition object')
       }
       if (!path.type) {

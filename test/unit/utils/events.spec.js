@@ -13,8 +13,13 @@ describe('Utils: Events', () => {
       it('accepts string', () => {
         expect(getEventsFromInput(['some'])[0]).to.include.keys('path')
       })
-      it('accepts object', () => {
-        expect(getEventsFromInput([{path: 'some'}])[0]).to.include.keys('path')
+      describe('accepts object', () => {
+        it('that is valid', () => {
+          expect(getEventsFromInput([{path: 'some'}])[0]).to.include.keys('path')
+        })
+        it('that is invalid', () => {
+          expect(() => getEventsFromInput([{type: 'value'}])).to.throw('Path is a required parameter within definition object')
+        })
       })
       it('accepts array', () => {
         expect(getEventsFromInput([['somechild']])[0]).to.include.keys('path')

@@ -14,10 +14,8 @@ import {
 } from '../../../src/actions/auth'
 let functionSpy
 let dispatchSpy
-const dispatch = () => {
-  console.log('dispatch')
-}
-
+const dispatch = sinon.spy()
+const fakeLogin = { email: 'test@tst.com', password: 'asdfasdf' }
 const fakeFirebase = {
   _: {
     authUid: '123',
@@ -40,8 +38,10 @@ const fakeFirebase = {
     },
     signOut: () =>
       Promise.resolve({}),
-    createUserWithEmailAndPassword: () =>
-      Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
+    createUserWithEmailAndPassword: (email, password) =>
+      email === 'error'
+        ? Promise.reject({ code: 'asdfasdf' })
+        : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
     signInWithCustomToken: () => {
       return Promise.resolve({
         toJSON: () => ({
@@ -51,7 +51,19 @@ const fakeFirebase = {
           uid: 'asdfasdfsdf'
         })
       })
-    }
+    },
+    signInWithEmailAndPassword: (email, password) =>
+      email.indexOf('error2') !== -1
+        ? Promise.reject({ code: 'asdfasdf' })
+        : email === 'error3'
+          ? Promise.reject({ code: 'auth/user-not-found' })
+          : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
+    sendPasswordResetEmail: (email) =>
+      email === 'error'
+        ? Promise.reject({code: 'auth/user-not-found'})
+        : email === 'error2'
+          ? Promise.reject({code: 'asdfasdf'})
+          : Promise.resolve({some: 'val'})
   })
 }
 
@@ -87,6 +99,9 @@ describe('Actions: Auth', () => {
   })
 
   describe('watchUserProfile', () => {
+    beforeEach(() => {
+      functionSpy = sinon.spy()
+    })
     it('calls profile unwatch', () => {
       watchUserProfile(dispatch, fakeFirebase)
       expect(firebase._.profileWatch).to.be.a.function
@@ -95,6 +110,17 @@ describe('Actions: Auth', () => {
       watchUserProfile(dispatch, firebase)
       expect(firebase._.profileWatch).to.be.a.function
     })
+    it('sets populates using array', () => {
+      firebase._.config.profileParamsToPopulate = ['asdfasdf']
+      watchUserProfile(dispatch, firebase)
+      expect(firebase._.profileWatch).to.be.a.function
+    })
+    it('sets populates using string', () => {
+      firebase._.config.profileParamsToPopulate = 'asdfasdf'
+      watchUserProfile(dispatch, firebase)
+      expect(firebase._.profileWatch).to.be.a.function
+    })
+
   })
 
   describe('createUserProfile', () => {
@@ -108,7 +134,7 @@ describe('Actions: Auth', () => {
 
   describe('login', () => {
     it('handles invalid email login', () => {
-      return login(dispatch, firebase, { email: 'test@tst.com', password: 'asdfasdf' })
+      return login(dispatch, firebase, fakeLogin)
         .catch((err) => {
           expect(err.code).to.equal('auth/user-not-found')
         })
@@ -141,10 +167,7 @@ describe('Actions: Auth', () => {
           expect(functionSpy).to.have.been.calledOnce
         })
     })
-    it('calls firebase.auth().signOut()', () => {
-      logout(dispatch, firebase)
-      expect(functionSpy).to.have.been.calledOnce
-    })
+
     it('sets authUid to null', () => {
       fakeFirebase._.authUid = 'asdfasdf'
       return logout(dispatch, fakeFirebase)
@@ -162,41 +185,68 @@ describe('Actions: Auth', () => {
   })
 
   describe('createUser', () => {
-    // Skipped because of TypeError: Cannot read property 'apply' of undefined
-    it.skip('creates user', () => {
-      return createUser(dispatch, fakeFirebase, { email: 'test@test.com', password: 'asdf' }, { email: 'test@test.com', password: 'asdf' })
+    it('creates user', () =>
+      createUser(dispatch, fakeFirebase, fakeLogin, fakeLogin)
         .then(userData => {
           expect(userData).to.be.an.object
         })
-    })
-    it('handles no email', () => {
-      return createUser(dispatch, fakeFirebase, { password: 'asdf' })
-        .catch((err) => {
-          expect(err).to.be.a.string
+    )
+    it('creates user without profile', () =>
+      createUser(dispatch, fakeFirebase, fakeLogin)
+        .then(userData => {
+          expect(userData).to.be.an.object
         })
-    })
-    it('handles no password', () => {
-      return createUser(dispatch, fakeFirebase, { email: 'asdf@asdf.com' })
+    )
+    it('handles no email', () =>
+      createUser(dispatch, fakeFirebase, { password: fakeLogin.password })
         .catch((err) => {
-          expect(err).to.be.a.string
+          expect(err).to.be.an.object
         })
-    })
-  }, 4000)
+    )
+    it('handles no password', () =>
+      createUser(dispatch, fakeFirebase, { email: fakeLogin.email })
+        .catch((err) => {
+          expect(err).to.be.an.object
+        })
+    )
+    it('handles error with createUserWithEmailAndPassword', () =>
+      createUser(dispatch, fakeFirebase, { email: 'error', password: 'error' })
+        .catch((err) => {
+          expect(err).to.be.an.object
+        })
+    )
+    it('handles error with login', () =>
+      createUser(dispatch, fakeFirebase, { email: 'error2', password: 'error2' })
+        .catch((err) => {
+          expect(err).to.be.an.object
+        })
+    )
+    it('handles user-not-found error', () =>
+      createUser(dispatch, fakeFirebase, { email: 'error3', password: 'error2' })
+        .catch((err) => {
+          expect(err).to.be.an.object
+        })
+    )
+  })
 
   describe('resetPassword', () => {
-    beforeEach(() => {
-      functionSpy = sinon.spy(firebase.auth(), 'sendPasswordResetEmail')
-    })
-    afterEach(() => {
-      firebase.auth().sendPasswordResetEmail.restore()
+    it('resets password for real user', () => {
+      return resetPassword(dispatch, fakeFirebase, 'test@test.com')
+        .catch((err) => {
+          expect(err.code).to.equal('auth/user-not-found')
+        })
     })
     it('dispatches error for invalid user', () => {
-      return resetPassword(dispatch, firebase, 'test@test.com')
+      return resetPassword(dispatch, fakeFirebase, 'error')
         .catch((err) => {
-          console.log('error', err)
           expect(err.code).to.equal('auth/user-not-found')
-          expect(functionSpy).to.have.been.calledOnce
         })
-    }, 4000)
+    })
+    it('dispatches for all other errors', () => {
+      return resetPassword(dispatch, fakeFirebase, 'error2')
+        .catch((err) => {
+          expect(err.code).to.be.a.string
+        })
+    })
   })
 })
