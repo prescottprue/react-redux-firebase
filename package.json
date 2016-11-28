@@ -39,6 +39,7 @@
     }
   ],
   "dependencies": {
+    "es6-promise": "^4.0.5",
     "firebase": "^3.6.1",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.1.0",
