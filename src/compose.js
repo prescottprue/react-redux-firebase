@@ -89,6 +89,7 @@ export default (config, otherConfig) => next =>
       authActions.resetPassword(dispatch, firebase, credentials)
 
     firebase.helpers = {
+      ref: Firebase.database().ref,
       set,
       uniqueSet,
       push,
@@ -100,7 +101,7 @@ export default (config, otherConfig) => next =>
       resetPassword,
       watchEvent,
       unWatchEvent,
-      storage: () => Firebase.storage()
+      storage: Firebase.storage
     }
 
     authActions.init(dispatch, firebase)

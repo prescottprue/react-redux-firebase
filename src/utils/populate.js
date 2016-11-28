@@ -64,8 +64,11 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
     // Loop over each object in list
     forEach(originalData, (d, key) => {
       // TODO: Handle input of [] within child (notating parameter for whole list)
+      const childArray = p.child.split('[]')
+      const mainChild = childArray[0]
+      console.log('populate child split', mainChild, childArray)
       // Get value of parameter to be populated (key or list of keys)
-      const idOrList = get(d, `${p.child}`)
+      const idOrList = get(d, mainChild)
 
       // Parameter/child to be populated does not exist
       if (!idOrList) {
@@ -89,7 +92,11 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
         return promisesArray.push(
           Promise.all(
             map(idOrList, (id) =>
-              getPopulateChild(firebase, p, id)
+              getPopulateChild(
+                firebase,
+                p,
+                childArray.length > 1 ? id : get(id, childArray[1]) // get child parameter if [] notation
+              )
             )
           )
           // replace parameter with populated list
