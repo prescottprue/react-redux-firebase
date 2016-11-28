@@ -6,6 +6,7 @@ import {
   map,
   get,
   forEach,
+  reduce,
   set
 } from 'lodash'
 
@@ -63,9 +64,10 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
   forEach(populates, (p) =>
     // Loop over each object in list
     forEach(originalData, (d, key) => {
-      // TODO: Handle input of [] within child (notating parameter for whole list)
-      const childArray = p.child.split('[]')
-      const mainChild = childArray[0]
+      // Handle input of [] within child (notating parameter for whole list)
+      const mainChild = p.child.split('[]')[0]
+      const childParam = p.child.split('[]')[1]
+
       // Get value of parameter to be populated (key or list of keys)
       const idOrList = get(d, mainChild)
 
@@ -86,22 +88,31 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
       }
 
       // Parameter is a list of ids
-      if (isArray(idOrList)) {
+      if (isArray(idOrList) || isObject(idOrList)) {
         // Create single promise that includes a promise for each child
         return promisesArray.push(
           Promise.all(
-            map(idOrList, (id) =>
+            map(idOrList, (id, childKey) =>
               getPopulateChild(
                 firebase,
                 p,
-                childArray.length > 1 ? id : get(id, childArray[1]) // get child parameter if [] notation
+                childParam ? get(id, childParam) : id // get child parameter if [] notation
+              )
+              .then(pc =>
+                !childParam
+                  ? pc
+                  : ({
+                    [childKey]: set(id, childParam, Object.assign(pc, { key: get(id, childParam) }))
+                  })
               )
             )
           )
           // replace parameter with populated list
-          .then((v) =>
-            set(originalData, `${key}.${p.child}`, v)
-          )
+          .then((v) => {
+            // reduce array of arrays if childParam exists
+            const vObj = childParam ? reduce(v, (a, b) => Object.assign(a, b), {}) : v
+            return set(originalData, `${key}.${mainChild}`, vObj)
+          })
         )
       }
     })
