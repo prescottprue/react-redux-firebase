@@ -11,7 +11,7 @@
     "watch": "npm run build -- --watch",
     "clean": "rimraf dist",
     "prepublish": "npm run clean && npm run build",
-    "lint": "eslint src/**",
+    "lint": "eslint src/** test/**",
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha -R spec --compilers js:babel-core/register ./test/setup.js ./test/**/*.spec.js",
     "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./test/** --recursive --report lcov --compilers js:babel-register --require babel-polyfill",
