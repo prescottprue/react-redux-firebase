@@ -13,7 +13,7 @@
 
 ## Demo
 
-View deployed version of Material Example [here](https://redux-firebasev3.firebaseapp.com/)
+View deployed version of [Material Example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) [here](https://redux-firebasev3.firebaseapp.com/)
 
 
 ## Features
@@ -184,15 +184,21 @@ See [API Docs](https://prescottprue.gitbooks.io/react-redux-firebase/content/)
 
 ## [Examples](examples)
 
-#### [Simple Example](examples/simple)
+Examples folder is broken into two categories [complete](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete) and [snippets](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/snippets). Complete contains full applications that can be run as is, where as snippets is small amounts of code to show functionality (dev tools and deps not included).
+
+#### [State Based Query Snippet](examples/snippets/stateBasedQuery)
+
+Snippet showing querying based on data in redux state. One of the most common examples of this is querying based on the current users auth UID.
+
+#### [Decorators Snippet](examples/snippets/decorators)
+
+Snippet showing how to use decorators to simplify connect functions (redux's `connect` and react-redux-firebase's `firebaseConnect`)
+
+#### [Simple App Example](examples/complete/simple)
 
 A simple example that was created using [create-react-app](https://github.com/facebookincubator/create-react-app)'s. Shows a list of todo items and allows you to add to them.
 
-#### [Decorators Example](examples/decorators)
-
-The simple example implemented using decorators built from the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command. Shows a list of todo items and allows you to add to them.
-
-#### [Material Example](examples/material)
+#### [Material App Example](examples/complete/material)
 
 An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command.  Shows a list of todo items and allows you to add to them. This is what is deployed to [react-redux-firebase.firebaseapp.com](https://react-redux-firebase.firebaseapp.com/).
 
@@ -271,7 +277,7 @@ const somethingEpic = (action$, store, getFirebase) =>
   * [`profileDecorator`](https://prescottprue.gitbooks.io/react-redux-firebase/content/config.html) - change format of profile stored on Firebase
   * [`getFirebase`](https://prescottprue.gitbooks.io/react-redux-firebase/content/thunks.html) - access to firebase instance that fires actions when methods are called
   * [integrations](https://prescottprue.gitbooks.io/react-redux-firebase/content/thunks.html) for [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org) - using `getFirebase`
-  * [access to firebase's `storage`](https://prescottprue.gitbooks.io/react-redux-firebase/content/storage.html) method
+  * [access to firebase's `storage`](https://prescottprue.gitbooks.io/react-redux-firebase/content/storage.html) method`
   * `uniqueSet` method helper for only setting if location doesn't already exist
   * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)
   * Action Types and other Constants are exposed for external usage (such as `redux-observable`)
