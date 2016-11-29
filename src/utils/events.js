@@ -59,9 +59,15 @@ export const getEventsFromInput = paths =>
       if (!path.path) {
         throw new Error('Path is a required parameter within definition object')
       }
-      if (!path.type) {
-        path.type = 'value'
+      let strPath = path.path
+
+      if (path.queryParams) {
+        // append query params to path for queryId added in pathStrToObj
+        strPath = `${strPath}#${path.queryParams.join('&')}`
       }
+
+      // Add all parameters that are missing (ones that exist will remain)
+      path = Object.assign({}, pathStrToObj(strPath), path)
       return [ path ]
     }
 

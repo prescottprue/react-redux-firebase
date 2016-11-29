@@ -1,5 +1,5 @@
 import Firebase from 'firebase'
-import { authActions, queryActions } from './actions'
+import { authActions, queryActions, storageActions } from './actions'
 let firebaseInstance
 
 export default (config, otherConfig) => next =>
@@ -58,6 +58,15 @@ export default (config, otherConfig) => next =>
     const remove = (path, onComplete) =>
       ref.child(path).remove(onComplete)
 
+    const uploadFile = (path, file, dbPath) =>
+      storageActions.uploadFile(dispatch, firebase, { path, file, dbPath })
+
+    const uploadFiles = (path, files, dbPath) =>
+      storageActions.uploadFiles(dispatch, firebase, { path, files, dbPath })
+
+    const deleteFile = (path, dbPath) =>
+      storageActions.deleteFile(dispatch, firebase, { path, dbPath })
+
     const uniqueSet = (path, value, onComplete) =>
       ref.child(path)
         .once('value')
@@ -89,6 +98,7 @@ export default (config, otherConfig) => next =>
       authActions.resetPassword(dispatch, firebase, credentials)
 
     firebase.helpers = {
+      ref: Firebase.database().ref,
       set,
       uniqueSet,
       push,
@@ -96,6 +106,9 @@ export default (config, otherConfig) => next =>
       update,
       login,
       logout,
+      uploadFile,
+      uploadFiles,
+      deleteFile,
       createUser,
       resetPassword,
       watchEvent,

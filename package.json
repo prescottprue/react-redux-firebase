@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "main": "dist/index.js",
   "module": "src/index.js",
@@ -11,7 +11,7 @@
     "watch": "npm run build -- --watch",
     "clean": "rimraf dist",
     "prepublish": "npm run clean && npm run build",
-    "lint": "eslint src/**",
+    "lint": "eslint src/** test/**",
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha -R spec --compilers js:babel-core/register ./test/setup.js ./test/**/*.spec.js",
     "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./test/** --recursive --report lcov --compilers js:babel-register --require babel-polyfill",
@@ -39,6 +39,7 @@
     }
   ],
   "dependencies": {
+    "es6-promise": "^4.0.5",
     "firebase": "^3.6.1",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.1.0",
