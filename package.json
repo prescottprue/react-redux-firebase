@@ -13,11 +13,15 @@
     "prepublish": "npm run clean && npm run build",
     "lint": "eslint src/** test/**",
     "lint:fix": "npm run lint -- --fix",
-    "docs:build": "node node_modules/documentation/bin/documentation.js build src/** -f html -o docs",
     "test": "mocha -R spec --compilers js:babel-core/register ./test/setup.js ./test/**/*.spec.js",
     "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./test/** --recursive --report lcov --compilers js:babel-register --require babel-polyfill",
     "codecov": "cat coverage/*/lcov.info | codecov",
-    "prepush": "npm run lint:fix"
+    "prepush": "npm run lint:fix",
+    "docs:clean": "rimraf _book",
+    "docs:prepare": "gitbook install",
+    "docs:build": "npm run docs:prepare && gitbook build -g prescottprue/react-redux-firebase",
+    "docs:watch": "npm run docs:prepare && gitbook serve",
+    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force"
   },
   "contributors": [
     {
