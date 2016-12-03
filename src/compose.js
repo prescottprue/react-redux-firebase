@@ -58,15 +58,6 @@ export default (config, otherConfig) => next =>
     const remove = (path, onComplete) =>
       ref.child(path).remove(onComplete)
 
-    const uploadFile = (path, file, dbPath) =>
-      storageActions.uploadFile(dispatch, firebase, { path, file, dbPath })
-
-    const uploadFiles = (path, files, dbPath) =>
-      storageActions.uploadFiles(dispatch, firebase, { path, files, dbPath })
-
-    const deleteFile = (path, dbPath) =>
-      storageActions.deleteFile(dispatch, firebase, { path, dbPath })
-
     const uniqueSet = (path, value, onComplete) =>
       ref.child(path)
         .once('value')
@@ -78,6 +69,15 @@ export default (config, otherConfig) => next =>
           }
           return ref.child(path).set(value, onComplete)
         })
+
+    const uploadFile = (path, file, dbPath) =>
+      storageActions.uploadFile(dispatch, firebase, { path, file, dbPath })
+
+    const uploadFiles = (path, files, dbPath) =>
+      storageActions.uploadFiles(dispatch, firebase, { path, files, dbPath })
+
+    const deleteFile = (path, dbPath) =>
+      storageActions.deleteFile(dispatch, firebase, { path, dbPath })
 
     const watchEvent = (type, path) =>
       queryActions.watchEvent(firebase, dispatch, { type, path }, true)
@@ -125,11 +125,15 @@ export default (config, otherConfig) => next =>
   }
 
 // Expose Firebase instance
+/**
+ * @description Create a Firebase instance with provided config
+ */
 export const getFirebase = () => {
   // TODO: Handle recieveing config and creating firebase instance if it doesn't exist
   /* istanbul ignore next: Firebase instance always exists during tests */
   if (!firebaseInstance) {
     throw new Error('Firebase instance does not yet exist. Check your compose function.') // eslint-disable-line no-console
   }
+  // TODO: Create new firebase here with config passed in
   return firebaseInstance
 }

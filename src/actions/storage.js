@@ -1,6 +1,6 @@
 import { map } from 'lodash'
-
 import { actionTypes } from '../constants'
+import { wrapInDispatch, deleteFile as deleteFileFromFb } from '../utils/actions'
 
 const {
   FILE_UPLOAD_START,
@@ -68,39 +68,16 @@ export const uploadFiles = (dispatch, firebase, { path, files, dbPath }) =>
     )
   )
 
-export const deleteFile = (dispatch, firebase, { path, dbPath }) => {
-  dispatch({
-    type: FILE_DELETE_START,
-    path
+export const deleteFile = (dispatch, firebase, { path, dbPath }) =>
+  wrapInDispatch(dispatch, {
+    method: deleteFileFromFb,
+    args: [
+      firebase,
+      { path, dbPath }
+    ],
+    types: [
+      FILE_DELETE_START,
+      FILE_DELETE_COMPLETE,
+      FILE_DELETE_ERROR
+    ]
   })
-  return firebase.storage()
-    .ref(path)
-    .delete()
-    .then(() => {
-      if (!dbPath) {
-        dispatch({
-          path,
-          type: FILE_DELETE_COMPLETE
-        })
-        return { path, dbPath }
-      }
-
-      // Handle option for removing file info from database
-      return firebase.database()
-        .ref(dbPath)
-        .remove()
-        .then(() => {
-          dispatch({
-            type: FILE_DELETE_COMPLETE
-          })
-          return { path, dbPath }
-        })
-    })
-    .catch((err) => {
-      dispatch({
-        type: FILE_DELETE_ERROR,
-        payload: err
-      })
-      return Promise.reject(err)
-    })
-}
