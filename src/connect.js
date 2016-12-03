@@ -3,6 +3,13 @@ import { isEqual } from 'lodash'
 import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable } from './utils'
 
+/**
+ * @name firebaseConnect
+ * @description Higher Order Component that automatically listens/unListens
+ * to provided firebase paths using React's Lifecycle hooks.
+ * @param {Array} watchArray - Array of objects or strings for paths to sync from Firebase
+ * @return {Function}
+ */
 export default (dataOrFn = []) => WrappedComponent => {
   class FirebaseConnect extends Component {
 

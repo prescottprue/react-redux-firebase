@@ -2,6 +2,13 @@ import Firebase from 'firebase'
 import { authActions, queryActions, storageActions } from './actions'
 let firebaseInstance
 
+/**
+ * @name reactReduxFirebase
+ * @description Configuration call to be placed in compose call
+ * @param {Object} fbConfig - Object containing Firebase config including databaseURL
+ * @param {Object} config - Object containing other config such as userProfile
+ * @return {Function}
+ */
 export default (config, otherConfig) => next =>
   (reducer, initialState, middleware) => {
     const defaultConfig = {
