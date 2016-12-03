@@ -13,3 +13,8 @@
    * [Thunks](docs/thunks.md)
 * [Roadmap](docs/roadmap.md)
 * [Contributing](docs/contributing.md)
+* [API Reference](/docs/api/README.md)
+  * [firebaseConnect](/docs/api/connect.md)
+  * [firebaseStateReducer](/docs/api/reducer.md)
+  * [reactReduxFirebase](/docs/api/compose.md)
+  * [helpers](/docs/api/helpers.md)

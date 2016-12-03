@@ -24,6 +24,13 @@ const initialState = fromJS(emptyState)
 
 const pathToArr = path => path.split(/\//).filter(p => !!p)
 
+/**
+ * @name firebaseStateReducer
+ * @description Reducer for react redux firebase
+ * @param {Object} state - State object
+ * @param {Object} action - Action which will modify state
+ * @return {Map} State
+ */
 export default (state = initialState, action = {}) => {
   const { path } = action
   let pathArr
