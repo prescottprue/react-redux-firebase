@@ -2,9 +2,7 @@
 
 Firebase Storage is available within components by using `this.props.firebase.storage()`. This method is equivalent to Firebase's `firebase.storage()` method, meaning you can reference the [Firebase Storage Docs](https://firebase.google.com/docs/storage/web/upload-files) for full list of methods and examples.
 
-### File Upload Example
-
-#### Example
+### File String Upload
 
 ```javascript
 import React, { Component, PropTypes } from 'react'
@@ -13,9 +11,7 @@ import { firebaseConnect } from 'react-redux-firebase'
 @firebaseConnect()
 export default class Uploader extends Component {
   static propTypes = {
-    firebase: PropTypes.shape({
-      storage: PropTypes.func.isRequired
-    })
+    firebase: PropTypes.object
   }
 
   render() {

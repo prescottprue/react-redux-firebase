@@ -2,7 +2,7 @@
 
 This section includes some recipes for using react-redux-firebase within real applications.
 
-## Actions
+## [Actions](/docs/recipes/actions.md)
 
 Standard actions for interacting with Firebase including `push`, `set`, `uniqueSet`, `update`, and `remove`.
 
@@ -12,7 +12,14 @@ Standard actions for interacting with Firebase including `push`, `set`, `uniqueS
 * Writing key from a push to another location
 * Writing to multiple locations
 
-## Thunks
+## [Upload](/docs/recipes/upload.md)
+Actions for uploading files with Firebase storage including `uploadFiles` and `uploadFile` as well as direct access to `Firebase.storage()`.
+
+#### Examples
+* Upload Files
+* Upload a String as a file
+
+## [Thunks](/docs/recipes/thunks.md)
 
 Actions that dispatch other actions and have access to redux state
 

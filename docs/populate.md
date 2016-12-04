@@ -60,7 +60,7 @@ Population can also be used to populate a parameter with an object. An example o
 ```javascript
 @firebaseConnect([
   { path: '/todos', populates: [{ child: 'owner', root: 'users' }] }
-  // '/todos#populate=owner:users'// equivalent string notation
+  // '/todos#populate=owner:users' // equivalent string notation
  ])
 ```
 
@@ -82,9 +82,14 @@ There is also the option to load a parameter from within a population object. An
 
 ##### Example Query
 ```javascript
-@firebase([
- { path: '/todos', populates: [{ child: 'owner', root: 'users', childParam: 'email' }] }
- '/todos#populate=owner:users:email'
+@firebaseConnect([
+ {
+   path: '/todos',
+   populates: [
+     { child: 'owner', root: 'users', childParam: 'email' }
+   ]
+ }
+ // '/todos#populate=owner:users:email' // equivalent string notation
 ])
 ```
 

@@ -136,4 +136,4 @@ To load a firebase location once instead of binding, the once option can be used
 
 Populate allows you to replace IDs within your data with other data from Firebase. This is very useful when trying to keep your data flat. Some would call it a _join_, but it was modeled after [the mongo populate method](http://mongoosejs.com/docs/populate.html).
 
-Visit [Populate Section](/populate.md) for full documentation.
+Visit [Populate Section](/docs/populate.md) for full documentation.
