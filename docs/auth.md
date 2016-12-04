@@ -4,11 +4,11 @@ Authentication data is attached to `auth`, and errors are attached to `authError
 
 ```js
 import { connect } from 'react-redux'
-import { helpers } from 'redux-firebasev3'
+import { helpers } from 'react-redux-firebase'
 const { pathToJS } = helpers
 @connect(
   // Map state to props
-  ({firebase}) => ({
+  ({ firebase }) => ({
     authError: pathToJS(firebase, 'authError'),
     auth: pathToJS(firebase, 'auth'),
     profile: pathToJS(firebase, 'profile')
@@ -16,86 +16,125 @@ const { pathToJS } = helpers
 )
 ```
 
-**NOTE**
-All examples below assume you have placed the following at the beginning of your component:
-```js
-import { connect } from 'react-redux'
-import { firebase } from 'redux-firebasev3'
-@firebase()
-class SomeComponent extends Component {
+#### NOTE
+All examples below assume you have wrapped your component using `firebaseConnect`. This will make `this.props.firebase` available within your component:
 
+###### Decorators
+
+```js
+import React, { Component, PropTypes } from 'react'
+import { firebaseConnect } from 'react-redux-firebase'
+
+@firebaseConnect()
+export default class SomeComponent extends Component {
+  render() {
+    // this.props.firebase contains API
+  }
 }
 ```
+
+###### No Decorators
+
+```js
+import React, { Component, PropTypes } from 'react'
+import { firebaseConnect } from 'react-redux-firebase'
+
+class SomeComponent extends Component {
+  render() {
+    // this.props.firebase contains API
+  }
+}
+export default firebaseConnect()(SomeComponent)
+```
+
+
 ## `login(credentials)`
 
-##### Arguments
+##### Parameters
 
-- `credentials` (*String or Object*) If String then `ref.authWithCustomToken(credentials)` is used . If object then following cases:
-- with provider `ref.authWithOAuthPopup(provider)` or `ref.authWithOAuthRedirect(provider)`
+  * `credentials` ([**String**]() | [**Object**]())
+    * [**String**]() - `ref.authWithCustomToken(credentials)` is used
+    * [**Object**]() - cases:
+      * email and password (runs `ref.authWithPassword(credentials)`) :
+        ```js
+        {
+            email: String
+            password: String
+        }
+        ```
+      * provider (runs `ref.authWithOAuthPopup(provider)` or `ref.authWithOAuthRedirect(provider)`) :
+        ```js
+        {
+            provider: "facebook | google | twitter",
+            type: "popup | redirect", // redirect is default
+        }
+        ```
+      * provider and token (runs `ref.authWithOAuthToken(provider, token)`) :
+        ```js
+        {
+            provider: "facebook | google | twitter",
+            token : String
+        }
+        ```
+
+
+##### Returns
+[**Promise**]() with authData in case of success or the error otherwise.
+
+##### Examples
+
+   *Email*
 ```js
-{
-    provider: "facebook | google | twitter",
-    type: "popup | redirect", // redirect is default
-}
+// Call with info
+this.props.firebase.login({
+  email: 'test@test.com',
+  password: 'testest1'
+})
 ```
-- with provider and token `ref.authWithOAuthToken(provider, token)`
+
+  *OAuth Provider Redirect*
 ```js
-{
-    provider: "facebook | google | twitter",
-    token : String
-}
-```
-- with email and password `ref.authWithPassword(credentials)`
+ // Call with info
+ this.props.firebase.login({
+   provider: 'google'
+ })
+ ```
+
+   *OAuth Provider Popup*
 ```js
-{
-    email: String
-    password: String
-}
+// Call with info
+this.props.firebase.login({
+  provider: 'google',
+  type: 'popup'
+})
 ```
 
-##### Return
-
-Return a promise with authData in case of success or the error otherwise.
-
-##### Example
-
-  ```js
-  // Call with info
-  this.props.firebase.login({
-    email: 'test@test'com,
-    password: 'testest1'
-  })
-  ```
-
+  *Token*
+```js
+// Call with info
+this.props.firebase.login('someJWTAuthToken')
+```
 
 ## `createUser(credentials, profile)`
-Similar to Firebase's `ref.createUser(credentials)` but with support for automatic profile setup (based on your userProfile config). 
 
-##### Arguments
+Similar to Firebase's `ref.createUser(credentials)` but with support for automatic profile setup (based on your userProfile config).
 
-- `credentials` (Object*)
+##### Parameters
 
+* `credentials` [**Object**]()
+  * `credentials.email` [**String**]() - User's email
+  * `credentials.password` [**String**]() - User's password
+
+* `profile` [**Object**]()
+  * `profile.username` [**String**]()
+
+##### Examples
 ```js
-{
-    email: String
-    password: String
-}
-```
-
-- `profile` (Object*) 
-
-```js
-{
-    username: String,
-    anyKey: String,
-    orValue: Boolean
-}
-```
-
-##### Example
-```js
-const createNewUser = ({email, password, username }) => {
-  this.props.firebase.createUser({ email, password }, { username, email })
+const createNewUser = ({ email, password, username }) => {
+  this.props.firebase.createUser(
+    { email, password },
+    { username, email }
+  )
 }
 
 // Call with info
@@ -106,29 +145,36 @@ createNewUser({
 })
 ```
 
+##### Returns
+[**Promise**]() with `userData`
 
 ## `logout()`
-Logout from Firebase and delete all data from the store (`store.state.firebase.data`).
+Logout from Firebase and delete all data from the store (`state.firebase.data` and `state.firebase.auth` are set to `null`).
 
-`store.state.firebase.auth` is set to `null`
+##### Examples
 
-##### Example
 ```js
+// logout and remove profile and auth from state
 firebase.logout()
 ```
 
 ## `resetPassword(credentials)`
-Short for `ref.resetPassword(credentials)` and set the output in `store.state.firebase.authError`
+Calls Firebase's `ref.resetPassword(credentials)` then adds the output into redux state under `state.firebase.authError`
 
-##### Example
+##### Examples
+
 ```js
-firebase.resetPassword({email: 'test@test'com, password: 'testest1', username: 'tester'})
+firebase.resetPassword({
+  email: 'test@test.com',
+  password: 'testest1',
+  username: 'tester'
+})
 ```
-##### Arguments
-- `credentials` same as firebase docs
-- `profile` if initialized with userProfile support then profile will be saved into `${userProfile}/${auth.uid}`
 
-##### Return
-Return a promise with user's uid in case of success or the error otherwise.
-Always authenticate the new user in case of success
+##### Parameters
+  * `credentials` [**Object**]() - Credentials same as described in firebase docs
+  * `profile` [**Object**]() - if initialized with userProfile support then profile will be saved into `${userProfile}/${auth.uid}`
 
+##### Returns
+  [**Promise**]() with user's UID in case of success or the error otherwise.
+  Always authenticate the new user in case of success

@@ -8,24 +8,6 @@
 export const actionsPrefix = '@@reactReduxFirebase/'
 
 /** @constant
- * @description Default keys returned within JSON Web Token recieved when authenticating
- * @type {Array}
- * @example
- * import { constants } from 'react-redux-firebase'
- * constants.defaultJWTKeys // list of default JWT keys from Firebase
-*/
-export const defaultJWTKeys = [
-  'aud',
-  'auth_time',
-  'exp',
-  'firebase',
-  'iat',
-  'iss',
-  'sub',
-  'user_id'
-]
-
-/** @constant
  * @description Object containing all action types
  * @type {Object}
  * @example
@@ -60,15 +42,29 @@ export const actionTypes = {
 /** @constant
  * @description List of all external auth providers that are supported (firebase's email/anonymous included by default)
  * @type {Array}
- * @example
- * import { constants } from 'react-redux-firebase'
- * constants.supportedAuthProviders // list of supportedAuthProviders
+ * @private
 */
 export const supportedAuthProviders = [
   'google',
   'github',
   'twitter',
   'facebook'
+]
+
+/** @constant
+ * @description Default keys returned within JSON Web Token recieved when authenticating
+ * @type {Array}
+ * @private
+*/
+export const defaultJWTKeys = [
+  'aud',
+  'auth_time',
+  'exp',
+  'firebase',
+  'iat',
+  'iss',
+  'sub',
+  'user_id'
 ]
 
 export default {

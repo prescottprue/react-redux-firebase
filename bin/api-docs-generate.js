@@ -38,7 +38,7 @@ const generateDocForFile = (file) => {
   files.forEach(file => {
     generateDocForFile(file)
       .then((res) => {
-        console.log('\nSuccessfully generated', file) // eslint-disable-line no-console
+        console.log('Successfully generated', file) // eslint-disable-line no-console
       })
       .catch((err) => {
         console.log('error generating doc: ', err) // eslint-disable-line no-console

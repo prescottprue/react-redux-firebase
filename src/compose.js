@@ -4,6 +4,7 @@ let firebaseInstance
 
 /**
  * @name reactReduxFirebase
+ * @external
  * @description Middleware that handles configuration (placed in redux's `compose` call)
  * @param {Object} fbConfig - Object containing Firebase config including databaseURL
  * @param {String} fbConfig.apiKey - Firebase apiKey
@@ -164,7 +165,11 @@ export default (config, otherConfig) => next =>
     return store
   }
 
-// Expose Firebase instance
+/**
+ * @description Expose Firebase instance.
+ * Warning: This is going to be rewritten in coming versions.
+ * @private
+*/
 export const getFirebase = () => {
   // TODO: Handle recieveing config and creating firebase instance if it doesn't exist
   /* istanbul ignore next: Firebase instance always exists during tests */

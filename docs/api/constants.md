@@ -11,17 +11,6 @@ import { constants } from 'react-redux-firebase'
 constants.actionsPrefix === '@@reactReduxFirebase' // true
 ```
 
-# defaultJWTKeys
-
-Default keys returned within JSON Web Token recieved when authenticating
-
-**Examples**
-
-```javascript
-import { constants } from 'react-redux-firebase'
-constants.defaultJWTKeys // list of default JWT keys from Firebase
-```
-
 # actionTypes
 
 Object containing all action types
@@ -36,15 +25,4 @@ actionTypes.SET === '@@reactReduxFirebase/SET' // true
 ```javascript
 import { constants } from 'react-redux-firebase'
 constants.actionTypes.SET === '@@reactReduxFirebase/SET' // true
-```
-
-# supportedAuthProviders
-
-List of all external auth providers that are supported (firebase's email/anonymous included by default)
-
-**Examples**
-
-```javascript
-import { constants } from 'react-redux-firebase'
-constants.supportedAuthProviders // list of supportedAuthProviders
 ```

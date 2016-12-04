@@ -2,6 +2,8 @@
 
 # firebaseConnect
 
+**Extends React.Component**
+
 Higher Order Component that automatically listens/unListens
 to provided firebase paths using React's Lifecycle hooks.
 
@@ -26,13 +28,11 @@ import { connect } from 'react-redux'
 import { firebaseConnect, helpers } from 'react-redux-firebase'
 const { pathToJS } = helpers
 
-const fbWrapped = firebaseConnect()(App)
-
 // pass todos list from redux as this.props.todosList
 export default connect(({ firebase }) => ({
   profile: pathToJS(firebase, 'profile'),
   auth: pathToJS(firebase, 'auth')
-}))(fbWrapped)
+}))(App)
 ```
 
 _Data_
