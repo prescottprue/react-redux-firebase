@@ -8,7 +8,37 @@ import { getEventsFromInput, createCallable } from './utils'
  * @description Higher Order Component that automatically listens/unListens
  * to provided firebase paths using React's Lifecycle hooks.
  * @param {Array} watchArray - Array of objects or strings for paths to sync from Firebase
- * @return {Function}
+ * @return {Function} - that accepts a component to wrap and returns the wrapped component
+ * @example <caption>Basic</caption>
+ * // this.props.firebase set on App component as firebase object with helpers
+ * import { firebaseConnect } from 'react-redux-firebase'
+ * export default firebaseConnect()(App)
+ * @example <caption>Paths</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, helpers } from 'react-redux-firebase'
+ * const { pathToJS } = helpers
+ *
+ * const fbWrapped = firebaseConnect()(App)
+ *
+ * // pass todos list from redux as this.props.todosList
+ * export default connect(({ firebase }) => ({
+ *   profile: pathToJS(firebase, 'profile'),
+ *   auth: pathToJS(firebase, 'auth')
+ * }))(fbWrapped)
+ * @example <caption>Data</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, helpers } from 'react-redux-firebase'
+ * const { dataToJS } = helpers
+ *
+ * // sync /todos from firebase into redux
+ * const fbWrapped = firebaseConnect([
+ *   'todos'
+ * ])(App)
+ *
+ * // pass todos list from redux as this.props.todosList
+ * export default connect(({ firebase }) => ({
+ *   todosList: dataToJS(firebase, 'todos')
+ * }))(fbWrapped)
  */
 export default (dataOrFn = []) => WrappedComponent => {
   class FirebaseConnect extends Component {

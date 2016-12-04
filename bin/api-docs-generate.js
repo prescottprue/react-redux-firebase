@@ -15,6 +15,10 @@ const files = [
   {
     src: 'reducer.js',
     dest: 'reducer.md'
+  },
+  {
+    src: 'constants.js',
+    dest: 'constants.md'
   }
 ]
 const pathToDocumentationJs = 'node_modules/documentation/bin/documentation.js'
