@@ -15,11 +15,10 @@
 
 View deployed version of [Material Example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) [here](https://redux-firebasev3.firebaseapp.com/)
 
-
 ## Features
 - Integrated into redux
 - Support for updating and nested props
-- [Population capability](https://prescottprue.gitbooks.io/react-redux-firebase/content/populate.html) (similar to mongoose's `populate` or SQL's `JOIN`)
+- [Population capability](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
 - Out of the box support for authentication (with auto load user profile)
 - Firebase Storage Support
 - Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed` )
@@ -120,7 +119,7 @@ const { isLoaded, isEmpty, dataToJS } = helpers
     todos: dataToJS(firebase, '/todos'),
   })
 )
-class Todos extends Component {
+export default class Todos extends Component {
   static propTypes = {
     todos: PropTypes.object,
     firebase: PropTypes.object
@@ -161,7 +160,6 @@ class Todos extends Component {
     )
   }
 }
-export default Todos
 ```
 
 Alternatively, if you choose not to use decorators:
@@ -179,8 +177,14 @@ export default connect(
 
 ```
 
-## [API](https://prescottprue.gitbooks.io/react-redux-firebase/content/)
-See [API Docs](https://prescottprue.gitbooks.io/react-redux-firebase/content/)
+## [Documentation](http://react-redux-firebase.com)
+See [react-redux-firebase.com](http://react-redux-firebase.com)
+
+* [Getting Started](http://react-redux-firebase.com/docs/getting_started)
+* [Auth](http://react-redux-firebase.com/docs/auth)
+* [Queries](http://react-redux-firebase.com/docs/queries)
+* [Populate](http://react-redux-firebase.com/docs/populate)
+* [API Reference](http://react-redux-firebase.com/docs/api)
 
 ## [Examples](examples)
 
@@ -200,7 +204,11 @@ A simple example that was created using [create-react-app](https://github.com/fa
 
 #### [Material App Example](examples/complete/material)
 
-An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command.  Shows a list of todo items and allows you to add to them. This is what is deployed to [react-redux-firebase.firebaseapp.com](https://react-redux-firebase.firebaseapp.com/).
+An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command.  Shows a list of todo items and allows you to add to them. This is what is deployed to [redux-firebasev3.firebaseapp.com](https://redux-firebasev3.firebaseapp.com/).
+
+## Discussion
+
+Join the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby).
 
 ## Using with `redux-thunk`
 If you are using `redux-thunk`, make sure to set up your thunk middleware using it's redux-thunk's `withExtraArgument` method so that firebase is available within your actions. Here is an example `createStore` function that adds `getFirebase` as third argument along with a thunk that uses it:
@@ -214,7 +222,10 @@ import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
 import makeRootReducer from './reducers';
 
 const fbConfig = {} // your firebase config
-
+const config = {
+  userProfile: 'users',
+  enableLogging: false
+}
 const store = createStore(
   makeRootReducer(),
   initialState,
@@ -222,7 +233,7 @@ const store = createStore(
     applyMiddleware([
       thunk.withExtraArgument(getFirebase) // Pass getFirebase function as extra argument
     ]),
-    reactReduxFirebase(fbConfig, { userProfile: 'users', enableLogging: false })
+    reactReduxFirebase(fbConfig, )
   )
 );
 
@@ -273,17 +284,17 @@ const somethingEpic = (action$, store, getFirebase) =>
 1. How is this different than [`redux-react-firebase`](https://github.com/tiberiuc/redux-react-firebase)?
 
   This library was actually originally forked from redux-react-firebase, but adds extended functionality such as:
-  * [populate functionality](https://prescottprue.gitbooks.io/react-redux-firebase/content/populate.html) (similar to mongoDB or SQL JOIN)
-  * [`profileDecorator`](https://prescottprue.gitbooks.io/react-redux-firebase/content/config.html) - change format of profile stored on Firebase
-  * [`getFirebase`](https://prescottprue.gitbooks.io/react-redux-firebase/content/thunks.html) - access to firebase instance that fires actions when methods are called
-  * [integrations](https://prescottprue.gitbooks.io/react-redux-firebase/content/thunks.html) for [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org) - using `getFirebase`
-  * [access to firebase's `storage`](https://prescottprue.gitbooks.io/react-redux-firebase/content/storage.html) method`
+  * [populate functionality](http://react-redux-firebase.com/docs/populate) (similar to mongoDB or SQL JOIN)
+  * [`profileDecorator`](http://react-redux-firebase.com/docs/config) - change format of profile stored on Firebase
+  * [`getFirebase`](http://react-redux-firebase.com/docs/thunks) - access to firebase instance that fires actions when methods are called
+  * [integrations](http://react-redux-firebase.com/docs/thunks) for [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org) - using `getFirebase`
+  * [access to firebase's `storage`](http://react-redux-firebase.com/docs/storage) method`
   * `uniqueSet` method helper for only setting if location doesn't already exist
   * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)
-  * Action Types and other Constants are exposed for external usage (such as `redux-observable`)
+  * Action Types and other Constants are exposed for external usage (such as with `redux-observable`)
 
   #### Well why not combine?
-  I have been talking to the author of [redux-react-firebase]() about combining, but we are not sure that the users of both want that at this point. Join us on [the redux-firebase gitter](https://gitter.im/redux-firebase/Lobby) if you haven't already since a ton of this type of discussion goes on there.
+  I have been talking to the author of [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase) about combining, but we are not sure that the users of both want that at this point. Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby) if you haven't already since a ton of this type of discussion goes on there.
 
   **Bottom line:** The author of redux-react-firebase was absent when functionality was needed by me and others, so this library was created.
 

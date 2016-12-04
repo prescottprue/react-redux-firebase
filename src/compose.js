@@ -2,6 +2,47 @@ import Firebase from 'firebase'
 import { authActions, queryActions, storageActions } from './actions'
 let firebaseInstance
 
+/**
+ * @name reactReduxFirebase
+ * @external
+ * @description Middleware that handles configuration (placed in redux's `compose` call)
+ * @param {Object} fbConfig - Object containing Firebase config including databaseURL
+ * @param {String} fbConfig.apiKey - Firebase apiKey
+ * @param {String} fbConfig.authDomain - Firebase auth domain
+ * @param {String} fbConfig.databaseURL - Firebase database url
+ * @param {String} fbConfig.storageBucket - Firebase storage bucket
+ * @param {Object} config - Containing react-redux-firebase specific config such as userProfile
+ * @param {String} config.userProfile - Location on firebase to store user profiles
+ * @param {Boolean} config.enableLogging - Location on firebase to store user profiles. default: `false`
+ * @param {Function} config.profileDecorator - Location on firebase to store user profiles. default: `false`
+ * @param {Boolean} config.updateProfileOnLogin - Whether or not to update profile when logging in. default: `false`
+ * @param {Boolean} config.profileParamsToPopulate - Whether or not to update profile when logging in. default: `false`
+ * @return {Function} That accepts a component a returns a wrapped version of component
+ * @example <caption>Data</caption>
+ * import { createStore, compose } from 'redux'
+ * import { reactReduxFirebase } from 'react-redux-firebase'
+ *
+ * // Firebase config
+ * const fbConfig = {
+ *  apiKey: '<your-api-key>',
+ *  authDomain: '<your-auth-domain>',
+ *  databaseURL: '<your-database-url>',
+ *  storageBucket: '<your-storage-bucket>'
+ * }
+ *
+ * // React Redux Firebase Config
+ * const config = {
+ *   userProfile: 'users'
+ * }
+ *
+ * // Add react-redux-firebase to compose
+ * const createStoreWithFirebase = compose(
+ *  reactReduxFirebase(fbConfig, config),
+ * )(createStore)
+ *
+ * // Use Function later to create store
+ * const store = createStoreWithFirebase(rootReducer, initialState)
+ */
 export default (config, otherConfig) => next =>
   (reducer, initialState, middleware) => {
     const defaultConfig = {
@@ -124,7 +165,11 @@ export default (config, otherConfig) => next =>
     return store
   }
 
-// Expose Firebase instance
+/**
+ * @description Expose Firebase instance.
+ * Warning: This is going to be rewritten in coming versions.
+ * @private
+*/
 export const getFirebase = () => {
   // TODO: Handle recieveing config and creating firebase instance if it doesn't exist
   /* istanbul ignore next: Firebase instance always exists during tests */
