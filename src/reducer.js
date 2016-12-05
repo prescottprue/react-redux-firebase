@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable'
 import { actionTypes } from './constants'
+
 const {
   SET,
   SET_PROFILE,
@@ -24,6 +25,18 @@ const initialState = fromJS(emptyState)
 
 const pathToArr = path => path.split(/\//).filter(p => !!p)
 
+/**
+ * @name firebaseStateReducer
+ * @description Reducer for react redux firebase. This function is called
+ * automatically by redux every time an action is fired. Based on which action
+ * is called and its payload, the reducer will update redux state with relevant
+ * changes.
+ * @param {Map} state - Current Redux State
+ * @param {Object} action - Action which will modify state
+ * @param {String} action.type - Type of Action being called
+ * @param {String} action.data - Type of Action which will modify state
+ * @return {Map} State
+ */
 export default (state = initialState, action = {}) => {
   const { path } = action
   let pathArr

@@ -1,5 +1,61 @@
-const prefix = '@@reactReduxFirebase/'
+/** @constant
+ * @description Prefix for all actions within library
+ * @type {String}
+ * @example
+ * import { constants } from 'react-redux-firebase'
+ * constants.actionsPrefix === '@@reactReduxFirebase' // true
+*/
+export const actionsPrefix = '@@reactReduxFirebase/'
 
+/** @constant
+ * @description Object containing all action types
+ * @type {Object}
+ * @example
+ * import { actionTypes } from 'react-redux-firebase'
+ * actionTypes.SET === '@@reactReduxFirebase/SET' // true
+ * @example
+ * import { constants } from 'react-redux-firebase'
+ * constants.actionTypes.SET === '@@reactReduxFirebase/SET' // true
+*/
+export const actionTypes = {
+  START: `${actionsPrefix}START`,
+  SET: `${actionsPrefix}SET`,
+  SET_PROFILE: `${actionsPrefix}SET_PROFILE`,
+  LOGIN: `${actionsPrefix}LOGIN`,
+  LOGOUT: `${actionsPrefix}LOGOUT`,
+  LOGIN_ERROR: `${actionsPrefix}LOGIN_ERROR`,
+  NO_VALUE: `${actionsPrefix}NO_VALUE`,
+  UNAUTHORIZED_ERROR: `${actionsPrefix}UNAUTHORIZED_ERROR`,
+  ERROR: `${actionsPrefix}ERROR`,
+  INIT_BY_PATH: `${actionsPrefix}INIT_BY_PATH`,
+  AUTHENTICATION_INIT_STARTED: `${actionsPrefix}AUTHENTICATION_INIT_STARTED`,
+  AUTHENTICATION_INIT_FINISHED: `${actionsPrefix}AUTHENTICATION_INIT_FINISHED`,
+  FILE_UPLOAD_START: `${actionsPrefix}FILE_UPLOAD_START`,
+  FILE_UPLOAD_ERROR: `${actionsPrefix}FILE_UPLOAD_ERROR`,
+  FILE_UPLOAD_PROGRESS: `${actionsPrefix}FILE_UPLOAD_PROGRESS`,
+  FILE_UPLOAD_COMPLETE: `${actionsPrefix}FILE_UPLOAD_COMPLETE`,
+  FILE_DELETE_START: `${actionsPrefix}FILE_DELETE_START`,
+  FILE_DELETE_ERROR: `${actionsPrefix}FILE_DELETE_ERROR`,
+  FILE_DELETE_COMPLETE: `${actionsPrefix}FILE_DELETE_COMPLETE`
+}
+
+/** @constant
+ * @description List of all external auth providers that are supported (firebase's email/anonymous included by default)
+ * @type {Array}
+ * @private
+*/
+export const supportedAuthProviders = [
+  'google',
+  'github',
+  'twitter',
+  'facebook'
+]
+
+/** @constant
+ * @description Default keys returned within JSON Web Token recieved when authenticating
+ * @type {Array}
+ * @private
+*/
 export const defaultJWTKeys = [
   'aud',
   'auth_time',
@@ -9,36 +65,6 @@ export const defaultJWTKeys = [
   'iss',
   'sub',
   'user_id'
-]
-
-export const actionTypes = {
-  START: `${prefix}START`,
-  SET: `${prefix}SET`,
-  SET_PROFILE: `${prefix}SET_PROFILE`,
-  LOGIN: `${prefix}LOGIN`,
-  LOGOUT: `${prefix}LOGOUT`,
-  LOGIN_ERROR: `${prefix}LOGIN_ERROR`,
-  NO_VALUE: `${prefix}NO_VALUE`,
-  UNAUTHORIZED_ERROR: `${prefix}UNAUTHORIZED_ERROR`,
-  ERROR: `${prefix}ERROR`,
-  INIT_BY_PATH: `${prefix}INIT_BY_PATH`,
-  AUTHENTICATION_INIT_STARTED: `${prefix}AUTHENTICATION_INIT_STARTED`,
-  AUTHENTICATION_INIT_FINISHED: `${prefix}AUTHENTICATION_INIT_FINISHED`,
-  FILE_UPLOAD_START: `${prefix}FILE_UPLOAD_START`,
-  FILE_UPLOAD_ERROR: `${prefix}FILE_UPLOAD_ERROR`,
-  FILE_UPLOAD_PROGRESS: `${prefix}FILE_UPLOAD_PROGRESS`,
-  FILE_UPLOAD_COMPLETE: `${prefix}FILE_UPLOAD_COMPLETE`,
-  FILE_DELETE_START: `${prefix}FILE_DELETE_START`,
-  FILE_DELETE_ERROR: `${prefix}FILE_DELETE_ERROR`,
-  FILE_DELETE_COMPLETE: `${prefix}FILE_DELETE_COMPLETE`
-}
-
-// List of all external auth providers that are supported (firebase's email/anonymous included by default)
-export const supportedAuthProviders = [
-  'google',
-  'github',
-  'twitter',
-  'facebook'
 ]
 
 export default {

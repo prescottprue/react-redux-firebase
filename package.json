@@ -16,7 +16,13 @@
     "test": "mocha -R spec --compilers js:babel-core/register ./test/setup.js ./test/**/*.spec.js",
     "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./test/** --recursive --report lcov --compilers js:babel-register --require babel-polyfill",
     "codecov": "cat coverage/*/lcov.info | codecov",
-    "prepush": "npm run lint:fix"
+    "prepush": "npm run lint:fix",
+    "docs:clean": "rimraf _book",
+    "docs:prepare": "gitbook install",
+    "docs:api": "node bin/api-docs-generate",
+    "docs:build": "npm run docs:prepare && gitbook build -g prescottprue/react-redux-firebase && npm run docs:api",
+    "docs:watch": "npm run docs:prepare && gitbook serve",
+    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force"
   },
   "contributors": [
     {
@@ -64,6 +70,9 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "codecov": "^1.0.1",
+    "docdown": "^0.7.2",
+    "documentation": "^4.0.0-beta15",
+    "documentation-markdown-api-theme": "^1.0.2",
     "eslint": "^3.10.2",
     "eslint-config-standard": "^6.2.1",
     "eslint-config-standard-react": "^4.2.0",
@@ -71,6 +80,7 @@
     "eslint-plugin-promise": "^3.0.0",
     "eslint-plugin-react": "^6.7.1",
     "eslint-plugin-standard": "^2.0.1",
+    "gitbook-cli": "^2.3.0",
     "istanbul": "^1.1.0-alpha.1",
     "jsdom": "^9.8.3",
     "mocha": "^3.1.2",

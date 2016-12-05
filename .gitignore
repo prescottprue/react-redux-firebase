@@ -3,9 +3,9 @@ node_modules
 examples/**/node_modules
 dist
 coverage
+_book
 
 # Logs
 *.log
 
 .DS_Store
-**/**/.DS_Store
