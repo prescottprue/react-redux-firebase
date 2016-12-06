@@ -5,7 +5,7 @@
  * import { constants } from 'react-redux-firebase'
  * constants.actionsPrefix === '@@reactReduxFirebase' // true
 */
-export const actionsPrefix = '@@reactReduxFirebase/'
+export const actionsPrefix = '@@reactReduxFirebase'
 
 /** @constant
  * @description Object containing all action types
@@ -18,25 +18,35 @@ export const actionsPrefix = '@@reactReduxFirebase/'
  * constants.actionTypes.SET === '@@reactReduxFirebase/SET' // true
 */
 export const actionTypes = {
-  START: `${actionsPrefix}START`,
-  SET: `${actionsPrefix}SET`,
-  SET_PROFILE: `${actionsPrefix}SET_PROFILE`,
-  LOGIN: `${actionsPrefix}LOGIN`,
-  LOGOUT: `${actionsPrefix}LOGOUT`,
-  LOGIN_ERROR: `${actionsPrefix}LOGIN_ERROR`,
-  NO_VALUE: `${actionsPrefix}NO_VALUE`,
-  UNAUTHORIZED_ERROR: `${actionsPrefix}UNAUTHORIZED_ERROR`,
-  ERROR: `${actionsPrefix}ERROR`,
-  INIT_BY_PATH: `${actionsPrefix}INIT_BY_PATH`,
-  AUTHENTICATION_INIT_STARTED: `${actionsPrefix}AUTHENTICATION_INIT_STARTED`,
-  AUTHENTICATION_INIT_FINISHED: `${actionsPrefix}AUTHENTICATION_INIT_FINISHED`,
-  FILE_UPLOAD_START: `${actionsPrefix}FILE_UPLOAD_START`,
-  FILE_UPLOAD_ERROR: `${actionsPrefix}FILE_UPLOAD_ERROR`,
-  FILE_UPLOAD_PROGRESS: `${actionsPrefix}FILE_UPLOAD_PROGRESS`,
-  FILE_UPLOAD_COMPLETE: `${actionsPrefix}FILE_UPLOAD_COMPLETE`,
-  FILE_DELETE_START: `${actionsPrefix}FILE_DELETE_START`,
-  FILE_DELETE_ERROR: `${actionsPrefix}FILE_DELETE_ERROR`,
-  FILE_DELETE_COMPLETE: `${actionsPrefix}FILE_DELETE_COMPLETE`
+  START: `${actionsPrefix}/START`,
+  SET: `${actionsPrefix}/SET`,
+  SET_PROFILE: `${actionsPrefix}/SET_PROFILE`,
+  LOGIN: `${actionsPrefix}/LOGIN`,
+  LOGOUT: `${actionsPrefix}/LOGOUT`,
+  LOGIN_ERROR: `${actionsPrefix}/LOGIN_ERROR`,
+  NO_VALUE: `${actionsPrefix}/NO_VALUE`,
+  UNAUTHORIZED_ERROR: `${actionsPrefix}/UNAUTHORIZED_ERROR`,
+  ERROR: `${actionsPrefix}/ERROR`,
+  INIT_BY_PATH: `${actionsPrefix}/INIT_BY_PATH`,
+  AUTHENTICATION_INIT_STARTED: `${actionsPrefix}/AUTHENTICATION_INIT_STARTED`,
+  AUTHENTICATION_INIT_FINISHED: `${actionsPrefix}/AUTHENTICATION_INIT_FINISHED`,
+  FILE_UPLOAD_START: `${actionsPrefix}/FILE_UPLOAD_START`,
+  FILE_UPLOAD_ERROR: `${actionsPrefix}/FILE_UPLOAD_ERROR`,
+  FILE_UPLOAD_PROGRESS: `${actionsPrefix}/FILE_UPLOAD_PROGRESS`,
+  FILE_UPLOAD_COMPLETE: `${actionsPrefix}/FILE_UPLOAD_COMPLETE`,
+  FILE_DELETE_START: `${actionsPrefix}/FILE_DELETE_START`,
+  FILE_DELETE_ERROR: `${actionsPrefix}/FILE_DELETE_ERROR`,
+  FILE_DELETE_COMPLETE: `${actionsPrefix}/FILE_DELETE_COMPLETE`
+}
+
+/** @constant
+ * @description Default configuration options
+ * @type {Array}
+*/
+export const defaultConfig = {
+  userProfile: null,
+  enableLogging: false,
+  updateProfileOnLogin: true
 }
 
 /** @constant
@@ -56,7 +66,7 @@ export const supportedAuthProviders = [
  * @type {Array}
  * @private
 */
-export const defaultJWTKeys = [
+export const defaultJWTProps = [
   'aud',
   'auth_time',
   'exp',
@@ -67,14 +77,31 @@ export const defaultJWTKeys = [
   'user_id'
 ]
 
+/** @constant
+ * @description Default initial props used when running firebase.initializeApp
+ * @type {Array}
+ * @private
+*/
+export const defaultInitProps = [
+  'apiKey',
+  'authDomain',
+  'databaseURL',
+  'storageBucket',
+  'messagingSenderId'
+]
+
 export default {
-  defaultJWTKeys,
+  defaultJWTProps,
   actionTypes,
-  supportedAuthProviders
+  defaultConfig,
+  supportedAuthProviders,
+  defaultInitProps
 }
 
 module.exports = {
-  defaultJWTKeys,
+  defaultJWTProps,
   actionTypes,
-  supportedAuthProviders
+  defaultConfig,
+  supportedAuthProviders,
+  defaultInitProps
 }

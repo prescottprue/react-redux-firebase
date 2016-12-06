@@ -1,6 +1,7 @@
 import { map, isFunction } from 'lodash'
 import { actionTypes } from '../constants'
-import { wrapInDispatch, deleteFile as deleteFileFromFb } from '../utils/actions'
+import { wrapInDispatch } from '../utils/actions'
+import { deleteFile as deleteFileFromFb } from '../utils/storage'
 
 const {
   FILE_UPLOAD_START,
@@ -71,7 +72,7 @@ export const uploadFile = (dispatch, firebase, { path, file, dbPath }) =>
       }
       const { metadata: { name, fullPath, downloadURLs } } = res
       const { fileMetadataFactory } = firebase._.config
-      console.log('download urls:', res)
+
       // Apply fileMetadataFactory if it exists in config
       const fileData = isFunction(fileMetadataFactory)
         ? fileMetadataFactory(res)

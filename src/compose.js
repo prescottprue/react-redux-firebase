@@ -1,4 +1,5 @@
 import Firebase from 'firebase'
+import { defaultConfig } from './constants'
 import { authActions, queryActions, storageActions } from './actions'
 let firebaseInstance
 
@@ -44,16 +45,10 @@ let firebaseInstance
  */
 export default (config, otherConfig) => next =>
   (reducer, initialState, middleware) => {
-    const defaultConfig = {
-      userProfile: null,
-      enableLogging: false,
-      updateProfileOnLogin: true
-    }
-
     const store = next(reducer, initialState, middleware)
     const { dispatch } = store
 
-    const { apiKey, authDomain, databaseURL, storageBucket } = config
+    const { apiKey, authDomain, databaseURL } = config
 
     // Throw for missing Firebase Data
     if (!databaseURL) throw new Error('Firebase databaseURL is required')
@@ -65,7 +60,7 @@ export default (config, otherConfig) => next =>
 
     // Initialize Firebase
     try {
-      Firebase.initializeApp({apiKey, authDomain, databaseURL, storageBucket})
+      Firebase.initializeApp(config)
     } catch (err) {}
 
     // Enable Logging based on config

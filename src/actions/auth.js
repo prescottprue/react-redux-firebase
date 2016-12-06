@@ -1,7 +1,7 @@
 import { omit, isArray, isString, isFunction } from 'lodash'
 import jwtDecode from 'jwt-decode'
 
-import { actionTypes, defaultJWTKeys } from '../constants'
+import { actionTypes, defaultJWTProps } from '../constants'
 import { promisesForPopulate } from '../utils/populate'
 import { getLoginMethodAndParams } from '../utils/auth'
 
@@ -208,7 +208,7 @@ export const login = (dispatch, firebase, credentials) => {
       if (method === 'signInWithCustomToken') {
         // Extract the extra data in the JWT token for user object
         const { stsTokenManager: { accessToken }, uid } = userData.toJSON()
-        const extraJWTData = omit(jwtDecode(accessToken), defaultJWTKeys)
+        const extraJWTData = omit(jwtDecode(accessToken), defaultJWTProps)
 
         return createUserProfile(
           dispatch,
@@ -220,12 +220,11 @@ export const login = (dispatch, firebase, credentials) => {
 
       // Create profile when logging in with external provider
       const { user } = userData
-      console.log('userData:', userData, user)
 
       return createUserProfile(
         dispatch,
         firebase,
-        user, // TODO: Change this to userData so it has uid?
+        user,
         {
           email: user.email,
           displayName: user.providerData[0].displayName || user.email,
