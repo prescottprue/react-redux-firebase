@@ -104,17 +104,18 @@ describe('Compose', () => {
   })
 
   describe('throws for missing fbConfig parameters', () => {
+    const errorSuffix = 'is a required config parameter for react-redux-firebase.'
     it('databaseURL', () => {
       expect(() => generateCreateStore('databaseURL')(reducer))
-        .to.throw('Firebase databaseURL is required')
+        .to.throw(`databaseURL ${errorSuffix}`)
     })
     it('authDomain', () => {
       expect(() => generateCreateStore('authDomain')(reducer))
-        .to.throw('Firebase authDomain is required')
+        .to.throw(`authDomain ${errorSuffix}`)
     })
     it('apiKey', () => {
       expect(() => generateCreateStore('apiKey')(reducer))
-        .to.throw('Firebase apiKey is required')
+        .to.throw(`apiKey ${errorSuffix}`)
     })
   })
 

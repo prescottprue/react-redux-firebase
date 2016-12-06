@@ -1,5 +1,6 @@
 import Firebase from 'firebase'
 import { defaultConfig } from './constants'
+import { validateConfig } from './utils'
 import { authActions, queryActions, storageActions } from './actions'
 let firebaseInstance
 
@@ -43,25 +44,20 @@ let firebaseInstance
  * // Use Function later to create store
  * const store = createStoreWithFirebase(rootReducer, initialState)
  */
-export default (config, otherConfig) => next =>
+export default (fbConfig, otherConfig) => next =>
   (reducer, initialState, middleware) => {
     const store = next(reducer, initialState, middleware)
     const { dispatch } = store
 
-    const { apiKey, authDomain, databaseURL } = config
-
-    // Throw for missing Firebase Data
-    if (!databaseURL) throw new Error('Firebase databaseURL is required')
-    if (!authDomain) throw new Error('Firebase authDomain is required')
-    if (!apiKey) throw new Error('Firebase apiKey is required')
-
     // Combine all configs
-    const configs = Object.assign({}, defaultConfig, config, otherConfig)
+    const configs = Object.assign({}, defaultConfig, fbConfig, otherConfig)
+
+    validateConfig(configs)
 
     // Initialize Firebase
     try {
-      Firebase.initializeApp(config)
-    } catch (err) {}
+      Firebase.initializeApp(fbConfig)
+    } catch (err) {} // silence reinitialize warning (hot-reloading)
 
     // Enable Logging based on config
     if (configs.enableLogging) {
