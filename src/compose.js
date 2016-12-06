@@ -5,37 +5,36 @@ let firebaseInstance
 /**
  * @name reactReduxFirebase
  * @external
- * @description Middleware that handles configuration (placed in redux's `compose` call)
- * @param {Object} fbConfig - Object containing Firebase config including databaseURL
+ * @description Middleware that handles configuration (placed in redux's
+ * `compose` call)
+ * @param {Object} fbConfig - Object containing Firebase config including
+ * databaseURL
  * @param {String} fbConfig.apiKey - Firebase apiKey
  * @param {String} fbConfig.authDomain - Firebase auth domain
  * @param {String} fbConfig.databaseURL - Firebase database url
  * @param {String} fbConfig.storageBucket - Firebase storage bucket
- * @param {Object} config - Containing react-redux-firebase specific config such as userProfile
+ * @param {Object} config - Containing react-redux-firebase specific config such
+ * as userProfile
  * @param {String} config.userProfile - Location on firebase to store user profiles
  * @param {Boolean} config.enableLogging - Location on firebase to store user profiles. default: `false`
- * @param {Function} config.profileDecorator - Location on firebase to store user profiles. default: `false`
+ * @param {Function} config.profileDecorator - Function that returns
+ * @param {Function} config.uploadFileDataFactory - Factory for modifying
+ * how file meta data is written during file uploads
  * @param {Boolean} config.updateProfileOnLogin - Whether or not to update profile when logging in. default: `false`
  * @param {Boolean} config.profileParamsToPopulate - Whether or not to update profile when logging in. default: `false`
  * @return {Function} That accepts a component a returns a wrapped version of component
- * @example <caption>Data</caption>
+ * @example <caption>Setup</caption>
  * import { createStore, compose } from 'redux'
  * import { reactReduxFirebase } from 'react-redux-firebase'
- *
- * // Firebase config
- * const fbConfig = {
- *  apiKey: '<your-api-key>',
- *  authDomain: '<your-auth-domain>',
- *  databaseURL: '<your-database-url>',
- *  storageBucket: '<your-storage-bucket>'
- * }
- *
+
  * // React Redux Firebase Config
  * const config = {
- *   userProfile: 'users'
+ *   userProfile: 'users', // saves user profiles to '/users' on Firebase
+ *   // here is where you place other config options
  * }
  *
  * // Add react-redux-firebase to compose
+ * // Note: In full projects this will often be within createStore.js or store.js
  * const createStoreWithFirebase = compose(
  *  reactReduxFirebase(fbConfig, config),
  * )(createStore)

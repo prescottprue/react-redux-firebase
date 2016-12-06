@@ -19,6 +19,7 @@ const {
  * @description Dispatch login error action
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} authError - Error object
+ * @private
  */
 export const dispatchLoginError = (dispatch, authError) =>
   dispatch({
@@ -30,6 +31,7 @@ export const dispatchLoginError = (dispatch, authError) =>
  * @description Dispatch login error action
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} authError - Error object
+ * @private
  */
 export const dispatchUnauthorizedError = (dispatch, authError) =>
   dispatch({
@@ -41,6 +43,7 @@ export const dispatchUnauthorizedError = (dispatch, authError) =>
  * @description Dispatch login action
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} auth - Auth data object
+ * @private
  */
 export const dispatchLogin = (dispatch, auth) =>
   dispatch({
@@ -53,6 +56,7 @@ export const dispatchLogin = (dispatch, auth) =>
  * @description Initialize authentication state change listener that
  * watches user profile and dispatches login action
  * @param {Function} dispatch - Action dispatch function
+ * @private
  */
 export const init = (dispatch, firebase) => {
   dispatch({ type: AUTHENTICATION_INIT_STARTED })
@@ -81,6 +85,7 @@ export const init = (dispatch, firebase) => {
 /**
  * @description Remove listener from user profile
  * @param {Object} firebase - Internal firebase object
+ * @private
  */
 export const unWatchUserProfile = (firebase) => {
   const authUid = firebase._.authUid
@@ -98,6 +103,7 @@ export const unWatchUserProfile = (firebase) => {
  * @description Watch user profile
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
+ * @private
  */
 export const watchUserProfile = (dispatch, firebase) => {
   const authUid = firebase._.authUid
@@ -141,33 +147,39 @@ export const watchUserProfile = (dispatch, firebase) => {
  * @param {Object} firebase - Internal firebase object
  * @param {Object} userData - User data object (response from authenticating)
  * @param {Object} profile - Profile data to place in new profile
+ * @private
  */
-export const createUserProfile = (dispatch, firebase, userData, profile) =>
+export const createUserProfile = (dispatch, firebase, userData, profile) => {
+  if (!firebase._.config.userProfile) {
+    return Promise.resolve(userData)
+  }
+  const { database, _: { config } } = firebase
+  if (isFunction(config.profileFactory)) {
+    profile = config.profileFactory(userData, profile)
+  }
   // Check for user's profile at userProfile path if provided
-  !firebase._.config.userProfile
-    ? Promise.resolve(userData)
-    : firebase.database()
+  return database()
     .ref()
-    .child(`${firebase._.config.userProfile}/${userData.uid}`)
+    .child(`${config.userProfile}/${userData.uid}`)
     .once('value')
     .then(profileSnap =>
       // update profile only if doesn't exist or if set by config
-      !firebase._.config.updateProfileOnLogin && profileSnap.val() !== null
+      !config.updateProfileOnLogin && profileSnap.val() !== null
         ? profileSnap.val()
         : profileSnap.ref.update(profile) // Update the profile
-        .then(() => profile)
-        .catch(err => {
-          // Error setting profile
-          dispatchUnauthorizedError(dispatch, err)
-          return Promise.reject(err)
-        })
+            .then(() => profile)
+            .catch(err => {
+              // Error setting profile
+              dispatchUnauthorizedError(dispatch, err)
+              return Promise.reject(err)
+            })
     )
     .catch(err => {
       // Error reading user profile
       dispatchUnauthorizedError(dispatch, err)
       return Promise.reject(err)
     })
-
+}
 /**
  * @description Login with errors dispatched
  * @param {Function} dispatch - Action dispatch function
@@ -178,6 +190,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) =>
  * @param {Object} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
  * @param {Object} credentials.type - Popup or redirect (only needed for 3rd party provider login)
  * @param {Object} credentials.token - Custom or provider token
+ * @private
  */
 export const login = (dispatch, firebase, credentials) => {
   dispatchLoginError(dispatch, null)
@@ -191,49 +204,34 @@ export const login = (dispatch, firebase, credentials) => {
       // For email auth return uid (createUser is used for creating a profile)
       if (userData.email) return userData.uid
 
-      const { profileDecorator } = firebase._.config
-
       // For token auth, the user key doesn't exist. Instead, return the JWT.
       if (method === 'signInWithCustomToken') {
         // Extract the extra data in the JWT token for user object
         const { stsTokenManager: { accessToken }, uid } = userData.toJSON()
-        const jwtData = jwtDecode(accessToken)
-        const extraJWTData = omit(jwtData, defaultJWTKeys)
-
-        // Handle profile decorator
-        const profileData = profileDecorator && isFunction(profileDecorator)
-          ? profileDecorator(Object.assign(userData.toJSON(), extraJWTData))
-          : extraJWTData
+        const extraJWTData = omit(jwtDecode(accessToken), defaultJWTKeys)
 
         return createUserProfile(
           dispatch,
           firebase,
           { uid },
-          profileData
+          { ...extraJWTData, uid }
         )
       }
 
       // Create profile when logging in with external provider
       const { user } = userData
-
-      // Handle profile decorator
-      const profileData = profileDecorator && isFunction(profileDecorator)
-        ? profileDecorator(user)
-        : Object.assign(
-          {},
-          {
-            email: user.email,
-            displayName: user.providerData[0].displayName || user.email,
-            avatarUrl: user.providerData[0].photoURL,
-            providerData: user.providerData
-          }
-        )
+      console.log('userData:', userData, user)
 
       return createUserProfile(
         dispatch,
         firebase,
-        user,
-        profileData
+        user, // TODO: Change this to userData so it has uid?
+        {
+          email: user.email,
+          displayName: user.providerData[0].displayName || user.email,
+          avatarUrl: user.providerData[0].photoURL,
+          providerData: user.providerData
+        }
       )
     })
     .catch(err => {
@@ -246,6 +244,7 @@ export const login = (dispatch, firebase, credentials) => {
  * @description Logout of firebase and dispatch logout event
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
+ * @private
  */
 export const logout = (dispatch, firebase) => {
   firebase.auth().signOut()
@@ -261,6 +260,7 @@ export const logout = (dispatch, firebase) => {
  * @param {Object} firebase - Internal firebase object
  * @param {Object} credentials - Login credentials
  * @return {Promise}
+ * @private
  */
 export const createUser = (dispatch, firebase, { email, password, signIn }, profile) => {
   dispatchLoginError(dispatch, null)
@@ -303,6 +303,7 @@ export const createUser = (dispatch, firebase, { email, password, signIn }, prof
  * @param {Object} firebase - Internal firebase object
  * @param {String} email - Email to send recovery email to
  * @return {Promise}
+ * @private
  */
 export const resetPassword = (dispatch, firebase, email) => {
   dispatchLoginError(dispatch, null)
