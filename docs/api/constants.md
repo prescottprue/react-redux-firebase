@@ -26,3 +26,7 @@ actionTypes.SET === '@@reactReduxFirebase/SET' // true
 import { constants } from 'react-redux-firebase'
 constants.actionTypes.SET === '@@reactReduxFirebase/SET' // true
 ```
+
+# defaultConfig
+
+Default configuration options

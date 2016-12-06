@@ -15,15 +15,13 @@ let firebaseInstance
  * @param {String} fbConfig.authDomain - Firebase auth domain
  * @param {String} fbConfig.databaseURL - Firebase database url
  * @param {String} fbConfig.storageBucket - Firebase storage bucket
- * @param {Object} config - Containing react-redux-firebase specific config such
- * as userProfile
+ * @param {Object} config - Containing react-redux-firebase specific config such as userProfile
  * @param {String} config.userProfile - Location on firebase to store user profiles
- * @param {Boolean} config.enableLogging - Location on firebase to store user profiles. default: `false`
- * @param {Function} config.profileDecorator - Function that returns
- * @param {Function} config.uploadFileDataFactory - Factory for modifying
- * how file meta data is written during file uploads
- * @param {Boolean} config.updateProfileOnLogin - Whether or not to update profile when logging in. default: `false`
- * @param {Boolean} config.profileParamsToPopulate - Whether or not to update profile when logging in. default: `false`
+ * @param {Boolean} config.enableLogging - Location on firebase to store user profiles. (default: `false`)
+ * @param {Boolean} config.updateProfileOnLogin - Whether or not to update profile when logging in. (default: `false`)
+ * @param {Function} config.profileFactory - Factory for modifying how user profile is saved
+ * @param {Function} config.uploadFileDataFactory - Factory for modifying how file meta data is written during file uploads
+ * @param {Array|String} config.profileParamsToPopulate - Whether or not to update profile when logging in.
  * @return {Function} That accepts a component a returns a wrapped version of component
  * @example <caption>Setup</caption>
  * import { createStore, compose } from 'redux'
