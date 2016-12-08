@@ -35,6 +35,7 @@ var watchEvent = exports.watchEvent = function watchEvent(firebase, dispatch, _r
 
   var watchPath = !dest ? path : path + '@' + dest;
   var counter = (0, _query.getWatcherCount)(firebase, type, watchPath, queryId);
+  queryId = queryId || (0, _query.getQueryIdFromPath)(path);
 
   if (counter > 0) {
     if (queryId) {
