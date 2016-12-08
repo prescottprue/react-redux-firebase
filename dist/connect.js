@@ -109,16 +109,18 @@ exports.default = function () {
       }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
-          var firebase = this.context.store.firebase;
+          var _context$store2 = this.context.store,
+              firebase = _context$store2.firebase,
+              dispatch = _context$store2.dispatch;
 
-          (0, _query.unWatchEvents)(firebase, this._firebaseEvents);
+          (0, _query.unWatchEvents)(firebase, dispatch, this._firebaseEvents);
         }
       }, {
         key: 'componentWillReceiveProps',
         value: function componentWillReceiveProps(np) {
-          var _context$store2 = this.context.store,
-              firebase = _context$store2.firebase,
-              dispatch = _context$store2.dispatch;
+          var _context$store3 = this.context.store,
+              firebase = _context$store3.firebase,
+              dispatch = _context$store3.dispatch;
 
           var inputAsFunc = (0, _utils.createCallable)(dataOrFn);
           var data = inputAsFunc(np, firebase);
@@ -126,7 +128,7 @@ exports.default = function () {
           // Handle a data parameter having changed
           if (!(0, _isEqual3.default)(data, this.originalData)) {
             // UnWatch all current events
-            (0, _query.unWatchEvents)(firebase, this._firebaseEvents);
+            (0, _query.unWatchEvents)(firebase, dispatch, this._firebaseEvents);
             // Get watch events from new data
             this._firebaseEvents = (0, _utils.getEventsFromInput)(data);
             // Watch new events
