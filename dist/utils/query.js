@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.applyParamsToQuery = exports.getQueryIdFromPath = exports.unsetWatcher = exports.getWatcherCount = exports.setWatcher = exports.getWatchPath = undefined;
 
-var _constants = require('./constants');
+var _constants = require('../constants');
 
 var INIT_BY_PATH = _constants.actionTypes.INIT_BY_PATH;
 var getWatchPath = exports.getWatchPath = function getWatchPath(event, path) {
