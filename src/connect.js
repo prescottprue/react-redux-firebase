@@ -68,8 +68,8 @@ export default (dataOrFn = []) => WrappedComponent => {
     }
 
     componentWillUnmount () {
-      const { firebase } = this.context.store
-      unWatchEvents(firebase, this._firebaseEvents)
+      const { firebase, dispatch } = this.context.store
+      unWatchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
     componentWillReceiveProps (np) {
@@ -80,7 +80,7 @@ export default (dataOrFn = []) => WrappedComponent => {
       // Handle a data parameter having changed
       if (!isEqual(data, this.originalData)) {
         // UnWatch all current events
-        unWatchEvents(firebase, this._firebaseEvents)
+        unWatchEvents(firebase, dispatch, this._firebaseEvents)
         // Get watch events from new data
         this._firebaseEvents = getEventsFromInput(data)
         // Watch new events
