@@ -92,7 +92,7 @@ exports.default = function () {
           // Allow function to be passed
 
           var inputAsFunc = (0, _utils.createCallable)(dataOrFn);
-          this.originalData = inputAsFunc(this.props, firebase);
+          this.prevData = inputAsFunc(this.props, firebase);
 
           var ref = firebase.ref,
               helpers = firebase.helpers,
@@ -102,7 +102,7 @@ exports.default = function () {
 
           this.firebase = _extends({ ref: ref, storage: storage, database: database, auth: auth }, helpers);
 
-          this._firebaseEvents = (0, _utils.getEventsFromInput)(this.originalData);
+          this._firebaseEvents = (0, _utils.getEventsFromInput)(this.prevData);
 
           (0, _query.watchEvents)(firebase, dispatch, this._firebaseEvents);
         }
@@ -126,7 +126,8 @@ exports.default = function () {
           var data = inputAsFunc(np, firebase);
 
           // Handle a data parameter having changed
-          if (!(0, _isEqual3.default)(data, this.originalData)) {
+          if (!(0, _isEqual3.default)(data, this.prevData)) {
+            this.prevData = data;
             // UnWatch all current events
             (0, _query.unWatchEvents)(firebase, dispatch, this._firebaseEvents);
             // Get watch events from new data
