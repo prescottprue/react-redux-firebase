@@ -122,8 +122,8 @@ exports.default = function () {
         isLoading: false,
         data: {},
         timestamp: {},
-        requesting: false,
-        requested: false
+        requesting: {},
+        requested: {}
       });
 
     case LOGIN:
