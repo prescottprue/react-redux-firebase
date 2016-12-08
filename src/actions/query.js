@@ -4,7 +4,8 @@ import {
   applyParamsToQuery,
   getWatcherCount,
   setWatcher,
-  unsetWatcher
+  unsetWatcher,
+  getQueryIdFromPath
 } from '../utils/query'
 
 const { START, SET, NO_VALUE, ERROR } = actionTypes
@@ -20,6 +21,7 @@ const { START, SET, NO_VALUE, ERROR } = actionTypes
 export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery }, dest) => {
   const watchPath = !dest ? path : `${path}@${dest}`
   const counter = getWatcherCount(firebase, type, watchPath, queryId)
+  queryId = queryId || getQueryIdFromPath(path);
 
   if (counter > 0) {
       if (queryId) {
