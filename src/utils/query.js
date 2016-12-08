@@ -66,25 +66,21 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefine
  * @param {String} path - Path from which to get query id
  */
 export const getQueryIdFromPath = (path) => {
-  if (path) {
-      const origPath = path
-      let pathSplitted = path.split('#')
-      path = pathSplitted[0]
+    const origPath = path
+    let pathSplitted = path.split('#')
+    path = pathSplitted[0]
 
-      const isQuery = pathSplitted.length > 1
-      const queryParams = isQuery ? pathSplitted[1].split('&') : []
-      const queryId = isQuery ? queryParams.map((param) => {
-          let splittedParam = param.split('=')
-          if (splittedParam[0] === 'queryId') {
-              return splittedParam[1]
-          }
-      }).filter(q => q) : undefined
-      return (queryId && queryId.length > 0)
-          ? queryId[0]
-          : ((isQuery) ? origPath : undefined)
-  } else {
-    return undefined
-  }
+    const isQuery = pathSplitted.length > 1
+    const queryParams = isQuery ? pathSplitted[1].split('&') : []
+    const queryId = isQuery ? queryParams.map((param) => {
+        let splittedParam = param.split('=')
+        if (splittedParam[0] === 'queryId') {
+            return splittedParam[1]
+        }
+    }).filter(q => q) : undefined
+    return (queryId && queryId.length > 0)
+        ? queryId[0]
+        : ((isQuery) ? origPath : undefined)
 }
 
 /**
