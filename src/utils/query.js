@@ -2,18 +2,31 @@ import { actionTypes } from '../constants'
 
 const { INIT_BY_PATH } = actionTypes
 
-export const getWatchPath = (event, path) =>
-  `${event}:${((path.substring(0, 1) === '/') ? '' : '/')}${path}`
+/**
+ * @private
+ * @description Get path to watch
+ * @param {String} event - Type of event to watch for
+ * @param {String} path - Path to watch with watcher
+ * @return {String} watchPath
+ */
+export const getWatchPath = (event, path) => {
+  if (!event || event === '' || !path) {
+    throw new Error('Event and path are required')
+  }
+  return `${event}:${((path.substring(0, 1) === '/') ? '' : '/')}${path}`
+}
 
 /**
+ * @private
  * @description Set a new watcher
  * @param {Object} firebase - Internal firebase object
  * @param {String} event - Type of event to watch for
  * @param {String} path - Path to watch with watcher
  * @param {String} queryId - Id of query
+ * @return {Object} watcher
  */
 export const setWatcher = (firebase, event, path, queryId = undefined) => {
-    const id = queryId || getQueryIdFromPath(path) || getWatchPath(event, path)
+  const id = queryId || getQueryIdFromPath(path) || getWatchPath(event, path)
 
   if (firebase._.watchers[id]) {
     firebase._.watchers[id]++
@@ -25,11 +38,13 @@ export const setWatcher = (firebase, event, path, queryId = undefined) => {
 }
 
 /**
+ * @private
  * @description Get count of currently attached watchers
  * @param {Object} firebase - Internal firebase object
  * @param {String} event - Type of event to watch for
  * @param {String} path - Path to watch with watcher
  * @param {String} queryId - Id of query
+ * @return {Number} watcherCount
  */
 export const getWatcherCount = (firebase, event, path, queryId = undefined) => {
   const id = queryId || getQueryIdFromPath(path) || getWatchPath(event, path)
@@ -37,6 +52,7 @@ export const getWatcherCount = (firebase, event, path, queryId = undefined) => {
 }
 
 /**
+ * @private
  * @description Remove/Unset a watcher
  * @param {Object} firebase - Internal firebase object
  * @param {String} event - Type of event to watch for
@@ -62,31 +78,35 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefine
 }
 
 /**
+ * @private
  * @description Get query id from query path
  * @param {String} path - Path from which to get query id
+ * @return {String} queryId
  */
 export const getQueryIdFromPath = (path) => {
-    const origPath = path
-    let pathSplitted = path.split('#')
-    path = pathSplitted[0]
+  const origPath = path
+  let pathSplitted = path.split('#')
+  path = pathSplitted[0]
 
-    const isQuery = pathSplitted.length > 1
-    const queryParams = isQuery ? pathSplitted[1].split('&') : []
-    const queryId = isQuery ? queryParams.map((param) => {
-        let splittedParam = param.split('=')
-        if (splittedParam[0] === 'queryId') {
-            return splittedParam[1]
-        }
-    }).filter(q => q) : undefined
-    return (queryId && queryId.length > 0)
+  const isQuery = pathSplitted.length > 1
+  const queryParams = isQuery ? pathSplitted[1].split('&') : []
+  const queryId = isQuery ? queryParams.map((param) => {
+    let splittedParam = param.split('=')
+    if (splittedParam[0] === 'queryId') {
+      return splittedParam[1]
+    }
+  }).filter(q => q) : undefined
+  return (queryId && queryId.length > 0)
         ? queryId[0]
         : ((isQuery) ? origPath : undefined)
 }
 
 /**
+ * @private
  * @description Modify query to include methods based on query parameters (such as orderByChild)
  * @param {Array} queryParams - Array of query parameters to apply to query
  * @param {Object} query - Query object on which to apply query parameters
+ * @return {FirebaseQuery}
  */
 export const applyParamsToQuery = (queryParams, query) => {
   let doNotParse = false

@@ -73,31 +73,6 @@ describe('Helpers:', () => {
     })
   })
 
-  describe('snapshotToJS', () => {
-    it('exists', () => {
-      expect(helpers).to.respondTo('snapshotToJS')
-    })
-    it('passes notSetValue', () => {
-      const fakeState = { }
-      expect(helpers.snapshotToJS(fakeState, '/some', exampleData))
-        .to
-        .equal(fakeState)
-    })
-    it('gets data from state', () => {
-      const path = 'some'
-      expect(helpers.snapshotToJS(exampleState, path, exampleData))
-        .to
-        .equal(exampleData.snapshot[path])
-    })
-    it('returns snapshot for non-immutable', () => {
-      const path = 'some'
-      const fakeState = { }
-      expect(helpers.snapshotToJS(fakeState, path, exampleData))
-        .to
-        .equal(fakeState)
-    })
-  })
-
   describe('isLoaded', () => {
     it('exists', () => {
       expect(helpers).to.respondTo('isLoaded')

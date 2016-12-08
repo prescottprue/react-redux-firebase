@@ -42,10 +42,11 @@ Install peer dependencies: `npm i --save redux react-redux`
 
 ### Decorators
 
-Though they are optional, it is highly recommended that you used decorators with this library. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
+Though they are optional, it is highly recommended that you use decorators with this library. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
 
 A side by side comparison using [react-redux](https://github.com/reactjs/react-redux)'s `connect` function/HOC is the best way to illustrate the difference:
 
+#### Without Decorators
 ```javascript
 class SomeComponent extends Component {
 
@@ -54,6 +55,7 @@ export default connect()(SomeComponent)
 ```
 vs.
 
+#### With Decorators
 ```javascript
 @connect()
 export default class SomeComponent extends Component {
@@ -188,7 +190,7 @@ See [react-redux-firebase.com](http://react-redux-firebase.com)
 
 ## [Examples](examples)
 
-Examples folder is broken into two categories [complete](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete) and [snippets](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/snippets). Complete contains full applications that can be run as is, where as snippets is small amounts of code to show functionality (dev tools and deps not included).
+Examples folder is broken into two categories [complete](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete) and [snippets](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/snippets). `/complete` contains full applications that can be run as is, while `/snippets` contains small amounts of code to show functionality (dev tools and deps not included).
 
 #### [State Based Query Snippet](examples/snippets/stateBasedQuery)
 

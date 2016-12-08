@@ -20,12 +20,15 @@ const emptyState = {
   authError: undefined,
   profile: undefined,
   isInitializing: undefined,
-  data: {}
+  data: {},
+  timestamp: {},
+  requesting: {},
+  requested: {}
 }
 
 const initialState = fromJS(emptyState)
 
-const pathToArr = path => path.split(/\//).filter(p => !!p)
+const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
 
 /**
  * @name firebaseStateReducer
@@ -57,7 +60,7 @@ export default (state = initialState, action = {}) => {
           ? retVal.setIn(['requested', ...pathArr], fromJS(requested))
           : retVal.deleteIn(['requested', ...pathArr])
 
-      return retVal;
+      return retVal
 
     case SET:
       const { data, rootPath } = action
@@ -115,16 +118,7 @@ export default (state = initialState, action = {}) => {
         : state.deleteIn(['profile'])
 
     case LOGOUT:
-      return fromJS({
-        auth: null,
-        authError: null,
-        profile: null,
-        isLoading: false,
-        data: {},
-        timestamp: {},
-        requesting: {},
-        requested: {}
-      })
+      return fromJS(emptyState)
 
     case LOGIN:
       return state.setIn(['auth'], fromJS(action.auth))

@@ -79,7 +79,7 @@ export default (dataOrFn = []) => WrappedComponent => {
 
       // Handle a data parameter having changed
       if (!isEqual(data, this.prevData)) {
-        this.prevData = data;
+        this.prevData = data
         // UnWatch all current events
         unWatchEvents(firebase, dispatch, this._firebaseEvents)
         // Get watch events from new data

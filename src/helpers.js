@@ -91,13 +91,10 @@ export const fixPath = path =>
  * @return {Object} data - Javascript version of Immutable Map
  * @return {Object} Data located at path within Immutable Map
  */
-export const toJS = data => {
-  if (data && data.toJS) {
-    return data.toJS()
-  }
-
-  return data
-}
+export const toJS = data =>
+  data && data.toJS
+    ? data.toJS()
+    : data
 
 /**
  * @description Convert parameter from Immutable Map to a Javascript object
@@ -152,9 +149,7 @@ export const dataToJS = (data, path, notSetValue) => {
     return notSetValue
   }
 
-  const dataPath = '/data' + fixPath(path)
-
-  const pathArr = dataPath.split(/\//).slice(1)
+  const pathArr = `/data${fixPath(path)}`.split(/\//).slice(1)
 
   if (data.getIn) {
     return toJS(data.getIn(pathArr, notSetValue))
@@ -169,16 +164,25 @@ export const dataToJS = (data, path, notSetValue) => {
  * @param {String} path - Path of parameter to load
  * @param {String} customPath - Part of store from which to load
  * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
- * @return {Object} Data located at path within Immutable Map
+ * @return {Object} Data located at path within state
+ * @example <caption>Basic</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, helpers } from 'react-redux-firebase'
+ * const { customToJS } = helpers
+ *
+ * const fbWrapped = firebaseConnect(['/todos'])(App)
+ *
+ * export default connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.data.todos
+ *   requesting: customToJS(firebase, 'todos', 'requesting')
+ * }))(fbWrapped)
  */
 export const customToJS = (data, path, custom, notSetValue) => {
   if (!(data && data.getIn)) {
     return notSetValue
   }
 
-  const customPath = '/' + custom + fixPath(path)
-
-  const pathArr = customPath.split(/\//).slice(1)
+  const pathArr = `/${custom}${fixPath(path)}`.split(/\//).slice(1)
 
   if (data.getIn) {
     return toJS(data.getIn(pathArr, notSetValue))
@@ -187,34 +191,10 @@ export const customToJS = (data, path, custom, notSetValue) => {
   return data
 }
 
-/**
- * @description Convert Immutable Map to a Javascript object
- * @param {Map} snapshot - Snapshot from store
- * @param {String} path - Path of snapshot to load
- * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
- * @return {Object} Data located at path within Immutable Map
- */
-export const snapshotToJS = (snapshot, path, notSetValue) => {
-  if (!snapshot) {
-    return notSetValue
-  }
-
-  const snapshotPath = '/snapshot' + fixPath(path)
-
-  const pathArr = snapshotPath.split(/\//).slice(1)
-
-  if (snapshot.getIn) {
-    return toJS(snapshot.getIn(pathArr, notSetValue))
-  }
-
-  return snapshot
-}
-
 export default {
   toJS,
   pathToJS,
   dataToJS,
-  snapshotToJS,
   customToJS,
   isLoaded,
   isEmpty

@@ -21,14 +21,14 @@ const { START, SET, NO_VALUE, ERROR } = actionTypes
 export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery }, dest) => {
   const watchPath = !dest ? path : `${path}@${dest}`
   const counter = getWatcherCount(firebase, type, watchPath, queryId)
-  queryId = queryId || getQueryIdFromPath(path);
+  queryId = queryId || getQueryIdFromPath(path)
 
   if (counter > 0) {
-      if (queryId) {
-          unsetWatcher(firebase, dispatch, type, path, queryId)
-      } else {
-          return
-      }
+    if (queryId) {
+      unsetWatcher(firebase, dispatch, type, path, queryId)
+    } else {
+      return
+    }
   }
 
   setWatcher(firebase, type, watchPath, queryId)
@@ -44,8 +44,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           dispatch({
             type: NO_VALUE,
             timestamp: Date.now(),
-            requesting : false,
-            requested : true,
+            requesting: false,
+            requested: true,
             path
           })
         }
@@ -65,13 +65,13 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
   }
 
   const runQuery = (q, e, p, params) => {
-      dispatch({
-        type: START,
-        timestamp: Date.now(),
-        requesting : true,
-        requested : false,
-        path
-      })
+    dispatch({
+      type: START,
+      timestamp: Date.now(),
+      requesting: true,
+      requested: false,
+      path
+    })
 
     // Handle once queries
     if (e === 'once') {
@@ -115,8 +115,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           rootPath,
           data,
           timestamp: Date.now(),
-          requesting : false,
-          requested : true
+          requesting: false,
+          requested: true
         })
       }
 
@@ -129,8 +129,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
             path: resultPath,
             rootPath,
             timestamp: Date.now(),
-            requesting : false,
-            requested : true,
+            requesting: false,
+            requested: true,
             data: list
           })
         })

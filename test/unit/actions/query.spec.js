@@ -43,14 +43,16 @@ describe('Actions: Query', () => {
       expect(() => watchEvent(firebase, dispatch, { path: 'projects' }, 'projects')).to.Throw
     })
   })
+
   describe('unWatchEvent', () => {
     it('is exported', () => {
       expect(unWatchEvent).to.be.a.function
     })
     it('runs given basic params', () => {
-      expect(unWatchEvent(firebase, 'once', 'projects')).to.be.a.function
+      expect(unWatchEvent(firebase, dispatch, 'once', 'projects')).to.be.a.function
     })
   })
+
   describe('watchEvents', () => {
     it('is exported', () => {
       expect(watchEvents).to.be.a.function
@@ -62,6 +64,7 @@ describe('Actions: Query', () => {
       expect(spy).to.be.calledOnce
     })
   })
+
   describe('unWatchEvents', () => {
     it('is exported', () => {
       expect(unWatchEvents).to.be.a.function
@@ -69,14 +72,13 @@ describe('Actions: Query', () => {
     it('runs given basic params', () => {
       const events = [{type: 'value', path: 'test'}]
       spy = sinon.spy(events, 'forEach')
-      unWatchEvents(firebase, events)
+      unWatchEvents(firebase, dispatch, events)
       expect(spy).to.be.calledOnce
     })
     it('throws for bad type', () => {
-      const events = [{type: '', path: 'test'}]
+      const events = [{path: 'test'}]
       spy = sinon.spy(events, 'forEach')
-      unWatchEvents(firebase, events)
-      expect(spy).to.Throw
+      expect(() => unWatchEvents(firebase, dispatch, events)).to.Throw
     })
   })
 })
