@@ -106,6 +106,8 @@ export default (state = initialState, action = {}) => {
       retVal = retVal.deleteIn(['requesting', ...pathArr])
       retVal = retVal.deleteIn(['requested', ...pathArr])
 
+      return retVal
+
     case SET_PROFILE:
       const {profile} = action
       return (profile !== undefined)
