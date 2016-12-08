@@ -1,4 +1,4 @@
-import { actionTypes } from './constants'
+import { actionTypes } from '../constants'
 
 const { INIT_BY_PATH } = actionTypes
 
