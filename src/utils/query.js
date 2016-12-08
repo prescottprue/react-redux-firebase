@@ -1,3 +1,7 @@
+import { actionTypes } from './constants'
+
+const { INIT_BY_PATH } = actionTypes
+
 export const getWatchPath = (event, path) =>
   `${event}:${((path.substring(0, 1) === '/') ? '' : '/')}${path}`
 
@@ -39,7 +43,7 @@ export const getWatcherCount = (firebase, event, path, queryId = undefined) => {
  * @param {String} path - Path to watch with watcher
  * @param {String} queryId - Id of query
  */
-export const unsetWatcher = (firebase, event, path, queryId = undefined) => {
+export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefined) => {
   let id = queryId || getQueryIdFromPath(path)
   path = path.split('#')[0]
 
@@ -51,6 +55,10 @@ export const unsetWatcher = (firebase, event, path, queryId = undefined) => {
     delete firebase._.watchers[id]
     if (event !== 'first_child') {
       firebase.database().ref().child(path).off(event)
+      dispatch({
+        type: INIT_BY_PATH,
+        path
+      })
     }
   } else if (firebase._.watchers[id]) {
     firebase._.watchers[id]--
