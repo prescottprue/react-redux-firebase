@@ -57,19 +57,19 @@ export default (dataOrFn = []) => WrappedComponent => {
 
       // Allow function to be passed
       const inputAsFunc = createCallable(dataOrFn)
-      this.originalData = inputAsFunc(this.props, firebase)
+      this.prevData = inputAsFunc(this.props, firebase)
 
       const { ref, helpers, storage, database, auth } = firebase
       this.firebase = { ref, storage, database, auth, ...helpers }
 
-      this._firebaseEvents = getEventsFromInput(this.originalData)
+      this._firebaseEvents = getEventsFromInput(this.prevData)
 
       watchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
     componentWillUnmount () {
-      const { firebase } = this.context.store
-      unWatchEvents(firebase, this._firebaseEvents)
+      const { firebase, dispatch } = this.context.store
+      unWatchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
     componentWillReceiveProps (np) {
@@ -78,9 +78,10 @@ export default (dataOrFn = []) => WrappedComponent => {
       const data = inputAsFunc(np, firebase)
 
       // Handle a data parameter having changed
-      if (!isEqual(data, this.originalData)) {
+      if (!isEqual(data, this.prevData)) {
+        this.prevData = data;
         // UnWatch all current events
-        unWatchEvents(firebase, this._firebaseEvents)
+        unWatchEvents(firebase, dispatch, this._firebaseEvents)
         // Get watch events from new data
         this._firebaseEvents = getEventsFromInput(data)
         // Watch new events
