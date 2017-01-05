@@ -1,4 +1,6 @@
-import Firebase from 'firebase'
+const Firebase = require('firebase/app');
+require('firebase/auth');
+require('firebase/database');
 import { authActions, queryActions, storageActions } from './actions'
 let firebaseInstance
 

@@ -96,7 +96,7 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
               getPopulateChild(
                 firebase,
                 p,
-                childParam ? get(id, childParam) : id // get child parameter if [] notation
+                childParam ? get(id, childParam) : id === true ? childKey : id // get child parameter if [] notation
               )
               .then(pc =>
                 !childParam
