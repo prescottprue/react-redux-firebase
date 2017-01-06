@@ -13,7 +13,7 @@ Populate allows you to replace the owner parameter with another value on Firebas
 ##### Example Data
 ```javascript
 todos: {
-  123: {
+  ASDF123: {
     text: 'Some Todo Item',
     owner: "Iq5b0qK2NtgggT6U3bU6iZRGyma2"
    }
@@ -47,7 +47,7 @@ When trying to replace the owner parameter with a string such as a displayName f
 
 ##### Result
 ```javascript
-123: {
+ASDF123: {
   text: 'Some Todo Item',
   owner: 'Scott Prue'
  }
@@ -67,7 +67,7 @@ Population can also be used to populate a parameter with an object. An example o
 ##### Example Result
 
 ```javascript
-123: {
+ASDF123: {
   text: 'Some Todo Item',
   owner: {
     displayName: 'Scott Prue',
@@ -96,8 +96,93 @@ There is also the option to load a parameter from within a population object. An
 ##### Example Result
 
 ```javascript
-123: {
+ASDF123: {
   text: 'Some Todo Item',
   owner: 'scott@prue.io'
+}
+```
+
+## Profile Parameters
+**NOTE:** This functionality is still under construction. Please confirm you have the most recent version.
+
+To Populate parameters within profile/user object, include the `profileParamsToPopulate` parameter when [calling `reactReduxFirebase` in your compose function](/api/compose).
+
+### Parameter
+
+##### Example Config
+Populating username with username from usernames ref.
+
+```javascript
+const config = {
+  userProfile: 'users',
+  profileParamsToPopulate: [ 'username:usernames' ]
+}
+```
+##### Initial Data
+
+```javascript
+{
+  users: {
+    $uid: {
+      email: 'test@test.com',
+      displayName: 'Iq5b0qK2NtgggT6U3bU6iZRGyma2'
+    }
+  }
+}
+```
+##### Example Result
+
+```javascript
+{
+  users: {
+    $uid: {
+      email: 'test@test.com',
+      displayName: 'someuser'
+    }
+  }
+}
+```
+
+### List of Items (Coming Soon)
+**Note:** This feature does not currently work, but is being added to `v1.2.0`
+
+##### Example Config
+
+```javascript
+const config = {
+  userProfile: 'users',
+  profileParamsToPopulate: [ 'todos:todos' ] // populate list of todos from todos ref
+}
+```
+
+##### Initial Data
+
+```javascript
+{
+  users: {
+    $uid: {
+      email: 'test@test.com',
+      todos: {
+        0: "ASDF123"
+      }
+    }
+  }
+}
+```
+
+##### Example Result
+```js
+{
+  users: {
+    $uid: {
+      email: 'test@test.com',
+      todos: {
+        ASDF123: {
+          text: 'Some Todo Item',
+          owner: "Iq5b0qK2NtgggT6U3bU6iZRGyma2"
+        }
+      }
+    }
+  }
 }
 ```

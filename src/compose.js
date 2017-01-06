@@ -21,7 +21,7 @@ let firebaseInstance
  * @param {Boolean} config.updateProfileOnLogin - Whether or not to update profile when logging in. (default: `false`)
  * @param {Function} config.profileFactory - Factory for modifying how user profile is saved
  * @param {Function} config.uploadFileDataFactory - Factory for modifying how file meta data is written during file uploads
- * @param {Array|String} config.profileParamsToPopulate - Whether or not to update profile when logging in.
+ * @param {Array|String} config.profileParamsToPopulate - Parameters within profile object to populate
  * @return {Function} That accepts a component a returns a wrapped version of component
  * @example <caption>Setup</caption>
  * import { createStore, compose } from 'redux'
