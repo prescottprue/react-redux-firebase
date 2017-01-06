@@ -1,4 +1,4 @@
-import { capitalize, isArray, isString } from 'lodash'
+import { capitalize, isArray, isString, isFunction } from 'lodash'
 import { supportedAuthProviders } from '../constants'
 
 /**
@@ -9,12 +9,20 @@ import { supportedAuthProviders } from '../constants'
  */
 export const createAuthProvider = (firebase, providerName, scopes) => {
   // TODO: Verify scopes are valid before adding
+  // TODO: Validate parameter inputs
   // Verify providerName is valid
   if (supportedAuthProviders.indexOf(providerName.toLowerCase()) === -1) {
     throw new Error(`${providerName} is not a valid Auth Provider`)
   }
   const provider = new firebase.auth[`${capitalize(providerName)}AuthProvider`]()
+
+  // Handle providers without scopes
+  if (providerName.toLowerCase() === 'twitter' || !isFunction(provider.addScope)) {
+    return provider
+  }
+
   provider.addScope('email')
+
   if (scopes) {
     if (isArray(scopes)) {
       scopes.forEach(scope => {
@@ -25,6 +33,7 @@ export const createAuthProvider = (firebase, providerName, scopes) => {
       provider.addScope(scopes)
     }
   }
+
   return provider
 }
 

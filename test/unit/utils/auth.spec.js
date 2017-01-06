@@ -1,7 +1,7 @@
-/* global describe expect it beforeEach */
+/* global firebase describe expect it */
 import {
   createAuthProvider,
-  getLoginMethodAndParams,
+  getLoginMethodAndParams
 } from '../../../src/utils/auth'
 
 describe('Utils: Auth', () => {
@@ -21,9 +21,15 @@ describe('Utils: Auth', () => {
         .to.Throw(Error, `${provider} is not a valid Auth Provider`)
     })
   })
+
   describe('getLoginMethodAndParams', () => {
     it('google provider', () => {
       expect(getLoginMethodAndParams(firebase, { provider: 'google' }))
+        .to.include.keys('method')
+    })
+    it('twitter provider', () => {
+      // TODO: Confirm that addScope
+      expect(getLoginMethodAndParams(firebase, { provider: 'twitter' }))
         .to.include.keys('method')
     })
     it('token', () => {
