@@ -10,6 +10,7 @@
   * [Upload](/docs/recipes/upload.md)
   * [Actions](/docs/recipes/actions.md)
   * [Thunks](/docs/recipes/thunks.md)
+  * [Populate](/docs/recipes/populate.md)
 * [API Reference](/docs/api/README.md)
   * [constants](/docs/api/constants.md)
   * [firebaseConnect](/docs/api/connect.md)

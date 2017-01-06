@@ -96,7 +96,8 @@ this.props.firebase.login({
 ```js
  // Call with info
  this.props.firebase.login({
-   provider: 'google'
+   provider: 'google',
+   type: 'redirect'
  })
  ```
 

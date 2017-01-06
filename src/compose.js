@@ -16,8 +16,8 @@ let firebaseInstance
  * @param {Boolean} config.enableLogging - Location on firebase to store user profiles. default: `false`
  * @param {Function} config.profileDecorator - Location on firebase to store user profiles. default: `false`
  * @param {Boolean} config.updateProfileOnLogin - Whether or not to update profile when logging in. default: `false`
- * @param {Boolean} config.profileParamsToPopulate - Whether or not to update profile when logging in. default: `false`
- * @return {Function} That accepts a component a returns a wrapped version of component
+ * @param {Boolean} config.profileParamsToPopulate - Parameters within profile object to populate
+ * @return {Function} Middleware function
  * @example <caption>Data</caption>
  * import { createStore, compose } from 'redux'
  * import { reactReduxFirebase } from 'react-redux-firebase'
