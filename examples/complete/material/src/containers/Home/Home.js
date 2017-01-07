@@ -23,7 +23,6 @@ const { isLoaded, pathToJS, dataToJS } = helpers
 @connect(
   ({firebase}) => ({
     todos: dataToJS(firebase, 'todos'),
-    profile: pathToJS(firebase, 'profile'),
     auth: pathToJS(firebase, 'auth')
   })
 )
@@ -41,8 +40,7 @@ export default class Home extends Component {
     }),
     auth: PropTypes.shape({
       uid: PropTypes.string
-    }),
-    profile: PropTypes.object
+    })
   }
 
   toggleDone = (todo, id) => {
@@ -73,8 +71,8 @@ export default class Home extends Component {
         <div className='Home-Info'>
           from
           <span className='Home-Url'>
-            <a href='https://react-redux-firebase.firebaseio.com/'>
-              react-redux-firebase.firebaseio.com
+            <a href='https://redux-firebasev3.firebaseio.com/'>
+              redux-firebasev3.firebaseio.com
             </a>
           </span>
         </div>
