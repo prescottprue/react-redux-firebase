@@ -19,6 +19,7 @@ const { isLoaded, pathToJS, dataToJS } = helpers
   // '/todos#populate=owner:displayNames' // for populating owner parameter from id into string loaded from /displayNames root
   // '/todos#populate=owner:users' // for populating owner parameter from id to user object loaded from /users root
   '/todos#populate=owner:users:displayName' // for populating owner parameter from id within to displayName string from user object within users root
+  // '/todos#orderByChild=done&equalTo=false', // list only not done todos
 ])
 @connect(
   ({firebase}) => ({

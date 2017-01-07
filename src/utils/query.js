@@ -116,6 +116,8 @@ export const applyParamsToQuery = (queryParams, query) => {
         case 'equalTo':
           let equalToParam = !doNotParse ? parseInt(param[1], 10) || param[1] : param[1]
           equalToParam = equalToParam === 'null' ? null : equalToParam
+          equalToParam = equalToParam === 'false' ? false : equalToParam
+          equalToParam = equalToParam === 'true' ? true : equalToParam
           query = param.length === 3
             ? query.equalTo(equalToParam, param[2])
             : query.equalTo(equalToParam)
