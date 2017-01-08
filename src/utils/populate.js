@@ -96,13 +96,21 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
               getPopulateChild(
                 firebase,
                 p,
-                childParam ? get(id, childParam) : id // get child parameter if [] notation
+                childParam
+                  ? get(id, childParam) // get child parameter if [] notation
+                  : id === true // handle list of keys
+                    ? childKey
+                    : id
               )
               .then(pc =>
                 !childParam
                   ? pc
                   : ({
-                    [childKey]: set(id, childParam, Object.assign(pc, { key: get(id, childParam) }))
+                    [childKey]: set(
+                      id,
+                      childParam,
+                      Object.assign(pc, { key: get(id, childParam) })
+                    )
                   })
               )
             )
@@ -110,7 +118,10 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
           // replace parameter with populated list
           .then((v) => {
             // reduce array of arrays if childParam exists
-            const vObj = childParam ? reduce(v, (a, b) => Object.assign(a, b), {}) : v
+            const vObj = childParam
+              ? reduce(v, (a, b) => Object.assign(a, b), {})
+              : v
+
             return set(originalData, `${key}.${mainChild}`, vObj)
           })
         )
