@@ -48,7 +48,7 @@ export const getPopulateChild = (firebase, populate, id) =>
    .once('value')
    .then(snap =>
      // Return id if population value does not exist
-     snap.val() || id
+     snap.val()
    )
 
 /**
@@ -60,6 +60,7 @@ export const getPopulateChild = (firebase, populate, id) =>
 export const promisesForPopulate = (firebase, originalData, populates) => {
   // TODO: Handle selecting of parameter to populate with (i.e. displayName of users/user)
   let promisesArray = []
+  let results = {}
   // Loop over all populates
   forEach(populates, (p) =>
     // Loop over each object in list
@@ -82,7 +83,7 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
           getPopulateChild(firebase, p, idOrList)
             .then((v) =>
               // replace parameter with loaded object
-              set(originalData, `${key}.${p.child}`, v)
+              set(results, `${p.root}.${idOrList}`, v)
             )
         )
       }
@@ -121,8 +122,7 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
             const vObj = childParam
               ? reduce(v, (a, b) => Object.assign(a, b), {})
               : v
-
-            return set(originalData, `${key}.${mainChild}`, vObj)
+            return set(results, `${p.root}.${key}`, vObj)
           })
         )
       }
@@ -130,7 +130,7 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
   )
 
   // Return original data after population promises run
-  return Promise.all(promisesArray).then(d => originalData)
+  return Promise.all(promisesArray).then(d => results)
 }
 
 export default { promisesForPopulate }

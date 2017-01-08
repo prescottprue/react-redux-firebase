@@ -1,5 +1,6 @@
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from '../utils/populate'
+import { forEach } from 'lodash'
 import {
   applyParamsToQuery,
   getWatcherCount,
@@ -121,17 +122,27 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       }
 
       // TODO: Allow setting of unpopulated data before starting population through config
-
       promisesForPopulate(firebase, data, populates)
-        .then((list) => {
+        .then((results) => {
           dispatch({
             type: SET,
             path: resultPath,
             rootPath,
+            data,
             timestamp: Date.now(),
             requesting: false,
-            requested: true,
-            data: list
+            requested: true
+          })
+          forEach(results, (result, path) => {
+            dispatch({
+              type: SET,
+              path,
+              rootPath,
+              data: result,
+              timestamp: Date.now(),
+              requesting: false,
+              requested: true
+            })
           })
         })
     }, (err) => {
