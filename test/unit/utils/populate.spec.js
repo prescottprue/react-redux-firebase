@@ -33,19 +33,20 @@ describe('Utils: Populate', () => {
     it('none existant child', () => {
       return promisesForPopulate(Firebase, {uid: '123123'}, [{child: 'random', root: 'users'}])
         .then((v) => {
-          expect(v).to.have.keys('uid')
+          expect(JSON.stringify(v)).to.equal(JSON.stringify({}))
         })
     })
     it('string populate', () => {
       return promisesForPopulate(Firebase, { 1: { owner: 'Iq5b0qK2NtgggT6U3bU6iZRGyma2' } }, [{child: 'owner', root: 'users'}])
         .then((v) => {
-          expect(v['1'].owner).to.have.keys('displayName', 'email', 'providerData')
+          expect(v).to.have.keys('users')
         })
     })
     it('array populate', () => {
       return promisesForPopulate(Firebase, { 1: { collaborators: ['Iq5b0qK2NtgggT6U3bU6iZRGyma2', '123'] } }, [{child: 'collaborators', root: 'users'}])
         .then((v) => {
-          expect(v['1'].collaborators[0]).to.have.keys('displayName', 'email', 'providerData')
+          // expect(v['1'].collaborators[0]).to.have.keys('displayName', 'email', 'providerData')
+          expect(v).to.have.keys('users')
         })
     })
   })

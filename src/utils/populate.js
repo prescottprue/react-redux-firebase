@@ -6,7 +6,6 @@ import {
   map,
   get,
   forEach,
-  reduce,
   set
 } from 'lodash'
 
@@ -15,7 +14,11 @@ import {
  * @param {String|Object} str - String or Object to standardize into populate object
  */
 export const getPopulateObj = (str) => {
+  if (!isString(str)) {
+    return str
+  }
   const strArray = str.split(':')
+  // TODO: Handle childParam
   return { child: strArray[0], root: strArray[1] }
 }
 
@@ -48,7 +51,7 @@ export const getPopulateChild = (firebase, populate, id) =>
    .once('value')
    .then(snap =>
      // Return id if population value does not exist
-     snap.val() || id
+     snap.val()
    )
 
 /**
@@ -60,6 +63,7 @@ export const getPopulateChild = (firebase, populate, id) =>
 export const promisesForPopulate = (firebase, originalData, populates) => {
   // TODO: Handle selecting of parameter to populate with (i.e. displayName of users/user)
   let promisesArray = []
+  let results = {}
   // Loop over all populates
   forEach(populates, (p) =>
     // Loop over each object in list
@@ -75,15 +79,17 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
       if (!idOrList) {
         return
       }
-
       // Parameter is single ID
       if (isString(idOrList)) {
         return promisesArray.push(
           getPopulateChild(firebase, p, idOrList)
-            .then((v) =>
-              // replace parameter with loaded object
-              set(originalData, `${key}.${p.child}`, v)
-            )
+            .then((v) => {
+              // write child to result object under root name if it is found
+              if (v) {
+                set(results, `${p.root}.${idOrList}`, v)
+              }
+              return results
+            })
         )
       }
 
@@ -92,45 +98,42 @@ export const promisesForPopulate = (firebase, originalData, populates) => {
         // Create single promise that includes a promise for each child
         return promisesArray.push(
           Promise.all(
-            map(idOrList, (id, childKey) =>
-              getPopulateChild(
+            map(idOrList, (id, childKey) => {
+              // handle list of keys
+              const populateKey = id === true ? childKey : id
+              return getPopulateChild(
                 firebase,
                 p,
                 childParam
                   ? get(id, childParam) // get child parameter if [] notation
-                  : id === true // handle list of keys
-                    ? childKey
-                    : id
+                  : populateKey
               )
-              .then(pc =>
-                !childParam
-                  ? pc
-                  : ({
+              .then(pc => {
+                if (pc) {
+                  // write child to result object under root name if it is found
+                  if (!childParam) {
+                    return set(results, `${p.root}.${populateKey}`, pc)
+                  }
+                  // handle child param
+                  return ({
                     [childKey]: set(
                       id,
                       childParam,
                       Object.assign(pc, { key: get(id, childParam) })
                     )
                   })
-              )
-            )
+                }
+                return results
+              })
+            })
           )
-          // replace parameter with populated list
-          .then((v) => {
-            // reduce array of arrays if childParam exists
-            const vObj = childParam
-              ? reduce(v, (a, b) => Object.assign(a, b), {})
-              : v
-
-            return set(originalData, `${key}.${mainChild}`, vObj)
-          })
         )
       }
     })
   )
 
   // Return original data after population promises run
-  return Promise.all(promisesArray).then(d => originalData)
+  return Promise.all(promisesArray).then(d => results)
 }
 
 export default { promisesForPopulate }

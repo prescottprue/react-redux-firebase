@@ -1,4 +1,5 @@
-import { size, map } from 'lodash'
+import { size, map, forEach, set, omit } from 'lodash'
+import { getPopulateObj } from './utils/populate'
 
 /**
  * @description Detect whether items are loaded yet or not
@@ -153,6 +154,62 @@ export const dataToJS = (data, path, notSetValue) => {
 
   if (data.getIn) {
     return toJS(data.getIn(pathArr, notSetValue))
+  }
+
+  return data
+}
+/**
+ * @description Convert parameter under "data" path of Immutable Map to a
+ * Javascript object with parameters populated based on populates array
+ * @param {Map} firebase - Immutable Map to be converted to JS object (state.firebase)
+ * @param {String} path - Path of parameter to load
+ * @param {Array} populates - Array of populate objects
+ * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
+ * @return {Object} Data located at path within Immutable Map
+ * @example <caption>Basic</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, helpers } from 'react-redux-firebase'
+ * const { dataToJS } = helpers
+ *
+ * const fbWrapped = firebaseConnect(['/todos'])(App)
+ *
+ * export default connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.data.todos
+ *   // each todo has child 'owner' populated from matching uid in 'users' root
+ *   todos: populatedDataToJS(firebase, 'todos', [{ child: 'owner', root: 'users' }])
+ * }))(fbWrapped)
+ */
+export const populatedDataToJS = (data, path, populates, notSetValue) => {
+  if (!data) {
+    return notSetValue
+  }
+
+  const pathArr = `/data${fixPath(path)}`.split(/\//).slice(1)
+
+  if (data.getIn) {
+    const unpopulated = toJS(data.getIn(pathArr, notSetValue))
+    if (!unpopulated) {
+      return undefined
+    }
+    const populateObjs = map(populates, p => getPopulateObj(p))
+    const populated = {}
+    forEach(populateObjs, p => {
+      forEach(unpopulated, (child, i) => { // iterate over list
+        set(populated, `${i}`, omit(child, [p.child])) // set child without parameter
+        // TODO: Handle single populates
+        forEach(child[p.child], (val, key) => { // iterate of child list
+          // Handle key: true lists
+          if (val === true) {
+            val = key
+          }
+          // Set to child under key if populate child exists
+          if (toJS(data.getIn(['data', p.root, val]))) {
+            set(populated, `${i}.${p.child}.${val}`, toJS(data.getIn(['data', p.root, val])))
+          }
+        })
+      })
+    })
+    return populated
   }
 
   return data
