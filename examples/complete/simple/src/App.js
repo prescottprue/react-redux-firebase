@@ -45,8 +45,8 @@ class App extends Component {
           <h4>
             Loaded From
             <span className='App-Url'>
-              <a href='https://react-redux-firebase.firebaseio.com/'>
-                react-redux-firebase.firebaseio.com
+              <a href='https://redux-firebasev3.firebaseio.com/'>
+                redux-firebasev3.firebaseio.com
               </a>
             </span>
           </h4>

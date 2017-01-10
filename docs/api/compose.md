@@ -16,7 +16,7 @@ Middleware that handles configuration (placed in redux's `compose` call)
     -   `config.enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Location on firebase to store user profiles. default: `false`
     -   `config.profileDecorator` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Location on firebase to store user profiles. default: `false`
     -   `config.updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to update profile when logging in. default: `false`
-    -   `config.profileParamsToPopulate` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to update profile when logging in. default: `false`
+    -   `config.profileParamsToPopulate` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Parameters within profile object to populate
 
 **Examples**
 
@@ -48,4 +48,4 @@ const createStoreWithFirebase = compose(
 const store = createStoreWithFirebase(rootReducer, initialState)
 ```
 
-Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** That accepts a component a returns a wrapped version of component
+Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Middleware function
