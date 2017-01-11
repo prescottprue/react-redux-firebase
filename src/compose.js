@@ -140,7 +140,6 @@ export default (config, otherConfig) => next =>
 
     firebase.helpers = {
       ref: path => Firebase.database().ref(path),
-      rootRef,
       set,
       uniqueSet,
       push,
