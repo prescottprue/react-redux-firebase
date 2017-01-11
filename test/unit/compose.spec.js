@@ -24,6 +24,15 @@ describe('Compose', () => {
   })
 
   describe('helpers', () => {
+    describe('ref', () => {
+      it('exists', () => {
+        expect(helpers.ref('test')).to.be.an.object
+      })
+      it('has child', () => {
+        expect(helpers.ref('test').child('asdf')).to.be.an.object
+      })
+    })
+
     describe('set', () =>
       helpers.set('test', {some: 'asdf'})
     )
