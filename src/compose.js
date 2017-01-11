@@ -62,7 +62,7 @@ export default (fbConfig, otherConfig) => next =>
       Firebase.database.enableLogging(configs.enableLogging)
     }
 
-    const ref = Firebase.database().ref()
+    const rootRef = Firebase.database().ref()
 
     const firebase = Object.defineProperty(Firebase, '_', {
       value: {
@@ -76,19 +76,19 @@ export default (fbConfig, otherConfig) => next =>
     })
 
     const set = (path, value, onComplete) =>
-      ref.child(path).set(value, onComplete)
+      rootRef.child(path).set(value, onComplete)
 
     const push = (path, value, onComplete) =>
-      ref.child(path).push(value, onComplete)
+      rootRef.child(path).push(value, onComplete)
 
     const update = (path, value, onComplete) =>
-      ref.child(path).update(value, onComplete)
+      rootRef.child(path).update(value, onComplete)
 
     const remove = (path, onComplete) =>
-      ref.child(path).remove(onComplete)
+      rootRef.child(path).remove(onComplete)
 
     const uniqueSet = (path, value, onComplete) =>
-      ref.child(path)
+      rootRef.child(path)
         .once('value')
         .then(snap => {
           if (snap.val && snap.val() !== null) {
@@ -96,7 +96,7 @@ export default (fbConfig, otherConfig) => next =>
             if (onComplete) onComplete(err)
             return Promise.reject(err)
           }
-          return ref.child(path).set(value, onComplete)
+          return rootRef.child(path).set(value, onComplete)
         })
 
     const uploadFile = (path, file, dbPath) =>
@@ -127,7 +127,7 @@ export default (fbConfig, otherConfig) => next =>
       authActions.resetPassword(dispatch, firebase, credentials)
 
     firebase.helpers = {
-      ref: Firebase.database().ref,
+      ref: path => Firebase.database().ref(path),
       set,
       uniqueSet,
       push,
