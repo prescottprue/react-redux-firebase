@@ -6,7 +6,7 @@ branches:
   - master
 script:
 - npm run lint:fix
-- npm run test:cov
+# - npm run test:cov
 cache:
   directories:
   - node_modules
