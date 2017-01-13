@@ -1,37 +1,28 @@
 language: node_js
-
 node_js:
-  - "6"
-
+- '6'
 branches:
   only:
-    - master
-
+  - master
 script:
-  - npm run lint:fix
-  - npm run test:cov
-
+- npm run lint:fix
+- npm run test:cov
 cache:
   directories:
-    - node_modules
-
+  - node_modules
 addons:
   code_climate:
-    repo_token: $CODE_CLIMATE
-
+    repo_token: "$CODE_CLIMATE"
 before_install:
-  - "npm install react firebase lodash redux react-redux"
-
+- npm install react firebase lodash redux react-redux
 after_success:
-  - npm install -g codeclimate-test-reporter
-  - codeclimate-test-reporter < coverage/lcov.info
-  - npm run codecov
-
+- npm install -g codeclimate-test-reporter
+- codeclimate-test-reporter < coverage/lcov.info
+- npm run codecov
 deploy:
-  skip_cleanup: true
   provider: npm
-  email: $NPM_EMAIL
-  api_key: $NPM_TOKEN
+  email: technik@interwebs-ug.de
+  api_key:
+    secure: WR/xe4I775m8FpYKwSRbG4YuPzDC7EcRzZAz/6FZRhp+yt6mWckKJ8CYA+bHaShSA8JWLCG21CPZdoYj9VU+4iP0wBScPJHcSGVdULb8KJWkf7KZSgCqX5CPsOpIcwnHBg9BcNO53+Rd037jjDBua4SpnFfU6d38QOfD4fb30JAGG89s8T9ATEFko+1oCcdrOUo6Ad2NGs7/SWRWDg50C5/Jr1LhnTWQeryuDCnlYgGQPgWBNl2pMIpHXV3QLCiMGk5SyChTybhNq85oCK0R1gftPGGfCEu6px0OPazQUauvuctodbAy1SNDTFCxw46R/OLVfuA8qm2SHnQPtflltml5T1z0dzHVtvNFhzE9DxPqy2afUp/hQVQHRKu51Ji0J8WoevJniQmE50/541jCQFzdWP7IqeIb28DsCyP0xGTHb0IBrgsENPeLr2R4vWSP+dEZlsaN/2thticrepW93lihckh29qtBDyNQXz5JIRTocDuREVprdgnRMfG4FdChtApBx0sq0QlmBxEcuoOrxaHu9NcIsfIgO3YoXceMiZUYSUuc9GHQP5kIjRl3vHU+TvN4P92VxuuBtGEne5r7lBowERD8mufxePtq7VCtaFCU+IXvZeb7wbe/9k236oQ24VTyKHIKcI5oeF4Hbx1dHavGfRNTlt4ZUTVd5LaBWAY=
   on:
-    tags: true
-    branch: master
+    repo: michelalbers/react-redux-firebase
