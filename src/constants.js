@@ -26,7 +26,6 @@ export const actionTypes = {
   LOGIN_ERROR: `${actionsPrefix}/LOGIN_ERROR`,
   NO_VALUE: `${actionsPrefix}/NO_VALUE`,
   UNAUTHORIZED_ERROR: `${actionsPrefix}/UNAUTHORIZED_ERROR`,
-  ERROR: `${actionsPrefix}/ERROR`,
   INIT_BY_PATH: `${actionsPrefix}/INIT_BY_PATH`,
   AUTHENTICATION_INIT_STARTED: `${actionsPrefix}/AUTHENTICATION_INIT_STARTED`,
   AUTHENTICATION_INIT_FINISHED: `${actionsPrefix}/AUTHENTICATION_INIT_FINISHED`,
@@ -90,12 +89,28 @@ export const defaultInitProps = [
   'messagingSenderId'
 ]
 
+/** @constant
+ * @description Parameters stored by path string instead of full path
+ * @type {Array}
+ * @private
+*/
+export const metaParams = ['timestamp', 'requesting', 'requested']
+
+/** @constant
+ * @description String Character used to split/join meta parameter keys
+ * @type {Array}
+ * @private
+*/
+export const paramSplitChar = '/'
+
 export default {
   defaultJWTProps,
   actionTypes,
   defaultConfig,
   supportedAuthProviders,
-  defaultInitProps
+  defaultInitProps,
+  metaParams,
+  paramSplitChar
 }
 
 module.exports = {
@@ -103,5 +118,7 @@ module.exports = {
   actionTypes,
   defaultConfig,
   supportedAuthProviders,
-  defaultInitProps
+  defaultInitProps,
+  metaParams,
+  paramSplitChar
 }

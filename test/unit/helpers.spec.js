@@ -1,7 +1,11 @@
 /* global describe expect it */
 import { fromJS } from 'immutable'
 import helpers from '../../src/helpers'
-const exampleData = { data: { some: 'data' }, snapshot: { some: 'snapshot' } }
+const exampleData = {
+  data: { some: 'data' },
+  timestamp: { 'some/path': { test: 'key' } },
+  snapshot: { some: 'snapshot' }
+}
 const exampleState = fromJS(exampleData)
 
 describe('Helpers:', () => {
@@ -30,6 +34,12 @@ describe('Helpers:', () => {
       expect(helpers.pathToJS(exampleState, '/some', exampleData))
         .to
         .equal(exampleData)
+    })
+    it('gets meta (string key)', () => {
+      expect(helpers.pathToJS(exampleState, 'timestamp/some/path'))
+        .to
+        .have
+        .keys('test')
     })
     it('returns state if its not an immutable Map', () => {
       const fakeState = {}

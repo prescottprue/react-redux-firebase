@@ -18,6 +18,30 @@ export const getWatchPath = (event, path) => {
 
 /**
  * @private
+ * @description Get query id from query path
+ * @param {String} path - Path from which to get query id
+ * @param {String} event - Type of query event
+ */
+export const getQueryIdFromPath = (path, event = undefined) => {
+  const origPath = path
+  let pathSplitted = path.split('#')
+  path = pathSplitted[0]
+
+  const isQuery = pathSplitted.length > 1
+  const queryParams = isQuery ? pathSplitted[1].split('&') : []
+  const queryId = isQuery ? queryParams.map((param) => {
+    let splittedParam = param.split('=')
+    if (splittedParam[0] === 'queryId') {
+      return splittedParam[1]
+    }
+  }).filter(q => q) : undefined
+  return (queryId && queryId.length > 0)
+      ? (event ? `${event}:/${queryId}` : queryId[0])
+      : ((isQuery) ? origPath : undefined)
+}
+
+/**
+ * @private
  * @description Set a new watcher
  * @param {Object} firebase - Internal firebase object
  * @param {String} event - Type of event to watch for
@@ -26,7 +50,7 @@ export const getWatchPath = (event, path) => {
  * @return {Object} watcher
  */
 export const setWatcher = (firebase, event, path, queryId = undefined) => {
-  const id = queryId || getQueryIdFromPath(path) || getWatchPath(event, path)
+  const id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
 
   if (firebase._.watchers[id]) {
     firebase._.watchers[id]++
@@ -47,7 +71,7 @@ export const setWatcher = (firebase, event, path, queryId = undefined) => {
  * @return {Number} watcherCount
  */
 export const getWatcherCount = (firebase, event, path, queryId = undefined) => {
-  const id = queryId || getQueryIdFromPath(path) || getWatchPath(event, path)
+  const id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   return firebase._.watchers[id]
 }
 
@@ -60,7 +84,7 @@ export const getWatcherCount = (firebase, event, path, queryId = undefined) => {
  * @param {String} queryId - Id of query
  */
 export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefined) => {
-  const id = queryId || getQueryIdFromPath(path) || getWatchPath(event, path)
+  let id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   path = path.split('#')[0]
 
   if (firebase._.watchers[id] <= 1) {
@@ -78,31 +102,6 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefine
 }
 
 /**
- * @private
- * @description Get query id from query path
- * @param {String} path - Path from which to get query id
- * @return {String} queryId
- */
-export const getQueryIdFromPath = (path) => {
-  const origPath = path
-  let pathSplitted = path.split('#')
-  path = pathSplitted[0]
-
-  const isQuery = pathSplitted.length > 1
-  const queryParams = isQuery ? pathSplitted[1].split('&') : []
-  const queryId = isQuery ? queryParams.map((param) => {
-    let splittedParam = param.split('=')
-    if (splittedParam[0] === 'queryId') {
-      return splittedParam[1]
-    }
-  }).filter(q => q) : undefined
-  return (queryId && queryId.length > 0)
-        ? queryId[0]
-        : ((isQuery) ? origPath : undefined)
-}
-
-/**
- * @private
  * @description Modify query to include methods based on query parameters (such as orderByChild)
  * @param {Array} queryParams - Array of query parameters to apply to query
  * @param {Object} query - Query object on which to apply query parameters

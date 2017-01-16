@@ -105,7 +105,13 @@ describe('reducer', () => {
           exampleState,
           { type: actionTypes.LOGOUT }
         ).toJS())
-      ).to.equal(JSON.stringify(initialState))
+      ).to.equal(JSON.stringify({
+        auth: null,
+        authError: null,
+        profile: null,
+        isLoading: false,
+        data: {}
+      }))
     })
   })
 

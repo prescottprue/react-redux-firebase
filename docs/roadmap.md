@@ -29,10 +29,11 @@
 ### `v1.2.0-beta`
 
 #### Breaking Changes
-*Stay Tuned*
+* `populatedDataToJS` method added to populate from normalized redux
+* Populated data is stored normalized (requires `populatedDataToJS` or standard mapping to populate values)
 
 #### Enhancements
-
+* Meta values (including `timestamp`, `requesting`, and `requested`) stored within redux under string keys (fixes [`invalid keyPath` error from Immutable](https://github.com/facebook/immutable-js/issues/635)). Reference [this immutable issue for more details](https://github.com/facebook/immutable-js/issues/573)
 
 ## Upcoming Minor Version (`v1.2.0`)
 
@@ -44,3 +45,15 @@
 * Config params type validation
 * `fileMetadataFactory` config option added to allow control of metadata written to database when using `uploadFile` and `uploadFiles`
 * docs improvements
+* Meta values (including `timestamp`, `requesting`, and `requested`) stored within redux under string keys (fixes [`invalid keyPath` error from Immutable](https://github.com/facebook/immutable-js/issues/635)). Reference [this immutable issue for more details](https://github.com/facebook/immutable-js/issues/573)
+
+## Upcoming Major Version (`v2.0.0`)
+
+**NOTE:** The changes are unconfirmed and are subject to change
+
+#### Breaking Changes
+* Remove usage of Immutable Maps (no more need for `pathToJS()` and `dataToJS()` to load data from redux)
+* reducer split into multiple nested reducers (follows [standard for nesting of reducers using combine reducers](http://redux.js.org/docs/recipes/reducers/UpdatingNormalizedData.html))
+
+#### Enhancements
+* `AuthRequired` decorator that forces auth to exist before rendering component

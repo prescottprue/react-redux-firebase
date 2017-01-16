@@ -1,5 +1,6 @@
-import { size, map, forEach, set, omit } from 'lodash'
+import { size, map, forEach, set, omit, some, first, drop } from 'lodash'
 import { getPopulateObj } from './utils/populate'
+import { metaParams, paramSplitChar } from './constants'
 
 /**
  * @description Detect whether items are loaded yet or not
@@ -117,10 +118,18 @@ export const pathToJS = (data, path, notSetValue) => {
   if (!data) {
     return notSetValue
   }
-
   const pathArr = fixPath(path).split(/\//).slice(1)
 
   if (data.getIn) {
+    // Handle meta params (stored by string key)
+    if (some(metaParams, (v) => pathArr.indexOf(v) !== -1)) {
+      return toJS(
+        data.getIn([
+          first(pathArr),
+          drop(pathArr).join(paramSplitChar)
+        ], notSetValue)
+      )
+    }
     return toJS(data.getIn(pathArr, notSetValue))
   }
 
@@ -193,6 +202,7 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
     }
     const populateObjs = map(populates, p => getPopulateObj(p))
     const populated = {}
+    // TODO: Use mapValues
     forEach(populateObjs, p => {
       forEach(unpopulated, (child, i) => { // iterate over list
         set(populated, `${i}`, omit(child, [p.child])) // set child without parameter
@@ -204,7 +214,11 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
           }
           // Set to child under key if populate child exists
           if (toJS(data.getIn(['data', p.root, val]))) {
-            set(populated, `${i}.${p.child}.${val}`, toJS(data.getIn(['data', p.root, val])))
+            set(
+              populated,
+              `${i}.${p.child}.${val}`,
+              toJS(data.getIn(['data', p.root, val]))
+            )
           }
         })
       })

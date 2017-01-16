@@ -9,7 +9,7 @@ import {
   getQueryIdFromPath
 } from '../utils/query'
 
-const { START, SET, NO_VALUE, ERROR } = actionTypes
+const { START, SET, NO_VALUE, UNAUTHORIZED_ERROR } = actionTypes
 
 /**
  * @description Watch a specific event type
@@ -53,7 +53,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
         return snapshot
       }, (err) => {
         dispatch({
-          type: ERROR,
+          type: UNAUTHORIZED_ERROR,
           payload: err
         })
       })
@@ -88,7 +88,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           return snapshot
         }, (err) => {
           dispatch({
-            type: ERROR,
+            type: UNAUTHORIZED_ERROR,
             payload: err
           })
         })
@@ -147,7 +147,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
         })
     }, (err) => {
       dispatch({
-        type: ERROR,
+        type: UNAUTHORIZED_ERROR,
         payload: err
       })
     })
