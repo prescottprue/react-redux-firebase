@@ -11,6 +11,7 @@ import {
 } from 'lodash'
 
 /**
+ * @private
  * @description Create standardized populate object from strings or objects
  * @param {String|Object} str - String or Object to standardize into populate object
  */
@@ -23,6 +24,7 @@ export const getPopulateObj = (str) => {
   return { child: strArray[0], root: strArray[1] }
 }
 /**
+ * @private
  * @description Create standardized populate object from strings or objects
  * @param {String|Object} str - String or Object to standardize into populate object
  */
@@ -34,6 +36,7 @@ export const getPopulateObjs = (arr) => {
 }
 
 /**
+ * @private
  * @description Get array of populates from list of query params
  * @param {Array} queryParams - Query parameters from which to get populates
  */
@@ -49,6 +52,7 @@ export const getPopulates = (params) => {
 }
 
 /**
+ * @private
  * @description Create an array of promises for population of an object or list
  * @param {Object} firebase - Internal firebase object
  * @param {Object} populate - Object containing root to be populate
@@ -65,6 +69,14 @@ export const getPopulateChild = (firebase, populate, id) =>
      snap.val()
    )
 
+/**
+ * @private
+ * @description Populate list of data
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} originalObj - Object to have parameter populated
+ * @param {Object} populate - Object containing populate information
+ * @param {Object} results - Object containing results of population from other populates
+ */
 export const populateList = (firebase, originalData, p, results) => {
   const mainChild = p.child.split('[]')[0]
   const childParam = p.child.split('[]')[1]
@@ -99,7 +111,9 @@ export const populateList = (firebase, originalData, p, results) => {
     })
   )
 }
+
 /**
+ * @private
  * @description Create an array of promises for population of an object or list
  * @param {Object} firebase - Internal firebase object
  * @param {Object} originalObj - Object to have parameter populated

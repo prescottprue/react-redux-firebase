@@ -19,10 +19,9 @@ import { getEventsFromInput, createCallable } from './utils'
  * import { firebaseConnect, helpers } from 'react-redux-firebase'
  * const { pathToJS } = helpers
  *
- * // pass todos list from redux as this.props.todosList
  * export default connect(({ firebase }) => ({
- *   profile: pathToJS(firebase, 'profile'),
- *   auth: pathToJS(firebase, 'auth')
+ *   profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.proifle
+ *   auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
  * }))(App)
  * @example <caption>Data</caption>
  * import { connect } from 'react-redux'
