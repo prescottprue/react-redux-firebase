@@ -102,6 +102,9 @@ describe('Actions: Auth', () => {
     beforeEach(() => {
       functionSpy = sinon.spy()
     })
+    afterEach(() => {
+      firebase._.config.profileParamsToPopulate = undefined
+    })
     it('calls profile unwatch', () => {
       watchUserProfile(dispatch, fakeFirebase)
       expect(firebase._.profileWatch).to.be.a.function

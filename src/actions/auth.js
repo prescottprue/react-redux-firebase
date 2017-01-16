@@ -123,19 +123,17 @@ export const watchUserProfile = (dispatch, firebase) => {
           })
         } else {
           // Convert each populate string in array into an array of once query promises
-          Promise.all(
-            promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
-          )
-          .then(data => {
-            // Dispatch action with profile combined with populated parameters
-            dispatch({
-              type: SET_PROFILE,
-              profile: Object.assign(
-                snap.val(), // profile
-                data.reduce((a, b) => Object.assign(a, b)) // populated profile parameters
-              )
+          promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
+            .then(data => {
+              // Dispatch action with profile combined with populated parameters
+              dispatch({
+                type: SET_PROFILE,
+                profile: Object.assign(
+                  snap.val(), // profile
+                  data
+                )
+              })
             })
-          })
         }
       })
   }

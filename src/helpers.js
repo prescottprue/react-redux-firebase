@@ -202,7 +202,7 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
     }
     const populateObjs = map(populates, p => getPopulateObj(p))
     const populated = {}
-    // TODO: Use mapValues
+    // TODO: Look into using mapValues
     forEach(populateObjs, p => {
       forEach(unpopulated, (child, i) => { // iterate over list
         set(populated, `${i}`, omit(child, [p.child])) // set child without parameter
