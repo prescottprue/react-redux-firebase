@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable'
+import { dropRight } from 'lodash'
 import { actionTypes, paramSplitChar } from './constants'
 
 const {
@@ -67,7 +68,9 @@ export default (state = initialState, action = {}) => {
 
       // Handle invalid keyPath error caused by deep setting to a null value
       if (data !== undefined && state.getIn(['data', ...pathArr]) === null) {
-        retVal = state.remove(['data', ...pathArr])
+        retVal = state.deleteIn(['data', ...pathArr])
+      } else if (state.getIn(dropRight(['data', ...pathArr])) === null) {
+        retVal = state.deleteIn(dropRight(['data', ...pathArr]))
       } else {
         retVal = state // start with state
       }
