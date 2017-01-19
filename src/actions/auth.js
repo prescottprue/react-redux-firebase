@@ -77,6 +77,34 @@ export const init = (dispatch, firebase) => {
     }
   })
 
+  firebase.auth().getRedirectResult()
+    .then((authData) => {
+      if (!authData || !authData.user) {
+        return dispatch({ type: LOGOUT })
+      }
+      const { user } = authData
+
+      firebase._.authUid = user.uid
+      watchUserProfile(dispatch, firebase)
+
+      dispatchLogin(dispatch, user)
+
+      createUserProfile(
+        dispatch,
+        firebase,
+        user,
+        {
+          email: user.email,
+          displayName: user.providerData[0].displayName || user.email,
+          avatarUrl: user.providerData[0].photoURL,
+          providerData: user.providerData
+        }
+      )
+    }).catch((error) => {
+      dispatchLoginError(dispatch, error)
+      return Promise.reject(error)
+    })
+
   firebase.auth().currentUser
 
   dispatch({ type: AUTHENTICATION_INIT_FINISHED })
@@ -145,6 +173,7 @@ export const watchUserProfile = (dispatch, firebase) => {
  * @param {Object} firebase - Internal firebase object
  * @param {Object} userData - User data object (response from authenticating)
  * @param {Object} profile - Profile data to place in new profile
+ * @return {Promise}
  * @private
  */
 export const createUserProfile = (dispatch, firebase, userData, profile) => {
@@ -188,6 +217,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
  * @param {Object} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
  * @param {Object} credentials.type - Popup or redirect (only needed for 3rd party provider login)
  * @param {Object} credentials.token - Custom or provider token
+ * @return {Promise}
  * @private
  */
 export const login = (dispatch, firebase, credentials) => {
