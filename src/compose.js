@@ -154,9 +154,8 @@ export default (fbConfig, otherConfig) => next =>
   }
 
 /**
- * @description Expose Firebase instance.
- * Warning: This is going to be rewritten in coming versions.
- * @private
+ * @external
+ * @description Expose Firebase instance created internally
 */
 export const getFirebase = () => {
   // TODO: Handle recieveing config and creating firebase instance if it doesn't exist
@@ -164,6 +163,5 @@ export const getFirebase = () => {
   if (!firebaseInstance) {
     throw new Error('Firebase instance does not yet exist. Check your compose function.') // eslint-disable-line no-console
   }
-  // TODO: Create new firebase here with config passed in
   return firebaseInstance
 }

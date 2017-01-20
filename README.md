@@ -305,9 +305,14 @@ const somethingEpic = (action$, store, getFirebase) =>
 
   This isn't a super quick answer, so I wrote up [a medium article to explain](https://medium.com/@prescottprue/firebase-with-redux-82d04f8675b9)
 
+# Patrons
+
+Meet some of the outstanding companies and individuals that made it possible:
+
+* [Reside Network Inc.](https://github.com/reside-eng)
+
 ## Contributors
 - [Prescott Prue](https://github.com/prescottprue)
-- [Tiberiu Craciun](https://github.com/tiberiuc)
 - [Bojhan](https://github.com/Bojhan)
 - [Rahav Lussto](https://github.com/RahavLussato)
 - [Justin Handley](https://github.com/justinhandley)

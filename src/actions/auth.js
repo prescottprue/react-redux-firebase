@@ -1,6 +1,5 @@
 import { omit, isArray, isString, isFunction } from 'lodash'
 import jwtDecode from 'jwt-decode'
-
 import { actionTypes, defaultJWTProps } from '../constants'
 import { promisesForPopulate } from '../utils/populate'
 import { getLoginMethodAndParams } from '../utils/auth'

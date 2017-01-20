@@ -1,9 +1,8 @@
 # Roadmap
 
 ## Short Term
-* List Population within user profile parameter (only single parameter currently supported)
 * Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance
-* `firebase-admin` integration
+* `firebase-admin` integration (and other external integrations like geoFire)
 * Huge App Example with passing of props to child routes
 
 ### Long Term
@@ -37,11 +36,16 @@
 
 ## Upcoming Minor Version (`v1.2.0`)
 
+**Note:** These changes include the combination of changes from all pre-release versions
+
 #### Breaking Changes
 * `profileDecorator` config option renamed to `profileFactory` for clarity
 * default file metadata written to database includes `downloadURL` instead of `downloadURLs` array
+* `populatedDataToJS` method added to populate from normalized redux
+* Populated data is stored normalized (requires `populatedDataToJS` or standard mapping to populate values)
 
 #### Enhancements
+* `redirect` type authentication working as expected with external auth Providers
 * Config params type validation
 * `fileMetadataFactory` config option added to allow control of metadata written to database when using `uploadFile` and `uploadFiles`
 * docs improvements
