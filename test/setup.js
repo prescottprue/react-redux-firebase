@@ -38,7 +38,7 @@ global.firebase = Object.defineProperty(Firebase, '_', {
   value: {
     watchers: {},
     authUid: null,
-    config: Object.assign({}, fbConfig, { userProfile: 'users' })
+    config: Object.assign({}, fbConfig, { userProfile: 'users', enableRedirectHandling: false })
   },
   writable: true,
   enumerable: true,

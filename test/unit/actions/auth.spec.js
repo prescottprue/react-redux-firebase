@@ -20,7 +20,8 @@ const fakeFirebase = {
   _: {
     authUid: '123',
     config: {
-      userProfile: 'users'
+      userProfile: 'users',
+      disableRedirectHandling: true,
     },
   },
   database: () => ({
@@ -35,6 +36,9 @@ const fakeFirebase = {
   auth: () => ({
     onAuthStateChanged: (f) => {
       f({uid: 'asdfasdf'})
+    },
+    getRedirectResult: (f) => {
+      return Promise.resolve({uid: 'asdfasdf'})
     },
     signOut: () =>
       Promise.resolve({}),
@@ -178,9 +182,10 @@ describe('Actions: Auth', () => {
           expect(fakeFirebase._.authUid).to.be.null
         })
     })
+    // TODO: dispatch spy not being called
     it.skip('calls dispatch', () => {
       dispatchSpy = sinon.spy(dispatch)
-      return logout(dispatch, firebase)
+      return logout(dispatch, fakeFirebase)
         .then(() => {
           expect(dispatchSpy).to.have.been.calledOnce
         })

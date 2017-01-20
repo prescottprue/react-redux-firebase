@@ -7,7 +7,7 @@ const reducer = sinon.spy()
 const generateCreateStore = (params) =>
   compose(composeFunc(
     params ? omit(fbConfig, params) : fbConfig,
-    { userProfile: 'users', enableLogging: true }
+    { userProfile: 'users', enableLogging: false, enableRedirectHandling: false }
   ))(createStore)
 const helpers = generateCreateStore()(reducer).firebase.helpers
 

@@ -45,7 +45,8 @@ export const actionTypes = {
 export const defaultConfig = {
   userProfile: null,
   enableLogging: false,
-  updateProfileOnLogin: true
+  updateProfileOnLogin: true,
+  enableRedirectHandling: true
 }
 
 /** @constant
