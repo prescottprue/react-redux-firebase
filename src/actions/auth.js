@@ -52,6 +52,105 @@ export const dispatchLogin = (dispatch, auth) =>
   })
 
 /**
+ * @description Remove listener from user profile
+ * @param {Object} firebase - Internal firebase object
+ * @private
+ */
+export const unWatchUserProfile = (firebase) => {
+  const authUid = firebase._.authUid
+  const userProfile = firebase._.config.userProfile
+  if (firebase._.profileWatch) {
+    firebase.database()
+      .ref()
+      .child(`${userProfile}/${authUid}`)
+      .off('value', firebase._.profileWatch)
+    firebase._.profileWatch = null
+  }
+}
+
+/**
+ * @description Watch user profile
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @private
+ */
+export const watchUserProfile = (dispatch, firebase) => {
+  const authUid = firebase._.authUid
+  const userProfile = firebase._.config.userProfile
+  unWatchUserProfile(firebase)
+
+  if (firebase._.config.userProfile) {
+    firebase._.profileWatch = firebase.database()
+      .ref()
+      .child(`${userProfile}/${authUid}`)
+      .on('value', snap => {
+        const { profileParamsToPopulate } = firebase._.config
+        if (!profileParamsToPopulate || (!isArray(profileParamsToPopulate) && !isString(profileParamsToPopulate))) {
+          dispatch({
+            type: SET_PROFILE,
+            profile: snap.val()
+          })
+        } else {
+          // Convert each populate string in array into an array of once query promises
+          promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
+            .then(data => {
+              // Dispatch action with profile combined with populated parameters
+              dispatch({
+                type: SET_PROFILE,
+                profile: Object.assign(
+                  snap.val(), // profile
+                  data
+                )
+              })
+            })
+        }
+      })
+  }
+}
+
+/**
+ * @description Create user profile if it does not already exist. `updateProifleOnLogin: false`
+ * can be passed to config to dsiable updating. Profile factory is applied if it exists and is a function.
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} userData - User data object (response from authenticating)
+ * @param {Object} profile - Profile data to place in new profile
+ * @return {Promise}
+ * @private
+ */
+export const createUserProfile = (dispatch, firebase, userData, profile) => {
+  if (!firebase._.config.userProfile) {
+    return Promise.resolve(userData)
+  }
+  const { database, _: { config } } = firebase
+  if (isFunction(config.profileFactory)) {
+    profile = config.profileFactory(userData, profile)
+  }
+  // Check for user's profile at userProfile path if provided
+  return database()
+    .ref()
+    .child(`${config.userProfile}/${userData.uid}`)
+    .once('value')
+    .then(profileSnap =>
+      // update profile only if doesn't exist or if set by config
+      !config.updateProfileOnLogin && profileSnap.val() !== null
+        ? profileSnap.val()
+        : profileSnap.ref.update(profile) // Update the profile
+            .then(() => profile)
+            .catch(err => {
+              // Error setting profile
+              dispatchUnauthorizedError(dispatch, err)
+              return Promise.reject(err)
+            })
+    )
+    .catch(err => {
+      // Error reading user profile
+      dispatchUnauthorizedError(dispatch, err)
+      return Promise.reject(err)
+    })
+}
+
+/**
  * @description Initialize authentication state change listener that
  * watches user profile and dispatches login action
  * @param {Function} dispatch - Action dispatch function
@@ -111,103 +210,6 @@ export const init = (dispatch, firebase) => {
   dispatch({ type: AUTHENTICATION_INIT_FINISHED })
 }
 
-/**
- * @description Remove listener from user profile
- * @param {Object} firebase - Internal firebase object
- * @private
- */
-export const unWatchUserProfile = (firebase) => {
-  const authUid = firebase._.authUid
-  const userProfile = firebase._.config.userProfile
-  if (firebase._.profileWatch) {
-    firebase.database()
-      .ref()
-      .child(`${userProfile}/${authUid}`)
-      .off('value', firebase._.profileWatch)
-    firebase._.profileWatch = null
-  }
-}
-
-/**
- * @description Watch user profile
- * @param {Function} dispatch - Action dispatch function
- * @param {Object} firebase - Internal firebase object
- * @private
- */
-export const watchUserProfile = (dispatch, firebase) => {
-  const authUid = firebase._.authUid
-  const userProfile = firebase._.config.userProfile
-  unWatchUserProfile(firebase)
-
-  if (firebase._.config.userProfile) {
-    firebase._.profileWatch = firebase.database()
-      .ref()
-      .child(`${userProfile}/${authUid}`)
-      .on('value', snap => {
-        const { profileParamsToPopulate } = firebase._.config
-        if (!profileParamsToPopulate || (!isArray(profileParamsToPopulate) && !isString(profileParamsToPopulate))) {
-          dispatch({
-            type: SET_PROFILE,
-            profile: snap.val()
-          })
-        } else {
-          // Convert each populate string in array into an array of once query promises
-          promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
-            .then(data => {
-              // Dispatch action with profile combined with populated parameters
-              dispatch({
-                type: SET_PROFILE,
-                profile: Object.assign(
-                  snap.val(), // profile
-                  data
-                )
-              })
-            })
-        }
-      })
-  }
-}
-
-/**
- * @description Login with errors dispatched
- * @param {Function} dispatch - Action dispatch function
- * @param {Object} firebase - Internal firebase object
- * @param {Object} userData - User data object (response from authenticating)
- * @param {Object} profile - Profile data to place in new profile
- * @return {Promise}
- * @private
- */
-export const createUserProfile = (dispatch, firebase, userData, profile) => {
-  if (!firebase._.config.userProfile) {
-    return Promise.resolve(userData)
-  }
-  const { database, _: { config } } = firebase
-  if (isFunction(config.profileFactory)) {
-    profile = config.profileFactory(userData, profile)
-  }
-  // Check for user's profile at userProfile path if provided
-  return database()
-    .ref()
-    .child(`${config.userProfile}/${userData.uid}`)
-    .once('value')
-    .then(profileSnap =>
-      // update profile only if doesn't exist or if set by config
-      !config.updateProfileOnLogin && profileSnap.val() !== null
-        ? profileSnap.val()
-        : profileSnap.ref.update(profile) // Update the profile
-            .then(() => profile)
-            .catch(err => {
-              // Error setting profile
-              dispatchUnauthorizedError(dispatch, err)
-              return Promise.reject(err)
-            })
-    )
-    .catch(err => {
-      // Error reading user profile
-      dispatchUnauthorizedError(dispatch, err)
-      return Promise.reject(err)
-    })
-}
 /**
  * @description Login with errors dispatched
  * @param {Function} dispatch - Action dispatch function

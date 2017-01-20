@@ -7,15 +7,31 @@
 */
 export const actionsPrefix = '@@reactReduxFirebase'
 
-/** @constant
- * @description Object containing all action types
+/**
+ * @constant
  * @type {Object}
+ * @description Object containing all action types
+ * @property {String} START - `@@reactReduxFirebase/START`
+ * @property {String} SET - `@@reactReduxFirebase/SET`
+ * @property {String} SET_PROFILE - `@@reactReduxFirebase/SET_PROFILE`
+ * @property {String} LOGIN - `@@reactReduxFirebase/LOGIN`
+ * @property {String} LOGOUT - `@@reactReduxFirebase/LOGOUT`
+ * @property {String} LOGIN_ERROR - `@@reactReduxFirebase/LOGIN_ERROR`
+ * @property {String} NO_VALUE - `@@reactReduxFirebase/NO_VALUE`
+ * @property {String} UNAUTHORIZED_ERROR - `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
+ * @property {String} INIT_BY_PATH - `@@reactReduxFirebase/INIT_BY_PATH`
+ * @property {String} AUTHENTICATION_INIT_STARTED - `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`
+ * @property {String} AUTHENTICATION_INIT_FINISHED - `@@reactReduxFirebase/AUTHENTICATION_INIT_FINISHED`
+ * @property {String} FILE_UPLOAD_START - `@@reactReduxFirebase/FILE_UPLOAD_START`
+ * @property {String} FILE_UPLOAD_ERROR - `@@reactReduxFirebase/FILE_UPLOAD_ERROR`
+ * @property {String} FILE_UPLOAD_PROGRESS - `@@reactReduxFirebase/FILE_UPLOAD_PROGRESS`
+ * @property {String} FILE_UPLOAD_COMPLETE - `@@reactReduxFirebase/FILE_UPLOAD_COMPLETE`
+ * @property {String} FILE_DELETE_START - `@@reactReduxFirebase/FILE_DELETE_START`
+ * @property {String} FILE_DELETE_ERROR - `@@reactReduxFirebase/FILE_DELETE_ERROR`
+ * @property {String} FILE_DELETE_COMPLETE - `@@reactReduxFirebase/FILE_DELETE_COMPLETE`
  * @example
  * import { actionTypes } from 'react-redux-firebase'
  * actionTypes.SET === '@@reactReduxFirebase/SET' // true
- * @example
- * import { constants } from 'react-redux-firebase'
- * constants.actionTypes.SET === '@@reactReduxFirebase/SET' // true
 */
 export const actionTypes = {
   START: `${actionsPrefix}/START`,
@@ -40,6 +56,10 @@ export const actionTypes = {
 
 /** @constant
  * @description Default configuration options
+ * @property {String} userProfile - `null` Location on Firebase where user profiles are stored. Often set to `'users'`.
+ * @property {Boolean} enableLogging - `false` Whether or not firebase logging is enabled
+ * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update user profile when logging in
+ * @property {Boolean} enableRedirectHandling - `true` Whether or not to enable redirect handling
  * @type {Array}
 */
 export const defaultConfig = {

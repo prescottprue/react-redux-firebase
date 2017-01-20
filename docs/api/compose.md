@@ -5,7 +5,7 @@
 Middleware that handles configuration (placed in redux's
 `compose` call)
 
-**Parameters**
+**Properties**
 
 -   `fbConfig` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing Firebase config including
     databaseURL
@@ -15,9 +15,10 @@ Middleware that handles configuration (placed in redux's
     -   `fbConfig.storageBucket` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Firebase storage bucket
 -   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Containing react-redux-firebase specific config such as userProfile
     -   `config.userProfile` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Location on firebase to store user profiles
-    -   `config.enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Location on firebase to store user profiles. (default: `false`)
+    -   `config.enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable Firebase database logging
     -   `config.updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to update profile when logging in. (default: `false`)
-    -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user profile is saved
+    -   `config.enableRedirectHandling` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable auth redirect handling listener. (default: `true`)
+    -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user profile is saved.
     -   `config.uploadFileDataFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how file meta data is written during file uploads
     -   `config.profileParamsToPopulate` **([Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String))** Parameters within profile object to populate
 
@@ -46,3 +47,45 @@ const store = createStoreWithFirebase(rootReducer, initialState)
 ```
 
 Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** That accepts a component a returns a wrapped version of component
+
+# getFirebase
+
+Expose Firebase instance created internally. Useful for
+integrations into external libraries such as redux-thunk and redux-observable.
+
+**Examples**
+
+_redux-thunk integration_
+
+```javascript
+import { applyMiddleware, compose, createStore } from 'redux';
+import thunk from 'redux-thunk';
+import { reactReduxFirebase } from 'react-redux-firebase';
+import makeRootReducer from './reducers';
+import { getFirebase } from 'react-redux-firebase';
+
+const fbConfig = {} // your firebase config
+
+const store = createStore(
+  makeRootReducer(),
+  initialState,
+  compose(
+    applyMiddleware([
+      // Pass getFirebase function as extra argument
+      thunk.withExtraArgument(getFirebase)
+    ]),
+    reactReduxFirebase(fbConfig)
+  )
+);
+// then later
+export const addTodo = (newTodo) =>
+ (dispatch, getState, getFirebase) => {
+   const firebase = getFirebase()
+   firebase
+     .helpers
+     .push('todos', newTodo)
+     .then(() => {
+       dispatch({ type: 'SOME_ACTION' })
+     })
+};
+```

@@ -52,9 +52,9 @@ export default firebaseConnect()(SomeComponent)
 
 ##### Parameters
 
-  * `credentials` ([**String**]() | [**Object**]())
-    * [**String**]() - `ref.authWithCustomToken(credentials)` is used
-    * [**Object**]() - cases:
+  * `credentials` ([**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) | [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))
+    * [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) - `ref.authWithCustomToken(credentials)` is used
+    * [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - cases:
       * email and password (runs `ref.authWithPassword(credentials)`) :
         ```js
         {
@@ -66,7 +66,7 @@ export default firebaseConnect()(SomeComponent)
         ```js
         {
             provider: "facebook | google | twitter",
-            type: "popup | redirect", // redirect is default
+            type: "popup | redirect", // popup is default
         }
         ```
       * provider and token (runs `ref.authWithOAuthToken(provider, token)`) :
@@ -79,7 +79,7 @@ export default firebaseConnect()(SomeComponent)
 
 
 ##### Returns
-[**Promise**]() with authData in case of success or the error otherwise.
+[**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with authData in case of success or the error otherwise.
 
 ##### Examples
 
@@ -122,12 +122,12 @@ Similar to Firebase's `ref.createUser(credentials)` but with support for automat
 
 ##### Parameters
 
-* `credentials` [**Object**]()
-  * `credentials.email` [**String**]() - User's email
-  * `credentials.password` [**String**]() - User's password
+* `credentials` [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
+  * `credentials.email` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) - User's email
+  * `credentials.password` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) - User's password
 
-* `profile` [**Object**]()
-  * `profile.username` [**String**]()
+* `profile` [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
+  * `profile.username` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
 
 ##### Examples
 ```js
@@ -147,7 +147,7 @@ createNewUser({
 ```
 
 ##### Returns
-[**Promise**]() with `userData`
+[**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with `userData`
 
 ## `logout()`
 Logout from Firebase and delete all data from the store (`state.firebase.data` and `state.firebase.auth` are set to `null`).
@@ -173,9 +173,9 @@ firebase.resetPassword({
 ```
 
 ##### Parameters
-  * `credentials` [**Object**]() - Credentials same as described in firebase docs
-  * `profile` [**Object**]() - if initialized with userProfile support then profile will be saved into `${userProfile}/${auth.uid}`
+  * `credentials` [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - Credentials same as described in firebase docs
+  * `profile` [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - if initialized with userProfile support then profile will be saved into `${userProfile}/${auth.uid}`
 
 ##### Returns
-  [**Promise**]() with user's UID in case of success or the error otherwise.
+  [**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with user's UID in case of success or the error otherwise.
   Always authenticate the new user in case of success

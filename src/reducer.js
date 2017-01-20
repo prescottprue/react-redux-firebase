@@ -40,7 +40,7 @@ const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
  * @param {Object} action - Action which will modify state
  * @param {String} action.type - Type of Action being called
  * @param {String} action.data - Type of Action which will modify state
- * @return {Map} State
+ * @return {Map} Redux State.
  */
 export default (state = initialState, action = {}) => {
   const { path, timestamp, requesting, requested } = action
