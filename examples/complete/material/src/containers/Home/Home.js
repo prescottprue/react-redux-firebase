@@ -10,15 +10,15 @@ import { List } from 'material-ui/List'
 import Paper from 'material-ui/Paper'
 import Subheader from 'material-ui/Subheader'
 
-import { firebase, helpers } from 'react-redux-firebase'
+import { firebaseConnect, helpers } from 'react-redux-firebase'
 const { isLoaded, pathToJS, dataToJS } = helpers
 
-@firebase([
-  // '/todos'
-  // { type: 'once', path: '/todos' } // for loading once instead of binding
-  // '/todos#populate=owner:displayNames' // for populating owner parameter from id into string loaded from /displayNames root
-  // '/todos#populate=owner:users' // for populating owner parameter from id to user object loaded from /users root
-  '/projects#populate=owner:users:displayName' // for populating owner parameter from id within to displayName string from user object within users root
+@firebaseConnect([
+  // '/projects'
+  // { type: 'once', path: '/projects' } // for loading once instead of binding
+  // '/projects#populate=owner:displayNames' // for populating owner parameter from id into string loaded from /displayNames root
+  // '/projects#populate=owner:users' // for populating owner parameter from id to user object loaded from /users root
+  // '/projects#populate=owner:users:displayName' // for populating owner parameter from id within to displayName string from user object within users root
   // '/projects#orderByChild=done&equalTo=false', // list only not done todos
 ])
 @connect(

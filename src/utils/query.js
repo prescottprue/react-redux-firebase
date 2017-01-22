@@ -42,12 +42,12 @@ export const getQueryIdFromPath = (path, event = undefined) => {
 
 /**
  * @private
- * @description Set a new watcher
+ * @description Update the number of watchers for a query
  * @param {Object} firebase - Internal firebase object
  * @param {String} event - Type of event to watch for
  * @param {String} path - Path to watch with watcher
  * @param {String} queryId - Id of query
- * @return {Object} watcher
+ * @return {Integer} watcherCount - count
  */
 export const setWatcher = (firebase, event, path, queryId = undefined) => {
   const id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
@@ -86,15 +86,11 @@ export const getWatcherCount = (firebase, event, path, queryId = undefined) => {
 export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefined) => {
   let id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   path = path.split('#')[0]
-
   if (firebase._.watchers[id] <= 1) {
     delete firebase._.watchers[id]
-    if (event !== 'first_child') {
+    if (event !== 'first_child' && event !== 'once') {
       firebase.database().ref().child(path).off(event)
-      dispatch({
-        type: INIT_BY_PATH,
-        path
-      })
+      dispatch({ type: INIT_BY_PATH, path })
     }
   } else if (firebase._.watchers[id]) {
     firebase._.watchers[id]--
