@@ -2,7 +2,29 @@
 import { fromJS } from 'immutable'
 import helpers from '../../src/helpers'
 const exampleData = {
-  data: { some: 'data' },
+  data: {
+    some: 'data',
+    projects: {
+      CDF: {
+        owner: 'ABC'
+      },
+      GHI: {
+        owner: 'ABC'
+      },
+      OKF: {
+        owner: 'asdfasdf',
+        collaborators: {
+          ABC: true,
+          abc: true
+        }
+      }
+    },
+    users: {
+      ABC: {
+        displayName: 'scott'
+      }
+    }
+  },
   timestamp: { 'some/path': { test: 'key' } },
   snapshot: { some: 'snapshot' }
 }
@@ -72,14 +94,113 @@ describe('Helpers:', () => {
     })
   })
 
+  describe('populatedDataToJS', () => {
+    it('exists', () => {
+      expect(helpers).to.respondTo('populatedDataToJS')
+    })
+    it('passes notSetValue', () => {
+      expect(helpers.populatedDataToJS(null, '/some', [], exampleData))
+        .to
+        .equal(exampleData)
+    })
+    it('returns undefined for non existant path', () => {
+      expect(helpers.populatedDataToJS(exampleState, '/asdf', []))
+        .to
+        .equal(undefined)
+    })
+    it('returns state if its not an immutable Map', () => {
+      const fakeState = { }
+      expect(helpers.populatedDataToJS(fakeState, 'asdf'))
+        .to
+        .equal(fakeState)
+    })
+    it('returns unpopulated data for no populates', () => {
+      const path = '/projects'
+      expect(helpers.populatedDataToJS(exampleState, path, []))
+        .to
+        .equal(exampleData.data[path])
+    })
+
+    it('populates child', () => {
+      const path = 'projects'
+      const rootName = 'users'
+      const valName = 'CDF'
+      expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName }])[valName].owner)
+        .to
+        .have
+        .property('displayName', 'scott')
+    })
+
+    it('populates child list', () => {
+      const path = 'projects'
+      const rootName = 'users'
+      const valName = 'OKF'
+      const populates = [
+        { child: 'collaborators', root: rootName },
+      ]
+      const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
+      expect(populatedData)
+        .to
+        .have
+        .deep
+        .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+    })
+
+    it('handles non existant children', () => {
+      const path = 'projects'
+      const rootName = 'users'
+      const valName = 'OKF'
+      const populates = [
+        { child: 'collaborators', root: rootName },
+      ]
+      expect(helpers.populatedDataToJS(exampleState, path, populates))
+        .to
+        .have
+        .deep
+        .property(`${valName}.collaborators.abc`, true)
+        expect(helpers.populatedDataToJS(exampleState, path, populates))
+          .to
+          .have
+          .deep
+          .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+    })
+
+    it('populates multiple children', () => {
+      const path = 'projects'
+      const rootName = 'users'
+      const valName = 'CDF'
+      const populates = [
+        { child: 'owner', root: rootName },
+        { child: 'collaborators', root: rootName },
+      ]
+      expect(helpers.populatedDataToJS(exampleState, path, populates))
+        .to
+        .have
+        .deep
+        .property(`${valName}.owner.displayName`, exampleData.data[rootName].ABC.displayName)
+    })
+
+
+  })
+
   describe('customToJS', () => {
     it('exists', () => {
       expect(helpers).to.respondTo('customToJS')
     })
-    it('passes notSetValue', () => {
-      expect(helpers.customToJS(exampleData, '/some', 'some', exampleData))
+    it('handles non-immutable state', () => {
+      expect(helpers.customToJS(exampleData, '/some', 'some'))
         .to
         .equal(exampleData)
+    })
+    it('passes notSetValue', () => {
+      expect(helpers.customToJS(null, '/some', 'some', exampleData))
+        .to
+        .equal(exampleData)
+    })
+    it('passes custom data', () => {
+      expect(helpers.customToJS(exampleState, '/some', 'snapshot'))
+        .to
+        .exist
     })
   })
 

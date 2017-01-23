@@ -1,5 +1,14 @@
-import { size, map, forEach, set, omit, some, first, drop } from 'lodash'
-import { getPopulateObj } from './utils/populate'
+import {
+  size,
+  map,
+  some,
+  first,
+  drop,
+  mapValues,
+  reduce,
+  isString
+} from 'lodash'
+import { getPopulateObjs } from './utils/populate'
 import { metaParams, paramSplitChar } from './constants'
 
 /**
@@ -196,34 +205,51 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
   const pathArr = `/data${fixPath(path)}`.split(/\//).slice(1)
 
   if (data.getIn) {
-    const unpopulated = toJS(data.getIn(pathArr, notSetValue))
-    if (!unpopulated) {
-      return undefined
+    if (!toJS(data.getIn(pathArr, notSetValue))) {
+      return toJS(data.getIn(pathArr))
     }
-    const populateObjs = map(populates, p => getPopulateObj(p))
-    const populated = {}
-    // TODO: Look into using mapValues
-    forEach(populateObjs, p => {
-      forEach(unpopulated, (child, i) => { // iterate over list
-        set(populated, `${i}`, omit(child, [p.child])) // set child without parameter
-        // TODO: Handle single populates
-        forEach(child[p.child], (val, key) => { // iterate of child list
-          // Handle key: true lists
-          if (val === true) {
-            val = key
+    const populateObjs = getPopulateObjs(populates)
+    // reduce array of populates to object of combined populated data
+    return reduce(
+      map(populateObjs, (p, obj) =>
+        // map values of list
+        mapValues(toJS(data.getIn(pathArr)), (child, i) => {
+          // no matching child parameter
+          if (!child[p.child]) {
+            return child
           }
-          // Set to child under key if populate child exists
-          if (toJS(data.getIn(['data', p.root, val]))) {
-            set(
-              populated,
-              `${i}.${p.child}.${val}`,
-              toJS(data.getIn(['data', p.root, val]))
-            )
+          // populate child is key
+          if (isString(child[p.child])) {
+            if (toJS(data.getIn(['data', p.root, child[p.child]]))) {
+              return {
+                ...child,
+                [p.child]: toJS(data.getIn(['data', p.root, child[p.child]]))
+              }
+            }
+            // matching child does not exist
+            return child
+          }
+          // populate child list
+          return {
+            ...child,
+            [p.child]: mapValues(child[p.child], (val, key) => { // iterate of child list
+              let getKey = val
+               // Handle key: true lists
+              if (val === true) {
+                getKey = key
+              }
+              // Set to child under key if populate child exists
+              if (toJS(data.getIn(['data', p.root, getKey]))) {
+                return toJS(data.getIn(['data', p.root, getKey]))
+              }
+              // Populate child does not exist
+              return val === true ? val : getKey
+            })
           }
         })
-      })
-    })
-    return populated
+     ), (obj, v) =>
+      Object.assign({}, v, obj),
+     )
   }
 
   return data
@@ -249,7 +275,7 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
  * }))(fbWrapped)
  */
 export const customToJS = (data, path, custom, notSetValue) => {
-  if (!(data && data.getIn)) {
+  if (!data) {
     return notSetValue
   }
 
@@ -266,6 +292,7 @@ export default {
   toJS,
   pathToJS,
   dataToJS,
+  populatedDataToJS,
   customToJS,
   isLoaded,
   isEmpty
