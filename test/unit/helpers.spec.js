@@ -158,11 +158,11 @@ describe('Helpers:', () => {
         .have
         .deep
         .property(`${valName}.collaborators.abc`, true)
-        expect(helpers.populatedDataToJS(exampleState, path, populates))
-          .to
-          .have
-          .deep
-          .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+      expect(helpers.populatedDataToJS(exampleState, path, populates))
+        .to
+        .have
+        .deep
+        .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
     })
 
     it('populates multiple children', () => {
@@ -179,8 +179,6 @@ describe('Helpers:', () => {
         .deep
         .property(`${valName}.owner.displayName`, exampleData.data[rootName].ABC.displayName)
     })
-
-
   })
 
   describe('customToJS', () => {
