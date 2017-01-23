@@ -6,6 +6,7 @@ import './Home.css'
 import TodoItem from '../../components/TodoItem/TodoItem'
 import NewTodoPanel from '../../components/NewTodoPanel/NewTodoPanel'
 import CircularProgress from 'material-ui/CircularProgress'
+import Snackbar from 'material-ui/Snackbar'
 import { List } from 'material-ui/List'
 import Paper from 'material-ui/Paper'
 import Subheader from 'material-ui/Subheader'
@@ -14,7 +15,7 @@ import { firebaseConnect, helpers } from 'react-redux-firebase'
 const { isLoaded, pathToJS, dataToJS } = helpers
 
 @firebaseConnect([
-  // '/projects'
+  '/todos'
   // { type: 'once', path: '/projects' } // for loading once instead of binding
   // '/projects#populate=owner:displayNames' // for populating owner parameter from id into string loaded from /displayNames root
   // '/projects#populate=owner:users' // for populating owner parameter from id to user object loaded from /users root
@@ -23,7 +24,7 @@ const { isLoaded, pathToJS, dataToJS } = helpers
 ])
 @connect(
   ({firebase}) => ({
-    todos: dataToJS(firebase, 'projects'),
+    todos: dataToJS(firebase, 'todos'),
     auth: pathToJS(firebase, 'auth')
   })
 )
@@ -43,14 +44,28 @@ export default class Home extends Component {
       uid: PropTypes.string
     })
   }
+  state = {
+    error: null
+  }
 
   toggleDone = (todo, id) => {
-    console.log('toggle done', todo, id)
-    this.props.firebase.set(`/todos/${id}/done`, !todo.done)
+    const { firebase, auth } = this.props
+    console.log('toggle done', todo, id, auth)
+    if (!auth || !auth.uid) {
+      return this.setState({ error: 'You must be Logged into Toggle Done' })
+    }
+    firebase.set(`/todos/${id}/done`, !todo.done)
   }
 
   deleteTodo = (id) => {
-    this.props.firebase.remove(`/todos/${id}`)
+    const { todos, auth, firebase } = this.props
+    if (!auth || !auth.uid) {
+      return this.setState({ error: 'You must be Logged into Delete' })
+    }
+    if (todos[id].owner !== auth.uid) {
+      return this.setState({ error: 'You must own todo to delete' })
+    }
+    firebase.remove(`/todos/${id}`)
   }
 
   handleAdd = (newTodo) => {
@@ -69,6 +84,12 @@ export default class Home extends Component {
     console.debug('todo list:', todos)
     return (
       <div className='Home'>
+        <Snackbar
+          open={!!this.state.error}
+          message={this.state.error}
+          autoHideDuration={4000}
+          onRequestClose={() => this.setState({ error: null })}
+        />
         <div className='Home-Info'>
           from
           <span className='Home-Url'>
