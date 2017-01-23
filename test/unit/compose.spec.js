@@ -7,7 +7,7 @@ const reducer = sinon.spy()
 const generateCreateStore = (params) =>
   compose(composeFunc(
     params ? omit(fbConfig, params) : fbConfig,
-    { userProfile: 'users', enableLogging: true }
+    { userProfile: 'users', enableLogging: false, enableRedirectHandling: false }
   ))(createStore)
 const helpers = generateCreateStore()(reducer).firebase.helpers
 
@@ -72,13 +72,18 @@ describe('Compose', () => {
       helpers.remove('test')
     )
 
-    describe('watchEvent', () =>
-      helpers.watchEvent('value', 'test')
-    )
+    describe.skip('watchEvent', () => {
+      it('starts watcher', () => {
+        helpers.watchEvent('value', 'test')
+      })
+    })
 
-    describe('unWatchEvent', () =>
-      helpers.unWatchEvent('value', 'test')
-    )
+    describe.skip('unWatchEvent', () => {
+      it.skip('unWatchesEvent', () =>
+        helpers.unWatchEvent('value', 'test')
+
+      )
+    })
 
     describe('login', () => {
       try {
@@ -113,17 +118,18 @@ describe('Compose', () => {
   })
 
   describe('throws for missing fbConfig parameters', () => {
+    const errorSuffix = 'is a required config parameter for react-redux-firebase.'
     it('databaseURL', () => {
       expect(() => generateCreateStore('databaseURL')(reducer))
-        .to.throw('Firebase databaseURL is required')
+        .to.throw(`databaseURL ${errorSuffix}`)
     })
     it('authDomain', () => {
       expect(() => generateCreateStore('authDomain')(reducer))
-        .to.throw('Firebase authDomain is required')
+        .to.throw(`authDomain ${errorSuffix}`)
     })
     it('apiKey', () => {
       expect(() => generateCreateStore('apiKey')(reducer))
-        .to.throw('Firebase apiKey is required')
+        .to.throw(`apiKey ${errorSuffix}`)
     })
   })
 

@@ -109,6 +109,39 @@ export default connect(({ firebase }) => ({
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Map
 
+# populatedDataToJS
+
+Convert parameter under "data" path of Immutable Map to a
+Javascript object with parameters populated based on populates array
+
+**Parameters**
+
+-   `firebase` **[Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)** Immutable Map to be converted to JS object (state.firebase)
+-   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
+-   `populates` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of populate objects
+-   `notSetValue` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to return if value is not found
+-   `data`  
+
+**Examples**
+
+_Basic_
+
+```javascript
+import { connect } from 'react-redux'
+import { firebaseConnect, helpers } from 'react-redux-firebase'
+const { dataToJS } = helpers
+
+const fbWrapped = firebaseConnect(['/todos'])(App)
+
+export default connect(({ firebase }) => ({
+  // this.props.todos loaded from state.firebase.data.todos
+  // each todo has child 'owner' populated from matching uid in 'users' root
+  todos: populatedDataToJS(firebase, 'todos', [{ child: 'owner', root: 'users' }])
+}))(fbWrapped)
+```
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Map
+
 # customToJS
 
 Load custom object from within store
@@ -122,16 +155,21 @@ Load custom object from within store
 -   `data`  
 -   `custom`  
 
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Map
+**Examples**
 
-# snapshotToJS
+_Basic_
 
-Convert Immutable Map to a Javascript object
+```javascript
+import { connect } from 'react-redux'
+import { firebaseConnect, helpers } from 'react-redux-firebase'
+const { customToJS } = helpers
 
-**Parameters**
+const fbWrapped = firebaseConnect(['/todos'])(App)
 
--   `snapshot` **[Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)** Snapshot from store
--   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of snapshot to load
--   `notSetValue` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to return if value is not found
+export default connect(({ firebase }) => ({
+  // this.props.todos loaded from state.firebase.data.todos
+  requesting: customToJS(firebase, 'todos', 'requesting')
+}))(fbWrapped)
+```
 
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Map
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within state

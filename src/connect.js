@@ -14,16 +14,6 @@ import { getEventsFromInput, createCallable } from './utils'
  * // this.props.firebase set on App component as firebase object with helpers
  * import { firebaseConnect } from 'react-redux-firebase'
  * export default firebaseConnect()(App)
- * @example <caption>Paths</caption>
- * import { connect } from 'react-redux'
- * import { firebaseConnect, helpers } from 'react-redux-firebase'
- * const { pathToJS } = helpers
- *
- * // pass todos list from redux as this.props.todosList
- * export default connect(({ firebase }) => ({
- *   profile: pathToJS(firebase, 'profile'),
- *   auth: pathToJS(firebase, 'auth')
- * }))(App)
  * @example <caption>Data</caption>
  * import { connect } from 'react-redux'
  * import { firebaseConnect, helpers } from 'react-redux-firebase'
@@ -36,7 +26,9 @@ import { getEventsFromInput, createCallable } from './utils'
  *
  * // pass todos list from redux as this.props.todosList
  * export default connect(({ firebase }) => ({
- *   todosList: dataToJS(firebase, 'todos')
+ *   todosList: dataToJS(firebase, 'todos'),
+ *   profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.proifle
+ *   auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
  * }))(fbWrapped)
  */
 export default (dataOrFn = []) => WrappedComponent => {
@@ -57,19 +49,19 @@ export default (dataOrFn = []) => WrappedComponent => {
 
       // Allow function to be passed
       const inputAsFunc = createCallable(dataOrFn)
-      this.originalData = inputAsFunc(this.props, firebase)
+      this.prevData = inputAsFunc(this.props, firebase)
 
       const { ref, helpers, storage, database, auth } = firebase
       this.firebase = { ref, storage, database, auth, ...helpers }
 
-      this._firebaseEvents = getEventsFromInput(this.originalData)
+      this._firebaseEvents = getEventsFromInput(this.prevData)
 
       watchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
     componentWillUnmount () {
-      const { firebase } = this.context.store
-      unWatchEvents(firebase, this._firebaseEvents)
+      const { firebase, dispatch } = this.context.store
+      unWatchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
     componentWillReceiveProps (np) {
@@ -78,9 +70,10 @@ export default (dataOrFn = []) => WrappedComponent => {
       const data = inputAsFunc(np, firebase)
 
       // Handle a data parameter having changed
-      if (!isEqual(data, this.originalData)) {
+      if (!isEqual(data, this.prevData)) {
+        this.prevData = data
         // UnWatch all current events
-        unWatchEvents(firebase, this._firebaseEvents)
+        unWatchEvents(firebase, dispatch, this._firebaseEvents)
         // Get watch events from new data
         this._firebaseEvents = getEventsFromInput(data)
         // Watch new events

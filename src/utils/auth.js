@@ -6,6 +6,8 @@ import { supportedAuthProviders } from '../constants'
  * @param {Object} firebase - Internal firebase object
  * @param {String} providerName - Name of Auth Provider (i.e. google, github, facebook, twitter)
  * @param {Array|String} scopes - List of scopes to add to auth provider
+ * @return {Object} provider - Auth Provider
+ * @private
  */
 export const createAuthProvider = (firebase, providerName, scopes) => {
   // TODO: Verify scopes are valid before adding
@@ -47,6 +49,7 @@ export const createAuthProvider = (firebase, providerName, scopes) => {
  * @param {String} credentials.type - Popup or redirect (only needed for 3rd party provider login)
  * @param {String} credentials.token - Custom or provider token
  * @param {String} credentials.scopes - Scopes to add to provider (i.e. email)
+ * @private
  */
 export const getLoginMethodAndParams = (firebase, {email, password, provider, type, token, scopes}) => {
   if (provider) {

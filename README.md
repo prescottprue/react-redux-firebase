@@ -43,10 +43,11 @@ Install peer dependencies: `npm i --save redux react-redux`
 
 ### Decorators
 
-Though they are optional, it is highly recommended that you used decorators with this library. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
+Though they are optional, it is highly recommended that you use decorators with this library. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
 
 A side by side comparison using [react-redux](https://github.com/reactjs/react-redux)'s `connect` function/HOC is the best way to illustrate the difference:
 
+#### Without Decorators
 ```javascript
 class SomeComponent extends Component {
 
@@ -55,6 +56,7 @@ export default connect()(SomeComponent)
 ```
 vs.
 
+#### With Decorators
 ```javascript
 @connect()
 export default class SomeComponent extends Component {
@@ -112,7 +114,7 @@ const { isLoaded, isEmpty, dataToJS } = helpers
 
 @firebaseConnect( [
   '/todos'
-  // { type: 'once', path: '/todos' } // for loading once instead of binding
+  // { path: '/todos' } // object notation
 ])
 @connect(
   ({ firebase }) => ({
@@ -178,8 +180,8 @@ export default connect(
 
 ```
 
-## [Documentation](http://react-redux-firebase.com)
-See [react-redux-firebase.com](http://react-redux-firebase.com)
+## [Docs](http://react-redux-firebase.com)
+See full documentation at [react-redux-firebase.com](http://react-redux-firebase.com)
 
 * [Getting Started](http://react-redux-firebase.com/docs/getting_started)
 * [Auth](http://react-redux-firebase.com/docs/auth)
@@ -189,7 +191,7 @@ See [react-redux-firebase.com](http://react-redux-firebase.com)
 
 ## [Examples](examples)
 
-Examples folder is broken into two categories [complete](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete) and [snippets](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/snippets). Complete contains full applications that can be run as is, where as snippets is small amounts of code to show functionality (dev tools and deps not included).
+Examples folder is broken into two categories [complete](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete) and [snippets](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/snippets). `/complete` contains full applications that can be run as is, while `/snippets` contains small amounts of code to show functionality (dev tools and deps not included).
 
 #### [State Based Query Snippet](examples/snippets/stateBasedQuery)
 
@@ -276,9 +278,11 @@ const somethingEpic = (action$, store, getFirebase) =>
     )
 ```
 
-## Generator
+## Starting A Project
 
-[generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) uses react-redux-firebase when opting to include redux
+### Generator
+
+[generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) is a yeoman generator uses react-redux-firebase when opting to include redux
 
 ## FAQ
 
@@ -293,19 +297,25 @@ const somethingEpic = (action$, store, getFirebase) =>
   * `uniqueSet` method helper for only setting if location doesn't already exist
   * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)
   * Action Types and other Constants are exposed for external usage (such as with `redux-observable`)
+  * [Complete Firebase Auth Integration](http://react-redux-firebase.com/docs/auth.html#examples) including `signInWithRedirect` compatibility for OAuth Providers
 
   #### Well why not combine?
   I have been talking to the author of [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase) about combining, but we are not sure that the users of both want that at this point. Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby) if you haven't already since a ton of this type of discussion goes on there.
-
-  **Bottom line:** The author of redux-react-firebase was absent when functionality was needed by me and others, so this library was created.
 
 2. Why use redux if I have Firebase to store state?
 
   This isn't a super quick answer, so I wrote up [a medium article to explain](https://medium.com/@prescottprue/firebase-with-redux-82d04f8675b9)
 
+
+# Patrons
+
+Meet some of the outstanding companies and individuals that made it possible:
+
+* [Reside Network Inc.](https://github.com/reside-eng)
+
+
 ## Contributors
 - [Prescott Prue](https://github.com/prescottprue)
-- [Tiberiu Craciun](https://github.com/tiberiuc)
 - [Bojhan](https://github.com/Bojhan)
 - [Rahav Lussto](https://github.com/RahavLussato)
 - [Justin Handley](https://github.com/justinhandley)

@@ -22,11 +22,11 @@ global.navigator = global.window.navigator
 // Firebase
 var Firebase = global.Firebase = require('firebase')
 var fbConfig = global.fbConfig = {
-  apiKey: 'AIzaSyCTUERDM-Pchn_UDTsfhVPiwM4TtNIxots',
-  authDomain: 'redux-firebasev3.firebaseapp.com',
-  databaseURL: 'https://redux-firebasev3.firebaseio.com',
-  storageBucket: 'redux-firebasev3.appspot.com',
-  messagingSenderId: '823357791673'
+  apiKey: 'AIzaSyA-4ZcRO93M3bl6SdUjTiqN7tNfNOjV6D4',
+  authDomain: 'tester-2d4fa.firebaseapp.com',
+  databaseURL: 'https://tester-2d4fa.firebaseio.com',
+  storageBucket: 'tester-2d4fa.appspot.com',
+  messagingSenderId: '553568276840'
 }
 
 // Swallow firebase reinitialize error (useful when using watch)
@@ -38,7 +38,14 @@ global.firebase = Object.defineProperty(Firebase, '_', {
   value: {
     watchers: {},
     authUid: null,
-    config: Object.assign({}, fbConfig, { userProfile: 'users' })
+    config: Object.assign(
+      {},
+      fbConfig,
+      {
+        userProfile: 'users',
+        enableRedirectHandling: false // disabled due to lack of http/https
+      }
+    )
   },
   writable: true,
   enumerable: true,

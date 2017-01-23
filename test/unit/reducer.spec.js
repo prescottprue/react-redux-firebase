@@ -9,7 +9,17 @@ const emptyState = {
   isInitializing: undefined,
   data: {}
 }
-const intializedState = { isInitializing: true, data: {} }
+const initialState = {
+  auth: undefined,
+  authError: undefined,
+  profile: undefined,
+  isInitializing: undefined,
+  data: {},
+  timestamp: {},
+  requesting: {},
+  requested: {}
+}
+const intializedState = Object.assign({}, initialState, { isInitializing: true })
 const noError = { authError: null }
 const noAuth = { auth: null, profile: null }
 const exampleData = { some: 'data' }
@@ -26,7 +36,7 @@ describe('reducer', () => {
   it('handles no initialState', () => {
     expect(
       JSON.stringify(firebaseStateReducer(undefined, {}).toJS()))
-      .to.equal(JSON.stringify(exampleEmptyState.toJS()))
+      .to.equal(JSON.stringify(initialState))
   })
 
   it('returns state by default', () => {
@@ -39,13 +49,14 @@ describe('reducer', () => {
       expect(
         firebaseStateReducer(
           exampleState,
-          { type: actionTypes.SET, path: 'asdfasdf' }
+          { type: actionTypes.SET, path: 'test' }
         )
       ).to.equal(exampleState)
     })
     it('sets state', () => {
-      const path = 'asdfasdf'
+      const path = 'test'
       const pathArray = path.split(/\//).filter(p => !!p)
+      console.log('path:', { type: actionTypes.SET, path, data: {} })
       expect(
         JSON.stringify(firebaseStateReducer(
           exampleState,
@@ -98,8 +109,8 @@ describe('reducer', () => {
         auth: null,
         authError: null,
         profile: null,
-        isLoading:false,
-        data:{}
+        isLoading: false,
+        data: {}
       }))
     })
   })
@@ -133,7 +144,13 @@ describe('reducer', () => {
           exampleState,
           { type: actionTypes.AUTHENTICATION_INIT_STARTED }
         ).toJS())
-      ).to.equal(JSON.stringify(intializedState))
+      ).to.equal(JSON.stringify({
+        isInitializing: true,
+        data: {},
+        timestamp: {},
+        requesting: {},
+        requested: {}
+      }))
     })
   })
 

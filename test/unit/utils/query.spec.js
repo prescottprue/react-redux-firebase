@@ -16,21 +16,25 @@ describe('Utils: Query', () => {
       expect(getWatchPath('once', '/todos')).to.be.a.string
     })
   })
+
   describe('setWatcher', () => {
     it('handles basic path', () => {
       expect(setWatcher(Firebase, 'once', '/todos')).to.be.a.string
     })
   })
+
   describe('getWatcherCount', () => {
     it('returns watcher count', () => {
       expect(getWatcherCount(Firebase, 'once', '/todos')).to.equal(1)
     })
   })
+
   describe('unsetWatcher', () => {
     it('returns watcher count', () => {
-      expect(unsetWatcher(Firebase, 'value', '/todos'))
+      expect(unsetWatcher(Firebase, () => console.log('dispatch'), 'value', '/todos'))
     })
   })
+
   describe('getQueryIdFromPath', () => {
     it('handles basic path', () => {
       expect(getQueryIdFromPath('/todos')).to.be.a.string
@@ -39,6 +43,7 @@ describe('Utils: Query', () => {
       expect(getQueryIdFromPath('/todos#orderByChild=uid')).to.be.a.string
     })
   })
+
   describe('applyParamsToQuery', () => {
     it('orderByValue', () => {
       expect(createQueryFromParams(['orderByValue=uid'])).to.be.an.object

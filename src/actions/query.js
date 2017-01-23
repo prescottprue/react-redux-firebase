@@ -1,13 +1,15 @@
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from '../utils/populate'
+import { forEach } from 'lodash'
 import {
   applyParamsToQuery,
   getWatcherCount,
   setWatcher,
-  unsetWatcher
+  unsetWatcher,
+  getQueryIdFromPath
 } from '../utils/query'
 
-const { SET, NO_VALUE, ERROR } = actionTypes
+const { START, SET, NO_VALUE, UNAUTHORIZED_ERROR } = actionTypes
 
 /**
  * @description Watch a specific event type
@@ -16,20 +18,17 @@ const { SET, NO_VALUE, ERROR } = actionTypes
  * @param {String} event - Type of event to watch for (defaults to value)
  * @param {String} path - Path to watch with watcher
  * @param {String} dest
- * @param {Boolean} onlyLastEvent - Whether or not to listen to only the last event
  */
-export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery }, dest, onlyLastEvent = false) => {
+export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery }, dest) => {
   const watchPath = !dest ? path : `${path}@${dest}`
   const counter = getWatcherCount(firebase, type, watchPath, queryId)
+  queryId = queryId || getQueryIdFromPath(path)
 
   if (counter > 0) {
-    if (onlyLastEvent) {
-      // listen only to last query on same path
-      if (queryId) {
-        unsetWatcher(firebase, type, path, queryId)
-      } else {
-        return
-      }
+    if (queryId) {
+      unsetWatcher(firebase, dispatch, type, path, queryId)
+    } else {
+      return
     }
   }
 
@@ -45,13 +44,16 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
         if (snapshot.val() === null) {
           dispatch({
             type: NO_VALUE,
+            timestamp: Date.now(),
+            requesting: false,
+            requested: true,
             path
           })
         }
         return snapshot
       }, (err) => {
         dispatch({
-          type: ERROR,
+          type: UNAUTHORIZED_ERROR,
           payload: err
         })
       })
@@ -64,6 +66,14 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
   }
 
   const runQuery = (q, e, p, params) => {
+    dispatch({
+      type: START,
+      timestamp: Date.now(),
+      requesting: true,
+      requested: false,
+      path
+    })
+
     // Handle once queries
     if (e === 'once') {
       return q.once('value')
@@ -78,7 +88,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           return snapshot
         }, (err) => {
           dispatch({
-            type: ERROR,
+            type: UNAUTHORIZED_ERROR,
             payload: err
           })
         })
@@ -89,6 +99,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
       const resultPath = dest || (e === 'value') ? p : `${p}/${snapshot.key}`
+      const rootPath = dest || path
 
       if (dest && e !== 'child_removed') {
         data = {
@@ -102,24 +113,41 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
         return dispatch({
           type: SET,
           path: resultPath,
+          rootPath,
           data,
-          snapshot
+          timestamp: Date.now(),
+          requesting: false,
+          requested: true
         })
       }
 
       // TODO: Allow setting of unpopulated data before starting population through config
-
       promisesForPopulate(firebase, data, populates)
-        .then((list) => {
+        .then((results) => {
           dispatch({
             type: SET,
             path: resultPath,
-            data: list
+            rootPath,
+            data,
+            timestamp: Date.now(),
+            requesting: false,
+            requested: true
+          })
+          forEach(results, (result, path) => {
+            dispatch({
+              type: SET,
+              path,
+              rootPath,
+              data: result,
+              timestamp: Date.now(),
+              requesting: false,
+              requested: true
+            })
           })
         })
     }, (err) => {
       dispatch({
-        type: ERROR,
+        type: UNAUTHORIZED_ERROR,
         payload: err
       })
     })
@@ -134,8 +162,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
  * @param {String} event - Event for which to remove the watcher
  * @param {String} path - Path of watcher to remove
  */
-export const unWatchEvent = (firebase, event, path, queryId = undefined) =>
-    unsetWatcher(firebase, event, path, queryId)
+export const unWatchEvent = (firebase, dispatch, event, path, queryId = undefined) =>
+    unsetWatcher(firebase, dispatch, event, path, queryId)
 
 /**
  * @description Add watchers to a list of events
@@ -153,9 +181,9 @@ export const watchEvents = (firebase, dispatch, events) =>
  * @param {Object} firebase - Internal firebase object
  * @param {Array} events - List of events for which to remove watchers
  */
-export const unWatchEvents = (firebase, events) =>
+export const unWatchEvents = (firebase, dispatch, events) =>
     events.forEach(event =>
-      unWatchEvent(firebase, event.type, event.path)
+      unWatchEvent(firebase, dispatch, event.type, event.path)
     )
 
 export default { watchEvents, unWatchEvents }

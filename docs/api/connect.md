@@ -21,20 +21,6 @@ import { firebaseConnect } from 'react-redux-firebase'
 export default firebaseConnect()(App)
 ```
 
-_Paths_
-
-```javascript
-import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { pathToJS } = helpers
-
-// pass todos list from redux as this.props.todosList
-export default connect(({ firebase }) => ({
-  profile: pathToJS(firebase, 'profile'),
-  auth: pathToJS(firebase, 'auth')
-}))(App)
-```
-
 _Data_
 
 ```javascript
@@ -49,7 +35,9 @@ const fbWrapped = firebaseConnect([
 
 // pass todos list from redux as this.props.todosList
 export default connect(({ firebase }) => ({
-  todosList: dataToJS(firebase, 'todos')
+  todosList: dataToJS(firebase, 'todos'),
+  profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.proifle
+  auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
 }))(fbWrapped)
 ```
 

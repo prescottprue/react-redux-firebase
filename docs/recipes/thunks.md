@@ -7,7 +7,7 @@ In order to get the most out of writing your thunks, make sure to set up your th
 ```javascript
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { reduxReactFirebase } from 'react-redux-firebase';
+import { reactReduxFirebase } from 'react-redux-firebase';
 import makeRootReducer from './reducers';
 import { getFirebase } from 'react-redux-firebase';
 
@@ -20,7 +20,7 @@ const store = createStore(
     applyMiddleware([
       thunk.withExtraArgument(getFirebase) // Pass getFirebase function as extra argument
     ]),
-    reduxReactFirebase(fbConfig, { userProfile: 'users', enableLogging: false })
+    reactReduxFirebase(fbConfig, { userProfile: 'users', enableLogging: false })
   )
 );
 

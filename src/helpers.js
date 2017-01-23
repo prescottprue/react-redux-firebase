@@ -1,4 +1,15 @@
-import { size, map } from 'lodash'
+import {
+  size,
+  map,
+  some,
+  first,
+  drop,
+  mapValues,
+  reduce,
+  isString
+} from 'lodash'
+import { getPopulateObjs } from './utils/populate'
+import { metaParams, paramSplitChar } from './constants'
 
 /**
  * @description Detect whether items are loaded yet or not
@@ -91,13 +102,10 @@ export const fixPath = path =>
  * @return {Object} data - Javascript version of Immutable Map
  * @return {Object} Data located at path within Immutable Map
  */
-export const toJS = data => {
-  if (data && data.toJS) {
-    return data.toJS()
-  }
-
-  return data
-}
+export const toJS = data =>
+  data && data.toJS
+    ? data.toJS()
+    : data
 
 /**
  * @description Convert parameter from Immutable Map to a Javascript object
@@ -119,10 +127,18 @@ export const pathToJS = (data, path, notSetValue) => {
   if (!data) {
     return notSetValue
   }
-
   const pathArr = fixPath(path).split(/\//).slice(1)
 
   if (data.getIn) {
+    // Handle meta params (stored by string key)
+    if (some(metaParams, (v) => pathArr.indexOf(v) !== -1)) {
+      return toJS(
+        data.getIn([
+          first(pathArr),
+          drop(pathArr).join(paramSplitChar)
+        ], notSetValue)
+      )
+    }
     return toJS(data.getIn(pathArr, notSetValue))
   }
 
@@ -152,12 +168,88 @@ export const dataToJS = (data, path, notSetValue) => {
     return notSetValue
   }
 
-  const dataPath = '/data' + fixPath(path)
-
-  const pathArr = dataPath.split(/\//).slice(1)
+  const pathArr = `/data${fixPath(path)}`.split(/\//).slice(1)
 
   if (data.getIn) {
     return toJS(data.getIn(pathArr, notSetValue))
+  }
+
+  return data
+}
+/**
+ * @description Convert parameter under "data" path of Immutable Map to a
+ * Javascript object with parameters populated based on populates array
+ * @param {Map} firebase - Immutable Map to be converted to JS object (state.firebase)
+ * @param {String} path - Path of parameter to load
+ * @param {Array} populates - Array of populate objects
+ * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
+ * @return {Object} Data located at path within Immutable Map
+ * @example <caption>Basic</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, helpers } from 'react-redux-firebase'
+ * const { dataToJS } = helpers
+ *
+ * const fbWrapped = firebaseConnect(['/todos'])(App)
+ *
+ * export default connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.data.todos
+ *   // each todo has child 'owner' populated from matching uid in 'users' root
+ *   todos: populatedDataToJS(firebase, 'todos', [{ child: 'owner', root: 'users' }])
+ * }))(fbWrapped)
+ */
+export const populatedDataToJS = (data, path, populates, notSetValue) => {
+  if (!data) {
+    return notSetValue
+  }
+
+  const pathArr = `/data${fixPath(path)}`.split(/\//).slice(1)
+
+  if (data.getIn) {
+    if (!toJS(data.getIn(pathArr, notSetValue))) {
+      return toJS(data.getIn(pathArr))
+    }
+    const populateObjs = getPopulateObjs(populates)
+    // reduce array of populates to object of combined populated data
+    return reduce(
+      map(populateObjs, (p, obj) =>
+        // map values of list
+        mapValues(toJS(data.getIn(pathArr)), (child, i) => {
+          // no matching child parameter
+          if (!child[p.child]) {
+            return child
+          }
+          // populate child is key
+          if (isString(child[p.child])) {
+            if (toJS(data.getIn(['data', p.root, child[p.child]]))) {
+              return {
+                ...child,
+                [p.child]: toJS(data.getIn(['data', p.root, child[p.child]]))
+              }
+            }
+            // matching child does not exist
+            return child
+          }
+          // populate child list
+          return {
+            ...child,
+            [p.child]: mapValues(child[p.child], (val, key) => { // iterate of child list
+              let getKey = val
+               // Handle key: true lists
+              if (val === true) {
+                getKey = key
+              }
+              // Set to child under key if populate child exists
+              if (toJS(data.getIn(['data', p.root, getKey]))) {
+                return toJS(data.getIn(['data', p.root, getKey]))
+              }
+              // Populate child does not exist
+              return val === true ? val : getKey
+            })
+          }
+        })
+     ), (obj, v) =>
+      Object.assign({}, v, obj),
+     )
   }
 
   return data
@@ -169,16 +261,25 @@ export const dataToJS = (data, path, notSetValue) => {
  * @param {String} path - Path of parameter to load
  * @param {String} customPath - Part of store from which to load
  * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
- * @return {Object} Data located at path within Immutable Map
+ * @return {Object} Data located at path within state
+ * @example <caption>Basic</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, helpers } from 'react-redux-firebase'
+ * const { customToJS } = helpers
+ *
+ * const fbWrapped = firebaseConnect(['/todos'])(App)
+ *
+ * export default connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.data.todos
+ *   requesting: customToJS(firebase, 'todos', 'requesting')
+ * }))(fbWrapped)
  */
 export const customToJS = (data, path, custom, notSetValue) => {
-  if (!(data && data.getIn)) {
+  if (!data) {
     return notSetValue
   }
 
-  const customPath = '/' + custom + fixPath(path)
-
-  const pathArr = customPath.split(/\//).slice(1)
+  const pathArr = `/${custom}${fixPath(path)}`.split(/\//).slice(1)
 
   if (data.getIn) {
     return toJS(data.getIn(pathArr, notSetValue))
@@ -187,34 +288,11 @@ export const customToJS = (data, path, custom, notSetValue) => {
   return data
 }
 
-/**
- * @description Convert Immutable Map to a Javascript object
- * @param {Map} snapshot - Snapshot from store
- * @param {String} path - Path of snapshot to load
- * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
- * @return {Object} Data located at path within Immutable Map
- */
-export const snapshotToJS = (snapshot, path, notSetValue) => {
-  if (!snapshot) {
-    return notSetValue
-  }
-
-  const snapshotPath = '/snapshot' + fixPath(path)
-
-  const pathArr = snapshotPath.split(/\//).slice(1)
-
-  if (snapshot.getIn) {
-    return toJS(snapshot.getIn(pathArr, notSetValue))
-  }
-
-  return snapshot
-}
-
 export default {
   toJS,
   pathToJS,
   dataToJS,
-  snapshotToJS,
+  populatedDataToJS,
   customToJS,
   isLoaded,
   isEmpty
