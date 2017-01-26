@@ -1,6 +1,6 @@
 # Recipes
 
-This section includes some recipes for using react-redux-firebase within real applications.
+This section includes some recipes for using `react-redux-firebase` within real applications.
 
 ## [Profile](/docs/recipes/profile.md)
 Recipes for using/modifying built in profile handling.
@@ -44,3 +44,12 @@ Middleware that listens for Actions and dispatches other, often async, actions.
 * Debounced persisting of user input: Listen for typing actions from `redux-form` -> call `firebase.update()`
 * Throttled/Debounced API calls
 * Displaying a system wide error: Listen for error actions -> display error message
+
+## [Routing](/docs/recipes/routing.md)
+
+Change location within your application based on Firebase state.
+
+#### Examples
+* Route Protection (user redirected to `/login` if not authenticated)
+* Redirect to `/` if user visits `/login` when authenticated
+* Show/Hide components based on user profile data such as `role: 'admin'` or `isAdmin: true`

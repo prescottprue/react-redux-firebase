@@ -12,6 +12,7 @@
   * [Actions](/docs/recipes/actions.md)
   * [Thunks](/docs/recipes/thunks.md)
   * [Epics](/docs/recipes/epics.md)
+  * [Routing](/docs/recipes/routing.md)
   * [Redux Form](/docs/recipes/redux-form.md)
   * [Populate](/docs/recipes/populate.md)
 * [API Reference](/docs/api/README.md)
