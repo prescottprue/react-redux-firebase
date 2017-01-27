@@ -29,8 +29,7 @@ const exampleEmptyState = fromJS(emptyState)
 
 describe('reducer', () => {
   it('is a function', () => {
-    expect(firebaseStateReducer)
-      .to.be.a.function
+    expect(firebaseStateReducer).to.be.a.function
   })
 
   it('handles no initialState', () => {
@@ -109,7 +108,7 @@ describe('reducer', () => {
         auth: null,
         authError: null,
         profile: null,
-        isLoading: false,
+        isInitializing: false,
         data: {}
       }))
     })
