@@ -168,7 +168,7 @@ export const promisesForPopulate = (firebase, originalData, populatesIn) => {
   })
 
   // Return original data after population promises run
-  return Promise.all(promisesArray).then(d => results)
+  return Promise.all(promisesArray).then(() => results)
 }
 
 export default { promisesForPopulate }
