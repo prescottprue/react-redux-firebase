@@ -184,27 +184,26 @@ export const init = (dispatch, firebase) => {
   if (firebase._.config.enableRedirectHandling) {
     firebase.auth().getRedirectResult()
       .then((authData) => {
-        if (!authData || !authData.user) {
-          return dispatch({ type: LOGOUT })
+        if (authData && authData.user) {
+          const { user } = authData
+
+          firebase._.authUid = user.uid
+          watchUserProfile(dispatch, firebase)
+
+          dispatchLogin(dispatch, user)
+
+          createUserProfile(
+            dispatch,
+            firebase,
+            user,
+            {
+              email: user.email,
+              displayName: user.providerData[0].displayName || user.email,
+              avatarUrl: user.providerData[0].photoURL,
+              providerData: user.providerData
+            }
+          )
         }
-        const { user } = authData
-
-        firebase._.authUid = user.uid
-        watchUserProfile(dispatch, firebase)
-
-        dispatchLogin(dispatch, user)
-
-        createUserProfile(
-          dispatch,
-          firebase,
-          user,
-          {
-            email: user.email,
-            displayName: user.providerData[0].displayName || user.email,
-            avatarUrl: user.providerData[0].photoURL,
-            providerData: user.providerData
-          }
-        )
       }).catch((error) => {
         dispatchLoginError(dispatch, error)
         return Promise.reject(error)

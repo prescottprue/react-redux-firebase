@@ -121,7 +121,7 @@ export default (state = initialState, action = {}) => {
         auth: null,
         authError: null,
         profile: null,
-        isLoading: false,
+        isInitializing: false,
         data: {}
       })
 

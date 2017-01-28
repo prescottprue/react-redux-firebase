@@ -176,6 +176,29 @@ export const dataToJS = (data, path, notSetValue) => {
 
   return data
 }
+
+/**
+ * @private
+ * @description Build child list based on populate
+ * @param {Map} data - Immutable Map to be converted to JS object (state.firebase)
+ * @param {Object} list - Path of parameter to load
+ * @param {Object} populate - Object with population settings
+ */
+export const buildChildList = (data, list, populate) =>
+  mapValues(list, (val, key) => {
+    let getKey = val
+     // Handle key: true lists
+    if (val === true) {
+      getKey = key
+    }
+    // Set to child under key if populate child exists
+    if (dataToJS(data, `${populate.root}/${getKey}`)) {
+      return dataToJS(data, `${populate.root}/${getKey}`)
+    }
+    // Populate child does not exist
+    return val === true ? val : getKey
+  })
+
 /**
  * @description Convert parameter under "data" path of Immutable Map to a
  * Javascript object with parameters populated based on populates array
@@ -188,13 +211,16 @@ export const dataToJS = (data, path, notSetValue) => {
  * import { connect } from 'react-redux'
  * import { firebaseConnect, helpers } from 'react-redux-firebase'
  * const { dataToJS } = helpers
+ * const populates = [{ child: 'owner', root: 'users' }]
  *
- * const fbWrapped = firebaseConnect(['/todos'])(App)
+ * const fbWrapped = firebaseConnect([
+ * { path: '/todos', populates } // load "todos" and matching "users" to redux
+ * ])(App)
  *
  * export default connect(({ firebase }) => ({
  *   // this.props.todos loaded from state.firebase.data.todos
  *   // each todo has child 'owner' populated from matching uid in 'users' root
- *   todos: populatedDataToJS(firebase, 'todos', [{ child: 'owner', root: 'users' }])
+ *   todos: populatedDataToJS(firebase, 'todos', populates)
  * }))(fbWrapped)
  */
 export const populatedDataToJS = (data, path, populates, notSetValue) => {
@@ -202,57 +228,44 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
     return notSetValue
   }
 
-  const pathArr = `/data${fixPath(path)}`.split(/\//).slice(1)
-
-  if (data.getIn) {
-    if (!toJS(data.getIn(pathArr, notSetValue))) {
-      return toJS(data.getIn(pathArr))
-    }
-    const populateObjs = getPopulateObjs(populates)
-    // reduce array of populates to object of combined populated data
-    return reduce(
-      map(populateObjs, (p, obj) =>
-        // map values of list
-        mapValues(toJS(data.getIn(pathArr)), (child, i) => {
-          // no matching child parameter
-          if (!child[p.child]) {
-            return child
-          }
-          // populate child is key
-          if (isString(child[p.child])) {
-            if (toJS(data.getIn(['data', p.root, child[p.child]]))) {
-              return {
-                ...child,
-                [p.child]: toJS(data.getIn(['data', p.root, child[p.child]]))
-              }
+  const populateObjs = getPopulateObjs(populates)
+  // reduce array of populates to object of combined populated data
+  return reduce(
+    map(populateObjs, (p, obj) => {
+      // single item with iterable child
+      if (dataToJS(data, path)[p.child]) {
+        return {
+          ...dataToJS(data, path),
+          [p.child]: buildChildList(data, dataToJS(data, path)[p.child], p)
+        }
+      }
+      // list with child param in each item
+      return mapValues(dataToJS(data, path), (child, i) => {
+        // no matching child parameter
+        if (!child[p.child]) {
+          return child
+        }
+        // populate child is key
+        if (isString(child[p.child])) {
+          if (dataToJS(data, `${p.root}/${child[p.child]}`)) {
+            return {
+              ...child,
+              [p.child]: dataToJS(data, `${p.root}/${child[p.child]}`)
             }
-            // matching child does not exist
-            return child
           }
-          // populate child list
-          return {
-            ...child,
-            [p.child]: mapValues(child[p.child], (val, key) => { // iterate of child list
-              let getKey = val
-               // Handle key: true lists
-              if (val === true) {
-                getKey = key
-              }
-              // Set to child under key if populate child exists
-              if (toJS(data.getIn(['data', p.root, getKey]))) {
-                return toJS(data.getIn(['data', p.root, getKey]))
-              }
-              // Populate child does not exist
-              return val === true ? val : getKey
-            })
-          }
-        })
-     ), (obj, v) =>
+          // matching child does not exist
+          return child
+        }
+        // populate child list
+        return {
+          ...child,
+          [p.child]: buildChildList(data, child[p.child], p)
+        }
+      })
+    }), (obj, v) =>
+      // reduce data from all populates to one object
       Object.assign({}, v, obj),
-     )
-  }
-
-  return data
+   )
 }
 
 /**
