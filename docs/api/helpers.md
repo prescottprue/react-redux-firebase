@@ -130,13 +130,16 @@ _Basic_
 import { connect } from 'react-redux'
 import { firebaseConnect, helpers } from 'react-redux-firebase'
 const { dataToJS } = helpers
+const populates = [{ child: 'owner', root: 'users' }]
 
-const fbWrapped = firebaseConnect(['/todos'])(App)
+const fbWrapped = firebaseConnect([
+{ path: '/todos', populates } // load "todos" and matching "users" to redux
+])(App)
 
 export default connect(({ firebase }) => ({
   // this.props.todos loaded from state.firebase.data.todos
   // each todo has child 'owner' populated from matching uid in 'users' root
-  todos: populatedDataToJS(firebase, 'todos', [{ child: 'owner', root: 'users' }])
+  todos: populatedDataToJS(firebase, 'todos', populates)
 }))(fbWrapped)
 ```
 

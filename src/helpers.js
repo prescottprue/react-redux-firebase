@@ -227,7 +227,10 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
   if (!data) {
     return notSetValue
   }
-
+  // Handle undefined child
+  if (!dataToJS(data, path, notSetValue)) {
+    return undefined
+  }
   const populateObjs = getPopulateObjs(populates)
   // reduce array of populates to object of combined populated data
   return reduce(
