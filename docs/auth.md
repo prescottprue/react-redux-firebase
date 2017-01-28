@@ -15,6 +15,7 @@ const { pathToJS } = helpers
   })
 )
 ```
+If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `this.props.firebase.auth()` or `getFirebase().auth()`.
 
 #### NOTE
 All examples below assume you have wrapped your component using `firebaseConnect`. This will make `this.props.firebase` available within your component:
@@ -48,7 +49,7 @@ export default firebaseConnect()(SomeComponent)
 ```
 
 
-## `login(credentials)`
+## login(credentials)
 
 ##### Parameters
 
@@ -116,7 +117,7 @@ this.props.firebase.login({
 this.props.firebase.login('someJWTAuthToken')
 ```
 
-## `createUser(credentials, profile)`
+## createUser(credentials, profile)
 
 Similar to Firebase's `ref.createUser(credentials)` but with support for automatic profile setup (based on your userProfile config).
 
@@ -149,7 +150,7 @@ createNewUser({
 ##### Returns
 [**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with `userData`
 
-## `logout()`
+## logout()
 Logout from Firebase and delete all data from the store (`state.firebase.data` and `state.firebase.auth` are set to `null`).
 
 ##### Examples
@@ -159,7 +160,7 @@ Logout from Firebase and delete all data from the store (`state.firebase.data` a
 firebase.logout()
 ```
 
-## `resetPassword(credentials)`
+## resetPassword(credentials)
 Calls Firebase's `ref.resetPassword(credentials)` then adds the output into redux state under `state.firebase.authError`
 
 ##### Examples

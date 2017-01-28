@@ -214,20 +214,24 @@ export const buildChildList = (data, list, populate) =>
  * const populates = [{ child: 'owner', root: 'users' }]
  *
  * const fbWrapped = firebaseConnect([
- * { path: '/todos', populates } // load "todos" and matching "users" to redux
+ *   { path: '/todos', populates } // load "todos" and matching "users" to redux
  * ])(App)
  *
  * export default connect(({ firebase }) => ({
  *   // this.props.todos loaded from state.firebase.data.todos
  *   // each todo has child 'owner' populated from matching uid in 'users' root
- *   todos: populatedDataToJS(firebase, 'todos', populates)
+ *   // for loading un-populated todos use dataToJS(firebase, 'todos')
+ *   todos: populatedDataToJS(firebase, 'todos', populates),
  * }))(fbWrapped)
  */
 export const populatedDataToJS = (data, path, populates, notSetValue) => {
   if (!data) {
     return notSetValue
   }
-
+  // Handle undefined child
+  if (!dataToJS(data, path, notSetValue)) {
+    return undefined
+  }
   const populateObjs = getPopulateObjs(populates)
   // reduce array of populates to object of combined populated data
   return reduce(
