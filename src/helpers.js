@@ -184,16 +184,19 @@ export const dataToJS = (data, path, notSetValue) => {
  * @param {Object} list - Path of parameter to load
  * @param {Object} populate - Object with population settings
  */
-export const buildChildList = (data, list, populate) =>
+export const buildChildList = (data, list, p) =>
   mapValues(list, (val, key) => {
     let getKey = val
      // Handle key: true lists
     if (val === true) {
       getKey = key
     }
+    const pathString = p.childParam
+      ? `${p.root}/${getKey}/${p.childParam}`
+      : `${p.root}/${getKey}`
     // Set to child under key if populate child exists
-    if (dataToJS(data, `${populate.root}/${getKey}`)) {
-      return dataToJS(data, `${populate.root}/${getKey}`)
+    if (dataToJS(data, pathString)) {
+      return dataToJS(data, pathString)
     }
     // Populate child does not exist
     return val === true ? val : getKey
@@ -230,7 +233,7 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
   }
   // Handle undefined child
   if (!dataToJS(data, path, notSetValue)) {
-    return undefined
+    return dataToJS(data, path, notSetValue)
   }
   const populateObjs = getPopulateObjs(populates)
   // reduce array of populates to object of combined populated data
@@ -238,6 +241,20 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
     map(populateObjs, (p, obj) => {
       // single item with iterable child
       if (dataToJS(data, path)[p.child]) {
+        // populate child is key
+        if (isString(dataToJS(data, path)[p.child])) {
+          const pathString = p.childParam
+            ? `${p.root}/${dataToJS(data, path)[p.child]}/${p.childParam}`
+            : `${p.root}/${dataToJS(data, path)[p.child]}`
+          if (dataToJS(data, pathString)) {
+            return {
+              ...dataToJS(data, path),
+              [p.child]: dataToJS(data, pathString)
+            }
+          }
+          // matching child does not exist
+          return dataToJS(data, path)
+        }
         return {
           ...dataToJS(data, path),
           [p.child]: buildChildList(data, dataToJS(data, path)[p.child], p)
@@ -251,10 +268,13 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
         }
         // populate child is key
         if (isString(child[p.child])) {
-          if (dataToJS(data, `${p.root}/${child[p.child]}`)) {
+          const pathString = p.childParam
+            ? `${p.root}/${child[p.child]}/${p.childParam}`
+            : `${p.root}/${child[p.child]}`
+          if (dataToJS(data, pathString)) {
             return {
               ...child,
-              [p.child]: dataToJS(data, `${p.root}/${child[p.child]}`)
+              [p.child]: dataToJS(data, pathString)
             }
           }
           // matching child does not exist

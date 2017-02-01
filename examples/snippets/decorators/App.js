@@ -4,10 +4,10 @@ import TodoItem from './TodoItem'
 
 // redux/firebase
 import { connect } from 'react-redux'
-import { firebase, helpers } from 'react-redux-firebase'
+import { firebaseConnect, helpers } from 'react-redux-firebase'
 const { isLoaded, isEmpty, pathToJS, dataToJS } = helpers
 
-@firebase([
+@firebaseConnect([
   '/todos'
 ])
 @connect(

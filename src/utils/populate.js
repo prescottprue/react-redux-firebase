@@ -77,34 +77,24 @@ export const getPopulateChild = (firebase, populate, id) =>
  * @param {Object} populate - Object containing populate information
  * @param {Object} results - Object containing results of population from other populates
  */
-export const populateList = (firebase, originalData, p, results) => {
-  const mainChild = p.child.split('[]')[0]
-  const childParam = p.child.split('[]')[1]
+export const populateList = (firebase, list, p, results) => {
+  // Handle root not being defined
+  if (!results[p.root]) {
+    set(results, p.root, {})
+  }
   return Promise.all(
-    map(get(originalData, mainChild), (id, childKey) => {
+    map(list, (id, childKey) => {
       // handle list of keys
       const populateKey = id === true ? childKey : id
       return getPopulateChild(
         firebase,
         p,
-        childParam
-          ? get(id, childParam) // get child parameter if [] notation
-          : populateKey
+        populateKey
       )
       .then(pc => {
         if (pc) {
           // write child to result object under root name if it is found
-          if (!childParam) {
-            return set(results, `${p.root}.${populateKey}`, pc)
-          }
-          // handle child param
-          return ({
-            [childKey]: set(
-              id,
-              childParam,
-              Object.assign(pc, { key: get(id, childParam) })
-            )
-          })
+          return set(results, `${p.root}.${populateKey}`, pc)
         }
         return results
       })
@@ -131,7 +121,9 @@ export const promisesForPopulate = (firebase, originalData, populatesIn) => {
 
     // Single parameter with list
     if (has(originalData, mainChild)) {
-      return promisesArray.push(populateList(firebase, originalData, p, results))
+      return promisesArray.push(
+        populateList(firebase, originalData[mainChild], p, results)
+      )
     }
     // Loop over each object in list
     forEach(originalData, (d, key) => {
@@ -161,7 +153,7 @@ export const promisesForPopulate = (firebase, originalData, populatesIn) => {
       if (isArray(idOrList) || isObject(idOrList)) {
         // Create single promise that includes a promise for each child
         return promisesArray.push(
-          populateList(firebase, originalData, p, results)
+          populateList(firebase, idOrList, p, results)
         )
       }
     })
