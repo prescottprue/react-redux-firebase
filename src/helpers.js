@@ -241,6 +241,20 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
     map(populateObjs, (p, obj) => {
       // single item with iterable child
       if (dataToJS(data, path)[p.child]) {
+        // populate child is key
+        if (isString(dataToJS(data, path)[p.child])) {
+          const pathString = p.childParam
+            ? `${p.root}/${dataToJS(data, path)[p.child]}/${p.childParam}`
+            : `${p.root}/${dataToJS(data, path)[p.child]}`
+          if (dataToJS(data, pathString)) {
+            return {
+              ...dataToJS(data, path),
+              [p.child]: dataToJS(data, pathString)
+            }
+          }
+          // matching child does not exist
+          return dataToJS(data, path)
+        }
         return {
           ...dataToJS(data, path),
           [p.child]: buildChildList(data, dataToJS(data, path)[p.child], p)

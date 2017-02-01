@@ -127,48 +127,112 @@ describe('Helpers:', () => {
         .equal(exampleData.data[path])
     })
 
-    it('populates child', () => {
-      const path = 'projects'
-      const rootName = 'users'
-      const valName = 'CDF'
-      expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName }])[valName].owner)
-        .to
-        .have
-        .property('displayName', 'scott')
+    describe('single', () => {
+      describe('single param', () => {
+        it('populates value', () => {
+          const path = 'projects/CDF'
+          const rootName = 'users'
+          console.log('--------', helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName }]).owner)
+          expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName }]).owner)
+            .to
+            .have
+            .property('displayName', 'scott')
+        })
+
+        it('populates childParam', () => {
+          const path = 'projects/CDF'
+          const rootName = 'users'
+          expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }]).owner)
+            .to
+            .have
+            .equal('scott')
+        })
+        it('keeps non-existant children', () => {
+          const path = 'projects/OKF'
+          const rootName = 'users'
+          expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName }]).owner)
+            .to
+            .have
+            .equal('asdfasdf')
+        })
+      })
+      describe('list param', () => {
+        it('populates values', () => {
+          const path = 'projects/OKF'
+          const rootName = 'users'
+          const populates = [
+            { child: 'collaborators', root: rootName },
+          ]
+          const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
+          expect(populatedData)
+            .to
+            .have
+            .deep
+            .property(`collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+        })
+      })
+
     })
 
-    it('populates child list', () => {
-      const path = 'projects'
-      const rootName = 'users'
-      const valName = 'OKF'
-      const populates = [
-        { child: 'collaborators', root: rootName },
-      ]
-      const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
-      expect(populatedData)
-        .to
-        .have
-        .deep
-        .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
-    })
+    describe('list', () => {
 
-    it('handles non existant children', () => {
-      const path = 'projects'
-      const rootName = 'users'
-      const valName = 'OKF'
-      const populates = [
-        { child: 'collaborators', root: rootName },
-      ]
-      expect(helpers.populatedDataToJS(exampleState, path, populates))
-        .to
-        .have
-        .deep
-        .property(`${valName}.collaborators.abc`, true)
-      expect(helpers.populatedDataToJS(exampleState, path, populates))
-        .to
-        .have
-        .deep
-        .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+      describe('single param', () => {
+        it('populates value', () => {
+          const path = 'projects'
+          const rootName = 'users'
+          const valName = 'CDF'
+          expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName }])[valName].owner)
+            .to
+            .have
+            .property('displayName', 'scott')
+        })
+
+        it('populates childParam', () => {
+          const path = 'projects'
+          const rootName = 'users'
+          const valName = 'CDF'
+          expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }])[valName].owner)
+            .to
+            .have
+            .equal('scott')
+        })
+      })
+
+      describe('list param', () => {
+        it('populates values', () => {
+          const path = 'projects'
+          const rootName = 'users'
+          const valName = 'OKF'
+          const populates = [
+            { child: 'collaborators', root: rootName },
+          ]
+          const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
+          expect(populatedData)
+            .to
+            .have
+            .deep
+            .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+        })
+
+        it('keeps non-existant children', () => {
+          const path = 'projects'
+          const rootName = 'users'
+          const valName = 'OKF'
+          const populates = [
+            { child: 'collaborators', root: rootName },
+          ]
+          expect(helpers.populatedDataToJS(exampleState, path, populates))
+            .to
+            .have
+            .deep
+            .property(`${valName}.collaborators.abc`, true)
+          expect(helpers.populatedDataToJS(exampleState, path, populates))
+            .to
+            .have
+            .deep
+            .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+        })
+      })
     })
 
     it('populates multiple children', () => {
@@ -179,6 +243,7 @@ describe('Helpers:', () => {
         { child: 'owner', root: rootName },
         { child: 'collaborators', root: rootName },
       ]
+      // TODO: Test both children are populated
       expect(helpers.populatedDataToJS(exampleState, path, populates))
         .to
         .have
@@ -222,6 +287,10 @@ describe('Helpers:', () => {
 
     it('returns true when is loaded', () => {
       expect(helpers.isLoaded('some')).to.be.true
+    })
+
+    it('returns false when on argument is not loaded', () => {
+      expect(helpers.isLoaded(undefined, {})).to.be.false
     })
   })
 
