@@ -263,7 +263,7 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
       // list with child param in each item
       return mapValues(dataToJS(data, path), (child, i) => {
         // no matching child parameter
-        if (!child[p.child]) {
+        if (!child || !child[p.child]) {
           return child
         }
         // populate child is key
@@ -278,7 +278,7 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
             }
           }
           // matching child does not exist
-          return child
+          return child[p.child]
         }
         // populate child list
         return {
