@@ -58,8 +58,10 @@ export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',
   authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
   authenticatingSelector: ({ firebase }) => pathToJS(firebase, 'isInitializing') === true,
+  predicate: auth => auth !== null,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
+    // routerActions.replace // if using react-router-redux
     dispatch({
       type: 'UNAUTHED_REDIRECT',
       payload: { message: 'You must be authenticated.' },
