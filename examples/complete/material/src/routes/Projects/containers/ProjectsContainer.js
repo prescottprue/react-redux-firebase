@@ -9,21 +9,22 @@ import NewProjectDialog from '../components/NewProjectDialog/NewProjectDialog'
 import LoadingSpinner from 'components/LoadingSpinner'
 import classes from './ProjectsContainer.scss'
 
-const { populatedDataToJS, pathToJS, isLoaded, isEmpty } = helpers
-const populates = [
-  { child: 'owner', root: 'users' }
-]
+const { dataToJS, pathToJS, isLoaded, isEmpty } = helpers
 
-@firebaseConnect([
-  {
-    path: 'projects',
-    populates
-  }
-  // 'projects#populate=owner:users' // string equivalent
-])
+@firebaseConnect(
+  ({ params, auth }) => ([
+    {
+      path: 'projects',
+      populates: [
+        { child: 'owner', root: 'users' }
+      ]
+    }
+    // 'projects#populate=owner:users' // string equivalent
+  ])
+)
 @connect(
   ({ firebase }, { params }) => ({
-    projects: populatedDataToJS(firebase, '/projects', populates),
+    projects: dataToJS(firebase, 'projects'),
     auth: pathToJS(firebase, 'auth')
   })
 )
@@ -46,11 +47,11 @@ export default class Projects extends Component {
   }
 
   newSubmit = (newProject) => {
-    const { auth } = this.props
+    const { auth, firebase: { push } } = this.props
     if (auth.uid) {
       newProject.owner = auth.uid
     }
-    this.props.firebase.push('projects', newProject)
+    push('projects', newProject)
       .then(() => this.setState({ newProjectModal: false }))
       .catch(err => {
         // TODO: Show Snackbar
@@ -81,32 +82,28 @@ export default class Projects extends Component {
     return (
       <div className={classes.container}>
         {
-          newProjectModal && isLoaded(projects)
-            ?
-              <NewProjectDialog
-                open={newProjectModal}
-                onSubmit={this.newSubmit}
-                onRequestClose={() => this.toggleModal('newProject')}
-              />
-            : null
+          newProjectModal &&
+            <NewProjectDialog
+              open={newProjectModal}
+              onSubmit={this.newSubmit}
+              onRequestClose={() => this.toggleModal('newProject')}
+            />
         }
-        <div className={classes.tiles}>
+        <div className={classes['tiles']}>
           <NewProjectTile
             onClick={() => this.toggleModal('newProject')}
           />
           {
-            !isEmpty(projects)
-              ?
-                 map(projects, (project, key) => (
-                   <ProjectTile
-                     key={`Project-${key}`}
-                     project={project}
-                     onCollabClick={this.collabClick}
-                     onSelect={() => this.context.router.push(`${LIST_PATH}/${key}`)}
-                     onDelete={this.deleteProject}
-                   />
-                ))
-              : <span>No Projects Found</span>
+            !isEmpty(projects) &&
+               map(projects, (project, key) => (
+                 <ProjectTile
+                   key={`${project.name}-Collab-${key}`}
+                   project={project}
+                   onCollabClick={this.collabClick}
+                   onSelect={() => this.context.router.push(`${LIST_PATH}/${key}`)}
+                   onDelete={this.deleteProject}
+                 />
+              ))
           }
         </div>
       </div>

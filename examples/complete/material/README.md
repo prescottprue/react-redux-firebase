@@ -7,6 +7,7 @@
 [![License][license-image]][license-url]
 [![Code Style][code-style-image]][code-style-url]
 
+This is a "real-world" example, and is based on the output of [`generator-react-firebase`](https://github.com/prescottprue/generator-react-firebase).
 
 ## Getting Started
 
@@ -14,18 +15,12 @@
 
 2. Start Development server: `npm start`
 
-If everything works, you should see the following:
-
-
 While developing, you will probably rely mostly on `npm start`; however, there are additional scripts at your disposal:
 
 |`npm run <script>`|Description|
 |------------------|-----------|
 |`start`|Serves your app at `localhost:3000`. HMR will be enabled in development.|
-|`compile`|Compiles the application to disk (`~/dist` by default).|
 |`dev`|Same as `npm start`, but enables nodemon for the server as well.|
-|`test`|Runs unit tests with Karma and generates a coverage report.|
-|`test:dev`|Runs Karma and watches for changes to re-run tests; does not generate coverage reports.|
 |`build`|Runs linter, tests, and then, on success, compiles your application to disk.|
 |`build:dev`|Same as `build` but overrides `NODE_ENV` to "development".|
 |`build:prod`|Same as `build` but overrides `NODE_ENV` to "production".|
@@ -77,18 +72,17 @@ The application structure presented in this boilerplate is **fractal**, where fu
 Build code before deployment by running `npm run build`. There are multiple options below for types of deployment, if you are unsure, checkout the Firebase section.
 
 ### Deployment
-
 1. Login to [Firebase](firebase.google.com) (or Signup if you don't have an account) and create a new project
 2. Install cli: `npm i -g firebase-tools`
 3. Login: `firebase login`
-4. Initialize project with `firebase init` then answer:
-  * What file should be used for Database Rules?  -> `database.rules.json`
-  * What do you want to use as your public directory? -> `build`
-  * Configure as a single-page app (rewrite all urls to /index.html)? -> `Yes`
-  * What Firebase project do you want to associate as default?  -> **your Firebase project name**
-5. Build Project: `npm run build`
-6. Confirm Firebase config by running locally: `firebase serve`
-7. Deploy to firebase: `firebase deploy`
+
+#### CI
+**Note:** The next steps automatically through config set in the `.travis.yml`. Use `firebase login:ci` to generate a token and set it to `TOKEN` within your travis config.
+
+#### Local
+1. Build Project: `npm run build`
+2. Confirm Firebase config by running locally: `firebase serve`
+3. Deploy to firebase: `firebase deploy`
 
 
 [npm-image]: https://img.shields.io/npm/v/material.svg?style=flat-square
