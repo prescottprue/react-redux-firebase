@@ -5,13 +5,13 @@ import { isObject } from 'lodash'
 import classes from './ProjectTile.scss'
 
 export const ProjectTile = ({ project, onSelect }) => (
-  <Paper key={`Project-${project.name}`} className={classes['container']}>
-    <div className={classes['top']}>
-      <span className={classes['name']} onClick={() => onSelect(project)}>
+  <Paper className={classes.container}>
+    <div className={classes.top}>
+      <span className={classes.name} onClick={() => onSelect(project)}>
         {project.name}
       </span>
     </div>
-    <span className={classes['owner']}>
+    <span className={classes.owner}>
       {
         isObject(project.owner)
           ? project.owner.displayName
