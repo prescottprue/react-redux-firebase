@@ -2,8 +2,6 @@ import NotFoundRoute from 'routes/NotFound'
 
 describe('(Route) NotFound', () => {
   let _route
-  let _component
-  let _childRoutes
 
   beforeEach(() => {
     _route = NotFoundRoute()
@@ -22,5 +20,4 @@ describe('(Route) NotFound', () => {
   it('Defines a getChildRoutes function', () => {
     expect(_route.getChildRoutes).to.be.a.function
   })
-
 })

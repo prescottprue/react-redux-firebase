@@ -2,15 +2,13 @@ import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
 import GoogleButton from 'react-google-button'
 import Paper from 'material-ui/Paper'
-import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
 import LoginForm from '../components/LoginForm/LoginForm'
-import { LIST_PATH } from 'constants/paths'
 
 import classes from './LoginContainer.scss'
 
 import { connect } from 'react-redux'
-import { UserIsNotAuthenticated } from 'utils/router';
+import { UserIsNotAuthenticated } from 'utils/router'
 import { firebaseConnect, helpers } from 'react-redux-firebase'
 const { isLoaded, isEmpty, pathToJS } = helpers
 
@@ -23,15 +21,13 @@ const { isLoaded, isEmpty, pathToJS } = helpers
   })
 )
 export default class Login extends Component {
-  
-
   static propTypes = {
     firebase: PropTypes.shape({
-      login: PropTypes.func.isRequired,
+      login: PropTypes.func.isRequired
     }),
     authError: PropTypes.shape({
-      message: PropTypes.string, // eslint-disable-line react/no-unused-prop-types
-    }),
+      message: PropTypes.string // eslint-disable-line react/no-unused-prop-types
+    })
   }
 
   state = {
@@ -40,8 +36,7 @@ export default class Login extends Component {
 
   handleLogin = loginData => {
     this.setState({
-      snackCanOpen: true,
-      isLoading: true
+      snackCanOpen: true
     })
 
     this.props.firebase.login(loginData)
@@ -54,28 +49,18 @@ export default class Login extends Component {
     const { authError } = this.props
     const { snackCanOpen } = this.state
 
-    if (!isLoaded(account) && !isEmpty(account)) {
-      return (
-        <div className={classes['container']}>
-          <div className={classes['progress']}>
-            <CircularProgress mode='indeterminate' />
-          </div>
-        </div>
-      )
-    }
-
     return (
-      <div className={classes['container']}>
-        <Paper className={classes['panel']}>
+      <div className={classes.container}>
+        <Paper className={classes.panel}>
           <LoginForm onSubmit={this.handleLogin} />
         </Paper>
-        <div className={classes['or']}>
+        <div className={classes.or}>
           or
         </div>
-        <div className={classes['providers']}>
+        <div className={classes.providers}>
           <GoogleButton onClick={() => this.providerLogin('google')} />
         </div>
-        <div className={classes['signup']}>
+        <div className={classes.signup}>
           <span className={classes['signup-label']}>
             Need an account?
           </span>

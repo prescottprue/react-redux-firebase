@@ -1,6 +1,6 @@
-import React from 'react';
-import { LoadingSpinner } from 'components/LoadingSpinner/LoadingSpinner';
-import { shallow } from 'enzyme';
+import React from 'react'
+import { LoadingSpinner } from 'components/LoadingSpinner/LoadingSpinner'
+import { shallow } from 'enzyme'
 
 describe('(Component) LoadingSpinner', () => {
   let _component
@@ -13,5 +13,4 @@ describe('(Component) LoadingSpinner', () => {
     const firstDiv = _component.find('div')
     expect(firstDiv).to.exist
   })
-
 })

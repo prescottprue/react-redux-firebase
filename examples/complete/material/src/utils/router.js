@@ -1,14 +1,13 @@
-import { get, find } from 'lodash';
-import { UserAuthWrapper } from 'redux-auth-wrapper';
-import { browserHistory } from 'react-router';
-import { paths } from 'constants';
-import { helpers } from 'react-redux-firebase';
-import LoadingSpinner from 'components/LoadingSpinner';
+import { UserAuthWrapper } from 'redux-auth-wrapper'
+import { browserHistory } from 'react-router'
+import { paths } from 'constants'
+import { helpers } from 'react-redux-firebase'
+import LoadingSpinner from 'components/LoadingSpinner'
 
-const { pathToJS } = helpers;
+const { pathToJS } = helpers
 
-const AUTHED_REDIRECT = 'AUTHED_REDIRECT';
-const UNAUTHED_REDIRECT = 'UNAUTHED_REDIRECT';
+const AUTHED_REDIRECT = 'AUTHED_REDIRECT'
+const UNAUTHED_REDIRECT = 'UNAUTHED_REDIRECT'
 
 /**
  * @description Higher Order Component that redirects to `/login` instead
@@ -21,17 +20,17 @@ export const UserIsAuthenticated = UserAuthWrapper({ // eslint-disable-line new-
   LoadingComponent: LoadingSpinner,
   authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
   authenticatingSelector: ({ firebase }) =>
-    (pathToJS(firebase, 'auth') === undefined)
-    || (pathToJS(firebase, 'isInitializing') === true),
+    (pathToJS(firebase, 'auth') === undefined) ||
+    (pathToJS(firebase, 'isInitializing') === true),
   predicate: auth => auth !== null,
   redirectAction: newLoc => (dispatch) => {
-    browserHistory.replace(newLoc);
+    browserHistory.replace(newLoc)
     dispatch({
       type: UNAUTHED_REDIRECT,
-      payload: { message: 'User is not authenticated.' },
-    });
-  },
-});
+      payload: { message: 'User is not authenticated.' }
+    })
+  }
+})
 
 /**
  * @description Higher Order Component that redirects to listings page or most
@@ -49,16 +48,16 @@ export const UserIsNotAuthenticated = UserAuthWrapper({ // eslint-disable-line n
     props.location.query.redirect || paths.listings,
   authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
   authenticatingSelector: ({ firebase }) =>
-    (pathToJS(firebase, 'auth') === undefined)
-    || (pathToJS(firebase, 'isInitializing') === true),
+    (pathToJS(firebase, 'auth') === undefined) ||
+    (pathToJS(firebase, 'isInitializing') === true),
   predicate: auth => auth === null,
   redirectAction: newLoc => (dispatch) => {
-    browserHistory.replace(newLoc);
-    dispatch({ type: AUTHED_REDIRECT });
-  },
-});
+    browserHistory.replace(newLoc)
+    dispatch({ type: AUTHED_REDIRECT })
+  }
+})
 
 export default {
   UserIsAuthenticated,
-  UserIsNotAuthenticated,
-};
+  UserIsNotAuthenticated
+}

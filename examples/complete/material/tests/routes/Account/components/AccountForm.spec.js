@@ -8,7 +8,7 @@ describe('(Account:Component) AccountForm', () => {
   beforeEach(() => {
     _component = shallow(
       <AccountForm
-        handleSubmit={() => console.log('handle submit called')}
+        handleSubmit={() => console.log('handle submit called')} // eslint-disable-line no-console
       />
     )
   })

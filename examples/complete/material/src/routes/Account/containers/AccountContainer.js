@@ -19,13 +19,13 @@ const { pathToJS, isLoaded } = helpers
   ({ firebase }) => ({
     authError: pathToJS(firebase, 'authError'),
     account: pathToJS(firebase, 'profile'),
-    initialValues: pathToJS(firebase, 'profile'),
+    initialValues: pathToJS(firebase, 'profile')
   })
 )
 @reduxForm({
   form: ACCOUNT_FORM_NAME,
   enableReinitialization: true,
-  persistentSubmitErrors: true,
+  persistentSubmitErrors: true
 })
 export default class Account extends Component {
 

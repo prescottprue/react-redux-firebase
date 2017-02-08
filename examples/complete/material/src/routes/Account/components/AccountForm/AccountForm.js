@@ -3,11 +3,8 @@ import React, { PropTypes } from 'react'
 import classes from './AccountForm.scss'
 import ProviderDataForm from '../ProviderDataForm/ProviderDataForm'
 
-import { Field, reduxForm } from 'redux-form'
-import TextField from '../../../../components/TextField'
-import { connect } from 'react-redux'
-import { helpers } from 'react-redux-firebase'
-const { pathToJS } = helpers
+import { Field } from 'redux-form'
+import TextField from 'components/TextField'
 
 export const AccountForm = ({ account, handleSubmit, submitting }) => (
   <div className={classes.container}>
