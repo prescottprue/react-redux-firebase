@@ -53,6 +53,15 @@ describe('Utils: Populate', () => {
         })
     )
 
+    it('populates single property containing a single item', () =>
+      promisesForPopulate(Firebase, { uid: '123' }, [{child: 'uid', root: 'users'}])
+        .then((v) => {
+          expect(v).to.exist
+          expect(v).to.have.keys('users')
+          expect(v.users['Iq5b0qK2NtgggT6U3bU6iZRGyma2']).to.be.an.object
+        })
+    )
+
     it('populates single property containing a list', () =>
       promisesForPopulate(Firebase, { collaborators: { 'Iq5b0qK2NtgggT6U3bU6iZRGyma2': true, '123': true } }, [{child: 'collaborators', root: 'users'}])
         .then((v) => {
