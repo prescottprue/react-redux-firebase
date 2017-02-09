@@ -31,6 +31,7 @@ export const getQueryIdFromPath = (path, event = undefined) => {
   const queryParams = isQuery ? pathSplitted[1].split('&') : []
   const queryId = isQuery ? queryParams.map((param) => {
     let splittedParam = param.split('=')
+    // Handle query id in path
     if (splittedParam[0] === 'queryId') {
       return splittedParam[1]
     }

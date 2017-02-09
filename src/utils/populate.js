@@ -127,7 +127,6 @@ export const promisesForPopulate = (firebase, originalData, populatesIn) => {
               if (v) {
                 set(results, `${p.root}.${originalData[p.child]}`, v)
               }
-              return results
             })
         )
       }
