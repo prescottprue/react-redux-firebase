@@ -1,10 +1,11 @@
-import { omit, isArray, isString, isFunction } from 'lodash'
+import { omit, isArray, isString, isFunction, forEach, set, get } from 'lodash'
 import jwtDecode from 'jwt-decode'
 import { actionTypes, defaultJWTProps } from '../constants'
-import { promisesForPopulate } from '../utils/populate'
+import { promisesForPopulate, getPopulateObjs } from '../utils/populate'
 import { getLoginMethodAndParams } from '../utils/auth'
 
 const {
+  SET,
   SET_PROFILE,
   LOGIN,
   LOGOUT,
@@ -84,7 +85,11 @@ export const watchUserProfile = (dispatch, firebase) => {
       .ref()
       .child(`${userProfile}/${authUid}`)
       .on('value', snap => {
-        const { profileParamsToPopulate } = firebase._.config
+        const {
+          profileParamsToPopulate,
+          autoPopulateProfile,
+          setProfilePopulateResults
+        } = firebase._.config
         if (!profileParamsToPopulate || (!isArray(profileParamsToPopulate) && !isString(profileParamsToPopulate))) {
           dispatch({
             type: SET_PROFILE,
@@ -95,13 +100,38 @@ export const watchUserProfile = (dispatch, firebase) => {
           promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
             .then(data => {
               // Dispatch action with profile combined with populated parameters
-              dispatch({
-                type: SET_PROFILE,
-                profile: Object.assign(
-                  snap.val(), // profile
-                  data
-                )
-              })
+              // Auto Populate profile
+              if (autoPopulateProfile) {
+                const populates = getPopulateObjs(profileParamsToPopulate)
+                const profile = snap.val()
+                forEach(populates, (p) => {
+                  set(profile, p.child, get(data, `${p.root}.${snap.val()[p.child]}`))
+                })
+                dispatch({
+                  type: SET_PROFILE,
+                  profile
+                })
+              } else {
+                // dispatch with unpopulated profile data
+                dispatch({
+                  type: SET_PROFILE,
+                  profile: snap.val()
+                })
+              }
+
+              // Fire actions for placement of data gathered in populate into redux
+              if (setProfilePopulateResults) {
+                forEach(data, (result, path) => {
+                  dispatch({
+                    type: SET,
+                    path,
+                    data: result,
+                    timestamp: Date.now(),
+                    requesting: false,
+                    requested: true
+                  })
+                })
+              }
             })
         }
       })
