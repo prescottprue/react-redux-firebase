@@ -1,4 +1,4 @@
-/* global describe expect it beforeEach */
+/* global describe expect it */
 import { validateConfig } from '../../../src/utils'
 console.log('validateConfig', validateConfig)
 const validConfig = {
