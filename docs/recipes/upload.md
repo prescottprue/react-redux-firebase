@@ -3,7 +3,7 @@
 ### File Drag/Drop Upload with Delete
 This example component uses `react-dropzone` to allow for drag/drop uploading directly to Firebase storage. `this.props.uploadFiles()` provides the capability to update Firebase database with Files metadata, which is perfect for showing your upload results cleaning in the same component.
 
-**NOTE:** The third argument provided to the `uploadFiles` and `deleteFiles` calls below is the database path where File Metadata will be written/deleted from. This is out of connivence only, simply remove the third argument if you don't want metadata written/deleted to/from database.
+**NOTE:** The third argument provided to the `uploadFiles` and `deleteFiles` calls below is the database path where File Metadata will be written/deleted from. This is out of convenience only, simply remove the third argument if you don't want metadata written/deleted to/from database.
 
 ```js
 import React, { PropTypes, Component } from 'react'
