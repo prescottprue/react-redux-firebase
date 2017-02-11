@@ -1,0 +1,18 @@
+@import 'base';
+
+.container {
+  @extend .flex-row-center;
+  align-items: center;
+  cursor: pointer;
+  height: 200px;
+  margin: .5rem;
+  padding: 1.3rem;
+  overflow: hidden;
+  min-width: 300px;
+  @include tablet {
+    flex-basis: 40%;
+  }
+  @include mobile {
+    flex-basis: 80%;
+  }
+}

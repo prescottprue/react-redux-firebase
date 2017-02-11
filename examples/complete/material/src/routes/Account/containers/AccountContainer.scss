@@ -1,0 +1,48 @@
+@import 'base';
+
+.container {
+  @extend .flex-row-center;
+  align-items: center;
+  padding-top: 4rem;
+}
+.pane {
+  @extend .flex-column-center;
+  justify-content: space-around;
+  flex-basis: 60%;
+}
+.settings {
+  @extend .flex-row-center;
+  width: 100%;
+  align-items: center;
+}
+.avatar {
+  &-new {
+    &-droptext {
+      @extend .flex-column-center;
+      height: 100%;
+      font-size: 1.3rem;
+      justify-content: center;
+    }
+  }
+  &-current {
+    width: 100%;
+    max-width: 13rem;
+    height: auto;
+    cursor: pointer;
+  }
+}
+
+.ImageManager {
+  @extend .flex-row;
+  .Preview {
+    width: 10rem;
+    height: auto;
+  }
+}
+.meta {
+  @extend .flex-column-center;
+  justify-content: center;
+  flex-basis: 60%;
+  margin-bottom: 3rem;
+  margin-top: 2rem;
+}

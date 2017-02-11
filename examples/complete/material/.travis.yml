@@ -1,0 +1,30 @@
+language: node_js
+
+node_js:
+- 6.9.1
+
+sudo: false
+
+notifications:
+  email:
+    on_failure: change
+    on_success: change
+
+branches:
+  only:
+    - master
+    - stage
+    - prod
+
+install:
+  - npm set progress=false
+  - npm install
+
+script:
+  - npm run lint:fix
+  - npm run test
+  - npm run build:prod
+
+after_success:
+  - npm install -g firebase-tools
+  - npm run deploy
