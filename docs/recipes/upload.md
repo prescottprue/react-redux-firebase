@@ -8,13 +8,11 @@ This example component uses `react-dropzone` to allow for drag/drop uploading di
 ```js
 import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
+import { firebaseConnect, dataToJS } from 'react-redux-firebase'
 import { map } from 'lodash'
 import Dropzone from 'react-dropzone'
 
-const { dataToJS } = helpers
-
-// Path within Storage for file and Database for metadata
+// Path within Database for metadata (also used for file Storage path)
 const filesPath = 'uploadedFiles'
 
 @firebaseConnect([

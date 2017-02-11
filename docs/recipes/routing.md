@@ -9,9 +9,13 @@ Routing can be changed based on data by using react lifecycle hooks such as `com
 ```javascript
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-
-const { isLoaded, isEmpty, pathToJS } = helpers
+import {
+  firebaseConnect,
+  helpers,
+  pathToJS,
+  isLoaded,
+  isEmpty
+} from 'react-redux-firebase'
 
 @firebaseConnect()
 @connect(
@@ -51,8 +55,7 @@ In order to only allow authenticated users to view a page, a `UserIsAuthenticate
 ```javascript
 import { browserHistory } from 'react-router'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { helpers } from 'react-redux-firebase'
-const { pathToJS } = helpers
+import { pathToJS } from 'react-redux-firebase'
 
 export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',
@@ -109,8 +112,7 @@ Just as easily as creating a wrapper for redirect if a user is not logged in, we
 ```javascript
 import { browserHistory } from 'react-router'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { helpers } from 'react-redux-firebase'
-const { pathToJS } = helpers
+import { pathToJS } from 'react-redux-firebase'
 
 export const UserIsNotAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsNotAuthenticated',

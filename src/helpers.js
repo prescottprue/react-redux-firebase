@@ -18,8 +18,7 @@ import { metaParams, paramSplitChar } from './constants'
  * @example
  * import React, { Component, PropTypes } from 'react'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, helpers } from 'react-redux-firebase'
- * const { isLoaded, dataToJS } = helpers
+ * import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
  *
  * @firebaseConnect(['/todos'])
  * @connect(
@@ -59,8 +58,7 @@ export const isLoaded = function () {
  * @example
  * import React, { Component, PropTypes } from 'react'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, helpers } from 'react-redux-firebase'
- * const { isEmpty, dataToJS } = helpers
+ * import { firebaseConnect, isEmpty, dataToJS } from 'react-redux-firebase'
  *
  * @firebaseConnect(['/todos'])
  * @connect(
@@ -115,13 +113,15 @@ export const toJS = data =>
  * @return {Object} Data located at path within Immutable Map
  * @example <caption>Basic</caption>
  * import { connect } from 'react-redux'
- * import { firebaseConnect, helpers } from 'react-redux-firebase'
- * const { pathToJS } = helpers
- * const fbWrapped = firebaseConnect()(App)
- * export default connect(({ firebase }) => ({
+ * import { firebaseConnect, pathToJS } from 'react-redux-firebase'
+ *
+ * @firebaseConnect()
+ * @connect(({ firebase }) => ({
  *   profile: pathToJS(firebase, 'profile'),
  *   auth: pathToJS(firebase, 'auth')
- * }))(fbWrapped)
+ * })
+ * export default class MyComponent extends Component {
+ * ...
  */
 export const pathToJS = (data, path, notSetValue) => {
   if (!data) {
@@ -153,15 +153,13 @@ export const pathToJS = (data, path, notSetValue) => {
  * @return {Object} Data located at path within Immutable Map
  * @example <caption>Basic</caption>
  * import { connect } from 'react-redux'
- * import { firebaseConnect, helpers } from 'react-redux-firebase'
- * const { dataToJS } = helpers
+ * import { firebaseConnect, dataToJS } from 'react-redux-firebase'
  *
- * const fbWrapped = firebaseConnect(['/todos'])(App)
- *
- * export default connect(({ firebase }) => ({
+ * @firebaseConnect(['/todos'])
+ * @connect(({ firebase }) => ({
  *   // this.props.todos loaded from state.firebase.data.todos
  *   todos: dataToJS(firebase, 'todos')
- * }))(fbWrapped)
+ * })
  */
 export const dataToJS = (data, path, notSetValue) => {
   if (!data) {
