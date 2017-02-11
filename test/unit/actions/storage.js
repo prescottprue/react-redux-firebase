@@ -13,7 +13,8 @@ const fakeFirebase = {
   _: {
     authUid: '123',
     config: {
-      userProfile: 'users'
+      userProfile: 'users',
+      disableRedirectHandling: true
     }
   },
   database: () => ({

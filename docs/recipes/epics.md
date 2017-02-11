@@ -29,9 +29,8 @@ export const notificationEpic = (action$, { getState, dispatch }, { getFirebase 
   action$.ofType(SEND_NOTIFICATION) // stream of notification actions
     .debounceTime(2000) // debounce SEND_NOTIFICATION actions by 2 seconds
     .do((action) => {
-      const { helpers: { push } } = getFirebase();
       // push the notification object to the notifications ref
-      return push('/notifications', action.payload)
+      return getFirebase().push('/notifications', action.payload)
     })
     .mapTo({ type: 'EMAIL_NOTIFICATION_CREATED' });
 ```

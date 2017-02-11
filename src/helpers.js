@@ -1,4 +1,15 @@
-import { size, map } from 'lodash'
+import {
+  size,
+  map,
+  some,
+  first,
+  drop,
+  mapValues,
+  reduce,
+  isString
+} from 'lodash'
+import { getPopulateObjs } from './utils/populate'
+import { metaParams, paramSplitChar } from './constants'
 
 /**
  * @description Detect whether items are loaded yet or not
@@ -116,10 +127,18 @@ export const pathToJS = (data, path, notSetValue) => {
   if (!data) {
     return notSetValue
   }
-
   const pathArr = fixPath(path).split(/\//).slice(1)
 
   if (data.getIn) {
+    // Handle meta params (stored by string key)
+    if (some(metaParams, (v) => pathArr.indexOf(v) !== -1)) {
+      return toJS(
+        data.getIn([
+          first(pathArr),
+          drop(pathArr).join(paramSplitChar)
+        ], notSetValue)
+      )
+    }
     return toJS(data.getIn(pathArr, notSetValue))
   }
 
@@ -159,6 +178,124 @@ export const dataToJS = (data, path, notSetValue) => {
 }
 
 /**
+ * @private
+ * @description Build child list based on populate
+ * @param {Map} data - Immutable Map to be converted to JS object (state.firebase)
+ * @param {Object} list - Path of parameter to load
+ * @param {Object} populate - Object with population settings
+ */
+export const buildChildList = (data, list, p) =>
+  mapValues(list, (val, key) => {
+    let getKey = val
+     // Handle key: true lists
+    if (val === true) {
+      getKey = key
+    }
+    const pathString = p.childParam
+      ? `${p.root}/${getKey}/${p.childParam}`
+      : `${p.root}/${getKey}`
+    // Set to child under key if populate child exists
+    if (dataToJS(data, pathString)) {
+      return dataToJS(data, pathString)
+    }
+    // Populate child does not exist
+    return val === true ? val : getKey
+  })
+
+/**
+ * @description Convert parameter under "data" path of Immutable Map to a
+ * Javascript object with parameters populated based on populates array
+ * @param {Map} firebase - Immutable Map to be converted to JS object (state.firebase)
+ * @param {String} path - Path of parameter to load
+ * @param {Array} populates - Array of populate objects
+ * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
+ * @return {Object} Data located at path within Immutable Map
+ * @example <caption>Basic</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, helpers } from 'react-redux-firebase'
+ * const { dataToJS } = helpers
+ * const populates = [{ child: 'owner', root: 'users' }]
+ *
+ * const fbWrapped = firebaseConnect([
+ *   { path: '/todos', populates } // load "todos" and matching "users" to redux
+ * ])(App)
+ *
+ * export default connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.data.todos
+ *   // each todo has child 'owner' populated from matching uid in 'users' root
+ *   // for loading un-populated todos use dataToJS(firebase, 'todos')
+ *   todos: populatedDataToJS(firebase, 'todos', populates),
+ * }))(fbWrapped)
+ */
+export const populatedDataToJS = (data, path, populates, notSetValue) => {
+  if (!data) {
+    return notSetValue
+  }
+  // Handle undefined child
+  if (!dataToJS(data, path, notSetValue)) {
+    return dataToJS(data, path, notSetValue)
+  }
+  const populateObjs = getPopulateObjs(populates)
+  // reduce array of populates to object of combined populated data
+  return reduce(
+    map(populateObjs, (p, obj) => {
+      // single item with iterable child
+      if (dataToJS(data, path)[p.child]) {
+        // populate child is key
+        if (isString(dataToJS(data, path)[p.child])) {
+          const pathString = p.childParam
+            ? `${p.root}/${dataToJS(data, path)[p.child]}/${p.childParam}`
+            : `${p.root}/${dataToJS(data, path)[p.child]}`
+
+          if (dataToJS(data, pathString)) {
+            return {
+              ...dataToJS(data, path),
+              [p.child]: dataToJS(data, pathString)
+            }
+          }
+
+          // matching child does not exist
+          return dataToJS(data, path)
+        }
+
+        return {
+          ...dataToJS(data, path),
+          [p.child]: buildChildList(data, dataToJS(data, path)[p.child], p)
+        }
+      }
+      // list with child param in each item
+      return mapValues(dataToJS(data, path), (child, i) => {
+        // no matching child parameter
+        if (!child || !child[p.child]) {
+          return child
+        }
+        // populate child is key
+        if (isString(child[p.child])) {
+          const pathString = p.childParam
+            ? `${p.root}/${child[p.child]}/${p.childParam}`
+            : `${p.root}/${child[p.child]}`
+          if (dataToJS(data, pathString)) {
+            return {
+              ...child,
+              [p.child]: dataToJS(data, pathString)
+            }
+          }
+          // matching child does not exist
+          return child
+        }
+        // populate child list
+        return {
+          ...child,
+          [p.child]: buildChildList(data, child[p.child], p)
+        }
+      })
+    }), (obj, v) =>
+      // reduce data from all populates to one object
+      Object.assign({}, v, obj),
+   )
+}
+
+/**
  * @description Load custom object from within store
  * @param {Map} firebase - Immutable Map to be converted to JS object (state.firebase)
  * @param {String} path - Path of parameter to load
@@ -178,7 +315,7 @@ export const dataToJS = (data, path, notSetValue) => {
  * }))(fbWrapped)
  */
 export const customToJS = (data, path, custom, notSetValue) => {
-  if (!(data && data.getIn)) {
+  if (!data) {
     return notSetValue
   }
 
@@ -195,6 +332,7 @@ export default {
   toJS,
   pathToJS,
   dataToJS,
+  populatedDataToJS,
   customToJS,
   isLoaded,
   isEmpty

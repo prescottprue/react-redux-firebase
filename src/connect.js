@@ -14,16 +14,6 @@ import { getEventsFromInput, createCallable } from './utils'
  * // this.props.firebase set on App component as firebase object with helpers
  * import { firebaseConnect } from 'react-redux-firebase'
  * export default firebaseConnect()(App)
- * @example <caption>Paths</caption>
- * import { connect } from 'react-redux'
- * import { firebaseConnect, helpers } from 'react-redux-firebase'
- * const { pathToJS } = helpers
- *
- * // pass todos list from redux as this.props.todosList
- * export default connect(({ firebase }) => ({
- *   profile: pathToJS(firebase, 'profile'),
- *   auth: pathToJS(firebase, 'auth')
- * }))(App)
  * @example <caption>Data</caption>
  * import { connect } from 'react-redux'
  * import { firebaseConnect, helpers } from 'react-redux-firebase'
@@ -36,7 +26,9 @@ import { getEventsFromInput, createCallable } from './utils'
  *
  * // pass todos list from redux as this.props.todosList
  * export default connect(({ firebase }) => ({
- *   todosList: dataToJS(firebase, 'todos')
+ *   todosList: dataToJS(firebase, 'todos'),
+ *   profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.proifle
+ *   auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
  * }))(fbWrapped)
  */
 export default (dataOrFn = []) => WrappedComponent => {

@@ -29,8 +29,7 @@ const exampleEmptyState = fromJS(emptyState)
 
 describe('reducer', () => {
   it('is a function', () => {
-    expect(firebaseStateReducer)
-      .to.be.a.function
+    expect(firebaseStateReducer).to.be.a.function
   })
 
   it('handles no initialState', () => {
@@ -105,7 +104,13 @@ describe('reducer', () => {
           exampleState,
           { type: actionTypes.LOGOUT }
         ).toJS())
-      ).to.equal(JSON.stringify(initialState))
+      ).to.equal(JSON.stringify({
+        auth: null,
+        authError: null,
+        profile: null,
+        isInitializing: false,
+        data: {}
+      }))
     })
   })
 

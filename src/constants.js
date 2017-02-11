@@ -7,15 +7,31 @@
 */
 export const actionsPrefix = '@@reactReduxFirebase'
 
-/** @constant
- * @description Object containing all action types
+/**
+ * @constant
  * @type {Object}
+ * @description Object containing all action types
+ * @property {String} START - `@@reactReduxFirebase/START`
+ * @property {String} SET - `@@reactReduxFirebase/SET`
+ * @property {String} SET_PROFILE - `@@reactReduxFirebase/SET_PROFILE`
+ * @property {String} LOGIN - `@@reactReduxFirebase/LOGIN`
+ * @property {String} LOGOUT - `@@reactReduxFirebase/LOGOUT`
+ * @property {String} LOGIN_ERROR - `@@reactReduxFirebase/LOGIN_ERROR`
+ * @property {String} NO_VALUE - `@@reactReduxFirebase/NO_VALUE`
+ * @property {String} UNAUTHORIZED_ERROR - `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
+ * @property {String} INIT_BY_PATH - `@@reactReduxFirebase/INIT_BY_PATH`
+ * @property {String} AUTHENTICATION_INIT_STARTED - `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`
+ * @property {String} AUTHENTICATION_INIT_FINISHED - `@@reactReduxFirebase/AUTHENTICATION_INIT_FINISHED`
+ * @property {String} FILE_UPLOAD_START - `@@reactReduxFirebase/FILE_UPLOAD_START`
+ * @property {String} FILE_UPLOAD_ERROR - `@@reactReduxFirebase/FILE_UPLOAD_ERROR`
+ * @property {String} FILE_UPLOAD_PROGRESS - `@@reactReduxFirebase/FILE_UPLOAD_PROGRESS`
+ * @property {String} FILE_UPLOAD_COMPLETE - `@@reactReduxFirebase/FILE_UPLOAD_COMPLETE`
+ * @property {String} FILE_DELETE_START - `@@reactReduxFirebase/FILE_DELETE_START`
+ * @property {String} FILE_DELETE_ERROR - `@@reactReduxFirebase/FILE_DELETE_ERROR`
+ * @property {String} FILE_DELETE_COMPLETE - `@@reactReduxFirebase/FILE_DELETE_COMPLETE`
  * @example
  * import { actionTypes } from 'react-redux-firebase'
  * actionTypes.SET === '@@reactReduxFirebase/SET' // true
- * @example
- * import { constants } from 'react-redux-firebase'
- * constants.actionTypes.SET === '@@reactReduxFirebase/SET' // true
 */
 export const actionTypes = {
   START: `${actionsPrefix}/START`,
@@ -41,16 +57,37 @@ export const actionTypes = {
 
 /** @constant
  * @description Default configuration options
+ * @property {String} userProfile - `null` Location on Firebase where user
+ * profiles are stored. Often set to `'users'`.
+ * @property {Boolean} enableLogging - `false` Whether or not firebase
+ * database logging is enabled.
+ * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
+ * user profile when logging in.
+ * @property {Boolean} enableRedirectHandling - `true` Whether or not to enable
+ * redirect handling. This must be disabled if environment is not http/https
+ * such as with react-native.
+ * @property {Boolean} autoPopulateProfile - `true` Whether or not to
+ * automatically populate profile with data loaded through
+ * profileParamsToPopulate config.
+ * @property {Boolean} setProfilePopulateResults - `true` Whether or not to
+ * call SET actions for data that results from populating profile to redux under
+ * the data path. For example: role paramter on profile populated from 'roles'
+ * root. True will call SET_PROFILE as well as a SET action with the role that
+ * is loaded (places it in data/roles).
  * @type {Array}
 */
 export const defaultConfig = {
   userProfile: null,
   enableLogging: false,
-  updateProfileOnLogin: true
+  updateProfileOnLogin: true,
+  enableRedirectHandling: true,
+  autoPopulateProfile: true,
+  setProfilePopulateResults: false
 }
 
 /** @constant
- * @description List of all external auth providers that are supported (firebase's email/anonymous included by default)
+ * @description List of all external auth providers that are supported
+ * (firebase's email/anonymous included by default).
  * @type {Array}
  * @private
 */
@@ -62,7 +99,8 @@ export const supportedAuthProviders = [
 ]
 
 /** @constant
- * @description Default keys returned within JSON Web Token recieved when authenticating
+ * @description Default keys returned within JSON Web Token recieved when
+ * authenticating with Firebase
  * @type {Array}
  * @private
 */
@@ -90,12 +128,28 @@ export const defaultInitProps = [
   'messagingSenderId'
 ]
 
+/** @constant
+ * @description Parameters stored by path string instead of full path
+ * @type {Array}
+ * @private
+*/
+export const metaParams = ['timestamp', 'requesting', 'requested']
+
+/** @constant
+ * @description String Character used to split/join meta parameter keys
+ * @type {Array}
+ * @private
+*/
+export const paramSplitChar = '/'
+
 export default {
   defaultJWTProps,
   actionTypes,
   defaultConfig,
   supportedAuthProviders,
-  defaultInitProps
+  defaultInitProps,
+  metaParams,
+  paramSplitChar
 }
 
 module.exports = {
@@ -103,5 +157,7 @@ module.exports = {
   actionTypes,
   defaultConfig,
   supportedAuthProviders,
-  defaultInitProps
+  defaultInitProps,
+  metaParams,
+  paramSplitChar
 }

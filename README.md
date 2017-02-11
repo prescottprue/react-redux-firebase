@@ -112,9 +112,9 @@ import { connect } from 'react-redux'
 import { firebaseConnect, helpers } from 'react-redux-firebase'
 const { isLoaded, isEmpty, dataToJS } = helpers
 
-@firebaseConnect( [
+@firebaseConnect([
   '/todos'
-  // { type: 'once', path: '/todos' } // for loading once instead of binding
+  // { path: '/todos' } // object notation
 ])
 @connect(
   ({ firebase }) => ({
@@ -180,8 +180,8 @@ export default connect(
 
 ```
 
-## [Documentation](http://react-redux-firebase.com)
-See [react-redux-firebase.com](http://react-redux-firebase.com)
+## [Docs](http://react-redux-firebase.com)
+See full documentation at [react-redux-firebase.com](http://react-redux-firebase.com)
 
 * [Getting Started](http://react-redux-firebase.com/docs/getting_started)
 * [Auth](http://react-redux-firebase.com/docs/auth)
@@ -211,9 +211,11 @@ An example that user Material UI built on top of the output of [create-react-app
 
 ## Discussion
 
-Join the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby).
+Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby).
 
-## Using with `redux-thunk`
+## Using With Other Libraries
+
+### redux-thunk
 If you are using `redux-thunk`, make sure to set up your thunk middleware using it's redux-thunk's `withExtraArgument` method so that firebase is available within your actions. Here is an example `createStore` function that adds `getFirebase` as third argument along with a thunk that uses it:
 
 createStore:
@@ -244,23 +246,22 @@ const store = createStore(
 Action:
 
 ```javascript
-const sendNotification = (payload) => {
-  type: NOTIFICATION,
-  payload
-}
 export const addTodo = (newTodo) =>
   (dispatch, getState, getFirebase) => {
     const firebase = getFirebase()
     firebase
       .push('todos', newTodo)
       .then(() => {
-        dispatch(sendNotification('Todo Added'))
+        dispatch({
+          type: NOTIFICATION,
+          payload
+        })
       })
   };
 
 ```
 
-## Using with `redux-observable`
+### redux-observable
 If you are using `redux-observable`, make sure to set up your redux-observable middleware so that firebase is available within your epics. Here is an example `combineEpics` function that adds `getFirebase` as third argument along with an epic that uses it:
 
 ```javascript
@@ -278,9 +279,57 @@ const somethingEpic = (action$, store, getFirebase) =>
     )
 ```
 
-## Generator
+### redux-auth-wrapper
 
-[generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) uses react-redux-firebase when opting to include redux
+*For full example, go to the [Routing Recipes Section of the docs](http://react-redux-firebase.com/docs/recipes/routing.html)*
+
+In order to only allow authenticated users to view a page, a `UserIsAuthenticated` Higher Order Component can be created:
+
+```javascript
+import { browserHistory } from 'react-router'
+import { UserAuthWrapper } from 'redux-auth-wrapper'
+import { helpers } from 'react-redux-firebase'
+const { pathToJS } = helpers
+
+export const UserIsAuthenticated = UserAuthWrapper({
+  wrapperDisplayName: 'UserIsAuthenticated',
+  authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
+  authenticatingSelector: ({ firebase }) => pathToJS(firebase, 'isInitializing') === true,
+  predicate: auth => auth !== null,
+  redirectAction: (newLoc) => (dispatch) => {
+    browserHistory.replace(newLoc)
+    dispatch({
+      type: 'UNAUTHED_REDIRECT',
+      payload: { message: 'You must be authenticated.' },
+    })
+  },
+})
+```
+
+Then it can be used as a Higher Order Component wrapper on a component:
+
+```javascript
+@UserIsAuthenticated // redirects to '/login' if user not is logged in
+export default class ProtectedThing extends Component {
+  render() {
+    return (
+      <div>
+        You are authed!
+      </div>
+    )
+  }
+}
+```
+
+## Starting A Project
+
+### Generator
+
+[generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) is a yeoman generator uses react-redux-firebase when opting to include redux.
+
+### Complete Examples
+
+The [examples folder](/examples) contains full applications that can be copied/adapted and used as a new project.
 
 ## FAQ
 
@@ -295,19 +344,35 @@ const somethingEpic = (action$, store, getFirebase) =>
   * `uniqueSet` method helper for only setting if location doesn't already exist
   * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)
   * Action Types and other Constants are exposed for external usage (such as with `redux-observable`)
+  * [Complete Firebase Auth Integration](http://react-redux-firebase.com/docs/auth.html#examples) including `signInWithRedirect` compatibility for OAuth Providers
 
   #### Well why not combine?
   I have been talking to the author of [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase) about combining, but we are not sure that the users of both want that at this point. Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby) if you haven't already since a ton of this type of discussion goes on there.
-
-  **Bottom line:** The author of redux-react-firebase was absent when functionality was needed by me and others, so this library was created.
 
 2. Why use redux if I have Firebase to store state?
 
   This isn't a super quick answer, so I wrote up [a medium article to explain](https://medium.com/@prescottprue/firebase-with-redux-82d04f8675b9)
 
+3. Where can I find some examples?
+
+  * [Recipes Section](http://react-redux-firebase.com/docs/recipes/) of [the docs](http://react-redux-firebase.com/docs/recipes/)
+  * [examples folder](/examples) contains [complete example apps](/examples/complete) as well as [useful snippets](/examples/snippets)
+
+4. How do I help?
+
+  * Join the conversion on [gitter][gitter-url]
+  * Post Issues
+  * Create Pull Requests
+
+# Patrons
+
+Meet some of the outstanding companies and individuals that made it possible:
+
+  * [Reside Network Inc.](https://github.com/reside-eng)
+
+
 ## Contributors
 - [Prescott Prue](https://github.com/prescottprue)
-- [Tiberiu Craciun](https://github.com/tiberiuc)
 - [Bojhan](https://github.com/Bojhan)
 - [Rahav Lussto](https://github.com/RahavLussato)
 - [Justin Handley](https://github.com/justinhandley)

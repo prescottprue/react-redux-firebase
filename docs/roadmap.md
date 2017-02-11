@@ -1,9 +1,8 @@
 # Roadmap
 
 ## Short Term
-* List Population within user profile parameter (only single parameter currently supported)
 * Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance
-* `firebase-admin` integration
+* `firebase-admin` integration (and other external integrations like geoFire)
 * Huge App Example with passing of props to child routes
 
 ### Long Term
@@ -29,18 +28,36 @@
 ### `v1.2.0-beta`
 
 #### Breaking Changes
-*Stay Tuned*
+* `populatedDataToJS` method added to populate from normalized redux
+* Populated data is stored normalized (requires `populatedDataToJS` or standard mapping to populate values)
 
 #### Enhancements
-
+* Meta values (including `timestamp`, `requesting`, and `requested`) stored within redux under string keys (fixes [`invalid keyPath` error from Immutable](https://github.com/facebook/immutable-js/issues/635)). Reference [this immutable issue for more details](https://github.com/facebook/immutable-js/issues/573)
 
 ## Upcoming Minor Version (`v1.2.0`)
+
+**Note:** These changes include the combination of changes from all pre-release versions
 
 #### Breaking Changes
 * `profileDecorator` config option renamed to `profileFactory` for clarity
 * default file metadata written to database includes `downloadURL` instead of `downloadURLs` array
+* `populatedDataToJS` method added to populate from normalized redux
+* Populated data is stored normalized (requires `populatedDataToJS` or standard mapping to populate values)
 
 #### Enhancements
+* `redirect` type authentication working as expected with external auth Providers
 * Config params type validation
 * `fileMetadataFactory` config option added to allow control of metadata written to database when using `uploadFile` and `uploadFiles`
 * docs improvements
+* Meta values (including `timestamp`, `requesting`, and `requested`) stored within redux under string keys (fixes [`invalid keyPath` error from Immutable](https://github.com/facebook/immutable-js/issues/635)). Reference [this immutable issue for more details](https://github.com/facebook/immutable-js/issues/573)
+
+## Upcoming Major Version (`v2.0.0`)
+
+**NOTE:** The changes are unconfirmed and are subject to change
+
+#### Breaking Changes
+* Remove usage of Immutable Maps (no more need for `pathToJS()` and `dataToJS()` to load data from redux)
+* reducer split into multiple nested reducers (follows [standard for nesting of reducers using combine reducers](http://redux.js.org/docs/recipes/reducers/UpdatingNormalizedData.html))
+
+#### Enhancements
+* `AuthRequired` decorator that forces auth to exist before rendering component

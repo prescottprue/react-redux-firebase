@@ -1,18 +1,9 @@
 import React, { createClass, Children, PropTypes, Component } from 'react'
 import ReactDOM from 'react-dom'
 import connect from '../../src/connect'
-import reduxFirebase from '../../src/compose'
+import reactReduxFirebase from '../../src/compose'
 import TestUtils from 'react-addons-test-utils'
 import { createStore, compose, combineReducers } from 'redux'
-
-const apiKey = 'AIzaSyCTUERDM-Pchn_UDTsfhVPiwM4TtNIxots'
-const authDomain = 'redux-firebasev3.firebaseapp.com'
-const databaseURL = 'https://redux-firebasev3.firebaseio.com'
-const testFbConfig = {
-  databaseURL,
-  apiKey,
-  authDomain
-}
 
 describe('Connect', () => {
   class Passthrough extends Component {
@@ -44,7 +35,7 @@ describe('Connect', () => {
 
   it('should receive the store in the context', () => {
     const createStoreWithMiddleware = compose(
-      reduxFirebase(testFbConfig, { userProfile: 'users' }),
+      reactReduxFirebase(fbConfig, { userProfile: 'users' }),
       typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
     )(createStore)
     const store = createStoreWithMiddleware(combineReducers({ test: (state = {}) => state }))

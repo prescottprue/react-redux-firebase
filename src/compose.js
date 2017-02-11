@@ -9,19 +9,34 @@ let firebaseInstance
  * @external
  * @description Middleware that handles configuration (placed in redux's
  * `compose` call)
- * @param {Object} fbConfig - Object containing Firebase config including
+ * @property {Object} fbConfig - Object containing Firebase config including
  * databaseURL
- * @param {String} fbConfig.apiKey - Firebase apiKey
- * @param {String} fbConfig.authDomain - Firebase auth domain
- * @param {String} fbConfig.databaseURL - Firebase database url
- * @param {String} fbConfig.storageBucket - Firebase storage bucket
- * @param {Object} config - Containing react-redux-firebase specific config such as userProfile
- * @param {String} config.userProfile - Location on firebase to store user profiles
- * @param {Boolean} config.enableLogging - Location on firebase to store user profiles. (default: `false`)
- * @param {Boolean} config.updateProfileOnLogin - Whether or not to update profile when logging in. (default: `false`)
- * @param {Function} config.profileFactory - Factory for modifying how user profile is saved
- * @param {Function} config.uploadFileDataFactory - Factory for modifying how file meta data is written during file uploads
- * @param {Array|String} config.profileParamsToPopulate - Parameters within profile object to populate
+ * @property {String} fbConfig.apiKey - Firebase apiKey
+ * @property {String} fbConfig.authDomain - Firebase auth domain
+ * @property {String} fbConfig.databaseURL - Firebase database url
+ * @property {String} fbConfig.storageBucket - Firebase storage bucket
+ * @property {Object} config - Containing react-redux-firebase specific config
+ * such as userProfile
+ * @property {String} config.userProfile - Location on firebase to store user
+ * profiles
+ * @property {Boolean} config.enableLogging - Whether or not to enable Firebase
+ * database logging
+ * @property {Boolean} config.updateProfileOnLogin - Whether or not to update
+ * profile when logging in. (default: `false`)
+ * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
+ * auth redirect handling listener. (default: `true`)
+ * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
+ * @property {Function} config.uploadFileDataFactory - Factory for modifying how file meta data is written during file uploads
+ * @property {Array|String} config.profileParamsToPopulate - Parameters within
+ * profile object to populate
+ * @property {Boolean} config.autoPopulateProfile - Whether or not to
+ * automatically populate profile with data loaded through
+ * profileParamsToPopulate config. (default: `true`)
+ * @property {Boolean} config.setProfilePopulateResults - Whether or not to
+ * call SET actions for data that results from populating profile to redux under
+ * the data path. For example: role paramter on profile populated from 'roles'
+ * root. True will call SET_PROFILE as well as a SET action with the role that
+ * is loaded (places it in data/roles). (default: `false`)
  * @return {Function} That accepts a component a returns a wrapped version of component
  * @example <caption>Setup</caption>
  * import { createStore, compose } from 'redux'
@@ -62,7 +77,7 @@ export default (fbConfig, otherConfig) => next =>
       Firebase.database.enableLogging(configs.enableLogging)
     }
 
-    const ref = Firebase.database().ref()
+    const rootRef = Firebase.database().ref()
 
     const firebase = Object.defineProperty(Firebase, '_', {
       value: {
@@ -76,19 +91,19 @@ export default (fbConfig, otherConfig) => next =>
     })
 
     const set = (path, value, onComplete) =>
-      ref.child(path).set(value, onComplete)
+      rootRef.child(path).set(value, onComplete)
 
     const push = (path, value, onComplete) =>
-      ref.child(path).push(value, onComplete)
+      rootRef.child(path).push(value, onComplete)
 
     const update = (path, value, onComplete) =>
-      ref.child(path).update(value, onComplete)
+      rootRef.child(path).update(value, onComplete)
 
     const remove = (path, onComplete) =>
-      ref.child(path).remove(onComplete)
+      rootRef.child(path).remove(onComplete)
 
     const uniqueSet = (path, value, onComplete) =>
-      ref.child(path)
+      rootRef.child(path)
         .once('value')
         .then(snap => {
           if (snap.val && snap.val() !== null) {
@@ -96,7 +111,7 @@ export default (fbConfig, otherConfig) => next =>
             if (onComplete) onComplete(err)
             return Promise.reject(err)
           }
-          return ref.child(path).set(value, onComplete)
+          return rootRef.child(path).set(value, onComplete)
         })
 
     const uploadFile = (path, file, dbPath) =>
@@ -127,7 +142,7 @@ export default (fbConfig, otherConfig) => next =>
       authActions.resetPassword(dispatch, firebase, credentials)
 
     firebase.helpers = {
-      ref: Firebase.database().ref,
+      ref: path => Firebase.database().ref(path),
       set,
       uniqueSet,
       push,
@@ -154,10 +169,42 @@ export default (fbConfig, otherConfig) => next =>
   }
 
 /**
- * @description Expose Firebase instance.
- * Warning: This is going to be rewritten in coming versions.
- * @private
-*/
+ * @external
+ * @description Expose Firebase instance created internally. Useful for
+ * integrations into external libraries such as redux-thunk and redux-observable.
+ * @example <caption>redux-thunk integration</caption>
+ * import { applyMiddleware, compose, createStore } from 'redux';
+ * import thunk from 'redux-thunk';
+ * import { reactReduxFirebase } from 'react-redux-firebase';
+ * import makeRootReducer from './reducers';
+ * import { getFirebase } from 'react-redux-firebase';
+ *
+ * const fbConfig = {} // your firebase config
+ *
+ * const store = createStore(
+ *   makeRootReducer(),
+ *   initialState,
+ *   compose(
+ *     applyMiddleware([
+ *       // Pass getFirebase function as extra argument
+ *       thunk.withExtraArgument(getFirebase)
+ *     ]),
+ *     reactReduxFirebase(fbConfig)
+ *   )
+ * );
+ * // then later
+ * export const addTodo = (newTodo) =>
+ *  (dispatch, getState, getFirebase) => {
+ *    const firebase = getFirebase()
+ *    firebase
+ *      .helpers
+ *      .push('todos', newTodo)
+ *      .then(() => {
+ *        dispatch({ type: 'SOME_ACTION' })
+ *      })
+ * };
+ *
+ */
 export const getFirebase = () => {
   // TODO: Handle recieveing config and creating firebase instance if it doesn't exist
   /* istanbul ignore next: Firebase instance always exists during tests */

@@ -9,17 +9,33 @@ import {
 } from '../../../src/utils/query'
 let createQueryFromParams = (queryParams) =>
   applyParamsToQuery(queryParams, Firebase.database().ref())
-
+const dispatch = () => {}
 describe('Utils: Query', () => {
   describe('getWatchPath', () => {
     it('handles basic path', () => {
       expect(getWatchPath('once', '/todos')).to.be.a.string
     })
+    it('throws for no event', () => {
+      expect(() => getWatchPath(null, '/todos')).to.throw('Event and path are required')
+    })
+    it('throws for no path', () => {
+      expect(() => getWatchPath(null, null)).to.throw('Event and path are required')
+    })
   })
 
   describe('setWatcher', () => {
+    beforeEach(() => {
+      Firebase._.watchers = {
+        'once:/todos': 1
+      }
+    })
+    it('handles incrementating path watcher count', () => {
+      setWatcher(Firebase, 'once', '/todos')
+      expect(Firebase._.watchers['once:/todos']).to.equal(2)
+    })
     it('handles basic path', () => {
-      expect(setWatcher(Firebase, 'once', '/todos')).to.be.a.string
+      setWatcher(Firebase, 'once', '/todo')
+      expect(Firebase._.watchers['once:/todo']).to.equal(1)
     })
   })
 
@@ -30,8 +46,19 @@ describe('Utils: Query', () => {
   })
 
   describe('unsetWatcher', () => {
-    it('returns watcher count', () => {
-      expect(unsetWatcher(Firebase, () => console.log('dispatch'), 'value', '/todos'))
+    beforeEach(() => {
+      Firebase._.watchers = {
+        'value:/todos': 1,
+        'value:/todo': 2
+      }
+    })
+    it('removes single watcher', () => {
+      unsetWatcher(Firebase, dispatch, 'value', '/todos')
+      expect(Firebase._.watchers['value:/todos']).to.be.undefined
+    })
+    it('decrements existings watcher count', () => {
+      unsetWatcher(Firebase, dispatch, 'value', '/todo')
+      expect(Firebase._.watchers['value:/todos']).to.equal(1)
     })
   })
 
@@ -41,6 +68,9 @@ describe('Utils: Query', () => {
     })
     it('handles split param', () => {
       expect(getQueryIdFromPath('/todos#orderByChild=uid')).to.be.a.string
+    })
+    it('handles query id in path', () => {
+      expect(getQueryIdFromPath('/todos#queryId=value:/todos')).to.be.a.string
     })
   })
 

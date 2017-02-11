@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import rootReducer from '../reducers'
 import { firebase as fbConfig } from '../config'
 import { syncHistory } from 'react-router-redux'
-import { reactReduxFirebase } from 'react-redux-firebase' // >= v0.1.1
+import { reactReduxFirebase } from 'react-redux-firebase'
 
 export default function configureStore (initialState, history) {
   const reduxRouterMiddleware = syncHistory(history)
