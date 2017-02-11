@@ -197,7 +197,6 @@ export default (fbConfig, otherConfig) => next =>
  *  (dispatch, getState, getFirebase) => {
  *    const firebase = getFirebase()
  *    firebase
- *      .helpers
  *      .push('todos', newTodo)
  *      .then(() => {
  *        dispatch({ type: 'SOME_ACTION' })
