@@ -49,7 +49,20 @@ Default configuration options
 
 **Properties**
 
--   `userProfile` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `null` Location on Firebase where user profiles are stored. Often set to `'users'`.
--   `enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not firebase logging is enabled
--   `updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to update user profile when logging in
--   `enableRedirectHandling` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to enable redirect handling
+-   `userProfile` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `null` Location on Firebase where user
+    profiles are stored. Often set to `'users'`.
+-   `enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not firebase
+    database logging is enabled.
+-   `updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to update
+    user profile when logging in.
+-   `enableRedirectHandling` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to enable
+    redirect handling. This must be disabled if environment is not http/https
+    such as with react-native.
+-   `autoPopulateProfile` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to
+    automatically populate profile with data loaded through
+    profileParamsToPopulate config.
+-   `setProfilePopulateResults` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to
+    call SET actions for data that results from populating profile to redux under
+    the data path. For example: role paramter on profile populated from 'roles'
+    root. True will call SET_PROFILE as well as a SET action with the role that
+    is loaded (places it in data/roles).

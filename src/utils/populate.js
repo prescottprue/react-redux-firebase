@@ -116,26 +116,38 @@ export const promisesForPopulate = (firebase, originalData, populatesIn) => {
   const populates = getPopulateObjs(populatesIn)
   // Loop over all populates
   forEach(populates, (p) => {
-    // Handle input of [] within child (notating parameter for whole list)
-    const mainChild = p.child.split('[]')[0]
+    // Data is single parameter
+    if (has(originalData, p.child)) {
+      // Single Parameter is single ID
+      if (isString(originalData[p.child])) {
+        return promisesArray.push(
+          getPopulateChild(firebase, p, originalData[p.child])
+            .then((v) => {
+              // write child to result object under root name if it is found
+              if (v) {
+                set(results, `${p.root}.${originalData[p.child]}`, v)
+              }
+            })
+        )
+      }
 
-    // Single parameter with list
-    if (has(originalData, mainChild)) {
+      // Single Parameter is list
       return promisesArray.push(
-        populateList(firebase, originalData[mainChild], p, results)
+        populateList(firebase, originalData[p.child], p, results)
       )
     }
-    // Loop over each object in list
+
+    // Data is list, each item has parameter to be populated
     forEach(originalData, (d, key) => {
       // Get value of parameter to be populated (key or list of keys)
-      const idOrList = get(d, mainChild)
+      const idOrList = get(d, p.child)
 
-      // Parameter/child to be populated does not exist
+      // Parameter/child of list item does not exist
       if (!idOrList) {
         return
       }
 
-      // Parameter is single ID
+      // Parameter of each list item is single ID
       if (isString(idOrList)) {
         return promisesArray.push(
           getPopulateChild(firebase, p, idOrList)
@@ -149,7 +161,7 @@ export const promisesForPopulate = (firebase, originalData, populatesIn) => {
         )
       }
 
-      // Parameter is a list of ids
+      // Parameter of each list item is a list of ids
       if (isArray(idOrList) || isObject(idOrList)) {
         // Create single promise that includes a promise for each child
         return promisesArray.push(

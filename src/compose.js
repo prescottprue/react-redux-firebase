@@ -15,14 +15,28 @@ let firebaseInstance
  * @property {String} fbConfig.authDomain - Firebase auth domain
  * @property {String} fbConfig.databaseURL - Firebase database url
  * @property {String} fbConfig.storageBucket - Firebase storage bucket
- * @property {Object} config - Containing react-redux-firebase specific config such as userProfile
- * @property {String} config.userProfile - Location on firebase to store user profiles
- * @property {Boolean} config.enableLogging - Whether or not to enable Firebase database logging
- * @property {Boolean} config.updateProfileOnLogin - Whether or not to update profile when logging in. (default: `false`)
- * @property {Boolean} config.enableRedirectHandling - Whether or not to enable auth redirect handling listener. (default: `true`)
+ * @property {Object} config - Containing react-redux-firebase specific config
+ * such as userProfile
+ * @property {String} config.userProfile - Location on firebase to store user
+ * profiles
+ * @property {Boolean} config.enableLogging - Whether or not to enable Firebase
+ * database logging
+ * @property {Boolean} config.updateProfileOnLogin - Whether or not to update
+ * profile when logging in. (default: `false`)
+ * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
+ * auth redirect handling listener. (default: `true`)
  * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
  * @property {Function} config.uploadFileDataFactory - Factory for modifying how file meta data is written during file uploads
- * @property {Array|String} config.profileParamsToPopulate - Parameters within profile object to populate
+ * @property {Array|String} config.profileParamsToPopulate - Parameters within
+ * profile object to populate
+ * @property {Boolean} config.autoPopulateProfile - Whether or not to
+ * automatically populate profile with data loaded through
+ * profileParamsToPopulate config. (default: `true`)
+ * @property {Boolean} config.setProfilePopulateResults - Whether or not to
+ * call SET actions for data that results from populating profile to redux under
+ * the data path. For example: role paramter on profile populated from 'roles'
+ * root. True will call SET_PROFILE as well as a SET action with the role that
+ * is loaded (places it in data/roles). (default: `false`)
  * @return {Function} That accepts a component a returns a wrapped version of component
  * @example <caption>Setup</caption>
  * import { createStore, compose } from 'redux'
