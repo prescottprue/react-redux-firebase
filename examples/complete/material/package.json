@@ -14,9 +14,6 @@
     "lint:fix": "npm run lint -- --fix",
     "start": "better-npm-run start",
     "dev": "better-npm-run dev",
-    "dev:no-debug": "npm run dev -- --no_debug",
-    "test": "better-npm-run test",
-    "test:dev": "npm run test -- --watch",
     "create-config": "better-npm-run create-config",
     "build": "better-npm-run build",
     "build:dev": "better-npm-run build:dev",
@@ -64,13 +61,6 @@
         "DEBUG": "app:*"
       }
     },
-    "test": {
-      "command": "node ./node_modules/karma/bin/karma start build/karma.conf",
-      "env": {
-        "NODE_ENV": "test",
-        "DEBUG": "app:*"
-      }
-    },
     "create-config": {
       "command": "node build/create-config",
       "env": {
@@ -91,7 +81,7 @@
     "react": "15.3.2",
     "react-dom": "15.3.2",
     "react-redux": "^4.4.5",
-    "react-redux-firebase": "^1.2.4",
+    "react-redux-firebase": "*",
     "react-router": "^2.8.0",
     "react-google-button": "^0.1.0",
     "react-tap-event-plugin": "1.0.0",
