@@ -13,17 +13,21 @@ import Paper from 'material-ui/Paper'
 import Subheader from 'material-ui/Subheader'
 
 import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { isLoaded, pathToJS, dataToJS } = helpers
+const { isLoaded, pathToJS, dataToJS, populatedDataToJS } = helpers
+// used for populating
+// const populates = [{ child: 'owner', root: 'users', keyProp: 'key' }]
 
 @firebaseConnect([
   // 'todos' // sync list of todos
   { path: 'todos', queryParams: ['limitToFirst=20'] } // limit to first 20
+  // { path: 'todos', queryParams: ['limitToFirst=20'], populates } // populate
   // { path: '/projects', type: 'once' } // for loading once instead of binding
   // { path: 'todos', queryParams: ['orderByChild=text'] }, // list only not done todos
 ])
 @connect(
   ({firebase}) => ({
     todos: dataToJS(firebase, 'todos'),
+    // todos: populatedDataToJS(firebase, '/todos', populates), // if populating
     // todos: orderedToJS(firebase, 'todos'), // if using ordering such as orderByChild
     auth: pathToJS(firebase, 'auth')
   })

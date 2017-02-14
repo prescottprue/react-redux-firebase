@@ -230,7 +230,9 @@ export const buildChildList = (data, list, p) =>
       : `${p.root}/${getKey}`
     // Set to child under key if populate child exists
     if (dataToJS(data, pathString)) {
-      return dataToJS(data, pathString)
+      return p.keyProp
+        ? { [p.keyProp]: getKey, ...dataToJS(data, pathString) }
+        : dataToJS(data, pathString)
     }
     // Populate child does not exist
     return val === true ? val : getKey
@@ -277,14 +279,16 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
       if (dataToJS(data, path)[p.child]) {
         // populate child is key
         if (isString(dataToJS(data, path)[p.child])) {
+          const key = dataToJS(data, path)[p.child]
           const pathString = p.childParam
-            ? `${p.root}/${dataToJS(data, path)[p.child]}/${p.childParam}`
-            : `${p.root}/${dataToJS(data, path)[p.child]}`
-
+            ? `${p.root}/${key}/${p.childParam}`
+            : `${p.root}/${key}`
           if (dataToJS(data, pathString)) {
             return {
               ...dataToJS(data, path),
-              [p.child]: dataToJS(data, pathString)
+              [p.child]: p.keyProp
+                ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
+                : dataToJS(data, pathString)
             }
           }
 
@@ -305,13 +309,16 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
         }
         // populate child is key
         if (isString(child[p.child])) {
+          const key = child[p.child]
           const pathString = p.childParam
-            ? `${p.root}/${child[p.child]}/${p.childParam}`
-            : `${p.root}/${child[p.child]}`
+            ? `${p.root}/${key}/${p.childParam}`
+            : `${p.root}/${key}`
           if (dataToJS(data, pathString)) {
             return {
               ...child,
-              [p.child]: dataToJS(data, pathString)
+              [p.child]: p.keyProp
+                ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
+                : dataToJS(data, pathString)
             }
           }
           // matching child does not exist
