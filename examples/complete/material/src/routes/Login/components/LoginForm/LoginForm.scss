@@ -1,0 +1,49 @@
+@import 'base';
+
+.container {
+  @extend .flex-column-center;
+  justify-content: flex-start;
+  flex-grow: 1;
+  height: 100%;
+  width: 100%;
+  margin: .2rem;
+}
+
+.submit {
+  @extend .flex-column-center;
+  width: 30%;
+  min-width: 192px;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.options {
+  @extend .flex-row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  width: 80%;
+  @include mobile {
+    flex-direction: column;
+  }
+}
+.remember {
+  @extend .flex-row;
+  flex-basis: 50%;
+  @include mobile {
+    display: none;
+  }
+}
+.recover {
+  display: inline;
+  font-size: .8rem;
+  .hover {
+    text-decoration: underline;
+  }
+  @include mobile {
+    font-size: 1rem;
+  }
+}
+.progress {
+  margin-top: 5rem;
+}

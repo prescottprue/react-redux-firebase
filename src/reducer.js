@@ -10,6 +10,7 @@ const {
   LOGOUT,
   LOGIN_ERROR,
   NO_VALUE,
+  INIT_BY_PATH,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
   UNAUTHORIZED_ERROR
@@ -45,6 +46,7 @@ const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
 export default (state = initialState, action = {}) => {
   const { path, timestamp, requesting, requested } = action
   let pathArr
+  let rootPathArr
   let retVal
 
   switch (action.type) {
@@ -62,9 +64,10 @@ export default (state = initialState, action = {}) => {
       return retVal
 
     case SET:
-      const { data } = action
 
+      const { data, rootPath, ordered } = action
       pathArr = pathToArr(path)
+      rootPathArr = pathToArr(rootPath)
 
       // Handle invalid keyPath error caused by deep setting to a null value
       if (data !== undefined && state.getIn(['data', ...pathArr]) === null) {
@@ -79,6 +82,10 @@ export default (state = initialState, action = {}) => {
         ? retVal.setIn(['data', ...pathArr], fromJS(data))
         : retVal.deleteIn(['data', ...pathArr])
 
+      retVal = (ordered !== undefined)
+        ? retVal.setIn(['ordered', ...pathArr], fromJS(ordered))
+        : retVal.deleteIn(['ordered', ...pathArr])
+
       retVal = (timestamp !== undefined)
         ? retVal.setIn(['timestamp', pathArr.join(paramSplitChar)], fromJS(timestamp))
         : retVal.deleteIn(['timestamp', pathArr.join(paramSplitChar)])
@@ -90,6 +97,18 @@ export default (state = initialState, action = {}) => {
       retVal = (requested !== undefined)
         ? retVal.setIn(['requested', pathArr.join(paramSplitChar)], fromJS(requested))
         : retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
+
+      retVal = (timestamp !== undefined)
+        ? retVal.setIn(['timestamp', ...rootPathArr], fromJS(timestamp))
+        : retVal.deleteIn(['timestamp', ...rootPathArr])
+
+      retVal = (requesting !== undefined)
+        ? retVal.setIn(['requesting', ...rootPathArr], fromJS(requesting))
+        : retVal.deleteIn(['requesting', ...rootPathArr])
+
+      retVal = (requested !== undefined)
+        ? retVal.setIn(['requested', ...rootPathArr], fromJS(requested))
+        : retVal.deleteIn(['requested', ...rootPathArr])
 
       return retVal
 
@@ -108,6 +127,15 @@ export default (state = initialState, action = {}) => {
       retVal = (requested !== undefined)
         ? retVal.setIn(['requested', pathArr.join(paramSplitChar)], fromJS(requested))
         : retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
+
+      return retVal
+
+    case INIT_BY_PATH:
+      pathArr = pathToArr(path)
+      retVal = state.deleteIn(['data', ...pathArr])
+      retVal = retVal.deleteIn(['timestamp', ...pathArr])
+      retVal = retVal.deleteIn(['requesting', ...pathArr])
+      retVal = retVal.deleteIn(['requested', ...pathArr])
 
       return retVal
 

@@ -7,9 +7,8 @@ In order to get the most out of writing your thunks, make sure to set up your th
 ```javascript
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { reactReduxFirebase } from 'react-redux-firebase';
+import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
 import makeRootReducer from './reducers';
-import { getFirebase } from 'react-redux-firebase';
 
 const fbConfig = {} // your firebase config
 
@@ -39,7 +38,6 @@ export const addTodo = (newTodo) =>
   (dispatch, getState, getFirebase) => {
     const firebase = getFirebase()
     firebase
-      .helpers
       .push('todos', newTodo)
       .then(() => {
         dispatch(sendNotification('Todo Added'))

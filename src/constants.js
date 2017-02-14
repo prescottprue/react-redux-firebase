@@ -42,6 +42,7 @@ export const actionTypes = {
   LOGIN_ERROR: `${actionsPrefix}/LOGIN_ERROR`,
   NO_VALUE: `${actionsPrefix}/NO_VALUE`,
   UNAUTHORIZED_ERROR: `${actionsPrefix}/UNAUTHORIZED_ERROR`,
+  ERROR: `${actionsPrefix}/ERROR`,
   INIT_BY_PATH: `${actionsPrefix}/INIT_BY_PATH`,
   AUTHENTICATION_INIT_STARTED: `${actionsPrefix}/AUTHENTICATION_INIT_STARTED`,
   AUTHENTICATION_INIT_FINISHED: `${actionsPrefix}/AUTHENTICATION_INIT_FINISHED`,

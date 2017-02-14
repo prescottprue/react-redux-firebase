@@ -197,7 +197,6 @@ export default (fbConfig, otherConfig) => next =>
  *  (dispatch, getState, getFirebase) => {
  *    const firebase = getFirebase()
  *    firebase
- *      .helpers
  *      .push('todos', newTodo)
  *      .then(() => {
  *        dispatch({ type: 'SOME_ACTION' })
@@ -211,5 +210,6 @@ export const getFirebase = () => {
   if (!firebaseInstance) {
     throw new Error('Firebase instance does not yet exist. Check your compose function.') // eslint-disable-line no-console
   }
+  // TODO: Create new firebase here with config passed in
   return firebaseInstance
 }

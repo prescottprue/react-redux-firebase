@@ -4,6 +4,7 @@
     "es6-promise",
     "add-module-exports",
     "lodash",
-    "transform-decorators-legacy"
+    "transform-object-rest-spread",
+    "transform-class-properties"
   ]
 }

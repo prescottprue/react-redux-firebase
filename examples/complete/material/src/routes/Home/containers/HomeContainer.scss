@@ -1,0 +1,16 @@
+@import 'base';
+.container {
+  @extend .flex-column-center;
+  padding-top: 4rem;
+}
+.todos {
+  @extend .flex-column-center;
+  margin-top: 4rem;
+}
+.paper {
+  padding: 1rem;
+  margin-bottom: 4rem;
+}
+.info {
+  @extend .flex-row-center;
+}
