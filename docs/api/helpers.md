@@ -91,6 +91,29 @@ import { firebaseConnect, dataToJS } from 'react-redux-firebase'
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Map
 
+# orderedToJS
+
+Convert parameter under "ordered" path of Immutable Map to a
+Javascript array. This preserves order set by query.
+
+**Parameters**
+
+-   `firebase` **[Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)** Immutable Map to be converted to JS object (state.firebase)
+-   `data`  
+-   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
+-   `notSetValue` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to return if value is not found
+
+**Examples**
+
+_Basic_
+
+```javascript
+import { connect } from 'react-redux'
+import { firebaseConnect, orderedToJS } from 'react-redux-firebase'
+```
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Map
+
 # populatedDataToJS
 
 Convert parameter under "data" path of Immutable Map to a
