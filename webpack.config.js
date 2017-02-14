@@ -7,8 +7,7 @@ const env = process.env.NODE_ENV
 const config = {
   module: {
     loaders: [
-      { test: /\.js$/, loaders: ['babel-loader'], exclude: /node_modules/ },
-      { test: /\.json$/, loaders: [ 'json' ], exclude: /node_modules/ }
+      { test: /\.js$/, loaders: ['babel-loader'], exclude: /node_modules/ }
     ]
   },
   output: {
