@@ -109,8 +109,12 @@ In components:
 ```javascript
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { isLoaded, isEmpty, dataToJS } = helpers
+import {
+  firebaseConnect,
+  isLoaded,
+  isEmpty,
+  dataToJS
+} from 'react-redux-firebase'
 
 @firebaseConnect([
   '/todos'
@@ -238,7 +242,7 @@ const store = createStore(
     applyMiddleware([
       thunk.withExtraArgument(getFirebase) // Pass getFirebase function as extra argument
     ]),
-    reactReduxFirebase(fbConfig, )
+    reactReduxFirebase(fbConfig, config)
   )
 );
 
@@ -246,15 +250,18 @@ const store = createStore(
 Action:
 
 ```javascript
+import { pathToJS } from 'react-redux-firebase'
+
 export const addTodo = (newTodo) =>
   (dispatch, getState, getFirebase) => {
-    const firebase = getFirebase()
-    firebase
+    const auth = pathToJS(getState.firebase, 'auth')
+    newTodo.owner = auth.uid
+    getFirebase()
       .push('todos', newTodo)
       .then(() => {
         dispatch({
-          type: NOTIFICATION,
-          payload
+          type: 'TODO_CREATED',
+          payload: newTodo
         })
       })
   };
@@ -288,8 +295,7 @@ In order to only allow authenticated users to view a page, a `UserIsAuthenticate
 ```javascript
 import { browserHistory } from 'react-router'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { helpers } from 'react-redux-firebase'
-const { pathToJS } = helpers
+import { pathToJS } from 'react-redux-firebase'
 
 export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',

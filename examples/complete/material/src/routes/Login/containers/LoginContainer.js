@@ -1,16 +1,18 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
 import GoogleButton from 'react-google-button'
+import { connect } from 'react-redux'
+import {
+  firebaseConnect,
+  isLoaded,
+  isEmpty,
+  pathToJS
+} from 'react-redux-firebase'
 import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
-import LoginForm from '../components/LoginForm/LoginForm'
-
-import classes from './LoginContainer.scss'
-
-import { connect } from 'react-redux'
 import { UserIsNotAuthenticated } from 'utils/router'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { isLoaded, isEmpty, pathToJS } = helpers
+import LoginForm from '../components/LoginForm/LoginForm'
+import classes from './LoginContainer.scss'
 
 @UserIsNotAuthenticated // redirect to list page if logged in
 @firebaseConnect()
@@ -20,7 +22,7 @@ const { isLoaded, isEmpty, pathToJS } = helpers
     authError: pathToJS(firebase, 'authError')
   })
 )
-export default class Login extends Component {
+export default class Signup extends Component {
   static propTypes = {
     firebase: PropTypes.shape({
       login: PropTypes.func.isRequired

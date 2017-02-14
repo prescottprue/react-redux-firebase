@@ -48,7 +48,7 @@ export default class TodoItem extends Component {
               <span className='TodoItem-Owner'>
                 {
                   isObject(todo.owner)
-                  ? todo.owner.displayName
+                  ? todo.owner.displayName || todo.owner.username
                   : todo.owner || 'No Owner'
                 }
               </span>
