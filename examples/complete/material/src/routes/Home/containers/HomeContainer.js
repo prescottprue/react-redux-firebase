@@ -7,7 +7,8 @@ import {
   isLoaded,
   pathToJS,
   dataToJS,
-  populatedDataToJS
+  // orderedToJS,
+  // populatedDataToJS
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
@@ -19,7 +20,6 @@ import NewTodoPanel from '../components/NewTodoPanel'
 import classes from './HomeContainer.scss'
 
 // const populates = [{ child: 'owner', root: 'users', keyProp: 'key' }]
-
 @firebaseConnect([
   // 'todos' // sync list of todos
   { path: 'todos', queryParams: ['limitToFirst=20'] } // limit to first 20

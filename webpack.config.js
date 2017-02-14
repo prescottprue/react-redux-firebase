@@ -1,12 +1,14 @@
 'use strict'
 
-var webpack = require('webpack')
+const webpack = require('webpack')
+const pkg = require('./package.json')
+const env = process.env.NODE_ENV
 
-var env = process.env.NODE_ENV
-var config = {
+const config = {
   module: {
     loaders: [
-      { test: /\.js$/, loaders: ['babel-loader'], exclude: /node_modules/ }
+      { test: /\.js$/, loaders: ['babel-loader'], exclude: /node_modules/ },
+      { test: /\.json$/, loaders: [ 'json' ], exclude: /node_modules/ }
     ]
   },
   output: {
@@ -34,9 +36,7 @@ var config = {
   },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(env)
-    })
+    new webpack.optimize.DedupePlugin()
   ]
 }
 
@@ -55,4 +55,13 @@ if (env === 'production') {
   )
 }
 
+config.plugins.push(
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(env)
+  }),
+  new webpack.BannerPlugin(
+    `${pkg.name}${env === 'production' ? '.min' : ''}.js v${pkg.version}`,
+    { raw: false, entryOnly: true }
+  )
+)
 module.exports = config
