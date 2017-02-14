@@ -11,6 +11,7 @@ import {
 import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
 import { UserIsNotAuthenticated } from 'utils/router'
+import { SIGNUP_PATH } from 'constants/paths'
 import LoginForm from '../components/LoginForm/LoginForm'
 import classes from './LoginContainer.scss'
 
@@ -45,7 +46,7 @@ export default class Signup extends Component {
   }
 
   providerLogin = (provider) =>
-    this.handleLogin({ provider, type: 'popup' })
+    this.handleLogin({ provider })
 
   render () {
     const { authError } = this.props
@@ -66,7 +67,7 @@ export default class Signup extends Component {
           <span className={classes['signup-label']}>
             Need an account?
           </span>
-          <Link className={classes['signup-link']} to='/signup'>
+          <Link className={classes['signup-link']} to={SIGNUP_PATH}>
             Sign Up
           </Link>
         </div>

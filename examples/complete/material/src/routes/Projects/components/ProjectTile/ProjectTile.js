@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import Paper from 'material-ui/Paper'
 import { isObject } from 'lodash'
-import IconButton from 'material-ui/IconButton';
-import DeleteIcon from 'material-ui/svg-icons/action/delete';
+import IconButton from 'material-ui/IconButton'
+import DeleteIcon from 'material-ui/svg-icons/action/delete'
 
 import classes from './ProjectTile.scss'
 
@@ -14,13 +14,12 @@ export const ProjectTile = ({ project, onSelect, onDelete, showDelete }) => (
       </span>
       {
         showDelete && onDelete
-          ?
-            <IconButton
-              tooltip="delete"
-              onClick={onDelete}
+          ? <IconButton
+            tooltip='delete'
+            onClick={onDelete}
             >
-              <DeleteIcon />
-            </IconButton>
+            <DeleteIcon />
+          </IconButton>
           : null
       }
 

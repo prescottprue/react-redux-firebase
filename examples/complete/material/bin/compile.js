@@ -1,4 +1,3 @@
-const fs = require('fs-extra')
 const webpack = require('webpack')
 const debug = require('debug')('app:bin:compile')
 const webpackConfig = require('../config/webpack.config')

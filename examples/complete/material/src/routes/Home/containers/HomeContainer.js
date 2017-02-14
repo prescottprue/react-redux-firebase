@@ -6,7 +6,7 @@ import {
   firebaseConnect,
   isLoaded,
   pathToJS,
-  dataToJS,
+  dataToJS
   // orderedToJS,
   // populatedDataToJS
 } from 'react-redux-firebase'

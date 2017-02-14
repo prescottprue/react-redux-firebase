@@ -51,7 +51,7 @@ export default class NewProjectDialog extends Component {
   }
 
   render () {
-    const { open, error } = this.state
+    const { open } = this.state
     const { handleSubmit } = this.props
 
     const actions = [

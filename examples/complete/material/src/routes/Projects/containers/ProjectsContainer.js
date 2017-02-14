@@ -61,8 +61,10 @@ export default class Projects extends Component {
   }
 
   deleteProject = (key) => {
-    console.log('delete called:', key)
     this.props.firebase.remove(`projects/${key}`)
+      .then(() => {
+        // TODO: Show snackbar
+      })
   }
 
   toggleModal = (name, project) => {
@@ -76,7 +78,7 @@ export default class Projects extends Component {
     const { projects, auth } = this.props
     const { newProjectModal } = this.state
 
-    if (!isLoaded(projects)) {
+    if (!isLoaded(projects, auth)) {
       return <LoadingSpinner />
     }
 
@@ -101,7 +103,7 @@ export default class Projects extends Component {
                    onCollabClick={this.collabClick}
                    onSelect={() => this.context.router.push(`${LIST_PATH}/${key}`)}
                    onDelete={() => this.deleteProject(key)}
-                   showDelete={project.owner.uid === auth.uid}
+                   showDelete={auth && project.owner.uid === auth.uid}
                  />
               ))
           }

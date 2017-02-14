@@ -10,7 +10,7 @@ import {
 } from 'react-redux-firebase'
 import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
-import { LIST_PATH } from 'constants/paths'
+import { LOGIN_PATH } from 'constants/paths'
 import { UserIsNotAuthenticated } from 'utils/router'
 import SignupForm from '../components/SignupForm/SignupForm'
 import classes from './SignupContainer.scss'
@@ -49,11 +49,7 @@ export default class Signup extends Component {
       snackCanOpen: true
     })
 
-    this.props.firebase
-      .login({ provider, type: 'popup' })
-      .then(account =>
-        this.context.router.push(LIST_PATH)
-      )
+    this.props.firebase.login({ provider })
   }
 
   render () {
@@ -75,7 +71,7 @@ export default class Signup extends Component {
           <span className={classes['login-label']}>
             Already have an account?
           </span>
-          <Link className={classes['login-link']} to='/login'>
+          <Link className={classes['login-link']} to={LOGIN_PATH}>
             Login
           </Link>
         </div>
