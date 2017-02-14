@@ -87,7 +87,7 @@ Limit query results to the first n number of results.
   ```javascript
   @firebaseConnect([
     '/todos#limitToFirst'
-    // { path: '/todos', queryParams: [ 'limitToFirst' ] } // object notation
+    // { path: '/todos', queryParams: [ 'limitToFirst=1' ] } // object notation
   ])
   ```
 2. Displaying only the first 10 todo items
