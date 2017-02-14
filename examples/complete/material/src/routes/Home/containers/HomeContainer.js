@@ -20,19 +20,20 @@ import NewTodoPanel from '../components/NewTodoPanel'
 import classes from './HomeContainer.scss'
 
 // const populates = [{ child: 'owner', root: 'users', keyProp: 'key' }]
+
 @firebaseConnect([
   // 'todos' // sync list of todos
+  // { path: '/projects', type: 'once' } // for loading once instead of binding
   { path: 'todos', queryParams: ['limitToFirst=20'] } // limit to first 20
   // { path: 'todos', queryParams: ['limitToFirst=20'], populates } // populate
-  // { path: '/projects', type: 'once' } // for loading once instead of binding
-  // { path: 'todos', queryParams: ['orderByChild=text'] }, // list only not done todos
+  // { path: 'todos', queryParams: ['orderByChild=text'] }, // list todos alphabetically
 ])
 @connect(
   ({firebase}) => ({
-    todos: dataToJS(firebase, 'todos'),
+    auth: pathToJS(firebase, 'auth'),
+    todos: dataToJS(firebase, 'todos')
     // todos: populatedDataToJS(firebase, '/todos', populates), // if populating
     // todos: orderedToJS(firebase, 'todos'), // if using ordering such as orderByChild
-    auth: pathToJS(firebase, 'auth')
   })
 )
 export default class Home extends Component {

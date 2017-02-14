@@ -33,11 +33,6 @@ export default class NewProjectDialog extends Component {
       this.setState({
         open: true
       })
-      setTimeout(() => {
-        if (this.refs && this.refs.projectNameField) {
-          this.refs.projectNameField.focus()
-        }
-      }, 500)
     }
   }
 
@@ -79,13 +74,12 @@ export default class NewProjectDialog extends Component {
         actions={actions}
         open={open}
         onRequestClose={this.close}
-        contentClassName={classes['container']}>
-        <div className={classes['inputs']}>
+        contentClassName={classes.container}>
+        <div className={classes.inputs}>
           <form onSubmit={handleSubmit}>
             <Field
               name='name'
               component={TextField}
-              error={error || null}
               label='Project Name'
             />
           </form>

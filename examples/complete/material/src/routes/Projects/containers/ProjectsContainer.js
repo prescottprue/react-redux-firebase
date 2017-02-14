@@ -1,7 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { map } from 'lodash'
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
+import {
+  firebaseConnect,
+  populatedDataToJS,
+  pathToJS,
+  isLoaded,
+  isEmpty
+} from 'react-redux-firebase'
 import { LIST_PATH } from 'constants/paths'
 import ProjectTile from '../components/ProjectTile/ProjectTile'
 import NewProjectTile from '../components/NewProjectTile/NewProjectTile'
@@ -9,33 +15,23 @@ import NewProjectDialog from '../components/NewProjectDialog/NewProjectDialog'
 import LoadingSpinner from 'components/LoadingSpinner'
 import classes from './ProjectsContainer.scss'
 
-const { dataToJS, pathToJS, isLoaded, isEmpty } = helpers
+const populates = [
+  { child: 'owner', root: 'users', keyProp: 'uid' }
+]
 
-@firebaseConnect(
-  ({ params, auth }) => ([
-    {
-      path: 'projects',
-      populates: [
-        { child: 'owner', root: 'users' }
-      ]
-    }
-    // 'projects#populate=owner:users' // string equivalent
-  ])
-)
+@firebaseConnect([
+  { path: 'projects', populates }
+  // 'projects#populate=owner:users' // string equivalent
+])
 @connect(
   ({ firebase }, { params }) => ({
-    projects: dataToJS(firebase, 'projects'),
-    auth: pathToJS(firebase, 'auth')
+    auth: pathToJS(firebase, 'auth'),
+    projects: populatedDataToJS(firebase, '/projects', populates)
   })
 )
 export default class Projects extends Component {
   static contextTypes = {
     router: React.PropTypes.object.isRequired
-  }
-
-  state = {
-    newProjectModal: false,
-    addProjectModal: false
   }
 
   static propTypes = {
@@ -44,6 +40,11 @@ export default class Projects extends Component {
     auth: PropTypes.object,
     children: PropTypes.object,
     params: PropTypes.object
+  }
+
+  state = {
+    newProjectModal: false,
+    addProjectModal: false
   }
 
   newSubmit = (newProject) => {
@@ -59,20 +60,20 @@ export default class Projects extends Component {
       })
   }
 
-  deleteProject = ({ name }) =>
-    this.props.firebase.remove(`projects/${name}`)
+  deleteProject = (key) => {
+    console.log('delete called:', key)
+    this.props.firebase.remove(`projects/${key}`)
+  }
 
   toggleModal = (name, project) => {
-    let newState = {}
-    newState[`${name}Modal`] = !this.state[`${name}Modal`]
-    this.setState(newState)
+    this.setState({ [`${name}Modal`]: !this.state[`${name}Modal`] })
   }
 
   render () {
     // Project Route is being loaded
     if (this.props.children) return this.props.children
 
-    const { projects } = this.props
+    const { projects, auth } = this.props
     const { newProjectModal } = this.state
 
     if (!isLoaded(projects)) {
@@ -89,19 +90,18 @@ export default class Projects extends Component {
               onRequestClose={() => this.toggleModal('newProject')}
             />
         }
-        <div className={classes['tiles']}>
-          <NewProjectTile
-            onClick={() => this.toggleModal('newProject')}
-          />
+        <div className={classes.tiles}>
+          <NewProjectTile onClick={() => this.toggleModal('newProject')} />
           {
             !isEmpty(projects) &&
                map(projects, (project, key) => (
                  <ProjectTile
-                   key={`${project.name}-Collab-${key}`}
+                   key={`Project-${key}`}
                    project={project}
                    onCollabClick={this.collabClick}
                    onSelect={() => this.context.router.push(`${LIST_PATH}/${key}`)}
-                   onDelete={this.deleteProject}
+                   onDelete={() => this.deleteProject(key)}
+                   showDelete={project.owner.uid === auth.uid}
                  />
               ))
           }

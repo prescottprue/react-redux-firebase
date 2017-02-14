@@ -17,29 +17,20 @@ export default class TodoItem extends Component {
   }
 
   render () {
-    const {
-      todo,
-      id,
-      onCompleteClick,
-      onDeleteClick
-    } = this.props
-
-    const checkbox = (
-      <Checkbox
-        defaultChecked={todo.done}
-        onCheck={() => onCompleteClick(todo, todo._key || id)}
-      />
-    )
-
-    const deleteButton = (
-      <Delete onClick={() => onDeleteClick(todo._key || id)} />
-    )
+    const { todo, id, onCompleteClick, onDeleteClick } = this.props
 
     return (
       <div className={classes.container}>
         <ListItem
-          leftIcon={checkbox}
-          rightIcon={deleteButton}
+          leftIcon={
+            <Checkbox
+              defaultChecked={todo.done}
+              onCheck={() => onCompleteClick(todo, todo._key || id)}
+            />
+          }
+          rightIcon={
+            <Delete onClick={() => onDeleteClick(todo._key || id)} />
+          }
           secondaryText={
             <p>
               <span className='TodoItem-Text'>
