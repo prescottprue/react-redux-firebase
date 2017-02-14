@@ -10,7 +10,7 @@ const {
   LOGOUT,
   LOGIN_ERROR,
   NO_VALUE,
-  INIT_BY_PATH,
+  UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
   UNAUTHORIZED_ERROR
@@ -46,7 +46,7 @@ const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
 export default (state = initialState, action = {}) => {
   const { path, timestamp, requesting, requested } = action
   let pathArr
-  let rootPathArr
+  let rootPathArr // eslint-disable-line no-unused-vars
   let retVal
 
   switch (action.type) {
@@ -98,18 +98,6 @@ export default (state = initialState, action = {}) => {
         ? retVal.setIn(['requested', pathArr.join(paramSplitChar)], fromJS(requested))
         : retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
 
-      retVal = (timestamp !== undefined)
-        ? retVal.setIn(['timestamp', ...rootPathArr], fromJS(timestamp))
-        : retVal.deleteIn(['timestamp', ...rootPathArr])
-
-      retVal = (requesting !== undefined)
-        ? retVal.setIn(['requesting', ...rootPathArr], fromJS(requesting))
-        : retVal.deleteIn(['requesting', ...rootPathArr])
-
-      retVal = (requested !== undefined)
-        ? retVal.setIn(['requested', ...rootPathArr], fromJS(requested))
-        : retVal.deleteIn(['requested', ...rootPathArr])
-
       return retVal
 
     case NO_VALUE:
@@ -130,12 +118,12 @@ export default (state = initialState, action = {}) => {
 
       return retVal
 
-    case INIT_BY_PATH:
+    case UNSET_LISTENER:
       pathArr = pathToArr(path)
       retVal = state.deleteIn(['data', ...pathArr])
-      retVal = retVal.deleteIn(['timestamp', ...pathArr])
-      retVal = retVal.deleteIn(['requesting', ...pathArr])
-      retVal = retVal.deleteIn(['requested', ...pathArr])
+      retVal = retVal.deleteIn(['timestamp', pathArr.join(paramSplitChar)])
+      retVal = retVal.deleteIn(['requesting', pathArr.join(paramSplitChar)])
+      retVal = retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
 
       return retVal
 

@@ -1,6 +1,6 @@
 import { actionTypes } from '../constants'
 
-const { INIT_BY_PATH } = actionTypes
+const { UNSET_LISTENER } = actionTypes
 
 /**
  * @private
@@ -91,7 +91,9 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefine
     delete firebase._.watchers[id]
     if (event !== 'first_child' && event !== 'once') {
       firebase.database().ref().child(path).off(event)
-      dispatch({ type: INIT_BY_PATH, path })
+      if (firebase._.config.distpatchOnUnsetListener) {
+        dispatch({ type: UNSET_LISTENER, path })
+      }
     }
   } else if (firebase._.watchers[id]) {
     firebase._.watchers[id]--
