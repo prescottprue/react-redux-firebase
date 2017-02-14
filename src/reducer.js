@@ -65,7 +65,7 @@ export default (state = initialState, action = {}) => {
 
     case SET:
 
-      const { data, rootPath } = action
+      const { data, rootPath, ordered } = action
       pathArr = pathToArr(path)
       rootPathArr = pathToArr(rootPath)
 
@@ -81,6 +81,10 @@ export default (state = initialState, action = {}) => {
       retVal = (data !== undefined)
         ? retVal.setIn(['data', ...pathArr], fromJS(data))
         : retVal.deleteIn(['data', ...pathArr])
+
+      retVal = (ordered !== undefined)
+        ? retVal.setIn(['ordered', ...pathArr], fromJS(ordered))
+        : retVal.deleteIn(['ordered', ...pathArr])
 
       retVal = (timestamp !== undefined)
         ? retVal.setIn(['timestamp', pathArr.join(paramSplitChar)], fromJS(timestamp))

@@ -115,10 +115,21 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
 
       // Dispatch standard event if no populates exists
       if (!populates) {
+        const ordered = []
+        // preserve order of children under ordered
+        if (e === 'child_added') {
+          ordered.push({ key: snapshot.key, ...snapshot.val() })
+        } else {
+          snapshot.forEach((child) => {
+            ordered.push({ key: child.key, ...child.val() })
+          })
+        }
+
         return dispatch({
           type: SET,
           path: resultPath,
           rootPath,
+          ordered,
           data,
           timestamp: Date.now(),
           requesting: false,

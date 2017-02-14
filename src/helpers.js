@@ -176,6 +176,42 @@ export const dataToJS = (data, path, notSetValue) => {
 }
 
 /**
+ * @description Convert parameter under "ordered" path of Immutable Map to a
+ * Javascript array. This preserves order set by query.
+ * @param {Map} firebase - Immutable Map to be converted to JS object (state.firebase)
+ * @param {String} path - Path of parameter to load
+ * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
+ * @return {Object} Data located at path within Immutable Map
+ * @example <caption>Basic</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, orderedToJS } from 'react-redux-firebase'
+ *
+ * @firebaseConnect([
+ *   {
+ *     path: 'todos',
+ *     queryParams: ['orderByChild=text'] // order alphabetically based on text
+ *   },
+ * ])
+ * @connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.ordered.todos
+ *   todos: orderedToJS(firebase, 'todos')
+ * })
+ */
+export const orderedToJS = (data, path, notSetValue) => {
+  if (!data) {
+    return notSetValue
+  }
+
+  const pathArr = `/ordered${fixPath(path)}`.split(/\//).slice(1)
+
+  if (data.getIn) {
+    return toJS(data.getIn(pathArr, notSetValue))
+  }
+
+  return data
+}
+
+/**
  * @private
  * @description Build child list based on populate
  * @param {Map} data - Immutable Map to be converted to JS object (state.firebase)
@@ -330,6 +366,7 @@ export default {
   toJS,
   pathToJS,
   dataToJS,
+  orderedToJS,
   populatedDataToJS,
   customToJS,
   isLoaded,

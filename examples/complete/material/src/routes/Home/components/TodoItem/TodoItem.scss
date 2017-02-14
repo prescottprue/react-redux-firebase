@@ -1,0 +1,5 @@
+@import 'base';
+.container {
+  @extend .flex-row-center;
+  padding-top: 4rem;
+}
