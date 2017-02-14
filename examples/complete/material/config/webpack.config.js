@@ -2,21 +2,21 @@ const webpack = require('webpack')
 const cssnano = require('cssnano')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const config = require('../config')
+
+const project = require('./project.config')
 const debug = require('debug')('app:webpack:config')
 
-const paths = config.utils_paths
-const __DEV__ = config.globals.__DEV__
-const __PROD__ = config.globals.__PROD__
-const __TEST__ = config.globals.__TEST__
+const __DEV__ = project.globals.__DEV__
+const __PROD__ = project.globals.__PROD__
+const __TEST__ = project.globals.__TEST__
 
 debug('Creating configuration.')
 const webpackConfig = {
   name: 'client',
   target: 'web',
-  devtool: config.compiler_devtool,
+  devtool: project.compiler_devtool,
   resolve: {
-    root: paths.client(),
+    root: project.paths.client(),
     extensions: ['', '.js', '.jsx', '.json']
   },
   module: {}
@@ -24,22 +24,22 @@ const webpackConfig = {
 // ------------------------------------
 // Entry Points
 // ------------------------------------
-const APP_ENTRY = paths.client('main.js')
+const APP_ENTRY = project.paths.client('main.js')
 
 webpackConfig.entry = {
   app: __DEV__
-    ? [APP_ENTRY].concat(`webpack-hot-middleware/client?path=${config.compiler_public_path}__webpack_hmr`)
+    ? [APP_ENTRY].concat(`webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr`)
     : [APP_ENTRY],
-  vendor: config.compiler_vendors
+  vendor: project.compiler_vendors
 }
 
 // ------------------------------------
 // Bundle Output
 // ------------------------------------
 webpackConfig.output = {
-  filename: `[name].[${config.compiler_hash_type}].js`,
-  path: paths.dist(),
-  publicPath: config.compiler_public_path
+  filename: `[name].[${project.compiler_hash_type}].js`,
+  path: project.paths.dist(),
+  publicPath: project.compiler_public_path
 }
 
 // ------------------------------------
@@ -62,11 +62,11 @@ webpackConfig.plugins = [
       }
     })
   },
-  new webpack.DefinePlugin(config.globals),
+  new webpack.DefinePlugin(project.globals),
   new HtmlWebpackPlugin({
-    template: paths.client('index.html'),
+    template: project.paths.client('index.html'),
     hash: false,
-    // favicon  : paths.client('static/favicon.ico'), // for including single favicon
+    // favicon  : project.paths.client('static/favicon.ico'), // for including single favicon
     filename: 'index.html',
     inject: 'body',
     minify: {
@@ -113,7 +113,7 @@ webpackConfig.module.loaders = [{
   test: /\.(js|jsx)$/,
   exclude: [ /node_modules/ /* exclude any npm-linked modules here */ ],
   loader: 'babel',
-  query: config.compiler_babel
+  query: project.compiler_babel
 }, {
   test: /\.json$/,
   loader: 'json'
@@ -133,9 +133,9 @@ const PATHS_TO_TREAT_AS_CSS_MODULES = [
 ]
 
 // If config has CSS modules enabled, treat this project's styles as CSS modules.
-if (config.compiler_css_modules) {
+if (project.compiler_css_modules) {
   PATHS_TO_TREAT_AS_CSS_MODULES.push(
-    paths.client().replace(/[\^\$\.\*\+\-\?\=\!\:\|\\\/\(\)\[\]\{\}\,]/g, '\\$&') // eslint-disable-line
+    project.paths.client().replace(/[\^\$\.\*\+\-\?\=\!\:\|\\\/\(\)\[\]\{\}\,]/g, '\\$&') // eslint-disable-line
   )
 }
 const isUsingCSSModules = !!PATHS_TO_TREAT_AS_CSS_MODULES.length
@@ -195,7 +195,7 @@ webpackConfig.module.loaders.push({
 })
 
 webpackConfig.sassLoader = {
-  includePaths: paths.client('styles')
+  includePaths: project.paths.client('styles')
 }
 
 webpackConfig.postcss = [

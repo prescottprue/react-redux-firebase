@@ -13,10 +13,11 @@ import Paper from 'material-ui/Paper'
 import Subheader from 'material-ui/Subheader'
 
 import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { isLoaded, pathToJS, dataToJS, orderedToJS } = helpers
+const { isLoaded, pathToJS, dataToJS } = helpers
 
 @firebaseConnect([
-  '/todos'
+  // 'todos' // sync list of todos
+  { path: 'todos', queryParams: ['limitToFirst=20'] } // limit to first 20
   // { path: '/projects', type: 'once' } // for loading once instead of binding
   // { path: 'todos', queryParams: ['orderByChild=text'] }, // list only not done todos
 ])
@@ -28,7 +29,6 @@ const { isLoaded, pathToJS, dataToJS, orderedToJS } = helpers
   })
 )
 export default class Home extends Component {
-
   static propTypes = {
     todos: PropTypes.oneOfType([
       PropTypes.object, // object if using dataToJS
@@ -36,7 +36,8 @@ export default class Home extends Component {
     ]),
     firebase: PropTypes.shape({
       set: PropTypes.func.isRequired,
-      remove: PropTypes.func.isRequired
+      remove: PropTypes.func.isRequired,
+      push: PropTypes.func.isRequired
     }),
     auth: PropTypes.shape({
       uid: PropTypes.string
@@ -49,7 +50,6 @@ export default class Home extends Component {
 
   toggleDone = (todo, id) => {
     const { firebase, auth } = this.props
-    console.log('toggle done', todo, id, auth)
     if (!auth || !auth.uid) {
       return this.setState({ error: 'You must be Logged into Toggle Done' })
     }
@@ -68,30 +68,28 @@ export default class Home extends Component {
   }
 
   handleAdd = (newTodo) => {
-    const { firebase, auth } = this.props
     // Attach user if logged in
-    if (auth) {
-      newTodo.owner = auth.uid
+    if (this.props.auth) {
+      newTodo.owner = this.props.auth.uid
     } else {
       newTodo.owner = 'Anonymous'
     }
-    firebase.push('/todos', newTodo)
+    this.props.firebase.push('/todos', newTodo)
   }
 
   render () {
     const { todos } = this.props
     const { error } = this.state
-    console.debug('todo list:', todos)
+
     return (
       <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>
         {
           error
-            ?
-              <Snackbar
-                open={!!error}
-                message={error}
-                autoHideDuration={4000}
-                onRequestClose={() => this.setState({ error: null })}
+            ? <Snackbar
+              open={!!error}
+              message={error}
+              autoHideDuration={4000}
+              onRequestClose={() => this.setState({ error: null })}
               />
             : null
         }
@@ -111,11 +109,10 @@ export default class Home extends Component {
           {
             !isLoaded(todos)
               ? <CircularProgress />
-              :
-                <Paper className={classes.paper}>
-                  <Subheader>Todos</Subheader>
-                  <List className={classes.list}>
-                      {
+              : <Paper className={classes.paper}>
+                <Subheader>Todos</Subheader>
+                <List className={classes.list}>
+                  {
                         todos &&
                           map(todos, (todo, id) => (
                             <TodoItem
@@ -128,8 +125,8 @@ export default class Home extends Component {
                           )
                         )
                       }
-                  </List>
-                </Paper>
+                </List>
+              </Paper>
           }
         </div>
       </div>

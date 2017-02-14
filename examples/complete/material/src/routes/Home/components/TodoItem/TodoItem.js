@@ -16,7 +16,7 @@ export default class TodoItem extends Component {
     onCompleteClick: PropTypes.func
   }
 
-  render() {
+  render () {
     const {
       todo,
       id,
@@ -27,25 +27,25 @@ export default class TodoItem extends Component {
     const checkbox = (
       <Checkbox
         defaultChecked={todo.done}
-        onCheck={() => { onCompleteClick(todo, todo._key || id) }}
+        onCheck={() => onCompleteClick(todo, todo._key || id)}
       />
     )
 
     const deleteButton = (
-      <Delete onClick={() => { onDeleteClick(todo._key || id) }} />
+      <Delete onClick={() => onDeleteClick(todo._key || id)} />
     )
 
     return (
-      <div>
+      <div className={classes.container}>
         <ListItem
           leftIcon={checkbox}
           rightIcon={deleteButton}
           secondaryText={
             <p>
-              <span className="TodoItem-Text">
+              <span className='TodoItem-Text'>
                 {todo.text}
-              </span><br/>
-              <span className="TodoItem-Owner">
+              </span><br />
+              <span className='TodoItem-Owner'>
                 {
                   isObject(todo.owner)
                   ? todo.owner.displayName

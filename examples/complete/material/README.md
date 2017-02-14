@@ -1,12 +1,9 @@
 # react-redux-firebase Complete Material Example
 
-[![Build Status][travis-image]][travis-url]
-[![Dependency Status][daviddm-image]][daviddm-url]
-
 [![License][license-image]][license-url]
 [![Code Style][code-style-image]][code-style-url]
 
-This is a "real-world" example, and is based on the output of [`generator-react-firebase`](https://github.com/prescottprue/generator-react-firebase).
+This is a "real-world" example and is deployed to [demo.react-redux-firebase.com](https://demo.react-redux-firebase.com). Project was based on the output of [`generator-react-firebase`](https://github.com/prescottprue/generator-react-firebase), which generates a full project starter with `react-redux-firebase` included.
 
 ## Getting Started
 
@@ -38,10 +35,8 @@ The application structure presented in this boilerplate is **fractal**, where fu
 ```
 .
 ├── bin                      # Build/Start scripts
-├── build                    # All build-related configuration
-│   └── webpack              # Environment-specific configuration files for webpack
-├── config                   # Project configuration settings
-├── server                   # Express application that provides webpack middleware
+├── config                   # Project and build configurations
+├── server                   # Express application that provides Webpack middleware
 │   └── main.js              # Server application entry point
 ├── src                      # Application source code
 │   ├── index.html           # Main HTML page container for app
@@ -71,7 +66,7 @@ The application structure presented in this boilerplate is **fractal**, where fu
 
 ### Production
 
-Build code before deployment by running `npm run build`. There are multiple options below for types of deployment, if you are unsure, checkout the Firebase section.
+Build code before deployment by running `npm run build:prod`.
 
 ### Deployment
 1. Login to [Firebase](firebase.google.com) (or Signup if you don't have an account) and create a new project
@@ -85,14 +80,6 @@ Build code before deployment by running `npm run build`. There are multiple opti
 1. Build Project: `npm run build`
 2. Confirm Firebase config by running locally: `firebase serve`
 3. Deploy to firebase: `firebase deploy`
-
-
-[npm-image]: https://img.shields.io/npm/v/material.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/material
-[travis-image]: https://img.shields.io/travis/prescottprue/material/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/prescottprue/material
-[daviddm-image]: https://img.shields.io/david/prescottprue/material.svg?style=flat-square
-[daviddm-url]: https://david-dm.org/prescottprue/material
 
 [license-image]: https://img.shields.io/npm/l/material.svg?style=flat-square
 [license-url]: https://github.com/prescottprue/material/blob/master/LICENSE

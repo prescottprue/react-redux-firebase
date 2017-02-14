@@ -12,9 +12,9 @@
 
 > Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 
-## Demo
+## [Demo](https://demo.react-redux-firebase.com)
 
-View deployed version of [Material Example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) [here](https://redux-firebasev3.firebaseapp.com/)
+The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) is deployed to [demo.react-redux-firebase.com](https://demo.react-redux-firebase.com).
 
 ## Features
 - Integrated into redux
@@ -364,7 +364,7 @@ The [examples folder](/examples) contains full applications that can be copied/a
   * Post Issues
   * Create Pull Requests
 
-# Patrons
+## Patrons
 
 Meet some of the outstanding companies and individuals that made it possible:
 

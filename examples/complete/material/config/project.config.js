@@ -113,7 +113,7 @@ function base () {
   return path.resolve.apply(path, args)
 }
 
-config.utils_paths = {
+config.paths = {
   base   : base,
   client : base.bind(null, config.dir_client),
   dist   : base.bind(null, config.dir_dist)
@@ -123,7 +123,7 @@ config.utils_paths = {
 // Environment Configuration
 // ========================================================
 debug(`Looking for environment overrides for NODE_ENV "${config.env}".`)
-const environments = require('./environments')
+const environments = require('./environments.config')
 const overrides = environments[config.env]
 if (overrides) {
   debug('Found overrides, applying to default configuration.')
