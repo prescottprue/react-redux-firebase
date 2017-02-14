@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 import { map } from 'lodash'
 import classes from './Home.scss'
+import Theme from 'theme'
 
 import TodoItem from '../TodoItem'
 import NewTodoPanel from '../NewTodoPanel'
@@ -41,6 +42,7 @@ export default class Home extends Component {
       uid: PropTypes.string
     })
   }
+
   state = {
     error: null
   }
@@ -78,16 +80,22 @@ export default class Home extends Component {
 
   render () {
     const { todos } = this.props
+    const { error } = this.state
     console.debug('todo list:', todos)
     return (
-      <div className='Home'>
-        <Snackbar
-          open={!!this.state.error}
-          message={this.state.error}
-          autoHideDuration={4000}
-          onRequestClose={() => this.setState({ error: null })}
-        />
-        <div className='Home-Info'>
+      <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>
+        {
+          error
+            ?
+              <Snackbar
+                open={!!error}
+                message={error}
+                autoHideDuration={4000}
+                onRequestClose={() => this.setState({ error: null })}
+              />
+            : null
+        }
+        <div className={classes.info}>
           from
           <span className='Home-Url'>
             <a href='https://redux-firebasev3.firebaseio.com/'>
@@ -95,33 +103,34 @@ export default class Home extends Component {
             </a>
           </span>
         </div>
-        <div className='Home-todos'>
+        <div className={classes.todos}>
           <NewTodoPanel
             onNewClick={this.handleAdd}
             disabled={false}
           />
-          <Paper className='Home-Paper'>
-            <Subheader>Todos</Subheader>
-            {
-              !isLoaded(todos)
-                ? <CircularProgress />
-                : <List className='Home-List'>
-                    {
-                      todos &&
-                        map(todos, (todo, id) => (
-                          <TodoItem
-                            key={id}
-                            id={id}
-                            todo={todo}
-                            onCompleteClick={this.toggleDone}
-                            onDeleteClick={this.deleteTodo}
-                          />
+          {
+            !isLoaded(todos)
+              ? <CircularProgress />
+              :
+                <Paper className={classes.paper}>
+                  <Subheader>Todos</Subheader>
+                  <List className={classes.list}>
+                      {
+                        todos &&
+                          map(todos, (todo, id) => (
+                            <TodoItem
+                              key={id}
+                              id={id}
+                              todo={todo}
+                              onCompleteClick={this.toggleDone}
+                              onDeleteClick={this.deleteTodo}
+                            />
+                          )
                         )
-                      )
-                    }
-                </List>
-            }
-          </Paper>
+                      }
+                  </List>
+                </Paper>
+          }
         </div>
       </div>
     )

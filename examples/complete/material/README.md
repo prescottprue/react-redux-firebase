@@ -1,6 +1,5 @@
-# material
+# react-redux-firebase Complete Material Example
 
-[![NPM version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Dependency Status][daviddm-image]][daviddm-url]
 
@@ -20,12 +19,17 @@ While developing, you will probably rely mostly on `npm start`; however, there a
 |`npm run <script>`|Description|
 |------------------|-----------|
 |`start`|Serves your app at `localhost:3000`. HMR will be enabled in development.|
-|`dev`|Same as `npm start`, but enables nodemon for the server as well.|
-|`build`|Runs linter, tests, and then, on success, compiles your application to disk.|
 |`build:dev`|Same as `build` but overrides `NODE_ENV` to "development".|
 |`build:prod`|Same as `build` but overrides `NODE_ENV` to "production".|
 |`lint`|Lint all `.js` files.|
 |`lint:fix`|Lint and fix all `.js` files. [Read more on this](http://eslint.org/docs/user-guide/command-line-interface.html#fix).|
+
+## What is Shown
+* Route protection using `redux-auth-wrapper`
+* Data input/validation using `redux-form`
+* Async & Sync route loading
+* Real CI and Deployment settings (including `prod` and `stage` environments)
+* Using different instances of Firebase based on environment
 
 ## Application Structure
 
@@ -34,7 +38,6 @@ The application structure presented in this boilerplate is **fractal**, where fu
 ```
 .
 ├── bin                      # Build/Start scripts
-├── blueprints               # Blueprint files for redux-cli
 ├── build                    # All build-related configuration
 │   └── webpack              # Environment-specific configuration files for webpack
 ├── config                   # Project configuration settings
@@ -60,7 +63,6 @@ The application structure presented in this boilerplate is **fractal**, where fu
 │   │   ├── createStore.js   # Create and instrument redux store
 │   │   └── reducers.js      # Reducer registry and injection
 │   └── styles               # Application-wide styles (generally settings)
-└── tests                    # Unit tests
 ```
 
 ## Learning Resources
@@ -77,7 +79,7 @@ Build code before deployment by running `npm run build`. There are multiple opti
 3. Login: `firebase login`
 
 #### CI
-**Note:** The next steps automatically through config set in the `.travis.yml`. Use `firebase login:ci` to generate a token and set it to `TOKEN` within your travis config.
+**Note:** The next steps automatically through config set in the `.travis.yml`. Use `firebase login:ci` to generate a token and set it to `FIREBASE_TOKEN` within your travis config.
 
 #### Local
 1. Build Project: `npm run build`

@@ -48,7 +48,9 @@ const config = {
     'react',
     'react-router',
     'react-redux',
-    'redux'
+    // 'redux', // avoid warning in production
+    'react-redux-firebase',
+    'material-ui'
   ],
 
   compiler_css_modules: true, // enable/disable css modules
