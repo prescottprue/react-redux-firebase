@@ -46,7 +46,6 @@ const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
 export default (state = initialState, action = {}) => {
   const { path, timestamp, requesting, requested } = action
   let pathArr
-  let rootPathArr // eslint-disable-line no-unused-vars
   let retVal
 
   switch (action.type) {
@@ -65,9 +64,8 @@ export default (state = initialState, action = {}) => {
 
     case SET:
 
-      const { data, rootPath, ordered } = action
+      const { data, ordered } = action
       pathArr = pathToArr(path)
-      rootPathArr = pathToArr(rootPath)
 
       // Handle invalid keyPath error caused by deep setting to a null value
       if (data !== undefined && state.getIn(['data', ...pathArr]) === null) {

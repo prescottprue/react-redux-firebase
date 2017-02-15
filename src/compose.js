@@ -123,8 +123,8 @@ export default (fbConfig, otherConfig) => next =>
     const deleteFile = (path, dbPath) =>
       storageActions.deleteFile(dispatch, firebase, { path, dbPath })
 
-    const watchEvent = (type, path) =>
-      queryActions.watchEvent(firebase, dispatch, { type, path }, true)
+    const watchEvent = (type, path, dest) =>
+      queryActions.watchEvent(firebase, dispatch, { type, path, dest })
 
     const unWatchEvent = (eventName, eventPath, queryId = undefined) =>
       queryActions.unWatchEvent(firebase, eventName, eventPath, queryId)
