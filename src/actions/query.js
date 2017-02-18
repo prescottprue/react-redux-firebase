@@ -15,12 +15,13 @@ const { START, SET, NO_VALUE, UNAUTHORIZED_ERROR, ERROR } = actionTypes
  * @description Watch a specific event type
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
- * @param {String} event - Type of event to watch for (defaults to value)
- * @param {String} path - Path to watch with watcher
- * @param {String} dest
+ * @param {Object} options - Event options object
+ * @param {String} options.event - Type of event to watch for (defaults to value)
+ * @param {String} options.path - Path to watch with watcher
+ * @param {String} options.storeAs - Location within redux to store value
  */
-export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery, dest }) => {
-  const watchPath = !dest ? path : `${path}@${dest}`
+export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery, storeAs }) => {
+  const watchPath = !storeAs ? path : `${path}@${storeAs}`
   const counter = getWatcherCount(firebase, type, watchPath, queryId)
   queryId = queryId || getQueryIdFromPath(path)
 
@@ -47,7 +48,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
             timestamp: Date.now(),
             requesting: false,
             requested: true,
-            path: dest || path
+            path: storeAs || path
           })
         }
         return snapshot
@@ -76,7 +77,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       timestamp: Date.now(),
       requesting: true,
       requested: false,
-      path: dest || path
+      path: storeAs || path
     })
 
     // Handle once queries
@@ -86,7 +87,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           if (snapshot.val() !== null) {
             dispatch({
               type: SET,
-              path: dest || path,
+              path: storeAs || path,
               data: snapshot.val()
             })
           }
@@ -103,7 +104,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
     /* istanbul ignore next: is run by tests but doesn't show in coverage */
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
-      const resultPath = dest || (e === 'value') ? p : `${p}/${snapshot.key}`
+      const resultPath = storeAs || (e === 'value') ? p : `${p}/${snapshot.key}`
 
       // Dispatch standard event if no populates exists
       if (!populates) {
@@ -119,7 +120,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
 
         return dispatch({
           type: SET,
-          path: dest || resultPath,
+          path: storeAs || resultPath,
           ordered: size(ordered) ? ordered : undefined,
           data,
           timestamp: Date.now(),
