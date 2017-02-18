@@ -28,8 +28,8 @@ import TodoItem from './TodoItem'
 ]))
 @connect(
   ({firebase}) => ({
-    personalProjects: dataToJS(firebase, '/myProjects'),
-    anonymousProjects: dataToJS(firebase, '/anonymousProjects')
+    personalProjects: dataToJS(firebase, '/myProjects'), // path matches storeAs
+    anonymousProjects: dataToJS(firebase, '/anonymousProjects') // path matches storeAs
   })
 )
 export default class App extends Component {
@@ -39,7 +39,7 @@ export default class App extends Component {
   }
 
   render () {
-    const { firebase, personalProjects, anonymousProjects } = this.props
+    const { personalProjects, anonymousProjects } = this.props
 
     const personalProjectsList = !isLoaded(personalProjects)
       ? 'Loading'
