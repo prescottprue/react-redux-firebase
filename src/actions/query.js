@@ -131,6 +131,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
 
       // TODO: Allow setting of unpopulated data before starting population through config
       // TODO: Set ordered for populate queries
+      // TODO: Allow config to toggle Combining into one SET action
       promisesForPopulate(firebase, data, populates)
         .then((results) => {
           dispatch({
