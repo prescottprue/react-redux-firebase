@@ -1,30 +1,42 @@
 # Roadmap
 
-## Pre-release Versions
+## Recent Minor Version (`v1.3.0`)
 
-### `v1.3.0-alpha`
+**Note:** These changes include the combination of changes from all pre-release versions (`v1.3.0-*`)
 
-#### Breaking Changes
-  *None Yet Planned*
+### Breaking Changes
+* Get ordered data using `orderedToJS(firebase, 'path')` which returns an array
+* `commonjs`, `es`, `umd` versions built with Webpack (could cause issues with some webpack configs)
+* `INIT_BY_PATH` action type no longer exists (replaced with `UNSET_LISTENER`)
+* Action is no longer automatically fired when removing listeners (not enabled by default as it removes data from redux)
 
-#### Enhancements
-* Helpers such as `pathToJS` and `dataToJS` are now available as top level imports: `import { pathToJS } from 'react-redux-firebase'`
-* Browser version now included (built with Webpack)
-* Webpack 2 support (along with an example to show necessary config)
-* Full Material-UI example including route protection (addresses [#54](https://github.com/prescottprue/react-redux-firebase/issues/54))
+### Enhancements
+* Webpack 2 support (fixes [#64](https://github.com/prescottprue/react-redux-firebase/issues/64))
+* Helpers are available as imports from top level:
+```js
+import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
+```
+* Multiple populates now supported (Fixes [#49](https://github.com/prescottprue/react-redux-firebase/issues/49))
+* `keyProp` option added to assign key from populate to a property (described in [#40](https://github.com/prescottprue/react-redux-firebase/issues/40))
+* `keyProp` usage illustrated within [material example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) (on projects list page)
+* `storeAs` capability added allowing for multiple queries on the same route (As requested in [#56](https://github.com/prescottprue/react-redux-firebase/issues/56))
+* `storeAs` usage illustrated in [multiple queries example](https://github.com/prescottprue/react-redux-firebase/tree/v1.3.0-rc.1/examples/snippets/multipleQueries)
+* `dispatchOnUnsetListener` config option added for enabling dispatching of `UNSET_LISTENER` action (along with matching reducer case which removes data from path) when unsetting listeners
+* [material example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) errors fixed (including [#54](https://github.com/prescottprue/react-redux-firebase/issues/54))
+* Removed redundant set calls within `SET` case of reducer (unnecessary and can cause `invalid keyPath`)
+* Demo now available at [demo.react-redux-firebase.com](https://demo.react-redux-firebase.com)
+* Delete project button added to [material example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material)
 
-## Upcoming Minor Version (`v1.3.0`)
+## Upcoming Minor Version (`v1.4.0`)
 
-**Note:** These changes include the combination of changes from all pre-release versions
+**Note:** These changes are subject to change
 
 #### Breaking Changes
  *None Yet Planned*
 
 #### Enhancements
-* Key within populated data described in [#40](https://github.com/prescottprue/react-redux-firebase/issues/40) *could be moved*
-* `storeAs` param for multiple queries on the same route described in [#56](https://github.com/prescottprue/react-redux-firebase/issues/56)
-* Multiple populates working as described in [#49](https://github.com/prescottprue/react-redux-firebase/issues/49)
-* Other updates to population internals (performance and readability)
+* Option for populated items updating when changed [#69](https://github.com/prescottprue/react-redux-firebase/issues/69)
+* Support for Boilerplates ([#53](https://github.com/prescottprue/react-redux-firebase/issues/53))
 
 ## Upcoming Major Version (`v2.0.0`)
 
@@ -37,7 +49,7 @@
 #### Enhancements
 * `AuthRequired` decorator (or decorator factory) that forces auth to exist before rendering component
 * Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance
-
+* Possibility of delayed initialization as mentioned in [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
 
 ### Long Term Goals
 * Routing decorators (most likely to include `@AuthRequired`, `@DataLoaded` and `@RedirectOnAuth`)

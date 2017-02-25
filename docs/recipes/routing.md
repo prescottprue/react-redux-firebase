@@ -9,9 +9,13 @@ Routing can be changed based on data by using react lifecycle hooks such as `com
 ```javascript
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-
-const { isLoaded, isEmpty, pathToJS } = helpers
+import {
+  firebaseConnect,
+  helpers,
+  pathToJS,
+  isLoaded,
+  isEmpty
+} from 'react-redux-firebase'
 
 @firebaseConnect()
 @connect(
@@ -51,15 +55,16 @@ In order to only allow authenticated users to view a page, a `UserIsAuthenticate
 ```javascript
 import { browserHistory } from 'react-router'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { helpers } from 'react-redux-firebase'
-const { pathToJS } = helpers
+import { pathToJS } from 'react-redux-firebase'
 
 export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',
   authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
   authenticatingSelector: ({ firebase }) => pathToJS(firebase, 'isInitializing') === true,
+  predicate: auth => auth !== null,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
+    // routerActions.replace // if using react-router-redux
     dispatch({
       type: 'UNAUTHED_REDIRECT',
       payload: { message: 'You must be authenticated.' },
@@ -107,8 +112,7 @@ Just as easily as creating a wrapper for redirect if a user is not logged in, we
 ```javascript
 import { browserHistory } from 'react-router'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { helpers } from 'react-redux-firebase'
-const { pathToJS } = helpers
+import { pathToJS } from 'react-redux-firebase'
 
 export const UserIsNotAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsNotAuthenticated',
@@ -134,8 +138,8 @@ Can then be used on a Login route component:
 import React, { Component } from 'react'
 import { firebaseConnect } from 'react-redux-firebase'
 
-@firebaseConnect() // adds this.props.firebase
 @UserIsNotAuthenticated // redirects to '/' if user is logged in
+@firebaseConnect() // adds this.props.firebase
 export default class Login extends Component {
   googleLogin = () => {
     this.props.firebase.login({ provider: 'google' })

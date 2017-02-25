@@ -19,7 +19,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @property {String} LOGIN_ERROR - `@@reactReduxFirebase/LOGIN_ERROR`
  * @property {String} NO_VALUE - `@@reactReduxFirebase/NO_VALUE`
  * @property {String} UNAUTHORIZED_ERROR - `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
- * @property {String} INIT_BY_PATH - `@@reactReduxFirebase/INIT_BY_PATH`
+ * @property {String} UNSET_LISTENER - `@@reactReduxFirebase/UNSET_LISTENER`
  * @property {String} AUTHENTICATION_INIT_STARTED - `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`
  * @property {String} AUTHENTICATION_INIT_FINISHED - `@@reactReduxFirebase/AUTHENTICATION_INIT_FINISHED`
  * @property {String} FILE_UPLOAD_START - `@@reactReduxFirebase/FILE_UPLOAD_START`
@@ -42,7 +42,8 @@ export const actionTypes = {
   LOGIN_ERROR: `${actionsPrefix}/LOGIN_ERROR`,
   NO_VALUE: `${actionsPrefix}/NO_VALUE`,
   UNAUTHORIZED_ERROR: `${actionsPrefix}/UNAUTHORIZED_ERROR`,
-  INIT_BY_PATH: `${actionsPrefix}/INIT_BY_PATH`,
+  ERROR: `${actionsPrefix}/ERROR`,
+  UNSET_LISTENER: `${actionsPrefix}/UNSET_LISTENER`,
   AUTHENTICATION_INIT_STARTED: `${actionsPrefix}/AUTHENTICATION_INIT_STARTED`,
   AUTHENTICATION_INIT_FINISHED: `${actionsPrefix}/AUTHENTICATION_INIT_FINISHED`,
   FILE_UPLOAD_START: `${actionsPrefix}/FILE_UPLOAD_START`,
@@ -73,6 +74,10 @@ export const actionTypes = {
  * the data path. For example: role paramter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
  * is loaded (places it in data/roles).
+ * @property {Boolean} distpatchOnUnsetListener - `false` Whether or not to
+ * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
+ * Setting this to true allows an action to be called that removes data
+ * from redux (which might not always be expected).
  * @type {Array}
 */
 export const defaultConfig = {
@@ -81,7 +86,8 @@ export const defaultConfig = {
   updateProfileOnLogin: true,
   enableRedirectHandling: true,
   autoPopulateProfile: true,
-  setProfilePopulateResults: false
+  setProfilePopulateResults: false,
+  distpatchOnUnsetListener: false
 }
 
 /** @constant

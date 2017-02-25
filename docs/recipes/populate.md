@@ -10,8 +10,7 @@ Populate the owner of each item in a todos list from the 'users' root.
 
 ```javascript
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { populatedDataToJS } = helpers
+import { firebaseConnect, populatedDataToJS } from 'react-redux-firebase'
 
 const populates = [
   { child: 'owner', root: 'users' }

@@ -93,8 +93,7 @@ View the [config section](/config.html) for full list of configuration options.
 ```javascript
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { isLoaded, isEmpty, dataToJS } = helpers
+import { firebaseConnect, isLoaded, isEmpty, dataToJS } from 'react-redux-firebase'
 
 @firebaseConnect([
   'todos' // corresponds to 'todos' root on firebase

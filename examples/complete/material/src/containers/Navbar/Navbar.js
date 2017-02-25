@@ -1,79 +1,119 @@
 import React, { Component, PropTypes } from 'react'
-import './Navbar.css'
+import classes from './Navbar.scss'
 import { Link } from 'react-router'
+import { connect } from 'react-redux'
+import {
+  firebaseConnect,
+  pathToJS,
+  isLoaded,
+  isEmpty
+} from 'react-redux-firebase'
+import {
+  LIST_PATH,
+  ACCOUNT_PATH,
+  LOGIN_PATH,
+  SIGNUP_PATH
+} from 'constants/paths'
+
 // Components
 import AppBar from 'material-ui/AppBar'
 import IconMenu from 'material-ui/IconMenu'
+import IconButton from 'material-ui/IconButton'
 import MenuItem from 'material-ui/MenuItem'
 import FlatButton from 'material-ui/FlatButton'
+import DownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down'
 import Avatar from 'material-ui/Avatar'
+import defaultUserImage from 'static/User.png'
 
-const stockPhotoUrl = 'https://s3.amazonaws.com/kyper-cdn/img/User.png'
-const originSettings = { horizontal: 'right', vertical: 'bottom' }
-const buttonStyle = { color: 'white' }
-const avatarSize = 50
+const buttonStyle = {
+  color: 'white',
+  textDecoration: 'none',
+  alignSelf: 'center'
+}
 
-// redux/firebase
-import { connect } from 'react-redux'
-import { firebase, helpers } from 'react-redux-firebase'
-const { pathToJS } = helpers
+const avatarStyles = {
+  wrapper: { marginTop: 0 },
+  button: { marginRight: '.5rem', width: '200px', height: '64px' },
+  buttonSm: { marginRight: '.5rem', width: '30px', height: '64px', padding: '0' }
+}
 
-@firebase()
+@firebaseConnect()
 @connect(
-  // Map state to props
-  ({firebase}) => ({
+  ({ firebase }) => ({
     authError: pathToJS(firebase, 'authError'),
+    auth: pathToJS(firebase, 'auth'),
     account: pathToJS(firebase, 'profile')
   })
 )
 export default class Navbar extends Component {
-
-  static propTypes = {
-    account: PropTypes.object,
-    firebase: PropTypes.object
+  static contextTypes = {
+    router: PropTypes.object.isRequired
   }
 
+  static propTypes = {
+    auth: PropTypes.object,
+    account: PropTypes.object,
+    firebase: PropTypes.object.isRequired
+  }
+
+  handleLogout = () => {
+    this.props.firebase.logout()
+    this.context.router.push('/')
+  }
 
   render () {
-    const { account, router } = this.props
+    const { account } = this.props
+    const accountExists = isLoaded(account) && !isEmpty(account)
 
     const iconButton = (
-      <Avatar
-        className='Navbar-Avatar'
-        src={account && account.avatar_url ? account.avatar_url : stockPhotoUrl}
-        size={avatarSize}
-      />
+      <IconButton style={avatarStyles.button} disableTouchRipple>
+        <div className={classes.avatar}>
+          <div className='hidden-mobile'>
+            <Avatar
+              src={accountExists && account.avatarUrl ? account.avatarUrl : defaultUserImage}
+            />
+          </div>
+          <div className={classes['avatar-text']}>
+            <span className={`${classes['avatar-text-name']} hidden-mobile`}>
+              { accountExists && account.displayName ? account.displayName : 'User' }
+            </span>
+            <DownArrow color='white' />
+          </div>
+        </div>
+      </IconButton>
     )
 
     const mainMenu = (
-      <div className='Navbar-Main-Menu'>
-        <FlatButton
-          label='Sign Up'
-          style={buttonStyle}
-          onClick={() => router.push('/signup')}
-        />
-        <FlatButton
-          label='Login'
-          style={buttonStyle}
-          onClick={() => router.push('/login')}
-        />
+      <div className={classes.menu}>
+        <Link to={SIGNUP_PATH}>
+          <FlatButton
+            label='Sign Up'
+            style={buttonStyle}
+          />
+        </Link>
+        <Link to={LOGIN_PATH}>
+          <FlatButton
+            label='Login'
+            style={buttonStyle}
+          />
+        </Link>
       </div>
     )
 
-    const rightMenu = account && account.email ? (
+    const rightMenu = accountExists ? (
       <IconMenu
         iconButtonElement={iconButton}
-        targetOrigin={originSettings}
-        anchorOrigin={originSettings}
+        targetOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+        animated={false}
       >
         <MenuItem
           primaryText='Account'
-          value='account'
-          onClick={() => router.push('/account')}
+          onTouchTap={() => this.context.router.push(ACCOUNT_PATH)}
         />
         <MenuItem
           primaryText='Sign out'
-          value='logout'
+          onTouchTap={this.handleLogout}
         />
       </IconMenu>
     ) : mainMenu
@@ -81,13 +121,14 @@ export default class Navbar extends Component {
     return (
       <AppBar
         title={
-          <Link to='/' style={buttonStyle}>
-            react-redux-firebase
+          <Link to={accountExists ? `${LIST_PATH}` : '/'} className={classes.brand}>
+            material
           </Link>
         }
-        className='Navbar'
         showMenuIconButton={false}
         iconElementRight={rightMenu}
+        iconStyleRight={accountExists ? avatarStyles.wrapper : {}}
+        className={classes.appBar}
       />
     )
   }

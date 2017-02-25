@@ -1,12 +1,16 @@
 import React, { Component, PropTypes } from 'react'
-import logo from './logo.svg'
-import './App.css'
-import TodoItem from './TodoItem'
-
-// redux/firebase
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { isLoaded, isEmpty, pathToJS, dataToJS } = helpers
+import {
+  firebaseConnect,
+  isLoaded,
+  isEmpty,
+  pathToJS,
+  dataToJS
+} from 'react-redux-firebase'
+
+import logo from './logo.svg'
+import TodoItem from './TodoItem'
+import './App.css'
 
 class App extends Component {
   static propTypes = {

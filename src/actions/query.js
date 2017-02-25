@@ -1,6 +1,6 @@
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from '../utils/populate'
-import { forEach } from 'lodash'
+import { forEach, size } from 'lodash'
 import {
   applyParamsToQuery,
   getWatcherCount,
@@ -9,18 +9,19 @@ import {
   getQueryIdFromPath
 } from '../utils/query'
 
-const { START, SET, NO_VALUE, UNAUTHORIZED_ERROR } = actionTypes
+const { START, SET, NO_VALUE, UNAUTHORIZED_ERROR, ERROR } = actionTypes
 
 /**
  * @description Watch a specific event type
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
- * @param {String} event - Type of event to watch for (defaults to value)
- * @param {String} path - Path to watch with watcher
- * @param {String} dest
+ * @param {Object} options - Event options object
+ * @param {String} options.event - Type of event to watch for (defaults to value)
+ * @param {String} options.path - Path to watch with watcher
+ * @param {String} options.storeAs - Location within redux to store value
  */
-export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery }, dest) => {
-  const watchPath = !dest ? path : `${path}@${dest}`
+export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery, storeAs }) => {
+  const watchPath = !storeAs ? path : `${path}@${storeAs}`
   const counter = getWatcherCount(firebase, type, watchPath, queryId)
   queryId = queryId || getQueryIdFromPath(path)
 
@@ -47,13 +48,18 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
             timestamp: Date.now(),
             requesting: false,
             requested: true,
-            path
+            path: storeAs || path
           })
         }
         return snapshot
       }, (err) => {
+        // TODO: Handle catching unauthorized error
+        // dispatch({
+        //   type: UNAUTHORIZED_ERROR,
+        //   payload: err
+        // })
         dispatch({
-          type: UNAUTHORIZED_ERROR,
+          type: ERROR,
           payload: err
         })
       })
@@ -71,7 +77,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       timestamp: Date.now(),
       requesting: true,
       requested: false,
-      path
+      path: storeAs || path
     })
 
     // Handle once queries
@@ -81,7 +87,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           if (snapshot.val() !== null) {
             dispatch({
               type: SET,
-              path,
+              path: storeAs || path,
               data: snapshot.val()
             })
           }
@@ -98,22 +104,24 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
     /* istanbul ignore next: is run by tests but doesn't show in coverage */
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
-      const resultPath = dest || (e === 'value') ? p : `${p}/${snapshot.key}`
-      const rootPath = dest || path
-
-      if (dest && e !== 'child_removed') {
-        data = {
-          _id: snapshot.key,
-          val: snapshot.val()
-        }
-      }
+      const resultPath = storeAs || (e === 'value') ? p : `${p}/${snapshot.key}`
 
       // Dispatch standard event if no populates exists
       if (!populates) {
+        const ordered = []
+        // preserve order of children under ordered
+        if (e === 'child_added') {
+          ordered.push({ key: snapshot.key, ...snapshot.val() })
+        } else {
+          snapshot.forEach((child) => {
+            ordered.push({ key: child.key, ...child.val() })
+          })
+        }
+
         return dispatch({
           type: SET,
-          path: resultPath,
-          rootPath,
+          path: storeAs || resultPath,
+          ordered: size(ordered) ? ordered : undefined,
           data,
           timestamp: Date.now(),
           requesting: false,
@@ -122,12 +130,13 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       }
 
       // TODO: Allow setting of unpopulated data before starting population through config
+      // TODO: Set ordered for populate queries
+      // TODO: Allow config to toggle Combining into one SET action
       promisesForPopulate(firebase, data, populates)
         .then((results) => {
           dispatch({
             type: SET,
             path: resultPath,
-            rootPath,
             data,
             timestamp: Date.now(),
             requesting: false,
@@ -137,7 +146,6 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
             dispatch({
               type: SET,
               path,
-              rootPath,
               data: result,
               timestamp: Date.now(),
               requesting: false,

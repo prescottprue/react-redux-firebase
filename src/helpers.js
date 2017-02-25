@@ -6,7 +6,8 @@ import {
   drop,
   mapValues,
   reduce,
-  isString
+  isString,
+  defaultsDeep
 } from 'lodash'
 import { getPopulateObjs } from './utils/populate'
 import { metaParams, paramSplitChar } from './constants'
@@ -18,8 +19,7 @@ import { metaParams, paramSplitChar } from './constants'
  * @example
  * import React, { Component, PropTypes } from 'react'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, helpers } from 'react-redux-firebase'
- * const { isLoaded, dataToJS } = helpers
+ * import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
  *
  * @firebaseConnect(['/todos'])
  * @connect(
@@ -59,8 +59,7 @@ export const isLoaded = function () {
  * @example
  * import React, { Component, PropTypes } from 'react'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, helpers } from 'react-redux-firebase'
- * const { isEmpty, dataToJS } = helpers
+ * import { firebaseConnect, isEmpty, dataToJS } from 'react-redux-firebase'
  *
  * @firebaseConnect(['/todos'])
  * @connect(
@@ -115,13 +114,15 @@ export const toJS = data =>
  * @return {Object} Data located at path within Immutable Map
  * @example <caption>Basic</caption>
  * import { connect } from 'react-redux'
- * import { firebaseConnect, helpers } from 'react-redux-firebase'
- * const { pathToJS } = helpers
- * const fbWrapped = firebaseConnect()(App)
- * export default connect(({ firebase }) => ({
+ * import { firebaseConnect, pathToJS } from 'react-redux-firebase'
+ *
+ * @firebaseConnect()
+ * @connect(({ firebase }) => ({
  *   profile: pathToJS(firebase, 'profile'),
  *   auth: pathToJS(firebase, 'auth')
- * }))(fbWrapped)
+ * })
+ * export default class MyComponent extends Component {
+ * ...
  */
 export const pathToJS = (data, path, notSetValue) => {
   if (!data) {
@@ -146,22 +147,36 @@ export const pathToJS = (data, path, notSetValue) => {
 }
 
 /**
- * @description Convert parameter under "data" path of Immutable Map to a Javascript object
+ * @description Convert parameter under "data" path of Immutable Map to a Javascript object.
+ * **NOTE:** Setting a default value will cause `isLoaded` to always return true
  * @param {Map} firebase - Immutable Map to be converted to JS object (state.firebase)
  * @param {String} path - Path of parameter to load
- * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
+ * @param {Object|String|Boolean} notSetValue - Value to return if value is not
+ * found in redux. This will cause `isLoaded` to always return true (since
+ * value is set from the start).
  * @return {Object} Data located at path within Immutable Map
  * @example <caption>Basic</caption>
  * import { connect } from 'react-redux'
- * import { firebaseConnect, helpers } from 'react-redux-firebase'
- * const { dataToJS } = helpers
+ * import { firebaseConnect, dataToJS } from 'react-redux-firebase'
  *
- * const fbWrapped = firebaseConnect(['/todos'])(App)
- *
- * export default connect(({ firebase }) => ({
+ * @firebaseConnect(['/todos'])
+ * @connect(({ firebase }) => ({
  *   // this.props.todos loaded from state.firebase.data.todos
  *   todos: dataToJS(firebase, 'todos')
- * }))(fbWrapped)
+ * })
+ * @example <caption>Default Value</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+ * const defaultValue = {
+ *  1: {
+ *    text: 'Example Todo'
+ *  }
+ * }
+ * @firebaseConnect(['/todos'])
+ * @connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.data.todos
+ *   todos: dataToJS(firebase, 'todos', defaultValue)
+ * })
  */
 export const dataToJS = (data, path, notSetValue) => {
   if (!data) {
@@ -169,6 +184,42 @@ export const dataToJS = (data, path, notSetValue) => {
   }
 
   const pathArr = `/data${fixPath(path)}`.split(/\//).slice(1)
+
+  if (data.getIn) {
+    return toJS(data.getIn(pathArr, notSetValue))
+  }
+
+  return data
+}
+
+/**
+ * @description Convert parameter under "ordered" path of Immutable Map to a
+ * Javascript array. This preserves order set by query.
+ * @param {Map} firebase - Immutable Map to be converted to JS object (state.firebase)
+ * @param {String} path - Path of parameter to load
+ * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
+ * @return {Object} Data located at path within Immutable Map
+ * @example <caption>Basic</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, orderedToJS } from 'react-redux-firebase'
+ *
+ * @firebaseConnect([
+ *   {
+ *     path: 'todos',
+ *     queryParams: ['orderByChild=text'] // order alphabetically based on text
+ *   },
+ * ])
+ * @connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.ordered.todos
+ *   todos: orderedToJS(firebase, 'todos')
+ * })
+ */
+export const orderedToJS = (data, path, notSetValue) => {
+  if (!data) {
+    return notSetValue
+  }
+
+  const pathArr = `/ordered${fixPath(path)}`.split(/\//).slice(1)
 
   if (data.getIn) {
     return toJS(data.getIn(pathArr, notSetValue))
@@ -196,7 +247,9 @@ export const buildChildList = (data, list, p) =>
       : `${p.root}/${getKey}`
     // Set to child under key if populate child exists
     if (dataToJS(data, pathString)) {
-      return dataToJS(data, pathString)
+      return p.keyProp
+        ? { [p.keyProp]: getKey, ...dataToJS(data, pathString) }
+        : dataToJS(data, pathString)
     }
     // Populate child does not exist
     return val === true ? val : getKey
@@ -243,14 +296,15 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
       if (dataToJS(data, path)[p.child]) {
         // populate child is key
         if (isString(dataToJS(data, path)[p.child])) {
+          const key = dataToJS(data, path)[p.child]
           const pathString = p.childParam
-            ? `${p.root}/${dataToJS(data, path)[p.child]}/${p.childParam}`
-            : `${p.root}/${dataToJS(data, path)[p.child]}`
-
+            ? `${p.root}/${key}/${p.childParam}`
+            : `${p.root}/${key}`
           if (dataToJS(data, pathString)) {
             return {
-              ...dataToJS(data, path),
-              [p.child]: dataToJS(data, pathString)
+              [p.child]: p.keyProp
+                ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
+                : dataToJS(data, pathString)
             }
           }
 
@@ -259,7 +313,6 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
         }
 
         return {
-          ...dataToJS(data, path),
           [p.child]: buildChildList(data, dataToJS(data, path)[p.child], p)
         }
       }
@@ -271,13 +324,15 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
         }
         // populate child is key
         if (isString(child[p.child])) {
+          const key = child[p.child]
           const pathString = p.childParam
-            ? `${p.root}/${child[p.child]}/${p.childParam}`
-            : `${p.root}/${child[p.child]}`
+            ? `${p.root}/${key}/${p.childParam}`
+            : `${p.root}/${key}`
           if (dataToJS(data, pathString)) {
             return {
-              ...child,
-              [p.child]: dataToJS(data, pathString)
+              [p.child]: p.keyProp
+                ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
+                : dataToJS(data, pathString)
             }
           }
           // matching child does not exist
@@ -285,14 +340,15 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
         }
         // populate child list
         return {
-          ...child,
           [p.child]: buildChildList(data, child[p.child], p)
         }
       })
-    }), (obj, v) =>
-      // reduce data from all populates to one object
-      Object.assign({}, v, obj),
-   )
+    }),
+  (obj, v) => {
+    // combine data from all populates to one object
+    const combined = defaultsDeep(obj, v)
+    return defaultsDeep(combined, dataToJS(data, path))
+  })
 }
 
 /**
@@ -332,6 +388,7 @@ export default {
   toJS,
   pathToJS,
   dataToJS,
+  orderedToJS,
   populatedDataToJS,
   customToJS,
   isLoaded,

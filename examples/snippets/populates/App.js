@@ -1,11 +1,15 @@
 import React, { PropTypes, Component } from 'react'
 import { map } from 'lodash'
+import { connect } from 'react-redux'
+import {
+  firebaseConnect,
+  populatedDataToJS,
+  isLoaded,
+  pathToJS,
+  dataToJS
+} from 'react-redux-firebase'
 import TodoItem from './TodoItem'
 
-// redux/firebase
-import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { populatedDataToJS, isLoaded, pathToJS, dataToJS } = helpers
 const populates = [
   { child: 'owner', root: 'users' },
   // or if you want a param of the populate child such as user's display name

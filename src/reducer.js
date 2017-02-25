@@ -10,6 +10,7 @@ const {
   LOGOUT,
   LOGIN_ERROR,
   NO_VALUE,
+  UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
   UNAUTHORIZED_ERROR
@@ -62,8 +63,8 @@ export default (state = initialState, action = {}) => {
       return retVal
 
     case SET:
-      const { data } = action
 
+      const { data, ordered } = action
       pathArr = pathToArr(path)
 
       // Handle invalid keyPath error caused by deep setting to a null value
@@ -78,6 +79,10 @@ export default (state = initialState, action = {}) => {
       retVal = (data !== undefined)
         ? retVal.setIn(['data', ...pathArr], fromJS(data))
         : retVal.deleteIn(['data', ...pathArr])
+
+      retVal = (ordered !== undefined)
+        ? retVal.setIn(['ordered', ...pathArr], fromJS(ordered))
+        : retVal.deleteIn(['ordered', ...pathArr])
 
       retVal = (timestamp !== undefined)
         ? retVal.setIn(['timestamp', pathArr.join(paramSplitChar)], fromJS(timestamp))
@@ -108,6 +113,15 @@ export default (state = initialState, action = {}) => {
       retVal = (requested !== undefined)
         ? retVal.setIn(['requested', pathArr.join(paramSplitChar)], fromJS(requested))
         : retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
+
+      return retVal
+
+    case UNSET_LISTENER:
+      pathArr = pathToArr(path)
+      retVal = state.deleteIn(['data', ...pathArr])
+      retVal = retVal.deleteIn(['timestamp', pathArr.join(paramSplitChar)])
+      retVal = retVal.deleteIn(['requesting', pathArr.join(paramSplitChar)])
+      retVal = retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
 
       return retVal
 

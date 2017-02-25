@@ -14,5 +14,6 @@ export default {
   constants,
   actionTypes,
   getFirebase,
-  helpers
+  helpers,
+  ...helpers
 }

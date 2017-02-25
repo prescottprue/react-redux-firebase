@@ -1,12 +1,15 @@
 import React, { Component, PropTypes } from 'react'
-import logo from './logo.svg'
-import './App.css'
-import TodoItem from './TodoItem'
-
-// redux/firebase
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { isLoaded, isEmpty, pathToJS, dataToJS } = helpers
+import {
+  firebaseConnect,
+  isLoaded,
+  isEmpty,
+  dataToJS
+} from 'react-redux-firebase'
+
+import logo from './logo.svg'
+import TodoItem from './TodoItem'
+import './App.css'
 
 class App extends Component {
   static propTypes = {
@@ -63,18 +66,16 @@ class App extends Component {
   }
 }
 const fbWrappedComponent = firebaseConnect([
-  // '/todos'
+  '/todos'
   // { type: 'once', path: '/todos' } // for loading once instead of binding
   // '/todos#populate=owner:displayNames' // for populating owner parameter from id into string loaded from /displayNames root
   // '/todos#populate=collaborators:users' // for populating owner parameter from id to user object loaded from /users root
-  { path: 'todos', populates: [{ child: 'collaborators', root: 'users' }] } // object notation
+  // { path: 'todos', populates: [{ child: 'collaborators', root: 'users' }] } // object notation of population
   // '/todos#populate=owner:users:displayName' // for populating owner parameter from id within to displayName string from user object within users root
 ])(App)
 
 export default connect(
   ({ firebase }) => ({
     todos: dataToJS(firebase, 'todos'),
-    profile: pathToJS(firebase, 'profile'),
-    auth: pathToJS(firebase, 'auth')
   })
 )(fbWrappedComponent)

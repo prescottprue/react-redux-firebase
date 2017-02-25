@@ -12,9 +12,9 @@
 
 > Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 
-## Demo
+## [Demo](https://demo.react-redux-firebase.com)
 
-View deployed version of [Material Example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) [here](https://redux-firebasev3.firebaseapp.com/)
+The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) is deployed to [demo.react-redux-firebase.com](https://demo.react-redux-firebase.com).
 
 ## Features
 - Integrated into redux
@@ -109,8 +109,12 @@ In components:
 ```javascript
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { isLoaded, isEmpty, dataToJS } = helpers
+import {
+  firebaseConnect,
+  isLoaded,
+  isEmpty,
+  dataToJS
+} from 'react-redux-firebase'
 
 @firebaseConnect([
   '/todos'
@@ -238,7 +242,7 @@ const store = createStore(
     applyMiddleware([
       thunk.withExtraArgument(getFirebase) // Pass getFirebase function as extra argument
     ]),
-    reactReduxFirebase(fbConfig, )
+    reactReduxFirebase(fbConfig, config)
   )
 );
 
@@ -246,15 +250,18 @@ const store = createStore(
 Action:
 
 ```javascript
+import { pathToJS } from 'react-redux-firebase'
+
 export const addTodo = (newTodo) =>
   (dispatch, getState, getFirebase) => {
-    const firebase = getFirebase()
-    firebase
+    const auth = pathToJS(getState.firebase, 'auth')
+    newTodo.owner = auth.uid
+    getFirebase()
       .push('todos', newTodo)
       .then(() => {
         dispatch({
-          type: NOTIFICATION,
-          payload
+          type: 'TODO_CREATED',
+          payload: newTodo
         })
       })
   };
@@ -288,8 +295,7 @@ In order to only allow authenticated users to view a page, a `UserIsAuthenticate
 ```javascript
 import { browserHistory } from 'react-router'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { helpers } from 'react-redux-firebase'
-const { pathToJS } = helpers
+import { pathToJS } from 'react-redux-firebase'
 
 export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',
@@ -364,7 +370,7 @@ The [examples folder](/examples) contains full applications that can be copied/a
   * Post Issues
   * Create Pull Requests
 
-# Patrons
+## Patrons
 
 Meet some of the outstanding companies and individuals that made it possible:
 

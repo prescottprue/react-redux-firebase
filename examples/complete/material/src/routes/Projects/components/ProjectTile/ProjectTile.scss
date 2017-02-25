@@ -1,0 +1,86 @@
+@import 'base';
+
+.container {
+  @extend .flex-column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 200px;
+  margin: .5rem;
+  padding: 1.3rem;
+  overflow: hidden;
+  min-width: 300px;
+  @include tablet {
+    flex-basis: 40%;
+  }
+  @include mobile {
+    flex-basis: 80%;
+  }
+}
+.top {
+  @extend .flex-row;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+.name {
+  font-size: 1.5rem;
+  font-weight: 300;
+  text-decoration: none;
+  color: $darkGray;
+  cursor: pointer;
+  transition: all 800ms cubic-bezier(0.25,0.1,0.25,1) 0ms;
+  &:hover {
+    color: $accentColor;
+  }
+  &:visited {
+    text-decoration: none;
+    color: $darkGray;
+  }
+}
+.settings {
+  @extend .flex-row;
+  align-items: flex-start;
+  align-self: flex-end;
+  cursor: pointer;
+  transition: all 800ms cubic-bezier(0.25,0.1,0.25,1) 0ms;
+  &:hover {
+    color: $accentColor;
+  }
+}
+.owner {
+  font-size: 1.2rem;
+  color: $darkGray;
+  cursor: pointer;
+  transition: all 800ms cubic-bezier(0.25,0.1,0.25,1) 0ms;
+  &:hover {
+    color: $accentColor;
+  }
+}
+.collaborators {
+  @extend .flex-row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 2rem;
+}
+.collaborator {
+  @extend .flex-row;
+  margin-left: .4rem;
+  margin-right: .4rem;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-filter: grayscale(1);
+  filter: grayscale(1);
+  &:hover {
+    -webkit-filter: none;
+    filter: none;
+    img {
+      background-color: $accentColor;
+    }
+  }
+}
+.add {
+  &:hover {
+    color: $accentColor;
+  }
+}

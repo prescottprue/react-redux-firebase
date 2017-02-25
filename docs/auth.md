@@ -4,8 +4,7 @@ Authentication data is attached to `auth`, and errors are attached to `authError
 
 ```js
 import { connect } from 'react-redux'
-import { helpers } from 'react-redux-firebase'
-const { pathToJS } = helpers
+import { pathToJS } from 'react-redux-firebase'
 @connect(
   // Map state to props
   ({ firebase }) => ({
