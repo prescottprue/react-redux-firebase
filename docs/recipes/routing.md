@@ -138,8 +138,8 @@ Can then be used on a Login route component:
 import React, { Component } from 'react'
 import { firebaseConnect } from 'react-redux-firebase'
 
-@firebaseConnect() // adds this.props.firebase
 @UserIsNotAuthenticated // redirects to '/' if user is logged in
+@firebaseConnect() // adds this.props.firebase
 export default class Login extends Component {
   googleLogin = () => {
     this.props.firebase.login({ provider: 'google' })

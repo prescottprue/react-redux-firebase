@@ -1,6 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import classes from './Navbar.scss'
 import { Link } from 'react-router'
+import { connect } from 'react-redux'
+import {
+  firebaseConnect,
+  pathToJS,
+  isLoaded,
+  isEmpty
+} from 'react-redux-firebase'
 import {
   LIST_PATH,
   ACCOUNT_PATH,
@@ -29,10 +36,6 @@ const avatarStyles = {
   button: { marginRight: '.5rem', width: '200px', height: '64px' },
   buttonSm: { marginRight: '.5rem', width: '30px', height: '64px', padding: '0' }
 }
-
-import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { pathToJS, isLoaded, isEmpty } = helpers
 
 @firebaseConnect()
 @connect(

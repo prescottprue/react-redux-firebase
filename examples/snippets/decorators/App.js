@@ -1,11 +1,14 @@
 import React, { PropTypes, Component } from 'react'
 import { map } from 'lodash'
-import TodoItem from './TodoItem'
-
-// redux/firebase
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { isLoaded, isEmpty, pathToJS, dataToJS } = helpers
+import {
+  firebaseConnect,
+  isLoaded,
+  isEmpty,
+  pathToJS,
+  dataToJS
+} from 'react-redux-firebase'
+import TodoItem from './TodoItem'
 
 @firebaseConnect([
   '/todos'

@@ -1,9 +1,9 @@
 import React, { PropTypes, Component } from 'react'
-import { firebase } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import './Todo.css'
 
-@firebase()
+@firebaseConnect()
 export default class TodoItem extends Component {
   static propTypes = {
     todo: PropTypes.object,

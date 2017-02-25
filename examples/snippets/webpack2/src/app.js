@@ -1,9 +1,6 @@
-import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase';
-
-console.log("reactReduxFirebase", reactReduxFirebase);
-
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { firebaseConnect } from 'react-redux-firebase';
 
 const App = React.createClass({
   render() {
