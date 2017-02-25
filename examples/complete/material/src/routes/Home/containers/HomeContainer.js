@@ -6,7 +6,7 @@ import {
   firebaseConnect,
   isLoaded,
   pathToJS,
-  dataToJS
+  dataToJS,
   // orderedToJS,
   // populatedDataToJS
 } from 'react-redux-firebase'
@@ -19,10 +19,12 @@ import TodoItem from '../components/TodoItem'
 import NewTodoPanel from '../components/NewTodoPanel'
 import classes from './HomeContainer.scss'
 
-// const populates = [{ child: 'owner', root: 'users', keyProp: 'key' }]
+// const populates = [
+//   { child: 'owner', root: 'users', keyProp: 'key' }
+// ]
 
 @firebaseConnect([
-  // 'todos' // sync list of todos
+  // 'todos' // sync full list of todos
   // { path: '/projects', type: 'once' } // for loading once instead of binding
   { path: 'todos', queryParams: ['limitToFirst=20'] } // limit to first 20
   // { path: 'todos', queryParams: ['limitToFirst=20'], populates } // populate
@@ -88,6 +90,7 @@ export default class Home extends Component {
   render () {
     const { todos } = this.props
     const { error } = this.state
+    console.log('todos:', todos)
 
     return (
       <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>

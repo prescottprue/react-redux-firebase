@@ -71,14 +71,17 @@ Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 
 # dataToJS
 
-Convert parameter under "data" path of Immutable Map to a Javascript object
+Convert parameter under "data" path of Immutable Map to a Javascript object.
+**NOTE:** Setting a default value will cause `isLoaded` to always return true
 
 **Parameters**
 
 -   `firebase` **[Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)** Immutable Map to be converted to JS object (state.firebase)
 -   `data`  
 -   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
--   `notSetValue` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to return if value is not found
+-   `notSetValue` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to return if value is not
+    found in redux. This will cause `isLoaded` to always return true (since
+    value is set from the start).
 
 **Examples**
 
@@ -87,6 +90,18 @@ _Basic_
 ```javascript
 import { connect } from 'react-redux'
 import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+```
+
+_Default Value_
+
+```javascript
+import { connect } from 'react-redux'
+import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+const defaultValue = {
+ 1: {
+   text: 'Example Todo'
+ }
+}
 ```
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Map
