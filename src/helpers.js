@@ -344,11 +344,8 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
         }
       })
     }),
-  (obj, v) => {
-    // combine data from all populates to one object
-    const combined = defaultsDeep(obj, v)
-    return defaultsDeep(combined, dataToJS(data, path))
-  })
+  // combine data from all populates to one object starting with original data
+  (obj, v) => defaultsDeep(v, obj), dataToJS(data, path))
 }
 
 /**

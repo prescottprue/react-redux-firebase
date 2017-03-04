@@ -6,13 +6,23 @@ const exampleData = {
     some: 'data',
     projects: {
       CDF: {
-        owner: 'ABC'
+        owner: 'ABC',
+        notes: {
+          123: true,
+        },
+        collaborators: {
+          ABC: true,
+          abc: true
+        }
       },
       GHI: {
         owner: 'ABC'
       },
       OKF: {
         owner: 'asdfasdf',
+        notes: {
+          123: true,
+        },
         collaborators: {
           ABC: true,
           abc: true
@@ -22,6 +32,11 @@ const exampleData = {
     users: {
       ABC: {
         displayName: 'scott'
+      }
+    },
+    notes: {
+      123: {
+        text: 'Some Text'
       }
     }
   },
@@ -115,16 +130,16 @@ describe('Helpers:', () => {
     })
 
     it('returns undefined for non existant path', () => {
-      expect(helpers.populatedDataToJS(exampleState, '/asdf', []))
+      expect(helpers.populatedDataToJS(exampleState, '/asdfasdfadsf', []))
         .to
         .equal(undefined)
     })
 
     it('returns unpopulated data for no populates', () => {
-      const path = '/projects'
-      expect(helpers.populatedDataToJS(exampleState, path, []))
+      const path = 'projects'
+      expect(helpers.populatedDataToJS(exampleState, path, []).CDF.owner)
         .to
-        .equal(exampleData.data[path])
+        .equal(exampleData.data[path].CDF.owner)
     })
 
     describe('single', () => {
@@ -132,7 +147,6 @@ describe('Helpers:', () => {
         it('populates value', () => {
           const path = 'projects/CDF'
           const rootName = 'users'
-          console.log('--------', helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName }]).owner)
           expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName }]).owner)
             .to
             .have
@@ -235,21 +249,55 @@ describe('Helpers:', () => {
       })
     })
 
-    it('populates multiple children', () => {
-      const path = 'projects'
-      const rootName = 'users'
-      const valName = 'CDF'
-      const populates = [
-        { child: 'owner', root: rootName },
-        { child: 'collaborators', root: rootName },
-      ]
-      // TODO: Test both children are populated
-      expect(helpers.populatedDataToJS(exampleState, path, populates))
-        .to
-        .have
-        .deep
-        .property(`${valName}.owner.displayName`, exampleData.data[rootName].ABC.displayName)
+    describe('multiple populates', () => {
+      it('from different roots', () => {
+        const path = 'projects'
+        const rootName = 'users'
+        const valName = 'CDF'
+        const populates = [
+          { child: 'owner', root: rootName },
+          { child: 'notes', root: 'notes' },
+        ]
+        // check that notes are populated
+        expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
+          .to
+          .have
+          .deep
+          .property(`${valName}.notes.123.text`, exampleData.data.notes['123'].text)
+        // check that owner is populated
+        expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
+          .to
+          .have
+          .deep
+          .property(`${valName}.owner.displayName`, exampleData.data.users['ABC'].displayName)
+      })
+
+      // Skipped since this is not currently supported
+      it('from same root', () => {
+        const path = 'projects'
+        const rootName = 'users'
+        const valName = 'CDF'
+        const populates = [
+          { child: 'owner', root: rootName },
+          { child: 'collaborators', root: rootName },
+        ]
+        // TODO: Test both children are populated
+        console.log('--------3', helpers.populatedDataToJS(exampleState, path, populates))
+        console.log('should have', exampleData.data[rootName])
+        expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
+          .to
+          .have
+          .deep
+          .property(`${valName}.owner.displayName`, exampleData.data[rootName].ABC.displayName)
+        expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
+          .to
+          .have
+          .deep
+          .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+      })
     })
+
+
   })
 
   describe('customToJS', () => {
