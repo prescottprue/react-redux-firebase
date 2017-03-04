@@ -273,7 +273,7 @@ describe('Helpers:', () => {
       })
 
       // Skipped since this is not currently supported
-      it.skip('from same root', () => {
+      it('from same root', () => {
         const path = 'projects'
         const rootName = 'users'
         const valName = 'CDF'
@@ -293,7 +293,7 @@ describe('Helpers:', () => {
           .to
           .have
           .deep
-          .property(`${valName}.collaborators.ABC`, exampleData.data[rootName].ABC.displayName)
+          .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
       })
     })
 
