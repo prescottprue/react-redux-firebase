@@ -23,8 +23,7 @@ _Data_
 
 ```javascript
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { dataToJS } = helpers
+import { firebaseConnect, dataToJS } from 'react-redux-firebase'
 
 // sync /todos from firebase into redux
 const fbWrapped = firebaseConnect([
