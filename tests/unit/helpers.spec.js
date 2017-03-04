@@ -284,12 +284,16 @@ describe('Helpers:', () => {
         // TODO: Test both children are populated
         console.log('--------3', helpers.populatedDataToJS(exampleState, path, populates))
         console.log('should have', exampleData.data[rootName])
-
         expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
           .to
           .have
           .deep
           .property(`${valName}.owner.displayName`, exampleData.data[rootName].ABC.displayName)
+        expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
+          .to
+          .have
+          .deep
+          .property(`${valName}.collaborators.ABC`, exampleData.data[rootName].ABC.displayName)
       })
     })
 
