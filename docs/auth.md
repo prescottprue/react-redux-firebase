@@ -125,6 +125,7 @@ Similar to Firebase's `ref.createUser(credentials)` but with support for automat
 * `credentials` [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
   * `credentials.email` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) - User's email
   * `credentials.password` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) - User's password
+  * `credentials.signIn` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) - Whether or not to sign in when user is signing up (defaults to `true`)
 
 * `profile` [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
   * `profile.username` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
@@ -160,7 +161,7 @@ firebase.logout()
 ```
 
 ## resetPassword(credentials)
-Calls Firebase's `ref.resetPassword(credentials)` then adds the output into redux state under `state.firebase.authError`
+Calls Firebase's `firebase.auth().resetPassword()`. If there is an error, it is added into redux state under `state.firebase.authError`, which can be loaded using `pathToJS(state.firebase, 'authError')`.
 
 ##### Examples
 
@@ -179,3 +180,36 @@ firebase.resetPassword({
 ##### Returns
   [**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with user's UID in case of success or the error otherwise.
   Always authenticate the new user in case of success
+
+## confirmPasswordReset(code, newPassword)
+Calls Firebase's `firebase.auth().confirmPasswordReset()`. If there is an error, it is added into redux state under `state.firebase.authError`, which can be loaded using `pathToJS(state.firebase, 'authError')`.
+
+##### Examples
+
+```js
+firebase.confirmPasswordReset('some reset code', 'myNewPassword')
+```
+
+##### Parameters
+  * `code` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - Password reset code
+  * `newPassword` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - New password to set for user
+
+##### Returns
+  [**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+
+## verifyPasswordResetCode(code)
+Verify a password reset code from password reset email.
+
+Calls Firebase's `firebase.auth().verifyPasswordResetCode()`. If there is an error, it is added into redux state under `state.firebase.authError`, which can be loaded using `pathToJS(state.firebase, 'authError')`.
+
+##### Examples
+
+```js
+firebase.verifyPasswordResetCode('some reset code')
+```
+
+##### Parameters
+  * `code` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - Password reset code
+
+##### Returns
+  [**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) - Email associated with reset code

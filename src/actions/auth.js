@@ -338,11 +338,13 @@ export const createUser = (dispatch, firebase, { email, password, signIn }, prof
   return firebase.auth()
     .createUserWithEmailAndPassword(email, password)
     .then((userData) =>
-      // Login to newly created account if signIn flag is true
+      // Login to newly created account if signIn flag is not set to false
       firebase.auth().currentUser || (!!signIn && signIn === false)
-        ? createUserProfile(dispatch, firebase, userData, profile)
+        ? createUserProfile(dispatch, firebase, userData, profile || { email })
         : login(dispatch, firebase, { email, password })
-            .then(() => createUserProfile(dispatch, firebase, userData, profile || { email }))
+            .then(() =>
+              createUserProfile(dispatch, firebase, userData, profile || { email })
+            )
             .catch(err => {
               if (err) {
                 switch (err.code) {
@@ -427,6 +429,25 @@ export const confirmPasswordReset = (dispatch, firebase, code, password) => {
     })
 }
 
+/**
+ * @description Verify that password reset code is valid
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {String} code - Password reset code
+ * @return {Promise} email - Email associated with reset code
+ * @private
+ */
+export const verifyPasswordResetCode = (dispatch, firebase, code) => {
+  dispatchLoginError(dispatch, null)
+  return firebase.auth()
+    .verifyPasswordResetCode(code)
+    .catch((err) => {
+      if (err) {
+        dispatchLoginError(dispatch, err)
+      }
+      return Promise.reject(err)
+    })
+}
 
 export default {
   dispatchLoginError,
@@ -440,5 +461,6 @@ export default {
   logout,
   createUser,
   resetPassword,
-  confirmPasswordReset
+  confirmPasswordReset,
+  verifyPasswordResetCode
 }
