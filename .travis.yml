@@ -22,7 +22,7 @@ addons:
     repo_token: $CODE_CLIMATE
 
 before_install:
-  - "npm install react firebase lodash redux react-redux"
+  - "npm install react redux react-redux"
 
 after_success:
   - npm install -g codeclimate-test-reporter
@@ -35,5 +35,4 @@ deploy:
   email: $NPM_EMAIL
   api_key: $NPM_TOKEN
   on:
-    tags: true
     branch: master
