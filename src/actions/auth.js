@@ -388,6 +388,46 @@ export const resetPassword = (dispatch, firebase, email) => {
     })
 }
 
+/**
+ * @description Confirm the password reset with code and password
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {String} code - Email confirmation reset code
+ * @param {String} password - Password to set it to
+ * @return {Promise}
+ * @private
+ */
+export const confirmPasswordReset = (dispatch, firebase, code, password) => {
+  dispatchLoginError(dispatch, null)
+  return firebase.auth()
+    .confirmPasswordReset(code, password)
+    .catch((err) => {
+      if (err) {
+        switch (err.code) {
+          case 'auth/expired-action-code':
+            dispatchLoginError(dispatch, new Error('The action code has expired.'))
+            break
+          case 'auth/invalid-action-code':
+            dispatchLoginError(dispatch, new Error('The action code is invalid.'))
+            break
+          case 'auth/user-disabled':
+            dispatchLoginError(dispatch, new Error('The user is disabled.'))
+            break
+          case 'auth/user-not-found':
+            dispatchLoginError(dispatch, new Error('The user is not found.'))
+            break
+          case 'auth/weak-password':
+            dispatchLoginError(dispatch, new Error('The password is not strong enough.'))
+            break
+          default:
+            dispatchLoginError(dispatch, err)
+        }
+        return Promise.reject(err)
+      }
+    })
+}
+
+
 export default {
   dispatchLoginError,
   dispatchUnauthorizedError,
@@ -399,5 +439,6 @@ export default {
   login,
   logout,
   createUser,
-  resetPassword
+  resetPassword,
+  confirmPasswordReset
 }

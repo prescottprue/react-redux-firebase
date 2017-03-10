@@ -108,6 +108,15 @@ describe('Compose', () => {
         expect(err).to.be.an.object
       }
     })
+
+    describe('confirmPasswordReset', () => {
+      try {
+        helpers.confirmPasswordReset({ code: 'test', password: 'test' })
+      } catch (err) {
+        expect(err).to.be.an.object
+      }
+    })
+
     describe('storage', () => {
       try {
         helpers.storage()
