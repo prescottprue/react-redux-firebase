@@ -10,7 +10,7 @@
     "clean": "rimraf dist",
     "lint": "eslint src/** test/**",
     "lint:fix": "npm run lint -- --fix",
-    "test": "mocha -R spec --compilers js:babel-core/register ./tests/setup.js ./test/**/*.spec.js",
+    "test": "mocha -R spec --compilers js:babel-core/register ./tests/setup.js ./tests/**/*.spec.js",
     "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./tests/** --recursive --report lcov --compilers js:babel-register --require babel-polyfill",
     "codecov": "cat coverage/*/lcov.info | codecov",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
