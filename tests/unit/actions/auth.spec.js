@@ -12,6 +12,7 @@ import {
   createUser,
   resetPassword,
   confirmPasswordReset,
+  verifyPasswordResetCode,
 } from '../../../src/actions/auth'
 import { promisesForPopulate } from '../../../src/utils/populate'
 
@@ -74,7 +75,10 @@ const fakeFirebase = {
     confirmPasswordReset: (code, password) =>
       password === 'error'
         ? Promise.reject({code: code})
-        : Promise.resolve()
+        : Promise.resolve(),
+    verifyPasswordResetCode: (code) => code === 'error'
+      ? Promise.reject({ code: 'some' })
+      : Promise.resolve('success')
   })
 }
 
@@ -171,25 +175,24 @@ describe('Actions: Auth', () => {
   })
 
   describe('login', () => {
-    it('handles invalid email login', () => {
-      return login(dispatch, firebase, fakeLogin)
+    it('handles invalid email login', () =>
+      login(dispatch, firebase, fakeLogin)
         .catch((err) => {
           expect(err.code).to.equal('auth/user-not-found')
         })
-    }, 4000)
-    it('handles invalid token login', () => {
-      return login(dispatch, firebase, { token: 'test@tst.com' })
+    , 4000)
+    it('handles invalid token login', () =>
+      login(dispatch, firebase, { token: 'test@tst.com' })
         .catch((err) => {
           expect(err.code).to.equal('auth/invalid-custom-token')
         })
-    }, 4000)
-    it('handles token login', () => {
-      const token = 'asdfasdf'
-      return login(dispatch, fakeFirebase, { token }, { uid: 'asdfasdf' })
+    , 4000)
+    it('handles token login', () =>
+      login(dispatch, fakeFirebase, { token: 'asdfasdf' }, { uid: 'asdfasdf' })
         .then((authData) => {
           expect(authData).to.be.an.object
         })
-    }, 4000)
+    , 4000)
   })
 
   describe('logout', () => {
@@ -296,11 +299,62 @@ describe('Actions: Auth', () => {
           expect(err).to.be.undefined
         })
     })
-    it('dispatches for all other errors', () => {
-      return confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-not-found', 'error')
-        .catch((err) => {
-          expect(err.code).to.be.a.string
+    describe('handles error code: ', () => {
+      it('auth/expired-action-code', () => {
+        return confirmPasswordReset(dispatch, fakeFirebase, 'auth/expired-action-code', 'error')
+          .catch((err) => {
+            expect(err.code).to.be.a.string
+          })
+      })
+      it('auth/invalid-action-code', () => {
+        return confirmPasswordReset(dispatch, fakeFirebase, 'auth/invalid-action-code', 'error')
+          .catch((err) => {
+            expect(err.code).to.be.a.string
+          })
+      })
+      it('auth/user-disabled', () => {
+        return confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-disabled', 'error')
+          .catch((err) => {
+            expect(err.code).to.be.a.string
+          })
+      })
+      it('auth/user-not-found', () => {
+        return confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-not-found', 'error')
+          .catch((err) => {
+            expect(err.code).to.be.a.string
+          })
+      })
+      it('auth/weak-password', () => {
+        return confirmPasswordReset(dispatch, fakeFirebase, 'auth/weak-password', 'error')
+          .catch((err) => {
+            console.log('error:', err)
+            expect(err.code).to.be.a.string
+          })
+      })
+      it('other', () => {
+        return confirmPasswordReset(dispatch, fakeFirebase, 'asdfasdf', 'error')
+          .catch((err) => {
+            expect(err.code).to.be.a.string
+          })
+      })
+    })
+
+  })
+
+  describe('verifyPasswordResetCode', () => {
+    it('resolves for valid code', () => {
+      return verifyPasswordResetCode(dispatch, fakeFirebase, 'test')
+        .then((res) => {
+          expect(res).to.equal('success')
         })
+    })
+    describe('handles error code: ', () => {
+      it('other', () => {
+        return verifyPasswordResetCode(dispatch, fakeFirebase, 'error')
+          .catch((err) => {
+            expect(err.code).to.be.a.string
+          })
+      })
     })
   })
 })
