@@ -141,6 +141,9 @@ export default (fbConfig, otherConfig) => next =>
     const resetPassword = (credentials) =>
       authActions.resetPassword(dispatch, firebase, credentials)
 
+    const confirmPasswordReset = (code, password) =>
+      authActions.confirmPasswordReset(dispatch, firebase, code, password)
+
     firebase.helpers = {
       ref: path => Firebase.database().ref(path),
       set,
@@ -155,6 +158,7 @@ export default (fbConfig, otherConfig) => next =>
       deleteFile,
       createUser,
       resetPassword,
+      confirmPasswordReset,
       watchEvent,
       unWatchEvent,
       storage: () => Firebase.storage()

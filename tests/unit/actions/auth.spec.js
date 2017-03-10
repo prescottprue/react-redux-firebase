@@ -10,7 +10,8 @@ import {
   login,
   logout,
   createUser,
-  resetPassword
+  resetPassword,
+  confirmPasswordReset,
 } from '../../../src/actions/auth'
 import { promisesForPopulate } from '../../../src/utils/populate'
 
@@ -69,7 +70,11 @@ const fakeFirebase = {
         ? Promise.reject({code: 'auth/user-not-found'})
         : email === 'error2'
           ? Promise.reject({code: 'asdfasdf'})
-          : Promise.resolve({some: 'val'})
+          : Promise.resolve({some: 'val'}),
+    confirmPasswordReset: (code, password) =>
+      password === 'error'
+        ? Promise.reject({code: code})
+        : Promise.resolve()
   })
 }
 
@@ -278,6 +283,21 @@ describe('Actions: Auth', () => {
     })
     it('dispatches for all other errors', () => {
       return resetPassword(dispatch, fakeFirebase, 'error2')
+        .catch((err) => {
+          expect(err.code).to.be.a.string
+        })
+    })
+  })
+
+  describe('confirmPasswordReset', () => {
+    it('resets password for real user', () => {
+      return confirmPasswordReset(dispatch, fakeFirebase, 'test', 'test')
+        .then((err) => {
+          expect(err).to.be.undefined
+        })
+    })
+    it('dispatches for all other errors', () => {
+      return confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-not-found', 'error')
         .catch((err) => {
           expect(err.code).to.be.a.string
         })
