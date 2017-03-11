@@ -1,4 +1,4 @@
-import Firebase from 'firebase'
+import * as Firebase from 'firebase'
 import { defaultConfig } from './constants'
 import { validateConfig } from './utils'
 import { authActions, queryActions, storageActions } from './actions'
