@@ -1,6 +1,6 @@
+import { forEach, size } from 'lodash'
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from '../utils/populate'
-import { forEach, size } from 'lodash'
 import {
   applyParamsToQuery,
   getWatcherCount,

@@ -20,17 +20,6 @@ const config = {
       commonjs2: 'react',
       amd: 'react',
       root: 'React'
-    },
-    redux: {
-      commonjs: 'redux',
-      commonjs2: 'redux',
-      amd: 'redux',
-      root: 'Redux'
-    },
-    'react-redux': {
-      commonjs: 'react-redux',
-      amd: 'react-redux',
-      root: 'ReactRedux'
     }
   },
   plugins: [
