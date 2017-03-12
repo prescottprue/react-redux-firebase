@@ -7,7 +7,7 @@ exports.getFirebase = undefined;
 
 var _firebase = require('firebase');
 
-var Firebase = _interopRequireWildcard(_firebase);
+var firebase = _interopRequireWildcard(_firebase);
 
 var _constants = require('./constants');
 
@@ -18,6 +18,11 @@ var _actions = require('./actions');
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var _Promise = typeof Promise === 'undefined' ? require('es6-promise').Promise : Promise;
+// import * as firebase from 'firebase/app'
+// import 'firebase/auth'
+// import 'firebase/database'
+// import 'firebase/storage'
+
 
 var firebaseInstance = void 0;
 
@@ -89,17 +94,17 @@ exports.default = function (fbConfig, otherConfig) {
 
       // Initialize Firebase
       try {
-        Firebase.initializeApp(fbConfig);
+        firebase.initializeApp(fbConfig);
       } catch (err) {} // silence reinitialize warning (hot-reloading)
 
       // Enable Logging based on config
       if (configs.enableLogging) {
-        Firebase.database.enableLogging(configs.enableLogging);
+        firebase.database.enableLogging(configs.enableLogging);
       }
 
-      var rootRef = Firebase.database().ref();
+      var rootRef = firebase.database().ref();
 
-      var firebase = Object.defineProperty(Firebase, '_', {
+      var instance = Object.defineProperty(firebase, '_', {
         value: {
           watchers: {},
           config: configs,
@@ -138,53 +143,53 @@ exports.default = function (fbConfig, otherConfig) {
       };
 
       var uploadFile = function uploadFile(path, file, dbPath) {
-        return _actions.storageActions.uploadFile(dispatch, firebase, { path: path, file: file, dbPath: dbPath });
+        return _actions.storageActions.uploadFile(dispatch, instance, { path: path, file: file, dbPath: dbPath });
       };
 
       var uploadFiles = function uploadFiles(path, files, dbPath) {
-        return _actions.storageActions.uploadFiles(dispatch, firebase, { path: path, files: files, dbPath: dbPath });
+        return _actions.storageActions.uploadFiles(dispatch, instance, { path: path, files: files, dbPath: dbPath });
       };
 
       var deleteFile = function deleteFile(path, dbPath) {
-        return _actions.storageActions.deleteFile(dispatch, firebase, { path: path, dbPath: dbPath });
+        return _actions.storageActions.deleteFile(dispatch, instance, { path: path, dbPath: dbPath });
       };
 
       var watchEvent = function watchEvent(type, path, storeAs) {
-        return _actions.queryActions.watchEvent(firebase, dispatch, { type: type, path: path, storeAs: storeAs });
+        return _actions.queryActions.watchEvent(instance, dispatch, { type: type, path: path, storeAs: storeAs });
       };
 
       var unWatchEvent = function unWatchEvent(eventName, eventPath) {
         var queryId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
-        return _actions.queryActions.unWatchEvent(firebase, eventName, eventPath, queryId);
+        return _actions.queryActions.unWatchEvent(instance, eventName, eventPath, queryId);
       };
 
       var login = function login(credentials) {
-        return _actions.authActions.login(dispatch, firebase, credentials);
+        return _actions.authActions.login(dispatch, instance, credentials);
       };
 
       var logout = function logout() {
-        return _actions.authActions.logout(dispatch, firebase);
+        return _actions.authActions.logout(dispatch, instance);
       };
 
       var createUser = function createUser(credentials, profile) {
-        return _actions.authActions.createUser(dispatch, firebase, credentials, profile);
+        return _actions.authActions.createUser(dispatch, instance, credentials, profile);
       };
 
       var resetPassword = function resetPassword(credentials) {
-        return _actions.authActions.resetPassword(dispatch, firebase, credentials);
+        return _actions.authActions.resetPassword(dispatch, instance, credentials);
       };
 
       var confirmPasswordReset = function confirmPasswordReset(code, password) {
-        return _actions.authActions.confirmPasswordReset(dispatch, firebase, code, password);
+        return _actions.authActions.confirmPasswordReset(dispatch, instance, code, password);
       };
 
       var verifyPasswordResetCode = function verifyPasswordResetCode(code) {
-        return _actions.authActions.verifyPasswordResetCode(dispatch, firebase, code);
+        return _actions.authActions.verifyPasswordResetCode(dispatch, instance, code);
       };
 
-      firebase.helpers = {
+      instance.helpers = {
         ref: function ref(path) {
-          return Firebase.database().ref(path);
+          return firebase.database().ref(path);
         },
         set: set,
         uniqueSet: uniqueSet,
@@ -203,14 +208,14 @@ exports.default = function (fbConfig, otherConfig) {
         watchEvent: watchEvent,
         unWatchEvent: unWatchEvent,
         storage: function storage() {
-          return Firebase.storage();
+          return firebase.storage();
         }
       };
 
-      _actions.authActions.init(dispatch, firebase);
+      _actions.authActions.init(dispatch, instance);
 
-      store.firebase = firebase;
-      firebaseInstance = Object.assign({}, firebase, firebase.helpers);
+      store.firebase = instance;
+      firebaseInstance = Object.assign({}, instance, instance.helpers);
 
       return store;
     };
