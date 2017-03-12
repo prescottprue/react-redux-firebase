@@ -5928,7 +5928,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        firebase.database.enableLogging(configs.enableLogging);
 	      }
 	      if (configs.rn) {
-	        var AsyncStorage = config.rn.AsyncStorage;
+	        var AsyncStorage = configs.rn.AsyncStorage;
 	        firebase.INTERNAL.extendNamespace({
 	          'INTERNAL': {
 	            'reactNative': {

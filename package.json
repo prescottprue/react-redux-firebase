@@ -53,8 +53,7 @@
     "firebase": "3.7.1",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.1.0",
-    "lodash": "^4.17.4",
-    "react-native": "^0.42.0"
+    "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "react": "^0.14.6 || ^15.0.0"

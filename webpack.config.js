@@ -20,12 +20,6 @@ const config = {
       commonjs2: 'react',
       amd: 'react',
       root: 'React'
-    },
-    'react-native': {
-      commonjs: 'react-native',
-      commonjs2: 'react-native',
-      amd: 'react-native',
-      root: 'ReactNative'
     }
   },
   plugins: [
