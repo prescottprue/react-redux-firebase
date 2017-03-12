@@ -5,9 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getFirebase = undefined;
 
-var _firebase = require('firebase');
+var _app = require('firebase/app');
 
-var firebase = _interopRequireWildcard(_firebase);
+var firebase = _interopRequireWildcard(_app);
+
+require('firebase/auth');
+
+require('firebase/database');
+
+require('firebase/storage');
 
 var _constants = require('./constants');
 
@@ -17,11 +23,7 @@ var _actions = require('./actions');
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var _Promise = typeof Promise === 'undefined' ? require('es6-promise').Promise : Promise;
-// import * as firebase from 'firebase/app'
-// import 'firebase/auth'
-// import 'firebase/database'
-// import 'firebase/storage'
+var _Promise = typeof Promise === 'undefined' ? require('es6-promise').Promise : Promise; // import * as firebase from 'firebase'
 
 
 var firebaseInstance = void 0;
