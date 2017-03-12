@@ -1,14 +1,14 @@
 /*! react-redux-firebase.js v1.3.3 */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react"));
+		module.exports = factory(require("react"), require("react-native"));
 	else if(typeof define === 'function' && define.amd)
-		define(["react"], factory);
+		define(["react", "react-native"], factory);
 	else if(typeof exports === 'object')
-		exports["ReactReduxFirebase"] = factory(require("react"));
+		exports["ReactReduxFirebase"] = factory(require("react"), require("react-native"));
 	else
-		root["ReactReduxFirebase"] = factory(root["React"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_246__) {
+		root["ReactReduxFirebase"] = factory(root["React"], root["ReactNative"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_246__, __WEBPACK_EXTERNAL_MODULE_247__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -1183,7 +1183,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function attemptVertx() {
 	  try {
 	    var r = require;
-	    var vertx = __webpack_require__(247);
+	    var vertx = __webpack_require__(248);
 	    vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	    return useVertxTimer();
 	  } catch (e) {
@@ -5849,6 +5849,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Promise = typeof Promise === 'undefined' ? __webpack_require__(21).Promise : Promise; // import * as firebase from 'firebase'
 
+
+	var AsyncStorage = __webpack_require__(247).AsyncStorage;
+	firebase.INTERNAL.extendNamespace({
+	  'INTERNAL': {
+	    'reactNative': {
+	      'AsyncStorage': AsyncStorage
+	    }
+	  }
+	});
 
 	var firebaseInstance = void 0;
 
@@ -17437,6 +17446,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 247 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_247__;
+
+/***/ },
+/* 248 */
 /***/ function(module, exports) {
 
 	/* (ignored) */

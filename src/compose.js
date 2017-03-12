@@ -3,6 +3,14 @@ import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
 import 'firebase/storage'
+var AsyncStorage = require('react-native').AsyncStorage;
+firebase.INTERNAL.extendNamespace({
+ 'INTERNAL': {
+   'reactNative': {
+     'AsyncStorage': AsyncStorage
+   }
+ }
+});
 import { defaultConfig } from './constants'
 import { validateConfig } from './utils'
 import { authActions, queryActions, storageActions } from './actions'

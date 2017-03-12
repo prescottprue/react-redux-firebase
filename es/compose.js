@@ -26,6 +26,15 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var _Promise = typeof Promise === 'undefined' ? require('es6-promise').Promise : Promise; // import * as firebase from 'firebase'
 
 
+var AsyncStorage = require('react-native').AsyncStorage;
+firebase.INTERNAL.extendNamespace({
+  'INTERNAL': {
+    'reactNative': {
+      'AsyncStorage': AsyncStorage
+    }
+  }
+});
+
 var firebaseInstance = void 0;
 
 /**
