@@ -33,3 +33,9 @@ deploy:
   api_key: $NPM_TOKEN
   on:
     branch: master
+
+notifications:
+  email:
+    # Only send notifications when travis status changes
+    on_failure: change
+    on_success: change
