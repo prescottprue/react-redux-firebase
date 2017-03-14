@@ -92,7 +92,6 @@ export default class Uploader extends Component {
     const { firebase: { storage } } = this.props;
 
     const addTestFile = () => {
-      const {newTodo} = this.refs
       const storageRef = storage().ref()
       const fileRef = storageRef.child('test.txt')
       fileRef.putString('Some File Contents')
