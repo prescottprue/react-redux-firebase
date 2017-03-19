@@ -93,16 +93,15 @@ View the [config section](/config.html) for full list of configuration options.
 ```javascript
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { firebaseConnect, helpers } from 'react-redux-firebase'
-const { isLoaded, isEmpty, dataToJS } = helpers
+import { firebaseConnect, isLoaded, isEmpty, dataToJS } from 'react-redux-firebase'
 
 @firebaseConnect([
-  '/todos' // corresponds to 'todos' root on firebase
+  'todos' // corresponds to 'todos' root on firebase
 ])
 @connect(
   ({ firebase }) => ({
     // todos prop set to firebase data in redux under '/todos'
-    todos: dataToJS(firebase, '/todos'),
+    todos: dataToJS(firebase, 'todos'),
   })
 )
 export default class Todos extends Component {
@@ -110,7 +109,7 @@ export default class Todos extends Component {
     todos: PropTypes.object,
     firebase: PropTypes.object
   }
-  
+
   handleAdd = () => {
     const {newTodo} = this.refs
     const { firebase } = this.props
@@ -118,10 +117,10 @@ export default class Todos extends Component {
     firebase.push('/todos', { text: newTodo.value, done: false })
     newTodo.value = ''
   }
-    
+
   render() {
     const { todos } = this.props;
-    
+
     // Build Todos list if todos exist and are loaded
     const todosList = !isLoaded(todos)
       ? 'Loading'
@@ -158,7 +157,7 @@ const wrappedTodos = firebaseConnect([
 
 export default connect(
   ({firebase}) => ({
-    todos: dataToJS(firebase, '/todos'),
+    todos: dataToJS(firebase, 'todos'),
   })
 )(wrappedTodos)
 

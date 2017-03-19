@@ -1,0 +1,49 @@
+@import 'base';
+
+.container {
+  @extend .flex-column-center;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+  font-weight: 400;
+  padding-top: 1.5rem;
+}
+.panel {
+  @extend .flex-column-center;
+  justify-content: center;
+  padding: 1.25rem;
+  width: 35%;
+  @include mobile {
+    width: 75%;
+  }
+  min-width: 250px;
+  min-height: 270px;
+}
+.or {
+  margin-top: 1rem;
+  margin-bottom: .5rem;
+  font-size: 1.3rem;
+}
+.signup {
+  @extend .flex-column-center;
+  justify-content: center;
+  margin-top: 2rem;
+  &-link {
+    // color: $linkBlue;
+    font-size: 1.2rem;
+    &:hover {
+      // color: $materialBlue;
+    }
+  }
+  &-label {
+    font-size: 1.3rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: $mediumGray;
+    font-weight: 400;
+  }
+}
+.providers {
+  margin-top: 1rem;
+}

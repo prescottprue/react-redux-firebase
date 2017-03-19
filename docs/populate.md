@@ -10,6 +10,8 @@ List of todo items where todo item can contain an owner parameter which is a use
 
 Populate allows you to replace the owner parameter with another value on Firebase under that key. That value you can be a string \(number and boolean treated as string\), or an object
 
+Initial data from populate is placed into redux in a normalized pattern [following defined redux practice of normalizing](http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html). `populatedDataToJS` helper used in the `connect` function then builds populated data out of normalized data within redux (**NOTE:** This does not apply if you are using `v1.1.5` or earlier).
+
 ##### Example Data
 ```javascript
 todos: {
@@ -39,10 +41,18 @@ When trying to replace the owner parameter with a string such as a displayName f
 
 ##### Example Query
 ```javascript
+const populates = [
+  { child: 'owner', root: 'displayNames' }
+]
 @firebaseConnect([
-  { path: '/todos', populates: [{ child: 'owner', root: 'displayNames' }] }
+  { path: '/todos', populates }
   // '/todos#populate=owner:displayNames', // equivalent string notation
- ])
+])
+@connect(
+  ({ firebase }) => ({
+    todos: populatedDataToJS(firebase, 'todos', populates),
+  })
+)
 ```
 
 ##### Result
@@ -58,10 +68,18 @@ Population can also be used to populate a parameter with an object. An example o
 
 ##### Example Query
 ```javascript
+const populates = [
+  { child: 'owner', root: 'users' }
+]
 @firebaseConnect([
-  { path: '/todos', populates: [{ child: 'owner', root: 'users' }] }
+  { path: '/todos', populates }
   // '/todos#populate=owner:users' // equivalent string notation
- ])
+])
+@connect(
+  ({ firebase }) => ({
+    todos: populatedDataToJS(firebase, 'todos', populates),
+  })
+)
 ```
 
 ##### Example Result
@@ -80,17 +98,23 @@ ASDF123: {
 
 There is also the option to load a parameter from within a population object. An example of this could be populating the owner parameter with the displayName property of the user with a matching ID:
 
-##### Example Query
+##### Example
 ```javascript
+const populates = [
+  { child: 'owner', root: 'users', childParam: 'email' }
+]
 @firebaseConnect([
  {
    path: '/todos',
-   populates: [
-     { child: 'owner', root: 'users', childParam: 'email' }
-   ]
+   populates
  }
  // '/todos#populate=owner:users:email' // equivalent string notation
 ])
+@connect(
+  ({ firebase }) => ({
+    todos: populatedDataToJS(firebase, 'todos', populates),
+  })
+)
 ```
 
 ##### Example Result
@@ -103,8 +127,6 @@ ASDF123: {
 ```
 
 ## Profile Parameters
-**NOTE:** This functionality is still under construction. Please confirm you have the most recent version.
-
 To Populate parameters within profile/user object, include the `profileParamsToPopulate` parameter when [calling `reactReduxFirebase` in your compose function](/api/compose).
 
 ### Parameter
@@ -143,8 +165,7 @@ const config = {
 }
 ```
 
-### List of Items (Coming Soon)
-**Note:** This feature does not currently work, but is being added to `v1.2.0`
+### List of Items
 
 ##### Example Config
 
@@ -182,6 +203,12 @@ const config = {
           owner: "Iq5b0qK2NtgggT6U3bU6iZRGyma2"
         }
       }
+    }
+  },
+  todos: {
+    ASDF123: {
+      text: 'Some Todo Item',
+      owner: "Iq5b0qK2NtgggT6U3bU6iZRGyma2"
     }
   }
 }

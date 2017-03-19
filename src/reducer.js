@@ -1,9 +1,10 @@
 import { fromJS } from 'immutable'
 import { combineReducers } from 'redux'
 import { dropRight } from 'lodash'
-import { actionTypes } from './constants'
+import { actionTypes, paramSplitChar } from './constants'
 
 const {
+  START,
   SET,
   SET_PROFILE,
   START,
@@ -11,6 +12,7 @@ const {
   LOGOUT,
   LOGIN_ERROR,
   NO_VALUE,
+  UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
   UNAUTHORIZED_ERROR
@@ -21,12 +23,15 @@ const emptyState = {
   authError: undefined,
   profile: undefined,
   isInitializing: undefined,
-  data: {}
+  data: {},
+  timestamp: {},
+  requesting: {},
+  requested: {}
 }
 
 const initialState = fromJS(emptyState)
 
-const pathToArr = path => path.split(/\//).filter(p => !!p)
+const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
 
 const requestingReducer = (state, action) => {
   const { path, requesting } = action
@@ -59,7 +64,8 @@ const requestingReducer = (state, action) => {
 const dataReducer = (state, action) => {
   switch (action.type) {
     case SET:
-      const { data } = action
+
+      const { data, ordered } = action
       pathArr = pathToArr(path)
       const dataPath = ['data', ...pathArr]
       console.log('set called ', { pathArr, data, getFromPath: state.getIn(dataPath) })

@@ -4,7 +4,8 @@ examples/**/node_modules
 dist
 coverage
 _book
-
+es
+lib
 # Logs
 *.log
 

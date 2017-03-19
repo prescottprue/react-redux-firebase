@@ -1,30 +1,18 @@
 import React, { Component, PropTypes } from 'react'
-
-// Components
-import Navbar from '../Navbar/Navbar'
+import { browserHistory, Router } from 'react-router'
+import { Provider } from 'react-redux'
 
 // Themeing/Styling
 import Theme from '../../theme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import './App.css'
 
 // Tap Plugin
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
-export default class Main extends Component {
-
+export default class AppContainer extends Component {
   static childContextTypes = {
-    muiTheme: PropTypes.object,
-  }
-
-  static contextTypes = {
-    store: PropTypes.object.isRequired,
-    router: PropTypes.object.isRequired
-  }
-
-  static propTypes = {
-    children: PropTypes.object
+    muiTheme: PropTypes.object
   }
 
   getChildContext = () => (
@@ -33,12 +21,21 @@ export default class Main extends Component {
     }
   )
 
+  static propTypes = {
+    routes: PropTypes.object.isRequired,
+    store: PropTypes.object.isRequired
+  }
+
   render () {
+    const { routes, store } = this.props
     return (
-      <div className='App'>
-        <Navbar router={this.context.router}/>
-        {this.props.children}
-      </div>
+      <Provider store={store}>
+        <div style={{ height: '100%' }}>
+          <Router history={browserHistory}>
+            {routes}
+          </Router>
+        </div>
+      </Provider>
     )
   }
 }

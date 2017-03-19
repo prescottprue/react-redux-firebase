@@ -1,35 +1,35 @@
+import { forEach, size } from 'lodash'
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from '../utils/populate'
 import {
   applyParamsToQuery,
   getWatcherCount,
   setWatcher,
-  unsetWatcher
+  unsetWatcher,
+  getQueryIdFromPath
 } from '../utils/query'
 
-const { SET, NO_VALUE, ERROR } = actionTypes
+const { START, SET, NO_VALUE, UNAUTHORIZED_ERROR, ERROR } = actionTypes
 
 /**
  * @description Watch a specific event type
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
- * @param {String} event - Type of event to watch for (defaults to value)
- * @param {String} path - Path to watch with watcher
- * @param {String} dest
- * @param {Boolean} onlyLastEvent - Whether or not to listen to only the last event
+ * @param {Object} options - Event options object
+ * @param {String} options.event - Type of event to watch for (defaults to value)
+ * @param {String} options.path - Path to watch with watcher
+ * @param {String} options.storeAs - Location within redux to store value
  */
-export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery }, dest, onlyLastEvent = false) => {
-  const watchPath = !dest ? path : `${path}@${dest}`
+export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery, storeAs }) => {
+  const watchPath = !storeAs ? path : `${path}@${storeAs}`
   const counter = getWatcherCount(firebase, type, watchPath, queryId)
+  queryId = queryId || getQueryIdFromPath(path)
 
   if (counter > 0) {
-    if (onlyLastEvent) {
-      // listen only to last query on same path
-      if (queryId) {
-        unsetWatcher(firebase, type, path, queryId)
-      } else {
-        return
-      }
+    if (queryId) {
+      unsetWatcher(firebase, dispatch, type, path, queryId)
+    } else {
+      return
     }
   }
 
@@ -45,11 +45,19 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
         if (snapshot.val() === null) {
           dispatch({
             type: NO_VALUE,
-            path
+            timestamp: Date.now(),
+            requesting: false,
+            requested: true,
+            path: storeAs || path
           })
         }
         return snapshot
       }, (err) => {
+        // TODO: Handle catching unauthorized error
+        // dispatch({
+        //   type: UNAUTHORIZED_ERROR,
+        //   payload: err
+        // })
         dispatch({
           type: ERROR,
           payload: err
@@ -64,6 +72,14 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
   }
 
   const runQuery = (q, e, p, params) => {
+    dispatch({
+      type: START,
+      timestamp: Date.now(),
+      requesting: true,
+      requested: false,
+      path: storeAs || path
+    })
+
     // Handle once queries
     if (e === 'once') {
       return q.once('value')
@@ -71,14 +87,14 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           if (snapshot.val() !== null) {
             dispatch({
               type: SET,
-              path,
+              path: storeAs || path,
               data: snapshot.val()
             })
           }
           return snapshot
         }, (err) => {
           dispatch({
-            type: ERROR,
+            type: UNAUTHORIZED_ERROR,
             payload: err
           })
         })
@@ -88,38 +104,58 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
     /* istanbul ignore next: is run by tests but doesn't show in coverage */
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
-      const resultPath = dest || (e === 'value') ? p : `${p}/${snapshot.key}`
-
-      if (dest && e !== 'child_removed') {
-        data = {
-          _id: snapshot.key,
-          val: snapshot.val()
-        }
-      }
+      const resultPath = storeAs || (e === 'value') ? p : `${p}/${snapshot.key}`
 
       // Dispatch standard event if no populates exists
       if (!populates) {
+        const ordered = []
+        // preserve order of children under ordered
+        if (e === 'child_added') {
+          ordered.push({ key: snapshot.key, ...snapshot.val() })
+        } else {
+          snapshot.forEach((child) => {
+            ordered.push({ key: child.key, ...child.val() })
+          })
+        }
+
         return dispatch({
           type: SET,
-          path: resultPath,
+          path: storeAs || resultPath,
+          ordered: size(ordered) ? ordered : undefined,
           data,
-          snapshot
+          timestamp: Date.now(),
+          requesting: false,
+          requested: true
         })
       }
 
       // TODO: Allow setting of unpopulated data before starting population through config
-
+      // TODO: Set ordered for populate queries
+      // TODO: Allow config to toggle Combining into one SET action
       promisesForPopulate(firebase, data, populates)
-        .then((list) => {
+        .then((results) => {
           dispatch({
             type: SET,
             path: resultPath,
-            data: list
+            data,
+            timestamp: Date.now(),
+            requesting: false,
+            requested: true
+          })
+          forEach(results, (result, path) => {
+            dispatch({
+              type: SET,
+              path,
+              data: result,
+              timestamp: Date.now(),
+              requesting: false,
+              requested: true
+            })
           })
         })
     }, (err) => {
       dispatch({
-        type: ERROR,
+        type: UNAUTHORIZED_ERROR,
         payload: err
       })
     })
@@ -134,8 +170,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
  * @param {String} event - Event for which to remove the watcher
  * @param {String} path - Path of watcher to remove
  */
-export const unWatchEvent = (firebase, event, path, queryId = undefined) =>
-    unsetWatcher(firebase, event, path, queryId)
+export const unWatchEvent = (firebase, dispatch, event, path, queryId = undefined) =>
+    unsetWatcher(firebase, dispatch, event, path, queryId)
 
 /**
  * @description Add watchers to a list of events
@@ -153,9 +189,9 @@ export const watchEvents = (firebase, dispatch, events) =>
  * @param {Object} firebase - Internal firebase object
  * @param {Array} events - List of events for which to remove watchers
  */
-export const unWatchEvents = (firebase, events) =>
+export const unWatchEvents = (firebase, dispatch, events) =>
     events.forEach(event =>
-      unWatchEvent(firebase, event.type, event.path)
+      unWatchEvent(firebase, dispatch, event.type, event.path)
     )
 
 export default { watchEvents, unWatchEvents }
