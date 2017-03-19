@@ -127,7 +127,7 @@ export default (fbConfig, otherConfig) => next =>
       queryActions.watchEvent(firebase, dispatch, { type, path, storeAs })
 
     const unWatchEvent = (eventName, eventPath, queryId = undefined) =>
-      queryActions.unWatchEvent(firebase, eventName, eventPath, queryId)
+      queryActions.unWatchEvent(firebase, dispatch, eventName, eventPath, queryId)
 
     const login = credentials =>
       authActions.login(dispatch, firebase, credentials)
