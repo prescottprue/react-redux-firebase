@@ -1,12 +1,12 @@
 # Contributing Guidelines
 
-Some basic conventions for contributing to this project.
+Thanks for taking the time to look into contributing! Below are some basic conventions for contributing to this project.
 
 ### General
 
-Please make sure that there aren't existing pull requests attempting to address the issue mentioned. Likewise, please check for issues related to update, as someone else may be working on the issue in a branch or fork.
+Please make sure that there aren't existing pull requests or [plans on the roadmap](http://react-redux-firebase.com/docs/roadmap.html) attempting to address the issue mentioned. Likewise, please check for issues related to update, as someone else may be working on the issue in a branch or fork.
 
-* Non-trivial changes should be discussed in an issue first
+* Non-trivial changes should be discussed in an issue or on [gitter](https://gitter.im/redux-firebase/Lobby) first
 * Develop in a topic branch, not master
 * Squash your commits
 
