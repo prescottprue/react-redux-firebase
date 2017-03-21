@@ -40,6 +40,9 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
 * Option for populated items updating when changed ([#69](https://github.com/prescottprue/react-redux-firebase/issues/69))
 * Support for Boilerplates ([#53](https://github.com/prescottprue/react-redux-firebase/issues/53))
 
+#### Enhancements
+* Fix for `unWatchEvent` helper dispatch mapping (#82)
+
 ## Future Minor Versions (`v1.*.*`)
 
 **Note:** Subject to change
