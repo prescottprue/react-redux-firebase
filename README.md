@@ -363,8 +363,11 @@ The [examples folder](/examples) contains full applications that can be copied/a
 
   * [Recipes Section](http://react-redux-firebase.com/docs/recipes/) of [the docs](http://react-redux-firebase.com/docs/recipes/)
   * [examples folder](/examples) contains [complete example apps](/examples/complete) as well as [useful snippets](/examples/snippets)
+4. How does `connect` relate to `firebaseConnect`?
 
-4. How do I help?
+  ![data flow](/docs/static/dataFlow.png)
+
+5. How do I help?
 
   * Join the conversion on [gitter][gitter-url]
   * Post Issues
