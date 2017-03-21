@@ -1,99 +1,85 @@
-import { fromJS } from 'immutable'
 import { combineReducers } from 'redux'
-import { dropRight } from 'lodash'
-import { actionTypes, paramSplitChar } from './constants'
+import { set } from 'lodash'
+import { actionTypes } from './constants'
 
 const {
   START,
   SET,
+  SET_ORDERED,
   SET_PROFILE,
-  START,
   LOGIN,
   LOGOUT,
   LOGIN_ERROR,
   NO_VALUE,
-  UNSET_LISTENER,
+  // UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
   UNAUTHORIZED_ERROR
 } = actionTypes
 
-const emptyState = {
-  auth: undefined,
-  authError: undefined,
-  profile: undefined,
-  isInitializing: undefined,
-  data: {},
-  timestamp: {},
-  requesting: {},
-  requested: {}
-}
-
-const initialState = fromJS(emptyState)
-
 const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
 
-const requestingReducer = (state, action) => {
+/**
+ * Reducer for requesting state. Changed by `START` and `SET` actions.
+ * @param  {Object} state - Current requesting redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @return {Object} Profile state after reduction
+ */
+const requestingReducer = (state = {}, action) => {
   const { path, requesting } = action
-  let pathArr
-
   switch (action.type) {
     case START:
-      pathArr = pathToArr(path)
-      try {
-        return (requesting !== undefined)
-            ? state.setIn([pathArr.join('/')], requesting)
-            : state.deleteIn([pathArr.join('/')])
-      } catch (err) {
-        console.error('error in start:', { name: err.name, message: err.message, pathArr, data });
-      }
-      break
     case SET:
-      return { [pathToArr(path).join('/')]: requesting, ...state }
-    case NO_VALUE:
-      pathArr = pathToArr(path)
-      return (requesting !== undefined)
-        ? state.setIn([pathArr.join('/')], fromJS(requesting))
-        : state.deleteIn([pathArr.join('/')])
-
+      return {
+        ...state,
+        [pathToArr(path).join('/')]: requesting
+      }
+    // TODO: Handle NO_VALUE case
+    // case NO_VALUE:
     default:
       return state
   }
 }
 
-const dataReducer = (state, action) => {
+/**
+ * Reducer for data state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR`
+ * actions.
+ * @param  {Object} state - Current data redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @return {Object} Profile state after reduction
+ */
+const dataReducer = (state = {}, action) => {
+  const { path, data, ordered } = action
+  const pathStr = path.replace('/', '.')
   switch (action.type) {
     case SET:
-
-      const { data, ordered } = action
-      pathArr = pathToArr(path)
-      const dataPath = ['data', ...pathArr]
-      console.log('set called ', { pathArr, data, getFromPath: state.getIn(dataPath) })
-      // // Handle invalid keyPath error caused by deep setting to a null value
-      if (data !== undefined && state.getIn(dataPath) === null) {
-        console.log('shit is nulllllll', state.getIn(dataPath))
-        retVal = state.deleteIn(dataPath)
-      } else {
-        retVal = state // start with state
+      return {
+        ...state,
+        ...set({}, pathStr, data)
       }
-
-      try {
-        return (data !== undefined)
-          ? retVal.setIn(dataPath, fromJS(data))
-          : retVal.deleteIn(dataPath)
-      } catch (err) {
-        console.error('error', { name: err.name, message: err.message, pathArr, data });
+    case SET_ORDERED:
+      return {
+        ...state,
+        ...set({}, pathStr, ordered)
       }
-
     case NO_VALUE:
-      pathArr = pathToArr(path)
-      return state.setIn(pathArr, fromJS({}))
+      return {
+        ...state,
+        ...set({}, pathStr, {})
+      }
     default:
       return state
   }
-
 }
-const authReducer = (state, action) => {
+
+/**
+ * Reducer for auth state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR`
+ * actions.
+ * @param  {Object} state - Current auth redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @return {Object} Profile state after reduction
+ */
+const authReducer = (state = undefined, action) => {
   switch (action.type) {
     case LOGIN:
       return action.auth
@@ -105,10 +91,20 @@ const authReducer = (state, action) => {
   }
 }
 
-const profileReducer = (state, action) => {
+/**
+ * Reducer for profile state. Changed by `SET_PROFILE`, `LOGOUT`, and
+ * `LOGIN_ERROR` actions.
+ * @param  {Object} state - Current profile redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @return {Object} Profile state after reduction
+ */
+const profileReducer = (state = undefined, action) => {
   switch (action.type) {
     case SET_PROFILE:
-      return action.profile
+      return {
+        ...state,
+        ...action.profile
+      }
     case LOGOUT:
     case LOGIN_ERROR:
       return null
@@ -117,6 +113,13 @@ const profileReducer = (state, action) => {
   }
 }
 
+/**
+ * Reducer for isInitializing state. Changed by `AUTHENTICATION_INIT_STARTED`
+ * and `AUTHENTICATION_INIT_FINISHED` actions.
+ * @param  {Object} state - Current isInitializing redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @return {Object} Profile state after reduction
+ */
 const isInitializingReducer = (state = false, action) => {
   switch (action.type) {
     case AUTHENTICATION_INIT_STARTED:
@@ -128,6 +131,13 @@ const isInitializingReducer = (state = false, action) => {
   }
 }
 
+/**
+ * Reducer for authError state. Changed by `UNAUTHORIZED_ERROR`
+ * and `LOGOUT` actions.
+ * @param  {Object} state - Current authError redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @return {Object} Profile state after reduction
+ */
 const authErrorReducer = (state, action) => {
   switch (action.type) {
     case UNAUTHORIZED_ERROR:
@@ -159,111 +169,3 @@ export default combineReducers({
   isInitializing: isInitializingReducer,
   authError: authErrorReducer
 })
-
-// export default (state = initialState, action = {}) => {
-//   const { path } = action
-//   let pathArr
-//   let retVal
-//
-//   switch (action.type) {
-//
-//     case START:
-//       pathArr = pathToArr(path)
-//
-//       try {
-//         retVal = (requesting !== undefined)
-//             ? state.setIn(['requesting', pathArr.join('/')], fromJS(requesting))
-//             : state.deleteIn(['requesting', pathArr.join('/')])
-//
-//         retVal = (requested !== undefined)
-//             ? retVal.setIn(['requested', pathArr.join('/')], fromJS(requested))
-//             : retVal.deleteIn(['requested', pathArr.join('/')])
-//       } catch (err) {
-//         console.error('error in start:', { name: err.name, message: err.message, pathArr, data });
-//       }
-//
-//       return retVal
-//
-//     case SET:
-//       const { data } = action
-//       pathArr = pathToArr(path)
-//       rootPathArr = pathToArr(rootPath)
-//       const dataPath = ['data', ...pathArr]
-//       console.log('set called ', { pathArr, data, getFromPath: state.getIn(dataPath) })
-//
-//       // // Handle invalid keyPath error caused by deep setting to a null value
-//       if (data !== undefined && state.getIn(dataPath) === null) {
-//         console.log('shit is nulllllll', state.getIn(dataPath))
-//         retVal = state.deleteIn(dataPath)
-//       } else {
-//         retVal = state // start with state
-//       }
-//
-//       try {
-//         retVal = (data !== undefined)
-//           ? retVal.setIn(dataPath, fromJS(data))
-//           : retVal.deleteIn(dataPath)
-//       } catch (err) {
-//         console.error('error', { name: err.name, message: err.message, pathArr, data });
-//       }
-//
-//       return retVal
-//
-//     case NO_VALUE:
-//       pathArr = pathToArr(path)
-//       retVal = state.setIn(['data', ...pathArr], fromJS({}))
-//
-//       retVal = (timestamp !== undefined)
-//         ? retVal.setIn(['timestamp', ...pathArr], fromJS(timestamp))
-//         : retVal.deleteIn(['timestamp', ...pathArr])
-//
-//       retVal = (requesting !== undefined)
-//         ? retVal.setIn(['requesting', ...pathArr], fromJS(requesting))
-//         : retVal.deleteIn(['requesting', ...pathArr])
-//
-//       retVal = (requested !== undefined)
-//         ? retVal.setIn(['requested', ...pathArr], fromJS(requested))
-//         : retVal.deleteIn(['requested', ...pathArr])
-//
-//       return retVal
-//
-//     case SET_PROFILE:
-//       const { profile } = action
-//       return (profile !== undefined)
-//         ? state.setIn(['profile'], fromJS(profile))
-//         : state.deleteIn(['profile'])
-//
-//     case LOGOUT:
-//       return fromJS({
-//         auth: null,
-//         authError: null,
-//         profile: null,
-//         isLoading: false,
-//         data: {}
-//       })
-//
-//     case LOGIN:
-//       return state.setIn(['auth'], fromJS(action.auth))
-//                   .setIn(['authError'], null)
-//
-//     case LOGIN_ERROR:
-//       return state
-//               .setIn(['authError'], action.authError)
-//               .setIn(['auth'], null)
-//               .setIn(['profile'], null)
-//
-//     case AUTHENTICATION_INIT_STARTED:
-//       return initialState.setIn(['isInitializing'], true)
-//     // return state.setIn(['isInitializing'], true) // throws state.setIn not a function error
-//
-//     case AUTHENTICATION_INIT_FINISHED:
-//       return state.setIn(['isInitializing'], false)
-//
-//     case UNAUTHORIZED_ERROR:
-//       return state.setIn(['authError'], action.authError)
-//
-//     default:
-//       return state
-//
-//   }
-// }

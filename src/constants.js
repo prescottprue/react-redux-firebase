@@ -13,6 +13,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @description Object containing all action types
  * @property {String} START - `@@reactReduxFirebase/START`
  * @property {String} SET - `@@reactReduxFirebase/SET`
+ * @property {String} SET_ORDERED - `@@reactReduxFirebase/SET_ORDERED`
  * @property {String} SET_PROFILE - `@@reactReduxFirebase/SET_PROFILE`
  * @property {String} LOGIN - `@@reactReduxFirebase/LOGIN`
  * @property {String} LOGOUT - `@@reactReduxFirebase/LOGOUT`
