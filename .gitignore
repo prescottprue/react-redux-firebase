@@ -5,5 +5,5 @@ coverage
 _book
 # Logs
 *.log
-
+dist
 .DS_Store
