@@ -1,4 +1,8 @@
-import Firebase from 'firebase'
+// import * as firebase from 'firebase'
+import * as firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
+import 'firebase/storage'
 import { defaultConfig } from './constants'
 import { validateConfig } from './utils'
 import { authActions, queryActions, storageActions } from './actions'
@@ -69,17 +73,27 @@ export default (fbConfig, otherConfig) => next =>
 
     // Initialize Firebase
     try {
-      Firebase.initializeApp(fbConfig)
+      firebase.initializeApp(fbConfig)
     } catch (err) {} // silence reinitialize warning (hot-reloading)
 
     // Enable Logging based on config
     if (configs.enableLogging) {
-      Firebase.database.enableLogging(configs.enableLogging)
+      firebase.database.enableLogging(configs.enableLogging)
+    }
+    if (configs.rn) {
+      var AsyncStorage = configs.rn.AsyncStorage
+      firebase.INTERNAL.extendNamespace({
+        'INTERNAL': {
+          'reactNative': {
+            'AsyncStorage': AsyncStorage
+          }
+        }
+      })
     }
 
-    const rootRef = Firebase.database().ref()
+    const rootRef = firebase.database().ref()
 
-    const firebase = Object.defineProperty(Firebase, '_', {
+    const instance = Object.defineProperty(firebase, '_', {
       value: {
         watchers: {},
         config: configs,
@@ -115,40 +129,40 @@ export default (fbConfig, otherConfig) => next =>
         })
 
     const uploadFile = (path, file, dbPath) =>
-      storageActions.uploadFile(dispatch, firebase, { path, file, dbPath })
+      storageActions.uploadFile(dispatch, instance, { path, file, dbPath })
 
     const uploadFiles = (path, files, dbPath) =>
-      storageActions.uploadFiles(dispatch, firebase, { path, files, dbPath })
+      storageActions.uploadFiles(dispatch, instance, { path, files, dbPath })
 
     const deleteFile = (path, dbPath) =>
-      storageActions.deleteFile(dispatch, firebase, { path, dbPath })
+      storageActions.deleteFile(dispatch, instance, { path, dbPath })
 
     const watchEvent = (type, path, storeAs) =>
-      queryActions.watchEvent(firebase, dispatch, { type, path, storeAs })
+      queryActions.watchEvent(instance, dispatch, { type, path, storeAs })
 
     const unWatchEvent = (eventName, eventPath, queryId = undefined) =>
-      queryActions.unWatchEvent(firebase, dispatch, eventName, eventPath, queryId)
+      queryActions.unWatchEvent(instance, dispatch, eventName, eventPath, queryId)
 
     const login = credentials =>
-      authActions.login(dispatch, firebase, credentials)
+      authActions.login(dispatch, instance, credentials)
 
     const logout = () =>
-      authActions.logout(dispatch, firebase)
+      authActions.logout(dispatch, instance)
 
     const createUser = (credentials, profile) =>
-      authActions.createUser(dispatch, firebase, credentials, profile)
+      authActions.createUser(dispatch, instance, credentials, profile)
 
     const resetPassword = (credentials) =>
-      authActions.resetPassword(dispatch, firebase, credentials)
+      authActions.resetPassword(dispatch, instance, credentials)
 
     const confirmPasswordReset = (code, password) =>
-      authActions.confirmPasswordReset(dispatch, firebase, code, password)
+      authActions.confirmPasswordReset(dispatch, instance, code, password)
 
     const verifyPasswordResetCode = (code) =>
-      authActions.verifyPasswordResetCode(dispatch, firebase, code)
+      authActions.verifyPasswordResetCode(dispatch, instance, code)
 
-    firebase.helpers = {
-      ref: path => Firebase.database().ref(path),
+    instance.helpers = {
+      ref: path => firebase.database().ref(path),
       set,
       uniqueSet,
       push,
@@ -165,13 +179,13 @@ export default (fbConfig, otherConfig) => next =>
       verifyPasswordResetCode,
       watchEvent,
       unWatchEvent,
-      storage: () => Firebase.storage()
+      storage: () => firebase.storage()
     }
 
-    authActions.init(dispatch, firebase)
+    authActions.init(dispatch, instance)
 
-    store.firebase = firebase
-    firebaseInstance = Object.assign({}, firebase, firebase.helpers)
+    store.firebase = instance
+    firebaseInstance = Object.assign({}, instance, instance.helpers)
 
     return store
   }
