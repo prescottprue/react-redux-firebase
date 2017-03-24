@@ -1,0 +1,23 @@
+{
+  "name": "react-redux-firebase-react-native-example",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "watch": "node ./scripts/watch-and-copy-src.js",
+    "packager": "sh node_modules/react-native/packager/packager.sh --root node_modules/react-native-google-signin",
+    "dev": "concurrently 'npm run watch' 'npm run packager'"
+  },
+  "dependencies": {
+    "react": "15.4.1",
+    "react-native": "0.42.0",
+    "react-native-google-signin": "0.9.0"
+  },
+  "devDependencies": {
+    "babel-preset-react-native": "1.9.1",
+    "concurrently": "^3.4.0",
+    "fs-extra": "^2.0.0",
+    "minimatch": "^3.0.3",
+    "node-watch": "^0.4.1",
+    "rimraf": "^2.6.1"
+  }
+}
