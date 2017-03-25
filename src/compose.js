@@ -1,8 +1,8 @@
-// import * as firebase from 'firebase'
-import * as firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/database'
-import 'firebase/storage'
+import * as firebase from 'firebase'
+// import * as firebase from 'firebase/app'
+// import 'firebase/auth'
+// import 'firebase/database'
+// import 'firebase/storage'
 import { defaultConfig } from './constants'
 import { validateConfig } from './utils'
 import { authActions, queryActions, storageActions } from './actions'
@@ -80,12 +80,14 @@ export default (fbConfig, otherConfig) => next =>
     if (configs.enableLogging) {
       firebase.database.enableLogging(configs.enableLogging)
     }
+
+    // Handle react-native
     if (configs.rn) {
-      var AsyncStorage = configs.rn.AsyncStorage
+      const { AsyncStorage } = configs.rn
       firebase.INTERNAL.extendNamespace({
-        'INTERNAL': {
-          'reactNative': {
-            'AsyncStorage': AsyncStorage
+        INTERNAL: {
+          reactNative: {
+            AsyncStorage
           }
         }
       })
