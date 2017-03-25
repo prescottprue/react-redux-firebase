@@ -5,7 +5,7 @@ import {
 const method = () => Promise.resolve()
 const failMethod = () => Promise.reject()
 const dispatch = () => {
-  console.log('dispatch called')
+  // console.log('dispatch called')
 }
 describe('Utils: Auth', () => {
   describe('wrapInDispatch', () => {
