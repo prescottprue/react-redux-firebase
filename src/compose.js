@@ -349,7 +349,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Auth}
      */
     firebase.helpers = {
-      ref: path => instance.database().ref(path),
+      ref: path => firebase.database().ref(path),
       set,
       uniqueSet,
       push,
