@@ -14,6 +14,7 @@
   * [Epics](/docs/recipes/epics.md)
   * [Routing](/docs/recipes/routing.md)
   * [Redux Form](/docs/recipes/redux-form.md)
+  * [React Native](/docs/recipes/react-native.md)
   * [Populate](/docs/recipes/populate.md)
 * [API Reference](/docs/api/README.md)
   * [constants](/docs/api/constants.md)

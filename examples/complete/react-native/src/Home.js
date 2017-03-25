@@ -14,8 +14,6 @@ const initialState = { firebase: { authError: null, auth: undefined }}
 const store = configureStore(initialState)
 
 const iosClientId = '499842460400-teaflfd8695oilltk5qkvl5688ebgq6b.apps.googleusercontent.com'; // get this from plist file
-const webClientId = '603421766430-60og8n04mebic8hi49u1mrcmcdmugnd5.apps.googleusercontent.com';
-
 
 const styles = StyleSheet.create({
   container: {
@@ -82,13 +80,12 @@ export default class SigninSampleApp extends Component {
       </View>
     );
   }
-
+  // based on google signin example
   async _setupGoogleSignin() {
     try {
       await GoogleSignin.hasPlayServices({ autoResolve: true });
       await GoogleSignin.configure({
         iosClientId,
-        webClientId,
         offlineAccess: false
       });
 
@@ -102,12 +99,15 @@ export default class SigninSampleApp extends Component {
   }
 
   _signIn() {
+    const { auth } = this.props.firebase
     return GoogleSignin.signIn()
       .then((user) => {
-        const creds = this.props.firebase.auth.GoogleAuthProvider.credential(null, user.accessToken)
-        return this.props.firebase.auth().signInWithCredential(creds)
+        const creds = auth.GoogleAuthProvider.credential(null, user.accessToken)
+        return auth()
+          .signInWithCredential(creds)
           .catch((err) => {
             console.error('error authing with firebase:', err)
+            return Promise.reject(err)
           })
       })
       .catch((err) => {

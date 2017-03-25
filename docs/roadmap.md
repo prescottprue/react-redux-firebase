@@ -51,6 +51,7 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
  *None Yet Planned*
 
 #### Features
+* Integration for [`react-native-google-signin`](https://github.com/devfd/react-native-google-signin) to simplify react-native authentication implementation
 * Nested populates [#85](https://github.com/prescottprue/react-redux-firebase/issues/85)
 
 ## Upcoming Major Version (`v2.0.0`)
@@ -68,6 +69,7 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
   * Improved rendering/update performance for `react` as described in [#84](https://github.com/prescottprue/react-redux-firebase/issues/84)
 
 #### Features
+* `react-native` index file referenced in `package.json` that makes it no longer necessary to pass `ReactNative` in config
 * `AuthRequired` decorator (or decorator factory) that forces auth to exist before rendering component
 * Possibility of delayed initialization as mentioned in [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
 

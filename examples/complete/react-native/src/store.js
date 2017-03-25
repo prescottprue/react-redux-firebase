@@ -2,7 +2,7 @@ import { createStore, compose } from 'redux'
 import rootReducer from './reducer'
 import { firebase as fbConfig } from './config'
 import { reactReduxFirebase } from 'react-redux-firebase'
-import ReactNative from 'react-native'
+import { AsyncStorage } from 'react-native'
 
 export default function configureStore (initialState, history) {
   const createStoreWithMiddleware = compose(
@@ -11,7 +11,7 @@ export default function configureStore (initialState, history) {
         userProfile: 'users',
         enableLogging: false,
         enableRedirectHandling: false,
-        rn: ReactNative,
+        rn: { AsyncStorage },
       }
     ),
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f

@@ -82,8 +82,9 @@ export default (fbConfig, otherConfig) => next =>
     }
 
     // Handle react-native
-    if (configs.rn) {
-      const { AsyncStorage } = configs.rn
+    if (configs.ReactNative) {
+      const { AsyncStorage } = configs.ReactNative
+      // Stub firebase's internal's with react-native (based on firebase's react-native index file)
       firebase.INTERNAL.extendNamespace({
         INTERNAL: {
           reactNative: {
