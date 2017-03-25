@@ -19,6 +19,8 @@
   * [constants](/docs/api/constants.md)
   * [firebaseConnect](/docs/api/connect.md)
   * [firebaseStateReducer](/docs/api/reducer.md)
+  * [props.firebase](/docs/api/props-firebase.md)
+  * [getFirebase](/docs/api/get-firebase.md)
   * [reactReduxFirebase](/docs/api/compose.md)
   * [helpers](/docs/api/helpers.md)
 * [Roadmap](/docs/roadmap.md)
