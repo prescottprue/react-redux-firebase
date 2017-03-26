@@ -10,8 +10,7 @@ export default function configureStore (initialState, history) {
       {
         userProfile: 'users',
         enableLogging: false,
-        enableRedirectHandling: false,
-        rn: { AsyncStorage },
+        ReactNative: { AsyncStorage },
       }
     ),
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f

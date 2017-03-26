@@ -83,6 +83,7 @@ export default (fbConfig, otherConfig) => next =>
 
     // Handle react-native
     if (configs.ReactNative) {
+      configs.enableRedirectHandling = false
       const { AsyncStorage } = configs.ReactNative
       // Stub firebase's internal's with react-native (based on firebase's react-native index file)
       firebase.INTERNAL.extendNamespace({
