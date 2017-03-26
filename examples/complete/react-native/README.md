@@ -11,6 +11,7 @@
 
 ## Dev Scripts
 * `npm run dev` - starts watcher and packager together concurrently
+* `npm run clean` - cleans up old build folder (good for troubleshooting)
 
 ## Application Structure
 

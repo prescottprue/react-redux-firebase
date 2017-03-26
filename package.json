@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "1.4.0",
+  "version": "1.4.0-beta",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "browser": "dist/react-redux-firebase.js",
   "main": "lib/index.js",
@@ -50,7 +50,7 @@
   ],
   "dependencies": {
     "es6-promise": "^4.0.5",
-    "firebase": "3.7.1",
+    "firebase": "^3.7.3",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.1.0",
     "lodash": "^4.17.4"
@@ -99,7 +99,7 @@
     "rimraf": "^2.5.4",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
-    "webpack": "^1.9.6",
+    "webpack": "^1.14.0",
     "xmlhttprequest": "^1.8.0"
   },
   "license": "MIT",

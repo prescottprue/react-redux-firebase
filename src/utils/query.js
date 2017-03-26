@@ -2,6 +2,14 @@ import { actionTypes } from '../constants'
 
 const { UNSET_LISTENER } = actionTypes
 
+const tryParseToNumber = (value) => {
+  const result = Number(value)
+  if (Number.isNaN(result)) {
+    return value
+  }
+  return result
+}
+
 /**
  * @private
  * @description Get path to watch
@@ -136,7 +144,7 @@ export const applyParamsToQuery = (queryParams, query) => {
           query = query.limitToLast(parseInt(param[1], 10))
           break
         case 'equalTo':
-          let equalToParam = !doNotParse ? parseInt(param[1], 10) || param[1] : param[1]
+          let equalToParam = !doNotParse ? tryParseToNumber(param[1]) : param[1]
           equalToParam = equalToParam === 'null' ? null : equalToParam
           equalToParam = equalToParam === 'false' ? false : equalToParam
           equalToParam = equalToParam === 'true' ? true : equalToParam
@@ -145,14 +153,14 @@ export const applyParamsToQuery = (queryParams, query) => {
             : query.equalTo(equalToParam)
           break
         case 'startAt':
-          let startAtParam = !doNotParse ? parseInt(param[1], 10) || param[1] : param[1]
+          let startAtParam = !doNotParse ? tryParseToNumber(param[1]) : param[1]
           startAtParam = startAtParam === 'null' ? null : startAtParam
           query = param.length === 3
             ? query.startAt(startAtParam, param[2])
             : query.startAt(startAtParam)
           break
         case 'endAt':
-          let endAtParam = !doNotParse ? parseInt(param[1], 10) || param[1] : param[1]
+          let endAtParam = !doNotParse ? tryParseToNumber(param[1]) : param[1]
           endAtParam = endAtParam === 'null' ? null : endAtParam
           query = param.length === 3
             ? query.endAt(endAtParam, param[2])

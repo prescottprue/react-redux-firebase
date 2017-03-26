@@ -2,6 +2,7 @@
   "name": "react-redux-firebase-react-native-example",
   "version": "0.0.1",
   "scripts": {
+    "clean": "rimraf ios/build",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "watch": "node ./scripts/watch-and-copy-src.js",
     "packager": "sh node_modules/react-native/packager/packager.sh --root node_modules/react-native-google-signin",
