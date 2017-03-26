@@ -1,7 +1,5 @@
 # react-redux-firebase
 
-[![Gitter][gitter-image]][gitter-url]
-
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][npm-downloads-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
@@ -9,6 +7,9 @@
 [![License][license-image]][license-url]
 [![Code Coverage][coverage-image]][coverage-url]
 [![Code Style][code-style-image]][code-style-url]
+
+[![Gitter][gitter-image]][gitter-url]
+[<img src="http://npm.packagequality.com/badge/react-redux-firebase.png" align="right"/>](http://packagequality.com/#?package=react-redux-firebase)
 
 > Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 
