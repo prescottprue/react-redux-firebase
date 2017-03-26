@@ -7,6 +7,8 @@ import {
   StyleSheet,
   Text,
   View,
+  Button,
+  ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
 import configureStore from './store'
@@ -22,6 +24,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
+  centering: {
+   alignItems: 'center',
+   justifyContent: 'center',
+   padding: 8,
+ },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
@@ -36,29 +43,47 @@ const styles = StyleSheet.create({
 
 @firebaseConnect()
 @connect(({ firebase }) => ({
-  auth: pathToJS(firebase, 'auth', undefined)
+  auth: pathToJS(firebase, 'auth')
 }))
 export default class SigninSampleApp extends Component {
+  state = {
+    isLoading: false
+  }
   componentDidMount() {
     this._setupGoogleSignin();
   }
 
   render() {
     const { auth } = this.props
-    if (!isLoaded(auth)) {
+    // auth always null?
+    // if (!isLoaded(auth)) {
+    //   return (
+    //     <View style={styles.container}>
+    //       <Text>Loading...</Text>
+    //     </View>
+    //   )
+    // }
+    if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <Text>Loading...</Text>
+          <ActivityIndicator
+            animating
+            style={[styles.centering, {height: 80}]}
+            size="large"
+          />
         </View>
       )
     }
     if (!this.props.auth) {
       return (
         <View style={styles.container}>
+          <Text style={{marginBottom: 20}}>
+            Welcome!
+          </Text>
           <GoogleSigninButton
-            style={{width: 212, height: 48}}
+            style={{width: 212, height: 48, backgroundColor: 'transparent'}}
             size={GoogleSigninButton.Size.Standard}
-            color={GoogleSigninButton.Color.Auto}
+            color={GoogleSigninButton.Color.Light}
             onPress={() => this._signIn()}
           />
         </View>
@@ -72,16 +97,15 @@ export default class SigninSampleApp extends Component {
         <Text>
           Your email is: {this.props.auth.email}</Text>
 
-        <TouchableOpacity onPress={() => {this._signOut(); }}>
-          <View style={{marginTop: 50}}>
-            <Text>Log out</Text>
-          </View>
-        </TouchableOpacity>
+        <View style={{marginTop: 50}}>
+          <Button title="Log Out" onPress={() => this._signOut()} />
+        </View>
       </View>
     );
   }
   // based on google signin example
   async _setupGoogleSignin() {
+    this.setState({ isLoading: true })
     try {
       await GoogleSignin.hasPlayServices({ autoResolve: true });
       await GoogleSignin.configure({
@@ -90,8 +114,11 @@ export default class SigninSampleApp extends Component {
       });
 
       const user = await GoogleSignin.currentUserAsync();
-      const creds = this.props.firebase.auth.GoogleAuthProvider.credential(null, user.accessToken)
-      await this.props.firebase.auth().signInWithCredential(creds)
+      if (user) {
+        const creds = this.props.firebase.auth.GoogleAuthProvider.credential(null, user.accessToken)
+        await this.props.firebase.auth().signInWithCredential(creds)
+      }
+      this.setState({ isLoading: false })
     }
     catch(err) {
       console.log("Google signin error", err.code, err.message);
@@ -100,13 +127,18 @@ export default class SigninSampleApp extends Component {
 
   _signIn() {
     const { auth } = this.props.firebase
+    this.setState({ isLoading: true })
     return GoogleSignin.signIn()
       .then((user) => {
         const creds = auth.GoogleAuthProvider.credential(null, user.accessToken)
         return auth()
           .signInWithCredential(creds)
+          .then(() => {
+            this.setState({ isLoading: false })
+          })
           .catch((err) => {
             console.error('error authing with firebase:', err)
+            this.setState({ isLoading: false })
             return Promise.reject(err)
           })
       })
