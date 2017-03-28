@@ -7,7 +7,11 @@ const reducer = sinon.spy()
 const generateCreateStore = (params) =>
   compose(composeFunc(
     params ? omit(fbConfig, params) : fbConfig,
-    { userProfile: 'users', enableLogging: false, enableRedirectHandling: false }
+    {
+      userProfile: 'users',
+      enableLogging: false,
+      enableRedirectHandling: false
+    }
   ))(createStore)
 const helpers = generateCreateStore()(reducer).firebase.helpers
 
@@ -37,13 +41,35 @@ describe('Compose', () => {
       helpers.set('test', {some: 'asdf'})
     )
 
+    describe('setWithMeta', () => {
+      it('accepts object', () =>
+        helpers.setWithMeta('test', {some: 'asdf'})
+      )
+      it('does not attach meta to string', () =>
+        // TODO: confirm that data set actually does not include meta
+        helpers.setWithMeta('test', 'asdd')
+      )
+    })
+
     describe('push', () =>
       helpers.push('test', {some: 'asdf'})
     )
 
+    describe('pushWithMeta', () => {
+      it('accepts object', () =>
+        helpers.pushWithMeta('test', {some: 'asdf'})
+      )
+    })
+
     describe('update', () =>
       helpers.update('test', {some: 'asdf'})
     )
+
+    describe('updateWithMeta', () => {
+      it('accepts object', () =>
+        helpers.updateWithMeta('test', {some: 'asdf'})
+      )
+    })
 
     describe('uniqueSet', () =>{
       // remove test root after test are complete

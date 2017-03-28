@@ -3,6 +3,7 @@ import * as firebase from 'firebase'
 // import 'firebase/auth'
 // import 'firebase/database'
 // import 'firebase/storage'
+import { isObject } from 'lodash'
 import { defaultConfig } from './constants'
 import { validateConfig } from './utils'
 import { authActions, queryActions, storageActions } from './actions'
@@ -109,6 +110,30 @@ export default (fbConfig, otherConfig) => next =>
     })
 
     /**
+     * @private
+     * @description Calls a method and attaches meta to value object
+     * @param {String} method - Method to run with meta attached
+     * @param {String} path - Path to location on Firebase which to set
+     * @param {Object|String|Boolean|Number} value - Value to write to Firebase
+     * @param {Function} onComplete - Function to run on complete
+     * @return {Promise} Containing reference snapshot
+     */
+    const withMeta = (method, path, value, onComplete) => {
+      if (isObject(value)) {
+        const prefix = method === 'update' ? 'updated' : 'created'
+        const dataWithMeta = {
+          ...value,
+          [`${prefix}At`]: firebase.database.ServerValue.TIMESTAMP
+        }
+        if (instance.auth().currentUser) {
+          dataWithMeta[`${prefix}By`] = instance.auth().currentUser.uid
+        }
+        return rootRef.child(path)[method](dataWithMeta, onComplete)
+      }
+      return rootRef.child(path)[method](value, onComplete)
+    }
+
+    /**
      * @description Sets data to Firebase.
      * @param {String} path - Path to location on Firebase which to set
      * @param {Object|String|Boolean|Number} value - Value to write to Firebase
@@ -126,6 +151,19 @@ export default (fbConfig, otherConfig) => next =>
      */
     const set = (path, value, onComplete) =>
       rootRef.child(path).set(value, onComplete)
+
+    /**
+     * @description Sets data to Firebase along with meta data. Currently,
+     * this includes createdAt and createdBy. *Warning* using this function
+     * may have unintented consequences (setting createdAt even if data already
+     * exists)
+     * @param {String} path - Path to location on Firebase which to set
+     * @param {Object|String|Boolean|Number} value - Value to write to Firebase
+     * @param {Function} onComplete - Function to run on complete (`not required`)
+     * @return {Promise} Containing reference snapshot
+     */
+    const setWithMeta = (path, value, onComplete) =>
+       withMeta('set', path, value, onComplete)
 
     /**
      * @description Pushes data to Firebase.
@@ -147,6 +185,17 @@ export default (fbConfig, otherConfig) => next =>
       rootRef.child(path).push(value, onComplete)
 
     /**
+     * @description Pushes data to Firebase along with meta data. Currently,
+     * this includes createdAt and createdBy.
+     * @param {String} path - Path to location on Firebase which to set
+     * @param {Object|String|Boolean|Number} value - Value to write to Firebase
+     * @param {Function} onComplete - Function to run on complete (`not required`)
+     * @return {Promise} Containing reference snapshot
+     */
+    const pushWithMeta = (path, value, onComplete) =>
+      withMeta('push', path, value, onComplete)
+
+    /**
      * @description Updates data on Firebase and sends new data.
      * @param {String} path - Path to location on Firebase which to update
      * @param {Object|String|Boolean|Number} value - Value to update to Firebase
@@ -164,6 +213,18 @@ export default (fbConfig, otherConfig) => next =>
      */
     const update = (path, value, onComplete) =>
       rootRef.child(path).update(value, onComplete)
+
+    /**
+     * @description Updates data on Firebase along with meta. *Warning*
+     * using this function may have unintented consequences (setting
+     * createdAt even if data already exists)
+     * @param {String} path - Path to location on Firebase which to update
+     * @param {Object|String|Boolean|Number} value - Value to update to Firebase
+     * @param {Function} onComplete - Function to run on complete (`not required`)
+     * @return {Promise} Containing reference snapshot
+     */
+    const updateWithMeta = (path, value, onComplete) =>
+      withMeta('update', path, value, onComplete)
 
     /**
      * @description Removes data from Firebase at a given path.
@@ -352,10 +413,13 @@ export default (fbConfig, otherConfig) => next =>
     firebase.helpers = {
       ref: path => firebase.database().ref(path),
       set,
+      setWithMeta,
       uniqueSet,
       push,
+      pushWithMeta,
       remove,
       update,
+      updateWithMeta,
       login,
       logout,
       uploadFile,
