@@ -26,7 +26,7 @@ class TodoItem extends Component {
           checked={todo.done}
           onChange={toggleDone}
         />
-        {todo.text}
+        {todo.text || todo.name}
         <button className="Todo-Button" onClick={deleteTodo}>
           Delete
         </button>
