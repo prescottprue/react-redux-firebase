@@ -3,6 +3,8 @@ import Paper from 'material-ui/Paper'
 import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form'
 import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
+import { submit } from 'redux-form'
+import { reduxFirebase as rfConfig } from 'config'
 import { ACCOUNT_FORM_NAME } from 'constants/formNames'
 import { UserIsAuthenticated } from 'utils/router'
 import defaultUserImageUrl from 'static/User.png'
@@ -11,21 +13,20 @@ import AccountForm from '../components/AccountForm/AccountForm'
 import classes from './AccountContainer.scss'
 
 @UserIsAuthenticated // redirect to /login if user is not authenticated
-@firebaseConnect()
+@firebaseConnect() // add this.props.firebase
 @connect(
   // Map state to props
   ({ firebase }) => ({
-    authError: pathToJS(firebase, 'authError'),
+    auth: pathToJS(firebase, 'auth'),
     account: pathToJS(firebase, 'profile'),
-    initialValues: pathToJS(firebase, 'profile')
-  })
+  }),
+  {
+    submitForm: () => (dispatch) => {
+      dispatch(submit(ACCOUNT_FORM_NAME));
+    },
+  }
 )
-@reduxForm({
-  form: ACCOUNT_FORM_NAME,
-  enableReinitialization: true
-})
 export default class Account extends Component {
-
   static contextTypes = {
     router: React.PropTypes.object.isRequired
   }
@@ -51,8 +52,17 @@ export default class Account extends Component {
     })
   }
 
+  updateAccount = (newData) => {
+    return this.props.firebase
+      .update(`${rfConfig.userProfile}/${this.props.auth.uid}`, newData)
+      .catch((err) => {
+        console.error('Error updating account', err)
+        // TODO: Display error to user
+      })
+  }
+
   render () {
-    const { account, firebase: { saveAccount } } = this.props
+    const { account } = this.props
 
     if (!isLoaded(account)) {
       return <LoadingSpinner />
@@ -71,8 +81,9 @@ export default class Account extends Component {
             </div>
             <div className={classes.meta}>
               <AccountForm
-                onSubmit={saveAccount}
                 account={account}
+                submitForm={this.props.submitForm}
+                onSubmit={this.updateAccount}
               />
             </div>
           </div>
@@ -81,3 +92,4 @@ export default class Account extends Component {
     )
   }
 }
+0
