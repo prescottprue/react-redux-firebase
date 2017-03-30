@@ -15,28 +15,23 @@ import classes from './AccountContainer.scss'
 @UserIsAuthenticated // redirect to /login if user is not authenticated
 @firebaseConnect() // add this.props.firebase
 @connect(
-  // Map state to props
+  // Map redux state to props
   ({ firebase }) => ({
     auth: pathToJS(firebase, 'auth'),
     account: pathToJS(firebase, 'profile'),
   }),
   {
-    submitForm: () => (dispatch) => {
-      dispatch(submit(ACCOUNT_FORM_NAME));
-    },
+    // action for submitting redux-form
+    submitForm: () => (dispatch) => dispatch(submit(ACCOUNT_FORM_NAME))
   }
 )
 export default class Account extends Component {
-  static contextTypes = {
-    router: React.PropTypes.object.isRequired
-  }
-
   static propTypes = {
     account: PropTypes.object,
     firebase: PropTypes.shape({
+      update: PropTypes.func.isRequired,
       logout: PropTypes.func.isRequired,
-      uploadAvatar: PropTypes.func,
-      updateAccount: PropTypes.func
+      uploadAvatar: PropTypes.func
     })
   }
 
@@ -62,7 +57,7 @@ export default class Account extends Component {
   }
 
   render () {
-    const { account } = this.props
+    const { account, submitForm } = this.props
 
     if (!isLoaded(account)) {
       return <LoadingSpinner />
@@ -82,7 +77,7 @@ export default class Account extends Component {
             <div className={classes.meta}>
               <AccountForm
                 account={account}
-                submitForm={this.props.submitForm}
+                submitForm={submitForm}
                 onSubmit={this.updateAccount}
               />
             </div>
