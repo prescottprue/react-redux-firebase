@@ -3,38 +3,29 @@ import { connect } from 'react-redux'
 import { Field, reduxForm, submit } from 'redux-form'
 import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
 import RaisedButton from 'material-ui/RaisedButton'
-import Subheader from 'material-ui/Subheader'
 import TextField from 'components/TextField'
 import { List, ListItem } from 'material-ui/List'
 import AccountCircle from 'material-ui/svg-icons/action/account-circle'
-import { RECOVER_CODE_FORM_NAME } from 'constants/formNames'
-import classes from './RecoverForm.scss'
+import { RECOVER_EMAIL_FORM_NAME } from 'constants/formNames'
+import classes from './EmailForm.scss'
 
 const required = value => value ? undefined : 'Required'
+const email = value =>
+  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
+  'Invalid email address' : undefined
 
-export const RecoverForm = ({ account, handleSubmit, onRecoverClick, submitting, pristine, valid }) => (
+export const EmailForm = ({ account, handleSubmit, submitting, pristine, valid }) => (
   <form className={classes.container} onSubmit={handleSubmit}>
-    <h4>Recover Using Code From Email</h4>
-    <div>
-      <Subheader>
-        <strong>Note:</strong> Not used for OAuth
-      </Subheader>
-    </div>
+    <h4>Send Recovery Code To Email</h4>
     <Field
-      name='code'
+      name='email'
       component={TextField}
-      label='Recover Code'
-      validate={[required]}
-    />
-    <Field
-      name='password'
-      component={TextField}
-      label='New Password'
-      validate={[required]}
+      label='Email'
+      validate={[required, email]}
     />
     <div className={classes.submit}>
       <RaisedButton
-        label='Recover'
+        label='Send'
         primary
         type='submit'
         disabled={submitting}
@@ -43,15 +34,14 @@ export const RecoverForm = ({ account, handleSubmit, onRecoverClick, submitting,
   </form>
 )
 
-RecoverForm.propTypes = {
+EmailForm.propTypes = {
   account: PropTypes.shape({
     providerData: PropTypes.array
   }),
-  handleSubmit: PropTypes.func,
-  onRecoverClick: PropTypes.func,
+  handleSubmit: PropTypes.func.isRequired,
   submitting: PropTypes.bool
 }
 
 export default reduxForm({
-  form: RECOVER_CODE_FORM_NAME
-})(RecoverForm)
+  form: RECOVER_EMAIL_FORM_NAME
+})(EmailForm)
