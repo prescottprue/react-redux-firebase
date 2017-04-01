@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
 import { Field, reduxForm, submit } from 'redux-form'
 import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'components/TextField'
+import { List, ListItem } from 'material-ui/List'
+import AccountCircle from 'material-ui/svg-icons/action/account-circle'
 import { ACCOUNT_FORM_NAME } from 'constants/formNames'
-import { connect } from 'react-redux'
-import ProviderDataForm from '../ProviderDataForm/ProviderDataForm'
 import classes from './AccountForm.scss'
 
 export const AccountForm = ({ account, handleSubmit, submitForm, submitting }) => (
@@ -24,8 +25,33 @@ export const AccountForm = ({ account, handleSubmit, submitForm, submitting }) =
     <div>
       <h4>Linked Accounts</h4>
       {
-        account.providerData &&
-          <ProviderDataForm providerData={account.providerData} />
+        account.providerData
+          ?
+            <List>
+              {
+                account.providerData.map((providerAccount, i) =>
+                  <ListItem
+                    key={i}
+                    primaryText={providerAccount.providerId}
+                    leftIcon={<AccountCircle />}
+                    nestedItems={[
+                      <ListItem
+                        key='display_name'
+                        primaryText={providerAccount.displayName}
+                      />,
+                      <ListItem
+                        key='email'
+                        label='email'
+                        primaryText={providerAccount.email}
+                        disabled
+                      />
+                    ]}
+                  />
+                )
+              }
+            </List>
+          :
+          null
       }
     </div>
     <div>
