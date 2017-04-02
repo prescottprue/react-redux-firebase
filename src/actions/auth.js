@@ -298,6 +298,7 @@ export const login = (dispatch, firebase, credentials) => {
           providerData: user.providerData
         }
       )
+      .then((profile) => ({ profile, ...userData }))
     })
     .catch(err => {
       dispatchLoginError(dispatch, err)
