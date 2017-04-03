@@ -84,7 +84,7 @@ export default class Home extends Component {
     } else {
       newTodo.owner = 'Anonymous'
     }
-    this.props.firebase.push('/todos', newTodo)
+    return this.props.firebase.push('/todos', newTodo)
   }
 
   render () {

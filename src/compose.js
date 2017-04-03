@@ -29,8 +29,13 @@ let firebaseInstance
  * profile when logging in. (default: `false`)
  * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
+ * @property {Function} config.onAuthStateChanged - Function run when auth state
+ * changes. Argument Pattern: `(authData, firebase, dispatch)`
+ * @property {Function} config.onRedirectResult - Function run when redirect
+ * result is returned. Argument Pattern: `(authData, firebase, dispatch)`
  * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
- * @property {Function} config.uploadFileDataFactory - Factory for modifying how file meta data is written during file uploads
+ * @property {Function} config.uploadFileDataFactory - Factory for modifying
+ * how file meta data is written during file uploads
  * @property {Array|String} config.profileParamsToPopulate - Parameters within
  * profile object to populate
  * @property {Boolean} config.autoPopulateProfile - Whether or not to

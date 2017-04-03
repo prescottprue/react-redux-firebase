@@ -2,37 +2,33 @@ import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import Checkbox from 'material-ui/Checkbox'
-
 import { Field, reduxForm } from 'redux-form'
+import { RECOVER_PATH } from 'constants/paths'
+import { LOGIN_FORM_NAME } from 'constants/formNames'
 import TextField from 'components/TextField'
-
 import classes from './LoginForm.scss'
 
-const validate = values => {
-  const errors = {}
-  if (!values.email) errors.email = 'Required'
-  if (!values.password) errors.password = 'Required'
-  return errors
-}
+const required = value => value ? undefined : 'Required'
+const email = value =>
+  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
+  'Invalid email address' : undefined
 
 export const LoginForm = ({ handleSubmit, submitting }) => (
-  <form className={classes['container']} onSubmit={handleSubmit}>
-    <div>
-      <Field
-        name='email'
-        component={TextField}
-        label='Email'
-      />
-    </div>
-    <div>
-      <Field
-        name='password'
-        component={TextField}
-        label='Password'
-        type='password'
-      />
-    </div>
-    <div className={classes['submit']}>
+  <form className={classes.container} onSubmit={handleSubmit}>
+    <Field
+      name='email'
+      component={TextField}
+      label='Email'
+      validate={[required, email]}
+    />
+    <Field
+      name='password'
+      component={TextField}
+      validate={[required]}
+      label='Password'
+      type='password'
+    />
+    <div className={classes.submit}>
       <RaisedButton
         label='Login'
         primary
@@ -40,8 +36,8 @@ export const LoginForm = ({ handleSubmit, submitting }) => (
         disabled={submitting}
       />
     </div>
-    <div className={classes['options']}>
-      <div className={classes['remember']}>
+    <div className={classes.options}>
+      <div className={classes.remember}>
         <Checkbox
           name='remember'
           value='remember'
@@ -49,7 +45,7 @@ export const LoginForm = ({ handleSubmit, submitting }) => (
           labelStyle={{ fontSize: '.8rem' }}
         />
       </div>
-      <Link className={classes['recover']} to='/recover'>
+      <Link className={classes.recover} to={RECOVER_PATH}>
         Forgot Password?
       </Link>
     </div>
@@ -62,6 +58,5 @@ LoginForm.propTypes = {
 }
 
 export default reduxForm({
-  form: 'Login',
-  validate
+  form: LOGIN_FORM_NAME
 })(LoginForm)
