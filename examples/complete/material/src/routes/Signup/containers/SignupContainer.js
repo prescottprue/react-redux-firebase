@@ -38,7 +38,7 @@ export default class Signup extends Component {
       snackCanOpen: true
     })
     const { createUser, login } = this.props.firebase
-    createUser(creds, { email: creds.email, username: creds.username })
+    return createUser(creds, { email: creds.email, username: creds.username })
       .then(() => {
         login(creds)
       })
@@ -49,7 +49,7 @@ export default class Signup extends Component {
       snackCanOpen: true
     })
 
-    this.props.firebase.login({ provider })
+    return this.props.firebase.login({ provider })
   }
 
   render () {

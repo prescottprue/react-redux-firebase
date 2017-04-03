@@ -42,7 +42,7 @@ export default class Signup extends Component {
       snackCanOpen: true
     })
 
-    this.props.firebase.login(loginData)
+    return this.props.firebase.login(loginData)
   }
 
   providerLogin = (provider) =>

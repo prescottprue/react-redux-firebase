@@ -1,4 +1,6 @@
 export const ACCOUNT_FORM_NAME = 'account'
+export const LOGIN_FORM_NAME = 'login'
+export const SIGNUP_FORM_NAME = 'signup'
 export const RECOVER_CODE_FORM_NAME = 'recoverCode'
 export const RECOVER_EMAIL_FORM_NAME = 'recoverEmail'
 
