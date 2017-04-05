@@ -244,7 +244,7 @@ export const init = (dispatch, firebase) => {
       })
   }
 
-  firebase.auth().currentUser
+  firebase.auth().currentUser // eslint-disable-line no-unused-expressions
 
   dispatch({ type: AUTHENTICATION_INIT_FINISHED })
 }
