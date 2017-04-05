@@ -37,37 +37,49 @@ describe('Compose', () => {
       })
     })
 
-    describe('set', () =>
-      helpers.set('test', {some: 'asdf'})
-    )
-
-    describe('setWithMeta', () => {
+    describe('set', () => {
       it('accepts object', () =>
-        helpers.setWithMeta('test', {some: 'asdf'})
-      )
-      it('does not attach meta to string', () =>
-        // TODO: confirm that data set actually does not include meta
-        helpers.setWithMeta('test', 'asdd')
+        expect(helpers.set('test', {some: 'asdf'})).to.eventually.become(undefined)
       )
     })
 
-    describe('push', () =>
-      helpers.push('test', {some: 'asdf'})
-    )
+    describe('setWithMeta', () => {
+      describe('accepts object', () => {
+        it('accepts object', () =>
+          expect(helpers.setWithMeta('test', {some: 'asdf'})).to.eventually.become(undefined)
+        )
+      })
+
+      describe('does not attach meta to string', () => {
+        // TODO: confirm that data set actually does not include meta
+        it('accepts object', () =>
+          expect(helpers.setWithMeta('test', 'asdd')).to.eventually.become(undefined)
+        )
+      })
+    })
+
+    describe('push', () => {
+      it('accepts object', () =>
+        expect(helpers.push('test', {some: 'asdf'})).to.eventually.have.property('key')
+      )
+    })
 
     describe('pushWithMeta', () => {
       it('accepts object', () =>
-        helpers.pushWithMeta('test', {some: 'asdf'})
+        expect(helpers.pushWithMeta('test', {some: 'asdf'})).to.eventually.have.property('key')
       )
     })
 
-    describe('update', () =>
-      helpers.update('test', {some: 'asdf'})
-    )
+    describe('update', () => {
+      it('accepts object', () =>
+        // undefined represents snapshot
+        expect(helpers.update('test', {some: 'asdf'})).to.eventually.become(undefined)
+      )
+    })
 
     describe('updateWithMeta', () => {
       it('accepts object', () =>
-        helpers.updateWithMeta('test', {some: 'asdf'})
+        expect(helpers.updateWithMeta('test', {some: 'asdf'})).to.eventually.become(undefined)
       )
     })
 

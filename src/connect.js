@@ -33,7 +33,6 @@ import { getEventsFromInput, createCallable } from './utils'
  */
 export default (dataOrFn = []) => WrappedComponent => {
   class FirebaseConnect extends Component {
-
     constructor (props, context) {
       super(props, context)
       this._firebaseEvents = []
