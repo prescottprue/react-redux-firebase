@@ -37,13 +37,12 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
 #### Features
 * `react-native` support (progress available on [`react-native` branch](https://github.com/prescottprue/react-redux-firebase/tree/react-native))
 * Server Side Rendering Support ([#72](https://github.com/prescottprue/react-redux-firebase/issues/72))
-* Option for populated items updating when changed ([#69](https://github.com/prescottprue/react-redux-firebase/issues/69))
 * Support for Boilerplates ([#53](https://github.com/prescottprue/react-redux-firebase/issues/53))
 
 #### Enhancements
 * Fix for `unWatchEvent` helper dispatch mapping (#82)
 
-## Future Minor Versions (`v1.*.*`)
+## Future Minor Versions (`v1.5.0 - v1.*.*`)
 
 **Note:** Subject to change
 
@@ -52,7 +51,12 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
 
 #### Features
 * Integration for [`react-native-google-signin`](https://github.com/devfd/react-native-google-signin) to simplify react-native authentication implementation
+* Option for populated items updating when changed ([#69](https://github.com/prescottprue/react-redux-firebase/issues/69))
 * Nested populates [#85](https://github.com/prescottprue/react-redux-firebase/issues/85)
+* `updateProfile` method for updating currently authenticated user's profile
+
+#### Enhancements
+ *None Yet Planned*
 
 ## Upcoming Major Version (`v2.0.0`)
 
