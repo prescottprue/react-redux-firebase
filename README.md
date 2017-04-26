@@ -30,6 +30,7 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 - [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/) integrations
 - Action Types and other Constants exported for external use (such as in `redux-observable`)
 - Firebase v3+ support
+- Server Side Rendering Support
 
 ## Install
 ```bash
@@ -185,6 +186,17 @@ export default connect(
 
 ```
 
+## Server Side Rendering
+
+Firebase's library requires XML request capability, so if you are using `react-redux-firebase` in a Server Side rendering environment, make sure you require `xmlhttprequest`.
+
+If you disagree with having to do this yourself, hop [on gitter]() and let us know!
+
+```js
+// needed to fix "Error: The XMLHttpRequest compatibility library was not found."
+global.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
+```
+
 ## [Docs](http://react-redux-firebase.com)
 See full documentation at [react-redux-firebase.com](http://react-redux-firebase.com)
 
@@ -301,7 +313,9 @@ import { pathToJS } from 'react-redux-firebase'
 export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',
   authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) => pathToJS(firebase, 'isInitializing') === true,
+  authenticatingSelector: ({ firebase }) =>
+    pathToJS(firebase, 'isInitializing') === true &&
+    pathToJS(firebase, 'auth') === undefined
   predicate: auth => auth !== null,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
