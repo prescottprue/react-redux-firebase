@@ -60,7 +60,9 @@ import { pathToJS } from 'react-redux-firebase'
 export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',
   authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) => pathToJS(firebase, 'isInitializing') === true,
+  authenticatingSelector: ({ firebase }) =>
+    pathToJS(firebase, 'isInitializing') === true ||
+    pathToJS(firebase, 'auth') === undefined
   predicate: auth => auth !== null,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
