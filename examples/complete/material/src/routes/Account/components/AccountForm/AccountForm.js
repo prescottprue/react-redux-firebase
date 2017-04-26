@@ -9,18 +9,18 @@ import AccountCircle from 'material-ui/svg-icons/action/account-circle'
 import { ACCOUNT_FORM_NAME } from 'constants/formNames'
 import classes from './AccountForm.scss'
 
-export const AccountForm = ({ account, handleSubmit, submitForm, submitting }) => (
+export const AccountForm = ({ account, handleSubmit, submitting }) => (
   <form className={classes.container} onSubmit={handleSubmit}>
     <h4>Account</h4>
     <Field
+      label='Name'
       name='displayName'
       component={TextField}
-      label='Name'
     />
     <Field
+      label='Email'
       name='email'
       component={TextField}
-      label='Email'
     />
     <div>
       <h4>Linked Accounts</h4>
@@ -59,7 +59,6 @@ export const AccountForm = ({ account, handleSubmit, submitForm, submitting }) =
         label='Save'
         primary
         type='submit'
-        onTouchTap={submitForm}
         disabled={submitting}
       />
     </div>
@@ -70,17 +69,12 @@ AccountForm.propTypes = {
   account: PropTypes.shape({
     providerData: PropTypes.array
   }),
-  handleSubmit: PropTypes.func,
-  submitting: PropTypes.bool
+  submit: PropTypes.func, // added by redux-form
+  handleSubmit: PropTypes.func, // added by redux-form
+  submitting: PropTypes.bool // added by redux-form
 }
 
-const form = reduxForm({
+export default reduxForm({
   form: ACCOUNT_FORM_NAME,
   enableReinitialization: true
 })(AccountForm)
-
-export default connect(
-  ({ firebase }) => ({
-    initialValues: pathToJS(firebase, 'profile')
-  }),
-)(form)

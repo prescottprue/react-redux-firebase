@@ -12,7 +12,7 @@ import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
 import { UserIsNotAuthenticated } from 'utils/router'
 import { SIGNUP_PATH } from 'constants/paths'
-import LoginForm from '../components/LoginForm/LoginForm'
+import LoginForm from '../components/LoginForm'
 import classes from './LoginContainer.scss'
 
 @UserIsNotAuthenticated // redirect to list page if logged in
@@ -23,7 +23,7 @@ import classes from './LoginContainer.scss'
     authError: pathToJS(firebase, 'authError')
   })
 )
-export default class Signup extends Component {
+export default class Login extends Component {
   static propTypes = {
     firebase: PropTypes.shape({
       login: PropTypes.func.isRequired

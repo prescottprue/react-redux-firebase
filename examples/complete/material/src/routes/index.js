@@ -15,11 +15,11 @@ export const createRoutes = (store) => ({
   component: CoreLayout,
   indexRoute: Home,
   childRoutes: [
-    AccountRoute(store),
-    LoginRoute(store),
-    SignupRoute(store),
-    ProjectsRoute(store),
-    RecoverRoute(store)
+    AccountRoute,
+    LoginRoute,
+    SignupRoute,
+    ProjectsRoute(store), // async route definitions recieve store
+    RecoverRoute(store) // async route definitions recieve store
   ]
 })
 

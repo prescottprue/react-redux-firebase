@@ -14,12 +14,10 @@ export const ProviderData = ({ providerData }) => (
             leftIcon={<AccountCircle />}
             nestedItems={[
               <ListItem
-                key={'display_name'}
                 primaryText={providerAccount.displayName}
+                disabled
               />,
               <ListItem
-                key={'email'}
-                label='email'
                 primaryText={providerAccount.email}
                 disabled
               />

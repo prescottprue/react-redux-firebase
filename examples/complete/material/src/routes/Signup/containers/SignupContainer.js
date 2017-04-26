@@ -12,7 +12,7 @@ import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
 import { LOGIN_PATH } from 'constants/paths'
 import { UserIsNotAuthenticated } from 'utils/router'
-import SignupForm from '../components/SignupForm/SignupForm'
+import SignupForm from '../components/SignupForm'
 import classes from './SignupContainer.scss'
 
 @UserIsNotAuthenticated // redirect to list page if logged in

@@ -16,15 +16,7 @@
   align-items: center;
 }
 .avatar {
-  &-new {
-    &-droptext {
-      @extend .flex-column-center;
-      height: 100%;
-      font-size: 1.3rem;
-      justify-content: center;
-    }
-  }
-  &-current {
+  &Current {
     width: 100%;
     max-width: 13rem;
     height: auto;

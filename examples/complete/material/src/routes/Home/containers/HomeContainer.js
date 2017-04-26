@@ -7,8 +7,8 @@ import {
   isLoaded,
   pathToJS,
   dataToJS,
-  // orderedToJS,
-  // populatedDataToJS
+  // orderedToJS, // needed for ordered list
+  // populatedDataToJS // needed for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
@@ -106,7 +106,7 @@ export default class Home extends Component {
         }
         <div className={classes.info}>
           from
-          <span className='Home-Url'>
+          <span>
             <a href='https://redux-firebasev3.firebaseio.com/'>
               redux-firebasev3.firebaseio.com
             </a>
