@@ -1,4 +1,4 @@
-import { LOGIN_PATH as path } from 'constants/paths'
+import { LOGIN_PATH as path } from 'constants'
 import component from './containers/LoginContainer'
 
 export default {

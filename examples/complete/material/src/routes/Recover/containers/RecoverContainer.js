@@ -9,7 +9,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add'
 import Subheader from 'material-ui/Subheader'
 import RecoverForm from '../components/RecoverForm'
 import EmailForm from '../components/EmailForm'
-import { RECOVER_FORM_NAME } from 'constants/formNames'
+import { RECOVER_FORM_NAME } from 'constants'
 
 @firebaseConnect() // adds this.props.firebase
 export default class RecoverContainer extends Component {

@@ -1,4 +1,4 @@
-import { SIGNUP_PATH as path } from 'constants/paths'
+import { SIGNUP_PATH as path } from 'constants'
 import component from './containers/SignupContainer'
 
 export default {

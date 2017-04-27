@@ -13,7 +13,7 @@ import {
   ACCOUNT_PATH,
   LOGIN_PATH,
   SIGNUP_PATH
-} from 'constants/paths'
+} from 'constants'
 
 // Components
 import AppBar from 'material-ui/AppBar'

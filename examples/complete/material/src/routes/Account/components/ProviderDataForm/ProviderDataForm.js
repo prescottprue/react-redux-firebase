@@ -7,7 +7,7 @@ export const ProviderData = ({ providerData }) => (
   <div className={classes.container}>
     <List>
       {
-        providerData.map((providerAccount, i) =>
+        providerData.map((providerAccount, i) => (
           <ListItem
             key={i}
             primaryText={providerAccount.providerId}
@@ -15,22 +15,21 @@ export const ProviderData = ({ providerData }) => (
             nestedItems={[
               <ListItem
                 primaryText={providerAccount.displayName}
-                disabled
               />,
               <ListItem
+                label='email'
                 primaryText={providerAccount.email}
-                disabled
               />
             ]}
           />
-        )
+        ))
       }
     </List>
   </div>
 )
 
 ProviderData.propTypes = {
-  providerData: PropTypes.array
+  providerData: PropTypes.array.isRequired
 }
 
 export default ProviderData

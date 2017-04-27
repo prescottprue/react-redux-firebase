@@ -1,7 +1,7 @@
-import { paths } from 'constants'
+import { DETAIL_PATH as path } from 'constants'
 import component from './components/Project'
 
 export default {
-  path: paths.detail,
+  path,
   component
 }

@@ -1,4 +1,4 @@
-import { LIST_PATH as path } from 'constants/paths'
+import { LIST_PATH as path } from 'constants'
 import Project from './routes/Project'
 
 export default (store) => ({

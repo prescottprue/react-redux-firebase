@@ -8,7 +8,7 @@ import {
   isLoaded,
   isEmpty
 } from 'react-redux-firebase'
-import { LIST_PATH } from 'constants/paths'
+import { LIST_PATH } from 'constants'
 import ProjectTile from '../components/ProjectTile/ProjectTile'
 import NewProjectTile from '../components/NewProjectTile/NewProjectTile'
 import NewProjectDialog from '../components/NewProjectDialog/NewProjectDialog'

@@ -1,7 +1,7 @@
-import { ACCOUNT_PATH as path } from 'constants/paths'
+import { ACCOUNT_PATH as path } from 'constants'
 import component from './containers/AccountContainer'
 
-export default () => ({
+export default {
   path,
   component
-})
+}

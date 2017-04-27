@@ -1,80 +1,48 @@
 import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { Field, reduxForm, submit } from 'redux-form'
-import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
+import { Field, reduxForm } from 'redux-form'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'components/TextField'
-import { List, ListItem } from 'material-ui/List'
-import AccountCircle from 'material-ui/svg-icons/action/account-circle'
-import { ACCOUNT_FORM_NAME } from 'constants/formNames'
+import { ACCOUNT_FORM_NAME } from 'constants'
+import ProviderDataForm from '../ProviderDataForm'
 import classes from './AccountForm.scss'
 
 export const AccountForm = ({ account, handleSubmit, submitting }) => (
   <form className={classes.container} onSubmit={handleSubmit}>
     <h4>Account</h4>
     <Field
-      label='Name'
       name='displayName'
       component={TextField}
+      label='Display Name'
     />
     <Field
-      label='Email'
       name='email'
       component={TextField}
+      label='Email'
     />
-    <div>
-      <h4>Linked Accounts</h4>
-      {
-        account.providerData
-          ?
-            <List>
-              {
-                account.providerData.map((providerAccount, i) =>
-                  <ListItem
-                    key={i}
-                    primaryText={providerAccount.providerId}
-                    leftIcon={<AccountCircle />}
-                    nestedItems={[
-                      <ListItem
-                        key='display_name'
-                        primaryText={providerAccount.displayName}
-                      />,
-                      <ListItem
-                        key='email'
-                        label='email'
-                        primaryText={providerAccount.email}
-                        disabled
-                      />
-                    ]}
-                  />
-                )
-              }
-            </List>
-          :
-          null
-      }
-    </div>
-    <div>
-      <RaisedButton
-        label='Save'
-        primary
-        type='submit'
-        disabled={submitting}
-      />
-    </div>
+    {
+      !!account && !!account.providerData &&
+        <div>
+          <h4>Linked Accounts</h4>
+          <ProviderDataForm
+            providerData={account.providerData}
+          />
+        </div>
+    }
+    <RaisedButton
+      primary
+      label='Save'
+      type='submit'
+      className={classes.submit}
+    />
   </form>
 )
 
 AccountForm.propTypes = {
-  account: PropTypes.shape({
-    providerData: PropTypes.array
-  }),
-  submit: PropTypes.func, // added by redux-form
-  handleSubmit: PropTypes.func, // added by redux-form
-  submitting: PropTypes.bool // added by redux-form
+  account: PropTypes.object,
+  handleSubmit: PropTypes.func,
+  submitting: PropTypes.bool
 }
 
 export default reduxForm({
-  form: ACCOUNT_FORM_NAME,
-  enableReinitialization: true
+  form: ACCOUNT_FORM_NAME
 })(AccountForm)
