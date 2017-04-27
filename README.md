@@ -172,15 +172,14 @@ export default class Todos extends Component {
 Alternatively, if you choose not to use decorators:
 
 ```javascript
+import { compose } from 'redux'
 
-const wrappedTodos = firebaseConnect([
-  '/todos'
-])(Todos)
-export default connect(
-  ({firebase}) => ({
-    todos: dataToJS(firebase, '/todos'),
-  })
-)(wrappedTodos)
+export default compose(
+  firebaseConnect(['/todos']),
+  connect(
+    ({firebase}) => ({ todos: dataToJS(firebase, '/todos') })
+  )
+)(Todos)
 
 ```
 
