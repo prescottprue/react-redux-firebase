@@ -2,6 +2,12 @@
 
 These recipes assume that you are using [`react-router`](https://github.com/ReactTraining/react-router), but the principles should be applicable to any routing solution.
 
+#### React Router 4
+
+There are known issues when attempting to use these patterns with react-router 4. More information to come.
+
+Progress on supporting react-router 4 [is tracked within this issue](https://github.com/prescottprue/react-redux-firebase/issues/119).
+
 ## Basic
 
 Routing can be changed based on data by using react lifecycle hooks such as `componentWillMount`, and `componentWillReceiveProps` to route users. This can be particularly useful when doing things such as route protection (only allowing user to view a route if they are logged in):
