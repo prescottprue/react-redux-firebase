@@ -1,4 +1,5 @@
-import { LIST_PATH as path } from 'constants/paths'
+import { LIST_PATH as path } from 'constants'
+import Project from './routes/Project'
 
 export default (store) => ({
   path,
@@ -17,16 +18,8 @@ export default (store) => ({
     /* Webpack named bundle   */
     }, 'Projects')
   },
-  getChildRoutes (partialNextState, cb) {
-    require.ensure([], (require) => {
-      /*  Webpack - use require callback to define
-          dependencies for bundling   */
-      const Project = require('./routes/Project').default
-
-      /*  Return getComponent   */
-      cb(null, [
-        Project(store)
-      ])
-    })
-  }
+  childRoutes: [
+    Project // not function for sync route
+    // async routes definitions require function here i.e. Project(store)
+  ]
 })

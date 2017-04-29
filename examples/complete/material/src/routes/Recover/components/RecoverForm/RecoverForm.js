@@ -7,7 +7,7 @@ import Subheader from 'material-ui/Subheader'
 import TextField from 'components/TextField'
 import { List, ListItem } from 'material-ui/List'
 import AccountCircle from 'material-ui/svg-icons/action/account-circle'
-import { RECOVER_CODE_FORM_NAME } from 'constants/formNames'
+import { RECOVER_CODE_FORM_NAME } from 'constants'
 import classes from './RecoverForm.scss'
 
 const required = value => value ? undefined : 'Required'

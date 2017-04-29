@@ -10,15 +10,14 @@ import {
 } from 'react-redux-firebase'
 import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
-import { LOGIN_PATH } from 'constants/paths'
+import { LOGIN_PATH } from 'constants'
 import { UserIsNotAuthenticated } from 'utils/router'
-import SignupForm from '../components/SignupForm/SignupForm'
+import SignupForm from '../components/SignupForm'
 import classes from './SignupContainer.scss'
 
 @UserIsNotAuthenticated // redirect to list page if logged in
-@firebaseConnect()
-@connect(
-  // Map state to props
+@firebaseConnect() // add this.props.firebase
+@connect( // map redux state to props
   ({firebase}) => ({
     authError: pathToJS(firebase, 'authError')
   })
@@ -34,22 +33,18 @@ export default class Signup extends Component {
   }
 
   handleSignup = (creds) => {
-    this.setState({
-      snackCanOpen: true
-    })
     const { createUser, login } = this.props.firebase
-    createUser(creds, { email: creds.email, username: creds.username })
-      .then(() => {
-        login(creds)
-      })
+    const { email, username } = creds
+    this.setState({ snackCanOpen: true })
+    // create new user then login (redirect handled by decorator)
+    return createUser(creds, { email, username })
+      .then(() => login(creds))
   }
 
   providerLogin = (provider) => {
-    this.setState({
-      snackCanOpen: true
-    })
+    this.setState({ snackCanOpen: true })
 
-    this.props.firebase.login({ provider })
+    return this.props.firebase.login({ provider })
   }
 
   render () {
@@ -68,10 +63,10 @@ export default class Signup extends Component {
           <GoogleButton onClick={() => this.providerLogin('google')} />
         </div>
         <div className={classes.login}>
-          <span className={classes['login-label']}>
+          <span className={classes.loginLabel}>
             Already have an account?
           </span>
-          <Link className={classes['login-link']} to={LOGIN_PATH}>
+          <Link className={classes.loginLink} to={LOGIN_PATH}>
             Login
           </Link>
         </div>

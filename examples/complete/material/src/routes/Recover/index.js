@@ -1,4 +1,4 @@
-import { RECOVER_PATH as path } from 'constants/paths'
+import { RECOVER_PATH as path } from 'constants'
 
 export default (store) => ({
   path: 'recover',

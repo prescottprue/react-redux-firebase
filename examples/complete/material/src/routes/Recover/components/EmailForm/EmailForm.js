@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'components/TextField'
 import { List, ListItem } from 'material-ui/List'
 import AccountCircle from 'material-ui/svg-icons/action/account-circle'
-import { RECOVER_EMAIL_FORM_NAME } from 'constants/formNames'
+import { RECOVER_EMAIL_FORM_NAME } from 'constants'
 import classes from './EmailForm.scss'
 
 const required = value => value ? undefined : 'Required'
