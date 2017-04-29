@@ -96,16 +96,18 @@ export default class Home extends Component {
       <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>
         {
           error
-            ? <Snackbar
-              open={!!error}
-              message={error}
-              autoHideDuration={4000}
-              onRequestClose={() => this.setState({ error: null })}
+            ?
+              <Snackbar
+                open={!!error}
+                message={error}
+                autoHideDuration={4000}
+                onRequestClose={() => this.setState({ error: null })}
               />
-            : null
+            :
+              null
         }
         <div className={classes.info}>
-          from
+          <span>data loaded from</span>
           <span>
             <a href='https://redux-firebasev3.firebaseio.com/'>
               redux-firebasev3.firebaseio.com

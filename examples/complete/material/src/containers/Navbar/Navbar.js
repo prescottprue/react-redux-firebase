@@ -122,7 +122,7 @@ export default class Navbar extends Component {
       <AppBar
         title={
           <Link to={accountExists ? `${LIST_PATH}` : '/'} className={classes.brand}>
-            material
+            material example
           </Link>
         }
         showMenuIconButton={false}
