@@ -1,4 +1,13 @@
-import { omit, isArray, isString, isFunction, forEach, set, get } from 'lodash'
+import {
+  omit,
+  isArray,
+  isString,
+  isFunction,
+  forEach,
+  set,
+  get,
+  mapValues
+} from 'lodash'
 import jwtDecode from 'jwt-decode'
 import { actionTypes, defaultJWTProps } from '../constants'
 import { promisesForPopulate, getPopulateObjs } from '../utils/populate'
@@ -105,7 +114,16 @@ export const watchUserProfile = (dispatch, firebase) => {
                 const populates = getPopulateObjs(profileParamsToPopulate)
                 const profile = snap.val()
                 forEach(populates, (p) => {
-                  set(profile, p.child, get(data, `${p.root}.${snap.val()[p.child]}`))
+                  const child = get(profile, p.child)
+                  const populatedChild = mapValues(
+                    child,
+                    (value, key) => {
+                      if (value) { // Only populate keys with truthy values
+                        return get(data, `${p.root}.${key}`)
+                      }
+                      return value
+                    })
+                  set(profile, p.child, populatedChild)
                 })
                 dispatch({
                   type: SET_PROFILE,
