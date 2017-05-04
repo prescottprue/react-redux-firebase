@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import react, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import { Field, reduxForm, submit } from 'redux-form'

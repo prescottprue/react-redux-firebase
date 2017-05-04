@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { isEqual } from 'lodash'
 import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable } from './utils'

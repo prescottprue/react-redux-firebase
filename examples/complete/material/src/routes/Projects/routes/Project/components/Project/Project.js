@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import react, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
 import LoadingSpinner from 'components/LoadingSpinner'

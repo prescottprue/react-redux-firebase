@@ -1,4 +1,5 @@
-import React, { Component, PropTypes, cloneElement } from 'react'
+import React, { Component, cloneElement } from 'react'
+import PropTypes from 'prop-types'
 import { map } from 'lodash'
 import { connect } from 'react-redux'
 import {

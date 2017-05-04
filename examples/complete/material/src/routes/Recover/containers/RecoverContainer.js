@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import react, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { reduxForm, submit } from 'redux-form'
 import { firebaseConnect } from 'react-redux-firebase'
 import IconButton from 'material-ui/IconButton'
