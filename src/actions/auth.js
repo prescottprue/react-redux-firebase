@@ -207,13 +207,17 @@ export const init = (dispatch, firebase) => {
 
     // Run onAuthStateChanged if it exists in config
     if (firebase._.config.onAuthStateChanged) {
-      firebase._.config.onAuthStateChanged(authData, firebase)
+      firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
     }
   })
 
   if (firebase._.config.enableRedirectHandling) {
     firebase.auth().getRedirectResult()
       .then((authData) => {
+        // Run onRedirectResult if it exists in config
+        if (firebase._.config.onRedirectResult) {
+          firebase._.config.onRedirectResult(authData, firebase, dispatch)
+        }
         if (authData && authData.user) {
           const { user } = authData
 
@@ -240,7 +244,7 @@ export const init = (dispatch, firebase) => {
       })
   }
 
-  firebase.auth().currentUser
+  firebase.auth().currentUser // eslint-disable-line no-unused-expressions
 
   dispatch({ type: AUTHENTICATION_INIT_FINISHED })
 }
@@ -298,6 +302,7 @@ export const login = (dispatch, firebase, credentials) => {
           providerData: user.providerData
         }
       )
+      .then((profile) => ({ profile, ...userData }))
     })
     .catch(err => {
       dispatchLoginError(dispatch, err)

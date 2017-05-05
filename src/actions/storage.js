@@ -81,6 +81,7 @@ export const uploadFile = (dispatch, firebase, { path, file, dbPath }) =>
       return firebase.database()
         .ref(dbPath)
         .push(fileData)
+        .then(snapshot => ({ snapshot, key: snapshot.key, File: fileData }))
     })
 
 /**

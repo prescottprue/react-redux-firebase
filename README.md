@@ -1,7 +1,5 @@
 # react-redux-firebase
 
-[![Gitter][gitter-image]][gitter-url]
-
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][npm-downloads-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
@@ -9,6 +7,9 @@
 [![License][license-image]][license-url]
 [![Code Coverage][coverage-image]][coverage-url]
 [![Code Style][code-style-image]][code-style-url]
+
+[![Gitter][gitter-image]][gitter-url]
+[<img src="http://npm.packagequality.com/badge/react-redux-firebase.png" align="right"/>](http://packagequality.com/#?package=react-redux-firebase)
 
 > Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 
@@ -29,6 +30,7 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 - [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/) integrations
 - Action Types and other Constants exported for external use (such as in `redux-observable`)
 - Firebase v3+ support
+- Server Side Rendering Support
 
 ## Install
 ```bash
@@ -182,6 +184,17 @@ export default compose(
   )
 )(Todos)
 
+```
+
+## Server Side Rendering
+
+Firebase's library requires XML request capability, so if you are using `react-redux-firebase` in a Server Side rendering environment, make sure you require `xmlhttprequest`.
+
+If you disagree with having to do this yourself, hop [on gitter]() and let us know!
+
+```js
+// needed to fix "Error: The XMLHttpRequest compatibility library was not found."
+global.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 ```
 
 ## [Docs](http://react-redux-firebase.com)

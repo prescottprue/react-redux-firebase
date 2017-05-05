@@ -95,7 +95,7 @@ Limit query results to the first n number of results.
   ```javascript
   @firebaseConnect([
     '/todos#limitToFirst=10'
-    // { path: '/todos', queryParams: [ 'orderByChild=owner', 'equalTo=123' ] } // object notation
+    // { path: '/todos', queryParams: [ 'orderByChild=createdBy', 'equalTo=123' ] } // object notation
   ])
   ```
 
@@ -160,11 +160,30 @@ Limit query results with parameter equal to previous query method (i.e when used
 1. Order by child parameter
 ```js
 @firebaseConnect([
-  'todos#orderByChild=owner&equalTo=123',
-  // { path: '/todos', queryParams: [ 'orderByChild=owner', 'equalTo=123' ] } // object notation
+  'todos#orderByChild=createdBy&equalTo=ASD123',
+  // { path: '/todos', queryParams: [ 'orderByChild=createdBy', 'equalTo=ASD123' ] } // object notation
 ])
 ```
 
+## notParsed
+
+Can be used to keep internal parsing from happening. Useful when attempting to search a number string using `equalTo`
+
+#### Examples
+1. Order by child parameter equal to a number string. Equivalent of searching for `'123'` (where as not using `notParsed` would search for children equal to `123`)
+
+```js
+@firebaseConnect([
+  {
+    path: '/todos',
+    queryParams: [
+      'orderByChild=createdBy',
+      'notParsed', // keeps equalTo from automatically parsing
+      'equalTo=123'
+    ]
+  }
+])
+```
 
 ## Populate {#populate}
 

@@ -16,7 +16,13 @@ export const createAuthProvider = (firebase, providerName, scopes) => {
   if (supportedAuthProviders.indexOf(providerName.toLowerCase()) === -1) {
     throw new Error(`${providerName} is not a valid Auth Provider`)
   }
+
   const provider = new firebase.auth[`${capitalize(providerName)}AuthProvider`]()
+
+  // Custom Auth Parameters
+  if (firebase._.config.customAuthParameters && firebase._.config.customAuthParameters[providerName]) {
+    provider.setCustomParameters(firebase._.config.customAuthParameters[providerName])
+  }
 
   // Handle providers without scopes
   if (providerName.toLowerCase() === 'twitter' || !isFunction(provider.addScope)) {

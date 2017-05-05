@@ -134,14 +134,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       // TODO: Allow config to toggle Combining into one SET action
       promisesForPopulate(firebase, data, populates)
         .then((results) => {
-          dispatch({
-            type: SET,
-            path: resultPath,
-            data,
-            timestamp: Date.now(),
-            requesting: false,
-            requested: true
-          })
+          // dispatch child sets first so isLoaded is only set to true for
+          // populatedDataToJS after all data is in redux (Issue #121)
           forEach(results, (result, path) => {
             dispatch({
               type: SET,
@@ -151,6 +145,14 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
               requesting: false,
               requested: true
             })
+          })
+          dispatch({
+            type: SET,
+            path: resultPath,
+            data,
+            timestamp: Date.now(),
+            requesting: false,
+            requested: true
           })
         })
     }, (err) => {

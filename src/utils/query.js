@@ -143,6 +143,10 @@ export const applyParamsToQuery = (queryParams, query) => {
           // TODO: Handle number not being passed as param
           query = query.limitToLast(parseInt(param[1], 10))
           break
+        case 'notParsed':
+          // support disabling internal number parsing (number strings)
+          doNotParse = true
+          break
         case 'equalTo':
           let equalToParam = !doNotParse ? tryParseToNumber(param[1]) : param[1]
           equalToParam = equalToParam === 'null' ? null : equalToParam

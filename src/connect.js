@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { isEqual } from 'lodash'
+import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable } from './utils'
 
@@ -33,7 +34,6 @@ import { getEventsFromInput, createCallable } from './utils'
  */
 export default (dataOrFn = []) => WrappedComponent => {
   class FirebaseConnect extends Component {
-
     constructor (props, context) {
       super(props, context)
       this._firebaseEvents = []
@@ -92,5 +92,5 @@ export default (dataOrFn = []) => WrappedComponent => {
     }
   }
 
-  return FirebaseConnect
+  return hoistStatics(FirebaseConnect, WrappedComponent)
 }

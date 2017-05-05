@@ -78,4 +78,3 @@ export default class Account extends Component {
     )
   }
 }
-0
