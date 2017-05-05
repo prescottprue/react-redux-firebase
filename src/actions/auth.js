@@ -1,7 +1,21 @@
-import { omit, isArray, isString, isFunction, forEach, set, get } from 'lodash'
+import {
+  omit,
+  isArray,
+  isString,
+  isFunction,
+  forEach,
+  set,
+  get,
+  map,
+  mapValues
+} from 'lodash'
 import jwtDecode from 'jwt-decode'
 import { actionTypes, defaultJWTProps } from '../constants'
-import { promisesForPopulate, getPopulateObjs } from '../utils/populate'
+import {
+  promisesForPopulate,
+  getPopulateObjs,
+  getChildType
+} from '../utils/populate'
 import { getLoginMethodAndParams } from '../utils/auth'
 
 const {
@@ -105,7 +119,39 @@ export const watchUserProfile = (dispatch, firebase) => {
                 const populates = getPopulateObjs(profileParamsToPopulate)
                 const profile = snap.val()
                 forEach(populates, (p) => {
-                  set(profile, p.child, get(data, `${p.root}.${snap.val()[p.child]}`))
+                  const child = get(profile, p.child)
+                  const childType = getChildType(child)
+                  let populatedChild
+
+                  switch (childType) {
+
+                    case 'object':
+                      populatedChild = mapValues(
+                        child,
+                        (value, key) => {
+                          if (value) { // Only populate keys with truthy values
+                            return get(data, `${p.root}.${key}`)
+                          }
+                          return value
+                        })
+                      break
+
+                    case 'string':
+                      populatedChild = get(data, `${p.root}.${child}`)
+                      break
+
+                    case 'array':
+                      populatedChild = map(
+                        child,
+                        (key) => get(data, `${p.root}.${key}`)
+                      )
+                      break
+
+                    default:
+                      populatedChild = child
+                  }
+                  // Overwrite the child value with the populated child
+                  set(profile, p.child, populatedChild)
                 })
                 dispatch({
                   type: SET_PROFILE,

@@ -19,7 +19,7 @@
     "build:umd:min": "cross-env BABEL_ENV=commonjs NODE_ENV=production webpack src/index.js dist/react-redux-firebase.min.js",
     "build:size": "cross-env SIZE=true BABEL_ENV=commonjs NODE_ENV=production webpack src/index.js dist/react-redux-firebase.min.js",
     "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
-    "watch": "npm run build:commonjs -- --watch",
+    "watch": "npm run build:umd -- --watch",
     "prepublish": "npm run clean && npm run build",
     "prepush": "npm run lint:fix",
     "docs:clean": "rimraf _book",
