@@ -6,12 +6,10 @@ import { Field, reduxForm } from 'redux-form'
 import { RECOVER_PATH } from 'constants/paths'
 import { LOGIN_FORM_NAME } from 'constants/formNames'
 import TextField from 'components/TextField'
+import { RECOVER_PATH, LOGIN_FORM_NAME } from 'constants'
 import classes from './LoginForm.scss'
 
-const required = value => value ? undefined : 'Required'
-const email = value =>
-  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
-  'Invalid email address' : undefined
+import { required, validateEmail } from 'utils/form'
 
 export const LoginForm = ({ handleSubmit, submitting }) => (
   <form className={classes.container} onSubmit={handleSubmit}>
@@ -19,14 +17,14 @@ export const LoginForm = ({ handleSubmit, submitting }) => (
       name='email'
       component={TextField}
       label='Email'
-      validate={[required, email]}
+      validate={[required, validateEmail]}
     />
     <Field
       name='password'
       component={TextField}
-      validate={[required]}
       label='Password'
       type='password'
+      validate={[required]}
     />
     <div className={classes.submit}>
       <RaisedButton

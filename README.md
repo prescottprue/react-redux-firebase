@@ -174,15 +174,14 @@ export default class Todos extends Component {
 Alternatively, if you choose not to use decorators:
 
 ```javascript
+import { compose } from 'redux'
 
-const wrappedTodos = firebaseConnect([
-  '/todos'
-])(Todos)
-export default connect(
-  ({firebase}) => ({
-    todos: dataToJS(firebase, '/todos'),
-  })
-)(wrappedTodos)
+export default compose(
+  firebaseConnect(['/todos']),
+  connect(
+    ({firebase}) => ({ todos: dataToJS(firebase, '/todos') })
+  )
+)(Todos)
 
 ```
 
@@ -314,7 +313,7 @@ export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',
   authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
   authenticatingSelector: ({ firebase }) =>
-    pathToJS(firebase, 'isInitializing') === true &&
+    pathToJS(firebase, 'isInitializing') === true ||
     pathToJS(firebase, 'auth') === undefined
   predicate: auth => auth !== null,
   redirectAction: (newLoc) => (dispatch) => {

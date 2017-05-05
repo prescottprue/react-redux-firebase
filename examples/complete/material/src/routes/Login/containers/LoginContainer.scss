@@ -29,14 +29,14 @@
   @extend .flex-column-center;
   justify-content: center;
   margin-top: 2rem;
-  &-link {
+  &Link {
     // color: $linkBlue;
     font-size: 1.2rem;
     &:hover {
       // color: $materialBlue;
     }
   }
-  &-label {
+  &Label {
     font-size: 1.3rem;
     font-size: 1rem;
     font-weight: bold;

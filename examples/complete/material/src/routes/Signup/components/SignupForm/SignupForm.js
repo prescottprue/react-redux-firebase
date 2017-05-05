@@ -1,15 +1,11 @@
 import React, { PropTypes } from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
 import { Field, reduxForm } from 'redux-form'
-import { SIGNUP_FORM_NAME } from 'constants/formNames'
 import TextField from 'components/TextField'
+import { required, validateEmail } from 'utils/form'
+import { SIGNUP_FORM_NAME } from 'constants'
 import classes from './SignupForm.scss'
 const buttonStyle = { width: '100%' }
-
-const required = value => value ? undefined : 'Required'
-const email = value =>
-  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
-  'Invalid email address' : undefined
 
 const SignupForm = ({ handleSubmit, submitting }) => {
   return (
@@ -24,7 +20,7 @@ const SignupForm = ({ handleSubmit, submitting }) => {
         name='email'
         component={TextField}
         label='Email'
-        validate={[required, email]}
+        validate={[required, validateEmail]}
       />
       <Field
         name='password'

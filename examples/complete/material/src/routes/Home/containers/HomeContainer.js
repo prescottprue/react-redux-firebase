@@ -7,8 +7,8 @@ import {
   isLoaded,
   pathToJS,
   dataToJS,
-  // orderedToJS,
-  // populatedDataToJS
+  // orderedToJS, // needed for ordered list
+  // populatedDataToJS // needed for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
@@ -96,17 +96,19 @@ export default class Home extends Component {
       <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>
         {
           error
-            ? <Snackbar
-              open={!!error}
-              message={error}
-              autoHideDuration={4000}
-              onRequestClose={() => this.setState({ error: null })}
+            ?
+              <Snackbar
+                open={!!error}
+                message={error}
+                autoHideDuration={4000}
+                onRequestClose={() => this.setState({ error: null })}
               />
-            : null
+            :
+              null
         }
         <div className={classes.info}>
-          from
-          <span className='Home-Url'>
+          <span>data loaded from</span>
+          <span>
             <a href='https://redux-firebasev3.firebaseio.com/'>
               redux-firebasev3.firebaseio.com
             </a>

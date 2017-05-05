@@ -37,7 +37,14 @@
   @extend .flex-column-center;
   justify-content: center;
   margin-top: 2rem;
-  &-label {
+  &Link {
+    // color: $linkBlue;
+    font-size: 1.2rem;
+    &:hover {
+      // color: $materialBlue;
+    }
+  }
+  &Label {
     @extend .flex-column-center;
     justify-content: center;
     font-size: 1.3rem;
