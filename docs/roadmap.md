@@ -29,18 +29,25 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
 
 ## Upcoming Minor Version (`v1.4.0`)
 
-**Note:** Subject to change
-
-#### Breaking Changes
- *None Yet Planned*
-
 #### Features
 * `react-native` support (progress available on [`react-native` branch](https://github.com/prescottprue/react-redux-firebase/tree/react-native))
 * Server Side Rendering Support ([#72](https://github.com/prescottprue/react-redux-firebase/issues/72))
 * Support for Boilerplates ([#53](https://github.com/prescottprue/react-redux-firebase/issues/53))
-
-#### Enhancements
+* Use `prop-types` package instead of `React.PropTypes` [#122](https://github.com/prescottprue/react-redux-firebase/pull/122) - Thanks [@petetnt](https://github.com/petetnt)
+* `pushWithMeta`, `setWithMeta`, and `updateWithMeta` methods added - write to firebase with createdAt/updatedAt and createdBy/updatedBy
 * Fix for `unWatchEvent` helper dispatch mapping (#82)
+* `populatedDataToJS` triggers `isLoaded` to be true only when all data is populated (instead of once for unpopulated data) [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
+* Support for `setCustomParameters` on external auth providers (i.e. `provider.setCustomParameters({ prompt: 'select_account' })`)
+
+#### Enhancements/Fixes
+* Fix for `unWatchEvent` helper dispatch mapping ([#82](https://github.com/prescottprue/react-redux-firebase/issues/82))
+* Firebase version is no longer fixed ([#109](https://github.com/prescottprue/react-redux-firebase/issues/109))
+* Only used parts of Firebase Library imported (shrinks bundle size)
+* `build:size` npm script added to generate size report for minified bundle ([#107](https://github.com/prescottprue/react-redux-firebase/issues/107))
+* `user` and `credential` are now returned from login method (solves [#106](https://github.com/prescottprue/react-redux-firebase/issues/106))
+* `yarn.lock` file added
+* Compose tests improved promise handling (better use of chai-as-promised)
+<!-- * Fix `profileParamsToPopulate` with `key: true` lists - thanks [@fej-snikduj](https://github.com/fej-snikduj) -->
 
 ## Future Minor Versions (`v1.5.0 - v1.*.*`)
 
@@ -52,10 +59,11 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
 #### Features
 * Integration for [`react-native-google-signin`](https://github.com/devfd/react-native-google-signin) to simplify react-native authentication implementation
 * Option for populated items updating when changed ([#69](https://github.com/prescottprue/react-redux-firebase/issues/69))
+* Setting allowing for `waitForPopulate` to be turned off (i.e. return populated data as in becomes available). As of v1.4.0, populate only sets `isLoaded` to true after all children are loaded ([#121](https://github.com/prescottprue/react-redux-firebase/issues/121)), `waitForPopulate` would make this optional.
 * Nested populates [#85](https://github.com/prescottprue/react-redux-firebase/issues/85)
 * `updateProfile` method for updating currently authenticated user's profile
 
-#### Enhancements
+#### Enhancements/Fixes
  *None Yet Planned*
 
 ## Upcoming Major Version (`v2.0.0`)
@@ -77,7 +85,7 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
 * `AuthRequired` decorator (or decorator factory) that forces auth to exist before rendering component
 * Possibility of delayed initialization as mentioned in [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
 
-#### Enhancements
+#### Enhancements/Fixes
 * Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance
 
 ### Long Term Goals
