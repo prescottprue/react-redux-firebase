@@ -38,6 +38,7 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
 * Fix for `unWatchEvent` helper dispatch mapping (#82)
 * `populatedDataToJS` triggers `isLoaded` to be true only when all data is populated (instead of once for unpopulated data) [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
 * Support for `setCustomParameters` on external auth providers (i.e. `provider.setCustomParameters({ prompt: 'select_account' })`)
+* `notParsed` query param option added for not parsing when using `equalTo` (for searching numbers stored as strings)
 
 #### Enhancements/Fixes
 * Fix for `unWatchEvent` helper dispatch mapping ([#82](https://github.com/prescottprue/react-redux-firebase/issues/82))
