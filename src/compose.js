@@ -33,6 +33,8 @@ let firebaseInstance
  * changes. Argument Pattern: `(authData, firebase, dispatch)`
  * @property {Function} config.onRedirectResult - Function run when redirect
  * result is returned. Argument Pattern: `(authData, firebase, dispatch)`
+ * @property {Object} config.customAuthParameters - Object for setting which
+ * customAuthParameters are passed to external auth providers.
  * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
  * @property {Function} config.uploadFileDataFactory - Factory for modifying
  * how file meta data is written during file uploads
@@ -65,6 +67,16 @@ let firebaseInstance
  *
  * // Use Function later to create store
  * const store = createStoreWithFirebase(rootReducer, initialState)
+ * @example <caption>Custom Auth Parameters</caption>
+ * // Follow Setup example with the following config:
+ * const config = {
+ *   customAuthParameters: {
+ *      google: {
+ *        // prompts user to select account on every google login
+ *        prompt: 'select_account'
+ *      }
+ *   }
+ * }
  */
 export default (fbConfig, otherConfig) => next =>
   (reducer, initialState, middleware) => {
