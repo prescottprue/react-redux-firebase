@@ -6,11 +6,12 @@
     "react-scripts": "0.4.1"
   },
   "dependencies": {
+    "prop-types": "^15.5.8",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-redux": "^4.4.5",
-    "redux": "^3.6.0",
-    "react-redux-firebase": "*"
+    "react-redux-firebase": "*",
+    "redux": "^3.6.0"
   },
   "scripts": {
     "start": "react-scripts start",

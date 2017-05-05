@@ -17,7 +17,8 @@ import { metaParams, paramSplitChar } from './constants'
  * @param {Object} item - Item to check loaded status of. A comma seperated list is also acceptable.
  * @return {Boolean} Whether or not item is loaded
  * @example
- * import React, { Component, PropTypes } from 'react'
+ * import React, { Component } from 'react'
+ * import PropTypes from 'prop-types'
  * import { connect } from 'react-redux'
  * import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
  *
@@ -57,7 +58,8 @@ export const isLoaded = function () {
  * @param {Object} item - Item to check loaded status of. A comma seperated list is also acceptable.
  * @return {Boolean} Whether or not item is empty
  * @example
- * import React, { Component, PropTypes } from 'react'
+ * import React, { Component } from 'react'
+ * import PropTypes from 'prop-types'
  * import { connect } from 'react-redux'
  * import { firebaseConnect, isEmpty, dataToJS } from 'react-redux-firebase'
  *

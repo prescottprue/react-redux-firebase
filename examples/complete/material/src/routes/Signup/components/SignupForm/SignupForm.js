@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import RaisedButton from 'material-ui/RaisedButton'
 import { Field, reduxForm } from 'redux-form'
 import TextField from 'components/TextField'

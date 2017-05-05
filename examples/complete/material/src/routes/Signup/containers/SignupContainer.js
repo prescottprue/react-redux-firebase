@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import react, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import GoogleButton from 'react-google-button'
 import { connect } from 'react-redux'

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Field, reduxForm, submit } from 'redux-form'
 import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'

@@ -109,7 +109,8 @@ const store = createStoreWithFirebase(rootReducer, initialState)
 
 In components:
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
   firebaseConnect,
