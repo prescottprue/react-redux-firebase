@@ -25,6 +25,24 @@ export const getPopulateObj = (str) => {
 }
 /**
  * @private
+ * @description Determine the structure of the child parameter to populate onto
+ * @param {String|Object} child - Value at child parameter
+ */
+export const getChildType = (child) => {
+  if (isString(child)) {
+    return 'string'
+  }
+  if (isArray(child)) {
+    return 'array'
+  }
+  if (isObject(child)) {
+    return 'object'
+  }
+  return 'other'
+}
+
+/**
+ * @private
  * @description Create standardized populate object from strings or objects
  * @param {String|Object} str - String or Object to standardize into populate object
  */
