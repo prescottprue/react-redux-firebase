@@ -1,13 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { Field, reduxForm, submit } from 'redux-form'
-import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
+import { Field, reduxForm } from 'redux-form'
 import RaisedButton from 'material-ui/RaisedButton'
 import Subheader from 'material-ui/Subheader'
 import TextField from 'components/TextField'
-import { List, ListItem } from 'material-ui/List'
-import AccountCircle from 'material-ui/svg-icons/action/account-circle'
 import { RECOVER_CODE_FORM_NAME } from 'constants'
 import classes from './RecoverForm.scss'
 
@@ -48,9 +44,11 @@ RecoverForm.propTypes = {
   account: PropTypes.shape({
     providerData: PropTypes.array
   }),
-  handleSubmit: PropTypes.func,
-  onRecoverClick: PropTypes.func,
-  submitting: PropTypes.bool
+  pristine: PropTypes.bool, // added by redux-form
+  valid: PropTypes.bool, // added by redux-form
+  handleSubmit: PropTypes.func, // added by redux-form
+  submitting: PropTypes.bool, // added by redux-form
+  onRecoverClick: PropTypes.func
 }
 
 export default reduxForm({

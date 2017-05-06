@@ -1,7 +1,7 @@
 import { RECOVER_PATH as path } from 'constants'
 
 export default (store) => ({
-  path: 'recover',
+  path: path,
   /*  Async getComponent is only invoked when route matches   */
   getComponent (nextState, cb) {
     /*  Webpack - use 'require.ensure' to create a split point

@@ -1,19 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { Field, reduxForm, submit } from 'redux-form'
-import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
+import { Field, reduxForm } from 'redux-form'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'components/TextField'
-import { List, ListItem } from 'material-ui/List'
-import AccountCircle from 'material-ui/svg-icons/action/account-circle'
 import { RECOVER_EMAIL_FORM_NAME } from 'constants'
 import classes from './EmailForm.scss'
 
 const required = value => value ? undefined : 'Required'
 const email = value =>
-  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
-  'Invalid email address' : undefined
+  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
+  ? 'Invalid email address' : undefined
 
 export const EmailForm = ({ account, handleSubmit, submitting, pristine, valid }) => (
   <form className={classes.container} onSubmit={handleSubmit}>
@@ -39,8 +35,10 @@ EmailForm.propTypes = {
   account: PropTypes.shape({
     providerData: PropTypes.array
   }),
-  handleSubmit: PropTypes.func.isRequired,
-  submitting: PropTypes.bool
+  pristine: PropTypes.bool, // added by redux-form
+  valid: PropTypes.bool, // added by redux-form
+  handleSubmit: PropTypes.func.isRequired, // added by redux-form
+  submitting: PropTypes.bool // added by redux-form
 }
 
 export default reduxForm({

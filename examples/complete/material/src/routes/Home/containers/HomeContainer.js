@@ -8,7 +8,7 @@ import {
   isLoaded,
   pathToJS,
   // dataToJS, // needed for full list and once
-  orderedToJS, // needed for ordered list
+  orderedToJS // needed for ordered list
   // populatedDataToJS // needed for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
@@ -25,9 +25,8 @@ import classes from './HomeContainer.scss'
 @firebaseConnect([
   // 'todos' // sync full list of todos
   // { path: 'todos', type: 'once' } // for loading once instead of binding
-  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=8'] } // limit to first 20
+  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=8'] } // 8 most recent
   // { path: 'todos', populates } // populate
-  // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] }, // get five most recent (array will need to be inverted)
 ])
 @connect(
   ({firebase}) => ({
@@ -35,7 +34,7 @@ import classes from './HomeContainer.scss'
     account: pathToJS(firebase, 'profile'),
     // todos: dataToJS(firebase, 'todos')
     // todos: populatedDataToJS(firebase, '/todos', populates), // if populating
-    todos: orderedToJS(firebase, 'todos'), // if using ordering such as orderByChild
+    todos: orderedToJS(firebase, 'todos') // if using ordering such as orderByChild
   })
 )
 export default class Home extends Component {
@@ -47,7 +46,11 @@ export default class Home extends Component {
     firebase: PropTypes.shape({
       set: PropTypes.func.isRequired,
       remove: PropTypes.func.isRequired,
-      push: PropTypes.func.isRequired
+      push: PropTypes.func.isRequired,
+      database: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.func
+      ])
     }),
     auth: PropTypes.shape({
       uid: PropTypes.string
@@ -67,7 +70,7 @@ export default class Home extends Component {
   }
 
   deleteTodo = (id) => {
-    const { todos, auth, firebase } = this.props
+    const { auth, firebase } = this.props
     if (!auth || !auth.uid) {
       return this.setState({ error: 'You must be Logged into Delete' })
     }
@@ -100,15 +103,13 @@ export default class Home extends Component {
       <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>
         {
           error
-            ?
-              <Snackbar
-                open={!!error}
-                message={error}
-                autoHideDuration={4000}
-                onRequestClose={() => this.setState({ error: null })}
+            ? <Snackbar
+              open={!!error}
+              message={error}
+              autoHideDuration={4000}
+              onRequestClose={() => this.setState({ error: null })}
               />
-            :
-              null
+            : null
         }
         <div className={classes.info}>
           <span>data loaded from</span>

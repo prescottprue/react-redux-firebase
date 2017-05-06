@@ -52,7 +52,6 @@ export default class Navbar extends Component {
   }
 
   static propTypes = {
-    auth: PropTypes.object,
     account: PropTypes.object,
     firebase: PropTypes.object.isRequired
   }

@@ -41,8 +41,7 @@ export default class Projects extends Component {
     projects: PropTypes.object,
     firebase: PropTypes.object,
     auth: PropTypes.object,
-    children: PropTypes.object,
-    params: PropTypes.object
+    children: PropTypes.object
   }
 
   state = {
@@ -51,7 +50,7 @@ export default class Projects extends Component {
   }
 
   newSubmit = (newProject) => {
-    const { auth, firebase: { push } } = this.props
+    const { firebase: { pushWithMeta } } = this.props
     return pushWithMeta('projects', newProject)
       .then(() => this.setState({ newProjectModal: false }))
       .catch(err => {
@@ -72,7 +71,9 @@ export default class Projects extends Component {
   }
 
   render () {
-    if (!isLoaded(this.props.projects, this.props.auth)) {
+    const { projects, auth } = this.props
+
+    if (!isLoaded(projects, auth)) {
       return <LoadingSpinner />
     }
 
@@ -82,7 +83,6 @@ export default class Projects extends Component {
       return cloneElement(this.props.children, this.props)
     }
 
-    const { projects, auth } = this.props
     const { newProjectModal } = this.state
 
     return (
