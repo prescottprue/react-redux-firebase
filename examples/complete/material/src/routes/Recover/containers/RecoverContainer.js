@@ -1,4 +1,4 @@
-import react, { Component } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { reduxForm, submit } from 'redux-form'
 import { firebaseConnect } from 'react-redux-firebase'

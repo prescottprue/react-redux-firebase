@@ -9,7 +9,7 @@ import {
   pathToJS,
   dataToJS,
   // orderedToJS, // needed for ordered list
-  // populatedDataToJS // needed for populated list
+  populatedDataToJS // needed for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
@@ -20,22 +20,22 @@ import TodoItem from '../components/TodoItem'
 import NewTodoPanel from '../components/NewTodoPanel'
 import classes from './HomeContainer.scss'
 
-// const populates = [
-//   { child: 'owner', root: 'users', keyProp: 'key' }
-// ]
+const populates = [
+  { child: 'owner', root: 'users', keyProp: 'key' }
+]
 
 @firebaseConnect([
   // 'todos' // sync full list of todos
   // { path: '/projects', type: 'once' } // for loading once instead of binding
-  { path: 'todos', queryParams: ['limitToFirst=20'] } // limit to first 20
-  // { path: 'todos', queryParams: ['limitToFirst=20'], populates } // populate
+  // { path: 'todos', queryParams: ['limitToFirst=20'] } // limit to first 20
+  { path: 'todos', populates } // populate
   // { path: 'todos', queryParams: ['orderByChild=text'] }, // list todos alphabetically
 ])
 @connect(
   ({firebase}) => ({
     auth: pathToJS(firebase, 'auth'),
-    todos: dataToJS(firebase, 'todos')
-    // todos: populatedDataToJS(firebase, '/todos', populates), // if populating
+    // todos: dataToJS(firebase, 'todos')
+    todos: populatedDataToJS(firebase, '/todos', populates), // if populating
     // todos: orderedToJS(firebase, 'todos'), // if using ordering such as orderByChild
   })
 )
@@ -85,6 +85,7 @@ export default class Home extends Component {
     } else {
       newTodo.owner = 'Anonymous'
     }
+    // using this.props.firebase.pushWithMeta would attach createdBy and createdAt
     return this.props.firebase.push('/todos', newTodo)
   }
 
