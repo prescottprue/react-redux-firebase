@@ -124,7 +124,6 @@ export const watchUserProfile = (dispatch, firebase) => {
                   let populatedChild
 
                   switch (childType) {
-
                     case 'object':
                       populatedChild = mapValues(
                         child,
