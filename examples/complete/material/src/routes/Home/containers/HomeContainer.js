@@ -74,12 +74,12 @@ export default class Home extends Component {
     if (!auth || !auth.uid) {
       return this.setState({ error: 'You must be Logged into Delete' })
     }
-    // return this.setState({ error: 'Delete example requires using populate' })
+    return this.setState({ error: 'Delete example requires using populate' })
     // only works if populated
     // if (todos[id].owner.uid !== auth.uid) {
     //   return this.setState({ error: 'You must own todo to delete' })
     // }
-    return firebase.remove(`/todos/${id}`)
+    // return firebase.remove(`/todos/${id}`)
   }
 
   handleAdd = (newTodo) => {
