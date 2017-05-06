@@ -7,9 +7,9 @@ import {
   firebaseConnect,
   isLoaded,
   pathToJS,
-  dataToJS,
-  // orderedToJS, // needed for ordered list
-  populatedDataToJS // needed for populated list
+  // dataToJS, // needed for full list and once
+  orderedToJS, // needed for ordered list
+  // populatedDataToJS // needed for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
@@ -20,23 +20,22 @@ import TodoItem from '../components/TodoItem'
 import NewTodoPanel from '../components/NewTodoPanel'
 import classes from './HomeContainer.scss'
 
-const populates = [
-  { child: 'owner', root: 'users', keyProp: 'key' }
-]
+// const populates = [{ child: 'owner', root: 'users', keyProp: 'uid' }]
 
 @firebaseConnect([
   // 'todos' // sync full list of todos
-  // { path: '/projects', type: 'once' } // for loading once instead of binding
-  // { path: 'todos', queryParams: ['limitToFirst=20'] } // limit to first 20
-  { path: 'todos', populates } // populate
-  // { path: 'todos', queryParams: ['orderByChild=text'] }, // list todos alphabetically
+  // { path: 'todos', type: 'once' } // for loading once instead of binding
+  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=8'] } // limit to first 20
+  // { path: 'todos', populates } // populate
+  // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] }, // get five most recent (array will need to be inverted)
 ])
 @connect(
   ({firebase}) => ({
     auth: pathToJS(firebase, 'auth'),
+    account: pathToJS(firebase, 'profile'),
     // todos: dataToJS(firebase, 'todos')
-    todos: populatedDataToJS(firebase, '/todos', populates), // if populating
-    // todos: orderedToJS(firebase, 'todos'), // if using ordering such as orderByChild
+    // todos: populatedDataToJS(firebase, '/todos', populates), // if populating
+    todos: orderedToJS(firebase, 'todos'), // if using ordering such as orderByChild
   })
 )
 export default class Home extends Component {
@@ -72,10 +71,12 @@ export default class Home extends Component {
     if (!auth || !auth.uid) {
       return this.setState({ error: 'You must be Logged into Delete' })
     }
-    if (todos[id].owner !== auth.uid) {
-      return this.setState({ error: 'You must own todo to delete' })
-    }
-    firebase.remove(`/todos/${id}`)
+    return this.setState({ error: 'Delete example requires using populate' })
+    // only works if populated
+    // if (todos[id].owner.uid !== auth.uid) {
+    //   return this.setState({ error: 'You must own todo to delete' })
+    // }
+    // firebase.remove(`/todos/${id}`)
   }
 
   handleAdd = (newTodo) => {
@@ -85,15 +86,16 @@ export default class Home extends Component {
     } else {
       newTodo.owner = 'Anonymous'
     }
-    // using this.props.firebase.pushWithMeta would attach createdBy and createdAt
+    // attach a timestamp
+    newTodo.createdAt = this.props.firebase.database.ServerValue.TIMESTAMP
+    // using this.props.firebase.pushWithMeta here instead would automatically attach createdBy and createdAt
     return this.props.firebase.push('/todos', newTodo)
   }
 
   render () {
     const { todos } = this.props
     const { error } = this.state
-    console.log('todos:', todos)
-
+    console.log('this.props.account', this.props.account)
     return (
       <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>
         {
@@ -115,6 +117,10 @@ export default class Home extends Component {
               redux-firebasev3.firebaseio.com
             </a>
           </span>
+          <span style={{ marginTop: '2rem' }}>
+            <strong>Note: </strong>
+            old data is removed
+          </span>
         </div>
         <div className={classes.todos}>
           <NewTodoPanel
@@ -129,7 +135,8 @@ export default class Home extends Component {
                 <List className={classes.list}>
                   {
                     todos &&
-                      map(todos, (todo, id) => (
+                    // todos list is reversed so the most recent is first
+                      map(todos.reverse(), (todo, id) => (
                         <TodoItem
                           key={id}
                           id={id}

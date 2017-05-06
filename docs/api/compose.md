@@ -25,6 +25,9 @@ Middleware that handles configuration (placed in redux's
         changes. Argument Pattern: `(authData, firebase, dispatch)`
     -   `config.onRedirectResult` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function run when redirect
         result is returned. Argument Pattern: `(authData, firebase, dispatch)`
+    -   `config.customAuthParameters` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object for setting which
+
+            customAuthParameters are passed to external auth providers.
     -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user profile is saved.
     -   `config.uploadFileDataFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying
         how file meta data is written during file uploads
@@ -61,6 +64,20 @@ const createStoreWithFirebase = compose(
 
 // Use Function later to create store
 const store = createStoreWithFirebase(rootReducer, initialState)
+```
+
+_Custom Auth Parameters_
+
+```javascript
+// Follow Setup example with the following config:
+const config = {
+  customAuthParameters: {
+     google: {
+       // prompts user to select account on every google login
+       prompt: 'select_account'
+     }
+  }
+}
 ```
 
 Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** That accepts a component a returns a wrapped version of component

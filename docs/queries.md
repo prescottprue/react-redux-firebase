@@ -128,7 +128,7 @@ Limit query results to include a range starting at a specific number
 
 **Internal Method**: [ `limitToLast`](https://firebase.google.com/docs/reference/js/firebase.database.Query#limitToLast)
 
-#### Example
+#### Examples
 
 1. Starting at the fifth item
   ```js
@@ -146,6 +146,9 @@ Limit query results to include a range starting at a specific number
   ```
 
 ## endAt
+
+#### Examples
+1. Usage with startAt
 ```js
 @firebaseConnect([
   'todos#orderByChild=added&startAt=1&endAt=5'
@@ -155,6 +158,14 @@ Limit query results to include a range starting at a specific number
 
 ## equalTo
 Limit query results with parameter equal to previous query method (i.e when used with orderByChild, it limits results with child equal to provided value). Internally runs [Firebase's `equalTo`](https://firebase.google.com/docs/reference/js/firebase.database.Query#equalTo).
+
+### Parsing
+The following are internally parsed:
+  * `null`
+  * `boolean`
+  * `number`
+
+This means the actual value will be parsed instead of the string containing the value. If you do not want this to happen, look at the `notParsed` query parameter below.
 
 #### Examples
 1. Order by child parameter
@@ -171,7 +182,6 @@ Can be used to keep internal parsing from happening. Useful when attempting to s
 
 #### Examples
 1. Order by child parameter equal to a number string. Equivalent of searching for `'123'` (where as not using `notParsed` would search for children equal to `123`)
-
 ```js
 @firebaseConnect([
   {

@@ -10,16 +10,18 @@ import {
   isEmpty
 } from 'react-redux-firebase'
 import { LIST_PATH } from 'constants'
+import { UserIsAuthenticated } from 'utils/router'
+import LoadingSpinner from 'components/LoadingSpinner'
 import ProjectTile from '../components/ProjectTile/ProjectTile'
 import NewProjectTile from '../components/NewProjectTile/NewProjectTile'
 import NewProjectDialog from '../components/NewProjectDialog/NewProjectDialog'
-import LoadingSpinner from 'components/LoadingSpinner'
 import classes from './ProjectsContainer.scss'
 
 const populates = [
   { child: 'createdBy', root: 'users', keyProp: 'uid' }
 ]
 
+@UserIsAuthenticated
 @firebaseConnect([
   { path: 'projects', populates }
   // 'projects#populate=owner:users' // string equivalent
@@ -50,10 +52,7 @@ export default class Projects extends Component {
 
   newSubmit = (newProject) => {
     const { auth, firebase: { push } } = this.props
-    if (auth.uid) {
-      newProject.owner = auth.uid
-    }
-    push('projects', newProject)
+    return pushWithMeta('projects', newProject)
       .then(() => this.setState({ newProjectModal: false }))
       .catch(err => {
         // TODO: Show Snackbar
@@ -62,7 +61,7 @@ export default class Projects extends Component {
   }
 
   deleteProject = (key) => {
-    this.props.firebase.remove(`projects/${key}`)
+    return this.props.firebase.remove(`projects/${key}`)
       .then(() => {
         // TODO: Show snackbar
       })
@@ -85,7 +84,6 @@ export default class Projects extends Component {
 
     const { projects, auth } = this.props
     const { newProjectModal } = this.state
-
 
     return (
       <div className={classes.container}>
