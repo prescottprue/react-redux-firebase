@@ -1,4 +1,4 @@
-import react, { Component } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import classes from './Navbar.scss'
 import { Link } from 'react-router'
