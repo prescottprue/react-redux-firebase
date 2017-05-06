@@ -7,8 +7,8 @@ import {
   firebaseConnect,
   isLoaded,
   pathToJS,
-  // dataToJS, // needed for full list and once
-  orderedToJS // needed for ordered list
+  dataToJS, // needed for full list and once
+  // orderedToJS // needed for ordered list
   // populatedDataToJS // needed for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
@@ -25,16 +25,16 @@ import classes from './HomeContainer.scss'
 @firebaseConnect([
   // 'todos' // sync full list of todos
   // { path: 'todos', type: 'once' } // for loading once instead of binding
-  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=8'] } // 8 most recent
+  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
   // { path: 'todos', populates } // populate
 ])
 @connect(
   ({firebase}) => ({
     auth: pathToJS(firebase, 'auth'),
     account: pathToJS(firebase, 'profile'),
-    // todos: dataToJS(firebase, 'todos')
+    todos: dataToJS(firebase, 'todos')
     // todos: populatedDataToJS(firebase, '/todos', populates), // if populating
-    todos: orderedToJS(firebase, 'todos') // if using ordering such as orderByChild
+    // todos: orderedToJS(firebase, '/todos') // if using ordering such as orderByChild
   })
 )
 export default class Home extends Component {
@@ -66,20 +66,23 @@ export default class Home extends Component {
     if (!auth || !auth.uid) {
       return this.setState({ error: 'You must be Logged into Toggle Done' })
     }
-    firebase.set(`/todos/${id}/done`, !todo.done)
+    return firebase.set(`/todos/${id}/done`, !todo.done)
   }
 
   deleteTodo = (id) => {
-    const { auth, firebase } = this.props
+    const { todos, auth, firebase } = this.props
     if (!auth || !auth.uid) {
       return this.setState({ error: 'You must be Logged into Delete' })
     }
-    return this.setState({ error: 'Delete example requires using populate' })
+    // return this.setState({ error: 'Delete example requires using populate' })
     // only works if populated
-    // if (todos[id].owner.uid !== auth.uid) {
-    //   return this.setState({ error: 'You must own todo to delete' })
-    // }
-    // return firebase.remove(`/todos/${id}`)
+    if (todos[id].owner !== auth.uid) {
+      return this.setState({ error: 'You must own todo to delete' })
+    }
+    return firebase.remove(`/todos/${id}`)
+      .catch((err) => {
+        return this.setState({ error: 'Error Removing todo' })
+      })
   }
 
   handleAdd = (newTodo) => {
@@ -136,8 +139,7 @@ export default class Home extends Component {
                 <List className={classes.list}>
                   {
                     todos &&
-                    // todos list is reversed so the most recent is first
-                      map(todos.reverse(), (todo, id) => (
+                      map(todos, (todo, id) => (
                         <TodoItem
                           key={id}
                           id={id}
