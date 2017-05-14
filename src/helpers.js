@@ -301,7 +301,7 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
     ? populates(last(split(path, '/')), dataToJS(data, path))
     : populates)
   const dataHasPopluateChilds = every(populatesForData, (populate) => (
-    has(data, populate.child)
+    has(dataToJS(data, path), populate.child)
   ))
 
   if (dataHasPopluateChilds) {
