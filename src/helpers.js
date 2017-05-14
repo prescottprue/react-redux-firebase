@@ -1,5 +1,8 @@
 import {
   size,
+  set,
+  last,
+  split,
   map,
   some,
   first,
@@ -7,7 +10,8 @@ import {
   mapValues,
   reduce,
   isString,
-  defaultsDeep
+  isFunction,
+  defaultsDeep,
 } from 'lodash'
 import { getPopulateObjs } from './utils/populate'
 import { metaParams, paramSplitChar } from './constants'
@@ -288,7 +292,9 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
   if (!dataToJS(data, path, notSetValue)) {
     return dataToJS(data, path, notSetValue)
   }
-  const populateObjs = getPopulateObjs(populates)
+  const populateObjs = isFunction(populates)
+    ? getPopulateObjs(populates(last(split(path, '/')), dataToJS(data, path)))
+    : getPopulateObjs(populates)
   // reduce array of populates to object of combined populated data
   return reduce(
     map(populateObjs, (p, obj) => {
