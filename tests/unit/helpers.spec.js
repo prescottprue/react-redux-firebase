@@ -27,6 +27,19 @@ const exampleData = {
           ABC: true,
           abc: true
         }
+      },
+      QRS: {
+        owner: 'ABC',
+        nested: {
+          owner: 'ABC'
+        },
+        notes: {
+          123: true,
+        },
+        collaborators: {
+          ABC: true,
+          abc: true
+        }
       }
     },
     users: {
@@ -152,7 +165,16 @@ describe('Helpers:', () => {
             .have
             .property('displayName', 'scott')
         })
-
+        it('handles child path', () => {
+          const path = 'projects/QRS'
+          const rootName = 'users'
+          const populates = [{ child: 'nested.owner', root: rootName }]
+          const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
+          expect(populatedData.nested.owner)
+            .to
+            .have
+            .property('displayName', 'scott')
+        })
         it('populates childParam', () => {
           const path = 'projects/CDF'
           const rootName = 'users'
@@ -183,6 +205,22 @@ describe('Helpers:', () => {
             .have
             .deep
             .property(`collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+        })
+      })
+
+      describe('config as function', () => {
+        it('populates values', () => {
+          const path = 'projects/CDF'
+          const rootName = 'users'
+          const populates = (projectKey, projectData) => ([
+            // configure populates with key / data tuple...
+            { child: 'owner', root: rootName }
+          ])
+          const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
+          expect(populatedData.owner)
+            .to
+            .have
+            .property('displayName', 'scott')
         })
       })
 
