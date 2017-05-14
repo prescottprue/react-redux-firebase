@@ -293,28 +293,24 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
   return reduce(
     map(populateObjs, (p, obj) => {
       // single item with iterable child
-      if (dataToJS(data, path)[p.child]) {
+      if (get(dataToJS(data, path), p.child)) {
         // populate child is key
-        if (isString(dataToJS(data, path)[p.child])) {
-          const key = dataToJS(data, path)[p.child]
+        if (isString(get(dataToJS(data, path), p.child))) {
+          const key = get(dataToJS(data, path), p.child)
           const pathString = p.childParam
             ? `${p.root}/${key}/${p.childParam}`
             : `${p.root}/${key}`
           if (dataToJS(data, pathString)) {
-            return {
-              [p.child]: p.keyProp
-                ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
-                : dataToJS(data, pathString)
-            }
+            return set({}, p.child, p.keyProp
+              ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
+              : dataToJS(data, pathString)
+            )
           }
 
           // matching child does not exist
           return dataToJS(data, path)
         }
-
-        return {
-          [p.child]: buildChildList(data, dataToJS(data, path)[p.child], p)
-        }
+        return set({}, p.child, buildChildList(data, get(dataToJS(data, path), p.child), p))
       }
       // list with child param in each item
       return mapValues(dataToJS(data, path), (child, i) => {
@@ -329,19 +325,16 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
             ? `${p.root}/${key}/${p.childParam}`
             : `${p.root}/${key}`
           if (dataToJS(data, pathString)) {
-            return {
-              [p.child]: p.keyProp
-                ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
-                : dataToJS(data, pathString)
-            }
+            return set({}, p.child, p.keyProp
+              ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
+              : dataToJS(data, pathString)
+            )
           }
           // matching child does not exist
           return child
         }
         // populate child list
-        return {
-          [p.child]: buildChildList(data, child[p.child], p)
-        }
+        return set({}, p.child, buildChildList(data, child[p.child], p))
       })
     }),
   // combine data from all populates to one object starting with original data

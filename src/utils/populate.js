@@ -119,13 +119,13 @@ export const promisesForPopulate = (firebase, originalData, populatesIn) => {
     // Data is single parameter
     if (has(originalData, p.child)) {
       // Single Parameter is single ID
-      if (isString(originalData[p.child])) {
+      if (isString(get(originalData, p.child))) {
         return promisesArray.push(
-          getPopulateChild(firebase, p, originalData[p.child])
+          getPopulateChild(firebase, p, get(originalData, p.child))
             .then((v) => {
               // write child to result object under root name if it is found
               if (v) {
-                set(results, `${p.root}.${originalData[p.child]}`, v)
+                set(results, `${p.root}.${get(originalData, p.child)}`, v)
               }
             })
         )
@@ -133,7 +133,7 @@ export const promisesForPopulate = (firebase, originalData, populatesIn) => {
 
       // Single Parameter is list
       return promisesArray.push(
-        populateList(firebase, originalData[p.child], p, results)
+        populateList(firebase, get(originalData, p.child), p, results)
       )
     }
 
