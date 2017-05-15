@@ -1,4 +1,4 @@
-import { forEach, size, isFunction } from 'lodash'
+import { forEach, size } from 'lodash'
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from '../utils/populate'
 import {
