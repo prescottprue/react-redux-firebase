@@ -137,7 +137,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
         .then((results) => {
           dispatch({
             type: SET,
-            path: resultPath,
+            path: storeAs || resultPath,
             data,
             timestamp: Date.now(),
             requesting: false,

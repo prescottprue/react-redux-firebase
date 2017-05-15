@@ -152,7 +152,7 @@ export const promisesForPopulate = (firebase, dataKey, originalData, populatesIn
       const populatesForDataItem = getPopulateObj(isFunction(populatesIn)
         ? populatesIn(key, d)
         : populatesIn)
-      
+
       // resolve each populate for this data item
       forEach(populatesForDataItem, (p) => {
         // get value of parameter to be populated (key or list of keys)
