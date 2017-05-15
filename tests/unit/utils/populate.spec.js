@@ -47,14 +47,14 @@ describe('Utils: Populate', () => {
 
   describe('promisesForPopulate', () => {
     it('handles non-existant single child', () =>
-      promisesForPopulate(Firebase, { uid: '123123' }, [{child: 'random', root: 'users'}])
+      promisesForPopulate(Firebase, '', { uid: '123123' }, [{child: 'random', root: 'users'}])
         .then((v) => {
           expect(JSON.stringify(v)).to.equal(JSON.stringify({}))
         })
     )
 
     it('populates single property containing a single item', () =>
-      promisesForPopulate(Firebase, { uid: '123' }, [{child: 'uid', root: 'users'}])
+      promisesForPopulate(Firebase, '', { uid: '123' }, [{child: 'uid', root: 'users'}])
         .then((v) => {
           expect(v).to.exist
           expect(v).to.have.keys('users')
@@ -63,7 +63,7 @@ describe('Utils: Populate', () => {
     )
 
     it('populates single property containing a list', () =>
-      promisesForPopulate(Firebase, { collaborators: { 'Iq5b0qK2NtgggT6U3bU6iZRGyma2': true, '123': true } }, [{child: 'collaborators', root: 'users'}])
+      promisesForPopulate(Firebase, '', { collaborators: { 'Iq5b0qK2NtgggT6U3bU6iZRGyma2': true, '123': true } }, [{child: 'collaborators', root: 'users'}])
         .then((v) => {
           expect(v).to.exist
           expect(v).to.have.keys('users')
@@ -72,7 +72,7 @@ describe('Utils: Populate', () => {
     )
 
     it('populates list with single property populate', () =>
-      promisesForPopulate(Firebase, { 1: { owner: 'Iq5b0qK2NtgggT6U3bU6iZRGyma2' } }, [{child: 'owner', root: 'users'}])
+      promisesForPopulate(Firebase, '', { 1: { owner: 'Iq5b0qK2NtgggT6U3bU6iZRGyma2' } }, [{child: 'owner', root: 'users'}])
         .then((v) => {
           expect(v).to.have.keys('users')
           expect(v.users['Iq5b0qK2NtgggT6U3bU6iZRGyma2']).to.be.an.object
@@ -80,7 +80,7 @@ describe('Utils: Populate', () => {
     )
 
     it('populates list with property containing array property', () =>
-      promisesForPopulate(Firebase, { 1: { collaborators: ['Iq5b0qK2NtgggT6U3bU6iZRGyma2', '123'] } }, [{child: 'collaborators', root: 'users'}])
+      promisesForPopulate(Firebase, '', { 1: { collaborators: ['Iq5b0qK2NtgggT6U3bU6iZRGyma2', '123'] } }, [{child: 'collaborators', root: 'users'}])
         .then((v) => {
           expect(v).to.exist
           expect(v).to.have.keys('users')
@@ -89,7 +89,7 @@ describe('Utils: Populate', () => {
     )
 
     it('populates list with property containing firebase list', () =>
-      promisesForPopulate(Firebase, { 1: { collaborators: { 'Iq5b0qK2NtgggT6U3bU6iZRGyma2': true, '123': true } } }, [{child: 'collaborators', root: 'users'}])
+      promisesForPopulate(Firebase, '', { 1: { collaborators: { 'Iq5b0qK2NtgggT6U3bU6iZRGyma2': true, '123': true } } }, [{child: 'collaborators', root: 'users'}])
         .then((v) => {
           expect(v).to.exist
           expect(v).to.have.keys('users')
@@ -98,7 +98,7 @@ describe('Utils: Populate', () => {
     )
 
     it('populates list with property containing invalid child id', () =>
-      promisesForPopulate(Firebase, { 1: { collaborators: ['1111', '123'] } }, [{child: 'collaborators', root: 'users'}])
+      promisesForPopulate(Firebase, '', { 1: { collaborators: ['1111', '123'] } }, [{child: 'collaborators', root: 'users'}])
         .then((v) => {
           expect(v).to.exist
           expect(v.users).to.have.keys('123') // sets valid child
