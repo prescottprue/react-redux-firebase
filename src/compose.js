@@ -156,8 +156,7 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Function} onComplete - Function to run on complete (`not required`)
      * @return {Promise} Containing reference snapshot
      * @example <caption>Basic</caption>
-     * import React, { Component } from 'react'
-     * import PropTypes from 'prop-types'
+     * import React, { Component, PropTypes } from 'react'
      * import { firebaseConnect } from 'react-redux-firebase'
      * const Example = ({ firebase: { set } }) => (
      *   <button onClick={() => set('some/path', { here: 'is a value' })}>
@@ -189,8 +188,7 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Function} onComplete - Function to run on complete (`not required`)
      * @return {Promise} Containing reference snapshot
      * @example <caption>Basic</caption>
-     * import React, { Component } from 'react'
-     * import PropTypes from 'prop-types'
+     * import React, { Component, PropTypes } from 'react'
      * import { firebaseConnect } from 'react-redux-firebase'
      * const Example = ({ firebase: { push } }) => (
      *   <button onClick={() => push('some/path', true)}>
@@ -220,8 +218,7 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Function} onComplete - Function to run on complete (`not required`)
      * @return {Promise} Containing reference snapshot
      * @example <caption>Basic</caption>
-     * import React, { Component } from 'react'
-     * import PropTypes from 'prop-types'
+     * import React, { Component, PropTypes } from 'react'
      * import { firebaseConnect } from 'react-redux-firebase'
      * const Example = ({ firebase: { update } }) => (
      *   <button onClick={() => update('some/path', { here: 'is a value' })}>
@@ -251,8 +248,7 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Function} onComplete - Function to run on complete (`not required`)
      * @return {Promise} Containing reference snapshot
      * @example <caption>Basic</caption>
-     * import React, { Component } from 'react'
-     * import PropTypes from 'prop-types'
+     * import React, { Component, PropTypes } from 'react'
      * import { firebaseConnect } from 'react-redux-firebase'
      * const Example = ({ firebase: { remove } }) => (
      *   <button onClick={() => remove('some/path')}>
@@ -272,8 +268,7 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Function} onComplete - Function to run on complete (`not required`)
      * @return {Promise} Containing reference snapshot
      * @example <caption>Basic</caption>
-     * import React, { Component } from 'react'
-     * import PropTypes from 'prop-types'
+     * import React, { Component, PropTypes } from 'react'
      * import { firebaseConnect } from 'react-redux-firebase'
      * const Example = ({ firebase: { uniqueSet } }) => (
      *   <button onClick={() => uniqueSet('some/unique/path', true)}>

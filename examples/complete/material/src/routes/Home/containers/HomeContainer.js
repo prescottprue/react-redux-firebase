@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { map } from 'lodash'
 import Theme from 'theme'
@@ -7,7 +6,7 @@ import {
   firebaseConnect,
   isLoaded,
   pathToJS,
-  dataToJS, // needed for full list and once
+  dataToJS // needed for full list and once
   // orderedToJS // needed for ordered list
   // populatedDataToJS // needed for populated list
 } from 'react-redux-firebase'
@@ -81,7 +80,9 @@ export default class Home extends Component {
     }
     return firebase.remove(`/todos/${id}`)
       .catch((err) => {
-        return this.setState({ error: 'Error Removing todo' })
+        console.error('Error removing todo: ', err) // eslint-disable-line no-console
+        this.setState({ error: 'Error Removing todo' })
+        return Promise.reject(err)
       })
   }
 
