@@ -68,7 +68,7 @@ export const UserIsAuthenticated = UserAuthWrapper({
   authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
   authenticatingSelector: ({ firebase }) =>
     pathToJS(firebase, 'isInitializing') === true ||
-    pathToJS(firebase, 'auth') === undefined
+    pathToJS(firebase, 'auth') === undefined,
   predicate: auth => auth !== null,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
