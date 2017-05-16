@@ -31,6 +31,7 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 - Action Types and other Constants exported for external use (such as in `redux-observable`)
 - Firebase v3+ support
 - Server Side Rendering Support
+- [`react-native` support](/docs/recipes/react-native.md)
 
 ## Install
 ```bash
@@ -190,7 +191,7 @@ export default compose(
 
 Firebase's library requires XML request capability, so if you are using `react-redux-firebase` in a Server Side rendering environment, make sure you require `xmlhttprequest`.
 
-If you disagree with having to do this yourself, hop [on gitter]() and let us know!
+If you disagree with having to do this yourself, hop [on gitter](https://gitter.im/redux-firebase/Lobby) and let us know!
 
 ```js
 // needed to fix "Error: The XMLHttpRequest compatibility library was not found."
@@ -268,9 +269,10 @@ import { pathToJS } from 'react-redux-firebase'
 export const addTodo = (newTodo) =>
   (dispatch, getState, getFirebase) => {
     const auth = pathToJS(getState.firebase, 'auth')
-    newTodo.owner = auth.uid
+    newTodo.createdBy = auth.uid //
     getFirebase()
       .push('todos', newTodo)
+      // using pushWithMeta instead would attach createdBy and createdAt automatically
       .then(() => {
         dispatch({
           type: 'TODO_CREATED',
@@ -365,6 +367,7 @@ The [examples folder](/examples) contains full applications that can be copied/a
   * `uniqueSet` method helper for only setting if location doesn't already exist
   * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)
   * Action Types and other Constants are exposed for external usage (such as with `redux-observable`)
+  * Server Side Rendering Support
   * [Complete Firebase Auth Integration](http://react-redux-firebase.com/docs/auth.html#examples) including `signInWithRedirect` compatibility for OAuth Providers
 
   #### Well why not combine?

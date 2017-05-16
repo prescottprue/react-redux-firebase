@@ -1,44 +1,5 @@
 # Auth Recipes
 
-## Wait For Auth To Load
-One of the most common patterns with authentication, is showing a loading spinner until
-
-```js
-import React, { Component, PropTypes } from 'react'
-import { isLoaded, isEmpty, pathToJS, dataToJS } from 'react-redux-firebase'
-import { connect } from 'react-redux'
-
-class App extends Component {
-  render() {
-    const { auth } = this.props
-
-    if (!isLoaded(auth) || isEmpty(auth)) {
-      return (<p>you need to login</p>)
-    }
-
-    return (
-      <div>
-        Todos For User with id: { auth.uid }
-        <TodoComponent
-          todos={this.props.todos}
-        />
-      </div>
-    )
-  }
-}
-
-const fbWrappedComponent = firebaseConnect([
-  '/todos'
-])(App)
-
-export default connect(
-  ({ firebase }) => ({
-    todos: dataToJS(firebase, 'todos'),
-    auth: pathToJS(firebase, 'auth')
-  })
-)(fbWrappedComponent)
-```
-
 ## Google Login
 
 Here is an example of a component that shows a Google login button if the user is not logged in, and a welcome message if they are. The initial loading state is handled with a simple "loading" message
@@ -81,6 +42,7 @@ export default class Login extends Component {
         // this is where you can redirect to another route
       })
       .catch((error) => {
+        this.setState({ isLoading: false })
         console.log('there was an error', error)
         console.log('error prop:', this.props.authError) // thanks to connect
       })
