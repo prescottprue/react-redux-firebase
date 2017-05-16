@@ -1,47 +1,19 @@
 # Roadmap
 
-## Recent Minor Version (`v1.3.0`)
-
-**Note:** These changes include the combination of changes from all pre-release versions (`v1.3.0-*`)
-
-### Breaking Changes
-* Get ordered data using `orderedToJS(firebase, 'path')` which returns an array
-* `commonjs`, `es`, `umd` versions built with Webpack (could cause issues with some webpack configs)
-* `INIT_BY_PATH` action type no longer exists (replaced with `UNSET_LISTENER`)
-* Action is no longer automatically fired when removing listeners (not enabled by default as it removes data from redux)
-
-### Features
-* Webpack 2 support (fixes [#64](https://github.com/prescottprue/react-redux-firebase/issues/64))
-* Helpers are available as imports from top level:
-```js
-import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
-```
-* Multiple populates now supported (Fixes [#49](https://github.com/prescottprue/react-redux-firebase/issues/49))
-* `keyProp` option added to assign key from populate to a property (described in [#40](https://github.com/prescottprue/react-redux-firebase/issues/40))
-* `keyProp` usage illustrated within [material example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) (on projects list page)
-* `storeAs` capability added allowing for multiple queries on the same route (As requested in [#56](https://github.com/prescottprue/react-redux-firebase/issues/56))
-* `storeAs` usage illustrated in [multiple queries example](https://github.com/prescottprue/react-redux-firebase/tree/v1.3.0-rc.1/examples/snippets/multipleQueries)
-* `dispatchOnUnsetListener` config option added for enabling dispatching of `UNSET_LISTENER` action (along with matching reducer case which removes data from path) when unsetting listeners
-* [material example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) errors fixed (including [#54](https://github.com/prescottprue/react-redux-firebase/issues/54))
-* Removed redundant set calls within `SET` case of reducer (unnecessary and can cause `invalid keyPath`)
-* Demo now available at [demo.react-redux-firebase.com](https://demo.react-redux-firebase.com)
-* Delete project button added to [material example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material)
-
-## Upcoming Minor Version (`v1.4.0`)
+## Recent Minor Version (`v1.4.0`)
 
 #### Features
 * `react-native` support (including [complete example](https://github.com/prescottprue/react-redux-firebase/tree/v1.4.0-beta/examples/complete/react-native) app as well as a [create your own recipe](/docs/recipes/react-native.md))
 * Server Side Rendering Support ([#72](https://github.com/prescottprue/react-redux-firebase/issues/72))
 * Support for Boilerplates ([#53](https://github.com/prescottprue/react-redux-firebase/issues/53))
-* Use `prop-types` package instead of `React.PropTypes` [#122](https://github.com/prescottprue/react-redux-firebase/pull/122) - Thanks [@petetnt](https://github.com/petetnt)
+* Use `prop-types` package instead of `React.PropTypes` [#122](https://github.com/prescottprue/react-redux-firebase/pull/122) - thanks [@petetnt](https://github.com/petetnt)
 * `pushWithMeta`, `setWithMeta`, and `updateWithMeta` methods added - write to firebase with createdAt/updatedAt and createdBy/updatedBy
 * Fix for `unWatchEvent` helper dispatch mapping (#82)
 * `populatedDataToJS` triggers `isLoaded` to be true only when all data is populated (instead of once for unpopulated data) [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
 * Support for `provider.setCustomParameters` on external auth providers (i.e. `provider.setCustomParameters({ prompt: 'select_account' })`)
 * `notParsed` query param option added for not parsing when using `equalTo` (for searching numbers stored as strings)
-* `profileParamsToPopulate` now works for `$key: true` lists (thanks @fej-snikduj)
+* `profileParamsToPopulate` now works for `$key: true` lists - thanks [@fej-snikduj](https://github.com/fej-snikduj)
 * `onRedirectResult` config option added (runs when redirect result occurs)
-
 
 #### Enhancements/Fixes
 * Improvements to Material Example
@@ -53,12 +25,20 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
 * Firebase version is no longer fixed ([#109](https://github.com/prescottprue/react-redux-firebase/issues/109))
 * Only used parts of Firebase Library imported (shrinks bundle size)
 * `build:size` npm script added to generate size report for minified bundle ([#107](https://github.com/prescottprue/react-redux-firebase/issues/107))
-* `user` and `credential` are now returned from login method (solves [#106](https://github.com/prescottprue/react-redux-firebase/issues/106))
+* `user` and `credential` are now returned from login method ([#106](https://github.com/prescottprue/react-redux-firebase/issues/106))
 * `yarn.lock` file added
 * Compose tests improved promise handling (better use of chai-as-promised)
-<!-- * Fix `profileParamsToPopulate` with `key: true` lists - thanks [@fej-snikduj](https://github.com/fej-snikduj) -->
+* Fix `profileParamsToPopulate` with `key: true` lists - thanks [@fej-snikduj](https://github.com/fej-snikduj)
 
-## Future Minor Versions (`v1.5.0 - v1.*.*`)
+
+## Next Minor Version (`v1.5.0`)
+* Setting that allows for `waitForPopulate` to be turned off (i.e. return populated data as in becomes available). As of `v1.4.0-rc.2`, populate only sets `isLoaded` to true after all children are loaded ([#121](https://github.com/prescottprue/react-redux-firebase/issues/121)), `waitForPopulate` would make this optional.
+* `updateUser` method for updating currently authenticated user's user object (`/users/${uid}`)
+* `updateAuth` method for updating currently authenticated user's auth object [as seen in the Firebase docs](https://firebase.google.com/docs/auth/web/manage-users#get_a_users_provider-specific_profile_information)
+* Option to not remove all data on logout (potential config syntax: `preserveOnLogout: ['todos']`)
+* Option for populated items updating when changed ([#69](https://github.com/prescottprue/react-redux-firebase/issues/69))
+
+## Future Minor Versions (`v1.6.0 - v1.*.*`)
 
 **Note:** Subject to change
 
@@ -66,12 +46,9 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
  *None Yet Planned*
 
 #### Features
-* Integration for [`react-native-google-signin`](https://github.com/devfd/react-native-google-signin) to simplify react-native authentication implementation
 * Integration for [`react-native-firebase`](https://github.com/invertase/react-native-firebase) for using Firebase native modules instead of JS library
-* Option for populated items updating when changed ([#69](https://github.com/prescottprue/react-redux-firebase/issues/69))
-* Setting allowing for `waitForPopulate` to be turned off (i.e. return populated data as in becomes available). As of v1.4.0, populate only sets `isLoaded` to true after all children are loaded ([#121](https://github.com/prescottprue/react-redux-firebase/issues/121)), `waitForPopulate` would make this optional.
-* Nested populates [#85](https://github.com/prescottprue/react-redux-firebase/issues/85)
-* `updateProfile` method for updating currently authenticated user's profile
+* Integration for [`react-native-google-signin`](https://github.com/devfd/react-native-google-signin) to simplify react-native authentication implementation
+* Nested populates ([#85](https://github.com/prescottprue/react-redux-firebase/issues/85))
 
 #### Enhancements/Fixes
  *None Yet Planned*
