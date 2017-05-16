@@ -30,17 +30,25 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
 ## Upcoming Minor Version (`v1.4.0`)
 
 #### Features
-* `react-native` support (progress available on [`react-native` branch](https://github.com/prescottprue/react-redux-firebase/tree/react-native))
+* `react-native` support (including [complete example](https://github.com/prescottprue/react-redux-firebase/tree/v1.4.0-beta/examples/complete/react-native) app as well as a [create your own recipe](/docs/recipes/react-native.md))
 * Server Side Rendering Support ([#72](https://github.com/prescottprue/react-redux-firebase/issues/72))
 * Support for Boilerplates ([#53](https://github.com/prescottprue/react-redux-firebase/issues/53))
 * Use `prop-types` package instead of `React.PropTypes` [#122](https://github.com/prescottprue/react-redux-firebase/pull/122) - Thanks [@petetnt](https://github.com/petetnt)
 * `pushWithMeta`, `setWithMeta`, and `updateWithMeta` methods added - write to firebase with createdAt/updatedAt and createdBy/updatedBy
 * Fix for `unWatchEvent` helper dispatch mapping (#82)
 * `populatedDataToJS` triggers `isLoaded` to be true only when all data is populated (instead of once for unpopulated data) [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
-* Support for `setCustomParameters` on external auth providers (i.e. `provider.setCustomParameters({ prompt: 'select_account' })`)
+* Support for `provider.setCustomParameters` on external auth providers (i.e. `provider.setCustomParameters({ prompt: 'select_account' })`)
 * `notParsed` query param option added for not parsing when using `equalTo` (for searching numbers stored as strings)
+* `profileParamsToPopulate` now works for `$key: true` lists (thanks @fej-snikduj)
+* `onRedirectResult` config option added (runs when redirect result occurs)
+
 
 #### Enhancements/Fixes
+* Improvements to Material Example
+  * Projects route is now protected (using `UserIsAuthenticated` HOC from `utils/router`)
+  * Todos list only displays first 8 (first at the top) - shows using ordering query params
+  * Most main routes are now sync (more simple)
+* Firebase Library dependency updated to [`v3.9.0`](https://firebase.google.com/support/release-notes/js)
 * Fix for `unWatchEvent` helper dispatch mapping ([#82](https://github.com/prescottprue/react-redux-firebase/issues/82))
 * Firebase version is no longer fixed ([#109](https://github.com/prescottprue/react-redux-firebase/issues/109))
 * Only used parts of Firebase Library imported (shrinks bundle size)
@@ -59,6 +67,7 @@ import { pathToJS, dataToJS, populatedDataToJS } from 'react-redux-firebase'
 
 #### Features
 * Integration for [`react-native-google-signin`](https://github.com/devfd/react-native-google-signin) to simplify react-native authentication implementation
+* Integration for [`react-native-firebase`](https://github.com/invertase/react-native-firebase) for using Firebase native modules instead of JS library
 * Option for populated items updating when changed ([#69](https://github.com/prescottprue/react-redux-firebase/issues/69))
 * Setting allowing for `waitForPopulate` to be turned off (i.e. return populated data as in becomes available). As of v1.4.0, populate only sets `isLoaded` to true after all children are loaded ([#121](https://github.com/prescottprue/react-redux-firebase/issues/121)), `waitForPopulate` would make this optional.
 * Nested populates [#85](https://github.com/prescottprue/react-redux-firebase/issues/85)

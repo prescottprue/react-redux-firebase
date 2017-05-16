@@ -26,8 +26,7 @@ Middleware that handles configuration (placed in redux's
     -   `config.onRedirectResult` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function run when redirect
         result is returned. Argument Pattern: `(authData, firebase, dispatch)`
     -   `config.customAuthParameters` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object for setting which
-
-            customAuthParameters are passed to external auth providers.
+        customAuthParameters are passed to external auth providers.
     -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user profile is saved.
     -   `config.uploadFileDataFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying
         how file meta data is written during file uploads
