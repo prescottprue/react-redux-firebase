@@ -40,6 +40,7 @@
   * Use `storeAs` with populates - [#130](https://github.com/prescottprue/react-redux-firebase/issues/130)
 * `updateUser` method for updating currently authenticated user's user object (`/users/${uid}`)
 * `updateAuth` method for updating currently authenticated user's auth object [as seen in the Firebase docs](https://firebase.google.com/docs/auth/web/manage-users#get_a_users_provider-specific_profile_information) - [#129](https://github.com/prescottprue/react-redux-firebase/issues/129)
+* Expose Firebase messaging
 * Setting that allows for `waitForPopulate` to be turned off (i.e. return populated data as in becomes available). As of `v1.4.0-rc.2`, populate only sets `isLoaded` to true after all children are loaded, `waitForPopulate` would make this optional - [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
 
 ## Future Minor Versions (`v1.6.0 - v1.*.*`)
