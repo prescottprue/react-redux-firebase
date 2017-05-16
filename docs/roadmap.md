@@ -6,7 +6,6 @@
 * `react-native` support (including [complete example](https://github.com/prescottprue/react-redux-firebase/tree/v1.4.0-beta/examples/complete/react-native) app as well as a [create your own recipe](/docs/recipes/react-native.md))
 * Server Side Rendering Support ([#72](https://github.com/prescottprue/react-redux-firebase/issues/72))
 * Support for Boilerplates ([#53](https://github.com/prescottprue/react-redux-firebase/issues/53))
-* Use `prop-types` package instead of `React.PropTypes` [#122](https://github.com/prescottprue/react-redux-firebase/pull/122) - thanks [@petetnt](https://github.com/petetnt)
 * `pushWithMeta`, `setWithMeta`, and `updateWithMeta` methods added - write to firebase with createdAt/updatedAt and createdBy/updatedBy
 * Fix for `unWatchEvent` helper dispatch mapping (#82)
 * `populatedDataToJS` triggers `isLoaded` to be true only when all data is populated (instead of once for unpopulated data) [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
@@ -32,11 +31,14 @@
 
 
 ## Next Minor Version (`v1.5.0`)
-* Setting that allows for `waitForPopulate` to be turned off (i.e. return populated data as in becomes available). As of `v1.4.0-rc.2`, populate only sets `isLoaded` to true after all children are loaded ([#121](https://github.com/prescottprue/react-redux-firebase/issues/121)), `waitForPopulate` would make this optional.
+* Use `prop-types` package instead of `React.PropTypes` ([#122](https://github.com/prescottprue/react-redux-firebase/pull/122)) - thanks [@petetnt](https://github.com/petetnt)
+* New Features for Population  ([#132](https://github.com/prescottprue/react-redux-firebase/pull/132)) - thanks [@javamonn](https://github.com/javamonn)
+  * Lodash supported path syntax for `populates.child`
+  * Dynamic populates configurations (passing a function that generates populates config based on top level `(key, item)` tuple)
+  * Use `storeAs` with populates ([#130](https://github.com/prescottprue/react-redux-firebase/issues/130))
 * `updateUser` method for updating currently authenticated user's user object (`/users/${uid}`)
 * `updateAuth` method for updating currently authenticated user's auth object [as seen in the Firebase docs](https://firebase.google.com/docs/auth/web/manage-users#get_a_users_provider-specific_profile_information)
-* Option to not remove all data on logout (potential config syntax: `preserveOnLogout: ['todos']`)
-* Option for populated items updating when changed ([#69](https://github.com/prescottprue/react-redux-firebase/issues/69))
+* Setting that allows for `waitForPopulate` to be turned off (i.e. return populated data as in becomes available). As of `v1.4.0-rc.2`, populate only sets `isLoaded` to true after all children are loaded ([#121](https://github.com/prescottprue/react-redux-firebase/issues/121)), `waitForPopulate` would make this optional.
 
 ## Future Minor Versions (`v1.6.0 - v1.*.*`)
 
@@ -46,6 +48,8 @@
  *None Yet Planned*
 
 #### Features
+* Config option for populated items updating when changed ([#69](https://github.com/prescottprue/react-redux-firebase/issues/69))
+* Config option to not remove all data on logout (potential config syntax: `preserveOnLogout: ['todos']`)
 * Integration for [`react-native-firebase`](https://github.com/invertase/react-native-firebase) for using Firebase native modules instead of JS library
 * Integration for [`react-native-google-signin`](https://github.com/devfd/react-native-google-signin) to simplify react-native authentication implementation
 * Nested populates ([#85](https://github.com/prescottprue/react-redux-firebase/issues/85))
