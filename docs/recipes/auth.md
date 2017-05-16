@@ -5,8 +5,7 @@
 Here is an example of a component that shows a Google login button if the user is not logged in, and a welcome message if they are. The initial loading state is handled with a simple "loading" message
 
 ```js
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component, PropTypes } from 'react'
 import GoogleButton from 'react-google-button'
 import { connect } from 'react-redux'
 import {

@@ -1,15 +1,10 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { PropTypes } from 'react'
 import { Field, reduxForm } from 'redux-form'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'components/TextField'
+import { required, email } from 'utils/forms'
 import { RECOVER_EMAIL_FORM_NAME } from 'constants'
 import classes from './EmailForm.scss'
-
-const required = value => value ? undefined : 'Required'
-const email = value =>
-  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-  ? 'Invalid email address' : undefined
 
 export const EmailForm = ({ account, handleSubmit, submitting, pristine, valid }) => (
   <form className={classes.container} onSubmit={handleSubmit}>

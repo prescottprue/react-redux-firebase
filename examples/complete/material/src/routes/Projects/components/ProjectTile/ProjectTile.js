@@ -1,5 +1,4 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { PropTypes } from 'react'
 import Paper from 'material-ui/Paper'
 import { isObject } from 'lodash'
 import IconButton from 'material-ui/IconButton'

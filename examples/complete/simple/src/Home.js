@@ -1,5 +1,4 @@
-import react, { Component } from 'react'
-import PropTypes from 'prop-types'
+import react, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import {
   firebaseConnect,

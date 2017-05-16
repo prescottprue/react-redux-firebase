@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component, PropTypes } from 'react'
 import classes from './TodoItem.scss'
 import { ListItem } from 'material-ui/List'
 import Checkbox from 'material-ui/Checkbox'

@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component, PropTypes } from 'react'
 import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'

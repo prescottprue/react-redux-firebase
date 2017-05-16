@@ -1,5 +1,4 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { PropTypes } from 'react'
 import MaterialTextField from 'material-ui/TextField'
 
 export const TextField = ({ input, label, meta: { touched, error }, ...custom }) => (

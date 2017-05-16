@@ -1,13 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { PropTypes } from 'react'
 import { Field, reduxForm } from 'redux-form'
 import RaisedButton from 'material-ui/RaisedButton'
 import Subheader from 'material-ui/Subheader'
 import TextField from 'components/TextField'
+import { required } from 'utils/forms'
 import { RECOVER_CODE_FORM_NAME } from 'constants'
 import classes from './RecoverForm.scss'
-
-const required = value => value ? undefined : 'Required'
 
 export const RecoverForm = ({ account, handleSubmit, onRecoverClick, submitting, pristine, valid }) => (
   <form className={classes.container} onSubmit={handleSubmit}>
