@@ -9,7 +9,8 @@ Detect whether items are loaded yet or not
 **Examples**
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
 ```
@@ -28,7 +29,8 @@ Detect whether items are empty or not
 **Examples**
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { firebaseConnect, isEmpty, dataToJS } from 'react-redux-firebase'
 ```
