@@ -1,10 +1,9 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Paper from 'material-ui/Paper'
 import { connect } from 'react-redux'
-import { reduxForm } from 'redux-form'
 import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
 import { reduxFirebase as rfConfig } from 'config'
-import { ACCOUNT_FORM_NAME } from 'constants'
 import { UserIsAuthenticated } from 'utils/router'
 import defaultUserImageUrl from 'static/User.png'
 import LoadingSpinner from 'components/LoadingSpinner'
@@ -16,12 +15,15 @@ import classes from './AccountContainer.scss'
 @connect( // Map redux state to props
   ({ firebase }) => ({
     auth: pathToJS(firebase, 'auth'),
-    account: pathToJS(firebase, 'profile'),
+    account: pathToJS(firebase, 'profile')
   })
 )
 export default class Account extends Component {
   static propTypes = {
     account: PropTypes.object,
+    auth: PropTypes.shape({
+      uid: PropTypes.string
+    }),
     firebase: PropTypes.shape({
       update: PropTypes.func.isRequired,
       logout: PropTypes.func.isRequired
@@ -42,7 +44,7 @@ export default class Account extends Component {
     this.props.firebase
       .update(`${rfConfig.userProfile}/${this.props.auth.uid}`, newData)
       .catch((err) => {
-        console.error('Error updating account', err)
+        console.error('Error updating account', err) // eslint-disable-line no-console
         // TODO: Display error to user
       })
 
@@ -77,4 +79,3 @@ export default class Account extends Component {
     )
   }
 }
-0

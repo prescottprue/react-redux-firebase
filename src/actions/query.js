@@ -135,14 +135,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       const dataKey = snapshot.key
       promisesForPopulate(firebase, dataKey, data, populates)
         .then((results) => {
-          dispatch({
-            type: SET,
-            path: storeAs || resultPath,
-            data,
-            timestamp: Date.now(),
-            requesting: false,
-            requested: true
-          })
+          // dispatch child sets first so isLoaded is only set to true for
+          // populatedDataToJS after all data is in redux (Issue #121)
           forEach(results, (result, path) => {
             dispatch({
               type: SET,
@@ -152,6 +146,14 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
               requesting: false,
               requested: true
             })
+          })
+          dispatch({
+            type: SET,
+            path: storeAs || resultPath,
+            data,
+            timestamp: Date.now(),
+            requesting: false,
+            requested: true
           })
         })
     }, (err) => {

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import classes from './Navbar.scss'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
@@ -51,7 +52,6 @@ export default class Navbar extends Component {
   }
 
   static propTypes = {
-    auth: PropTypes.object,
     account: PropTypes.object,
     firebase: PropTypes.object.isRequired
   }

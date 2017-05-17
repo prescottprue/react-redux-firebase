@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { List, ListItem } from 'material-ui/List'
 import classes from './ProviderDataForm.scss'
 import AccountCircle from 'material-ui/svg-icons/action/account-circle'
@@ -14,10 +15,12 @@ export const ProviderData = ({ providerData }) => (
             leftIcon={<AccountCircle />}
             nestedItems={[
               <ListItem
+                key={`Name-${i}`}
                 primaryText={providerAccount.displayName}
               />,
               <ListItem
                 label='email'
+                key={`Email-${i}`}
                 primaryText={providerAccount.email}
               />
             ]}

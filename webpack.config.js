@@ -3,6 +3,7 @@
 const webpack = require('webpack')
 const pkg = require('./package.json')
 const env = process.env.NODE_ENV
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const config = {
   module: {
@@ -41,6 +42,12 @@ if (env === 'production') {
       }
     })
   )
+
+  if (process.env.SIZE) {
+    config.plugins.push(
+      new BundleAnalyzerPlugin()
+    )
+  }
 }
 
 config.plugins.push(
@@ -52,4 +59,5 @@ config.plugins.push(
     { raw: false, entryOnly: true }
   )
 )
+
 module.exports = config

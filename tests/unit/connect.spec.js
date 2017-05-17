@@ -1,4 +1,5 @@
-import React, { createClass, Children, PropTypes, Component } from 'react'
+import React, { createClass, Children, Component } from 'react'
+import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import connect from '../../src/connect'
 import reactReduxFirebase from '../../src/compose'

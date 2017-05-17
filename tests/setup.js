@@ -19,6 +19,9 @@ global.document = jsdom('<!doctype html><html><body></body></html>')
 global.window = document.defaultView
 global.navigator = global.window.navigator
 
+// needed to fix "Error: The XMLHttpRequest compatibility library was not found." from Firebase auth
+global.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
+
 // Firebase
 var Firebase = global.Firebase = require('firebase')
 var fbConfig = global.fbConfig = {
