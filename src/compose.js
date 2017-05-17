@@ -452,7 +452,9 @@ export default (fbConfig, otherConfig) => next =>
       verifyPasswordResetCode,
       watchEvent,
       unWatchEvent,
-      storage: () => firebase.storage()
+      storage: (app) => firebase.storage(app),
+      messaging: (app) => firebase.messaging(app),
+      instance: firebase
     }
 
     authActions.init(dispatch, instance)
