@@ -1,27 +1,20 @@
 import React, { Component, PropTypes } from 'react'
+import { Field, reduxForm } from 'redux-form'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
-import { Field, reduxForm, submit } from 'redux-form'
 import TextField from 'components/TextField'
-
+import { required } from 'utils/forms'
 import classes from './NewProjectDialog.scss'
 
-const formName = 'newProject'
-const validate = values => {
-  const errors = {}
-  if (!values.name) errors.name = 'Required'
-  return errors
-}
 @reduxForm({
-  form: formName,
-  validate
+  form: 'newProject'
 })
 export default class NewProjectDialog extends Component {
   static propTypes = {
     open: PropTypes.bool,
     onRequestClose: PropTypes.func.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
-    dispatch: PropTypes.func.isRequired
+    submit: PropTypes.func.isRequired, // added by redux-form
+    handleSubmit: PropTypes.func.isRequired // added by redux-form
   }
 
   state = {
@@ -30,24 +23,15 @@ export default class NewProjectDialog extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.open) {
-      this.setState({
-        open: true
-      })
+      this.setState({ open: true })
     }
   }
 
   close = () => {
-    this.setState({
-      open: false
-    })
+    this.setState({ open: false })
     if (this.props.onRequestClose) {
       this.props.onRequestClose()
     }
-  }
-
-  handleSubmitClick = (e) => {
-    e.preventDefault()
-    this.props.dispatch(submit(formName))
   }
 
   render () {
@@ -63,7 +47,7 @@ export default class NewProjectDialog extends Component {
       <FlatButton
         label='Create'
         primary
-        onClick={this.handleSubmitClick}
+        onClick={this.props.submit}
       />
     ]
 
@@ -80,6 +64,7 @@ export default class NewProjectDialog extends Component {
             <Field
               name='name'
               component={TextField}
+              validate={[required]}
               label='Project Name'
             />
           </form>

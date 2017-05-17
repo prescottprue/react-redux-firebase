@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { firebase } from 'react-redux-firebase'
 
 import './Todo.css'

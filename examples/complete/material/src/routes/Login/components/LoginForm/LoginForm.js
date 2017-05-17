@@ -1,14 +1,12 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
+import { Field, reduxForm } from 'redux-form'
 import RaisedButton from 'material-ui/RaisedButton'
 import Checkbox from 'material-ui/Checkbox'
-
-import { Field, reduxForm } from 'redux-form'
-import TextField from 'components/TextField'
 import { RECOVER_PATH, LOGIN_FORM_NAME } from 'constants'
+import TextField from 'components/TextField'
+import { required, validateEmail } from 'utils/forms'
 import classes from './LoginForm.scss'
-
-import { required, validateEmail } from 'utils/form'
 
 export const LoginForm = ({ handleSubmit, submitting }) => (
   <form className={classes.container} onSubmit={handleSubmit}>

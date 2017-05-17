@@ -1,4 +1,8 @@
-import Firebase from 'firebase'
+import * as firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
+import 'firebase/storage'
+import { isObject } from 'lodash'
 import { defaultConfig } from './constants'
 import { validateConfig } from './utils'
 import { authActions, queryActions, storageActions } from './actions'
@@ -25,8 +29,15 @@ let firebaseInstance
  * profile when logging in. (default: `false`)
  * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
+ * @property {Function} config.onAuthStateChanged - Function run when auth state
+ * changes. Argument Pattern: `(authData, firebase, dispatch)`
+ * @property {Function} config.onRedirectResult - Function run when redirect
+ * result is returned. Argument Pattern: `(authData, firebase, dispatch)`
+ * @property {Object} config.customAuthParameters - Object for setting which
+ * customAuthParameters are passed to external auth providers.
  * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
- * @property {Function} config.uploadFileDataFactory - Factory for modifying how file meta data is written during file uploads
+ * @property {Function} config.uploadFileDataFactory - Factory for modifying
+ * how file meta data is written during file uploads
  * @property {Array|String} config.profileParamsToPopulate - Parameters within
  * profile object to populate
  * @property {Boolean} config.autoPopulateProfile - Whether or not to
@@ -56,6 +67,16 @@ let firebaseInstance
  *
  * // Use Function later to create store
  * const store = createStoreWithFirebase(rootReducer, initialState)
+ * @example <caption>Custom Auth Parameters</caption>
+ * // Follow Setup example with the following config:
+ * const config = {
+ *   customAuthParameters: {
+ *      google: {
+ *        // prompts user to select account on every google login
+ *        prompt: 'select_account'
+ *      }
+ *   }
+ * }
  */
 export default (fbConfig, otherConfig) => next =>
   (reducer, initialState, middleware) => {
@@ -69,17 +90,31 @@ export default (fbConfig, otherConfig) => next =>
 
     // Initialize Firebase
     try {
-      Firebase.initializeApp(fbConfig)
+      firebase.initializeApp(fbConfig)
     } catch (err) {} // silence reinitialize warning (hot-reloading)
 
     // Enable Logging based on config
     if (configs.enableLogging) {
-      Firebase.database.enableLogging(configs.enableLogging)
+      firebase.database.enableLogging(configs.enableLogging)
     }
 
-    const rootRef = Firebase.database().ref()
+    // Handle react-native
+    if (configs.ReactNative) {
+      configs.enableRedirectHandling = false
+      const { AsyncStorage } = configs.ReactNative
+      // Stub firebase's internal's with react-native (based on firebase's react-native index file)
+      firebase.INTERNAL.extendNamespace({
+        INTERNAL: {
+          reactNative: {
+            AsyncStorage
+          }
+        }
+      })
+    }
 
-    const firebase = Object.defineProperty(Firebase, '_', {
+    const rootRef = firebase.database().ref()
+
+    const instance = Object.defineProperty(firebase, '_', {
       value: {
         watchers: {},
         config: configs,
@@ -89,6 +124,30 @@ export default (fbConfig, otherConfig) => next =>
       enumerable: true,
       configurable: true
     })
+
+    /**
+     * @private
+     * @description Calls a method and attaches meta to value object
+     * @param {String} method - Method to run with meta attached
+     * @param {String} path - Path to location on Firebase which to set
+     * @param {Object|String|Boolean|Number} value - Value to write to Firebase
+     * @param {Function} onComplete - Function to run on complete
+     * @return {Promise} Containing reference snapshot
+     */
+    const withMeta = (method, path, value, onComplete) => {
+      if (isObject(value)) {
+        const prefix = method === 'update' ? 'updated' : 'created'
+        const dataWithMeta = {
+          ...value,
+          [`${prefix}At`]: firebase.database.ServerValue.TIMESTAMP
+        }
+        if (instance.auth().currentUser) {
+          dataWithMeta[`${prefix}By`] = instance.auth().currentUser.uid
+        }
+        return rootRef.child(path)[method](dataWithMeta, onComplete)
+      }
+      return rootRef.child(path)[method](value, onComplete)
+    }
 
     /**
      * @description Sets data to Firebase.
@@ -110,6 +169,19 @@ export default (fbConfig, otherConfig) => next =>
       rootRef.child(path).set(value, onComplete)
 
     /**
+     * @description Sets data to Firebase along with meta data. Currently,
+     * this includes createdAt and createdBy. *Warning* using this function
+     * may have unintented consequences (setting createdAt even if data already
+     * exists)
+     * @param {String} path - Path to location on Firebase which to set
+     * @param {Object|String|Boolean|Number} value - Value to write to Firebase
+     * @param {Function} onComplete - Function to run on complete (`not required`)
+     * @return {Promise} Containing reference snapshot
+     */
+    const setWithMeta = (path, value, onComplete) =>
+       withMeta('set', path, value, onComplete)
+
+    /**
      * @description Pushes data to Firebase.
      * @param {String} path - Path to location on Firebase which to push
      * @param {Object|String|Boolean|Number} value - Value to push to Firebase
@@ -129,6 +201,17 @@ export default (fbConfig, otherConfig) => next =>
       rootRef.child(path).push(value, onComplete)
 
     /**
+     * @description Pushes data to Firebase along with meta data. Currently,
+     * this includes createdAt and createdBy.
+     * @param {String} path - Path to location on Firebase which to set
+     * @param {Object|String|Boolean|Number} value - Value to write to Firebase
+     * @param {Function} onComplete - Function to run on complete (`not required`)
+     * @return {Promise} Containing reference snapshot
+     */
+    const pushWithMeta = (path, value, onComplete) =>
+      withMeta('push', path, value, onComplete)
+
+    /**
      * @description Updates data on Firebase and sends new data.
      * @param {String} path - Path to location on Firebase which to update
      * @param {Object|String|Boolean|Number} value - Value to update to Firebase
@@ -146,6 +229,18 @@ export default (fbConfig, otherConfig) => next =>
      */
     const update = (path, value, onComplete) =>
       rootRef.child(path).update(value, onComplete)
+
+    /**
+     * @description Updates data on Firebase along with meta. *Warning*
+     * using this function may have unintented consequences (setting
+     * createdAt even if data already exists)
+     * @param {String} path - Path to location on Firebase which to update
+     * @param {Object|String|Boolean|Number} value - Value to update to Firebase
+     * @param {Function} onComplete - Function to run on complete (`not required`)
+     * @return {Promise} Containing reference snapshot
+     */
+    const updateWithMeta = (path, value, onComplete) =>
+      withMeta('update', path, value, onComplete)
 
     /**
      * @description Removes data from Firebase at a given path.
@@ -204,7 +299,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise} Containing the File object
      */
     const uploadFile = (path, file, dbPath) =>
-      storageActions.uploadFile(dispatch, firebase, { path, file, dbPath })
+      storageActions.uploadFile(dispatch, instance, { path, file, dbPath })
 
     /**
      * @description Upload multiple files to Firebase Storage with the option
@@ -216,7 +311,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise} Containing an array of File objects
      */
     const uploadFiles = (path, files, dbPath) =>
-      storageActions.uploadFiles(dispatch, firebase, { path, files, dbPath })
+      storageActions.uploadFiles(dispatch, instance, { path, files, dbPath })
 
     /**
      * @description Delete a file from Firebase Storage with the option to
@@ -226,7 +321,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise} Containing the File object
      */
     const deleteFile = (path, dbPath) =>
-      storageActions.deleteFile(dispatch, firebase, { path, dbPath })
+      storageActions.deleteFile(dispatch, instance, { path, dbPath })
 
     /**
      * @description Watch event. **Note:** this method is used internally
@@ -237,7 +332,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise}
      */
     const watchEvent = (type, path, storeAs) =>
-      queryActions.watchEvent(firebase, dispatch, { type, path, storeAs })
+      queryActions.watchEvent(instance, dispatch, { type, path, storeAs })
 
     /**
      * @description Unset a listener watch event. **Note:** this method is used
@@ -249,7 +344,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise}
      */
     const unWatchEvent = (eventName, eventPath, queryId = undefined) =>
-      queryActions.unWatchEvent(firebase, dispatch, eventName, eventPath, queryId)
+      queryActions.unWatchEvent(instance, dispatch, eventName, eventPath, queryId)
 
     /**
      * @description Logs user into Firebase. For examples, visit the [auth section](/docs/auth.md)
@@ -261,7 +356,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise} Containing user's auth data
      */
     const login = credentials =>
-      authActions.login(dispatch, firebase, credentials)
+      authActions.login(dispatch, instance, credentials)
 
     /**
      * @description Logs user out of Firebase and empties firebase state from
@@ -269,7 +364,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise}
      */
     const logout = () =>
-      authActions.logout(dispatch, firebase)
+      authActions.logout(dispatch, instance)
 
     /**
      * @description Creates a new user in Firebase authentication. If
@@ -282,7 +377,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise} Containing user's auth data
      */
     const createUser = (credentials, profile) =>
-      authActions.createUser(dispatch, firebase, credentials, profile)
+      authActions.createUser(dispatch, instance, credentials, profile)
 
     /**
      * @description Sends password reset email
@@ -291,7 +386,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise}
      */
     const resetPassword = (credentials) =>
-      authActions.resetPassword(dispatch, firebase, credentials)
+      authActions.resetPassword(dispatch, instance, credentials)
 
     /**
      * @description Confirm that a user's password has been reset
@@ -300,7 +395,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise}
      */
     const confirmPasswordReset = (code, password) =>
-      authActions.confirmPasswordReset(dispatch, firebase, code, password)
+      authActions.confirmPasswordReset(dispatch, instance, code, password)
 
     /**
      * @description Verify that a password reset code from a password reset
@@ -309,7 +404,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise} Containing user auth info
      */
     const verifyPasswordResetCode = (code) =>
-      authActions.verifyPasswordResetCode(dispatch, firebase, code)
+      authActions.verifyPasswordResetCode(dispatch, instance, code)
 
     /**
      * @name ref
@@ -332,12 +427,15 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Auth}
      */
     firebase.helpers = {
-      ref: path => Firebase.database().ref(path),
+      ref: path => firebase.database().ref(path),
       set,
+      setWithMeta,
       uniqueSet,
       push,
+      pushWithMeta,
       remove,
       update,
+      updateWithMeta,
       login,
       logout,
       uploadFile,
@@ -349,13 +447,13 @@ export default (fbConfig, otherConfig) => next =>
       verifyPasswordResetCode,
       watchEvent,
       unWatchEvent,
-      storage: () => Firebase.storage()
+      storage: () => firebase.storage()
     }
 
-    authActions.init(dispatch, firebase)
+    authActions.init(dispatch, instance)
 
-    store.firebase = firebase
-    firebaseInstance = Object.assign({}, firebase, firebase.helpers)
+    store.firebase = instance
+    firebaseInstance = Object.assign({}, instance, instance.helpers)
 
     return store
   }

@@ -1,7 +1,21 @@
-import { omit, isArray, isString, isFunction, forEach, set, get } from 'lodash'
+import {
+  omit,
+  isArray,
+  isString,
+  isFunction,
+  forEach,
+  set,
+  get,
+  map,
+  mapValues
+} from 'lodash'
 import jwtDecode from 'jwt-decode'
 import { actionTypes, defaultJWTProps } from '../constants'
-import { promisesForPopulate, getPopulateObjs } from '../utils/populate'
+import {
+  promisesForPopulate,
+  getPopulateObjs,
+  getChildType
+} from '../utils/populate'
 import { getLoginMethodAndParams } from '../utils/auth'
 
 const {
@@ -105,7 +119,38 @@ export const watchUserProfile = (dispatch, firebase) => {
                 const populates = getPopulateObjs(profileParamsToPopulate)
                 const profile = snap.val()
                 forEach(populates, (p) => {
-                  set(profile, p.child, get(data, `${p.root}.${snap.val()[p.child]}`))
+                  const child = get(profile, p.child)
+                  const childType = getChildType(child)
+                  let populatedChild
+
+                  switch (childType) {
+                    case 'object':
+                      populatedChild = mapValues(
+                        child,
+                        (value, key) => {
+                          if (value) { // Only populate keys with truthy values
+                            return get(data, `${p.root}.${key}`)
+                          }
+                          return value
+                        })
+                      break
+
+                    case 'string':
+                      populatedChild = get(data, `${p.root}.${child}`)
+                      break
+
+                    case 'array':
+                      populatedChild = map(
+                        child,
+                        (key) => get(data, `${p.root}.${key}`)
+                      )
+                      break
+
+                    default:
+                      populatedChild = child
+                  }
+                  // Overwrite the child value with the populated child
+                  set(profile, p.child, populatedChild)
                 })
                 dispatch({
                   type: SET_PROFILE,
@@ -207,13 +252,17 @@ export const init = (dispatch, firebase) => {
 
     // Run onAuthStateChanged if it exists in config
     if (firebase._.config.onAuthStateChanged) {
-      firebase._.config.onAuthStateChanged(authData, firebase)
+      firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
     }
   })
 
   if (firebase._.config.enableRedirectHandling) {
     firebase.auth().getRedirectResult()
       .then((authData) => {
+        // Run onRedirectResult if it exists in config
+        if (firebase._.config.onRedirectResult) {
+          firebase._.config.onRedirectResult(authData, firebase, dispatch)
+        }
         if (authData && authData.user) {
           const { user } = authData
 
@@ -240,7 +289,7 @@ export const init = (dispatch, firebase) => {
       })
   }
 
-  firebase.auth().currentUser
+  firebase.auth().currentUser // eslint-disable-line no-unused-expressions
 
   dispatch({ type: AUTHENTICATION_INIT_FINISHED })
 }
@@ -298,6 +347,7 @@ export const login = (dispatch, firebase, credentials) => {
           providerData: user.providerData
         }
       )
+      .then((profile) => ({ profile, ...userData }))
     })
     .catch(err => {
       dispatchLoginError(dispatch, err)

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, cloneElement } from 'react'
+import React, { Component, cloneElement, PropTypes } from 'react'
 import { map } from 'lodash'
 import { connect } from 'react-redux'
 import {
@@ -9,16 +9,18 @@ import {
   isEmpty
 } from 'react-redux-firebase'
 import { LIST_PATH } from 'constants'
+import { UserIsAuthenticated } from 'utils/router'
+import LoadingSpinner from 'components/LoadingSpinner'
 import ProjectTile from '../components/ProjectTile/ProjectTile'
 import NewProjectTile from '../components/NewProjectTile/NewProjectTile'
 import NewProjectDialog from '../components/NewProjectDialog/NewProjectDialog'
-import LoadingSpinner from 'components/LoadingSpinner'
 import classes from './ProjectsContainer.scss'
 
 const populates = [
   { child: 'createdBy', root: 'users', keyProp: 'uid' }
 ]
 
+@UserIsAuthenticated
 @firebaseConnect([
   { path: 'projects', populates }
   // 'projects#populate=owner:users' // string equivalent
@@ -38,8 +40,7 @@ export default class Projects extends Component {
     projects: PropTypes.object,
     firebase: PropTypes.object,
     auth: PropTypes.object,
-    children: PropTypes.object,
-    params: PropTypes.object
+    children: PropTypes.object
   }
 
   state = {
@@ -48,11 +49,8 @@ export default class Projects extends Component {
   }
 
   newSubmit = (newProject) => {
-    const { auth, firebase: { push } } = this.props
-    if (auth.uid) {
-      newProject.owner = auth.uid
-    }
-    push('projects', newProject)
+    const { firebase: { pushWithMeta } } = this.props
+    return pushWithMeta('projects', newProject)
       .then(() => this.setState({ newProjectModal: false }))
       .catch(err => {
         // TODO: Show Snackbar
@@ -61,7 +59,7 @@ export default class Projects extends Component {
   }
 
   deleteProject = (key) => {
-    this.props.firebase.remove(`projects/${key}`)
+    return this.props.firebase.remove(`projects/${key}`)
       .then(() => {
         // TODO: Show snackbar
       })
@@ -72,7 +70,9 @@ export default class Projects extends Component {
   }
 
   render () {
-    if (!isLoaded(this.props.projects, this.props.auth)) {
+    const { projects, auth } = this.props
+
+    if (!isLoaded(projects, auth)) {
       return <LoadingSpinner />
     }
 
@@ -82,9 +82,7 @@ export default class Projects extends Component {
       return cloneElement(this.props.children, this.props)
     }
 
-    const { projects, auth } = this.props
     const { newProjectModal } = this.state
-
 
     return (
       <div className={classes.container}>

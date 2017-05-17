@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import IconButton from 'material-ui/IconButton'
 import Paper from 'material-ui/Paper'
 import TextField from 'material-ui/TextField'

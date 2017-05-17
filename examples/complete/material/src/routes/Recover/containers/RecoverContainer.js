@@ -1,25 +1,22 @@
 import React, { Component, PropTypes } from 'react'
-import { reduxForm, submit } from 'redux-form'
 import { firebaseConnect } from 'react-redux-firebase'
-import IconButton from 'material-ui/IconButton'
-import Paper from 'material-ui/Paper'
-import TextField from 'material-ui/TextField'
 import Snackbar from 'material-ui/Snackbar'
-import ContentAdd from 'material-ui/svg-icons/content/add'
-import Subheader from 'material-ui/Subheader'
+import Paper from 'material-ui/Paper'
 import RecoverForm from '../components/RecoverForm'
 import EmailForm from '../components/EmailForm'
-import { RECOVER_FORM_NAME } from 'constants'
 
 @firebaseConnect() // adds this.props.firebase
 export default class RecoverContainer extends Component {
+  static propTypes = {
+    firebase: PropTypes.object
+  }
   state = {
     message: null,
     open: false
   }
 
-  sendRecoveryEmail = ({ email }) => {
-    return this.props.firebase
+  sendRecoveryEmail = ({ email }) =>
+    this.props.firebase
       .resetPassword(email)
       .then(() => {
         this.setState({
@@ -28,11 +25,10 @@ export default class RecoverContainer extends Component {
         })
       })
       .catch((err) => {
-        console.error('Error updating account', err)
+        console.error('Error updating account', err) // eslint-disable-line no-console
         this.setState({ message: err.message || 'Error' }) // show error snackbar
         return Promise.reject(err)
       })
-  }
 
   recoverAccount = ({ code, password }) => {
     const {
@@ -43,20 +39,18 @@ export default class RecoverContainer extends Component {
     return verifyPasswordResetCode(code)
       .then(() => confirmPasswordReset(code, password))
       .then((res) => {
-        this.setState({
-          message: 'Password Changed Successfully'
-        })
+        this.setState({ message: 'Password Changed Successfully' })
       })
       .catch((err) => {
-        console.error('Error updating account', err)
+        console.error('Error updating account', err) // eslint-disable-line no-console
         this.setState({ message: err.message }) // show error snackbar
         return Promise.reject(err)
       })
   }
 
-  render() {
+  render () {
     return (
-      <div className="flex-column-center">
+      <div className='flex-column-center'>
         <Paper style={{ marginTop: '3rem' }}>
           <EmailForm onSubmit={this.sendRecoveryEmail} />
         </Paper>
@@ -67,7 +61,7 @@ export default class RecoverContainer extends Component {
           open={!!this.state.message}
           message={this.state.message || 'Error'}
           autoHideDuration={4000}
-          onRequestClose={() => this.setState({ message: null})}
+          onRequestClose={() => this.setState({ message: null })}
         />
       </div>
     )
