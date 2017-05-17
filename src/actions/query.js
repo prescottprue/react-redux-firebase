@@ -132,7 +132,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       // TODO: Allow setting of unpopulated data before starting population through config
       // TODO: Set ordered for populate queries
       // TODO: Allow config to toggle Combining into one SET action
-      promisesForPopulate(firebase, data, populates)
+      const dataKey = snapshot.key
+      promisesForPopulate(firebase, dataKey, data, populates)
         .then((results) => {
           // dispatch child sets first so isLoaded is only set to true for
           // populatedDataToJS after all data is in redux (Issue #121)
@@ -148,7 +149,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           })
           dispatch({
             type: SET,
-            path: resultPath,
+            path: storeAs || resultPath,
             data,
             timestamp: Date.now(),
             requesting: false,
