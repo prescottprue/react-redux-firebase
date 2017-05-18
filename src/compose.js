@@ -412,10 +412,9 @@ export default (fbConfig, otherConfig) => next =>
       authActions.verifyPasswordResetCode(dispatch, instance, code)
 
     /**
-     * @description Verify that a password reset code from a password reset
-     * email is valid
-     * @param {String} code - Password reset code to verify
-     * @return {Promise} Containing user auth info
+     * @description Update the currently logged in user's profile object
+     * @param {String} profileUpdate - Changes to apply to profile
+     * @return {Promise}
      */
     const updateProfile = (profile) =>
       authActions.updateProfile(dispatch, instance, profile)
@@ -424,7 +423,7 @@ export default (fbConfig, otherConfig) => next =>
      * @description Update the currently logged in user's auth object. **Note**:
      * changes Auth object **only**, not user's profile.
      * @param {String} code - Password reset code to verify
-     * @return {Promise} Containing user auth info
+     * @return {Promise}
      */
     const updateAuth = (authUpdate) =>
       authActions.updateAuth(dispatch, instance, authUpdate)
@@ -432,8 +431,10 @@ export default (fbConfig, otherConfig) => next =>
     /**
      * @description Update the currently logged in user's email. **Note**:
      * changes email in Auth object only, not within user's profile.
-     * @param {String} code - Password reset code to verify
-     * @return {Promise} Containing user auth info
+     * @param {String} newEmail - New email
+     * @param {Boolean} updateInProfile - Whether or not to update user's
+     * profile with email change.
+     * @return {Promise}
      */
     const updateEmail = (email, updateInProfile) =>
       authActions.updateEmail(dispatch, instance, email, updateInProfile)
@@ -443,6 +444,11 @@ export default (fbConfig, otherConfig) => next =>
      * @description Firebase ref function
      * @return {database.Reference}
      */
+   /**
+    * @name auth
+    * @description Firebase auth service instance including all Firebase auth methods
+    * @return {Auth}
+    */
    /**
     * @name database
     * @description Firebase database service instance including all Firebase storage methods
@@ -454,9 +460,9 @@ export default (fbConfig, otherConfig) => next =>
     * @return {Storage} Firebase storage service
     */
     /**
-     * @name auth
-     * @description Firebase auth service instance including all Firebase auth methods
-     * @return {Auth}
+     * @name messaging
+     * @description Firebase messaging service instance including all Firebase messaging methods
+     * @return {Messaging} Firebase messaging service
      */
     firebase.helpers = {
       ref: path => firebase.database().ref(path),
@@ -483,8 +489,7 @@ export default (fbConfig, otherConfig) => next =>
       updateAuth,
       updateEmail,
       storage: (app) => firebase.storage(app),
-      messaging: (app) => firebase.messaging(app),
-      instance: firebase
+      messaging: (app) => firebase.messaging(app)
     }
 
     authActions.init(dispatch, instance)

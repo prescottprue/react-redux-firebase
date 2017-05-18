@@ -501,29 +501,6 @@ export const verifyPasswordResetCode = (dispatch, firebase, code) => {
 }
 
 /**
- * @description Update Auth Object. Internally calls
- * `firebase.auth().currentUser.updateProfile` as seen [in the firebase docs](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile).
- * @param {Function} dispatch - Action dispatch function
- * @param {Object} firebase - Internal firebase object
- * @param {Object} profileUpdate - Update to be auth object
- * @return {Promise}
- * @private
- */
-export const updateAuth = (dispatch, firebase, profileUpdate) =>
-  wrapInDispatch(dispatch, {
-    types: [
-      {
-        type: actionTypes.AUTH_UPDATE_START,
-        payload: profileUpdate
-      },
-      actionTypes.AUTH_UPDATE_SUCCESS,
-      actionTypes.AUTH_UPDATE_ERROR
-    ],
-    method: firebase.auth().currentUser.updateProfile,
-    args: [profileUpdate]
-  })
-
-/**
  * @description Update user profile
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
@@ -550,6 +527,37 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
     .catch((payload) => {
       dispatch({
         type: actionTypes.PROFILE_UPDATE_ERROR,
+        payload
+      })
+    })
+}
+
+ /**
+  * @description Update Auth Object. Internally calls
+  * `firebase.auth().currentUser.updateProfile` as seen [in the firebase docs](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile).
+  * @param {Function} dispatch - Action dispatch function
+  * @param {Object} firebase - Internal firebase object
+  * @param {Object} profileUpdate - Update to be auth object
+  * @return {Promise}
+  * @private
+  */
+export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
+  dispatch({
+    type: actionTypes.AUTH_UPDATE_START,
+    payload: authUpdate
+  })
+  return firebase.auth().currentUser
+    .updateProfile(authUpdate)
+    .then((payload) => {
+      dispatch({
+        type: actionTypes.AUTH_UPDATE_SUCCESS,
+        payload: authUpdate
+      })
+      return updateProfile(dispatch, firebase, authUpdate)
+    })
+    .catch((payload) => {
+      dispatch({
+        type: actionTypes.AUTH_UPDATE_ERROR,
         payload
       })
     })
