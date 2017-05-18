@@ -17,6 +17,7 @@ import {
   getChildType
 } from '../utils/populate'
 import { getLoginMethodAndParams } from '../utils/auth'
+import { wrapInDispatch } from '../utils/actions'
 
 const {
   SET,
@@ -499,6 +500,84 @@ export const verifyPasswordResetCode = (dispatch, firebase, code) => {
     })
 }
 
+/**
+ * @description Update Auth Object. Internally calls
+ * `firebase.auth().currentUser.updateProfile` as seen [in the firebase docs](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile).
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} profileUpdate - Update to be auth object
+ * @return {Promise}
+ * @private
+ */
+export const updateAuth = (dispatch, firebase, profileUpdate) =>
+  wrapInDispatch(dispatch, {
+    types: [
+      {
+        type: actionTypes.AUTH_UPDATE_START,
+        payload: profileUpdate
+      },
+      actionTypes.AUTH_UPDATE_SUCCESS,
+      actionTypes.AUTH_UPDATE_ERROR
+    ],
+    method: firebase.auth().currentUser.updateProfile,
+    args: [profileUpdate]
+  })
+
+/**
+ * @description Update user profile
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} userData - User data object (response from authenticating)
+ * @param {Object} profile - Profile data to place in new profile
+ * @return {Promise}
+ * @private
+ */
+export const updateProfile = (dispatch, firebase, profileUpdate) => {
+  const { database, _: { config, authUid } } = firebase
+  dispatch({
+    type: actionTypes.PROFILE_UPDATE_START,
+    payload: profileUpdate
+  })
+  return database()
+    .ref(`${config.userProfile}/${authUid}`)
+    .update(profileUpdate)
+    .then((payload) => {
+      dispatch({
+        type: actionTypes.PROFILE_UPDATE_SUCCESS,
+        payload
+      })
+    })
+    .catch((payload) => {
+      dispatch({
+        type: actionTypes.PROFILE_UPDATE_ERROR,
+        payload
+      })
+    })
+}
+
+/**
+ * @description Update user's email. Internally calls
+ * `firebase.auth().currentUser.updateEmail` as seen [in the firebase docs](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile).
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {String} newEmail - Update to be auth object
+ * @return {Promise}
+ * @private
+ */
+export const updateEmail = (dispatch, firebase, newEmail) =>
+  wrapInDispatch(dispatch, {
+    types: [
+      {
+        type: actionTypes.EMAIL_UPDATE_START,
+        payload: newEmail
+      },
+      actionTypes.EMAIL_UPDATE_SUCCESS,
+      actionTypes.EMAIL_UPDATE_ERROR
+    ],
+    method: firebase.auth().currentUser.updateEmail,
+    args: [newEmail]
+  })
+
 export default {
   dispatchLoginError,
   dispatchUnauthorizedError,
@@ -512,5 +591,8 @@ export default {
   createUser,
   resetPassword,
   confirmPasswordReset,
-  verifyPasswordResetCode
+  verifyPasswordResetCode,
+  updateAuth,
+  updateProfile,
+  updateEmail
 }

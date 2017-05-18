@@ -42,7 +42,7 @@ export default class Account extends Component {
 
   updateAccount = (newData) =>
     this.props.firebase
-      .update(`${rfConfig.userProfile}/${this.props.auth.uid}`, newData)
+      .updateProfile(newData)
       .catch((err) => {
         console.error('Error updating account', err) // eslint-disable-line no-console
         // TODO: Display error to user

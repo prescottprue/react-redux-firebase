@@ -412,6 +412,33 @@ export default (fbConfig, otherConfig) => next =>
       authActions.verifyPasswordResetCode(dispatch, instance, code)
 
     /**
+     * @description Verify that a password reset code from a password reset
+     * email is valid
+     * @param {String} code - Password reset code to verify
+     * @return {Promise} Containing user auth info
+     */
+    const updateProfile = (profile) =>
+      authActions.updateProfile(dispatch, instance, profile)
+
+    /**
+     * @description Update the currently logged in user's auth object. **Note**:
+     * changes Auth object **only**, not user's profile.
+     * @param {String} code - Password reset code to verify
+     * @return {Promise} Containing user auth info
+     */
+    const updateAuth = (authUpdate) =>
+      authActions.updateAuth(dispatch, instance, authUpdate)
+
+    /**
+     * @description Update the currently logged in user's email. **Note**:
+     * changes email in Auth object only, not within user's profile.
+     * @param {String} code - Password reset code to verify
+     * @return {Promise} Containing user auth info
+     */
+    const updateEmail = (email, updateInProfile) =>
+      authActions.updateEmail(dispatch, instance, email, updateInProfile)
+
+    /**
      * @name ref
      * @description Firebase ref function
      * @return {database.Reference}
@@ -452,6 +479,9 @@ export default (fbConfig, otherConfig) => next =>
       verifyPasswordResetCode,
       watchEvent,
       unWatchEvent,
+      updateProfile,
+      updateAuth,
+      updateEmail,
       storage: (app) => firebase.storage(app),
       messaging: (app) => firebase.messaging(app),
       instance: firebase
