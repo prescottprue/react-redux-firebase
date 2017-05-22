@@ -517,10 +517,10 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
   return database()
     .ref(`${config.userProfile}/${authUid}`)
     .update(profileUpdate)
-    .then((payload) => {
+    .then((snap) => {
       dispatch({
         type: actionTypes.PROFILE_UPDATE_SUCCESS,
-        payload
+        payload: snap.val()
       })
     })
     .catch((payload) => {
@@ -558,7 +558,7 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
     .then((payload) => {
       dispatch({
         type: actionTypes.AUTH_UPDATE_SUCCESS,
-        payload: authUpdate
+        payload: firebase.auth().currentUser
       })
       if (updateInProfile) {
         return updateProfile(dispatch, firebase, authUpdate)

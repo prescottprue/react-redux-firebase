@@ -160,7 +160,7 @@ export default (state = initialState, action = {}) => {
       return state.setIn(['authError'], action.authError)
 
     case AUTH_UPDATE_SUCCESS:
-      return state.updateIn(['auth'], action.payload)
+      return state.setIn(['auth'], fromJS(action.payload))
 
     default:
       return state

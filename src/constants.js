@@ -92,7 +92,7 @@ export const actionTypes = {
  * the data path. For example: role paramter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
  * is loaded (places it in data/roles).
- * @property {Boolean} distpatchOnUnsetListener - `false` Whether or not to
+ * @property {Boolean} dispatchOnUnsetListener - `false` Whether or not to
  * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
  * Setting this to true allows an action to be called that removes data
  * from redux (which might not always be expected).
@@ -105,7 +105,7 @@ export const defaultConfig = {
   enableRedirectHandling: true,
   autoPopulateProfile: true,
   setProfilePopulateResults: false,
-  distpatchOnUnsetListener: false
+  dispatchOnUnsetListener: false
 }
 
 /** @constant
