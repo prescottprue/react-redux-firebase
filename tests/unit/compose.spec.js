@@ -1,4 +1,3 @@
-/* global describe expect it */
 import { omit } from 'lodash'
 import { createStore, combineReducers, compose } from 'redux'
 import composeFunc, { getFirebase } from '../../src/compose'
@@ -119,7 +118,6 @@ describe('Compose', () => {
     describe.skip('unWatchEvent', () => {
       it.skip('unWatchesEvent', () =>
         helpers.unWatchEvent('value', 'test')
-
       )
     })
 

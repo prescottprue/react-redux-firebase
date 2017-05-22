@@ -8,7 +8,7 @@
   "jsnext:main": "es/index.js",
   "scripts": {
     "clean": "rimraf dist",
-    "lint": "eslint src/** test/**",
+    "lint": "eslint src/** tests/**",
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha -R spec --compilers js:babel-core/register ./tests/setup.js ./tests/**/*.spec.js",
     "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./tests/** --recursive --report lcov --compilers js:babel-register --require babel-polyfill",

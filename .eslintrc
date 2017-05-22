@@ -1,24 +1,27 @@
-{
-  "parser"  : "babel-eslint",
-  "extends" : [
-    "standard",
-    "standard-react"
-  ],
-  "plugins": [
-    "babel"
-  ],
-  "env"     : {
-    "browser" : true
-  },
-  "globals" : {
-    "__DEV__"      : false,
-    "__PROD__"     : false,
-    "__DEBUG__"    : false,
-    "__COVERAGE__" : false,
-    "__BASENAME__" : false
-  },
-  "rules": {
-    "semi" : [2, "never"],
-    "no-console": "error"
-  }
-}
+root: true
+
+parser: babel-eslint
+
+extends: [standard, standard-react]
+plugins: [babel, react]
+
+env:
+  browser: true
+  es6: true
+  jasmine: true
+  node: true
+
+ecmaFeatures:
+  jsx: true
+  modules: true
+
+globals:
+  MockFirebase: true
+  sinon: true
+  Raven: true
+  __COVERAGE__: true
+  __DEV__: true
+
+rules:
+  semi: [2, 'never']
+  no-console: 'error'

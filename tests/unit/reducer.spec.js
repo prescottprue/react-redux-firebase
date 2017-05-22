@@ -1,4 +1,3 @@
-/* global describe expect it */
 import { fromJS } from 'immutable'
 import { firebaseStateReducer } from '../../src'
 import { actionTypes } from '../../src/constants'

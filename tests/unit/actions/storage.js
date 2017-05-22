@@ -1,4 +1,4 @@
-/* global describe expect it beforeEach sinon */
+/* eslint-disable no-unused-expressions */
 import {
   uploadFileWithProgress,
   uploadFile,
