@@ -15,6 +15,11 @@ describe('Utils: Auth', () => {
       expect(createAuthProvider(firebase, 'google', 'email'))
         .to.be.a.function
     })
+    it('handles customAuthParameters config option', () => {
+      firebase._.config.customAuthParameters = { google: [{prompt: 'select_account'}] }
+      expect(createAuthProvider(firebase, 'google', 'email'))
+        .to.be.a.function
+    })
     it('throws for invalid provider', () => {
       const provider = 'asdf'
       expect(() => createAuthProvider(firebase, provider, ['email']))

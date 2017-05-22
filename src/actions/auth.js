@@ -11,13 +11,12 @@ import {
 } from 'lodash'
 import jwtDecode from 'jwt-decode'
 import { actionTypes, defaultJWTProps } from '../constants'
+import { getLoginMethodAndParams } from '../utils/auth'
 import {
   promisesForPopulate,
   getPopulateObjs,
   getChildType
 } from '../utils/populate'
-import { getLoginMethodAndParams } from '../utils/auth'
-import { wrapInDispatch } from '../utils/actions'
 
 const {
   SET,
@@ -546,6 +545,14 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
     type: actionTypes.AUTH_UPDATE_START,
     payload: authUpdate
   })
+  if (!firebase.auth().currentUser) {
+    const msg = 'User must be logged in to update auth.'
+    dispatch({
+      type: actionTypes.AUTH_UPDATE_ERROR,
+      payload: msg
+    })
+    return Promise.reject(msg)
+  }
   return firebase.auth().currentUser
     .updateProfile(authUpdate)
     .then((payload) => {
@@ -553,7 +560,10 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
         type: actionTypes.AUTH_UPDATE_SUCCESS,
         payload: authUpdate
       })
-      return updateProfile(dispatch, firebase, authUpdate)
+      if (updateInProfile) {
+        return updateProfile(dispatch, firebase, authUpdate)
+      }
+      return payload
     })
     .catch((payload) => {
       dispatch({
@@ -572,19 +582,38 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
  * @return {Promise}
  * @private
  */
-export const updateEmail = (dispatch, firebase, newEmail) =>
-  wrapInDispatch(dispatch, {
-    types: [
-      {
-        type: actionTypes.EMAIL_UPDATE_START,
-        payload: newEmail
-      },
-      actionTypes.EMAIL_UPDATE_SUCCESS,
-      actionTypes.EMAIL_UPDATE_ERROR
-    ],
-    method: firebase.auth().currentUser.updateEmail,
-    args: [newEmail]
+export const updateEmail = (dispatch, firebase, newEmail, updateInProfile) => {
+  dispatch({
+    type: actionTypes.EMAIL_UPDATE_START,
+    payload: newEmail
   })
+  if (!firebase.auth().currentUser) {
+    const msg = 'User must be logged in to update email.'
+    dispatch({
+      type: actionTypes.EMAIL_UPDATE_ERROR,
+      payload: msg
+    })
+    return Promise.reject(msg)
+  }
+  return firebase.auth().currentUser
+    .updateEmail(newEmail)
+    .then((payload) => {
+      dispatch({
+        type: actionTypes.EMAIL_UPDATE_SUCCESS,
+        payload: newEmail
+      })
+      if (updateInProfile) {
+        return updateProfile(dispatch, firebase, { email: newEmail })
+      }
+      return payload
+    })
+    .catch((payload) => {
+      dispatch({
+        type: actionTypes.EMAIL_UPDATE_ERROR,
+        payload
+      })
+    })
+}
 
 export default {
   dispatchLoginError,

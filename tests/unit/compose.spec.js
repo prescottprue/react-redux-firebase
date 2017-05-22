@@ -155,6 +155,44 @@ describe('Compose', () => {
       }
     })
 
+    describe('updateProfile', () => {
+      it('acccepts an object', () =>
+        expect(helpers.updateProfile({ displayName: 'test' })).to.eventually.become(undefined)
+      )
+    })
+
+    describe('updateAuth', () => {
+      it('rejects when not authenticated', () =>
+        expect(helpers.updateAuth()).to.be.rejectedWith('User must be logged in to update auth.')
+      )
+
+      // TODO: test that update auth when authenticated
+      it.skip('updates auth object if authenticated', () =>
+        expect(helpers.updateAuth()).to.eventually.become(undefined)
+      )
+
+      // TODO: test that updateProfile is called if updateInProfile is true
+      it.skip('calls update profile if updateInProfile is true', () =>
+        expect(helpers.updateAuth({}, true)).to.eventually.become(undefined)
+      )
+    })
+
+    describe('updateEmail', () => {
+      it('rejects when not authenticated', () =>
+        expect(helpers.updateEmail()).to.be.rejectedWith('User must be logged in to update email.')
+      )
+
+      // TODO: test that update auth when authenticated
+      it.skip('updates auth object if authenticated', () =>
+        expect(helpers.updateEmail()).to.eventually.become(undefined)
+      )
+
+      // TODO: test that updateProfile is called if updateInProfile is true
+      it.skip('calls update profile if updateInProfile is true', () =>
+        expect(helpers.updateEmail({}, true)).to.eventually.become(undefined)
+      )
+    })
+
     describe('storage', () => {
       try {
         helpers.storage()
