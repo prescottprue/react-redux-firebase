@@ -98,7 +98,7 @@ describe('Compose', () => {
       )
       it('has on err onComplete', () => {
         const func = sinon.spy()
-        helpers.uniqueSet('test', {some: 'asdf'}, func)
+        return helpers.uniqueSet('test', {some: 'asdf'}, func)
           .catch((err) => {
             expect(func).to.have.been.calledOnce
           })

@@ -68,7 +68,6 @@ describe('reducer', () => {
       const path = `test/${childPath}`
       const pathArray = path.split(/\//).filter(p => !!p)
       const newData = { some: 'val' }
-      console.log('----- pathArray:', pathArray)
       expect(
         JSON.stringify(firebaseStateReducer(
           fromJS({ data: { test: null } }),
