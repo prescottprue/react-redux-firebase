@@ -84,6 +84,10 @@ export const actionTypes = {
  * @property {Boolean} enableRedirectHandling - `true` Whether or not to enable
  * redirect handling. This must be disabled if environment is not http/https
  * such as with react-native.
+ * @property {Boolean} enableEmptyAuthChanges - `false` Whether or not to enable
+ * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
+ * empty auth changes such as `undefined` on initialization
+ * (see [#137](https://github.com/prescottprue/react-redux-firebase/issues/137))
  * @property {Boolean} autoPopulateProfile - `true` Whether or not to
  * automatically populate profile with data loaded through
  * profileParamsToPopulate config.
@@ -96,7 +100,7 @@ export const actionTypes = {
  * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
  * Setting this to true allows an action to be called that removes data
  * from redux (which might not always be expected).
- * @type {Array}
+ * @type {Object}
 */
 export const defaultConfig = {
   userProfile: null,
@@ -105,7 +109,8 @@ export const defaultConfig = {
   enableRedirectHandling: true,
   autoPopulateProfile: true,
   setProfilePopulateResults: false,
-  dispatchOnUnsetListener: false
+  dispatchOnUnsetListener: false,
+  enableEmptyAuthChanges: false
 }
 
 /** @constant

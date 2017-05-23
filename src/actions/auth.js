@@ -242,6 +242,10 @@ export const init = (dispatch, firebase) => {
 
   firebase.auth().onAuthStateChanged(authData => {
     if (!authData) {
+      // Run onAuthStateChanged if it exists in config and enableEmptyAuthChanges is set to true
+      if (isFunction(firebase._.config.onAuthStateChanged) && firebase._.config.enableEmptyAuthChanges) {
+        firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
+      }
       return dispatch({ type: LOGOUT })
     }
 
@@ -251,11 +255,12 @@ export const init = (dispatch, firebase) => {
     dispatchLogin(dispatch, authData)
 
     // Run onAuthStateChanged if it exists in config
-    if (firebase._.config.onAuthStateChanged) {
+    if (isFunction(firebase._.config.onAuthStateChanged)) {
       firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
     }
   })
 
+  // set redirect result callback if enableRedirectHandling set to true
   if (firebase._.config.enableRedirectHandling) {
     firebase.auth().getRedirectResult()
       .then((authData) => {
