@@ -41,7 +41,9 @@
 * `updateUser` method for updating currently authenticated user's user object (`/users/${uid}`)
 * `updateAuth` method for updating currently authenticated user's auth object [as seen in the Firebase docs](https://firebase.google.com/docs/auth/web/manage-users#get_a_users_provider-specific_profile_information) - [#129](https://github.com/prescottprue/react-redux-firebase/issues/129)
 * Expose Firebase messaging
+* Expose whole Firebase instance (warning: Using Firebase instance methods will not dispatch actions or update redux state)
 * Setting that allows for `waitForPopulate` to be turned off (i.e. return populated data as in becomes available). As of `v1.4.0-rc.2`, populate only sets `isLoaded` to true after all children are loaded, `waitForPopulate` would make this optional - [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
+
 
 ## Future Minor Versions (`v1.6.0 - v1.*.*`)
 
@@ -53,7 +55,7 @@
 #### Features
 * Config option for populated items updating when changed - [#69](https://github.com/prescottprue/react-redux-firebase/issues/69)
 * Config option to not remove all data on logout (potential config syntax: `preserveOnLogout: ['todos']`)
-* Integration for [`react-native-firebase`](https://github.com/invertase/react-native-firebase) for using Firebase native modules instead of JS library
+* Integration for [`react-native-firebase`](https://github.com/invertase/react-native-firebase) for using Firebase native modules instead of JS library (allowing for instance to be passed in).
 * Integration for [`react-native-google-signin`](https://github.com/devfd/react-native-google-signin) to simplify react-native authentication implementation
 * Nested populates - [#85](https://github.com/prescottprue/react-redux-firebase/issues/85)
 
