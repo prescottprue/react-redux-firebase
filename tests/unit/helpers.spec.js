@@ -1,6 +1,7 @@
-/* global describe expect it */
 import { fromJS } from 'immutable'
 import helpers from '../../src/helpers'
+import { buildChildList } from '../../src/helpers'
+
 const exampleData = {
   data: {
     some: 'data',
@@ -52,6 +53,20 @@ const exampleData = {
         text: 'Some Text'
       }
     }
+  },
+  ordered: {
+    projects: [
+      {
+        owner: 'ABC',
+        notes: {
+          123: true,
+        },
+        collaborators: {
+          ABC: true,
+          abc: true
+        }
+      },
+    ]
   },
   timestamp: { 'some/path': { test: 'key' } },
   snapshot: { some: 'snapshot' }
@@ -126,6 +141,32 @@ describe('Helpers:', () => {
     it('returns state if its not an immutable Map', () => {
       const fakeState = { }
       expect(helpers.dataToJS(fakeState, 'asdf'))
+        .to
+        .equal(fakeState)
+    })
+  })
+
+  describe('orderedToJS', () => {
+    it('exists', () => {
+      expect(helpers).to.respondTo('orderedToJS')
+    })
+
+    it('passes notSetValue', () => {
+      expect(helpers.orderedToJS(null, '/some', exampleData))
+        .to
+        .equal(exampleData)
+    })
+
+    it('gets data from state', () => {
+      const path = 'projects'
+      expect(JSON.stringify(helpers.orderedToJS(exampleState, path, exampleData)))
+        .to
+        .equal(JSON.stringify(exampleData.ordered[path]))
+    })
+
+    it('returns state if its not an immutable Map', () => {
+      const fakeState = { }
+      expect(helpers.orderedToJS(fakeState, 'asdf'))
         .to
         .equal(fakeState)
     })

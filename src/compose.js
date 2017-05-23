@@ -31,11 +31,17 @@ let firebaseInstance
  * auth redirect handling listener. (default: `true`)
  * @property {Function} config.onAuthStateChanged - Function run when auth state
  * changes. Argument Pattern: `(authData, firebase, dispatch)`
+ * @property {Boolean} config.enableEmptyAuthChanges - Whether or not to enable
+ * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
+ * empty auth changes such as undefined on initialization. See
+ * [#137](https://github.com/prescottprue/react-redux-firebase/issues/137) for
+ * more details. (default: `false`)
  * @property {Function} config.onRedirectResult - Function run when redirect
  * result is returned. Argument Pattern: `(authData, firebase, dispatch)`
  * @property {Object} config.customAuthParameters - Object for setting which
  * customAuthParameters are passed to external auth providers.
- * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
+ * @property {Function} config.profileFactory - Factory for modifying how user
+ * profile is saved.
  * @property {Function} config.uploadFileDataFactory - Factory for modifying
  * how file meta data is written during file uploads
  * @property {Array|String} config.profileParamsToPopulate - Parameters within
@@ -412,10 +418,43 @@ export default (fbConfig, otherConfig) => next =>
       authActions.verifyPasswordResetCode(dispatch, instance, code)
 
     /**
+     * @description Update the currently logged in user's profile object
+     * @param {String} profileUpdate - Changes to apply to profile
+     * @return {Promise}
+     */
+    const updateProfile = (profile) =>
+      authActions.updateProfile(dispatch, instance, profile)
+
+    /**
+     * @description Update the currently logged in user's auth object. **Note**:
+     * changes Auth object **only**, not user's profile.
+     * @param {String} code - Password reset code to verify
+     * @return {Promise}
+     */
+    const updateAuth = (authUpdate) =>
+      authActions.updateAuth(dispatch, instance, authUpdate)
+
+    /**
+     * @description Update the currently logged in user's email. **Note**:
+     * changes email in Auth object only, not within user's profile.
+     * @param {String} newEmail - New email
+     * @param {Boolean} updateInProfile - Whether or not to update user's
+     * profile with email change.
+     * @return {Promise}
+     */
+    const updateEmail = (email, updateInProfile) =>
+      authActions.updateEmail(dispatch, instance, email, updateInProfile)
+
+    /**
      * @name ref
      * @description Firebase ref function
      * @return {database.Reference}
      */
+   /**
+    * @name auth
+    * @description Firebase auth service instance including all Firebase auth methods
+    * @return {Auth}
+    */
    /**
     * @name database
     * @description Firebase database service instance including all Firebase storage methods
@@ -427,9 +466,9 @@ export default (fbConfig, otherConfig) => next =>
     * @return {Storage} Firebase storage service
     */
     /**
-     * @name auth
-     * @description Firebase auth service instance including all Firebase auth methods
-     * @return {Auth}
+     * @name messaging
+     * @description Firebase messaging service instance including all Firebase messaging methods
+     * @return {Messaging} Firebase messaging service
      */
     firebase.helpers = {
       ref: path => firebase.database().ref(path),
@@ -452,9 +491,11 @@ export default (fbConfig, otherConfig) => next =>
       verifyPasswordResetCode,
       watchEvent,
       unWatchEvent,
+      updateProfile,
+      updateAuth,
+      updateEmail,
       storage: (app) => firebase.storage(app),
-      messaging: (app) => firebase.messaging(app),
-      instance: firebase
+      messaging: (app) => firebase.messaging(app)
     }
 
     authActions.init(dispatch, instance)

@@ -1,9 +1,9 @@
-/* global describe expect it beforeEach */
 import {
   getPopulateObj,
   getPopulates,
   getPopulateChild,
   getPopulateObjs,
+  getChildType,
   promisesForPopulate
 } from '../../../src/utils/populate'
 
@@ -18,7 +18,22 @@ describe('Utils: Populate', () => {
     })
   })
 
-  describe('getPopulateObj', () => {
+  describe('getChildType', () => {
+    it('returns "string" for strings', () => {
+      expect(getChildType('some:value')).to.equal('string')
+    })
+    it('returns "object" for objects', () => {
+      expect(getChildType({ some: 'val' })).to.equal('object')
+    })
+    it('returns "array" for arrays', () => {
+      expect(getChildType([])).to.equal('array')
+    })
+    it('returns "other" for other types', () => {
+      expect(getChildType(1)).to.equal('other')
+    })
+  })
+
+  describe('getPopulateObjs', () => {
     it('returns object with child and root', () => {
       expect(getPopulateObjs(['some:value'])[0]).to.have.keys('child', 'root')
     })

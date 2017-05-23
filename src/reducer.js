@@ -13,7 +13,8 @@ const {
   UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
-  UNAUTHORIZED_ERROR
+  UNAUTHORIZED_ERROR,
+  AUTH_UPDATE_SUCCESS
 } = actionTypes
 
 const emptyState = {
@@ -157,6 +158,9 @@ export default (state = initialState, action = {}) => {
 
     case UNAUTHORIZED_ERROR:
       return state.setIn(['authError'], action.authError)
+
+    case AUTH_UPDATE_SUCCESS:
+      return state.setIn(['auth'], fromJS(action.payload))
 
     default:
       return state

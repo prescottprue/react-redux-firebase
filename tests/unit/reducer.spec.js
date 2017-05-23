@@ -1,4 +1,3 @@
-/* global describe expect it */
 import { fromJS } from 'immutable'
 import { firebaseStateReducer } from '../../src'
 import { actionTypes } from '../../src/constants'
@@ -52,10 +51,10 @@ describe('reducer', () => {
         )
       ).to.equal(exampleState)
     })
+
     it('sets state', () => {
       const path = 'test'
       const pathArray = path.split(/\//).filter(p => !!p)
-      console.log('path:', { type: actionTypes.SET, path, data: {} })
       expect(
         JSON.stringify(firebaseStateReducer(
           exampleState,
@@ -63,6 +62,46 @@ describe('reducer', () => {
         ))
       ).to.equal(JSON.stringify(exampleState.setIn(['data', ...pathArray], fromJS({}))))
     })
+
+    it('handles already existing parent that is null', () => {
+      const childPath = 123
+      const path = `test/${childPath}`
+      const pathArray = path.split(/\//).filter(p => !!p)
+      const newData = { some: 'val' }
+      expect(
+        JSON.stringify(firebaseStateReducer(
+          fromJS({ data: { test: null } }),
+          { type: actionTypes.SET, path, data: newData }
+        ).toJS())
+      ).to.equal(
+        JSON.stringify(
+          exampleState.setIn(
+            ['data', ...pathArray],
+            fromJS(newData)
+          ).toJS()
+        )
+      )
+    })
+
+    it('handles already existing value of null', () => {
+      const path = 'test/123'
+      const pathArray = path.split(/\//).filter(p => !!p)
+      const newData = { some: 'val' }
+      expect(
+        JSON.stringify(firebaseStateReducer(
+          fromJS({ data: { test: { '123': null } } }),
+          { type: actionTypes.SET, path, data: newData }
+        ))
+      ).to.equal(
+        JSON.stringify(
+          exampleState.setIn(
+            ['data', ...pathArray],
+            fromJS(newData)
+          ).toJS()
+        )
+      )
+    })
+
   })
 
   describe('NO_VALUE action', () => {
@@ -73,6 +112,17 @@ describe('reducer', () => {
           { type: actionTypes.NO_VALUE, path: 'asdfasdf' }
         ).toJS())
       ).to.equal(JSON.stringify(externalState))
+    })
+  })
+
+  describe('UNSET_LISTENER action', () => {
+    it('sets state', () => {
+      expect(
+        JSON.stringify(firebaseStateReducer(
+          exampleState,
+          { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf' }
+        ).toJS())
+      ).to.equal(JSON.stringify({}))
     })
   })
 
@@ -179,6 +229,22 @@ describe('reducer', () => {
       ).to.equal(
         JSON.stringify(
           exampleState.setIn(['authError'], authError).toJS()
+        )
+      )
+    })
+  })
+
+  describe('AUTH_UPDATE_SUCCESS action', () => {
+    it('sets state', () => {
+      const authUpdate = { email: 'newEmail' }
+      expect(
+        JSON.stringify(firebaseStateReducer(
+          exampleState,
+          { type: actionTypes.AUTH_UPDATE_SUCCESS, payload: authUpdate }
+        ).toJS())
+      ).to.equal(
+        JSON.stringify(
+          exampleState.setIn(['auth'], authUpdate).toJS()
         )
       )
     })

@@ -29,6 +29,15 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @property {String} FILE_DELETE_START - `@@reactReduxFirebase/FILE_DELETE_START`
  * @property {String} FILE_DELETE_ERROR - `@@reactReduxFirebase/FILE_DELETE_ERROR`
  * @property {String} FILE_DELETE_COMPLETE - `@@reactReduxFirebase/FILE_DELETE_COMPLETE`
+ * @property {String} AUTH_UPDATE_START - `@@reactReduxFirebase/AUTH_UPDATE_START`
+ * @property {String} AUTH_UPDATE_ERROR - `@@reactReduxFirebase/AUTH_UPDATE_ERROR`
+ * @property {String} AUTH_UPDATE_COMPLETE - `@@reactReduxFirebase/AUTH_UPDATE_COMPLETE`
+ * @property {String} PROFILE_UPDATE_START - `@@reactReduxFirebase/PROFILE_UPDATE_START`
+ * @property {String} PROFILE_UPDATE_ERROR - `@@reactReduxFirebase/PROFILE_UPDATE_ERROR`
+ * @property {String} PROFILE_UPDATE_COMPLETE - `@@reactReduxFirebase/PROFILE_UPDATE_COMPLETE`
+ * @property {String} EMAIL_UPDATE_START - `@@reactReduxFirebase/EMAIL_UPDATE_START`
+ * @property {String} EMAIL_UPDATE_ERROR - `@@reactReduxFirebase/EMAIL_UPDATE_ERROR`
+ * @property {String} EMAIL_UPDATE_COMPLETE - `@@reactReduxFirebase/EMAIL_UPDATE_COMPLETE`
  * @example
  * import { actionTypes } from 'react-redux-firebase'
  * actionTypes.SET === '@@reactReduxFirebase/SET' // true
@@ -52,7 +61,16 @@ export const actionTypes = {
   FILE_UPLOAD_COMPLETE: `${actionsPrefix}/FILE_UPLOAD_COMPLETE`,
   FILE_DELETE_START: `${actionsPrefix}/FILE_DELETE_START`,
   FILE_DELETE_ERROR: `${actionsPrefix}/FILE_DELETE_ERROR`,
-  FILE_DELETE_COMPLETE: `${actionsPrefix}/FILE_DELETE_COMPLETE`
+  FILE_DELETE_COMPLETE: `${actionsPrefix}/FILE_DELETE_COMPLETE`,
+  AUTH_UPDATE_START: `${actionsPrefix}/AUTH_UPDATE_START`,
+  AUTH_UPDATE_SUCCESS: `${actionsPrefix}/AUTH_UPDATE_SUCCESS`,
+  AUTH_UPDATE_ERROR: `${actionsPrefix}/AUTH_UPDATE_ERROR`,
+  PROFILE_UPDATE_START: `${actionsPrefix}/PROFILE_UPDATE_START`,
+  PROFILE_UPDATE_SUCCESS: `${actionsPrefix}/PROFILE_UPDATE_SUCCESS`,
+  PROFILE_UPDATE_ERROR: `${actionsPrefix}/PROFILE_UPDATE_ERROR`,
+  EMAIL_UPDATE_START: `${actionsPrefix}/EMAIL_UPDATE_START`,
+  EMAIL_UPDATE_SUCCESS: `${actionsPrefix}/EMAIL_UPDATE_SUCCESS`,
+  EMAIL_UPDATE_ERROR: `${actionsPrefix}/EMAIL_UPDATE_ERROR`
 }
 
 /** @constant
@@ -66,6 +84,10 @@ export const actionTypes = {
  * @property {Boolean} enableRedirectHandling - `true` Whether or not to enable
  * redirect handling. This must be disabled if environment is not http/https
  * such as with react-native.
+ * @property {Boolean} enableEmptyAuthChanges - `false` Whether or not to enable
+ * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
+ * empty auth changes such as `undefined` on initialization
+ * (see [#137](https://github.com/prescottprue/react-redux-firebase/issues/137))
  * @property {Boolean} autoPopulateProfile - `true` Whether or not to
  * automatically populate profile with data loaded through
  * profileParamsToPopulate config.
@@ -74,11 +96,11 @@ export const actionTypes = {
  * the data path. For example: role paramter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
  * is loaded (places it in data/roles).
- * @property {Boolean} distpatchOnUnsetListener - `false` Whether or not to
+ * @property {Boolean} dispatchOnUnsetListener - `false` Whether or not to
  * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
  * Setting this to true allows an action to be called that removes data
  * from redux (which might not always be expected).
- * @type {Array}
+ * @type {Object}
 */
 export const defaultConfig = {
   userProfile: null,
@@ -87,7 +109,8 @@ export const defaultConfig = {
   enableRedirectHandling: true,
   autoPopulateProfile: true,
   setProfilePopulateResults: false,
-  distpatchOnUnsetListener: false
+  dispatchOnUnsetListener: false,
+  enableEmptyAuthChanges: false
 }
 
 /** @constant
