@@ -7,7 +7,11 @@ const reducer = sinon.spy()
 const generateCreateStore = (params) =>
   compose(composeFunc(
     params ? omit(fbConfig, params) : fbConfig,
-    { userProfile: 'users', enableLogging: false, enableRedirectHandling: false }
+    {
+      userProfile: 'users',
+      enableLogging: false,
+      enableRedirectHandling: false
+    }
   ))(createStore)
 const helpers = generateCreateStore()(reducer).firebase.helpers
 
@@ -33,17 +37,51 @@ describe('Compose', () => {
       })
     })
 
-    describe('set', () =>
-      helpers.set('test', {some: 'asdf'})
-    )
+    describe('set', () => {
+      it('accepts object', () =>
+        expect(helpers.set('test', {some: 'asdf'})).to.eventually.become(undefined)
+      )
+    })
 
-    describe('push', () =>
-      helpers.push('test', {some: 'asdf'})
-    )
+    describe('setWithMeta', () => {
+      describe('accepts object', () => {
+        it('accepts object', () =>
+          expect(helpers.setWithMeta('test', {some: 'asdf'})).to.eventually.become(undefined)
+        )
+      })
 
-    describe('update', () =>
-      helpers.update('test', {some: 'asdf'})
-    )
+      describe('does not attach meta to string', () => {
+        // TODO: confirm that data set actually does not include meta
+        it('accepts object', () =>
+          expect(helpers.setWithMeta('test', 'asdd')).to.eventually.become(undefined)
+        )
+      })
+    })
+
+    describe('push', () => {
+      it('accepts object', () =>
+        expect(helpers.push('test', {some: 'asdf'})).to.eventually.have.property('key')
+      )
+    })
+
+    describe('pushWithMeta', () => {
+      it('accepts object', () =>
+        expect(helpers.pushWithMeta('test', {some: 'asdf'})).to.eventually.have.property('key')
+      )
+    })
+
+    describe('update', () => {
+      it('accepts object', () =>
+        // undefined represents snapshot
+        expect(helpers.update('test', {some: 'asdf'})).to.eventually.become(undefined)
+      )
+    })
+
+    describe('updateWithMeta', () => {
+      it('accepts object', () =>
+        expect(helpers.updateWithMeta('test', {some: 'asdf'})).to.eventually.become(undefined)
+      )
+    })
 
     describe('uniqueSet', () =>{
       // remove test root after test are complete

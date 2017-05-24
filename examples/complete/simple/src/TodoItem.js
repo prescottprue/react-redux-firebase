@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { firebase } from 'react-redux-firebase'
 
 import './Todo.css'
@@ -26,7 +26,7 @@ class TodoItem extends Component {
           checked={todo.done}
           onChange={toggleDone}
         />
-        {todo.text}
+        {todo.text || todo.name}
         <button className="Todo-Button" onClick={deleteTodo}>
           Delete
         </button>

@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import Paper from 'material-ui/Paper'
 import { connect } from 'react-redux'
-import { reduxForm } from 'redux-form'
 import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
-import { ACCOUNT_FORM_NAME } from 'constants/formNames'
+import { reduxFirebase as rfConfig } from 'config'
 import { UserIsAuthenticated } from 'utils/router'
 import defaultUserImageUrl from 'static/User.png'
 import LoadingSpinner from 'components/LoadingSpinner'
@@ -11,39 +10,28 @@ import AccountForm from '../components/AccountForm/AccountForm'
 import classes from './AccountContainer.scss'
 
 @UserIsAuthenticated // redirect to /login if user is not authenticated
-@firebaseConnect()
-@connect(
-  // Map state to props
+@firebaseConnect() // add this.props.firebase
+@connect( // Map redux state to props
   ({ firebase }) => ({
-    authError: pathToJS(firebase, 'authError'),
-    account: pathToJS(firebase, 'profile'),
-    initialValues: pathToJS(firebase, 'profile')
+    auth: pathToJS(firebase, 'auth'),
+    account: pathToJS(firebase, 'profile')
   })
 )
-@reduxForm({
-  form: ACCOUNT_FORM_NAME,
-  enableReinitialization: true
-})
 export default class Account extends Component {
-
-  static contextTypes = {
-    router: React.PropTypes.object.isRequired
-  }
-
   static propTypes = {
     account: PropTypes.object,
+    auth: PropTypes.shape({
+      uid: PropTypes.string
+    }),
     firebase: PropTypes.shape({
-      logout: PropTypes.func.isRequired,
-      uploadAvatar: PropTypes.func,
-      updateAccount: PropTypes.func
+      update: PropTypes.func.isRequired,
+      logout: PropTypes.func.isRequired
     })
   }
 
   state = { modalOpen: false }
 
-  handleLogout = () => {
-    this.props.firebase.logout()
-  }
+  handleLogout = () => this.props.firebase.logout()
 
   toggleModal = () => {
     this.setState({
@@ -51,8 +39,16 @@ export default class Account extends Component {
     })
   }
 
+  updateAccount = (newData) =>
+    this.props.firebase
+      .update(`${rfConfig.userProfile}/${this.props.auth.uid}`, newData)
+      .catch((err) => {
+        console.error('Error updating account', err) // eslint-disable-line no-console
+        // TODO: Display error to user
+      })
+
   render () {
-    const { account, firebase: { saveAccount } } = this.props
+    const { account } = this.props
 
     if (!isLoaded(account)) {
       return <LoadingSpinner />
@@ -64,15 +60,16 @@ export default class Account extends Component {
           <div className={classes.settings}>
             <div className={classes.avatar}>
               <img
-                className={classes['avatar-current']}
+                className={classes.avatarCurrent}
                 src={account && account.avatarUrl || defaultUserImageUrl}
                 onClick={this.toggleModal}
               />
             </div>
             <div className={classes.meta}>
               <AccountForm
-                onSubmit={saveAccount}
+                initialValues={account}
                 account={account}
+                onSubmit={this.updateAccount}
               />
             </div>
           </div>

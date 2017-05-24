@@ -13,7 +13,7 @@ import {
   ACCOUNT_PATH,
   LOGIN_PATH,
   SIGNUP_PATH
-} from 'constants/paths'
+} from 'constants'
 
 // Components
 import AppBar from 'material-ui/AppBar'
@@ -51,7 +51,6 @@ export default class Navbar extends Component {
   }
 
   static propTypes = {
-    auth: PropTypes.object,
     account: PropTypes.object,
     firebase: PropTypes.object.isRequired
   }
@@ -122,7 +121,7 @@ export default class Navbar extends Component {
       <AppBar
         title={
           <Link to={accountExists ? `${LIST_PATH}` : '/'} className={classes.brand}>
-            material
+            material example
           </Link>
         }
         showMenuIconButton={false}

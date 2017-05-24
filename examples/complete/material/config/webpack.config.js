@@ -53,12 +53,14 @@ webpackConfig.plugins = [
       if (stats.compilation.errors.length) {
         // Log each of the warnings
         stats.compilation.errors.forEach(function (error) {
-          errors.push(error.message || error)
+          errors.push(error.stack || error.message || error)
         })
 
-        // Pretend no assets were generated. This prevents the tests
-        // from running making it clear that there were warnings.
-        throw new Error(errors)
+        if (__TEST__) {
+          // Pretend no assets were generated. This prevents the tests
+          // from running making it clear that there were warnings.
+          throw new Error(errors)
+        }
       }
     })
   },
@@ -111,7 +113,7 @@ if (!__TEST__) {
 // JavaScript / JSON
 webpackConfig.module.loaders = [{
   test: /\.(js|jsx)$/,
-  exclude: [ /node_modules/ /* exclude any npm-linked modules here */ ],
+  exclude: [ /node_modules/, /react-redux-firebase\/dist/ /* exclude any npm-linked modules here */ ],
   loader: 'babel',
   query: project.compiler_babel
 }, {

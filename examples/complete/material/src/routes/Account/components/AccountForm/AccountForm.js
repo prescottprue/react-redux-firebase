@@ -1,43 +1,48 @@
 import React, { PropTypes } from 'react'
-
-import classes from './AccountForm.scss'
-import ProviderDataForm from '../ProviderDataForm/ProviderDataForm'
-
-import { Field } from 'redux-form'
+import { Field, reduxForm } from 'redux-form'
+import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'components/TextField'
+import { ACCOUNT_FORM_NAME } from 'constants'
+import ProviderDataForm from '../ProviderDataForm'
+import classes from './AccountForm.scss'
 
 export const AccountForm = ({ account, handleSubmit, submitting }) => (
-  <div className={classes.container}>
+  <form className={classes.container} onSubmit={handleSubmit}>
     <h4>Account</h4>
-    <div>
-      <Field
-        name='username'
-        component={TextField}
-        label='Username'
-      />
-    </div>
-    <div>
-      <Field
-        name='email'
-        component={TextField}
-        label='Email'
-      />
-    </div>
-    <div>
-      <h4>Linked Accounts</h4>
-      {
-        account.providerData &&
-          <ProviderDataForm providerData={account.providerData} />
-      }
-    </div>
-  </div>
+    <Field
+      name='displayName'
+      component={TextField}
+      label='Display Name'
+    />
+    <Field
+      name='email'
+      component={TextField}
+      label='Email'
+    />
+    {
+      !!account && !!account.providerData &&
+        <div>
+          <h4>Linked Accounts</h4>
+          <ProviderDataForm
+            providerData={account.providerData}
+          />
+        </div>
+    }
+    <RaisedButton
+      primary
+      label='Save'
+      type='submit'
+      className={classes.submit}
+    />
+  </form>
 )
 
 AccountForm.propTypes = {
-  account: PropTypes.shape({
-    providerData: PropTypes.array
-  }),
+  account: PropTypes.object,
   handleSubmit: PropTypes.func,
   submitting: PropTypes.bool
 }
-export default AccountForm
+
+export default reduxForm({
+  form: ACCOUNT_FORM_NAME
+})(AccountForm)

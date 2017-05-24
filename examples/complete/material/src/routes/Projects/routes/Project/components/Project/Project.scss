@@ -1,0 +1,7 @@
+@import 'base';
+
+
+.empty {
+  @extend .flex-row-center;
+  padding-top: 8rem;
+}

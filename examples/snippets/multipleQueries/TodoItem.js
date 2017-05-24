@@ -1,9 +1,9 @@
-import React, { PropTypes, Component } from 'react'
-import { firebase } from 'react-redux-firebase'
+import React, { Component, PropTypes } from 'react'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import './Todo.css'
 
-@firebase()
+@firebaseConnect()
 export default class TodoItem extends Component {
   static propTypes = {
     todo: PropTypes.object,
@@ -11,14 +11,10 @@ export default class TodoItem extends Component {
   }
 
   render(){
-    const {firebase, todo, id} = this.props
-    const toggleDone = () => {
-      firebase.set(`/todos/${id}/done`, !todo.done)
-    }
+    const { firebase, todo, id } = this.props
+    const toggleDone = () => firebase.set(`/todos/${id}/done`, !todo.done)
+    const deleteTodo = () => firebase.remove(`/todos/${id}`)
 
-    const deleteTodo = (event) => {
-       firebase.remove(`/todos/${id}`)
-    }
     return (
       <li className="Todo">
         <input

@@ -11,38 +11,35 @@ import {
 import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
 import { UserIsNotAuthenticated } from 'utils/router'
-import { SIGNUP_PATH } from 'constants/paths'
-import LoginForm from '../components/LoginForm/LoginForm'
+import { SIGNUP_PATH } from 'constants'
+import LoginForm from '../components/LoginForm'
 import classes from './LoginContainer.scss'
 
 @UserIsNotAuthenticated // redirect to list page if logged in
-@firebaseConnect()
-@connect(
-  // Map state to props
+@firebaseConnect() // add this.props.firebase
+@connect( // map redux state to props
   ({ firebase }) => ({
     authError: pathToJS(firebase, 'authError')
   })
 )
-export default class Signup extends Component {
+export default class Login extends Component {
   static propTypes = {
     firebase: PropTypes.shape({
       login: PropTypes.func.isRequired
     }),
     authError: PropTypes.shape({
-      message: PropTypes.string // eslint-disable-line react/no-unused-prop-types
+      message: PropTypes.string
     })
   }
 
   state = {
+    // state of snackbar so it can be closed
     snackCanOpen: false
   }
 
   handleLogin = loginData => {
-    this.setState({
-      snackCanOpen: true
-    })
-
-    this.props.firebase.login(loginData)
+    this.setState({ snackCanOpen: true })
+    return this.props.firebase.login(loginData)
   }
 
   providerLogin = (provider) =>
@@ -64,10 +61,10 @@ export default class Signup extends Component {
           <GoogleButton onClick={() => this.providerLogin('google')} />
         </div>
         <div className={classes.signup}>
-          <span className={classes['signup-label']}>
+          <span className={classes.signupLabel}>
             Need an account?
           </span>
-          <Link className={classes['signup-link']} to={SIGNUP_PATH}>
+          <Link className={classes.signupLink} to={SIGNUP_PATH}>
             Sign Up
           </Link>
         </div>

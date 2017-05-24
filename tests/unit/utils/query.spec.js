@@ -7,9 +7,47 @@ import {
   getQueryIdFromPath,
   applyParamsToQuery
 } from '../../../src/utils/query'
+const fakeFirebase = {
+  _: {
+    authUid: '123',
+    config: {
+      userProfile: 'users',
+      disableRedirectHandling: true,
+    },
+  },
+  database: () => ({
+    ref: () => ({
+      orderByValue: () => ({
+        on: () => ({ val: () => { some: 'obj' } }),
+        off: () => Promise.resolve({ val: () => { some: 'obj' }}),
+        once: () => Promise.resolve({ val: () => { some: 'obj' }})
+      }),
+      orderByPriority: () => ({
+        startAt: (startParam) => startParam,
+        toString: () => 'priority'
+      }),
+      orderByChild: (child) => ({
+        equalTo: (equalTo) => ({
+          child,
+          equalTo
+        }),
+        toString: () => child
+      }),
+      orderByKey: () => ({ }),
+      limitToFirst: () => ({ }),
+      limitToLast: () => ({ }),
+      equalTo: () => ({ }),
+      startAt: () => ({ }),
+      endAt: () => ({ }),
+    })
+  }),
+}
+let spy
+
 let createQueryFromParams = (queryParams) =>
-  applyParamsToQuery(queryParams, Firebase.database().ref())
+  applyParamsToQuery(queryParams, fakeFirebase.database().ref())
 const dispatch = () => {}
+let ref
 describe('Utils: Query', () => {
   describe('getWatchPath', () => {
     it('handles basic path', () => {
@@ -78,15 +116,92 @@ describe('Utils: Query', () => {
     it('orderByValue', () => {
       expect(createQueryFromParams(['orderByValue=uid'])).to.be.an.object
     })
-    it('orderByPriority', () => {
-      expect(createQueryFromParams(['orderByPriority=uid'])).to.be.an.object
+
+    describe('orderByPriority', () => {
+      it('handles single parameter', () => {
+        expect(createQueryFromParams(['orderByPriority']).toString())
+          .to.equal('priority')
+      })
+
+      describe('with startAt', () => {
+        it ('string containing number', () => {
+          const startAt = '123abc'
+          expect(createQueryFromParams(['orderByPriority', `startAt=${startAt}`]).toString())
+            .to.equal(startAt)
+        })
+      })
     })
+
     it('orderByKey', () => {
       expect(createQueryFromParams(['orderByKey'])).to.be.an.object
     })
-    it('orderByChild', () => {
-      expect(createQueryFromParams(['orderByChild=uid'])).to.be.an.object
+
+    describe('orderByChild', () => {
+      it('handles single parameter', () => {
+        const queryParams = createQueryFromParams(['orderByChild=uid'])
+        expect(queryParams.toString()).to.equal('uid')
+      })
+
+      describe('with equalTo', () => {
+        it('number', () => {
+          const child = 'emailAddress'
+          const equalTo = 1
+          const queryParams = createQueryFromParams([`orderByChild=${child}`, `equalTo=${equalTo}`])
+          expect(queryParams.child)
+            .to
+            .equal(child)
+          expect(queryParams.equalTo)
+            .to
+            .equal(equalTo)
+        })
+        it('boolean', () => {
+          const child = 'completed'
+          const equalTo = false
+          const queryParams = createQueryFromParams([`orderByChild=${child}`, `equalTo=${equalTo}`])
+          expect(queryParams.child)
+            .to
+            .equal(child)
+          expect(queryParams.equalTo)
+            .to
+            .equal(equalTo)
+        })
+        it('string containing a boolean', () => {
+          const child = 'emailAddress'
+          const equalTo = 'true'
+          const queryParams = createQueryFromParams([`orderByChild=${child}`, `equalTo=${equalTo}`])
+          expect(queryParams.child)
+            .to
+            .equal(child)
+          expect(queryParams.equalTo)
+            .to
+            .equal(true)
+        })
+        it('string containing null', () => {
+          const child = 'emailAddress'
+          const equalTo = 'null'
+          const queryParams = createQueryFromParams([`orderByChild=${child}`, `equalTo=${equalTo}`])
+          expect(queryParams.child)
+            .to
+            .equal(child)
+          expect(queryParams.equalTo)
+            .to
+            .equal(null)
+        })
+        it('string containing a number', () => {
+          const child = 'emailAddress'
+          const equalTo = '123example@gmail.com'
+          const queryParams = createQueryFromParams([`orderByChild=${child}`, `equalTo=${equalTo}`])
+          expect(queryParams.child)
+            .to
+            .equal(child)
+          expect(queryParams.equalTo)
+            .to
+            .equal(equalTo)
+        })
+      })
+
     })
+
     it('limitToFirst', () => {
       expect(createQueryFromParams(['limitToFirst=1'])).to.be.an.object
     })

@@ -1,7 +1,5 @@
 # react-redux-firebase
 
-[![Gitter][gitter-image]][gitter-url]
-
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][npm-downloads-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
@@ -9,6 +7,9 @@
 [![License][license-image]][license-url]
 [![Code Coverage][coverage-image]][coverage-url]
 [![Code Style][code-style-image]][code-style-url]
+
+[![Gitter][gitter-image]][gitter-url]
+[<img src="http://npm.packagequality.com/badge/react-redux-firebase.png" align="right"/>](http://packagequality.com/#?package=react-redux-firebase)
 
 > Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 
@@ -29,6 +30,8 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 - [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/) integrations
 - Action Types and other Constants exported for external use (such as in `redux-observable`)
 - Firebase v3+ support
+- Server Side Rendering Support
+- [`react-native` support](/docs/recipes/react-native.md)
 
 ## Install
 ```bash
@@ -172,16 +175,26 @@ export default class Todos extends Component {
 Alternatively, if you choose not to use decorators:
 
 ```javascript
+import { compose } from 'redux'
 
-const wrappedTodos = firebaseConnect([
-  '/todos'
-])(Todos)
-export default connect(
-  ({firebase}) => ({
-    todos: dataToJS(firebase, '/todos'),
-  })
-)(wrappedTodos)
+export default compose(
+  firebaseConnect(['/todos']),
+  connect(
+    ({firebase}) => ({ todos: dataToJS(firebase, '/todos') })
+  )
+)(Todos)
 
+```
+
+## Server Side Rendering
+
+Firebase's library requires XML request capability, so if you are using `react-redux-firebase` in a Server Side rendering environment, make sure you require `xmlhttprequest`.
+
+If you disagree with having to do this yourself, hop [on gitter](https://gitter.im/redux-firebase/Lobby) and let us know!
+
+```js
+// needed to fix "Error: The XMLHttpRequest compatibility library was not found."
+global.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 ```
 
 ## [Docs](http://react-redux-firebase.com)
@@ -255,9 +268,10 @@ import { pathToJS } from 'react-redux-firebase'
 export const addTodo = (newTodo) =>
   (dispatch, getState, getFirebase) => {
     const auth = pathToJS(getState.firebase, 'auth')
-    newTodo.owner = auth.uid
+    newTodo.createdBy = auth.uid //
     getFirebase()
       .push('todos', newTodo)
+      // using pushWithMeta instead would attach createdBy and createdAt automatically
       .then(() => {
         dispatch({
           type: 'TODO_CREATED',
@@ -300,7 +314,9 @@ import { pathToJS } from 'react-redux-firebase'
 export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',
   authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) => pathToJS(firebase, 'isInitializing') === true,
+  authenticatingSelector: ({ firebase }) =>
+    pathToJS(firebase, 'isInitializing') === true ||
+    pathToJS(firebase, 'auth') === undefined
   predicate: auth => auth !== null,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
@@ -350,6 +366,7 @@ The [examples folder](/examples) contains full applications that can be copied/a
   * `uniqueSet` method helper for only setting if location doesn't already exist
   * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)
   * Action Types and other Constants are exposed for external usage (such as with `redux-observable`)
+  * Server Side Rendering Support
   * [Complete Firebase Auth Integration](http://react-redux-firebase.com/docs/auth.html#examples) including `signInWithRedirect` compatibility for OAuth Providers
 
   #### Well why not combine?
@@ -363,8 +380,11 @@ The [examples folder](/examples) contains full applications that can be copied/a
 
   * [Recipes Section](http://react-redux-firebase.com/docs/recipes/) of [the docs](http://react-redux-firebase.com/docs/recipes/)
   * [examples folder](/examples) contains [complete example apps](/examples/complete) as well as [useful snippets](/examples/snippets)
+4. How does `connect` relate to `firebaseConnect`?
 
-4. How do I help?
+  ![data flow](/docs/static/dataFlow.png)
+
+5. How do I help?
 
   * Join the conversion on [gitter][gitter-url]
   * Post Issues
