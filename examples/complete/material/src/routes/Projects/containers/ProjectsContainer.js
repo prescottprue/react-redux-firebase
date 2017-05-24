@@ -28,7 +28,7 @@ const populates = [
 @connect(
   ({ firebase }, { params }) => ({
     auth: pathToJS(firebase, 'auth'),
-    projects: populatedDataToJS(firebase, 'projects', populates)
+    projects: firebase.data.projects
   })
 )
 export default class Projects extends Component {

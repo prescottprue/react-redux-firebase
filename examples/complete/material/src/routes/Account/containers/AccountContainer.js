@@ -12,14 +12,14 @@ import classes from './AccountContainer.scss'
 @UserIsAuthenticated // redirect to /login if user is not authenticated
 @firebaseConnect() // add this.props.firebase
 @connect( // Map redux state to props
-  ({ firebase }) => ({
-    auth: pathToJS(firebase, 'auth'),
-    account: pathToJS(firebase, 'profile')
+  ({ firebase: { auth, profile } }) => ({
+    auth,
+    profile
   })
 )
 export default class Account extends Component {
   static propTypes = {
-    account: PropTypes.object,
+    profile: PropTypes.object,
     auth: PropTypes.shape({
       uid: PropTypes.string
     }),
@@ -48,9 +48,9 @@ export default class Account extends Component {
       })
 
   render () {
-    const { account } = this.props
+    const { profile } = this.props
 
-    if (!isLoaded(account)) {
+    if (!isLoaded(profile)) {
       return <LoadingSpinner />
     }
 
@@ -61,14 +61,14 @@ export default class Account extends Component {
             <div className={classes.avatar}>
               <img
                 className={classes.avatarCurrent}
-                src={account && account.avatarUrl || defaultUserImageUrl}
+                src={profile && profile.avatarUrl || defaultUserImageUrl}
                 onClick={this.toggleModal}
               />
             </div>
             <div className={classes.meta}>
               <AccountForm
-                initialValues={account}
-                account={account}
+                initialValues={profile}
+                account={profile}
                 onSubmit={this.updateAccount}
               />
             </div>

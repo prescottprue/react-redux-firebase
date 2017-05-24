@@ -16,10 +16,9 @@ const UNAUTHED_REDIRECT = 'UNAUTHED_REDIRECT'
 export const UserIsAuthenticated = UserAuthWrapper({ // eslint-disable-line new-cap
   wrapperDisplayName: 'UserIsAuthenticated',
   LoadingComponent: LoadingSpinner,
-  authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) =>
-    (pathToJS(firebase, 'auth') === undefined) ||
-    (pathToJS(firebase, 'isInitializing') === true),
+  authSelector: ({ firebase: { auth } }) => auth,
+  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+    auth === undefined || isInitializing === true,
   predicate: auth => auth !== null,
   redirectAction: newLoc => (dispatch) => {
     browserHistory.replace(newLoc)
@@ -45,10 +44,9 @@ export const UserIsNotAuthenticated = UserAuthWrapper({ // eslint-disable-line n
   failureRedirectPath: (state, props) =>
     // redirect to page user was on or to list path
     props.location.query.redirect || LIST_PATH,
-  authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) =>
-    (pathToJS(firebase, 'auth') === undefined) ||
-    (pathToJS(firebase, 'isInitializing') === true),
+  authSelector: ({ firebase: { auth } }) => auth,
+  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+    auth === undefined || isInitializing === true,
   predicate: auth => auth === null,
   redirectAction: newLoc => (dispatch) => {
     browserHistory.replace(newLoc)

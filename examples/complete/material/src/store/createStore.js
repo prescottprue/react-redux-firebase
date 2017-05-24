@@ -2,7 +2,8 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import makeRootReducer from './reducers'
 import { browserHistory } from 'react-router'
-import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
+import { reactReduxFirebase, getFirebase, toJS } from 'react-redux-firebase'
+import logger from 'redux-logger'
 import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
 import { version } from '../../package.json'
 import { updateLocation } from './location'
@@ -17,7 +18,8 @@ export default (initialState = {}, history) => {
   // Middleware Configuration
   // ======================================================
   const middleware = [
-    thunk.withExtraArgument(getFirebase)
+    thunk.withExtraArgument(getFirebase),
+    logger
     // This is where you add other middleware like redux-observable
   ]
 
@@ -39,8 +41,8 @@ export default (initialState = {}, history) => {
     makeRootReducer(),
     initialState,
     compose(
-      applyMiddleware(...middleware),
       reactReduxFirebase(fbConfig, reduxConfig),
+      applyMiddleware(...middleware),
       ...enhancers
     )
   )

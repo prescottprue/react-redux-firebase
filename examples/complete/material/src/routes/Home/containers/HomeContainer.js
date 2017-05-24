@@ -5,10 +5,7 @@ import Theme from 'theme'
 import {
   firebaseConnect,
   isLoaded,
-  pathToJS,
-  dataToJS // needed for full list and once
-  // orderedToJS // needed for ordered list
-  // populatedDataToJS // needed for populated list
+  // populate // for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
@@ -28,12 +25,13 @@ import classes from './HomeContainer.scss'
   // { path: 'todos', populates } // populate
 ])
 @connect(
-  ({firebase}) => ({
-    auth: pathToJS(firebase, 'auth'),
-    account: pathToJS(firebase, 'profile'),
-    todos: dataToJS(firebase, 'todos')
-    // todos: populatedDataToJS(firebase, '/todos', populates), // if populating
-    // todos: orderedToJS(firebase, '/todos') // if using ordering such as orderByChild
+  // get auth, profile, and data from
+  ({ firebase: { auth, profile, data: { todos } } }) => ({
+    auth,
+    profile,
+    todos,
+    // todos: populate(firebase, 'todos', populates), // if populating
+    // todos: firebase.ordered.todos // if using ordering such as orderByChild
   })
 )
 export default class Home extends Component {

@@ -41,6 +41,8 @@ const requestingReducer = (state = {}, action) => {
   }
 }
 
+const getPathStr = (path) => path ? path.replace('/', '.') : ''
+
 /**
  * Reducer for data state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR`
  * actions.
@@ -50,22 +52,21 @@ const requestingReducer = (state = {}, action) => {
  */
 const dataReducer = (state = {}, action) => {
   const { path, data, ordered } = action
-  const pathStr = path.replace('/', '.')
   switch (action.type) {
     case SET:
       return {
         ...state,
-        ...set({}, pathStr, data)
+        ...set({}, getPathStr(path), data)
       }
     case SET_ORDERED:
       return {
         ...state,
-        ...set({}, pathStr, ordered)
+        ...set({}, getPathStr(path), ordered)
       }
     case NO_VALUE:
       return {
         ...state,
-        ...set({}, pathStr, {})
+        ...set({}, getPathStr(path), {})
       }
     default:
       return state
@@ -79,10 +80,10 @@ const dataReducer = (state = {}, action) => {
  * @param  {object} action - Object containing the action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const authReducer = (state = undefined, action) => {
+const authReducer = (state = {}, action) => {
   switch (action.type) {
     case LOGIN:
-      return action.auth
+      return action.auth ? action.auth : undefined
     case LOGOUT:
     case LOGIN_ERROR:
       return null
@@ -98,7 +99,7 @@ const authReducer = (state = undefined, action) => {
  * @param  {object} action - Object containing the action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const profileReducer = (state = undefined, action) => {
+const profileReducer = (state = {}, action) => {
   switch (action.type) {
     case SET_PROFILE:
       return {
@@ -132,16 +133,16 @@ const isInitializingReducer = (state = false, action) => {
 }
 
 /**
- * Reducer for authError state. Changed by `UNAUTHORIZED_ERROR`
+ * Reducer for errors state. Changed by `UNAUTHORIZED_ERROR`
  * and `LOGOUT` actions.
  * @param  {Object} state - Current authError redux state
  * @param  {object} action - Object containing the action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const authErrorReducer = (state, action) => {
+const errorsReducer = (state = [], action) => {
   switch (action.type) {
     case UNAUTHORIZED_ERROR:
-      return action.authError
+      return [...state, action.payload]
     case LOGOUT:
       return null
     default:
@@ -167,5 +168,5 @@ export default combineReducers({
   auth: authReducer,
   profile: profileReducer,
   isInitializing: isInitializingReducer,
-  authError: authErrorReducer
+  errors: errorsReducer
 })
