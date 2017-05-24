@@ -166,7 +166,7 @@ describe('Actions: Auth', () => {
 
   describe('createUserProfile', () => {
     it('creates profile if config is enabled', () => {
-      return createUserProfile(dispatch, firebase, { uid: '123', email: 'test@test.com', providerData: [{}] }, { some: 'asdf' })
+      return createUserProfile(dispatch, Firebase, { uid: '123', email: 'test@test.com', providerData: [{}] }, { some: 'asdf' })
         .then((profile) => {
           expect(profile).to.be.an.object
         })
@@ -175,13 +175,13 @@ describe('Actions: Auth', () => {
 
   describe('login', () => {
     it('handles invalid email login', () =>
-      login(dispatch, firebase, fakeLogin)
+      login(dispatch, fakeFirebase, fakeLogin)
         .catch((err) => {
           expect(err.code).to.equal('auth/user-not-found')
         })
     , 4000)
     it('handles invalid token login', () =>
-      login(dispatch, firebase, { token: 'test@tst.com' })
+      login(dispatch, fakeFirebase, { token: 'test@tst.com' })
         .catch((err) => {
           expect(err.code).to.equal('auth/invalid-custom-token')
         })
@@ -326,7 +326,6 @@ describe('Actions: Auth', () => {
       it('auth/weak-password', () => {
         return confirmPasswordReset(dispatch, fakeFirebase, 'auth/weak-password', 'error')
           .catch((err) => {
-            console.log('error:', err)
             expect(err.code).to.be.a.string
           })
       })
