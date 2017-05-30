@@ -2,8 +2,6 @@
 
 ## Current Minor Version (`v1.4.0`)
 
-**NOTE**: `v1.4.0` is still in pre-release, please check the [releases page](https://github.com/prescottprue/react-redux-firebase/releases) for the most up to date release information
-
 #### Features
 * `react-native` support (including [complete example](https://github.com/prescottprue/react-redux-firebase/tree/v1.4.0-beta/examples/complete/react-native) app as well as a [create your own recipe](/docs/recipes/react-native.md))
 * Server Side Rendering Support - [#72](https://github.com/prescottprue/react-redux-firebase/issues/72)
@@ -33,6 +31,9 @@
 
 
 ## Next Minor Version (`v1.5.0`)
+
+**NOTE**: `v1.5.0` is still in pre-release, please check the [releases page](https://github.com/prescottprue/react-redux-firebase/releases) for the most up to date release information
+
 * Use `prop-types` package instead of `React.PropTypes` - [#122](https://github.com/prescottprue/react-redux-firebase/pull/122) - thanks [@petetnt](https://github.com/petetnt)
 * New Features for Population - [#132](https://github.com/prescottprue/react-redux-firebase/pull/132) - thanks [@javamonn](https://github.com/javamonn)
   * Lodash supported path syntax for `populates.child`
@@ -67,7 +68,7 @@
 **NOTE:** The changes are unconfirmed and will most likely change
 
 #### Progress
-  * [`v2.0.0-alpha`](https://github.com/prescottprue/react-redux-firebase/tree/v2.0.0-alpha) has been started, view [the branch](https://github.com/prescottprue/react-redux-firebase/tree/v2.0.0-alpha)
+* [`v2.0.0-alpha`](https://github.com/prescottprue/react-redux-firebase/tree/v2.0.0-alpha) has been started, view [the branch](https://github.com/prescottprue/react-redux-firebase/tree/v2.0.0-alpha)
 
 #### Breaking Changes
 * Remove usage of `Immutable.js` and Immutable Maps (no more need for `pathToJS()` & `dataToJS()` to load data from redux)

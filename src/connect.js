@@ -28,7 +28,7 @@ import { getEventsFromInput, createCallable } from './utils'
  * // pass todos list from redux as this.props.todosList
  * export default connect(({ firebase }) => ({
  *   todosList: dataToJS(firebase, 'todos'),
- *   profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.proifle
+ *   profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.profile
  *   auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
  * }))(fbWrapped)
  */

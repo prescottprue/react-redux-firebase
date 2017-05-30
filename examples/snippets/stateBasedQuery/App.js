@@ -1,76 +1,33 @@
 import react, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty,
-  pathToJS,
-  dataToJS
-} from 'react-redux-firebase'
-
-import logo from './logo.svg'
-import TodoItem from './TodoItem'
-import './App.css'
+import { isLoaded, isEmpty, pathToJS } from 'react-redux-firebase'
+import TodosView from './Todos'
+import LoginView from './Todos'
 
 class App extends Component {
   static propTypes = {
-    todos: PropTypes.object
+    auth: PropTypes.object
   }
 
   render () {
-    const { todos } = this.props
+    const { auth } = this.props
 
-    const todosList = (!isLoaded(todos))
-                        ? 'Loading'
-                        : (isEmpty(todos))
-                          ? 'Todo list is empty'
-                          : Object.keys(todos).map((key) => (
-                            <TodoItem key={key} id={key} todo={todos[key]} />
-                          ))
-    return (
-      <div className='App'>
-        <div className='App-header'>
-          <h2>react-redux-firebase Auth Based Query Demo</h2>
-          <img src={logo} className='App-logo' alt='logo' />
-        </div>
-        <div className='App-todos'>
-          <h4>
-            Loaded From
-            <span className='App-Url'>
-              <a href='https://react-redux-firebase.firebaseio.com/'>
-                react-redux-firebase.firebaseio.com
-              </a>
-            </span>
-          </h4>
-          <h4>Todos List</h4>
-          {todosList}
-        </div>
-      </div>
-    )
+    // handle initial loading of auth
+    if (!isLoaded(auth)) {
+      return <div>Loading...</div>
+    }
+
+    if (isEmpty(auth)) {
+      return <LoginView />
+    }
+
+    return <TodosView auth={auth} />
   }
 }
 
-const authWrappedComponent = connect(
+export default connect(
   ({ firebase }) => ({
     auth: pathToJS(firebase, 'auth')
   })
 )(App)
-
-const fbWrappedComponent = firebaseConnect(
-  ({ auth }) => ([
-    `/todos#orderByChild=uid&equalTo=${auth ? auth.uid : ''}`
-    /* object notation equivalent
-    {
-      path: '/todos',
-      queryParams: ['orderByChild=uid', `equalTo=${auth ? auth.uid : ''}`]
-    }
-    */
-  ])
-)(authWrappedComponent)
-
-export default connect(
-  ({ firebase }) => ({
-    todos: dataToJS(firebase, 'todos')
-  })
-)(fbWrappedComponent)
