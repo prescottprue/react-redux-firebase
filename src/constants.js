@@ -179,13 +179,3 @@ export default {
   metaParams,
   paramSplitChar
 }
-
-module.exports = {
-  defaultJWTProps,
-  actionTypes,
-  defaultConfig,
-  supportedAuthProviders,
-  defaultInitProps,
-  metaParams,
-  paramSplitChar
-}
