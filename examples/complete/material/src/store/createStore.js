@@ -3,8 +3,6 @@ import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import { reactReduxFirebase, getFirebase, toJS } from 'react-redux-firebase'
 import { createLogger } from 'redux-logger'
-import { persistStore, autoRehydrate } from 'redux-persist'
-import immutableTransform from 'redux-persist-transform-immutable'
 import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
@@ -49,7 +47,6 @@ export default (initialState = {}, history) => {
     compose(
       applyMiddleware(...middleware),
       reactReduxFirebase(fbConfig, reduxConfig),
-      autoRehydrate(),
       ...enhancers
     )
   )
@@ -57,9 +54,6 @@ export default (initialState = {}, history) => {
 
   // To unsubscribe, invoke `store.unsubscribeHistory()` anytime
   store.unsubscribeHistory = browserHistory.listen(updateLocation(store))
-
-  // begin periodically persisting the store
-  persistStore(store, {transforms: [immutableTransform()]})
 
   if (module.hot) {
     module.hot.accept('./reducers', () => {

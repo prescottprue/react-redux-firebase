@@ -74,8 +74,6 @@
     "redux-auth-wrapper": "^1.0.0",
     "redux-form": "^6.6.1",
     "redux-logger": "^3.0.6",
-    "redux-persist": "^4.8.0",
-    "redux-persist-transform-immutable": "^4.3.0",
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
