@@ -31,7 +31,7 @@ import { getEventsFromInput, createCallable } from './utils'
  *   auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
  * }))(fbWrapped)
  */
-export default (dataOrFn = []) => WrappedComponent => {
+export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => WrappedComponent => {
   class FirebaseConnect extends Component {
     constructor (props, context) {
       super(props, context)
@@ -40,11 +40,11 @@ export default (dataOrFn = []) => WrappedComponent => {
     }
 
     static contextTypes = {
-      store: PropTypes.object.isRequired
+      [storeKey]: PropTypes.object.isRequired
     };
 
     componentWillMount () {
-      const { firebase, dispatch } = this.context.store
+      const { firebase, dispatch } = this.context[storeKey]
 
       // Allow function to be passed
       const inputAsFunc = createCallable(dataOrFn)
@@ -93,3 +93,5 @@ export default (dataOrFn = []) => WrappedComponent => {
 
   return hoistStatics(FirebaseConnect, WrappedComponent)
 }
+
+export default createFirebaseConnect()
