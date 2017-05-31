@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
+  "typings": "./index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
     "lint": "eslint src/** tests/**",
@@ -92,6 +93,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
     "eslint-plugin-standard": "^2.2.0",
+    "firebase-server": "^0.10.1",
     "gitbook-cli": "^2.3.0",
     "istanbul": "^1.1.0-alpha.1",
     "jsdom": "^9.12.0",
@@ -103,8 +105,9 @@
     "rimraf": "^2.6.1",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
-    "webpack": "^1.14.0",
+    "webpack": "^2.6.1",
     "webpack-bundle-analyzer": "^2.3.1",
+    "ws": "^3.0.0",
     "xmlhttprequest": "^1.8.0"
   },
   "license": "MIT",
