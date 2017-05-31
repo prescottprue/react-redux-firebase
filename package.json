@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
+  "typings": "./index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
     "lint": "eslint src/** tests/**",
