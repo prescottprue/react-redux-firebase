@@ -2,7 +2,7 @@
 
 In order to use `redux-persist`, you must use `redux-persist-transform-immutable` to transform state since `react-redux-firebase` uses immutable.
 
-**Note**: Will no longer be necessary in `v2.0.0` as immutable will no longer be used. Feel free to share your feelings and input on [gitter](https://gitter.im/redux-firebase/Lobby).
+**Note**: The immutable transform will no longer be necessary in `v2.0.0` as immutable will no longer be used. There are some small known issues with `v1.*.*`. Please share your feelings and input on [gitter](https://gitter.im/redux-firebase/Lobby).
 
 ```js
 import { applyMiddleware, compose, createStore } from 'redux'
