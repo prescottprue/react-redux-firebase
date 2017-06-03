@@ -173,8 +173,10 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
  * @param {String} event - Event for which to remove the watcher
  * @param {String} path - Path of watcher to remove
  */
-export const unWatchEvent = (firebase, dispatch, event, path, queryId = undefined) =>
-    unsetWatcher(firebase, dispatch, event, path, queryId)
+export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId = undefined }) => {
+  const watchPath = !storeAs ? path : `${path}@${storeAs}`
+  unsetWatcher(firebase, dispatch, type, watchPath, queryId)
+}
 
 /**
  * @description Add watchers to a list of events
@@ -193,8 +195,8 @@ export const watchEvents = (firebase, dispatch, events) =>
  * @param {Array} events - List of events for which to remove watchers
  */
 export const unWatchEvents = (firebase, dispatch, events) =>
-    events.forEach(event =>
-      unWatchEvent(firebase, dispatch, event.type, event.path)
-    )
+  events.forEach(event =>
+    unWatchEvent(firebase, dispatch, event)
+  )
 
 export default { watchEvents, unWatchEvents }
