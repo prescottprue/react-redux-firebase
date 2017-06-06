@@ -52,7 +52,7 @@
     "react",
     "babel",
     "hoc",
-    "react-redux-firebase"
+    "redux-react-firebase"
   ],
   "dependencies": {
     "es6-promise": "^4.1.0",
