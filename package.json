@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "1.5.0-beta.2",
+  "version": "1.5.0-beta.3",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -29,25 +29,30 @@
     "docs:watch": "npm run docs:prepare && gitbook serve",
     "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force"
   },
-  "contributors": [
-    {
-      "name": "Prescott Prue",
-      "email": "sprue.dev@gmail.com",
-      "url": "https://github.com/prescottprue"
-    },
-    {
-      "name": "Bojhan",
-      "url": "https://github.com/Bojhan"
-    },
-    {
-      "name": "Marshall",
-      "email": "mmoutenot@gmail.com",
-      "url": "https://github.com/mmoutenot"
-    },
-    {
-      "name": "Rahav Lussato",
-      "url": "https://github.com/RahavLussato"
-    }
+  "license": "MIT",
+  "homepage": "https://github.com/prescottprue/react-redux-firebase#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prescottprue/react-redux-firebase.git"
+  },
+  "bugs": {
+    "url": "https://github.com/prescottprue/react-redux-firebase/issues"
+  },
+  "author": {
+    "name": "Prescott Prue",
+    "email": "sprue.dev@gmail.com",
+    "url": "https://github.com/prescottprue"
+  },
+  "keywords": [
+    "firebase",
+    "redux",
+    "react",
+    "react-redux",
+    "redux-firebase",
+    "react",
+    "babel",
+    "hoc",
+    "redux-react-firebase"
   ],
   "dependencies": {
     "es6-promise": "^4.1.0",
@@ -109,41 +114,5 @@
     "webpack-bundle-analyzer": "^2.3.1",
     "ws": "^3.0.0",
     "xmlhttprequest": "^1.8.0"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/prescottprue/react-redux-firebase.git"
-  },
-  "bugs": {
-    "url": "https://github.com/prescottprue/react-redux-firebase/issues"
-  },
-  "homepage": "https://github.com/prescottprue/react-redux-firebase#readme",
-  "keywords": [
-    "firebase",
-    "redux",
-    "react",
-    "react-redux",
-    "redux-firebase",
-    "react",
-    "babel",
-    "hoc",
-    "react-redux-firebase"
-  ],
-  "npmName": "react-redux-firebase",
-  "files": [
-    "dist",
-    "src",
-    "es",
-    "lib",
-    "./index.d.ts"
-  ],
-  "npmFileMap": [
-    {
-      "basePath": "/dist/",
-      "files": [
-        "*.js"
-      ]
-    }
-  ]
+  }
 }
