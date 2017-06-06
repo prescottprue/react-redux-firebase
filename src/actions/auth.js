@@ -367,11 +367,13 @@ export const login = (dispatch, firebase, credentials) => {
  * @private
  */
 export const logout = (dispatch, firebase) => {
-  firebase.auth().signOut()
-  dispatch({ type: LOGOUT })
-  firebase._.authUid = null
-  unWatchUserProfile(firebase)
-  return Promise.resolve(firebase)
+  return firebase.auth().signOut()
+    .then(() => {
+      dispatch({ type: LOGOUT })
+      firebase._.authUid = null
+      unWatchUserProfile(firebase)
+      return firebase
+    })
 }
 
 /**
