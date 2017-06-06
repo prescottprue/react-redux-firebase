@@ -23,11 +23,17 @@ Middleware that handles configuration (placed in redux's
         auth redirect handling listener. (default: `true`)
     -   `config.onAuthStateChanged` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function run when auth state
         changes. Argument Pattern: `(authData, firebase, dispatch)`
+    -   `config.enableEmptyAuthChanges` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable
+        empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
+        empty auth changes such as undefined on initialization. See
+        [#137](https://github.com/prescottprue/react-redux-firebase/issues/137) for
+        more details. (default: `false`)
     -   `config.onRedirectResult` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function run when redirect
         result is returned. Argument Pattern: `(authData, firebase, dispatch)`
     -   `config.customAuthParameters` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object for setting which
         customAuthParameters are passed to external auth providers.
-    -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user profile is saved.
+    -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user
+        profile is saved.
     -   `config.uploadFileDataFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying
         how file meta data is written during file uploads
     -   `config.profileParamsToPopulate` **([Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String))** Parameters within

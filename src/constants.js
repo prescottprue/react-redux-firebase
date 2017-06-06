@@ -87,7 +87,8 @@ export const actionTypes = {
  * @property {Boolean} enableEmptyAuthChanges - `false` Whether or not to enable
  * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
  * empty auth changes such as `undefined` on initialization
- * (see [#137](https://github.com/prescottprue/react-redux-firebase/issues/137))
+ * (see [#137](https://github.com/prescottprue/react-redux-firebase/issues/137)).
+ * Requires `v1.5.0-alpha` or higher.
  * @property {Boolean} autoPopulateProfile - `true` Whether or not to
  * automatically populate profile with data loaded through
  * profileParamsToPopulate config.
