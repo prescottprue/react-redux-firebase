@@ -33,6 +33,15 @@ Object containing all action types
 -   `FILE_DELETE_START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/FILE_DELETE_START`
 -   `FILE_DELETE_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/FILE_DELETE_ERROR`
 -   `FILE_DELETE_COMPLETE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/FILE_DELETE_COMPLETE`
+-   `AUTH_UPDATE_START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_UPDATE_START`
+-   `AUTH_UPDATE_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_UPDATE_ERROR`
+-   `AUTH_UPDATE_COMPLETE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_UPDATE_COMPLETE`
+-   `PROFILE_UPDATE_START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/PROFILE_UPDATE_START`
+-   `PROFILE_UPDATE_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/PROFILE_UPDATE_ERROR`
+-   `PROFILE_UPDATE_COMPLETE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/PROFILE_UPDATE_COMPLETE`
+-   `EMAIL_UPDATE_START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/EMAIL_UPDATE_START`
+-   `EMAIL_UPDATE_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/EMAIL_UPDATE_ERROR`
+-   `EMAIL_UPDATE_COMPLETE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/EMAIL_UPDATE_COMPLETE`
 
 **Examples**
 
@@ -56,6 +65,11 @@ Default configuration options
 -   `enableRedirectHandling` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to enable
     redirect handling. This must be disabled if environment is not http/https
     such as with react-native.
+-   `enableEmptyAuthChanges` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not to enable
+    empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
+    empty auth changes such as `undefined` on initialization
+    (see [#137](https://github.com/prescottprue/react-redux-firebase/issues/137)).
+    Requires `v1.5.0-alpha` or higher.
 -   `autoPopulateProfile` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to
     automatically populate profile with data loaded through
     profileParamsToPopulate config.
@@ -64,7 +78,7 @@ Default configuration options
     the data path. For example: role paramter on profile populated from 'roles'
     root. True will call SET_PROFILE as well as a SET action with the role that
     is loaded (places it in data/roles).
--   `distpatchOnUnsetListener` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not to
+-   `dispatchOnUnsetListener` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not to
     dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
     Setting this to true allows an action to be called that removes data
     from redux (which might not always be expected).
