@@ -9,7 +9,7 @@ import { getEventsFromInput, createCallable } from './utils'
  * @extends React.Component
  * @description Higher Order Component that automatically listens/unListens
  * to provided firebase paths using React's Lifecycle hooks.
- * @param {Array} watchArray - Array of objects or strings for paths to sync from Firebase
+ * @param {Array} watchArray - Array of objects or strings for paths to sync from Firebase. Can also be a function that returns the array. The function is passed the current props and the firebase object.
  * @return {Function} - that accepts a component to wrap and returns the wrapped component
  * @example <caption>Basic</caption>
  * // this.props.firebase set on App component as firebase object with helpers
@@ -27,6 +27,21 @@ import { getEventsFromInput, createCallable } from './utils'
  * // pass todos list from redux as this.props.todosList
  * export default connect(({ firebase }) => ({
  *   todosList: dataToJS(firebase, 'todos'),
+ *   profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.profile
+ *   auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
+ * }))(fbWrapped)
+ * @example <caption>Data that depends on props</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+ *
+ * // sync /todos from firebase into redux
+ * const fbWrapped = firebaseConnect((props, firebase) => ([
+ *   `todos/${firebase.database().currentUser.uid}/${props.type}`
+ * ])(App)
+ *
+ * // pass todos list for the specified type of todos from redux as `this.props.todosList`
+ * export default connect(({ firebase, type }) => ({
+ *   todosList: dataToJS(firebase, `data/todos/${firebase.getIn(['auth', 'uid'])}/${type}`),
  *   profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.profile
  *   auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
  * }))(fbWrapped)
