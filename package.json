@@ -2,7 +2,6 @@
   "name": "react-redux-firebase",
   "version": "2.0.0-alpha",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
-  "browser": "dist/react-redux-firebase.js",
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
@@ -103,7 +102,7 @@
     "rimraf": "^2.6.1",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
-    "webpack": "^1.14.0",
+    "webpack": "^2.6.1",
     "webpack-bundle-analyzer": "^2.3.1",
     "xmlhttprequest": "^1.8.0"
   },

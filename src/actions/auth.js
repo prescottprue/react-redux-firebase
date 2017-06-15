@@ -361,13 +361,15 @@ export const login = (dispatch, firebase, credentials) => {
  * @param {Object} firebase - Internal firebase object
  * @private
  */
-export const logout = (dispatch, firebase) => {
-  firebase.auth().signOut()
-  dispatch({ type: LOGOUT })
-  firebase._.authUid = null
-  unWatchUserProfile(firebase)
-  return Promise.resolve(firebase)
-}
+export const logout = (dispatch, firebase) =>
+  firebase.auth()
+    .signOut()
+    .then(() => {
+      dispatch({ type: LOGOUT })
+      firebase._.authUid = null
+      unWatchUserProfile(firebase)
+      return Promise.resolve(firebase)
+    })
 
 /**
  * @description Create a new user in auth and add an account to userProfile root
