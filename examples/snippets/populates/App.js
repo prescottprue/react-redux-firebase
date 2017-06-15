@@ -8,7 +8,6 @@ import {
   pathToJS,
   dataToJS
 } from 'react-redux-firebase'
-import TodoItem from './TodoItem'
 
 const populates = [
   { child: 'owner', root: 'users' },
@@ -16,12 +15,14 @@ const populates = [
   // { child: 'owner', root: 'users', childParam: 'displayName' }
 ]
 
+// gather projects and matching owners from firebase and place into redux
 @firebaseConnect([
-  { path: '/projects', populates },
+  { path: 'projects', populates },
 ])
+// projects with owner populated from redux into component props
 @connect(
-  ({firebase}) => ({
-    projects: populatedDataToJS(firebase, '/projects', populates),
+  ({ firebase }) => ({
+    projects: populatedDataToJS(firebase, 'projects', populates),
   })
 )
 export default class App extends Component {
@@ -42,10 +43,10 @@ export default class App extends Component {
                         ? 'Loading'
                         : (isEmpty(projects))
                           ? 'Todo list is empty'
-                          : map(projects, (todo, id) => (
+                          : map(projects, (project, id) => (
                               <div>
                                 Name: {project.name}
-                                Owner: { owner.displayName || owner }
+                                Owner: { project.owner.displayName }
                               </div>
                             ))
     return (
