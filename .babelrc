@@ -5,6 +5,7 @@
     "add-module-exports",
     "lodash",
     "transform-object-rest-spread",
+    "transform-object-assign",
     "transform-class-properties",
     "transform-decorators-legacy"
   ]
