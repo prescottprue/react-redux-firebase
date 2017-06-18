@@ -1,9 +1,10 @@
-import React, { createClass, Children, Component, PropTypes } from 'react'
+import React, { createClass, Children, Component } from 'react'
+import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
-import connect from '../../src/connect'
-import reactReduxFirebase from '../../src/compose'
 import TestUtils from 'react-addons-test-utils'
 import { createStore, compose, combineReducers } from 'redux'
+import connect from '../../src/connect'
+import reactReduxFirebase from '../../src/compose'
 
 describe('Connect', () => {
   class Passthrough extends Component {

@@ -14,7 +14,8 @@ const {
   // UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
-  UNAUTHORIZED_ERROR
+  UNAUTHORIZED_ERROR,
+  AUTH_UPDATE_SUCCESS
 } = actionTypes
 
 const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []

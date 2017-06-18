@@ -4,7 +4,7 @@ export const deleteFile = (firebase, { path, dbPath }) =>
     .delete()
     .then(() =>
       !dbPath
-        ? ({ path, dbPath })
+        ? ({ path })
         : firebase // Handle option for removing file info from database
             .database()
             .ref(dbPath)

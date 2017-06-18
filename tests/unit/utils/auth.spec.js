@@ -1,4 +1,3 @@
-/* global firebase describe expect it */
 import {
   createAuthProvider,
   getLoginMethodAndParams
@@ -12,6 +11,11 @@ describe('Utils: Auth', () => {
         .to.be.a.function
     })
     it('handles string list of scopes', () => {
+      expect(createAuthProvider(firebase, 'google', 'email'))
+        .to.be.a.function
+    })
+    it('handles customAuthParameters config option', () => {
+      firebase._.config.customAuthParameters = { google: [{prompt: 'select_account'}] }
       expect(createAuthProvider(firebase, 'google', 'email'))
         .to.be.a.function
     })

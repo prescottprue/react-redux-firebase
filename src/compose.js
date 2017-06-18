@@ -30,11 +30,17 @@ import { authActions } from './actions'
  * auth redirect handling listener. (default: `true`)
  * @property {Function} config.onAuthStateChanged - Function run when auth state
  * changes. Argument Pattern: `(authData, firebase, dispatch)`
+ * @property {Boolean} config.enableEmptyAuthChanges - Whether or not to enable
+ * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
+ * empty auth changes such as undefined on initialization. See
+ * [#137](https://github.com/prescottprue/react-redux-firebase/issues/137) for
+ * more details. (default: `false`)
  * @property {Function} config.onRedirectResult - Function run when redirect
  * result is returned. Argument Pattern: `(authData, firebase, dispatch)`
  * @property {Object} config.customAuthParameters - Object for setting which
  * customAuthParameters are passed to external auth providers.
- * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
+ * @property {Function} config.profileFactory - Factory for modifying how user
+ * profile is saved.
  * @property {Function} config.uploadFileDataFactory - Factory for modifying
  * how file meta data is written during file uploads
  * @property {Array|String} config.profileParamsToPopulate - Parameters within

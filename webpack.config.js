@@ -53,9 +53,9 @@ config.plugins.push(
   }),
   new webpack.BannerPlugin(
     {
+      banner: `${pkg.name}${env === 'production' ? '.min' : ''}.js v${pkg.version}`,
       raw: false,
-      entryOnly: true,
-      banner: `${pkg.name}${env === 'production' ? '.min' : ''}.js v${pkg.version}`
+      entryOnly: true
     }
   )
 )

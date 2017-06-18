@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Paper from 'material-ui/Paper'
 import { connect } from 'react-redux'
 import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
@@ -41,7 +42,7 @@ export default class Account extends Component {
 
   updateAccount = (newData) =>
     this.props.firebase
-      .update(`${rfConfig.userProfile}/${this.props.auth.uid}`, newData)
+      .updateProfile(newData)
       .catch((err) => {
         console.error('Error updating account', err) // eslint-disable-line no-console
         // TODO: Display error to user
