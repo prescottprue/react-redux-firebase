@@ -27,14 +27,6 @@ after_success:
   - codeclimate-test-reporter < coverage/lcov.info
   - npm run codecov
 
-deploy:
-  skip_cleanup: true
-  provider: npm
-  email: $NPM_EMAIL
-  api_key: $NPM_TOKEN
-  on:
-    branch: master
-
 notifications:
   email:
     # Only send notifications when travis status changes
