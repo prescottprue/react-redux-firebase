@@ -9,7 +9,7 @@
 [![Code Style][code-style-image]][code-style-url]
 
 [![Gitter][gitter-image]][gitter-url]
-[<img src="http://npm.packagequality.com/badge/react-redux-firebase.png" align="right"/>](http://packagequality.com/#?package=react-redux-firebase)
+[<img src="http://npm.packagequality.com/badge/react-redux-firebase.png" align="right"/>](https://packagequality.com/#?package=react-redux-firebase)
 
 > Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 

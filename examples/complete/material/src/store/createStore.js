@@ -3,19 +3,13 @@ import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import { reactReduxFirebase, getFirebase, toJS } from 'react-redux-firebase'
 import logger from 'redux-logger'
+import * as firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
+import 'firebase/storage'
 import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
-
-// NOTE: Runs an toJS action on every log (DEV ONLY)
-const logger = createLogger({ // eslint-disable-line no-unused-vars
-  stateTransformer: (state) => {
-    if (state.firebase) {
-      return { ...state, firebase: toJS(state.firebase) }
-    }
-    return state
-  }
-})
 
 export default (initialState = {}, history) => {
   // ======================================================
@@ -38,6 +32,8 @@ export default (initialState = {}, history) => {
     }
   }
 
+  firebase.initializeApp(fbConfig)
+
   // ======================================================
   // Store Instantiation and HMR Setup
   // ======================================================
@@ -45,7 +41,7 @@ export default (initialState = {}, history) => {
     makeRootReducer(),
     initialState,
     compose(
-      reactReduxFirebase(fbConfig, reduxConfig),
+      reactReduxFirebase(firebase, reduxConfig),
       applyMiddleware(...middleware),
       ...enhancers
     )

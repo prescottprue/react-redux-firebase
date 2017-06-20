@@ -13,7 +13,7 @@ import { authActions } from './actions'
  * @description Middleware that handles configuration (placed in redux's
  * `compose` call)
  * @property {Object} fbConfig - Object containing Firebase config including
- * databaseURL
+ * databaseURL or Firebase instance
  * @property {String} fbConfig.apiKey - Firebase apiKey
  * @property {String} fbConfig.authDomain - Firebase auth domain
  * @property {String} fbConfig.databaseURL - Firebase database url
@@ -88,24 +88,26 @@ export default (fbConfig, otherConfig) => next =>
     const store = next(reducer, initialState, middleware)
     const { dispatch } = store
 
-    // Combine all configs
-    const configs = Object.assign({}, defaultConfig, fbConfig, otherConfig)
+    let firebaseInstance
 
-    validateConfig(configs)
+    // handle firebase instance being passed in as first argument
+    if (typeof fbConfig.initializeApp === 'function') {
+      firebaseInstance = createFirebaseInstance(fbConfig, otherConfig, dispatch)
+    } else {
+      // Combine all configs
+      const configs = Object.assign({}, defaultConfig, fbConfig, otherConfig)
 
-    // Initialize Firebase
-    try {
-      firebase.initializeApp(fbConfig)
-    } catch (err) {} // silence reinitialize warning (hot-reloading)
+      validateConfig(configs)
 
-    // Enable Logging based on config
-    if (configs.enableLogging) {
-      firebase.database.enableLogging(configs.enableLogging)
+      // Initialize Firebase
+      try {
+        firebase.initializeApp(fbConfig)
+      } catch (err) {} // silence reinitialize warning (hot-reloading)
+
+      firebaseInstance = createFirebaseInstance(firebase, configs, dispatch)
     }
 
-    const firebaseInstance = createFirebaseInstance(firebase, configs, dispatch)
     authActions.init(dispatch, firebaseInstance)
-    console.debug('firebase', firebaseInstance)
     store.firebase = firebaseInstance
 
     return store

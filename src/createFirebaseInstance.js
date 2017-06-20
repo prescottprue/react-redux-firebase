@@ -4,6 +4,11 @@ import { authActions, queryActions, storageActions } from './actions'
 let firebaseInstance
 
 export const createFirebaseInstance = (firebase, configs, dispatch) => {
+  // Enable Logging based on config
+  if (configs.enableLogging) {
+    firebase.database.enableLogging(configs.enableLogging)
+  }
+
   const rootRef = firebase.database().ref()
 
   const instance = Object.defineProperty(firebase, '_', {
