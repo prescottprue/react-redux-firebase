@@ -1,4 +1,3 @@
-import { fromJS } from 'immutable'
 import { firebaseStateReducer } from '../../src'
 import { actionTypes } from '../../src/constants'
 const emptyState = {
@@ -23,8 +22,8 @@ const noError = { authError: null }
 const noAuth = { auth: null, profile: null }
 const exampleData = { some: 'data' }
 const externalState = { data: { asdfasdf: {} } }
-const exampleState = fromJS({})
-const exampleEmptyState = fromJS(emptyState)
+const exampleState = {}
+const exampleEmptyState = emptyState
 
 describe('reducer', () => {
   it('is a function', () => {
@@ -32,21 +31,17 @@ describe('reducer', () => {
   })
 
   it('handles no initialState', () => {
-    expect(
-      JSON.stringify(firebaseStateReducer(undefined, {}).toJS()))
-      .to.equal(JSON.stringify(initialState))
+    expect(firebaseStateReducer(undefined, {})).to.equal(initialState)
   })
 
   it('returns state by default', () => {
-    expect(firebaseStateReducer(exampleData))
-      .to.equal(exampleData)
+    expect(firebaseStateReducer(exampleData)).to.equal(exampleData)
   })
 
   describe('SET action', () => {
     it('deletes data from state when data is null', () => {
       expect(
-        firebaseStateReducer(
-          exampleState,
+        firebaseStateReducer(exampleState,
           { type: actionTypes.SET, path: 'test' }
         )
       ).to.equal(exampleState)
@@ -56,31 +51,23 @@ describe('reducer', () => {
       const path = 'test'
       const pathArray = path.split(/\//).filter(p => !!p)
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.SET, path, data: {} }
-        ))
-      ).to.equal(JSON.stringify(exampleState.setIn(['data', ...pathArray], fromJS({}))))
+        )
+      ).to.equal(exampleState.setIn(['data', ...pathArray], {}))
     })
-
     it('handles already existing parent that is null', () => {
       const childPath = 123
       const path = `test/${childPath}`
       const pathArray = path.split(/\//).filter(p => !!p)
       const newData = { some: 'val' }
       expect(
-        JSON.stringify(firebaseStateReducer(
-          fromJS({ data: { test: null } }),
+        firebaseStateReducer(
+          {data: { test: null } },
           { type: actionTypes.SET, path, data: newData }
-        ).toJS())
-      ).to.equal(
-        JSON.stringify(
-          exampleState.setIn(
-            ['data', ...pathArray],
-            fromJS(newData)
-          ).toJS()
         )
-      )
+      ).to.equal(exampleState.data,newData)
     })
 
     it('handles already existing value of null', () => {
@@ -88,41 +75,33 @@ describe('reducer', () => {
       const pathArray = path.split(/\//).filter(p => !!p)
       const newData = { some: 'val' }
       expect(
-        JSON.stringify(firebaseStateReducer(
-          fromJS({ data: { test: { '123': null } } }),
+        firebaseStateReducer(
+          { data: { test: { '123': null } } },
           { type: actionTypes.SET, path, data: newData }
-        ))
-      ).to.equal(
-        JSON.stringify(
-          exampleState.setIn(
-            ['data', ...pathArray],
-            fromJS(newData)
-          ).toJS()
         )
-      )
+      ).to.equal(exampleState.data[pathArray],newData)
     })
-
   })
 
   describe('NO_VALUE action', () => {
     it('sets state', () => {
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.NO_VALUE, path: 'asdfasdf' }
-        ).toJS())
-      ).to.equal(JSON.stringify(externalState))
+        )
+      ).to.equal(externalState)
     })
   })
 
   describe('UNSET_LISTENER action', () => {
     it('sets state', () => {
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf' }
-        ).toJS())
-      ).to.equal(JSON.stringify({}))
+        )
+      ).to.equal({})
     })
   })
 
@@ -130,91 +109,87 @@ describe('reducer', () => {
     it('sets state', () => {
       const profile = { email: 'test@test.com' }
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.SET_PROFILE, profile }
-        ).toJS())
-      ).to.equal(JSON.stringify({ profile }))
+        )
+      ).to.equal({ profile })
     })
     it('removes for no profile', () => {
       const profile = { email: 'test@test.com' }
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.SET_PROFILE }
-        ).toJS())
-      ).to.equal(JSON.stringify(exampleState.deleteIn(['profile'])))
+        )
+      ).to.equal(exampleState.deleteIn(['profile']))
     })
   })
 
   describe('LOGOUT action', () => {
     it('sets state', () => {
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.LOGOUT }
-        ).toJS())
-      ).to.equal(JSON.stringify({
+        )
+      ).to.equal({
         auth: null,
         authError: null,
         profile: null,
         isInitializing: false,
         data: {}
-      }))
+      })
     })
   })
 
   describe('LOGIN action', () => {
     it('sets state', () => {
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.LOGIN }
-        ).toJS())
-      ).to.equal(JSON.stringify(noError))
+        )
+      ).to.equal(noError)
     })
   })
 
   describe('LOGIN_ERROR action', () => {
     it('sets state', () => {
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.LOGIN_ERROR }
-        ).toJS())
-      ).to.equal(JSON.stringify(noAuth))
+        )
+      ).to.equal(noAuth)
     })
   })
 
   describe('AUTHENTICATION_INIT_STARTED action', () => {
     it('sets state', () => {
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.AUTHENTICATION_INIT_STARTED }
-        ).toJS())
-      ).to.equal(JSON.stringify({
+        )
+      ).to.equal({
         isInitializing: true,
         data: {},
         timestamp: {},
         requesting: {},
         requested: {}
-      }))
+      })
     })
   })
 
   describe('AUTHENTICATION_INIT_FINISHED action', () => {
     it('sets state', () => {
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.AUTHENTICATION_INIT_FINISHED }
-        ).toJS())
-      ).to.equal(
-        JSON.stringify(
-          exampleState.setIn(['isInitializing'], false).toJS()
         )
-      )
+      ).to.equal(exampleState, false)
     })
   })
 
@@ -222,15 +197,11 @@ describe('reducer', () => {
     it('sets state', () => {
       const authError = {}
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.UNAUTHORIZED_ERROR, authError }
-        ).toJS())
-      ).to.equal(
-        JSON.stringify(
-          exampleState.setIn(['authError'], authError).toJS()
         )
-      )
+      ).to.equal(exampleState, authError)
     })
   })
 
@@ -238,15 +209,11 @@ describe('reducer', () => {
     it('sets state', () => {
       const authUpdate = { email: 'newEmail' }
       expect(
-        JSON.stringify(firebaseStateReducer(
+        firebaseStateReducer(
           exampleState,
           { type: actionTypes.AUTH_UPDATE_SUCCESS, payload: authUpdate }
-        ).toJS())
-      ).to.equal(
-        JSON.stringify(
-          exampleState.setIn(['auth'], authUpdate).toJS()
         )
-      )
+      ).to.equal(exampleState, authUpdate)
     })
   })
 })

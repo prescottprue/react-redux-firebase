@@ -48,7 +48,7 @@ import { getPopulateObjs } from './utils/populate'
  *   }
  * }
  */
-export const isLoaded = () => {
+export const isLoaded = function () {
   if (!arguments || !arguments.length) {
     return true
   }
@@ -109,7 +109,7 @@ export const buildChildList = (state, list, p) =>
       ? `${p.root}/${getKey}/${p.childParam}`
       : `${p.root}/${getKey}`
 
-    console.log('path string:', { pathString, state })
+    // console.log('path string:', { pathString, state })
     // Set to child under key if populate child exists
     if (state.data[pathString]) {
       return p.keyProp
@@ -145,16 +145,11 @@ export const buildChildList = (state, list, p) =>
  * }))(fbWrapped)
  */
 export const populate = (state, path, populates, notSetValue) => {
-  if (!state) {
+  // TODO: Handle slash and lodash notation
+  // Handle undefined child
+  if (!state || !state.data[path]) {
     return notSetValue
   }
-  // debugger
-  console.log('\npopulate:', {state, path, populates})
-  // Handle undefined child
-  // if (!data[path] || notSetValue) {
-  //   console.log('\nundefined child')
-  //   return data[path] || notSetValue
-  // }
   // test if data is a single object vs a list of objects, try generating
   // populates and testing for key presence
   const populatesForData = getPopulateObjs(isFunction(populates)
@@ -163,8 +158,6 @@ export const populate = (state, path, populates, notSetValue) => {
   const dataHasPopluateChilds = every(populatesForData, (populate) => (
     has(state.data[path], populate.child)
   ))
-  console.log('populates for data:', {populatesForData, dataHasPopluateChilds})
-
   if (dataHasPopluateChilds) {
     // Data is a single object, resolve populates directly
     return reduce(
@@ -173,20 +166,19 @@ export const populate = (state, path, populates, notSetValue) => {
         if (isString(get(state.data[path], p.child))) {
           const key = get(state.data[path], p.child)
           const pathString = p.childParam
-            ? `${p.root}/${key}/${p.childParam}`
-            : `${p.root}/${key}`
+            ? `${p.root}.${key}.${p.childParam}`
+            : `${p.root}.${key}`
 
-          if (state.data[pathString]) {
+          if (get(state.data, pathString)) {
             return set({}, p.child, p.keyProp
-              ? { [p.keyProp]: key, ...state.data[pathString] }
-              : state.data[pathString]
+              ? { [p.keyProp]: key, ...get(state.data, pathString) }
+              : get(state.data, pathString)
             )
           }
-
           // matching child does not exist
           return get(state.data, path)
         }
-        return set({}, p.child, buildChildList(state.data, get(state.data[path], p.child), p))
+        return set({}, p.child, buildChildList(state, get(state.data[path], p.child), p))
       }),
       // combine data from all populates to one object starting with original data
       (obj, v) => defaultsDeep(v, obj), state.data[path])
@@ -196,7 +188,6 @@ export const populate = (state, path, populates, notSetValue) => {
       const populatesForDataItem = getPopulateObjs(isFunction(populates)
       ? populates(childKey, child)
       : populates)
-
       const resolvedPopulates = map(populatesForDataItem, (p, obj) => {
         // no matching child parameter
         if (!child || !get(child, p.child)) {
@@ -205,20 +196,21 @@ export const populate = (state, path, populates, notSetValue) => {
         // populate child is key
         if (isString(get(child, p.child))) {
           const key = get(child, p.child)
+          // attach child paramter if it exists
           const pathString = p.childParam
-            ? `${p.root}/${key}/${p.childParam}`
-            : `${p.root}/${key}`
-          if (state.data[pathString]) {
+            ? `${p.root}.${key}.${p.childParam}`
+            : `${p.root}.${key}`
+          if (get(state.data, pathString)) {
             return set({}, p.child, (p.keyProp
-              ? { [p.keyProp]: key, ...state.data[pathString] }
-              : state.data[pathString])
-            )
+              ? { [p.keyProp]: key, ...get(state.data, pathString) }
+              : get(state.data, pathString)
+            ))
           }
           // matching child does not exist
           return child
         }
         // populate child list
-        return set({}, p.child, buildChildList(state.data, get(child, p.child), p))
+        return set({}, p.child, buildChildList(state, get(child, p.child), p))
       })
 
       // combine data from all populates to one object starting with original data
