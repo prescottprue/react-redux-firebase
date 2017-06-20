@@ -84,7 +84,8 @@ const dataReducer = (state = {}, action) => {
 const authReducer = (state = {}, action) => {
   switch (action.type) {
     case LOGIN:
-      return action.auth ? action.auth : undefined
+    case AUTH_UPDATE_SUCCESS:
+      return action.auth || undefined
     case LOGOUT:
     case LOGIN_ERROR:
       return null

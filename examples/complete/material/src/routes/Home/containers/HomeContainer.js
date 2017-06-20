@@ -6,7 +6,7 @@ import Theme from 'theme'
 import {
   firebaseConnect,
   isLoaded,
-  // populate // for populated list
+  populate // for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
@@ -17,21 +17,21 @@ import TodoItem from '../components/TodoItem'
 import NewTodoPanel from '../components/NewTodoPanel'
 import classes from './HomeContainer.scss'
 
-// const populates = [{ child: 'owner', root: 'users', keyProp: 'uid' }]
+const populates = [{ child: 'owner', root: 'users' }]
 
 @firebaseConnect([
   // 'todos' // sync full list of todos
   // { path: 'todos', type: 'once' } // for loading once instead of binding
-  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
-  // { path: 'todos', populates } // populate
+  // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
+  { path: 'todos', populates } // populate
 ])
 @connect(
   // get auth, profile, and data from
-  ({ firebase: { auth, profile, data: { todos } } }) => ({
+  ({ firebase, firebase: { auth, profile, data: { todos } } }) => ({
     auth,
     profile,
-    todos,
-    // todos: populate(firebase, 'todos', populates), // if populating
+    // todos,
+    todos: populate(firebase, 'todos', populates), // if populating
     // todos: firebase.ordered.todos // if using ordering such as orderByChild
   })
 )
@@ -101,7 +101,7 @@ export default class Home extends Component {
   render () {
     const { todos } = this.props
     const { error } = this.state
-
+    console.log('todos: ', todos)
     return (
       <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>
         {

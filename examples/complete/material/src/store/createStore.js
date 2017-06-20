@@ -17,7 +17,7 @@ export default (initialState = {}, history) => {
   // ======================================================
   const middleware = [
     thunk.withExtraArgument(getFirebase),
-    logger
+    // logger
     // This is where you add other middleware like redux-observable
   ]
 
