@@ -1,9 +1,10 @@
-/* global describe expect it */
 import { omit } from 'lodash'
 import { createStore, combineReducers, compose } from 'redux'
-import composeFunc, { getFirebase } from '../../src/compose'
+import composeFunc from '../../src/compose'
+
 const exampleData = { data: { some: 'data' } }
 const reducer = sinon.spy()
+
 const generateCreateStore = (params) =>
   compose(composeFunc(
     params ? omit(fbConfig, params) : fbConfig,
@@ -99,7 +100,7 @@ describe('Compose', () => {
       )
       it('has on err onComplete', () => {
         const func = sinon.spy()
-        helpers.uniqueSet('test', {some: 'asdf'}, func)
+        return helpers.uniqueSet('test', {some: 'asdf'}, func)
           .catch((err) => {
             expect(func).to.have.been.calledOnce
           })
@@ -119,7 +120,6 @@ describe('Compose', () => {
     describe.skip('unWatchEvent', () => {
       it.skip('unWatchesEvent', () =>
         helpers.unWatchEvent('value', 'test')
-
       )
     })
 
@@ -155,6 +155,44 @@ describe('Compose', () => {
       }
     })
 
+    describe('updateProfile', () => {
+      it('acccepts an object', () =>
+        expect(helpers.updateProfile({ displayName: 'test' })).to.eventually.become(undefined)
+      )
+    })
+
+    describe('updateAuth', () => {
+      it('rejects when not authenticated', () =>
+        expect(helpers.updateAuth()).to.be.rejectedWith('User must be logged in to update auth.')
+      )
+
+      // TODO: test that update auth when authenticated
+      it.skip('updates auth object if authenticated', () =>
+        expect(helpers.updateAuth()).to.eventually.become(undefined)
+      )
+
+      // TODO: test that updateProfile is called if updateInProfile is true
+      it.skip('calls update profile if updateInProfile is true', () =>
+        expect(helpers.updateAuth({}, true)).to.eventually.become(undefined)
+      )
+    })
+
+    describe('updateEmail', () => {
+      it('rejects when not authenticated', () =>
+        expect(helpers.updateEmail()).to.be.rejectedWith('User must be logged in to update email.')
+      )
+
+      // TODO: test that update auth when authenticated
+      it.skip('updates auth object if authenticated', () =>
+        expect(helpers.updateEmail()).to.eventually.become(undefined)
+      )
+
+      // TODO: test that updateProfile is called if updateInProfile is true
+      it.skip('calls update profile if updateInProfile is true', () =>
+        expect(helpers.updateEmail({}, true)).to.eventually.become(undefined)
+      )
+    })
+
     describe('storage', () => {
       try {
         helpers.storage()
@@ -180,7 +218,7 @@ describe('Compose', () => {
     })
   })
 
-  describe('getFirebase', () => {
+  describe.skip('getFirebase', () => {
     it('exports firebase instance', () => {
       expect(getFirebase()).to.be.an.object
     })

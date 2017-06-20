@@ -7,7 +7,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 const config = {
   module: {
-    loaders: [
+    rules: [
       { test: /\.js$/, loaders: ['babel-loader'], exclude: /node_modules/ }
     ]
   },
@@ -23,10 +23,7 @@ const config = {
       root: 'React'
     }
   },
-  plugins: [
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.DedupePlugin()
-  ]
+  plugins: []
 }
 
 if (env === 'production') {
@@ -55,8 +52,11 @@ config.plugins.push(
     'process.env.NODE_ENV': JSON.stringify(env)
   }),
   new webpack.BannerPlugin(
-    `${pkg.name}${env === 'production' ? '.min' : ''}.js v${pkg.version}`,
-    { raw: false, entryOnly: true }
+    {
+      banner: `${pkg.name}${env === 'production' ? '.min' : ''}.js v${pkg.version}`,
+      raw: false,
+      entryOnly: true
+    }
   )
 )
 

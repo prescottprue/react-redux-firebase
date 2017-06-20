@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import classes from './Navbar.scss'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
@@ -39,10 +40,9 @@ const avatarStyles = {
 
 @firebaseConnect()
 @connect(
-  ({ firebase }) => ({
-    authError: pathToJS(firebase, 'authError'),
-    auth: pathToJS(firebase, 'auth'),
-    account: pathToJS(firebase, 'profile')
+  ({ firebase: { auth, profile } }) => ({
+    auth,
+    profile,
   })
 )
 export default class Navbar extends Component {
@@ -51,7 +51,7 @@ export default class Navbar extends Component {
   }
 
   static propTypes = {
-    account: PropTypes.object,
+    profile: PropTypes.object,
     firebase: PropTypes.object.isRequired
   }
 
@@ -61,20 +61,20 @@ export default class Navbar extends Component {
   }
 
   render () {
-    const { account } = this.props
-    const accountExists = isLoaded(account) && !isEmpty(account)
+    const { profile } = this.props
+    const profileExists = isLoaded(profile) && !isEmpty(profile)
 
     const iconButton = (
       <IconButton style={avatarStyles.button} disableTouchRipple>
         <div className={classes.avatar}>
           <div className='hidden-mobile'>
             <Avatar
-              src={accountExists && account.avatarUrl ? account.avatarUrl : defaultUserImage}
+              src={profileExists && profile.avatarUrl ? profile.avatarUrl : defaultUserImage}
             />
           </div>
           <div className={classes['avatar-text']}>
             <span className={`${classes['avatar-text-name']} hidden-mobile`}>
-              { accountExists && account.displayName ? account.displayName : 'User' }
+              { profileExists && profile.displayName ? profile.displayName : 'User' }
             </span>
             <DownArrow color='white' />
           </div>
@@ -99,7 +99,7 @@ export default class Navbar extends Component {
       </div>
     )
 
-    const rightMenu = accountExists ? (
+    const rightMenu = profileExists ? (
       <IconMenu
         iconButtonElement={iconButton}
         targetOrigin={{ horizontal: 'right', vertical: 'bottom' }}
@@ -120,13 +120,13 @@ export default class Navbar extends Component {
     return (
       <AppBar
         title={
-          <Link to={accountExists ? `${LIST_PATH}` : '/'} className={classes.brand}>
+          <Link to={profileExists ? `${LIST_PATH}` : '/'} className={classes.brand}>
             material example
           </Link>
         }
         showMenuIconButton={false}
         iconElementRight={rightMenu}
-        iconStyleRight={accountExists ? avatarStyles.wrapper : {}}
+        iconStyleRight={profileExists ? avatarStyles.wrapper : {}}
         className={classes.appBar}
       />
     )

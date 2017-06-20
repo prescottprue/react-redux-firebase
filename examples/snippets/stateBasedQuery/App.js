@@ -1,4 +1,5 @@
-import react, { Component, PropTypes } from 'react'
+import react, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { isLoaded, isEmpty, pathToJS } from 'react-redux-firebase'
 import TodosView from './Todos'

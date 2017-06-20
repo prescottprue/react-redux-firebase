@@ -1,6 +1,7 @@
-/* global describe expect it */
 import { fromJS } from 'immutable'
-import helpers from '../../src/helpers'
+import * as helpers from '../../src/helpers'
+import { buildChildList } from '../../src/helpers'
+
 const exampleData = {
   data: {
     some: 'data',
@@ -27,6 +28,19 @@ const exampleData = {
           ABC: true,
           abc: true
         }
+      },
+      QRS: {
+        owner: 'ABC',
+        nested: {
+          owner: 'ABC'
+        },
+        notes: {
+          123: true,
+        },
+        collaborators: {
+          ABC: true,
+          abc: true
+        }
       }
     },
     users: {
@@ -40,104 +54,72 @@ const exampleData = {
       }
     }
   },
+  ordered: {
+    projects: [
+      {
+        owner: 'ABC',
+        notes: {
+          123: true,
+        },
+        collaborators: {
+          ABC: true,
+          abc: true
+        }
+      },
+    ]
+  },
   timestamp: { 'some/path': { test: 'key' } },
   snapshot: { some: 'snapshot' }
 }
 const exampleState = fromJS(exampleData)
 
 describe('Helpers:', () => {
-  describe('toJS', () => {
+  describe.skip('ordered', () => {
     it('exists', () => {
-      expect(helpers).to.respondTo('toJS')
-    })
-
-    it('handles non-immutable data', () => {
-      expect(helpers.toJS(exampleData)).to.equal(exampleData)
-    })
-
-    it('handles immutable data', () => {
-      expect(helpers.toJS(exampleState)).to.be.an.object
-    })
-  })
-
-  describe('pathToJS', () => {
-    it('exists', () => {
-      expect(helpers).to.respondTo('pathToJS')
+      expect(helpers).to.respondTo('ordered')
     })
 
     it('passes notSetValue', () => {
-      expect(helpers.pathToJS(null, '/some', exampleData))
-        .to
-        .equal(exampleData)
-    })
-
-    it('gets data', () => {
-      expect(helpers.pathToJS(exampleState, '/some', exampleData))
-        .to
-        .equal(exampleData)
-    })
-
-    it('gets meta (string key)', () => {
-      expect(helpers.pathToJS(exampleState, 'timestamp/some/path'))
-        .to
-        .have
-        .keys('test')
-    })
-
-    it('returns state if its not an immutable Map', () => {
-      const fakeState = {}
-      expect(helpers.pathToJS(fakeState, 'asdf'))
-        .to
-        .equal(fakeState)
-    })
-  })
-
-  describe('dataToJS', () => {
-    it('exists', () => {
-      expect(helpers).to.respondTo('dataToJS')
-    })
-
-    it('passes notSetValue', () => {
-      expect(helpers.dataToJS(null, '/some', exampleData))
+      expect(helpers.ordered(null, '/some', exampleData))
         .to
         .equal(exampleData)
     })
 
     it('gets data from state', () => {
-      const path = 'some'
-      expect(helpers.dataToJS(exampleState, path, exampleData))
+      const path = 'projects'
+      expect(JSON.stringify(helpers.ordered(exampleState, path, exampleData)))
         .to
-        .equal(exampleData.data[path])
+        .equal(JSON.stringify(exampleData.ordered[path]))
     })
 
     it('returns state if its not an immutable Map', () => {
       const fakeState = { }
-      expect(helpers.dataToJS(fakeState, 'asdf'))
+      expect(helpers.ordered(fakeState, 'asdf'))
         .to
         .equal(fakeState)
     })
   })
 
-  describe('populatedDataToJS', () => {
+  describe('populate', () => {
     it('exists', () => {
-      expect(helpers).to.respondTo('populatedDataToJS')
+      expect(helpers).to.respondTo('populate')
     })
 
     it('passes notSetValue', () => {
-      expect(helpers.populatedDataToJS(null, '/some', [], exampleData))
+      expect(helpers.populate(null, '/some', [], exampleData))
         .to
         .equal(exampleData)
     })
 
     it('returns undefined for non existant path', () => {
-      expect(helpers.populatedDataToJS(exampleState, '/asdfasdfadsf', []))
+      expect(helpers.populate(exampleState, '/asdfasdfadsf', []))
         .to
         .equal(undefined)
     })
 
     it('returns unpopulated data for no populates', () => {
       const path = 'projects'
-      expect(helpers.populatedDataToJS(exampleState, path, []).CDF.owner)
+      expect(helpers.populate(exampleState, path, []).CDF.owner)
         .to
         .equal(exampleData.data[path].CDF.owner)
     })
@@ -147,16 +129,25 @@ describe('Helpers:', () => {
         it('populates value', () => {
           const path = 'projects/CDF'
           const rootName = 'users'
-          expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName }]).owner)
+          expect(helpers.populate(exampleState, path, [{ child: 'owner', root: rootName }]).owner)
             .to
             .have
             .property('displayName', 'scott')
         })
-
+        it('handles child path', () => {
+          const path = 'projects/QRS'
+          const rootName = 'users'
+          const populates = [{ child: 'nested.owner', root: rootName }]
+          const populatedData = helpers.populate(exampleState, path, populates)
+          expect(populatedData.nested.owner)
+            .to
+            .have
+            .property('displayName', 'scott')
+        })
         it('populates childParam', () => {
           const path = 'projects/CDF'
           const rootName = 'users'
-          expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }]).owner)
+          expect(helpers.populate(exampleState, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }]).owner)
             .to
             .have
             .equal('scott')
@@ -164,7 +155,7 @@ describe('Helpers:', () => {
         it('keeps non-existant children', () => {
           const path = 'projects/OKF'
           const rootName = 'users'
-          expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName }]).owner)
+          expect(helpers.populate(exampleState, path, [{ child: 'owner', root: rootName }]).owner)
             .to
             .have
             .equal('asdfasdf')
@@ -177,12 +168,28 @@ describe('Helpers:', () => {
           const populates = [
             { child: 'collaborators', root: rootName },
           ]
-          const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
+          const populatedData = helpers.populate(exampleState, path, populates)
           expect(populatedData)
             .to
             .have
             .deep
             .property(`collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+        })
+      })
+
+      describe('config as function', () => {
+        it('populates values', () => {
+          const path = 'projects/CDF'
+          const rootName = 'users'
+          const populates = (projectKey, projectData) => ([
+            // configure populates with key / data tuple...
+            { child: 'owner', root: rootName }
+          ])
+          const populatedData = helpers.populate(exampleState, path, populates)
+          expect(populatedData.owner)
+            .to
+            .have
+            .property('displayName', 'scott')
         })
       })
 
@@ -195,7 +202,7 @@ describe('Helpers:', () => {
           const path = 'projects'
           const rootName = 'users'
           const valName = 'CDF'
-          expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName }])[valName].owner)
+          expect(helpers.populate(exampleState, path, [{ child: 'owner', root: rootName }])[valName].owner)
             .to
             .have
             .property('displayName', 'scott')
@@ -205,7 +212,7 @@ describe('Helpers:', () => {
           const path = 'projects'
           const rootName = 'users'
           const valName = 'CDF'
-          expect(helpers.populatedDataToJS(exampleState, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }])[valName].owner)
+          expect(helpers.populate(exampleState, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }])[valName].owner)
             .to
             .have
             .equal('scott')
@@ -220,7 +227,7 @@ describe('Helpers:', () => {
           const populates = [
             { child: 'collaborators', root: rootName },
           ]
-          const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
+          const populatedData = helpers.populate(exampleState, path, populates)
           expect(populatedData)
             .to
             .have
@@ -235,12 +242,12 @@ describe('Helpers:', () => {
           const populates = [
             { child: 'collaborators', root: rootName },
           ]
-          expect(helpers.populatedDataToJS(exampleState, path, populates))
+          expect(helpers.populate(exampleState, path, populates))
             .to
             .have
             .deep
             .property(`${valName}.collaborators.abc`, true)
-          expect(helpers.populatedDataToJS(exampleState, path, populates))
+          expect(helpers.populate(exampleState, path, populates))
             .to
             .have
             .deep
@@ -259,13 +266,13 @@ describe('Helpers:', () => {
           { child: 'notes', root: 'notes' },
         ]
         // check that notes are populated
-        expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
+        expect(helpers.populate(exampleState, `/${path}`, populates))
           .to
           .have
           .deep
           .property(`${valName}.notes.123.text`, exampleData.data.notes['123'].text)
         // check that owner is populated
-        expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
+        expect(helpers.populate(exampleState, `/${path}`, populates))
           .to
           .have
           .deep
@@ -282,12 +289,12 @@ describe('Helpers:', () => {
           { child: 'collaborators', root: rootName },
         ]
         // TODO: Test both children are populated
-        expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
+        expect(helpers.populate(exampleState, `/${path}`, populates))
           .to
           .have
           .deep
           .property(`${valName}.owner.displayName`, exampleData.data[rootName].ABC.displayName)
-        expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
+        expect(helpers.populate(exampleState, `/${path}`, populates))
           .to
           .have
           .deep
@@ -296,30 +303,6 @@ describe('Helpers:', () => {
     })
 
 
-  })
-
-  describe('customToJS', () => {
-    it('exists', () => {
-      expect(helpers).to.respondTo('customToJS')
-    })
-
-    it('handles non-immutable state', () => {
-      expect(helpers.customToJS(exampleData, '/some', 'some'))
-        .to
-        .equal(exampleData)
-    })
-
-    it('passes notSetValue', () => {
-      expect(helpers.customToJS(null, '/some', 'some', exampleData))
-        .to
-        .equal(exampleData)
-    })
-
-    it('passes custom data', () => {
-      expect(helpers.customToJS(exampleState, '/some', 'snapshot'))
-        .to
-        .exist
-    })
   })
 
   describe('isLoaded', () => {

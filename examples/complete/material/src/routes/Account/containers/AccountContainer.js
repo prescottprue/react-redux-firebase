@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Paper from 'material-ui/Paper'
 import { connect } from 'react-redux'
 import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
@@ -12,14 +13,14 @@ import classes from './AccountContainer.scss'
 @UserIsAuthenticated // redirect to /login if user is not authenticated
 @firebaseConnect() // add this.props.firebase
 @connect( // Map redux state to props
-  ({ firebase }) => ({
-    auth: pathToJS(firebase, 'auth'),
-    account: pathToJS(firebase, 'profile')
+  ({ firebase: { auth, profile } }) => ({
+    auth,
+    profile
   })
 )
 export default class Account extends Component {
   static propTypes = {
-    account: PropTypes.object,
+    profile: PropTypes.object,
     auth: PropTypes.shape({
       uid: PropTypes.string
     }),
@@ -41,16 +42,16 @@ export default class Account extends Component {
 
   updateAccount = (newData) =>
     this.props.firebase
-      .update(`${rfConfig.userProfile}/${this.props.auth.uid}`, newData)
+      .updateProfile(newData)
       .catch((err) => {
         console.error('Error updating account', err) // eslint-disable-line no-console
         // TODO: Display error to user
       })
 
   render () {
-    const { account } = this.props
+    const { profile } = this.props
 
-    if (!isLoaded(account)) {
+    if (!isLoaded(profile)) {
       return <LoadingSpinner />
     }
 
@@ -61,14 +62,14 @@ export default class Account extends Component {
             <div className={classes.avatar}>
               <img
                 className={classes.avatarCurrent}
-                src={account && account.avatarUrl || defaultUserImageUrl}
+                src={profile && profile.avatarUrl || defaultUserImageUrl}
                 onClick={this.toggleModal}
               />
             </div>
             <div className={classes.meta}>
               <AccountForm
-                initialValues={account}
-                account={account}
+                initialValues={profile}
+                account={profile}
                 onSubmit={this.updateAccount}
               />
             </div>

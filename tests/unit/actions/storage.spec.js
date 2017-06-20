@@ -1,4 +1,4 @@
-/* global describe expect it beforeEach sinon */
+/* eslint-disable no-unused-expressions */
 import {
   uploadFileWithProgress,
   uploadFile,
@@ -23,7 +23,8 @@ const fakeFirebase = {
         on: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
         off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
         once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
-      })
+      }),
+      remove: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
     })
   }),
   storage: () => ({
@@ -94,11 +95,20 @@ describe('Actions: Storage', () => {
     it('is exported', () => {
       expect(deleteFile).to.be.a.function
     })
-    it('runs given basic params', () =>
-      deleteFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
-        .then((snap) => {
-          expect(snap).to.be.an.object
-        })
+
+    it('runs given path', () =>
+      expect(deleteFile(dispatch, fakeFirebase, { path: 'projects' }))
+        .to
+        .eventually
+        .become({path: 'projects'})
     )
+
+    it('runs given basic params', () => {
+      const metaObj = { path: 'projects/test.png', dbPath: 'test.png' }
+      return expect(deleteFile(dispatch, fakeFirebase, metaObj))
+        .to
+        .eventually
+        .become(metaObj)
+    })
   })
 })

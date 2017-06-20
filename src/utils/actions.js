@@ -1,3 +1,5 @@
+import { isObject } from 'lodash'
+
 /**
  * @description Wrap method call in dispatched actions
  * @param {Function} dispatch - Action dispatch function
@@ -9,7 +11,8 @@
  */
 export const wrapInDispatch = (dispatch, { method, args, types }) => {
   dispatch({
-    type: types[0]
+    type: isObject(types[0]) ? types[0].type : types[0],
+    payload: isObject(types[0]) ? types[0].payload : { args }
   })
   return method(...args)
     .then((val) => {
@@ -17,11 +20,13 @@ export const wrapInDispatch = (dispatch, { method, args, types }) => {
         type: types[1],
         payload: val
       })
+      return val
     })
     .catch((err) => {
       dispatch({
         type: types[2],
         payload: err
       })
+      return Promise.reject(err)
     })
 }

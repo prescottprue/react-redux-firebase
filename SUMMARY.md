@@ -16,6 +16,7 @@
   * [Populate](/docs/recipes/populate.md)
   * [Upload](/docs/recipes/upload.md)
   * [Redux Form](/docs/recipes/redux-form.md)
+  * [Redux Persist](/docs/recipes/redux-persist.md)
   * [React Native](/docs/recipes/react-native.md)
   * [Server Side Rendering](/docs/recipes/ssr.md)
 * [API Reference](/docs/api/README.md)
