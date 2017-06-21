@@ -25,8 +25,8 @@ import {
 
 @firebaseConnect()
 @connect(
-  ({ firebase }) => ({
-    auth: pathToJS(firebase, 'auth'),
+  ({ firebase: { auth } }) => ({
+    auth,
   })
 )
 export default class ProtectedPage extends Component {
@@ -61,14 +61,12 @@ In order to only allow authenticated users to view a page, a `UserIsAuthenticate
 ```javascript
 import { browserHistory } from 'react-router'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { pathToJS } from 'react-redux-firebase'
 
 export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',
-  authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) =>
-    pathToJS(firebase, 'isInitializing') === true ||
-    pathToJS(firebase, 'auth') === undefined,
+  authSelector: ({ firebase: { auth } }) => auth,
+  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+    isInitializing === true || auth === undefined,
   predicate: auth => auth !== null,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
@@ -126,8 +124,9 @@ export const UserIsNotAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsNotAuthenticated',
   allowRedirectBack: false,
   failureRedirectPath: '/',
-  authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) => pathToJS(firebase, 'isInitializing') === true,
+  authSelector: ({ firebase: { auth } }) => auth,
+  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+    isInitializing === true || auth === undefined,
   predicate: auth => auth === null,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
@@ -152,6 +151,7 @@ export default class Login extends Component {
   googleLogin = () => {
     this.props.firebase.login({ provider: 'google' })
   }
+
   render() {
     return (
       <div>

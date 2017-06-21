@@ -8,7 +8,7 @@ List of todo items where todo item can contain an owner parameter which is a use
 { text: 'Some Todo Item', owner: "Iq5b0qK2NtgggT6U3bU6iZRGyma2" }
 ```
 
-Populate allows you to replace the owner parameter with another value on Firebase under that key. That value you can be a string \(number and boolean treated as string\), or an object
+Populate allows you to replace the owner parameter with another value on Firebase under that key. That value can be a string \(number and boolean treated as string\), or an object
 
 Initial data from populate is placed into redux in a normalized pattern [following defined redux practice of normalizing](http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html). `populatedDataToJS` helper used in the `connect` function then builds populated data out of normalized data within redux (**NOTE:** This does not apply if you are using `v1.1.5` or earlier).
 
@@ -50,7 +50,7 @@ const populates = [
 ])
 @connect(
   ({ firebase }) => ({
-    todos: populatedDataToJS(firebase, 'todos', populates),
+    todos: populate(firebase, 'todos', populates),
   })
 )
 ```
@@ -77,7 +77,7 @@ const populates = [
 ])
 @connect(
   ({ firebase }) => ({
-    todos: populatedDataToJS(firebase, 'todos', populates),
+    todos: populate(firebase, 'todos', populates),
   })
 )
 ```
@@ -112,7 +112,7 @@ const populates = [
 ])
 @connect(
   ({ firebase }) => ({
-    todos: populatedDataToJS(firebase, 'todos', populates),
+    todos: populate(firebase, 'todos', populates),
   })
 )
 ```

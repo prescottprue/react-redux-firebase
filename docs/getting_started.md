@@ -2,6 +2,11 @@
 
 ## Before Use
 
+## Install
+```bash
+npm install --save react-redux-firebase
+```
+
 ### Peer Dependencies
 
 Install peer dependencies: `npm i --save redux react-redux`
@@ -99,9 +104,9 @@ import { firebaseConnect, isLoaded, isEmpty, dataToJS } from 'react-redux-fireba
   'todos' // corresponds to 'todos' root on firebase
 ])
 @connect(
-  ({ firebase }) => ({
+  ({ firebase: { data: { todos } } }) => ({ // state.firebase.data.todos
     // todos prop set to firebase data in redux under '/todos'
-    todos: dataToJS(firebase, 'todos'),
+    todos,
   })
 )
 export default class Todos extends Component {

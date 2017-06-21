@@ -57,6 +57,11 @@
   "dependencies": {
     "es6-promise": "^4.1.0",
     "firebase": "^3.9.0",
+    "gitbook-plugin-anchorjs": "^1.1.1",
+    "gitbook-plugin-edit-link": "^2.0.2",
+    "gitbook-plugin-github": "^2.0.0",
+    "gitbook-plugin-prism": "^2.2.0",
+    "gitbook-plugin-versions": "^2.1.4",
     "hoist-non-react-statics": "^1.2.0",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.2.0",

@@ -22,7 +22,7 @@ All examples below assume you have wrapped your component using `firebaseConnect
 ###### Decorators
 
 ```js
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { firebaseConnect } from 'react-redux-firebase'
 
 @firebaseConnect()
@@ -36,7 +36,7 @@ export default class SomeComponent extends Component {
 ###### No Decorators
 
 ```js
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { firebaseConnect } from 'react-redux-firebase'
 
 class SomeComponent extends Component {

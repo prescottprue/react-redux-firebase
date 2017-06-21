@@ -12,14 +12,13 @@ import { connect } from 'react-redux'
 import {
   firebaseConnect,
   isLoaded,
-  isEmpty,
-  pathToJS
+  isEmpty
 } from 'react-redux-firebase'
 
 @firebaseConnect() // add this.props.firebase
 @connect( // map redux state to props
-  ({ firebase }) => ({
-    authError: pathToJS(firebase, 'authError')
+  ({ firebase: { authError } }) => ({
+    authError
   })
 )
 export default class Login extends Component {

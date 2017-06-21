@@ -10,17 +10,17 @@ Populate the owner of each item in a todos list from the 'users' root.
 
 ```javascript
 import { connect } from 'react-redux'
-import { firebaseConnect, populatedDataToJS } from 'react-redux-firebase'
+import { firebaseConnect, populate } from 'react-redux-firebase'
 
 const populates = [
   { child: 'owner', root: 'users' }
 ]
 @firebaseConnect([
-  { path: '/todos', populates }
+  { path: 'todos', populates }
 ])
 @connect(
   ({ firebase }) => ({
-    todos: populatedDataToJS(firebase, 'todos', populates),
+    todos: populate(firebase, 'todos', populates),
   })
 )
 ```

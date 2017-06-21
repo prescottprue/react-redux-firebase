@@ -2,6 +2,7 @@
 
 * [Read Me](/README.md)
 * [Getting Started](/docs/getting_started.md)
+* [v2 Migration Guide](/docs/v2-migration-guide.md)
 * [Auth](/docs/auth.md)
 * [Queries](/docs/queries.md)
 * [Populate](/docs/populate.md)
