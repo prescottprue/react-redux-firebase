@@ -11,6 +11,8 @@
   * allows any version of Firebase to be used
   * allows [`react-native-firebase`](https://github.com/invertase/react-native-firebase) to be passed (for using native modules instead of JS within `react-native`)
 
+### Loading Data and Paths
+
 #### `v1.*.*`
 
 ```js
@@ -20,8 +22,8 @@ import { firebaseConnect, dataToJS, pathToJS } from 'react-redux-firebase';
 @firebaseConnect(['todos'])
 @connect(
   ({ firebase }) => ({
-    todos: dataToJS(firebase, 'todos', populates),
-    auth: pathToJS(firebase, 'auth'),
+    todos: dataToJS(firebase, 'todos'),
+    auth: pathToJS(firebase, 'auth')
   })
 )
 ```
@@ -34,13 +36,13 @@ import { firebaseConnect } from 'react-redux-firebase';
 @firebaseConnect(['todos'])
 @connect(
   ({ firebase: { auth, data: { todos }} }) => ({
-    todos, // mapping state.firebase.data.todos to props.todos
-    auth,
+    todos,
+    auth
   })
 )
 ```
 
-### population
+### Population
 
 ##### `v1.*.*`
 ```js
@@ -97,8 +99,8 @@ const fbConfig = {} // object containing Firebase config
 firebase.initializeApp(fbConfig) // initialize firebase instance
 
 const store = createStore(
- makeRootReducer(),
- initialState,
+ reducer,
+ undefined, //
  compose(
    reactReduxFirebase(firebase, reduxConfig), // pass in firebase instance instead of config
    applyMiddleware(...middleware)

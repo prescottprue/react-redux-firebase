@@ -1,8 +1,8 @@
 # React Native
 
-[react-native complete example app](/examples/complete/react-native)
+Connecting to Firebase through react-native can be done with the default Firebase javascript library, or through native modules. Libraries such as [react-native-firebase](https://github.com/invertase/react-native-firebase) that preserve Firebase's web library syntax while providing access to native modules can be used with `react-redux-firebase`.
 
-**NOTE**: Only works for versions `v1.4.0-beta` and higher. It is still in the early stages of support.
+Regardless of which path you want to take, initial setup is the same, so we will begin there. Below are separate sections for the two different setups (native or web)
 
 ## Setup
 
@@ -13,174 +13,56 @@
 1. Copy your client id out of the `GoogleService-info.plist` file (should end in `.apps.googleusercontent.com`)
 1. Place the client id into `iosClientId` variable within the example
 
+## JS/Web
 
-## Example App Snippets
+**NOTE**: Only works for versions `v1.4.0-beta` and higher. For older versions please view the docs associated with previous version.
 
-This snippet is a condensed version of [react-native complete example](/examples/complete/react-native).
+[react-native complete example app](/examples/complete/react-native)
 
-**store.js**
-```js
-import { createStore, compose } from 'redux'
-import rootReducer from './reducer'
-import { firebase as fbConfig } from './config'
-import { reactReduxFirebase } from 'react-redux-firebase'
-import { AsyncStorage } from 'react-native'
-
-export default function configureStore (initialState, history) {
-  // use compose to make a function that will create store
-  const createStoreWithMiddleware = compose(
-    reactReduxFirebase(fbConfig,
-      {
-        userProfile: 'users',
-        enableLogging: false,
-        ReactNative: { AsyncStorage },
-      }
-    )
-  )(createStore)
-
-  // create store
-  const store = createStoreWithMiddleware(rootReducer)
-
-  // Enable Webpack hot module replacement for reducers
-  if (module.hot) {
-    module.hot.accept('./reducer', () => {
-      const nextRootReducer = require('./reducer')
-      store.replaceReducer(nextRootReducer)
-    })
-  }
-
-  return store
-}
-```
-
-**App.js**:
+Instantiate a Firebase instance outside of `react-redux-firebase` then pass it in as the first argument like so:
 
 ```js
-import React, { Component } from 'react'
-import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin'
-import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
-import { connect } from 'react-redux'
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native'
-import configureStore from './store'
-const initialState = { firebase: { authError: null, auth: undefined }}
-const store = configureStore(initialState)
+import * as firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
+import 'firebase/storage'
 
-const iosClientId = '499842460400-teaflfd8695oilltk5qkvl5688ebgq6b.apps.googleusercontent.com' // get this from plist file
+const fbConfig = {} // object containing Firebase config
+firebase.initializeApp(fbConfig) // initialize firebase instance
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-})
-
-@firebaseConnect()
-@connect(({ firebase }) => ({
-  auth: pathToJS(firebase, 'auth', undefined)
-}))
-export default class GoogleSigninSampleApp extends Component {
-  componentDidMount() {
-    this._setupGoogleSignin()
-  }
-
-  render() {
-    const { auth } = this.props
-    if (!isLoaded(auth)) {
-      return (
-        <View style={styles.container}>
-          <Text>Loading...</Text>
-        </View>
-      )
-    }
-    if (!this.props.auth) {
-      return (
-        <View style={styles.container}>
-          <GoogleSigninButton
-            style={{width: 212, height: 48}}
-            size={GoogleSigninButton.Size.Standard}
-            color={GoogleSigninButton.Color.Auto}
-            onPress={() => this._signIn()}
-          />
-        </View>
-      )
-    }
-    return (
-      <View style={styles.container}>
-        <Text style={{fontSize: 18, fontWeight: 'bold', marginBottom: 20}}>
-          Welcome {this.props.auth.displayName}
-        </Text>
-        <Text>
-          Your email is: {this.props.auth.email}</Text>
-
-        <TouchableOpacity onPress={() => {this._signOut() }}>
-          <View style={{marginTop: 50}}>
-            <Text>Log out</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-
-  // based on react-native-google-signin example
-  async _setupGoogleSignin() {
-    try {
-      await GoogleSignin.hasPlayServices({ autoResolve: true })
-      await GoogleSignin.configure({
-        iosClientId,
-        offlineAccess: false
-      })
-
-      const user = await GoogleSignin.currentUserAsync()
-      const creds = this.props.firebase.auth.GoogleAuthProvider.credential(null, user.accessToken)
-      await this.props.firebase.auth().signInWithCredential(creds)
-    }
-    catch(err) {
-      console.log("Google signin error", err.code, err.message)
-    }
-  }
-
-  _signIn() {
-    const { auth } = this.props.firebase
-    return GoogleSignin.signIn()
-      .then((user) => {
-        const creds = auth.GoogleAuthProvider.credential(null, user.accessToken)
-        return auth().signInWithCredential(creds)
-      })
-      .catch((err) => {
-        console.error('error authing with firebase:', err)
-        return Promise.reject(err)
-      })
-  }
-
-  _signOut() {
-    return GoogleSignin.revokeAccess()
-      .then(() => GoogleSignin.signOut())
-      .then(() => this.props.firebase.logout())
-  }
-}
-
-AppRegistry.registerComponent('GoogleSigninSampleApp', () => GoogleSigninSampleApp)
-
+const store = createStore(
+ reducer,
+ undefined, //
+ compose(
+   reactReduxFirebase(firebase, reduxConfig), // pass in firebase instance instead of config
+   applyMiddleware(...middleware)
+ )
+)
 ```
 
+#### Native Using [react-native-firebase](https://github.com/invertase/react-native-firebase)
+
+Passing in an instance also allows for libraries with similar APIs (such as [`react-native-firebase`](https://github.com/invertase/react-native-firebase)) to be used instead:
+
+```js
+import RNFirebase from 'react-native-firebase';
+
+const configurationOptions = {
+  debug: true
+};
+
+const firebase = RNFirebase.initializeApp(configurationOptions);
+
+const store = createStore(
+  reducer,
+  undefined,
+  compose(
+   reactReduxFirebase(RNFirebase, reduxConfig), // pass in react-native-firebase instance instead of config
+   applyMiddleware(...middleware)
+ )
+)
+```
+The [react-native-firebase initial setup guide](http://invertase.io/react-native-firebase/#/initial-setup) has more information about how to setup your project for iOS/Android.
 
 ## Creating Your Own
 
@@ -192,18 +74,17 @@ We are going to use the project name Devshare for example here. For your project
 1. After that is complete, eject using `yarn eject` or `npm run eject`
 
 ### Download Firebase Config
-1. Download `GoogleService-Info.plist` file from Firebase
-  1. Visit Over page and click Add Firebase to iOS
+1. Visit Overview page and click Add Firebase to iOS
 
-    ![img](/docs/static/FirebaseOverview.png)
+  ![img](/docs/static/FirebaseOverview.png)
 
-  1. Fill in application info in register modal and click register
+1. Fill in application info in register modal and click register
 
-    ![img](/docs/static/RegisterApp.png)
+  ![img](/docs/static/RegisterApp.png)
 
-  1. Download the .plist file and place it in your `ios` folder
+1. Download the .plist file and place it in your `ios` folder
 
-    ![img](/docs/static/PlistDownload.png)
+  ![img](/docs/static/PlistDownload.png)
 
 ### Add `react-native-google-signin`
 
