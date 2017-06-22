@@ -117,7 +117,7 @@ We are going to use the project name Devshare for example here. For your project
 
 1. Make sure you import `RNGoogleSignin.h` in your `AppDelegate.m` like so:
 
-  ```objc
+  ```objectivec
   // add this line before @implementation AppDelegate
   #import <RNGoogleSignin/RNGoogleSignin.h>
 
@@ -140,7 +140,7 @@ Only one `openURL` method can be defined, so if you have multiple listeners whic
 
 **AppDelegate.m:**
 
-```objc
+```objectivec
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
 
