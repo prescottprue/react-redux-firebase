@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "browser": "dist/react-redux-firebase.js",
   "main": "lib/index.js",
