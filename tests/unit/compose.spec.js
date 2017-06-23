@@ -1,6 +1,7 @@
 import { omit } from 'lodash'
 import { createStore, combineReducers, compose } from 'redux'
-import composeFunc from '../../src/compose'
+import composeFunc, { getFirebase } from '../../src/compose'
+import { login } from '../../src/actions/auth'
 
 const exampleData = { data: { some: 'data' } }
 const reducer = sinon.spy()
@@ -14,7 +15,10 @@ const generateCreateStore = (params) =>
       enableRedirectHandling: false
     }
   ))(createStore)
-const helpers = generateCreateStore()(reducer).firebase.helpers
+
+generateCreateStore()(reducer)
+
+const helpers = getFirebase().helpers
 
 describe('Compose', () => {
   it('is a function', () => {
@@ -111,14 +115,14 @@ describe('Compose', () => {
       helpers.remove('test')
     )
 
-    describe.skip('watchEvent', () => {
+    describe('watchEvent', () => {
       it('starts watcher', () => {
         helpers.watchEvent('value', 'test')
       })
     })
 
-    describe.skip('unWatchEvent', () => {
-      it.skip('unWatchesEvent', () =>
+    describe('unWatchEvent', () => {
+      it('unWatchesEvent', () =>
         helpers.unWatchEvent('value', 'test')
       )
     })
@@ -218,7 +222,7 @@ describe('Compose', () => {
     })
   })
 
-  describe.skip('getFirebase', () => {
+  describe('getFirebase', () => {
     it('exports firebase instance', () => {
       expect(getFirebase()).to.be.an.object
     })
