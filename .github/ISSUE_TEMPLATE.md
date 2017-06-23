@@ -16,3 +16,6 @@
 
 
 **Which versions of dependencies, and which browser and OS are affected by this issue? Did this work in previous versions or setups?**
+
+<!-- Love react-redux-firebase? Please consider supporting our collective:
+👉  https://opencollective.com/react-redux-firebase/donate -->
