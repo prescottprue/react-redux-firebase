@@ -1,7 +1,5 @@
 # Roles (Access Management) Recipe
 
-**Note:** This example is based on the Access Management chapter from this book: https://prescottprue.gitbooks.io/real-react-firebase/content/features/access-management.html
-
 Control/management of access through setting and assigning user roles and permissions are an important part of most production applications.
 
 Though there are many patterns, we are going to use the following terminology:
@@ -19,13 +17,13 @@ _Tip: you can import below JSON directly into Firebase. Alternatively you can po
 ```js
 {
   admin: {
-    name: 'admin', // will not be nessesary once profileParamsToPopulate supports keyProp
+    name: 'admin', // will not be necessary once profileParamsToPopulate supports keyProp
     todos: true,
     userManagement: true
   },
   user: {
     todos: true,
-    name: 'user'// will not be nessesary once profileParamsToPopulate supports keyProp
+    name: 'user'// will not be necessary once profileParamsToPopulate supports keyProp
   }
 }
 {
@@ -112,7 +110,6 @@ Here is an example of an HOC that checks to make sure the user is an admin:
 ```js
 import { get } from 'lodash';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
-import { pathToJS } from 'react-redux-firebase';
 import CircularProgress from 'material-ui/CircularProgress';
 
 /**
@@ -123,24 +120,17 @@ import CircularProgress from 'material-ui/CircularProgress';
  * @return {Component} wrappedComponent
  */
 export const UserIsAdmin = UserAuthWrapper({ // eslint-disable-line new-cap
-  authSelector: ({ firebase }) => {
-    const user = pathToJS(firebase, 'profile');
-    if (user) {
-      return { ...pathToJS(firebase, 'auth'), user }; // attach profile for use in predicate
-    }
-    return pathToJS(firebase, 'auth');
-  },
-  authenticatingSelector: ({ firebase }) =>
-      (pathToJS(firebase, 'auth') === undefined)
-      || (pathToJS(firebase, 'profile') === undefined)
-      || (pathToJS(firebase, 'isInitializing') === true),
+  authSelector: ({ firebase: { profile, auth } }) => ({ auth, profile })
+  authenticatingSelector: ({ firebase: { profile, auth, isInitializing } }) =>
+    auth === undefined || profile === undefined || isInitializing === true,
   redirectAction: newLoc => (dispatch) => {
     browserHistory.replace(newLoc);
     dispatch({ type: UNAUTHED_REDIRECT });
   },
+  allowRedirectBack: false,
   failureRedirectPath: '/login',
   wrapperDisplayName: 'UserIsAdmin',
-  predicate: auth => get(auth, `user.role.name`) === 'admin',
+  predicate: auth => get(auth, `profile.role.name`) === 'admin',
   LoadingComponent: <CircularProgress mode="indeterminate" size={80} />,
 });
 ```
@@ -152,7 +142,6 @@ _Tip: you can place the below HOC in `router.js` together with `UserIsNotAuthent
 ```js
 import { get } from 'lodash';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
-import { pathToJS } from 'react-redux-firebase';
 import CircularProgress from 'material-ui/CircularProgress';
 
 /**
@@ -163,29 +152,20 @@ import CircularProgress from 'material-ui/CircularProgress';
  * @return {Component} wrappedComponent
  */
 export const UserHasPermission = permission => UserAuthWrapper({ // eslint-disable-line new-cap
-  authSelector: ({ firebase }) => {
-    const user = pathToJS(firebase, 'profile');
-    if (user) {
-      return { ...pathToJS(firebase, 'auth'), { user } }; // attach profile for use in predicate
-    }
-    return pathToJS(firebase, 'auth');
-  },
-  authenticatingSelector: ({ firebase }) =>
-      (pathToJS(firebase, 'auth') === undefined)
-      || (pathToJS(firebase, 'profile') === undefined)
-      || (pathToJS(firebase, 'isInitializing') === true),
+  authSelector: ({ firebase: { profile, auth } }) => ({ auth, profile })
+  authenticatingSelector: ({ firebase: { profile, auth, isInitializing } }) =>
+    auth === undefined || profile === undefined || isInitializing === true,
   redirectAction: newLoc => (dispatch) => {
     browserHistory.replace(newLoc);
     dispatch({ type: UNAUTHED_REDIRECT });
   },
   failureRedirectPath: '/login',
   wrapperDisplayName: 'UserHasPermission',
-  predicate: auth => get(auth, `user.role.${permission}`, false),
+  predicate: auth => get(auth, `profile.role.${permission}`, false),
   allowRedirectBack: false,
   LoadingComponent: <CircularProgress mode="indeterminate" size={80} />,
 });
 ```
-
 
 ## Checking for roles on pages/components
 

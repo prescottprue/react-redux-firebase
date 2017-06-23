@@ -1,6 +1,6 @@
 # Redux Persist
 
-Redux persist is supported out of the box as of `v2.0.0`
+Redux persist is supported out of the box as of `v2.0.0`. That means you no longer need any transforms.
 
 ```js
 import { applyMiddleware, compose, createStore } from 'redux'

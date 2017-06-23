@@ -53,6 +53,8 @@ import {
   pathToJS
 } from 'react-redux-firebase';
 
+const populates = [{ child: 'owner', root: 'users' }]
+
 @firebaseConnect([
   { path: '/todos', populates }
   // '/todos#populate=owner:displayNames', // equivalent string notation
@@ -70,9 +72,7 @@ import {
 import { connect } from 'react-redux'
 import { firebaseConnect, populate } from 'react-redux-firebase'
 
-const populates = [
-  { child: 'owner', root: 'users' }
-]
+const populates = [{ child: 'owner', root: 'users' }]
 
 @firebaseConnect([
   { path: 'todos', populates }
@@ -100,7 +100,7 @@ firebase.initializeApp(fbConfig) // initialize firebase instance
 
 const store = createStore(
  reducer,
- undefined, //
+ initialState,
  compose(
    reactReduxFirebase(firebase, reduxConfig), // pass in firebase instance instead of config
    applyMiddleware(...middleware)
@@ -129,4 +129,28 @@ const store = createStore(
    applyMiddleware(...middleware)
  )
 )
+```
+
+### [redux-persist](/docs/recipes/redux-persist)
+
+View the [redux-persist](/docs/recipes/redux-persist) section for the full example
+
+```js
+import { compose, createStore } from 'redux'
+import { reactReduxFirebase } from 'react-redux-firebase'
+import { persistStore, autoRehydrate } from 'redux-persist'
+import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
+
+const store = createStore(
+  reducer,
+  initialState,
+  compose(
+    reactReduxFirebase(fbConfig, reduxConfig),
+    autoRehydrate()
+  )
+)
+
+// then later
+persistStore()
+
 ```

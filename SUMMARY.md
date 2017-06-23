@@ -14,6 +14,7 @@
   * [Thunks](/docs/recipes/thunks.md)
   * [Epics](/docs/recipes/epics.md)
   * [Routing](/docs/recipes/routing.md)
+  * [Roles](/docs/recipes/roles.md)
   * [Populate](/docs/recipes/populate.md)
   * [Upload](/docs/recipes/upload.md)
   * [Redux Form](/docs/recipes/redux-form.md)
