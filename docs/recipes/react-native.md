@@ -15,7 +15,7 @@ Regardless of which path you want to take, initial setup is the same, so we will
 
 ## JS/Web
 
-**NOTE**: Only works for versions `v1.4.0-beta` and higher. For older versions please view the docs associated with previous version.
+**NOTE**: Only works for versions `v2.0.0-alpha` and higher. For older versions please view the docs associated with previous version.
 
 [react-native complete example app](/examples/complete/react-native)
 
@@ -40,7 +40,7 @@ const store = createStore(
 )
 ```
 
-#### Native Using [react-native-firebase](https://github.com/invertase/react-native-firebase)
+## Native Modules
 
 Passing in an instance also allows for libraries with similar APIs (such as [`react-native-firebase`](https://github.com/invertase/react-native-firebase)) to be used instead:
 

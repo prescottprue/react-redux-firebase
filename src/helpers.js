@@ -106,8 +106,8 @@ export const buildChildList = (state, list, p) =>
       getKey = key
     }
     const pathString = p.childParam
-      ? `${p.root}/${getKey}/${p.childParam}`
-      : `${p.root}/${getKey}`
+      ? `${p.root}.${getKey}.${p.childParam}`
+      : `${p.root}.${getKey}`
 
     // console.log('path string:', { pathString, state })
     // Set to child under key if populate child exists

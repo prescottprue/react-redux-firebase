@@ -350,33 +350,37 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @description Firebase auth service instance including all Firebase auth methods
    * @return {Auth}
    */
+
+  const helpers = {
+    ref: path => firebase.database().ref(path),
+    storage: () => firebase.storage(),
+    set,
+    setWithMeta,
+    uniqueSet,
+    push,
+    pushWithMeta,
+    remove,
+    update,
+    updateWithMeta,
+    login,
+    logout,
+    updateAuth,
+    updateEmail,
+    updateProfile,
+    uploadFile,
+    uploadFiles,
+    deleteFile,
+    createUser,
+    resetPassword,
+    confirmPasswordReset,
+    verifyPasswordResetCode,
+    watchEvent,
+    unWatchEvent
+  }
+
   return {
     ...instance,
-    helpers: {
-      ref: path => firebase.database().ref(path),
-      storage: () => firebase.storage(),
-      set,
-      setWithMeta,
-      uniqueSet,
-      push,
-      pushWithMeta,
-      remove,
-      update,
-      updateWithMeta,
-      login,
-      logout,
-      updateAuth,
-      updateEmail,
-      updateProfile,
-      uploadFile,
-      uploadFiles,
-      deleteFile,
-      createUser,
-      resetPassword,
-      confirmPasswordReset,
-      verifyPasswordResetCode,
-      watchEvent,
-      unWatchEvent
-    }
+    ...helpers,
+    helpers
   }
 }
