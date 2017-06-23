@@ -1,11 +1,11 @@
 import { actionTypes } from '../constants'
-import { isFunction } from 'lodash'
+import { isFunction, isNaN } from 'lodash'
 
 const { UNSET_LISTENER } = actionTypes
 
 const tryParseToNumber = (value) => {
   const result = Number(value)
-  if (Number.isNaN(result)) {
+  if (isNaN(result)) {
     return value
   }
   return result
