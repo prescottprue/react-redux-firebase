@@ -1,7 +1,5 @@
 # Roles (Access Management) Recipe
 
-**Note:** This example is based on the Access Management chapter from this book: https://prescottprue.gitbooks.io/real-react-firebase/content/features/access-management.html
-
 Control/management of access through setting and assigning user roles and permissions are an important part of most production applications.
 
 Though there are many patterns, we are going to use the following terminology:
@@ -19,13 +17,13 @@ _Tip: you can import below JSON directly into Firebase. Alternatively you can po
 ```js
 {
   admin: {
-    name: 'admin', // will not be nessesary once profileParamsToPopulate supports keyProp
+    name: 'admin', // will not be necessary once profileParamsToPopulate supports keyProp
     todos: true,
     userManagement: true
   },
   user: {
     todos: true,
-    name: 'user'// will not be nessesary once profileParamsToPopulate supports keyProp
+    name: 'user'// will not be necessary once profileParamsToPopulate supports keyProp
   }
 }
 {
