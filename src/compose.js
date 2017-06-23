@@ -7,6 +7,8 @@ import { defaultConfig } from './constants'
 import { validateConfig } from './utils'
 import { authActions } from './actions'
 
+let firebaseInstance
+
 /**
  * @name reactReduxFirebase
  * @external
@@ -88,8 +90,6 @@ export default (fbConfig, otherConfig) => next =>
     const store = next(reducer, initialState, middleware)
     const { dispatch } = store
 
-    let firebaseInstance
-
     // handle firebase instance being passed in as first argument
     if (typeof fbConfig.initializeApp === 'function') {
       firebaseInstance = createFirebaseInstance(fbConfig, otherConfig, dispatch)
@@ -112,3 +112,49 @@ export default (fbConfig, otherConfig) => next =>
 
     return store
   }
+
+/**
+ * @external
+ * @description Expose Firebase instance created internally. Useful for
+ * integrations into external libraries such as redux-thunk and redux-observable.
+ * @example <caption>redux-thunk integration</caption>
+ * import { applyMiddleware, compose, createStore } from 'redux';
+ * import thunk from 'redux-thunk';
+ * import { reactReduxFirebase } from 'react-redux-firebase';
+ * import makeRootReducer from './reducers';
+ * import { getFirebase } from 'react-redux-firebase';
+ *
+ * const fbConfig = {} // your firebase config
+ *
+ * const store = createStore(
+ *   makeRootReducer(),
+ *   initialState,
+ *   compose(
+ *     applyMiddleware([
+ *       // Pass getFirebase function as extra argument
+ *       thunk.withExtraArgument(getFirebase)
+ *     ]),
+ *     reactReduxFirebase(fbConfig)
+ *   )
+ * );
+ * // then later
+ * export const addTodo = (newTodo) =>
+ *  (dispatch, getState, getFirebase) => {
+ *    const firebase = getFirebase()
+ *    firebase
+ *      .push('todos', newTodo)
+ *      .then(() => {
+ *        dispatch({ type: 'SOME_ACTION' })
+ *      })
+ * };
+ *
+ */
+export const getFirebase = () => {
+  // TODO: Handle recieveing config and creating firebase instance if it doesn't exist
+  /* istanbul ignore next: Firebase instance always exists during tests */
+  if (!firebaseInstance) {
+    throw new Error('Firebase instance does not yet exist. Check your compose function.') // eslint-disable-line no-console
+  }
+  // TODO: Create new firebase here with config passed in
+  return firebaseInstance
+}
