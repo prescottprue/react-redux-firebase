@@ -1,7 +1,7 @@
 {
   "gitbook": ">=3.2.1",
   "title": "React Redux Firebase",
-  "plugins": ["edit-link", "prism", "-highlight", "github", "anchorjs", "versions"],
+  "plugins": ["edit-link", "prism", "-highlight", "github", "anchorjs", "versions-select"],
   "pluginsConfig": {
     "edit-link": {
       "base": "https://github.com/prescottprue/react-redux-firebase/tree/master",
