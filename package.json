@@ -27,7 +27,8 @@
     "docs:api": "node bin/api-docs-generate",
     "docs:build": "npm run docs:prepare && gitbook build -g prescottprue/react-redux-firebase && npm run docs:api",
     "docs:watch": "npm run docs:prepare && gitbook serve",
-    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force"
+    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force",
+    "postinstall": "opencollective postinstall"
   },
   "contributors": [
     {
@@ -55,7 +56,8 @@
     "hoist-non-react-statics": "^1.2.0",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "opencollective": "^1.0.3"
   },
   "peerDependencies": {
     "react": "^0.14.6 || ^15.0.0"
@@ -147,5 +149,10 @@
         "*.js"
       ]
     }
-  ]
+  ],
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-redux-firebase",
+    "logo": "https://opencollective.com/opencollective/logo.txt"
+  }
 }
