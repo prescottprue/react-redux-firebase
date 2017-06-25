@@ -42,7 +42,7 @@ const avatarStyles = {
 @connect(
   ({ firebase: { auth, profile } }) => ({
     auth,
-    profile,
+    profile
   })
 )
 export default class Navbar extends Component {

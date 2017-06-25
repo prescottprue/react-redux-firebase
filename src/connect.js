@@ -41,7 +41,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => 
    * export default firebaseConnect()(App)
    * @example <caption>Data</caption>
    * import { connect } from 'react-redux'
-   * import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+   * import { firebaseConnect } from 'react-redux-firebase'
    *
    * // sync /todos from firebase into redux
    * const fbWrapped = firebaseConnect([

@@ -37,7 +37,9 @@ to provided firebase paths using React's Lifecycle hooks.
 
 **Parameters**
 
--   `watchArray` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync from Firebase. Can also be a function that returns the array. The function is passed the current props and the firebase object.
+-   `watchArray` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
+    from Firebase. Can also be a function that returns the array. The function
+    is passed the current props and the firebase object.
 
 **Examples**
 
@@ -53,7 +55,7 @@ _Data_
 
 ```javascript
 import { connect } from 'react-redux'
-import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 // sync /todos from firebase into redux
 const fbWrapped = firebaseConnect([

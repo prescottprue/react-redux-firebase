@@ -1,8 +1,6 @@
 import { isObject } from 'lodash'
 import { authActions, queryActions, storageActions } from './actions'
 
-let firebaseInstance
-
 export const createFirebaseInstance = (firebase, configs, dispatch) => {
   // Enable Logging based on config
   if (configs.enableLogging) {
@@ -240,8 +238,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @param {String} storeAs - Name of listener results within redux store
    * @return {Promise}
    */
-  const unWatchEvent = (eventName, eventPath, queryId = undefined) =>
-    queryActions.unWatchEvent(instance, dispatch, eventName, eventPath, queryId)
+  const unWatchEvent = (type, path, queryId = undefined) =>
+    queryActions.unWatchEvent(instance, dispatch, { type, path, queryId })
 
   /**
    * @description Logs user into Firebase. For examples, visit the [auth section](/docs/auth.md)
@@ -304,6 +302,35 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     authActions.verifyPasswordResetCode(dispatch, instance, code)
 
   /**
+   * @description Update user profile
+   * @param {Object} profile - Profile data to place in new profile
+   * @return {Promise}
+   * @private
+   */
+  const updateProfile = (profileUpdate) =>
+    authActions.updateProfile(dispatch, instance, profileUpdate)
+
+  /**
+   * @description Update Auth Object
+   * @param {Object} authUpdate - Update to be auth object
+   * @param {Boolean} updateInProfile - Update in profile
+   * @return {Promise}
+   * @private
+   */
+  const updateAuth = (authUpdate, updateInProfile) =>
+    authActions.updateAuth(dispatch, instance, authUpdate, updateInProfile)
+
+  /**
+   * @description Update user's email
+   * @param {String} newEmail - Update to be auth object
+   * @param {Boolean} updateInProfile - Update in profile
+   * @return {Promise}
+   * @private
+   */
+  const updateEmail = (newEmail, updateInProfile) =>
+    authActions.updateEmail(dispatch, instance, newEmail, updateInProfile)
+
+  /**
    * @name ref
    * @description Firebase ref function
    * @return {database.Reference}
@@ -323,76 +350,37 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @description Firebase auth service instance including all Firebase auth methods
    * @return {Auth}
    */
+
+  const helpers = {
+    ref: path => firebase.database().ref(path),
+    storage: () => firebase.storage(),
+    set,
+    setWithMeta,
+    uniqueSet,
+    push,
+    pushWithMeta,
+    remove,
+    update,
+    updateWithMeta,
+    login,
+    logout,
+    updateAuth,
+    updateEmail,
+    updateProfile,
+    uploadFile,
+    uploadFiles,
+    deleteFile,
+    createUser,
+    resetPassword,
+    confirmPasswordReset,
+    verifyPasswordResetCode,
+    watchEvent,
+    unWatchEvent
+  }
+
   return {
     ...instance,
-    helpers: {
-      ref: path => firebase.database().ref(path),
-      storage: () => firebase.storage(),
-      set,
-      setWithMeta,
-      uniqueSet,
-      push,
-      pushWithMeta,
-      remove,
-      update,
-      updateWithMeta,
-      login,
-      logout,
-      uploadFile,
-      uploadFiles,
-      deleteFile,
-      createUser,
-      resetPassword,
-      confirmPasswordReset,
-      verifyPasswordResetCode,
-      watchEvent,
-      unWatchEvent
-    }
+    ...helpers,
+    helpers
   }
-}
-
-/**
- * @external
- * @description Expose Firebase instance created internally. Useful for
- * integrations into external libraries such as redux-thunk and redux-observable.
- * @example <caption>redux-thunk integration</caption>
- * import { applyMiddleware, compose, createStore } from 'redux';
- * import thunk from 'redux-thunk';
- * import { reactReduxFirebase } from 'react-redux-firebase';
- * import makeRootReducer from './reducers';
- * import { getFirebase } from 'react-redux-firebase';
- *
- * const fbConfig = {} // your firebase config
- *
- * const store = createStore(
- *   makeRootReducer(),
- *   initialState,
- *   compose(
- *     applyMiddleware([
- *       // Pass getFirebase function as extra argument
- *       thunk.withExtraArgument(getFirebase)
- *     ]),
- *     reactReduxFirebase(fbConfig)
- *   )
- * );
- * // then later
- * export const addTodo = (newTodo) =>
- *  (dispatch, getState, getFirebase) => {
- *    const firebase = getFirebase()
- *    firebase
- *      .push('todos', newTodo)
- *      .then(() => {
- *        dispatch({ type: 'SOME_ACTION' })
- *      })
- * };
- *
- */
-export const getFirebase = () => {
-  // TODO: Handle recieveing config and creating firebase instance if it doesn't exist
-  /* istanbul ignore next: Firebase instance always exists during tests */
-  if (!firebaseInstance) {
-    throw new Error('Firebase instance does not yet exist. Check your compose function.') // eslint-disable-line no-console
-  }
-  // TODO: Create new firebase here with config passed in
-  return firebaseInstance
 }
