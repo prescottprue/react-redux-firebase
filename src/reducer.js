@@ -101,7 +101,7 @@ const authReducer = (state = {}, action) => {
  * @param  {object} action - Object containing the action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const profileReducer = (state = {}, action) => {
+const profileReducer = (state = null, action) => {
   switch (action.type) {
     case SET_PROFILE:
       return {

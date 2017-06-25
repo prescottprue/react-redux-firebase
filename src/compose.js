@@ -1,7 +1,4 @@
-import * as firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/database'
-import 'firebase/storage'
+import * as firebase from 'firebase'
 import { createFirebaseInstance } from './createFirebaseInstance'
 import { defaultConfig } from './constants'
 import { validateConfig } from './utils'

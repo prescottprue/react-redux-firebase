@@ -31,7 +31,7 @@ const populates = [{ child: 'owner', root: 'users' }]
     auth,
     profile,
     // todos,
-    todos: populate(firebase, 'todos', populates), // if populating
+    todos: populate(firebase, 'todos', populates) // if populating
     // todos: firebase.ordered.todos // if using ordering such as orderByChild
   })
 )

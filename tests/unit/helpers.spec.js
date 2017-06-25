@@ -1,4 +1,3 @@
-import { fromJS } from 'immutable'
 import * as helpers from '../../src/helpers'
 import { buildChildList } from '../../src/helpers'
 
@@ -71,7 +70,6 @@ const exampleData = {
   timestamp: { 'some/path': { test: 'key' } },
   snapshot: { some: 'snapshot' }
 }
-const exampleState = fromJS(exampleData)
 
 describe('Helpers:', () => {
   describe.skip('ordered', () => {
@@ -87,7 +85,7 @@ describe('Helpers:', () => {
 
     it('gets data from state', () => {
       const path = 'projects'
-      expect(JSON.stringify(helpers.ordered(exampleState, path, exampleData)))
+      expect(JSON.stringify(helpers.ordered(exampleData, path, exampleData)))
         .to
         .equal(JSON.stringify(exampleData.ordered[path]))
     })
@@ -112,24 +110,26 @@ describe('Helpers:', () => {
     })
 
     it('returns undefined for non existant path', () => {
-      expect(helpers.populate(exampleState, '/asdfasdfadsf', []))
+      expect(helpers.populate(exampleData, '/asdfasdfadsf', []))
         .to
         .equal(undefined)
     })
 
     it('returns unpopulated data for no populates', () => {
       const path = 'projects'
-      expect(helpers.populate(exampleState, path, []).CDF.owner)
+      expect(helpers.populate(exampleData, path, []).CDF.owner)
         .to
         .equal(exampleData.data[path].CDF.owner)
     })
 
     describe('single', () => {
-      describe('single param', () => {
+      describe('param', () => {
         it('populates value', () => {
           const path = 'projects/CDF'
           const rootName = 'users'
-          expect(helpers.populate(exampleState, path, [{ child: 'owner', root: rootName }]).owner)
+          const populates = [{ child: 'owner', root: rootName }]
+          console.log('\n\nhere', helpers.populate(exampleData, path, populates))
+          expect(helpers.populate(exampleData, path, populates).owner)
             .to
             .have
             .property('displayName', 'scott')
@@ -138,7 +138,7 @@ describe('Helpers:', () => {
           const path = 'projects/QRS'
           const rootName = 'users'
           const populates = [{ child: 'nested.owner', root: rootName }]
-          const populatedData = helpers.populate(exampleState, path, populates)
+          const populatedData = helpers.populate(exampleData, path, populates)
           expect(populatedData.nested.owner)
             .to
             .have
@@ -147,7 +147,7 @@ describe('Helpers:', () => {
         it('populates childParam', () => {
           const path = 'projects/CDF'
           const rootName = 'users'
-          expect(helpers.populate(exampleState, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }]).owner)
+          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }]).owner)
             .to
             .have
             .equal('scott')
@@ -155,7 +155,7 @@ describe('Helpers:', () => {
         it('keeps non-existant children', () => {
           const path = 'projects/OKF'
           const rootName = 'users'
-          expect(helpers.populate(exampleState, path, [{ child: 'owner', root: rootName }]).owner)
+          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName }]).owner)
             .to
             .have
             .equal('asdfasdf')
@@ -168,7 +168,7 @@ describe('Helpers:', () => {
           const populates = [
             { child: 'collaborators', root: rootName },
           ]
-          const populatedData = helpers.populate(exampleState, path, populates)
+          const populatedData = helpers.populate(exampleData, path, populates)
           expect(populatedData)
             .to
             .have
@@ -185,7 +185,7 @@ describe('Helpers:', () => {
             // configure populates with key / data tuple...
             { child: 'owner', root: rootName }
           ])
-          const populatedData = helpers.populate(exampleState, path, populates)
+          const populatedData = helpers.populate(exampleData, path, populates)
           expect(populatedData.owner)
             .to
             .have
@@ -202,7 +202,7 @@ describe('Helpers:', () => {
           const path = 'projects'
           const rootName = 'users'
           const valName = 'CDF'
-          expect(helpers.populate(exampleState, path, [{ child: 'owner', root: rootName }])[valName].owner)
+          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName }])[valName].owner)
             .to
             .have
             .property('displayName', 'scott')
@@ -212,7 +212,7 @@ describe('Helpers:', () => {
           const path = 'projects'
           const rootName = 'users'
           const valName = 'CDF'
-          expect(helpers.populate(exampleState, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }])[valName].owner)
+          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }])[valName].owner)
             .to
             .have
             .equal('scott')
@@ -227,7 +227,7 @@ describe('Helpers:', () => {
           const populates = [
             { child: 'collaborators', root: rootName },
           ]
-          const populatedData = helpers.populate(exampleState, path, populates)
+          const populatedData = helpers.populate(exampleData, path, populates)
           expect(populatedData)
             .to
             .have
@@ -242,12 +242,12 @@ describe('Helpers:', () => {
           const populates = [
             { child: 'collaborators', root: rootName },
           ]
-          expect(helpers.populate(exampleState, path, populates))
+          expect(helpers.populate(exampleData, path, populates))
             .to
             .have
             .deep
             .property(`${valName}.collaborators.abc`, true)
-          expect(helpers.populate(exampleState, path, populates))
+          expect(helpers.populate(exampleData, path, populates))
             .to
             .have
             .deep
@@ -266,13 +266,13 @@ describe('Helpers:', () => {
           { child: 'notes', root: 'notes' },
         ]
         // check that notes are populated
-        expect(helpers.populate(exampleState, `/${path}`, populates))
+        expect(helpers.populate(exampleData, `/${path}`, populates))
           .to
           .have
           .deep
           .property(`${valName}.notes.123.text`, exampleData.data.notes['123'].text)
         // check that owner is populated
-        expect(helpers.populate(exampleState, `/${path}`, populates))
+        expect(helpers.populate(exampleData, `/${path}`, populates))
           .to
           .have
           .deep
@@ -289,12 +289,12 @@ describe('Helpers:', () => {
           { child: 'collaborators', root: rootName },
         ]
         // TODO: Test both children are populated
-        expect(helpers.populate(exampleState, `/${path}`, populates))
+        expect(helpers.populate(exampleData, `/${path}`, populates))
           .to
           .have
           .deep
           .property(`${valName}.owner.displayName`, exampleData.data[rootName].ABC.displayName)
-        expect(helpers.populate(exampleState, `/${path}`, populates))
+        expect(helpers.populate(exampleData, `/${path}`, populates))
           .to
           .have
           .deep
