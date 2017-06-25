@@ -1,5 +1,5 @@
 import { actionTypes } from '../constants'
-import { isNaN } from 'lodash'
+import { isNaN, isFunction } from 'lodash'
 
 const { UNSET_LISTENER } = actionTypes
 
@@ -100,7 +100,11 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefine
     delete firebase._.watchers[id]
     if (event !== 'first_child' && event !== 'once') {
       firebase.database().ref().child(path).off(event)
-      if (firebase._.config.distpatchOnUnsetListener) {
+      const { config } = firebase._
+      if (config.dispatchOnUnsetListener || config.distpatchOnUnsetListener) {
+        if (config.distpatchOnUnsetListener && isFunction(console.warn)) {  // eslint-disable-line no-console
+          console.warn('config.distpatchOnUnsetListener is Depreceated and will be removed in future versions. Please use config.dispatchOnUnsetListener (dispatch spelled correctly).') // eslint-disable-line no-console
+        }
         dispatch({ type: UNSET_LISTENER, path })
       }
     }
