@@ -91,7 +91,7 @@ export default (fbConfig, otherConfig) => next =>
     const { dispatch } = store
 
     // handle firebase instance being passed in as first argument
-    if (typeof fbConfig.initializeApp === 'function') {
+    if (typeof fbConfig.database === 'function') {
       firebaseInstance = createFirebaseInstance(fbConfig, otherConfig, dispatch)
     } else {
       // Combine all configs
