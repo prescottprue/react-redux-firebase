@@ -1,5 +1,5 @@
 import { actionTypes } from '../constants'
-import { isFunction, isNaN } from 'lodash'
+import { isNaN, isFunction } from 'lodash'
 
 const { UNSET_LISTENER } = actionTypes
 
@@ -110,7 +110,7 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefine
       }
     }
   } else if (watchers[id]) {
-    watchers[id]--
+    firebase._.watchers[id]--
   }
 }
 
