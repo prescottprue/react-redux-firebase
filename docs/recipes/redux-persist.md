@@ -12,9 +12,25 @@ import makeRootReducer from './reducers'
 import { updateLocation } from './location'
 
 export default (initialState = {}, history) => {
+  // ======================================================
+  // Middleware Configuration
+  // ======================================================
   const middleware = []
-  const enhancers = []
 
+  // ======================================================
+  // Store Enhancers
+  // ======================================================
+  const enhancers = []
+  if (__DEV__) {
+    const devToolsExtension = window.devToolsExtension
+    if (typeof devToolsExtension === 'function') {
+      enhancers.push(devToolsExtension())
+    }
+  }
+
+  // ======================================================
+  // Store Instantiation
+  // ======================================================
   const store = createStore(
     makeRootReducer(),
     initialState,

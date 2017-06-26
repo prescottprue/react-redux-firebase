@@ -1,18 +1,19 @@
 import {
   size,
+  set,
+  get,
+  has,
+  last,
+  split,
   map,
   mapValues,
-  get,
-  isFunction,
   every,
-  has,
-  set,
-  split,
-  last,
   reduce,
   defaultsDeep,
   isString,
-  compact
+  compact,
+  isFunction,
+  defaultsDeep
 } from 'lodash'
 import { getPopulateObjs } from './utils/populate'
 

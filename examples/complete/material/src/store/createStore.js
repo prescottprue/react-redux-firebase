@@ -1,7 +1,7 @@
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
-import { reactReduxFirebase, getFirebase, toJS } from 'react-redux-firebase'
+import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 import logger from 'redux-logger'
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
@@ -16,8 +16,8 @@ export default (initialState = {}, history) => {
   // Middleware Configuration
   // ======================================================
   const middleware = [
-    thunk.withExtraArgument(getFirebase)
-    // logger
+    thunk.withExtraArgument(getFirebase),
+    logger, // Uncomment to see actions in console
     // This is where you add other middleware like redux-observable
   ]
 
