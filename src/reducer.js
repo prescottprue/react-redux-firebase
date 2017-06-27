@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { set } from 'lodash'
+import { set, get, has } from 'lodash'
 import { actionTypes } from './constants'
 
 const {
@@ -19,55 +19,109 @@ const {
 } = actionTypes
 
 const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
+const getSlashStrPath = path => pathToArr(path).join('/')
+const getDotStrPath = path => pathToArr(path).join('.')
 
 /**
  * Reducer for requesting state. Changed by `START` and `SET` actions.
  * @param  {Object} state - Current requesting redux state
- * @param  {object} action - Object containing the action that was dispatched
+ * @param  {Object} action - Object containing the action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const requestingReducer = (state = {}, action) => {
-  const { path, requesting } = action
-  switch (action.type) {
+const requestingReducer = (state = {}, { type, path }) => {
+  switch (type) {
     case START:
+      return {
+        ...state,
+        [getSlashStrPath(path)]: true
+      }
+    case NO_VALUE:
     case SET:
       return {
         ...state,
-        [pathToArr(path).join('/')]: requesting
+        [getSlashStrPath(path)]: false
       }
-    // TODO: Handle NO_VALUE case
-    // case NO_VALUE:
     default:
       return state
   }
 }
 
-const getPathStr = (path) => path ? path.replace('/', '.') : ''
+/**
+ * Reducer for requested state. Changed by `START` `NO_VALUE`, and `SET` actions.
+ * @param  {Object} state - Current requesting redux state
+ * @param  {Object} action - Object containing the action that was dispatched
+ * @return {Object} Profile state after reduction
+ */
+const requestedReducer = (state = {}, { type, path }) => {
+  switch (type) {
+    case START:
+      return {
+        ...state,
+        [getSlashStrPath(path)]: false
+      }
+    case NO_VALUE:
+    case SET:
+      return {
+        ...state,
+        [getSlashStrPath(path)]: true
+      }
+    default:
+      return state
+  }
+}
+
+/**
+ * Reducer for timestamps state. Changed by `START` and `SET` actions.
+ * @param  {Object} state - Current requesting redux state
+ * @param  {Object} action - Object containing the action that was dispatched
+ * @return {Object} Profile state after reduction
+ */
+const timestampsReducer = (state = {}, { type, path }) => {
+  switch (type) {
+    case START:
+    case NO_VALUE:
+    case SET:
+      return {
+        ...state,
+        [getSlashStrPath(path)]: Date.now()
+      }
+    default:
+      return state
+  }
+}
 
 /**
  * Reducer for data state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR`
  * actions.
  * @param  {Object} state - Current data redux state
- * @param  {object} action - Object containing the action that was dispatched
+ * @param  {Object} action - Object containing the action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const dataReducer = (state = {}, action) => {
-  const { path, data, ordered } = action
-  switch (action.type) {
+const dataReducer = (state = {}, { type, path, data, ordered }) => {
+  switch (type) {
     case SET:
+      if (!state) {
+        return set({}, getDotStrPath(path), data)
+      }
       return {
         ...state,
-        ...set({}, getPathStr(path), data)
+        ...set({}, getDotStrPath(path), data)
       }
-    case SET_ORDERED:
-      return {
-        ...state,
-        ...set({}, getPathStr(path), ordered)
-      }
+    // case SET_ORDERED:
+    //   if (!state) {
+    //     return set({}, getDotStrPath(path), ordered)
+    //   }
+    //   return {
+    //     ...state,
+    //     ...set({}, getDotStrPath(path), ordered)
+    //   }
     case NO_VALUE:
+      if (!state || !get(state, getDotStrPath(path))) {
+        return set({}, getDotStrPath(path), {})
+      }
       return {
         ...state,
-        ...set({}, getPathStr(path), {})
+        ...set({}, getDotStrPath(path), {})
       }
     default:
       return state
@@ -78,17 +132,17 @@ const dataReducer = (state = {}, action) => {
  * Reducer for auth state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR`
  * actions.
  * @param  {Object} state - Current auth redux state
- * @param  {object} action - Object containing the action that was dispatched
+ * @param  {Object} action - Object containing the action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const authReducer = (state = {}, action) => {
-  switch (action.type) {
+const authReducer = (state = { isLoaded: false }, { type, auth }) => {
+  switch (type) {
     case LOGIN:
     case AUTH_UPDATE_SUCCESS:
-      return action.auth || undefined
+      return auth || state
     case LOGOUT:
     case LOGIN_ERROR:
-      return null
+      return { isLoaded: true }
     default:
       return state
   }
@@ -101,16 +155,17 @@ const authReducer = (state = {}, action) => {
  * @param  {object} action - Object containing the action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const profileReducer = (state = null, action) => {
-  switch (action.type) {
+const profileReducer = (state = { isLoaded: false }, { type, profile }) => {
+  switch (type) {
     case SET_PROFILE:
       return {
         ...state,
-        ...action.profile
+        ...profile,
+        isLoaded: true
       }
     case LOGOUT:
     case LOGIN_ERROR:
-      return null
+      return { isLoaded: true }
     default:
       return state
   }
@@ -144,9 +199,12 @@ const isInitializingReducer = (state = false, action) => {
 const errorsReducer = (state = [], action) => {
   switch (action.type) {
     case UNAUTHORIZED_ERROR:
-      return [...state, action.payload]
+      if (!state) {
+        return [action.authError]
+      }
+      return [...state, action.authError]
     case LOGOUT:
-      return null
+      return []
     default:
       return state
   }
@@ -166,6 +224,8 @@ const errorsReducer = (state = [], action) => {
  */
 export default combineReducers({
   requesting: requestingReducer,
+  requested: requestedReducer,
+  timestamps: timestampsReducer,
   data: dataReducer,
   auth: authReducer,
   profile: profileReducer,

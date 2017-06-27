@@ -1,171 +1,135 @@
 import { firebaseStateReducer } from '../../src'
 import { actionTypes } from '../../src/constants'
+import { set } from 'lodash'
+
 const emptyState = {
-  auth: undefined,
-  authError: undefined,
-  profile: undefined,
-  isInitializing: undefined,
+  auth: { isLoaded: false },
+  profile: { isLoaded: false },
+  isInitializing: false,
   data: {}
 }
+
 const initialState = {
-  auth: undefined,
-  authError: undefined,
-  profile: undefined,
-  isInitializing: undefined,
+  auth: { isLoaded: false },
+  profile: { isLoaded: false },
+  isInitializing: false,
+  errors: [],
   data: {},
-  timestamp: {},
+  timestamps: {},
   requesting: {},
   requested: {}
 }
-const intializedState = Object.assign({}, initialState, { isInitializing: true })
-const noError = { authError: null }
-const noAuth = { auth: null, profile: null }
+
+const noError = { ...initialState, errors: [] }
+const loadedState = {
+  ...noError,
+  auth: { isLoaded: true },
+  profile: { isLoaded: true }
+}
 const exampleData = { some: 'data' }
 const externalState = { data: { asdfasdf: {} } }
 const exampleState = {}
 const exampleEmptyState = emptyState
 
+let path = 'test'
+let childKey = 'abc'
+let childPath = `${path}/${childKey}`
+let action = {}
+let state = {}
+const newData = { some: 'val' }
+
 describe('reducer', () => {
+
   it('is a function', () => {
     expect(firebaseStateReducer).to.be.a.function
   })
 
-  it('handles no initialState', () => {
+  it.skip('handles no initialState', () => {
     expect(firebaseStateReducer(undefined, {})).to.equal(initialState)
   })
 
   it('returns state by default', () => {
-    expect(firebaseStateReducer(exampleData)).to.equal(exampleData)
+    expect(firebaseStateReducer(externalState, {}))
+      .to.have.property('data', externalState.data)
+  })
+
+  beforeEach(() => {
+    // reset defaults
+    path = 'test'
+    childKey = 'abc'
+    childPath = `${path}/${childKey}`
+    action = {}
   })
 
   describe('SET action', () => {
-    it('deletes data from state when data is null', () => {
+    it.skip('deletes data from state when data is null', () => {
+      action = { type: actionTypes.SET, path: 'test' }
       expect(
-        firebaseStateReducer(exampleState,
-          { type: actionTypes.SET, path: 'test' }
-        )
-      ).to.equal(exampleState)
+        firebaseStateReducer(exampleState, action)
+      ).to.deep.equal(initialState)
     })
 
     it('sets state', () => {
-      const path = 'test'
-      const pathArray = path.split(/\//).filter(p => !!p)
+      action = { type: actionTypes.SET, path, data: exampleData }
       expect(
-        firebaseStateReducer(
-          exampleState,
-          { type: actionTypes.SET, path, data: {} }
-        )
-      ).to.equal(exampleState.setIn(['data', ...pathArray], {}))
+        firebaseStateReducer(exampleState, action).data
+      ).to.deep.equal({ ...initialState.data, [path]: exampleData })
     })
-    it('handles already existing parent that is null', () => {
-      const childPath = 123
-      const path = `test/${childPath}`
-      const pathArray = path.split(/\//).filter(p => !!p)
-      const newData = { some: 'val' }
+
+    it('handles already existing parent of null', () => {
+      action = { type: actionTypes.SET, path: childPath, data: exampleData }
+      const dotChildPath = childPath.split('/').join('.')
       expect(
-        firebaseStateReducer(
-          {data: { test: null } },
-          { type: actionTypes.SET, path, data: newData }
-        )
-      ).to.equal(exampleState.data,newData)
+        firebaseStateReducer({data: { test: null } }, action).data
+      ).to.deep.equal(set({}, dotChildPath, exampleData))
     })
 
     it('handles already existing value of null', () => {
-      const path = 'test/123'
-      const pathArray = path.split(/\//).filter(p => !!p)
-      const newData = { some: 'val' }
+      action = { type: actionTypes.SET, path: childPath, data: newData }
+      const dotChildPath = childPath.split('/').join('.')
       expect(
-        firebaseStateReducer(
-          { data: { test: { '123': null } } },
-          { type: actionTypes.SET, path, data: newData }
-        )
-      ).to.equal(exampleState.data[pathArray],newData)
-    })
-
-    it('handles already existing parent that is null', () => {
-      const childPath = 123
-      const path = `test/${childPath}`
-      const pathArray = path.split(/\//).filter(p => !!p)
-      const newData = { some: 'val' }
-      expect(
-        JSON.stringify(firebaseStateReducer(
-          fromJS({ data: { test: null } }),
-          { type: actionTypes.SET, path, data: newData }
-        ).toJS())
-      ).to.equal(
-        JSON.stringify(
-          exampleState.setIn(
-            ['data', ...pathArray],
-            fromJS(newData)
-          ).toJS()
-        )
-      )
-    })
-
-    it('handles already existing value of null', () => {
-      const path = 'test/123'
-      const pathArray = path.split(/\//).filter(p => !!p)
-      const newData = { some: 'val' }
-      expect(
-        JSON.stringify(firebaseStateReducer(
-          fromJS({ data: { test: { '123': null } } }),
-          { type: actionTypes.SET, path, data: newData }
-        ))
-      ).to.equal(
-        JSON.stringify(
-          exampleState.setIn(
-            ['data', ...pathArray],
-            fromJS(newData)
-          ).toJS()
-        )
-      )
+        firebaseStateReducer({ data: { test: { [childKey]: null } } }, action).data
+      ).to.deep.equal(set({}, dotChildPath, newData))
     })
 
   })
 
   describe('NO_VALUE action', () => {
     it('sets state', () => {
+      action = { type: actionTypes.NO_VALUE, path: 'asdfasdf' }
       expect(
-        firebaseStateReducer(
-          exampleState,
-          { type: actionTypes.NO_VALUE, path: 'asdfasdf' }
-        )
-      ).to.equal(externalState)
+        firebaseStateReducer({}, action).data
+      ).to.deep.equal(externalState.data)
     })
   })
 
   describe('UNSET_LISTENER action', () => {
     it('sets state', () => {
+      action = { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf' }
       expect(
-        firebaseStateReducer(
-          exampleState,
-          { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf' }
-        )
-      ).to.equal({})
+        firebaseStateReducer(exampleState, action)
+      ).to.deep.equal(initialState)
     })
   })
 
   describe('UNSET_LISTENER action', () => {
+    action = { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf' }
     it('sets state', () => {
       expect(
-        JSON.stringify(firebaseStateReducer(
-          exampleState,
-          { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf' }
-        ).toJS())
-      ).to.equal(JSON.stringify({}))
+        firebaseStateReducer(exampleState, action)
+      ).to.deep.equal(initialState)
     })
   })
 
   describe('SET_PROFILE action', () => {
     it('sets state', () => {
       const profile = { email: 'test@test.com' }
+      action = { type: actionTypes.SET_PROFILE, profile }
       expect(
-        firebaseStateReducer(
-          exampleState,
-          { type: actionTypes.SET_PROFILE, profile }
-        )
-      ).to.equal({ profile })
+        firebaseStateReducer(exampleState, action)
+      ).to.deep.equal({ ...initialState, profile: { ...profile, isLoaded: true } })
     })
+
     it('removes for no profile', () => {
       const profile = { email: 'test@test.com' }
       expect(
@@ -173,7 +137,7 @@ describe('reducer', () => {
           exampleState,
           { type: actionTypes.SET_PROFILE }
         )
-      ).to.equal(exampleState.deleteIn(['profile']))
+      ).to.deep.equal({ ...initialState, profile: { isLoaded: true } })
     })
   })
 
@@ -184,13 +148,7 @@ describe('reducer', () => {
           exampleState,
           { type: actionTypes.LOGOUT }
         )
-      ).to.equal({
-        auth: null,
-        authError: null,
-        profile: null,
-        isInitializing: false,
-        data: {}
-      })
+      ).to.deep.equal(loadedState)
     })
   })
 
@@ -201,7 +159,7 @@ describe('reducer', () => {
           exampleState,
           { type: actionTypes.LOGIN }
         )
-      ).to.equal(noError)
+      ).to.deep.equal(noError)
     })
   })
 
@@ -212,47 +170,45 @@ describe('reducer', () => {
           exampleState,
           { type: actionTypes.LOGIN_ERROR }
         )
-      ).to.equal(noAuth)
+      ).to.deep.equal({
+        ...initialState,
+        auth: { isLoaded: true },
+        profile: { isLoaded: true }
+      })
     })
   })
 
   describe('AUTHENTICATION_INIT_STARTED action', () => {
-    it('sets state', () => {
+    it('sets isInitializing to true', () => {
       expect(
         firebaseStateReducer(
           exampleState,
           { type: actionTypes.AUTHENTICATION_INIT_STARTED }
         )
-      ).to.equal({
-        isInitializing: true,
-        data: {},
-        timestamp: {},
-        requesting: {},
-        requested: {}
-      })
+      ).to.have.property('isInitializing', true)
     })
   })
 
   describe('AUTHENTICATION_INIT_FINISHED action', () => {
-    it('sets state', () => {
+    it('sets isInitializing to false', () => {
       expect(
         firebaseStateReducer(
           exampleState,
           { type: actionTypes.AUTHENTICATION_INIT_FINISHED }
         )
-      ).to.equal(exampleState, false)
+      ).to.have.property('isInitializing', false)
     })
   })
 
   describe('UNAUTHORIZED_ERROR action', () => {
     it('sets state', () => {
-      const authError = {}
+      const authError = { some: 'error' }
       expect(
         firebaseStateReducer(
           exampleState,
           { type: actionTypes.UNAUTHORIZED_ERROR, authError }
         )
-      ).to.equal(exampleState, authError)
+      ).to.deep.equal({ ...initialState, errors: [authError] })
     })
   })
 
@@ -264,23 +220,17 @@ describe('reducer', () => {
           exampleState,
           { type: actionTypes.AUTH_UPDATE_SUCCESS, payload: authUpdate }
         )
-      ).to.equal(exampleState, authUpdate)
+      ).to.deep.equal(initialState)
     })
   })
 
   describe('AUTH_UPDATE_SUCCESS action', () => {
     it('sets state', () => {
       const authUpdate = { email: 'newEmail' }
+      action = { type: actionTypes.AUTH_UPDATE_SUCCESS, payload: authUpdate }
       expect(
-        JSON.stringify(firebaseStateReducer(
-          exampleState,
-          { type: actionTypes.AUTH_UPDATE_SUCCESS, payload: authUpdate }
-        ).toJS())
-      ).to.equal(
-        JSON.stringify(
-          exampleState.setIn(['auth'], authUpdate).toJS()
-        )
-      )
+        firebaseStateReducer(exampleState, action)
+      ).to.deep.equal({ ...initialState })
     })
   })
 })

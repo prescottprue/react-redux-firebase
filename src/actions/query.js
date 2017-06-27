@@ -45,9 +45,6 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
         if (snapshot.val() === null) {
           dispatch({
             type: NO_VALUE,
-            timestamp: Date.now(),
-            requesting: false,
-            requested: true,
             path: storeAs || path
           })
         }
@@ -74,9 +71,6 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
   const runQuery = (q, e, p, params) => {
     dispatch({
       type: START,
-      timestamp: Date.now(),
-      requesting: true,
-      requested: false,
       path: storeAs || path
     })
 
@@ -123,7 +117,6 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           path: storeAs || resultPath,
           ordered: size(ordered) ? ordered : undefined,
           data,
-          timestamp: Date.now(),
           requesting: false,
           requested: true
         })
