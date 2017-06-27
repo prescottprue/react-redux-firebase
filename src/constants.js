@@ -47,6 +47,7 @@ export const actionTypes = {
   START: `${actionsPrefix}/START`,
   SET: `${actionsPrefix}/SET`,
   SET_PROFILE: `${actionsPrefix}/SET_PROFILE`,
+  SET_ORDERED: `${actionsPrefix}/SET_ORDERED`,
   LOGIN: `${actionsPrefix}/LOGIN`,
   LOGOUT: `${actionsPrefix}/LOGOUT`,
   LOGIN_ERROR: `${actionsPrefix}/LOGIN_ERROR`,

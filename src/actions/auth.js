@@ -84,7 +84,7 @@ export const unWatchUserProfile = (firebase) => {
 }
 
 /**
- * @description Watch user profile
+ * @description Watch user profile. Internally dispatches SET_PROFILE actions
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @private

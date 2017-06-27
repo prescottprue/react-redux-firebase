@@ -1,9 +1,7 @@
 import { omit } from 'lodash'
-import { createStore, combineReducers, compose } from 'redux'
+import { createStore, compose } from 'redux'
 import composeFunc, { getFirebase } from '../../src/compose'
-import { login } from '../../src/actions/auth'
 
-const exampleData = { data: { some: 'data' } }
 const reducer = sinon.spy()
 
 const generateCreateStore = (params) =>
@@ -24,9 +22,11 @@ describe('Compose', () => {
   it('is a function', () => {
     expect(composeFunc).to.be.a.function
   })
+
   it('returns an object', () => {
     expect(composeFunc(fbConfig)).to.be.a.function
   })
+
   it('allows enabling of Firebase database logging', () => {
     expect(generateCreateStore()(reducer))
       .to.be.an.object
@@ -37,6 +37,7 @@ describe('Compose', () => {
       it('exists', () => {
         expect(helpers.ref('test')).to.be.an.object
       })
+
       it('has child', () => {
         expect(helpers.ref('test').child('asdf')).to.be.an.object
       })
@@ -44,51 +45,58 @@ describe('Compose', () => {
 
     describe('set', () => {
       it('accepts object', () =>
-        expect(helpers.set('test', {some: 'asdf'})).to.eventually.become(undefined)
+        expect(helpers.set('test', {some: 'asdf'}))
+          .to.eventually.become(undefined)
       )
     })
 
     describe('setWithMeta', () => {
       describe('accepts object', () => {
         it('accepts object', () =>
-          expect(helpers.setWithMeta('test', {some: 'asdf'})).to.eventually.become(undefined)
+          expect(helpers.setWithMeta('test', {some: 'asdf'}))
+            .to.eventually.become(undefined)
         )
       })
 
       describe('does not attach meta to string', () => {
         // TODO: confirm that data set actually does not include meta
         it('accepts object', () =>
-          expect(helpers.setWithMeta('test', 'asdd')).to.eventually.become(undefined)
+          expect(helpers.setWithMeta('test', 'asdd'))
+            .to.eventually.become(undefined)
         )
       })
     })
 
     describe('push', () => {
       it('accepts object', () =>
-        expect(helpers.push('test', {some: 'asdf'})).to.eventually.have.property('key')
+        expect(helpers.push('test', {some: 'asdf'}))
+          .to.eventually.have.property('key')
       )
     })
 
     describe('pushWithMeta', () => {
       it('accepts object', () =>
-        expect(helpers.pushWithMeta('test', {some: 'asdf'})).to.eventually.have.property('key')
+        expect(helpers.pushWithMeta('test', {some: 'asdf'}))
+          .to.eventually.have.property('key')
       )
     })
 
     describe('update', () => {
       it('accepts object', () =>
         // undefined represents snapshot
-        expect(helpers.update('test', {some: 'asdf'})).to.eventually.become(undefined)
+        expect(helpers.update('test', {some: 'asdf'}))
+          .to.eventually.become(undefined)
       )
     })
 
     describe('updateWithMeta', () => {
       it('accepts object', () =>
-        expect(helpers.updateWithMeta('test', {some: 'asdf'})).to.eventually.become(undefined)
+        expect(helpers.updateWithMeta('test', {some: 'asdf'}))
+          .to.eventually.become(undefined)
       )
     })
 
-    describe('uniqueSet', () =>{
+    describe('uniqueSet', () => {
       // remove test root after test are complete
       after(() =>
         helpers.remove('test')
@@ -107,6 +115,7 @@ describe('Compose', () => {
         return helpers.uniqueSet('test', {some: 'asdf'}, func)
           .catch((err) => {
             expect(func).to.have.been.calledOnce
+            expect(err).to.exist
           })
       })
     })
@@ -161,7 +170,8 @@ describe('Compose', () => {
 
     describe('updateProfile', () => {
       it('acccepts an object', () =>
-        expect(helpers.updateProfile({ displayName: 'test' })).to.eventually.become(undefined)
+        expect(helpers.updateProfile({ displayName: 'test' }))
+          .to.eventually.become(undefined)
       )
     })
 
@@ -200,7 +210,7 @@ describe('Compose', () => {
     describe('storage', () => {
       try {
         helpers.storage()
-      } catch(err) {
+      } catch (err) {
         expect(err).to.be.an.object
       }
     })
@@ -212,10 +222,12 @@ describe('Compose', () => {
       expect(() => generateCreateStore('databaseURL')(reducer))
         .to.throw(`databaseURL ${errorSuffix}`)
     })
+
     it('authDomain', () => {
       expect(() => generateCreateStore('authDomain')(reducer))
         .to.throw(`authDomain ${errorSuffix}`)
     })
+
     it('apiKey', () => {
       expect(() => generateCreateStore('apiKey')(reducer))
         .to.throw(`apiKey ${errorSuffix}`)

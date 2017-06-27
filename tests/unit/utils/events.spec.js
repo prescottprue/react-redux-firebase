@@ -44,6 +44,5 @@ describe('Utils: Events', () => {
         expect(getEventsFromInput(['some'])[0]).to.not.include.keys('populates')
       })
     })
-
   })
 })

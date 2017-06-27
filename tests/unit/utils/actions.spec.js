@@ -3,10 +3,9 @@ import {
   wrapInDispatch
 } from '../../../src/utils/actions'
 const method = () => Promise.resolve()
-const failMethod = () => Promise.reject()
-const dispatch = () => {
-  // console.log('dispatch called')
-}
+const failMethod = () => Promise.reject(new Error('Some Error'))
+const dispatch = () => {}
+
 describe('Utils: Auth', () => {
   describe('wrapInDispatch', () => {
     // Skipped due to capatalize and auth provider function
@@ -20,5 +19,4 @@ describe('Utils: Auth', () => {
         .to.be.rejectedWith('Failed')
     })
   })
-
 })

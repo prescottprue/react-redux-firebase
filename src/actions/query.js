@@ -57,6 +57,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
         // })
         dispatch({
           type: ERROR,
+          path: storeAs || path,
           payload: err
         })
       })

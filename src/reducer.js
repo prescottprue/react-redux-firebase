@@ -1,16 +1,16 @@
 import { combineReducers } from 'redux'
-import { set, get, has } from 'lodash'
+import { set, pick } from 'lodash'
 import { actionTypes } from './constants'
 
 const {
   START,
   SET,
-  SET_ORDERED,
   SET_PROFILE,
   LOGIN,
   LOGOUT,
   LOGIN_ERROR,
   NO_VALUE,
+  SET_ORDERED,
   // UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
@@ -19,13 +19,27 @@ const {
 } = actionTypes
 
 const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
+
+/**
+ * Trim leading slash from path for use with state
+ * @param  {String} path - Path seperated with slashes
+ * @return {String} Path seperated with dots
+ */
 const getSlashStrPath = path => pathToArr(path).join('/')
+
+/**
+ * Convert path with slashes to dot seperated path (for use with lodash get/set)
+ * @param  {String} path - Path seperated with slashes
+ * @return {String} Path seperated with dots
+ */
 const getDotStrPath = path => pathToArr(path).join('.')
 
 /**
- * Reducer for requesting state. Changed by `START` and `SET` actions.
- * @param  {Object} state - Current requesting redux state
+ * Reducer for requesting state.Changed by `START`, `NO_VALUE`, and `SET` actions.
+ * @param  {Object} [state={}] - Current requesting redux state
  * @param  {Object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
+ * @param  {String} action.path - Path of action that was dispatched
  * @return {Object} Profile state after reduction
  */
 const requestingReducer = (state = {}, { type, path }) => {
@@ -47,9 +61,11 @@ const requestingReducer = (state = {}, { type, path }) => {
 }
 
 /**
- * Reducer for requested state. Changed by `START` `NO_VALUE`, and `SET` actions.
- * @param  {Object} state - Current requesting redux state
+ * Reducer for requested state. Changed by `START`, `NO_VALUE`, and `SET` actions.
+ * @param  {Object} [state={}] - Current requested redux state
  * @param  {Object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
+ * @param  {String} action.path - Path of action that was dispatched
  * @return {Object} Profile state after reduction
  */
 const requestedReducer = (state = {}, { type, path }) => {
@@ -71,9 +87,11 @@ const requestedReducer = (state = {}, { type, path }) => {
 }
 
 /**
- * Reducer for timestamps state. Changed by `START` and `SET` actions.
- * @param  {Object} state - Current requesting redux state
+ * Reducer for timestamps state. Changed by `START`, `NO_VALUE`, and `SET` actions.
+ * @param  {Object} [state={}] - Current timestamps redux state
  * @param  {Object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
+ * @param  {String} action.path - Path of action that was dispatched
  * @return {Object} Profile state after reduction
  */
 const timestampsReducer = (state = {}, { type, path }) => {
@@ -91,57 +109,58 @@ const timestampsReducer = (state = {}, { type, path }) => {
 }
 
 /**
- * Reducer for data state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR`
- * actions.
- * @param  {Object} state - Current data redux state
+ * Reducer for data state. Changed by `SET`, `SET_ORDERED`,`NO_VALUE`, and
+ * `LOGOUT` actions.
+ * @param  {Object} [state={}] - Current data redux state
  * @param  {Object} action - Object containing the action that was dispatched
- * @return {Object} Profile state after reduction
+ * @param  {String} action.type - Type of action that was dispatched
+ * @param  {String} action.path - Path of action that was dispatched
+ * @return {Object} Data state after reduction
  */
-const dataReducer = (state = {}, { type, path, data, ordered }) => {
+const dataReducer = (state = {}, { type, path, data, ordered, preserve }) => {
   switch (type) {
     case SET:
-      if (!state) {
-        return set({}, getDotStrPath(path), data)
-      }
       return {
         ...state,
         ...set({}, getDotStrPath(path), data)
       }
-    // case SET_ORDERED:
-    //   if (!state) {
-    //     return set({}, getDotStrPath(path), ordered)
-    //   }
-    //   return {
-    //     ...state,
-    //     ...set({}, getDotStrPath(path), ordered)
-    //   }
-    case NO_VALUE:
-      if (!state || !get(state, getDotStrPath(path))) {
-        return set({}, getDotStrPath(path), {})
-      }
+    case SET_ORDERED:
       return {
         ...state,
-        ...set({}, getDotStrPath(path), {})
+        ...set({}, getDotStrPath(path), ordered)
       }
+    case NO_VALUE:
+      return {
+        ...state,
+        ...set({}, getDotStrPath(path), null)
+      }
+    case LOGOUT:
+      // support keeping data when logging out - #125
+      if (preserve) {
+        return pick(state, preserve) // pick returns a new object
+      }
+      return {}
     default:
       return state
   }
 }
 
 /**
- * Reducer for auth state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR`
- * actions.
- * @param  {Object} state - Current auth redux state
+ * Reducer for auth state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR` actions.
+ * @param  {Object} [state={isLoaded: false}] - Current auth redux state
  * @param  {Object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const authReducer = (state = { isLoaded: false }, { type, auth }) => {
+const authReducer = (state = { isLoaded: false }, { type, auth, preserve }) => {
   switch (type) {
     case LOGIN:
     case AUTH_UPDATE_SUCCESS:
       return auth || state
-    case LOGOUT:
     case LOGIN_ERROR:
+      // TODO: Support keeping data when logging out
+      return { isLoaded: true }
+    case LOGOUT:
       return { isLoaded: true }
     default:
       return state
@@ -151,8 +170,9 @@ const authReducer = (state = { isLoaded: false }, { type, auth }) => {
 /**
  * Reducer for profile state. Changed by `SET_PROFILE`, `LOGOUT`, and
  * `LOGIN_ERROR` actions.
- * @param  {Object} state - Current profile redux state
+ * @param  {Object} [state={isLoaded: false}] - Current profile redux state
  * @param  {object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
 const profileReducer = (state = { isLoaded: false }, { type, profile }) => {
@@ -172,28 +192,11 @@ const profileReducer = (state = { isLoaded: false }, { type, profile }) => {
 }
 
 /**
- * Reducer for isInitializing state. Changed by `AUTHENTICATION_INIT_STARTED`
- * and `AUTHENTICATION_INIT_FINISHED` actions.
- * @param  {Object} state - Current isInitializing redux state
- * @param  {object} action - Object containing the action that was dispatched
- * @return {Object} Profile state after reduction
- */
-const isInitializingReducer = (state = false, action) => {
-  switch (action.type) {
-    case AUTHENTICATION_INIT_STARTED:
-      return true
-    case AUTHENTICATION_INIT_FINISHED:
-      return false
-    default:
-      return state
-  }
-}
-
-/**
  * Reducer for errors state. Changed by `UNAUTHORIZED_ERROR`
  * and `LOGOUT` actions.
- * @param  {Object} state - Current authError redux state
- * @param  {object} action - Object containing the action that was dispatched
+ * @param  {Object} [state=[]] - Current authError redux state
+ * @param  {Object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
 const errorsReducer = (state = [], action) => {
@@ -211,6 +214,25 @@ const errorsReducer = (state = [], action) => {
 }
 
 /**
+ * Reducer for isInitializing state. Changed by `AUTHENTICATION_INIT_STARTED`
+ * and `AUTHENTICATION_INIT_FINISHED` actions.
+ * @param  {Object} [state=false] - Current isInitializing redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
+ * @return {Object} Profile state after reduction
+ */
+const isInitializingReducer = (state = false, action) => {
+  switch (action.type) {
+    case AUTHENTICATION_INIT_STARTED:
+      return true
+    case AUTHENTICATION_INIT_FINISHED:
+      return false
+    default:
+      return state
+  }
+}
+
+/**
  * @name firebaseStateReducer
  * @description Reducer for react redux firebase. This function is called
  * automatically by redux every time an action is fired. Based on which action
@@ -219,8 +241,9 @@ const errorsReducer = (state = [], action) => {
  * @param {Object} state - Current Redux State
  * @param {Object} action - Action which will modify state
  * @param {String} action.type - Type of Action being called
- * @param {String} action.data - Type of Action which will modify state
- * @return {Object} State
+ * @param  {String} action.path - Path of action that was dispatched
+ * @param {String} action.data - Data associated with action
+ * @return {Object} Firebase redux state
  */
 export default combineReducers({
   requesting: requestingReducer,

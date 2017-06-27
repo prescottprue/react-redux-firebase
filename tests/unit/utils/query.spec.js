@@ -6,20 +6,22 @@ import {
   getQueryIdFromPath,
   applyParamsToQuery
 } from '../../../src/utils/query'
+
+let spy
 const fakeFirebase = {
   _: {
     authUid: '123',
     config: {
       userProfile: 'users',
-      disableRedirectHandling: true,
-    },
+      disableRedirectHandling: true
+    }
   },
   database: () => ({
     ref: () => ({
       orderByValue: () => ({
-        on: () => ({ val: () => { some: 'obj' } }),
-        off: () => Promise.resolve({ val: () => { some: 'obj' }}),
-        once: () => Promise.resolve({ val: () => { some: 'obj' }})
+        on: () => ({ val: () => ({ some: 'obj' }) }),
+        off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
+        once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
       }),
       orderByPriority: () => ({
         startAt: (startParam) => startParam,
@@ -37,26 +39,28 @@ const fakeFirebase = {
       limitToLast: () => ({ }),
       equalTo: () => ({ }),
       startAt: () => ({ }),
-      endAt: () => ({ }),
+      endAt: () => ({ })
     })
-  }),
+  })
 }
-let spy
 
 let createQueryFromParams = (queryParams) =>
   applyParamsToQuery(queryParams, fakeFirebase.database().ref())
+
 const dispatch = () => {}
-let ref
+
 describe('Utils: Query', () => {
   describe('getWatchPath', () => {
     it('handles basic path', () => {
       expect(getWatchPath('once', '/todos')).to.be.a.string
     })
     it('throws for no event', () => {
-      expect(() => getWatchPath(null, '/todos')).to.throw('Event and path are required')
+      expect(() => getWatchPath(null, '/todos'))
+        .to.throw('Event and path are required')
     })
     it('throws for no path', () => {
-      expect(() => getWatchPath(null, null)).to.throw('Event and path are required')
+      expect(() => getWatchPath(null, null))
+        .to.throw('Event and path are required')
     })
   })
 
@@ -89,10 +93,9 @@ describe('Utils: Query', () => {
         'value:/todo': 2
       }
       spy = sinon.spy(console, 'warn')
-
     })
     afterEach(() => {
-      console.warn.restore()
+      console.warn.restore() // eslint-disable-line no-console
     })
     it('removes single watcher', () => {
       unsetWatcher(Firebase, dispatch, 'value', '/todos')
@@ -142,7 +145,7 @@ describe('Utils: Query', () => {
       })
 
       describe('with startAt', () => {
-        it ('string containing number', () => {
+        it('string containing number', () => {
           const startAt = '123abc'
           expect(createQueryFromParams(['orderByPriority', `startAt=${startAt}`]).toString())
             .to.equal(startAt)
@@ -228,7 +231,6 @@ describe('Utils: Query', () => {
             .equal(equalTo)
         })
       })
-
     })
 
     it('limitToFirst', () => {

@@ -23,21 +23,20 @@ const {
  * @private
  */
 export const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
-  dispatch({
-    type: FILE_UPLOAD_START,
-    payload: { path, file }
-  })
+  dispatch({ type: FILE_UPLOAD_START, payload: { path, file } })
   const uploadEvent = firebase.storage().ref(`${path}/${file.name}`).put(file)
   // TODO: Allow config to control whether progress it set to state or not
   const unListen = uploadEvent.on(
     firebase.storage.TaskEvent.STATE_CHANGED,
     {
       next: (snapshot) => {
-        const percent = Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100)
         dispatch({
           type: FILE_UPLOAD_PROGRESS,
           path,
-          payload: { snapshot, percent }
+          payload: {
+            snapshot,
+            percent: Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100)
+          }
         })
       },
       error: (err) => {
@@ -62,6 +61,8 @@ export const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
  * @param {String} opts.path - Location within Firebase Stroage at which to upload files.
  * @param {Blob} opts.file - File Blob to be uploaded
  * @param {String} opts.dbPath - Datbase path to write file meta data to
+ * @return {Promise} Resolves with uploadFileWithProgress response. If dbPath
+ * is included, object with snapshot, key and File is returned.
  * @private
  */
 export const uploadFile = (dispatch, firebase, { path, file, dbPath }) =>
