@@ -33,7 +33,7 @@ describe('Connect', () => {
 
   it('should receive the store in the context', () => {
     const createStoreWithMiddleware = compose(
-      reactReduxFirebase(fbConfig, { userProfile: 'users' }),
+      reactReduxFirebase(Firebase, { userProfile: 'users' }),
       typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
     )(createStore)
     const store = createStoreWithMiddleware(combineReducers({ test: (state = {}) => state }))

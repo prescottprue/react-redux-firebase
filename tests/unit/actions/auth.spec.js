@@ -101,8 +101,11 @@ describe('Actions: Auth', () => {
   })
 
   describe('init', () => {
-    it('calls firebases onAuthStateChanged', () => {
-      init(dispatch, fakeFirebase)
+    it("calls firebase's onAuthStateChanged", () => {
+      init(dispatch, Firebase)
+    })
+    it('Errors if Firebase instance is not passed', () => {
+      // expect(init(dispatch, {})).to.Throw
     })
   })
 

@@ -1,3 +1,4 @@
+import jwtDecode from 'jwt-decode'
 import {
   omit,
   isArray,
@@ -9,7 +10,6 @@ import {
   map,
   mapValues
 } from 'lodash'
-import jwtDecode from 'jwt-decode'
 import { actionTypes, defaultJWTProps } from '../constants'
 import { getLoginMethodAndParams } from '../utils/auth'
 import {
@@ -17,17 +17,6 @@ import {
   getPopulateObjs,
   getChildType
 } from '../utils/populate'
-
-const {
-  SET,
-  SET_PROFILE,
-  LOGIN,
-  LOGOUT,
-  LOGIN_ERROR,
-  UNAUTHORIZED_ERROR,
-  AUTHENTICATION_INIT_STARTED,
-  AUTHENTICATION_INIT_FINISHED
-} = actionTypes
 
 /**
  * @description Dispatch login error action
@@ -37,7 +26,7 @@ const {
  */
 export const dispatchLoginError = (dispatch, authError) =>
   dispatch({
-    type: LOGIN_ERROR,
+    type: actionTypes.LOGIN_ERROR,
     authError
   })
 
@@ -49,7 +38,7 @@ export const dispatchLoginError = (dispatch, authError) =>
  */
 export const dispatchUnauthorizedError = (dispatch, authError) =>
   dispatch({
-    type: UNAUTHORIZED_ERROR,
+    type: actionTypes.UNAUTHORIZED_ERROR,
     authError
   })
 
@@ -61,9 +50,8 @@ export const dispatchUnauthorizedError = (dispatch, authError) =>
  */
 export const dispatchLogin = (dispatch, auth) =>
   dispatch({
-    type: LOGIN,
-    auth,
-    authError: null
+    type: actionTypes.LOGIN,
+    auth
   })
 
 /**
@@ -106,10 +94,11 @@ export const watchUserProfile = (dispatch, firebase) => {
         } = firebase._.config
         if (!profileParamsToPopulate || (!isArray(profileParamsToPopulate) && !isString(profileParamsToPopulate))) {
           dispatch({
-            type: SET_PROFILE,
+            type: actionTypes.SET_PROFILE,
             profile: snap.val()
           })
         } else {
+          // TODO: Share population logic with query action
           // Convert each populate string in array into an array of once query promises
           promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
             .then(data => {
@@ -153,13 +142,13 @@ export const watchUserProfile = (dispatch, firebase) => {
                   set(profile, p.child, populatedChild)
                 })
                 dispatch({
-                  type: SET_PROFILE,
+                  type: actionTypes.SET_PROFILE,
                   profile
                 })
               } else {
                 // dispatch with unpopulated profile data
                 dispatch({
-                  type: SET_PROFILE,
+                  type: actionTypes.SET_PROFILE,
                   profile: snap.val()
                 })
               }
@@ -168,7 +157,7 @@ export const watchUserProfile = (dispatch, firebase) => {
               if (setProfilePopulateResults) {
                 forEach(data, (result, path) => {
                   dispatch({
-                    type: SET,
+                    type: actionTypes.SET,
                     path,
                     data: result,
                     timestamp: Date.now(),
@@ -238,7 +227,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
  * @private
  */
 export const init = (dispatch, firebase) => {
-  dispatch({ type: AUTHENTICATION_INIT_STARTED })
+  dispatch({ type: actionTypes.AUTHENTICATION_INIT_STARTED })
 
   firebase.auth().onAuthStateChanged(authData => {
     if (!authData) {
@@ -246,7 +235,7 @@ export const init = (dispatch, firebase) => {
       if (isFunction(firebase._.config.onAuthStateChanged) && firebase._.config.enableEmptyAuthChanges) {
         firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
       }
-      return dispatch({ type: LOGOUT })
+      return dispatch({ type: actionTypes.LOGOUT })
     }
 
     firebase._.authUid = authData.uid
@@ -296,7 +285,7 @@ export const init = (dispatch, firebase) => {
 
   firebase.auth().currentUser // eslint-disable-line no-unused-expressions
 
-  dispatch({ type: AUTHENTICATION_INIT_FINISHED })
+  dispatch({ type: actionTypes.AUTHENTICATION_INIT_FINISHED })
 }
 
 /**
@@ -370,7 +359,10 @@ export const logout = (dispatch, firebase) =>
   firebase.auth()
     .signOut()
     .then(() => {
-      dispatch({ type: LOGOUT })
+      dispatch({
+        type: actionTypes.LOGOUT,
+        preserve: firebase._.config.preserveOnLogout
+      })
       firebase._.authUid = null
       unWatchUserProfile(firebase)
       return firebase

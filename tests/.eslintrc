@@ -9,7 +9,6 @@ globals:
   beforeEach: true
   Firebase: true
   firebase: true
-  fbConfig: true
 
 rules:
   no-unused-expressions: [0]

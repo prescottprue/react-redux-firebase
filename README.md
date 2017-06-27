@@ -41,7 +41,7 @@ npm install --save react-redux-firebase
 
 ## Use
 
-Include reduxFirebase in your store compose function:
+Include reactReduxFirebase in your store compose function:
 
 
 ```javascript
