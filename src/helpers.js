@@ -12,8 +12,7 @@ import {
   defaultsDeep,
   isString,
   compact,
-  isFunction,
-  defaultsDeep
+  isFunction
 } from 'lodash'
 import { getPopulateObjs } from './utils/populate'
 
