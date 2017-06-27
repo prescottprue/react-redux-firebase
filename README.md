@@ -9,7 +9,7 @@
 [![Code Style][code-style-image]][code-style-url]
 
 [![Gitter][gitter-image]][gitter-url]
-[<img src="http://npm.packagequality.com/badge/react-redux-firebase.png" align="right"/>](http://packagequality.com/#?package=react-redux-firebase)
+[<img src="http://npm.packagequality.com/badge/react-redux-firebase.png" align="right"/>](https://packagequality.com/#?package=react-redux-firebase)
 
 > Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 
@@ -27,60 +27,29 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 - queries support ( `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo` right now )
 - Automatic binding/unbinding
 - Declarative decorator syntax for React components
-- [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/) integrations
+- Tons of integrations including [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/)
 - Action Types and other Constants exported for external use (such as in `redux-observable`)
 - Firebase v3+ support
 - Server Side Rendering Support
-- [`react-native` support](/docs/recipes/react-native.md)
+- [`react-native` support](/docs/recipes/react-native.md) using [native modules](/docs/recipes/react-native.md#native-modules) or [web sdk](/docs/recipes/react-native.md#jsweb)
 
 ## Install
+
 ```bash
 npm install --save react-redux-firebase
 ```
+#### Other Versions
 
-## Before Use
+The above install command will install the `@latest` tag. You may also use the following tags when installing to get different versions:
 
-### Peer Dependencies
+<!-- `@next` - Next upcoming release. currently points to active progress with `v1.5.0-*` pre-releases -->
+`@canary` - Most possible up to date code. Currently points to active progress with `v2.0.0-*` pre-releases. *Warning:* Syntax is different than current stable version.
 
-Install peer dependencies: `npm i --save redux react-redux`
-
-### Decorators
-
-Though they are optional, it is highly recommended that you use decorators with this library. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
-
-A side by side comparison using [react-redux](https://github.com/reactjs/react-redux)'s `connect` function/HOC is the best way to illustrate the difference:
-
-#### Without Decorators
-```javascript
-class SomeComponent extends Component {
-
-}
-export default connect()(SomeComponent)
-```
-vs.
-
-#### With Decorators
-```javascript
-@connect()
-export default class SomeComponent extends Component {
-
-}
-```
-
-In order to enable this functionality, you will most likely need to install a plugin (depending on your build setup). For Webpack and Babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
-
-1. run `npm i --save-dev babel-plugin-transform-decorators-legacy`
-2. Add the following line to your `.babelrc`:
-```
-{
-    "plugins": ["transform-decorators-legacy"]
-}
-```
+**Note:** Be careful using no-stable versions. Try to keep an eye on the [releases page](https://github.com/prescottprue/react-redux-firebase/releases) for relevant release info.
 
 ## Use
 
-Include reduxFirebase in your store compose function:
-
+Include `reactReduxFirebase` in your store compose function and  `firebaseStateReducer` in your reducers:
 
 ```javascript
 import { createStore, combineReducers, compose } from 'redux'
@@ -109,41 +78,42 @@ const store = createStoreWithFirebase(rootReducer, initialState)
 ```
 
 In components:
+
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types' // can also come from react if react <= 15.4.0
 import { connect } from 'react-redux'
+import { compose } from 'redux'
 import {
   firebaseConnect,
   isLoaded,
   isEmpty,
-  dataToJS
+  dataToJS,
+  pathToJS
 } from 'react-redux-firebase'
 
-@firebaseConnect([
-  '/todos'
-  // { path: '/todos' } // object notation
-])
-@connect(
-  ({ firebase }) => ({
-    // Connect todos prop to firebase todos
-    todos: dataToJS(firebase, '/todos'),
-  })
-)
-export default class Todos extends Component {
+class Todos extends Component {
   static propTypes = {
     todos: PropTypes.object,
+    auth: PropTypes.object,
     firebase: PropTypes.object
   }
 
-  render() {
-    const { firebase, todos } = this.props;
+  addTodo = () => {
+    const { newTodo } = this.refs
+    return this.props.firebase
+      .push('/todos', { text: newTodo.value, done: false })
+      .then(() => {
+        newTodo.value = ''
+        console.log('Todo Created!')
+      })
+      .catch((err) => {
+        console.log('Error creating todo:', err) // error is also set to authError
+      })
+  }
 
-    // Add a new todo to firebase
-    const handleAdd = () => {
-      const {newTodo} = this.refs
-      firebase.push('/todos', { text:newTodo.value, done:false })
-      newTodo.value = ''
-    }
+  render() {
+    const { todos } = this.props;
 
     // Build Todos list if todos exist and are loaded
     const todosList = !isLoaded(todos)
@@ -163,38 +133,75 @@ export default class Todos extends Component {
           {todosList}
         </ul>
         <input type="text" ref="newTodo" />
-        <button onClick={handleAdd}>
+        <button onClick={this.handleAdd}>
           Add
         </button>
       </div>
     )
   }
 }
-```
-
-Alternatively, if you choose not to use decorators:
-
-```javascript
-import { compose } from 'redux'
 
 export default compose(
-  firebaseConnect(['/todos']),
+  firebaseConnect([
+    'todos' // { path: 'todos' } // object notation
+  ]),
   connect(
-    ({firebase}) => ({ todos: dataToJS(firebase, '/todos') })
+    ({ firebase } }) => ({ // state.firebase
+      todos: dataToJS(firebase, 'todos'),
+      auth: pathToJS(firebase, 'auth')
+    })
   )
 )(Todos)
-
 ```
 
-## Server Side Rendering
+Alternatively, if you choose to use decorators:
 
-Firebase's library requires XML request capability, so if you are using `react-redux-firebase` in a Server Side rendering environment, make sure you require `xmlhttprequest`.
+```javascript
+@firebaseConnect([
+  'todos' // { path: 'todos' } // object notation
+])
+@connect(
+  ({ firebase }) => ({
+    todos: dataToJS(firebase, 'todos'),
+    auth: pathToJS(firebase, 'auth')
+  })
+)
+export default class Todos extends Component {
 
-If you disagree with having to do this yourself, hop [on gitter](https://gitter.im/redux-firebase/Lobby) and let us know!
+}
+```
 
-```js
-// needed to fix "Error: The XMLHttpRequest compatibility library was not found."
-global.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
+### Decorators
+
+Though they are optional, it is highly recommended that you use decorators with this library. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
+
+A side by side comparison using [react-redux](https://github.com/reactjs/react-redux)'s `connect` function/HOC is the best way to illustrate the difference:
+
+#### Without Decorators
+```javascript
+class SomeComponent extends Component {
+
+}
+export default connect()(SomeComponent)
+```
+vs.
+
+#### With Decorators
+```javascript
+@connect()
+export default class SomeComponent extends Component {
+
+}
+```
+
+In order to enable this functionality, you will most likely need to install a plugin (depending on your build setup). For Webpack and Babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
+
+1. run `npm i --save-dev babel-plugin-transform-decorators-legacy`
+2. Add the following line to your `.babelrc`:
+```json
+{
+  "plugins": ["transform-decorators-legacy"]
+}
 ```
 
 ## [Docs](http://react-redux-firebase.com)
@@ -205,6 +212,11 @@ See full documentation at [react-redux-firebase.com](http://react-redux-firebase
 * [Queries](http://react-redux-firebase.com/docs/queries)
 * [Populate](http://react-redux-firebase.com/docs/populate)
 * [API Reference](http://react-redux-firebase.com/docs/api)
+
+#### Other Versions
+
+Other versions docs are available using the dropdown on the above docs link. For quick access:
+* [Version `2.0.0` Docs](http://docs.react-redux-firebase.com/history/v2.0.0/)
 
 ## [Examples](examples)
 
@@ -230,118 +242,17 @@ An example that user Material UI built on top of the output of [create-react-app
 
 Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby).
 
-## Using With Other Libraries
+## Integrations
 
-### redux-thunk
-If you are using `redux-thunk`, make sure to set up your thunk middleware using it's redux-thunk's `withExtraArgument` method so that firebase is available within your actions. Here is an example `createStore` function that adds `getFirebase` as third argument along with a thunk that uses it:
+View docs for recipes on integrations with:
 
-createStore:
-
-```javascript
-import { applyMiddleware, compose, createStore } from 'redux';
-import thunk from 'redux-thunk';
-import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
-import makeRootReducer from './reducers';
-
-const fbConfig = {} // your firebase config
-const config = {
-  userProfile: 'users',
-  enableLogging: false
-}
-const store = createStore(
-  makeRootReducer(),
-  initialState,
-  compose(
-    applyMiddleware([
-      thunk.withExtraArgument(getFirebase) // Pass getFirebase function as extra argument
-    ]),
-    reactReduxFirebase(fbConfig, config)
-  )
-);
-
-```
-Action:
-
-```javascript
-import { pathToJS } from 'react-redux-firebase'
-
-export const addTodo = (newTodo) =>
-  (dispatch, getState, getFirebase) => {
-    const auth = pathToJS(getState.firebase, 'auth')
-    newTodo.createdBy = auth.uid //
-    getFirebase()
-      .push('todos', newTodo)
-      // using pushWithMeta instead would attach createdBy and createdAt automatically
-      .then(() => {
-        dispatch({
-          type: 'TODO_CREATED',
-          payload: newTodo
-        })
-      })
-  };
-
-```
-
-### redux-observable
-If you are using `redux-observable`, make sure to set up your redux-observable middleware so that firebase is available within your epics. Here is an example `combineEpics` function that adds `getFirebase` as third argument along with an epic that uses it:
-
-```javascript
-import { getFirebase } from 'react-redux-firebase'
-import { combineEpics } from 'redux-observable'
-
-const rootEpic = (...args) =>
-  combineEpics(somethingEpic, epic2)(..args, getFirebase)
-
-// then later in your epics
-const somethingEpic = (action$, store, getFirebase) =>
-  action$.ofType(SOMETHING)
-    .map(() =>
-      getFirebase().push('somePath/onFirebase', { some: 'data' })
-    )
-```
-
-### redux-auth-wrapper
-
-*For full example, go to the [Routing Recipes Section of the docs](http://react-redux-firebase.com/docs/recipes/routing.html)*
-
-In order to only allow authenticated users to view a page, a `UserIsAuthenticated` Higher Order Component can be created:
-
-```javascript
-import { browserHistory } from 'react-router'
-import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { pathToJS } from 'react-redux-firebase'
-
-export const UserIsAuthenticated = UserAuthWrapper({
-  wrapperDisplayName: 'UserIsAuthenticated',
-  authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) =>
-    pathToJS(firebase, 'isInitializing') === true ||
-    pathToJS(firebase, 'auth') === undefined
-  predicate: auth => auth !== null,
-  redirectAction: (newLoc) => (dispatch) => {
-    browserHistory.replace(newLoc)
-    dispatch({
-      type: 'UNAUTHED_REDIRECT',
-      payload: { message: 'You must be authenticated.' },
-    })
-  },
-})
-```
-
-Then it can be used as a Higher Order Component wrapper on a component:
-
-```javascript
-@UserIsAuthenticated // redirects to '/login' if user not is logged in
-export default class ProtectedThing extends Component {
-  render() {
-    return (
-      <div>
-        You are authed!
-      </div>
-    )
-  }
-}
-```
+* [redux-thunk](/docs/recipes/thunks.md)
+* [redux-form](/docs/recipes/redux-form.md)
+* [redux-observable](/docs/recipes/redux-observable.md)
+* [redux-auth-wrapper](/docs/recipes/routing.md#advanced)
+* [redux-persist](/docs/recipes/redux-persist.md) - [improved integration with `v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/redux-persist.html)
+* [react-native](/docs/recipes/react-native.md)
+* [react-native-firebase](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules) - requires `v2.0.0`
 
 ## Starting A Project
 
@@ -395,13 +306,6 @@ The [examples folder](/examples) contains full applications that can be copied/a
 Meet some of the outstanding companies and individuals that made it possible:
 
   * [Reside Network Inc.](https://github.com/reside-eng)
-
-
-## Contributors
-- [Prescott Prue](https://github.com/prescottprue)
-- [Bojhan](https://github.com/Bojhan)
-- [Rahav Lussto](https://github.com/RahavLussato)
-- [Justin Handley](https://github.com/justinhandley)
 
 ## Thanks
 
