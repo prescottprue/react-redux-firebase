@@ -2407,9 +2407,9 @@ react-proxy@^1.1.7:
     lodash "^4.6.1"
     react-deep-force-update "^1.0.0"
 
-react-redux-firebase@^2.0.0-alpha.3:
-  version "2.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/react-redux-firebase/-/react-redux-firebase-2.0.0-alpha.3.tgz#3f1ec43575f90a0415e0bdcf5d1dccc01a9f9a1f"
+react-redux-firebase@^2.0.0-alpha.4:
+  version "2.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/react-redux-firebase/-/react-redux-firebase-2.0.0-alpha.4.tgz#b6e77b7d05ab1d6030d5663adf35db6ee8c7902c"
   dependencies:
     es6-promise "^4.1.0"
     firebase "^4.1.3"
