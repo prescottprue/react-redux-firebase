@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
-import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase';
+import { firebaseConnect } from 'react-redux-firebase';
 import { connect } from 'react-redux';
 import {
   AppRegistry,
@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
 });
 
 @firebaseConnect()
-@connect(({ firebase }) => ({
-  auth: pathToJS(firebase, 'auth')
+@connect(({ firebase: { auth } }) => ({
+  auth
 }))
 export default class SigninSampleApp extends Component {
   state = {
