@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.5",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -10,8 +10,8 @@
     "clean": "rimraf dist",
     "lint": "eslint src/** tests/**",
     "lint:fix": "npm run lint -- --fix",
-    "test": "mocha -R spec --compilers js:babel-core/register ./tests/setup.js ./tests/**/*.spec.js",
-    "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./tests/** --recursive --report lcov --compilers js:babel-register --require babel-polyfill",
+    "test": "cross-env BABEL_ENV=test mocha -R spec --compilers js:babel-core/register ./tests/setup.js ./tests/**/*.spec.js",
+    "test:cov": "cross-env BABEL_ENV=test istanbul cover ./node_modules/mocha/bin/_mocha -- ./tests/** --recursive --report lcov --compilers js:babel-register --require babel-polyfill",
     "codecov": "cat coverage/*/lcov.info | codecov",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
@@ -55,7 +55,6 @@
     "redux-react-firebase"
   ],
   "dependencies": {
-    "es6-promise": "^4.1.0",
     "firebase": "^4.1.3",
     "hoist-non-react-statics": "^1.2.0",
     "jwt-decode": "^2.2.0",
@@ -71,7 +70,6 @@
     "babel-eslint": "^7.2.1",
     "babel-loader": "^6.4.1",
     "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-es6-promise": "^1.1.1",
     "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-transform-class-properties": "^6.23.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
@@ -80,7 +78,6 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-react": "^6.23.0",
-    "babel-preset-stage-1": "^6.22.0",
     "babel-register": "^6.24.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",

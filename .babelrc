@@ -1,12 +1,15 @@
 {
-  "presets": ["es2015", "stage-1", "react"],
+  "presets": ["es2015", "react"],
   "plugins": [
-    "es6-promise",
     "add-module-exports",
     "lodash",
     "transform-object-rest-spread",
     "transform-object-assign",
-    "transform-class-properties",
-    "transform-decorators-legacy"
-  ]
+    "transform-class-properties"
+  ],
+  "env": {
+    "test": {
+      "plugins": ["transform-decorators-legacy"]
+    }
+  }
 }
