@@ -5,7 +5,11 @@
     "lodash",
     "transform-object-rest-spread",
     "transform-object-assign",
-    "transform-class-properties",
-    "transform-decorators-legacy"
-  ]
+    "transform-class-properties"
+  ],
+  "env": {
+    "test": {
+      "plugins": ["transform-decorators-legacy"]
+    }
+  }
 }
