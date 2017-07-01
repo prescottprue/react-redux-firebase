@@ -8,6 +8,12 @@
     "transform-class-properties"
   ],
   "env": {
+    "es": {
+      "comments": false
+    },
+    "commonjs": {
+      "comments": false
+    },
     "test": {
       "plugins": ["transform-decorators-legacy"]
     }
