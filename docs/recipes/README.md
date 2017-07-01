@@ -10,6 +10,10 @@ Recipes for using/modifying built in profile handling.
 * Change Profile Format
 
 
+## [Roles and Access Management](/docs/recipes/roles.md)
+Recipes for using roles with permissions. For example: Admin, user, user-paid.
+
+
 ## [Upload](/docs/recipes/upload.md)
 Actions for uploading files with Firebase storage including `uploadFiles` and `uploadFile` as well as direct access to `Firebase.storage()`.
 

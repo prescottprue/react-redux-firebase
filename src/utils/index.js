@@ -29,8 +29,10 @@ export const validateConfig = (config) => {
   // Check that some certain config are functions if they exist
   const functionProps = [
     'fileMetadataFactory',
-    'profileDecorator'
+    'profileDecorator',
+    'onAuthStateChange'
   ]
+
   functionProps.forEach((p) => {
     if (!!config[p] && !isFunction(config[p])) {
       throw new Error(`${p} parameter in react-redux-firebase config must be a function. check your compose function.`)

@@ -108,7 +108,7 @@ export default class Projects extends Component {
                    onCollabClick={this.collabClick}
                    onSelect={() => this.context.router.push(`${LIST_PATH}/${key}`)}
                    onDelete={() => this.deleteProject(key)}
-                   showDelete={auth && project.owner && project.owner.uid === auth.uid}
+                   showDelete={auth && project.createdBy && project.createdBy.uid === auth.uid}
                  />
               ))
           }
