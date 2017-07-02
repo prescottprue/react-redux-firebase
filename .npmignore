@@ -14,3 +14,8 @@ book.json
 CNAME
 .github
 yarn.lock
+.travis.yml
+CODE_OF_CONDUCT.md
+CHANGELOG.md
+.codeclimate.yml
+PATRONS.md

@@ -2,6 +2,7 @@
   "presets": ["es2015", "react"],
   "plugins": [
     "lodash",
+    "add-module-exports",
     "transform-object-rest-spread",
     "transform-object-assign",
     "transform-class-properties"
@@ -11,8 +12,7 @@
       "comments": false
     },
     "commonjs": {
-      "comments": false,
-      "plugins": ["transform-es2015-modules-commonjs"]
+      "comments": false
     },
     "test": {
       "plugins": ["transform-decorators-legacy"]
