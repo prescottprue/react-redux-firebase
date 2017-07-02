@@ -1,6 +1,16 @@
 docs
 bin
-tests
 examples
+tests
 coverage
+.istanbul.yml
 _book
+.babelrc
+SUMMARY.md
+webpack.config.js
+.eslintignore
+.eslintrc
+book.json
+CNAME
+.github
+yarn.lock
