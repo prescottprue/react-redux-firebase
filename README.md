@@ -1,6 +1,5 @@
 # react-redux-firebase
 
-[![Backers on Open Collective](https://opencollective.com/react-redux-firebase/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/react-redux-firebase/sponsors/badge.svg)](#sponsors)
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][npm-downloads-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
@@ -8,6 +7,7 @@
 [![License][license-image]][license-url]
 [![Code Coverage][coverage-image]][coverage-url]
 [![Code Style][code-style-image]][code-style-url]
+[![Backers on Open Collective][backers]](#backers)
 
 [![Gitter][gitter-image]][gitter-url]
 [<img src="http://npm.packagequality.com/badge/react-redux-firebase.png" align="right"/>](https://packagequality.com/#?package=react-redux-firebase)
@@ -302,31 +302,25 @@ The [examples folder](/examples) contains full applications that can be copied/a
   * Post Issues
   * Create Pull Requests
 
-## Patrons
-
-Meet some of the outstanding companies and individuals that made it possible:
-
-  * [Reside Network Inc.](https://github.com/reside-eng)
-
-
 ## Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute]](blob/master/CONTRIBUTING.md).
-
-- [Prescott Prue](https://github.com/prescottprue)
-- [Bojhan](https://github.com/Bojhan)
-- [Rahav Lussto](https://github.com/RahavLussato)
-- [Justin Handley](https://github.com/justinhandley)
+This project exists thanks to all the people who contribute.
 
 <a href="graphs/contributors"><img src="https://opencollective.com/react-redux-firebase/contributors.svg?width=890" /></a>
 
-## Thanks
+## Backers
 
-Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase), which this project was originally based on.
+Thank you to all our backers! 🙏 [[Become a backer][become-a-backer]]
+
+* [Reside Network Inc.](https://github.com/reside-eng)
+
+<a href="https://opencollective.com/react-redux-firebase#backers" target="_blank"><img src="https://opencollective.com/react-redux-firebase/backers.svg?width=890"></a>
 
 [npm-image]: https://img.shields.io/npm/v/react-redux-firebase.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/react-redux-firebase
 [npm-downloads-image]: https://img.shields.io/npm/dm/react-redux-firebase.svg?style=flat-square
+[backers]:https://opencollective.com/react-redux-firebase/backers/badge.svg?style=flat-square&color=blue
+[become-a-backer]:https://opencollective.com/react-redux-firebase#backer
 [travis-image]: https://img.shields.io/travis/prescottprue/react-redux-firebase/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/prescottprue/react-redux-firebase
 [daviddm-image]: https://img.shields.io/david/prescottprue/react-redux-firebase.svg?style=flat-square
@@ -341,28 +335,3 @@ Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [r
 [code-style-url]: http://standardjs.com/
 [gitter-image]: https://img.shields.io/gitter/room/redux-firebase/gitter.svg?style=flat-square
 [gitter-url]: https://gitter.im/redux-firebase/Lobby
-
-
-## Backers
-
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/react-redux-firebase#backer)]
-
-<a href="https://opencollective.com/react-redux-firebase#backers" target="_blank"><img src="https://opencollective.com/react-redux-firebase/backers.svg?width=890"></a>
-
-
-## Sponsors
-
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/react-redux-firebase#sponsor)]
-
-<a href="https://opencollective.com/react-redux-firebase/sponsor/0/website" target="_blank"><img src="https://opencollective.com/react-redux-firebase/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/react-redux-firebase/sponsor/1/website" target="_blank"><img src="https://opencollective.com/react-redux-firebase/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/react-redux-firebase/sponsor/2/website" target="_blank"><img src="https://opencollective.com/react-redux-firebase/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/react-redux-firebase/sponsor/3/website" target="_blank"><img src="https://opencollective.com/react-redux-firebase/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/react-redux-firebase/sponsor/4/website" target="_blank"><img src="https://opencollective.com/react-redux-firebase/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/react-redux-firebase/sponsor/5/website" target="_blank"><img src="https://opencollective.com/react-redux-firebase/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/react-redux-firebase/sponsor/6/website" target="_blank"><img src="https://opencollective.com/react-redux-firebase/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/react-redux-firebase/sponsor/7/website" target="_blank"><img src="https://opencollective.com/react-redux-firebase/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/react-redux-firebase/sponsor/8/website" target="_blank"><img src="https://opencollective.com/react-redux-firebase/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/react-redux-firebase/sponsor/9/website" target="_blank"><img src="https://opencollective.com/react-redux-firebase/sponsor/9/avatar.svg"></a>
-
-

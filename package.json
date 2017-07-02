@@ -27,29 +27,8 @@
     "docs:api": "node bin/api-docs-generate",
     "docs:build": "npm run docs:prepare && gitbook build -g prescottprue/react-redux-firebase && npm run docs:api",
     "docs:watch": "npm run docs:prepare && gitbook serve",
-    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force",
-    "postinstall": "opencollective postinstall"
+    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force"
   },
-  "contributors": [
-    {
-      "name": "Prescott Prue",
-      "email": "sprue.dev@gmail.com",
-      "url": "https://github.com/prescottprue"
-    },
-    {
-      "name": "Bojhan",
-      "url": "https://github.com/Bojhan"
-    },
-    {
-      "name": "Marshall",
-      "email": "mmoutenot@gmail.com",
-      "url": "https://github.com/mmoutenot"
-    },
-    {
-      "name": "Rahav Lussato",
-      "url": "https://github.com/RahavLussato"
-    }
-  ],
   "dependencies": {
     "es6-promise": "^4.1.0",
     "firebase": "^3.9.0",
