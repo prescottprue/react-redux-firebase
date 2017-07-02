@@ -1187,10 +1187,6 @@ errorhandler@~1.4.2:
     accepts "~1.3.0"
     escape-html "~1.0.3"
 
-es6-promise@^4.1.0:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.1.1.tgz#8811e90915d9a0dba36274f0b242dbda78f9c92a"
-
 escape-html@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.2.tgz#d77d32fa98e38c2f41ae85e9278e0e0e6ba1022c"
@@ -2407,11 +2403,10 @@ react-proxy@^1.1.7:
     lodash "^4.6.1"
     react-deep-force-update "^1.0.0"
 
-react-redux-firebase@^2.0.0-alpha.4:
-  version "2.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/react-redux-firebase/-/react-redux-firebase-2.0.0-alpha.4.tgz#b6e77b7d05ab1d6030d5663adf35db6ee8c7902c"
+react-redux-firebase@^2.0.0-alpha.7:
+  version "2.0.0-alpha.6"
+  resolved "https://registry.yarnpkg.com/react-redux-firebase/-/react-redux-firebase-2.0.0-alpha.7.tgz#87d55fca3d130ab13a6fd9c51da5aa8026beada4"
   dependencies:
-    es6-promise "^4.1.0"
     firebase "^4.1.3"
     hoist-non-react-statics "^1.2.0"
     jwt-decode "^2.2.0"

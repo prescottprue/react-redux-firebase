@@ -1,6 +1,5 @@
 import { createFirebaseInstance } from './createFirebaseInstance'
 import { defaultConfig } from './constants'
-import { validateConfig } from './utils'
 import { authActions } from './actions'
 
 let firebaseInstance
