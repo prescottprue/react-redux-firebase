@@ -12,6 +12,7 @@ import {
   defaultsDeep,
   isString,
   compact,
+  some,
   isFunction
 } from 'lodash'
 import { getPopulateObjs } from './utils/populate'
@@ -49,13 +50,10 @@ import { getPopulateObjs } from './utils/populate'
  *   }
  * }
  */
-export const isLoaded = function () {
-  if (!arguments || !arguments.length) {
-    return true
-  }
-
-  return map(arguments, a => a !== undefined).reduce((a, b) => a && b)
-}
+export const isLoaded = (...args) =>
+  !args || !args.length
+    ? true
+    : every(args, arg => arg !== undefined && arg.isLoaded !== false)
 
 /**
  * @description Detect whether items are empty or not
@@ -90,7 +88,8 @@ export const isLoaded = function () {
  *   }
  * }
  */
-export const isEmpty = data => !(data && size(data))
+export const isEmpty = (...args) =>
+  some(args, (arg) => !(arg && size(arg)) || arg.isEmpty === true)
 
 /**
  * @private
@@ -147,6 +146,7 @@ export const buildChildList = (state, list, p) =>
  */
 export const populate = (state, path, populates, notSetValue) => {
   // TODO: Handle slash and lodash notation
+  // TODO: Handle populating profile
   const pathArr = compact(path.split('/'))
   const dotPath = pathArr.join('.')
   // Handle undefined child

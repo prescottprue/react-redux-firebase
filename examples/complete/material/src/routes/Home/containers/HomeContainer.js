@@ -6,6 +6,7 @@ import Theme from 'theme'
 import {
   firebaseConnect,
   isLoaded,
+  isEmpty,
   populate // for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
@@ -102,6 +103,7 @@ export default class Home extends Component {
     const { todos } = this.props
     const { error } = this.state
     console.log('todos: ', todos)
+
     return (
       <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>
         {

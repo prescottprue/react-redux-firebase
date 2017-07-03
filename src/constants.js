@@ -23,6 +23,8 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @property {String} UNSET_LISTENER - `@@reactReduxFirebase/UNSET_LISTENER`
  * @property {String} AUTHENTICATION_INIT_STARTED - `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`
  * @property {String} AUTHENTICATION_INIT_FINISHED - `@@reactReduxFirebase/AUTHENTICATION_INIT_FINISHED`
+ * @property {String} SESSION_START - `@@reactReduxFirebase/SESSION_START`
+ * @property {String} SESSION_END - `@@reactReduxFirebase/SESSION_END`
  * @property {String} FILE_UPLOAD_START - `@@reactReduxFirebase/FILE_UPLOAD_START`
  * @property {String} FILE_UPLOAD_ERROR - `@@reactReduxFirebase/FILE_UPLOAD_ERROR`
  * @property {String} FILE_UPLOAD_PROGRESS - `@@reactReduxFirebase/FILE_UPLOAD_PROGRESS`
@@ -57,6 +59,8 @@ export const actionTypes = {
   UNSET_LISTENER: `${actionsPrefix}/UNSET_LISTENER`,
   AUTHENTICATION_INIT_STARTED: `${actionsPrefix}/AUTHENTICATION_INIT_STARTED`,
   AUTHENTICATION_INIT_FINISHED: `${actionsPrefix}/AUTHENTICATION_INIT_FINISHED`,
+  SESSION_START: `${actionsPrefix}/SESSION_START`,
+  SESSION_END: `${actionsPrefix}/SESSION_END`,
   FILE_UPLOAD_START: `${actionsPrefix}/FILE_UPLOAD_START`,
   FILE_UPLOAD_ERROR: `${actionsPrefix}/FILE_UPLOAD_ERROR`,
   FILE_UPLOAD_PROGRESS: `${actionsPrefix}/FILE_UPLOAD_PROGRESS`,

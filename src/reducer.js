@@ -152,16 +152,19 @@ const dataReducer = (state = {}, { type, path, data, ordered, preserve }) => {
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const authReducer = (state = { isLoaded: false }, { type, auth, preserve }) => {
+const authReducer = (
+  state = { isLoaded: false, isEmpty: true },
+  { type, auth, preserve }
+) => {
   switch (type) {
     case LOGIN:
     case AUTH_UPDATE_SUCCESS:
-      return auth || state
+      return { ...auth, isEmpty: false, isLoaded: true }
     case LOGIN_ERROR:
       // TODO: Support keeping data when logging out
-      return { isLoaded: true }
+      return { isLoaded: true, isEmpty: true }
     case LOGOUT:
-      return { isLoaded: true }
+      return { isLoaded: true, isEmpty: true }
     default:
       return state
   }
@@ -175,17 +178,21 @@ const authReducer = (state = { isLoaded: false }, { type, auth, preserve }) => {
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const profileReducer = (state = { isLoaded: false }, { type, profile }) => {
+const profileReducer = (
+  state = { isLoaded: false, isEmpty: true },
+  { type, profile }
+) => {
   switch (type) {
     case SET_PROFILE:
       return {
         ...state,
         ...profile,
+        isEmpty: false,
         isLoaded: true
       }
     case LOGOUT:
     case LOGIN_ERROR:
-      return { isLoaded: true }
+      return { isLoaded: true, isEmpty: true }
     default:
       return state
   }

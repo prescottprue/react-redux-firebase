@@ -342,8 +342,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @description Firebase ref function
    * @return {database.Reference}
    */
-  return {
-    ...instance,
+  const helpers = {
     ref: path => firebase.database().ref(path),
     set,
     setWithMeta,
@@ -367,5 +366,11 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     verifyPasswordResetCode,
     watchEvent,
     unWatchEvent
+  }
+
+  return {
+    ...instance,
+    ...helpers,
+    helpers
   }
 }

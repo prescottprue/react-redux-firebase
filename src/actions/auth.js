@@ -69,10 +69,7 @@ export const watchUserProfile = (dispatch, firebase) => {
           setProfilePopulateResults
         } = firebase._.config
         if (!profileParamsToPopulate || (!isArray(profileParamsToPopulate) && !isString(profileParamsToPopulate))) {
-          dispatch({
-            type: actionTypes.SET_PROFILE,
-            profile: snap.val()
-          })
+          dispatch({ type: actionTypes.SET_PROFILE, profile: snap.val() })
         } else {
           // TODO: Share population logic with query action
           // Convert each populate string in array into an array of once query promises
@@ -117,16 +114,10 @@ export const watchUserProfile = (dispatch, firebase) => {
                   // Overwrite the child value with the populated child
                   set(profile, p.child, populatedChild)
                 })
-                dispatch({
-                  type: actionTypes.SET_PROFILE,
-                  profile
-                })
+                dispatch({ type: actionTypes.SET_PROFILE, profile })
               } else {
                 // dispatch with unpopulated profile data
-                dispatch({
-                  type: actionTypes.SET_PROFILE,
-                  profile: snap.val()
-                })
+                dispatch({ type: actionTypes.SET_PROFILE, profile: snap.val() })
               }
 
               // Fire actions for placement of data gathered in populate into redux
@@ -207,37 +198,26 @@ const setupPresence = (dispatch, firebase) => {
   let amOnline = ref.child('.info/connected')
   let onlineRef = ref.child(presence).child(authUid)
   let sessionsRef = ref.child(sessions)
-  // let userSessionRef = ref.child('users').child(authUid).child('sessions')
-  // let pastSessionsRef = userSessionRef.child('past')
   amOnline.on('value', snapShot => {
     if (!snapShot.val()) return
     // user is online
-    // let onDisconnectRef = ref.onDisconnect()
     // add session and set disconnect
-    dispatch({ type: actionTypes.SESSION_STARTED, payload: authUid })
+    dispatch({ type: actionTypes.SESSION_START, payload: authUid })
     // add new session to sessions collection
     const session = sessionsRef.push({
-      startedAt: firebase.ServerValue.TIMESTAMP,
+      startedAt: firebase.database.ServerValue.TIMESTAMP,
       user: authUid
     })
     // set authUid as priority for easy sorting
     session.setPriority(authUid)
     const endedRef = session.child('endedAt')
-    endedRef.onDisconnect().set(firebase.ServerValue.TIMESTAMP)
+    endedRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP, () => {
+      dispatch({ type: actionTypes.SESSION_END })
+    })
     // add correct session id to user
     // remove from presence list
     onlineRef.set(true)
     onlineRef.onDisconnect().remove()
-    // Add session id to past sessions on disconnect
-    // pastSessionsRef.onDisconnect().push(session.key())
-    // Do same on unAuth
-    ref.onAuth(authData => {
-      if (!authData) {
-        endedRef.set(firebase.ServerValue.TIMESTAMP)
-        onlineRef.remove()
-        dispatch({ type: actionTypes.SESSION_ENDED })
-      }
-    })
   })
 }
 

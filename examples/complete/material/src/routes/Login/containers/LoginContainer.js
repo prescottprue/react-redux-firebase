@@ -6,8 +6,7 @@ import { connect } from 'react-redux'
 import {
   firebaseConnect,
   isLoaded,
-  isEmpty,
-  pathToJS
+  isEmpty
 } from 'react-redux-firebase'
 import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
@@ -19,8 +18,8 @@ import classes from './LoginContainer.scss'
 @UserIsNotAuthenticated // redirect to list page if logged in
 @firebaseConnect() // add this.props.firebase
 @connect( // map redux state to props
-  ({ firebase }) => ({
-    authError: pathToJS(firebase, 'authError')
+  ({ firebase: { authError } }) => ({
+    authError
   })
 )
 export default class Login extends Component {

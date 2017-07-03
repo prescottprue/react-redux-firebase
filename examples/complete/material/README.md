@@ -21,6 +21,14 @@ While developing, you will probably rely mostly on `npm start`; however, there a
 |`lint`|Lint all `.js` files.|
 |`lint:fix`|Lint and fix all `.js` files. [Read more on this](http://eslint.org/docs/user-guide/command-line-interface.html#fix).|
 
+## Config
+
+Visit the config file ([`src/config.js`](/src/config.js)) to change config within the project
+
+This usually gets skipped form git tracking because either:
+* it is built within a continuous integration environment  based on environment/branch settings then deployed
+* your local version is deployed if you are using `firebase deploy`
+
 ## What is Shown
 * Route protection using `redux-auth-wrapper`
 * Data input/validation using `redux-form`
