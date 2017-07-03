@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { set, pick } from 'lodash'
+import { set, pick, omit } from 'lodash'
 import { actionTypes } from './constants'
 
 const {
@@ -11,7 +11,8 @@ const {
   LOGIN_ERROR,
   NO_VALUE,
   SET_ORDERED,
-  // UNSET_LISTENER,
+  SET_LISTENER,
+  UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
   UNAUTHORIZED_ERROR,
@@ -208,17 +209,47 @@ const profileReducer = (
  */
 const errorsReducer = (state = [], action) => {
   switch (action.type) {
-    case UNAUTHORIZED_ERROR:
-      if (!state) {
-        return [action.authError]
-      }
-      return [...state, action.authError]
-    case LOGOUT:
-      return []
-    default:
-      return state
+    case UNAUTHORIZED_ERROR: return [...state, action.authError]
+    case LOGOUT: return []
+    default: return state
   }
 }
+
+const listenersById = (state = {}, { type, path, payload }) => {
+  switch (type) {
+    case SET_LISTENER:
+      return {
+        ...state,
+        [payload.id]: {
+          id: payload.id,
+          path
+        }
+      }
+    case UNSET_LISTENER: return omit(state, [payload.id])
+    default: return state
+  }
+}
+
+const allListeners = (state = {}, { type, path, payload }) => {
+  switch (type) {
+    case SET_LISTENER: return [...state, payload.id]
+    case UNSET_LISTENER: return state.filter(lId => lId !== payload.id)
+    default: return state
+  }
+}
+
+/**
+ * Reducer for errors state. Changed by `UNAUTHORIZED_ERROR`
+ * and `LOGOUT` actions.
+ * @param  {Object} [state=[]] - Current authError redux state
+ * @param  {Object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
+ * @return {Object} Profile state after reduction
+ */
+const listenersReducer = combineReducers({
+  byId: listenersById,
+  allIds: allListeners
+})
 
 /**
  * Reducer for isInitializing state. Changed by `AUTHENTICATION_INIT_STARTED`
@@ -259,6 +290,7 @@ export default combineReducers({
   data: dataReducer,
   auth: authReducer,
   profile: profileReducer,
+  listeners: listenersReducer,
   isInitializing: isInitializingReducer,
   errors: errorsReducer
 })

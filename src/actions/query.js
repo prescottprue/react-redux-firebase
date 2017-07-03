@@ -33,7 +33,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
     }
   }
 
-  setWatcher(firebase, type, watchPath, queryId)
+  setWatcher(firebase, dispatch, type, watchPath, queryId)
 
   if (type === 'first_child') {
     return firebase.database()

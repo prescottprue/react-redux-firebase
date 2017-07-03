@@ -53,7 +53,7 @@ import { getPopulateObjs } from './utils/populate'
 export const isLoaded = (...args) =>
   !args || !args.length
     ? true
-    : every(args, arg => arg !== undefined && arg.isLoaded !== false)
+    : every(args, arg => arg !== undefined && (get(arg, 'isLoaded') !== false))
 
 /**
  * @description Detect whether items are empty or not

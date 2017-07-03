@@ -150,18 +150,12 @@ export const watchUserProfile = (dispatch, firebase) => {
  * @private
  */
 export const createUserProfile = (dispatch, firebase, userData, profile) => {
-  if (!firebase._.config.userProfile) {
+  const { database, _: { config } } = firebase
+  if (!config.userProfile) {
     return Promise.resolve(userData)
   }
-  const { database, _: { config } } = firebase
   if (isFunction(config.profileFactory)) {
     profile = config.profileFactory(userData, profile)
-  }
-  if (isFunction(config.profileDecorator)) {
-    if (isFunction(console.warn)) { // eslint-disable-line no-console
-      console.warn('profileDecorator is Depreceated and will be removed in future versions. Please use profileFactory.') // eslint-disable-line no-console
-    }
-    profile = config.profileDecorator(userData, profile)
   }
   // Check for user's profile at userProfile path if provided
   return database()

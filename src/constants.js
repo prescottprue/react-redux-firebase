@@ -20,6 +20,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @property {String} LOGIN_ERROR - `@@reactReduxFirebase/LOGIN_ERROR`
  * @property {String} NO_VALUE - `@@reactReduxFirebase/NO_VALUE`
  * @property {String} UNAUTHORIZED_ERROR - `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
+ * @property {String} SET_LISTENER - `@@reactReduxFirebase/SET_LISTENER`
  * @property {String} UNSET_LISTENER - `@@reactReduxFirebase/UNSET_LISTENER`
  * @property {String} AUTHENTICATION_INIT_STARTED - `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`
  * @property {String} AUTHENTICATION_INIT_FINISHED - `@@reactReduxFirebase/AUTHENTICATION_INIT_FINISHED`
@@ -56,6 +57,7 @@ export const actionTypes = {
   NO_VALUE: `${actionsPrefix}/NO_VALUE`,
   UNAUTHORIZED_ERROR: `${actionsPrefix}/UNAUTHORIZED_ERROR`,
   ERROR: `${actionsPrefix}/ERROR`,
+  SET_LISTENER: `${actionsPrefix}/SET_LISTENER`,
   UNSET_LISTENER: `${actionsPrefix}/UNSET_LISTENER`,
   AUTHENTICATION_INIT_STARTED: `${actionsPrefix}/AUTHENTICATION_INIT_STARTED`,
   AUTHENTICATION_INIT_FINISHED: `${actionsPrefix}/AUTHENTICATION_INIT_FINISHED`,
@@ -123,7 +125,7 @@ export const defaultConfig = {
   enableRedirectHandling: true,
   autoPopulateProfile: true,
   setProfilePopulateResults: false,
-  dispatchOnUnsetListener: false,
+  dispatchOnUnsetListener: true,
   enableEmptyAuthChanges: false
 }
 

@@ -88,7 +88,7 @@ export default class Home extends Component {
 
   handleAdd = (newTodo) => {
     // Attach user if logged in
-    if (this.props.auth) {
+    if (!isEmpty(this.props.auth)) {
       newTodo.owner = this.props.auth.uid
     } else {
       newTodo.owner = 'Anonymous'
@@ -102,7 +102,6 @@ export default class Home extends Component {
   render () {
     const { todos } = this.props
     const { error } = this.state
-    console.log('todos: ', todos)
 
     return (
       <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>

@@ -59,6 +59,7 @@
   "author": "prescottprue (https://github.com/prescottprue)",
   "license": "MIT",
   "dependencies": {
+    "firebase": "^4.1.3",
     "lodash": "^4.17.2",
     "material-ui": "0.16.0",
     "normalize.css": "^4.1.1",

@@ -15,7 +15,7 @@ export const reduxFirebase = {
   enableLogging: false, // enable/disable Firebase Database Logging
   updateProfileOnLogin: false, // enable/disable updating of profile on login
   presence: 'presence'
-  // profileDecorator: (userData) => ({ email: userData.email }) // customize format of user profile
+  // profileFactory: (userData) => ({ email: userData.email }) // customize format of user profile
 }
 
 export const env = 'development'
