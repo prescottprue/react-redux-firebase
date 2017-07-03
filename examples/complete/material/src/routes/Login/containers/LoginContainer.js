@@ -11,11 +11,12 @@ import {
 import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
 import { UserIsNotAuthenticated } from 'utils/router'
-import { SIGNUP_PATH } from 'constants'
+import { SIGNUP_PATH, LIST_PATH } from 'constants'
 import LoginForm from '../components/LoginForm'
 import classes from './LoginContainer.scss'
 
-@UserIsNotAuthenticated // redirect to list page if logged in
+// TODO: Uncomment redirect decorator v2.0.0 router util still requires update
+// @UserIsNotAuthenticated // redirect to list page if logged in
 @firebaseConnect() // add this.props.firebase
 @connect( // map redux state to props
   ({ firebase: { authError } }) => ({
@@ -23,6 +24,10 @@ import classes from './LoginContainer.scss'
   })
 )
 export default class Login extends Component {
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
   static propTypes = {
     firebase: PropTypes.shape({
       login: PropTypes.func.isRequired
@@ -40,6 +45,9 @@ export default class Login extends Component {
   handleLogin = loginData => {
     this.setState({ snackCanOpen: true })
     return this.props.firebase.login(loginData)
+      .then(() => {
+        return this.context.router.push(LIST_PATH) // v2.0.0 router util still requires update
+      })
   }
 
   providerLogin = (provider) =>

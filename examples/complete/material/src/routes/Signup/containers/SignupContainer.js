@@ -11,12 +11,13 @@ import {
 } from 'react-redux-firebase'
 import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
-import { LOGIN_PATH } from 'constants'
+import { LOGIN_PATH, LIST_PATH } from 'constants'
 import { UserIsNotAuthenticated } from 'utils/router'
 import SignupForm from '../components/SignupForm'
 import classes from './SignupContainer.scss'
 
-@UserIsNotAuthenticated // redirect to list page if logged in
+// TODO: Uncomment redirect decorator v2.0.0 router util still requires update
+// @UserIsNotAuthenticated // redirect to list page if logged in
 @firebaseConnect() // add this.props.firebase
 @connect( // map redux state to props
   ({firebase}) => ({
@@ -24,6 +25,10 @@ import classes from './SignupContainer.scss'
   })
 )
 export default class Signup extends Component {
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
   static propTypes = {
     firebase: PropTypes.object,
     authError: PropTypes.object
@@ -40,6 +45,9 @@ export default class Signup extends Component {
     // create new user then login (redirect handled by decorator)
     return createUser(creds, { email, username })
       .then(() => login(creds))
+      .then(() => {
+        return this.context.router.push(LIST_PATH) // v2.0.0 router util still requires update
+      })
   }
 
   providerLogin = (provider) => {

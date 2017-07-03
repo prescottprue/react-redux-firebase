@@ -102,7 +102,7 @@ export const actionTypes = {
  * empty auth changes such as `undefined` on initialization
  * (see [#137](https://github.com/prescottprue/react-redux-firebase/issues/137)).
  * Requires `v1.5.0-alpha` or higher.
- * @property {Boolean} autoPopulateProfile - `true` Whether or not to
+ * @property {Boolean} autoPopulateProfile - `false` REMOVED FROM v2.0.0. Whether or not to
  * automatically populate profile with data loaded through
  * profileParamsToPopulate config.
  * @property {Boolean} setProfilePopulateResults - `true` Whether or not to
@@ -123,7 +123,7 @@ export const defaultConfig = {
   enableLogging: false,
   updateProfileOnLogin: true,
   enableRedirectHandling: true,
-  autoPopulateProfile: true,
+  autoPopulateProfile: false,
   setProfilePopulateResults: false,
   dispatchOnUnsetListener: true,
   enableEmptyAuthChanges: false

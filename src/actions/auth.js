@@ -4,19 +4,11 @@ import {
   isArray,
   isString,
   isFunction,
-  forEach,
-  set,
-  get,
-  map,
-  mapValues
+  forEach
 } from 'lodash'
 import { actionTypes, defaultJWTProps } from '../constants'
 import { getLoginMethodAndParams } from '../utils/auth'
-import {
-  promisesForPopulate,
-  getPopulateObjs,
-  getChildType
-} from '../utils/populate'
+import { promisesForPopulate } from '../utils/populate'
 
 /**
  * @description Dispatch login error action
@@ -65,8 +57,7 @@ export const watchUserProfile = (dispatch, firebase) => {
       .on('value', snap => {
         const {
           profileParamsToPopulate,
-          autoPopulateProfile,
-          setProfilePopulateResults
+          autoPopulateProfile
         } = firebase._.config
         if (!profileParamsToPopulate || (!isArray(profileParamsToPopulate) && !isString(profileParamsToPopulate))) {
           dispatch({ type: actionTypes.SET_PROFILE, profile: snap.val() })
@@ -75,63 +66,22 @@ export const watchUserProfile = (dispatch, firebase) => {
           // Convert each populate string in array into an array of once query promises
           promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
             .then(data => {
+              // Fire actions for placement of data gathered in populate into redux
+              forEach(data, (result, path) => {
+                dispatch({
+                  type: actionTypes.SET,
+                  path,
+                  data: result,
+                  timestamp: Date.now(),
+                  requesting: false,
+                  requested: true
+                })
+              })
+              dispatch({ type: actionTypes.SET_PROFILE, profile: snap.val() })
               // Dispatch action with profile combined with populated parameters
               // Auto Populate profile
               if (autoPopulateProfile) {
-                const populates = getPopulateObjs(profileParamsToPopulate)
-                const profile = snap.val()
-                forEach(populates, (p) => {
-                  const child = get(profile, p.child)
-                  const childType = getChildType(child)
-                  let populatedChild
-
-                  switch (childType) {
-                    case 'object':
-                      populatedChild = mapValues(
-                        child,
-                        (value, key) => {
-                          if (value) { // Only populate keys with truthy values
-                            return get(data, `${p.root}.${key}`)
-                          }
-                          return value
-                        })
-                      break
-
-                    case 'string':
-                      populatedChild = get(data, `${p.root}.${child}`)
-                      break
-
-                    case 'array':
-                      populatedChild = map(
-                        child,
-                        (key) => get(data, `${p.root}.${key}`)
-                      )
-                      break
-
-                    default:
-                      populatedChild = child
-                  }
-                  // Overwrite the child value with the populated child
-                  set(profile, p.child, populatedChild)
-                })
-                dispatch({ type: actionTypes.SET_PROFILE, profile })
-              } else {
-                // dispatch with unpopulated profile data
-                dispatch({ type: actionTypes.SET_PROFILE, profile: snap.val() })
-              }
-
-              // Fire actions for placement of data gathered in populate into redux
-              if (setProfilePopulateResults) {
-                forEach(data, (result, path) => {
-                  dispatch({
-                    type: actionTypes.SET,
-                    path,
-                    data: result,
-                    timestamp: Date.now(),
-                    requesting: false,
-                    requested: true
-                  })
-                })
+                console.warn('Auto populate is no longer supported. We are working on backwards compatibility for v2.0.0') // eslint-disable-line no-console
               }
             })
         }
