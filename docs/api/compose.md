@@ -54,6 +54,7 @@ _Setup_
 ```javascript
 import { createStore, compose } from 'redux'
 import { reactReduxFirebase } from 'react-redux-firebase'
+import * as firebase from 'firebase'
 
 // React Redux Firebase Config
 const config = {
@@ -61,28 +62,18 @@ const config = {
   // here is where you place other config options
 }
 
+// initialize script from Firebase page
+const fbConfg = {} // firebase config object
+firebase.initializeApp(fbConfig)
+
 // Add react-redux-firebase to compose
 // Note: In full projects this will often be within createStore.js or store.js
 const createStoreWithFirebase = compose(
- reactReduxFirebase(fbConfig, config),
+ reactReduxFirebase(firebase, config),
 )(createStore)
 
 // Use Function later to create store
 const store = createStoreWithFirebase(rootReducer, initialState)
-```
-
-_Custom Auth Parameters_
-
-```javascript
-// Follow Setup example with the following config:
-const config = {
-  customAuthParameters: {
-     google: {
-       // prompts user to select account on every google login
-       prompt: 'select_account'
-     }
-  }
-}
 ```
 
 Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** That accepts a component a returns a wrapped version of component

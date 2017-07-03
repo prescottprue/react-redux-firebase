@@ -59,6 +59,11 @@ Default configuration options
 
 -   `userProfile` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `null` Location on Firebase where user
     profiles are stored. Often set to `'users'`.
+-   `presence` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `null` Location on Firebase where of currently
+    online users is stored. Often set to `'presence'` or `'onlineUsers'`.
+-   `sessions` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `sessions` Location on Firebase where user
+    sessions are stored (only if presense is set). Often set to `'presence'` or
+    `'onlineUsers'`.
 -   `enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not firebase
     database logging is enabled.
 -   `updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to update

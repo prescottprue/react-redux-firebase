@@ -1,6 +1,13 @@
 import { isObject } from 'lodash'
 import { authActions, queryActions, storageActions } from './actions'
 
+/**
+ * Create a firebase instance that has helpers attached for dispatching actions
+ * @param  {Object} firebase - Firebase instance which to extend
+ * @param  {Object} configs - Configuration object
+ * @param  {Function} dispatch - Action dispatch function
+ * @return {Object} Extended Firebase instance
+ */
 export const createFirebaseInstance = (firebase, configs, dispatch) => {
   // Enable Logging based on config
   if (configs.enableLogging) {

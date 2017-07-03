@@ -24,34 +24,10 @@ import {
  * @param {Object} authError - Error object
  * @private
  */
-export const dispatchLoginError = (dispatch, authError) =>
+const dispatchLoginError = (dispatch, authError) =>
   dispatch({
     type: actionTypes.LOGIN_ERROR,
     authError
-  })
-
-/**
- * @description Dispatch login error action
- * @param {Function} dispatch - Action dispatch function
- * @param {Object} authError - Error object
- * @private
- */
-export const dispatchUnauthorizedError = (dispatch, authError) =>
-  dispatch({
-    type: actionTypes.UNAUTHORIZED_ERROR,
-    authError
-  })
-
-/**
- * @description Dispatch login action
- * @param {Function} dispatch - Action dispatch function
- * @param {Object} auth - Auth data object
- * @private
- */
-export const dispatchLogin = (dispatch, auth) =>
-  dispatch({
-    type: actionTypes.LOGIN,
-    auth
   })
 
 /**
@@ -205,25 +181,71 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
       // update profile only if doesn't exist or if set by config
       !config.updateProfileOnLogin && profileSnap.val() !== null
         ? profileSnap.val()
-        : profileSnap.ref.update(profile) // Update the profile
-            .then(() => profile)
-            .catch(err => {
-              // Error setting profile
-              dispatchUnauthorizedError(dispatch, err)
-              return Promise.reject(err)
-            })
+        : profileSnap.ref.update(profile).then(() => profile) // Update the profile
     )
     .catch(err => {
       // Error reading user profile
-      dispatchUnauthorizedError(dispatch, err)
+      dispatch({ type: actionTypes.UNAUTHORIZED_ERROR, authError: err })
       return Promise.reject(err)
     })
+}
+
+/**
+ * @description Start presence management for a specificed user uid.
+ * Presence collection contains a list of users that are online currently.
+ * Sessions collection contains a record of all user sessions.
+ * This function is called within login functions if enablePresence: true.
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @return {Promise}
+ * @private
+ */
+const setupPresence = (dispatch, firebase) => {
+  // TODO: Enable more settings here (enable/disable sessions, store past sessions)
+  const ref = firebase.database().ref()
+  const { config: { presence, sessions }, authUid } = firebase._
+  let amOnline = ref.child('.info/connected')
+  let onlineRef = ref.child(presence).child(authUid)
+  let sessionsRef = ref.child(sessions)
+  // let userSessionRef = ref.child('users').child(authUid).child('sessions')
+  // let pastSessionsRef = userSessionRef.child('past')
+  amOnline.on('value', snapShot => {
+    if (!snapShot.val()) return
+    // user is online
+    // let onDisconnectRef = ref.onDisconnect()
+    // add session and set disconnect
+    dispatch({ type: actionTypes.SESSION_STARTED, payload: authUid })
+    // add new session to sessions collection
+    const session = sessionsRef.push({
+      startedAt: firebase.ServerValue.TIMESTAMP,
+      user: authUid
+    })
+    // set authUid as priority for easy sorting
+    session.setPriority(authUid)
+    const endedRef = session.child('endedAt')
+    endedRef.onDisconnect().set(firebase.ServerValue.TIMESTAMP)
+    // add correct session id to user
+    // remove from presence list
+    onlineRef.set(true)
+    onlineRef.onDisconnect().remove()
+    // Add session id to past sessions on disconnect
+    // pastSessionsRef.onDisconnect().push(session.key())
+    // Do same on unAuth
+    ref.onAuth(authData => {
+      if (!authData) {
+        endedRef.set(firebase.ServerValue.TIMESTAMP)
+        onlineRef.remove()
+        dispatch({ type: actionTypes.SESSION_ENDED })
+      }
+    })
+  })
 }
 
 /**
  * @description Initialize authentication state change listener that
  * watches user profile and dispatches login action
  * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
  * @private
  */
 export const init = (dispatch, firebase) => {
@@ -239,9 +261,12 @@ export const init = (dispatch, firebase) => {
     }
 
     firebase._.authUid = authData.uid
+    if (firebase._.config.presence) {
+      setupPresence(dispatch, firebase)
+    }
     watchUserProfile(dispatch, firebase)
 
-    dispatchLogin(dispatch, authData)
+    dispatch({ type: actionTypes.LOGIN, auth: authData })
 
     // Run onAuthStateChanged if it exists in config
     if (isFunction(firebase._.config.onAuthStateChanged)) {
@@ -263,7 +288,7 @@ export const init = (dispatch, firebase) => {
           firebase._.authUid = user.uid
           watchUserProfile(dispatch, firebase)
 
-          dispatchLogin(dispatch, user)
+          dispatch({ type: actionTypes.LOGIN, auth: user })
 
           createUserProfile(
             dispatch,
@@ -508,11 +533,10 @@ export const verifyPasswordResetCode = (dispatch, firebase, code) => {
  * @private
  */
 export const updateProfile = (dispatch, firebase, profileUpdate) => {
+  dispatch({ type: actionTypes.PROFILE_UPDATE_START, payload: profileUpdate })
+
   const { database, _: { config, authUid } } = firebase
-  dispatch({
-    type: actionTypes.PROFILE_UPDATE_START,
-    payload: profileUpdate
-  })
+
   return database()
     .ref(`${config.userProfile}/${authUid}`)
     .update(profileUpdate)
@@ -521,12 +545,11 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
         type: actionTypes.PROFILE_UPDATE_SUCCESS,
         payload: snap.val()
       })
+      return snap.val()
     })
     .catch((payload) => {
-      dispatch({
-        type: actionTypes.PROFILE_UPDATE_ERROR,
-        payload
-      })
+      dispatch({ type: actionTypes.PROFILE_UPDATE_ERROR, payload })
+      return Promise.reject(payload)
     })
 }
 
@@ -540,18 +563,14 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
   * @private
   */
 export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
-  dispatch({
-    type: actionTypes.AUTH_UPDATE_START,
-    payload: authUpdate
-  })
+  dispatch({ type: actionTypes.AUTH_UPDATE_START, payload: authUpdate })
+
   if (!firebase.auth().currentUser) {
     const msg = 'User must be logged in to update auth.'
-    dispatch({
-      type: actionTypes.AUTH_UPDATE_ERROR,
-      payload: msg
-    })
+    dispatch({ type: actionTypes.AUTH_UPDATE_ERROR, payload: msg })
     return Promise.reject(msg)
   }
+
   return firebase.auth().currentUser
     .updateProfile(authUpdate)
     .then((payload) => {
@@ -565,10 +584,8 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
       return payload
     })
     .catch((payload) => {
-      dispatch({
-        type: actionTypes.AUTH_UPDATE_ERROR,
-        payload
-      })
+      dispatch({ type: actionTypes.AUTH_UPDATE_ERROR, payload })
+      return Promise.reject(payload)
     })
 }
 
@@ -582,53 +599,25 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
  * @private
  */
 export const updateEmail = (dispatch, firebase, newEmail, updateInProfile) => {
-  dispatch({
-    type: actionTypes.EMAIL_UPDATE_START,
-    payload: newEmail
-  })
+  dispatch({ type: actionTypes.EMAIL_UPDATE_START, payload: newEmail })
+
   if (!firebase.auth().currentUser) {
     const msg = 'User must be logged in to update email.'
-    dispatch({
-      type: actionTypes.EMAIL_UPDATE_ERROR,
-      payload: msg
-    })
+    dispatch({ type: actionTypes.EMAIL_UPDATE_ERROR, payload: msg })
     return Promise.reject(msg)
   }
+
   return firebase.auth().currentUser
     .updateEmail(newEmail)
     .then((payload) => {
-      dispatch({
-        type: actionTypes.EMAIL_UPDATE_SUCCESS,
-        payload: newEmail
-      })
+      dispatch({ type: actionTypes.EMAIL_UPDATE_SUCCESS, payload: newEmail })
       if (updateInProfile) {
         return updateProfile(dispatch, firebase, { email: newEmail })
       }
       return payload
     })
     .catch((payload) => {
-      dispatch({
-        type: actionTypes.EMAIL_UPDATE_ERROR,
-        payload
-      })
+      dispatch({ type: actionTypes.EMAIL_UPDATE_ERROR, payload })
+      return Promise.reject(payload)
     })
-}
-
-export default {
-  dispatchLoginError,
-  dispatchUnauthorizedError,
-  dispatchLogin,
-  unWatchUserProfile,
-  watchUserProfile,
-  init,
-  createUserProfile,
-  login,
-  logout,
-  createUser,
-  resetPassword,
-  confirmPasswordReset,
-  verifyPasswordResetCode,
-  updateAuth,
-  updateProfile,
-  updateEmail
 }

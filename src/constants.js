@@ -79,6 +79,11 @@ export const actionTypes = {
  * @description Default configuration options
  * @property {String} userProfile - `null` Location on Firebase where user
  * profiles are stored. Often set to `'users'`.
+ * @property {String} presence - `null` Location on Firebase where of currently
+ * online users is stored. Often set to `'presence'` or `'onlineUsers'`.
+ * @property {String} sessions - `sessions` Location on Firebase where user
+ * sessions are stored (only if presense is set). Often set to `'presence'` or
+ * `'onlineUsers'`.
  * @property {Boolean} enableLogging - `false` Whether or not firebase
  * database logging is enabled.
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
@@ -107,6 +112,8 @@ export const actionTypes = {
 */
 export const defaultConfig = {
   userProfile: null,
+  presence: null,
+  sessions: 'sessions',
   enableLogging: false,
   updateProfileOnLogin: true,
   enableRedirectHandling: true,
