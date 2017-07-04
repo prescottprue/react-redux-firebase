@@ -21,15 +21,15 @@ const populates = [
   { child: 'createdBy', root: 'users', keyProp: 'uid' }
 ]
 
-@UserIsAuthenticated
+// @UserIsAuthenticated
 @firebaseConnect([
   { path: 'projects', populates }
   // 'projects#populate=owner:users' // string equivalent
 ])
 @connect(
-  ({ firebase }, { params }) => ({
-    auth: pathToJS(firebase, 'auth'),
-    projects: firebase.data.projects
+  ({ firebase: { auth, data: { projects } } }, { params }) => ({
+    auth,
+    projects
   })
 )
 export default class Projects extends Component {
@@ -51,7 +51,8 @@ export default class Projects extends Component {
 
   newSubmit = (newProject) => {
     const { firebase: { pushWithMeta } } = this.props
-    return pushWithMeta('projects', newProject)
+    console.log('this.props', this.props.firebase)
+    return this.props.firebase.push('projects', newProject)
       .then(() => this.setState({ newProjectModal: false }))
       .catch(err => {
         // TODO: Show Snackbar

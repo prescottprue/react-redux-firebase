@@ -12,6 +12,7 @@ import {
   defaultsDeep,
   isString,
   compact,
+  some,
   isFunction
 } from 'lodash'
 import { getPopulateObjs } from './utils/populate'
@@ -49,13 +50,10 @@ import { getPopulateObjs } from './utils/populate'
  *   }
  * }
  */
-export const isLoaded = function () {
-  if (!arguments || !arguments.length) {
-    return true
-  }
-
-  return map(arguments, a => a !== undefined).reduce((a, b) => a && b)
-}
+export const isLoaded = (...args) =>
+  !args || !args.length
+    ? true
+    : every(args, arg => arg !== undefined && (get(arg, 'isLoaded') !== false))
 
 /**
  * @description Detect whether items are empty or not
@@ -90,7 +88,8 @@ export const isLoaded = function () {
  *   }
  * }
  */
-export const isEmpty = data => !(data && size(data))
+export const isEmpty = (...args) =>
+  some(args, (arg) => !(arg && size(arg)) || arg.isEmpty === true)
 
 /**
  * @private
@@ -147,50 +146,62 @@ export const buildChildList = (state, list, p) =>
  */
 export const populate = (state, path, populates, notSetValue) => {
   // TODO: Handle slash and lodash notation
+  // TODO: Handle populating profile
   const pathArr = compact(path.split('/'))
   const dotPath = pathArr.join('.')
+  const data = pathArr.indexOf('profile') === -1 ? get(state, 'data') : state
   // Handle undefined child
-  if (!state || !get(state.data, dotPath)) {
+  if (!state || !get(data, dotPath)) {
     return notSetValue
   }
   // test if data is a single object vs a list of objects, try generating
   // populates and testing for key presence
-  const populatesForData = getPopulateObjs(isFunction(populates)
-    ? populates(last(split(path, '/')), get(state.data, dotPath))
-    : populates)
+  const populatesForData = getPopulateObjs(
+    isFunction(populates)
+      ? populates(last(split(path, '/')), get(data, dotPath))
+      : populates
+  )
   const dataHasPopluateChilds = every(populatesForData, (populate) => (
-    has(get(state.data, dotPath), populate.child)
+    has(get(data, dotPath), populate.child)
   ))
   if (dataHasPopluateChilds) {
     // Data is a single object, resolve populates directly
     return reduce(
       map(populatesForData, (p, obj) => {
         // populate child is key
-        if (isString(get(get(state.data, dotPath), p.child))) {
-          const key = get(get(state.data, dotPath), p.child)
+        if (isString(get(get(data, dotPath), p.child))) {
+          const key = get(get(data, dotPath), p.child)
           const pathString = p.childParam
             ? `${p.root}.${key}.${p.childParam}`
             : `${p.root}.${key}`
 
-          if (get(state.data, pathString)) {
+          if (get(data, pathString)) {
             return set({}, p.child, p.keyProp
-              ? { [p.keyProp]: key, ...get(state.data, pathString) }
-              : get(state.data, pathString)
+              ? { [p.keyProp]: key, ...get(data, pathString) }
+              : get(data, pathString)
             )
           }
           // matching child does not exist
-          return get(state.data, dotPath)
+          return get(data, dotPath)
         }
-        return set({}, p.child, buildChildList(state, get(get(state.data, dotPath), p.child), p))
+        return set({}, p.child, buildChildList(state, get(get(data, dotPath), p.child), p))
       }),
       // combine data from all populates to one object starting with original data
-      (obj, v) => defaultsDeep(v, obj), get(state.data, dotPath))
+      (obj, v) => defaultsDeep(v, obj), get(data, dotPath)
+    )
   } else {
+    // TODO: Improve this logic
+    // Handle non-existant profile populate child
+    if (pathArr.indexOf('profile') !== -1) {
+      return get(data, dotPath)
+    }
     // Data is a map of objects, each value has parameters to be populated
-    return mapValues(get(state.data, dotPath), (child, childKey) => {
-      const populatesForDataItem = getPopulateObjs(isFunction(populates)
-      ? populates(childKey, child)
-      : populates)
+    return mapValues(get(data, dotPath), (child, childKey) => {
+      const populatesForDataItem = getPopulateObjs(
+        isFunction(populates)
+          ? populates(childKey, child)
+          : populates
+      )
       const resolvedPopulates = map(populatesForDataItem, (p, obj) => {
         // no matching child parameter
         if (!child || !get(child, p.child)) {
@@ -203,9 +214,9 @@ export const populate = (state, path, populates, notSetValue) => {
           const pathString = p.childParam
             ? `${p.root}.${key}.${p.childParam}`
             : `${p.root}.${key}`
-          if (get(state.data, pathString)) {
+          if (get(data, pathString)) {
             return set({}, p.child, (p.keyProp
-              ? { [p.keyProp]: key, ...get(state.data, pathString) }
+              ? { [p.keyProp]: key, ...get(data, pathString) }
               : get(state.data, pathString)
             ))
           }
@@ -215,7 +226,6 @@ export const populate = (state, path, populates, notSetValue) => {
         // populate child list
         return set({}, p.child, buildChildList(state, get(child, p.child), p))
       })
-
       // combine data from all populates to one object starting with original data
       return reduce(
         resolvedPopulates,

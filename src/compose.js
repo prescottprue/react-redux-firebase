@@ -1,7 +1,5 @@
-import * as firebase from 'firebase'
 import { createFirebaseInstance } from './createFirebaseInstance'
 import { defaultConfig } from './constants'
-import { validateConfig } from './utils'
 import { authActions } from './actions'
 
 let firebaseInstance
@@ -56,55 +54,41 @@ let firebaseInstance
  * @example <caption>Setup</caption>
  * import { createStore, compose } from 'redux'
  * import { reactReduxFirebase } from 'react-redux-firebase'
+ * import * as firebase from 'firebase'
 
  * // React Redux Firebase Config
  * const config = {
  *   userProfile: 'users', // saves user profiles to '/users' on Firebase
  *   // here is where you place other config options
  * }
+
+ * // initialize script from Firebase page
+ * const fbConfg = {} // firebase config object
+ * firebase.initializeApp(fbConfig)
  *
  * // Add react-redux-firebase to compose
  * // Note: In full projects this will often be within createStore.js or store.js
  * const createStoreWithFirebase = compose(
- *  reactReduxFirebase(fbConfig, config),
+ *  reactReduxFirebase(firebase, config),
  * )(createStore)
  *
  * // Use Function later to create store
  * const store = createStoreWithFirebase(rootReducer, initialState)
- * @example <caption>Custom Auth Parameters</caption>
- * // Follow Setup example with the following config:
- * const config = {
- *   customAuthParameters: {
- *      google: {
- *        // prompts user to select account on every google login
- *        prompt: 'select_account'
- *      }
- *   }
- * }
  */
 export default (fbConfig, otherConfig) => next =>
   (reducer, initialState, middleware) => {
     const store = next(reducer, initialState, middleware)
-    const { dispatch } = store
 
-    // handle firebase instance being passed in as first argument
-    if (typeof fbConfig.database === 'function') {
-      firebaseInstance = createFirebaseInstance(fbConfig, otherConfig, dispatch)
-    } else {
-      // Combine all configs
-      const configs = Object.assign({}, defaultConfig, fbConfig, otherConfig)
-
-      validateConfig(configs)
-
-      // Initialize Firebase
-      try {
-        firebase.initializeApp(fbConfig)
-      } catch (err) {} // silence reinitialize warning (hot-reloading)
-
-      firebaseInstance = createFirebaseInstance(firebase, configs, dispatch)
+    // firebase instance not being passed in as first argument
+    if (typeof fbConfig.database !== 'function') {
+      throw new Error('v2.0.0-beta and higher require passing a firebase instance. View the migration guide for details.')
     }
 
-    authActions.init(dispatch, firebaseInstance)
+    const configs = { ...defaultConfig, ...otherConfig }
+    // validateConfig(configs)
+    firebaseInstance = createFirebaseInstance(fbConfig, configs, store.dispatch)
+
+    authActions.init(store.dispatch, firebaseInstance)
     store.firebase = firebaseInstance
 
     return store

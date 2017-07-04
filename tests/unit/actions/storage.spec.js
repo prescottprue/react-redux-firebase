@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 import {
   uploadFileWithProgress,
   uploadFile,
@@ -51,9 +50,11 @@ describe('Actions: Storage', () => {
     beforeEach(() => {
       spy = sinon.spy(dispatch)
     })
+
     it('is exported', () => {
       expect(uploadFileWithProgress).to.be.a.function
     })
+
     it.skip('runs given basic params', () =>
       uploadFileWithProgress(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
         .then((snap) => {
@@ -67,9 +68,11 @@ describe('Actions: Storage', () => {
     beforeEach(() => {
       spy = sinon.spy(dispatch)
     })
+
     it('is exported', () => {
       expect(uploadFile).to.be.a.function
     })
+
     it.skip('runs given basic params', () =>
       uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
         .then((snap) => {
@@ -83,6 +86,7 @@ describe('Actions: Storage', () => {
     it('is exported', () => {
       expect(uploadFiles).to.be.a.function
     })
+
     it('runs given basic params', () =>
       uploadFiles(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
         .then((snap) => {

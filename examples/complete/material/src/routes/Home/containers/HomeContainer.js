@@ -6,6 +6,7 @@ import Theme from 'theme'
 import {
   firebaseConnect,
   isLoaded,
+  isEmpty,
   populate // for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
@@ -21,17 +22,17 @@ const populates = [{ child: 'owner', root: 'users' }]
 
 @firebaseConnect([
   // 'todos' // sync full list of todos
+  // { path: 'todos', populates }, // gather data to populate owners (uid => object)
   // { path: 'todos', type: 'once' } // for loading once instead of binding
-  // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
-  { path: 'todos', populates } // populate
+  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
 ])
 @connect(
   // get auth, profile, and data from
   ({ firebase, firebase: { auth, profile, data: { todos } } }) => ({
     auth,
     profile,
-    // todos,
-    todos: populate(firebase, 'todos', populates) // if populating
+    todos,
+    // todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
     // todos: firebase.ordered.todos // if using ordering such as orderByChild
   })
 )
@@ -87,7 +88,7 @@ export default class Home extends Component {
 
   handleAdd = (newTodo) => {
     // Attach user if logged in
-    if (this.props.auth) {
+    if (!isEmpty(this.props.auth)) {
       newTodo.owner = this.props.auth.uid
     } else {
       newTodo.owner = 'Anonymous'
@@ -99,9 +100,9 @@ export default class Home extends Component {
   }
 
   render () {
-    const { todos } = this.props
+    const { todos, profile, pProfile } = this.props
     const { error } = this.state
-    console.log('todos: ', todos)
+    console.log('profile:', profile)
     return (
       <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>
         {

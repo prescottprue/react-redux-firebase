@@ -18,8 +18,8 @@ export const UserIsAuthenticated = UserAuthWrapper({ // eslint-disable-line new-
   LoadingComponent: LoadingSpinner,
   authSelector: ({ firebase: { auth } }) => auth,
   authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
-    auth === undefined || isInitializing === true,
-  predicate: auth => auth !== null,
+    !auth.isLoaded || isInitializing,
+  predicate: auth => !auth.isEmpty,
   redirectAction: newLoc => (dispatch) => {
     browserHistory.replace(newLoc)
     dispatch({
@@ -46,8 +46,8 @@ export const UserIsNotAuthenticated = UserAuthWrapper({ // eslint-disable-line n
     props.location.query.redirect || LIST_PATH,
   authSelector: ({ firebase: { auth } }) => auth,
   authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
-    auth === undefined || isInitializing === true,
-  predicate: auth => auth === null,
+    !auth.isLoaded || isInitializing,
+  predicate: auth => auth.isEmpty,
   redirectAction: newLoc => (dispatch) => {
     browserHistory.replace(newLoc)
     dispatch({ type: AUTHED_REDIRECT })

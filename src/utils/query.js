@@ -1,7 +1,5 @@
 import { actionTypes } from '../constants'
-import { isNaN, isFunction } from 'lodash'
-
-const { UNSET_LISTENER } = actionTypes
+import { isNaN } from 'lodash'
 
 const tryParseToNumber = (value) => {
   const result = Number(value)
@@ -59,7 +57,7 @@ export const getQueryIdFromPath = (path, event = undefined) => {
  * @param {String} queryId - Id of query
  * @return {Integer} watcherCount - count
  */
-export const setWatcher = (firebase, event, path, queryId = undefined) => {
+export const setWatcher = (firebase, dispatch, event, path, queryId = undefined) => {
   const id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
 
   if (firebase._.watchers[id]) {
@@ -67,6 +65,8 @@ export const setWatcher = (firebase, event, path, queryId = undefined) => {
   } else {
     firebase._.watchers[id] = 1
   }
+
+  dispatch({ type: actionTypes.SET_LISTENER, path, payload: { id } })
 
   return firebase._.watchers[id]
 }
@@ -96,22 +96,17 @@ export const getWatcherCount = (firebase, event, path, queryId = undefined) => {
 export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefined) => {
   let id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   path = path.split('#')[0]
-  const { watchers, config } = firebase._
-  if (watchers[id] <= 1) {
-    delete watchers[id]
+  if (firebase._.watchers[id] <= 1) {
+    delete firebase._.watchers[id]
     if (event !== 'first_child' && event !== 'once') {
       firebase.database().ref().child(path).off(event)
       // TODO: Remove config.distpatchOnUnsetListener
-      if (config.dispatchOnUnsetListener || config.distpatchOnUnsetListener) {
-        if (config.distpatchOnUnsetListener && isFunction(console.warn)) {  // eslint-disable-line no-console
-          console.warn('config.distpatchOnUnsetListener is Depreceated and will be removed in future versions. Please use config.dispatchOnUnsetListener (dispatch spelled correctly).') // eslint-disable-line no-console
-        }
-        dispatch({ type: UNSET_LISTENER, path })
-      }
     }
-  } else if (watchers[id]) {
+  } else if (firebase._.watchers[id]) {
     firebase._.watchers[id]--
   }
+
+  dispatch({ type: actionTypes.UNSET_LISTENER, path, payload: { id } })
 }
 
 /**

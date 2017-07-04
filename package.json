@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "2.0.0-alpha.7",
+  "version": "2.0.0-beta",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -56,7 +56,6 @@
     "redux-react-firebase"
   ],
   "dependencies": {
-    "firebase": "^4.1.3",
     "hoist-non-react-statics": "^1.2.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
@@ -96,6 +95,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
     "eslint-plugin-standard": "^2.2.0",
+    "firebase": "^4.1.3",
     "firebase-server": "^0.10.1",
     "gitbook-cli": "^2.3.0",
     "istanbul": "^1.1.0-alpha.1",

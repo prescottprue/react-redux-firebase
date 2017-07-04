@@ -106,18 +106,14 @@ export const populateList = (firebase, list, p, results) => {
     map(list, (id, childKey) => {
       // handle list of keys
       const populateKey = id === true ? childKey : id
-      return getPopulateChild(
-        firebase,
-        p,
-        populateKey
-      )
-      .then(pc => {
-        if (pc) {
-          // write child to result object under root name if it is found
-          return set(results, `${p.root}.${populateKey}`, pc)
-        }
-        return results
-      })
+      return getPopulateChild(firebase, p, populateKey)
+        .then(pc => {
+          if (pc) {
+            // write child to result object under root name if it is found
+            return set(results, `${p.root}.${populateKey}`, pc)
+          }
+          return results
+        })
     })
   )
 }

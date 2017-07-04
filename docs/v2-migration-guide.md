@@ -6,10 +6,52 @@
   * simplified population (can easily be done manually following common redux patterns)
   * [`redux-persist`](https://github.com/rt2zz/redux-persist) is supported out of the box
 * Simplified population through `populate` (instead of `populatedDataToJS`)
-* Firebase instance can be passed as first argument instead of config vars:
+* Firebase instance must be passed as first argument instead of config vars:
   * removes platform specific code while improving platform support
   * allows any version of Firebase to be used
   * allows [`react-native-firebase`](https://github.com/invertase/react-native-firebase) to be passed (for using native modules instead of JS within `react-native`)
+  * firebase is no longer a dependency (shrinks umd bundle size)
+
+### Pass In Firebase instance
+
+If you would like to instantiate a Firebase instance outside of `react-redux-firebase`, you can pass it in as the first argument like so:
+
+#### `v1.*.*`
+
+```js
+import { reactReduxFirebase } from 'react-redux-firebase'
+const fbConfig = {} // object containing Firebase config
+const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
+
+const store = createStore(
+ reducer,
+ initialState,
+ compose(
+   reactReduxFirebase(fbConfig, rrfConfig), // pass in firebase instance instead of config
+   applyMiddleware(...middleware)
+ )
+)
+```
+
+#### `v2.*.*`
+
+```js
+import { reactReduxFirebase } from 'react-redux-firebase'
+import * as firebase from 'firebase'
+
+const fbConfig = {} // object containing Firebase config
+firebase.initializeApp(fbConfig) // initialize firebase instance
+const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
+
+const store = createStore(
+ reducer,
+ initialState,
+ compose(
+   reactReduxFirebase(firebase, rrfConfig), // pass in firebase instance instead of config
+   applyMiddleware(...middleware)
+ )
+)
+```
 
 ### Loading Data and Paths
 
@@ -29,6 +71,7 @@ import { firebaseConnect, dataToJS, pathToJS } from 'react-redux-firebase';
 ```
 
 #### `v2.*.*`
+
 ```js
 import { connect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase';
@@ -85,28 +128,6 @@ const populates = [{ child: 'owner', root: 'users' }]
 )
 ```
 
-### Pass In Firebase instance
-
-If you would like to instantiate a Firebase instance outside of `react-redux-firebase`, you can pass it in as the first argument like so:
-
-```js
-import * as firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/database'
-import 'firebase/storage'
-
-const fbConfig = {} // object containing Firebase config
-firebase.initializeApp(fbConfig) // initialize firebase instance
-
-const store = createStore(
- reducer,
- initialState,
- compose(
-   reactReduxFirebase(firebase, reduxConfig), // pass in firebase instance instead of config
-   applyMiddleware(...middleware)
- )
-)
-```
 
 #### [react-native-firebase](https://github.com/invertase/react-native-firebase)
 
@@ -115,17 +136,15 @@ Passing in an instance also allows for libraries with similar APIs (such as [`re
 ```js
 import RNFirebase from 'react-native-firebase';
 
-const configurationOptions = {
-  debug: true
-};
-
-const firebase = RNFirebase.initializeApp(configurationOptions);
+const rnfConfig = { debug: true } // react-native-firebase config
+const firebase = RNFirebase.initializeApp(rnfConfig);
 
 const store = createStore(
   reducer,
-  undefined,
+  initialState,
   compose(
-   reactReduxFirebase(RNFirebase, reduxConfig), // pass in react-native-firebase instance instead of config
+   // pass in react-native-firebase instance instead of firebase instance
+   reactReduxFirebase(RNFirebase, reduxConfig),
    applyMiddleware(...middleware)
  )
 )
@@ -139,13 +158,18 @@ View the [redux-persist](/docs/recipes/redux-persist) section for the full examp
 import { compose, createStore } from 'redux'
 import { reactReduxFirebase } from 'react-redux-firebase'
 import { persistStore, autoRehydrate } from 'redux-persist'
-import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
+import * as firebase from 'firebase'
+
+const fbConfig = {} // firebase config object
+firebase.initializeApp(fbConfig)
+
+const rrfConfig = {}
 
 const store = createStore(
   reducer,
   initialState,
   compose(
-    reactReduxFirebase(fbConfig, reduxConfig),
+    reactReduxFirebase(fbConfig, rrfConfig),
     autoRehydrate()
   )
 )

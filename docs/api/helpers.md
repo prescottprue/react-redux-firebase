@@ -5,6 +5,7 @@ Detect whether items are loaded yet or not
 **Parameters**
 
 -   `item` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma seperated list is also acceptable.
+-   `args` **...Any** 
 
 **Examples**
 
@@ -24,7 +25,7 @@ Detect whether items are empty or not
 **Parameters**
 
 -   `item` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma seperated list is also acceptable.
--   `data`  
+-   `args` **...Any** 
 
 **Examples**
 

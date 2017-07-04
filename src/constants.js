@@ -13,16 +13,18 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @description Object containing all action types
  * @property {String} START - `@@reactReduxFirebase/START`
  * @property {String} SET - `@@reactReduxFirebase/SET`
- * @property {String} SET_ORDERED - `@@reactReduxFirebase/SET_ORDERED`
  * @property {String} SET_PROFILE - `@@reactReduxFirebase/SET_PROFILE`
  * @property {String} LOGIN - `@@reactReduxFirebase/LOGIN`
  * @property {String} LOGOUT - `@@reactReduxFirebase/LOGOUT`
  * @property {String} LOGIN_ERROR - `@@reactReduxFirebase/LOGIN_ERROR`
  * @property {String} NO_VALUE - `@@reactReduxFirebase/NO_VALUE`
  * @property {String} UNAUTHORIZED_ERROR - `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
+ * @property {String} SET_LISTENER - `@@reactReduxFirebase/SET_LISTENER`
  * @property {String} UNSET_LISTENER - `@@reactReduxFirebase/UNSET_LISTENER`
  * @property {String} AUTHENTICATION_INIT_STARTED - `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`
  * @property {String} AUTHENTICATION_INIT_FINISHED - `@@reactReduxFirebase/AUTHENTICATION_INIT_FINISHED`
+ * @property {String} SESSION_START - `@@reactReduxFirebase/SESSION_START`
+ * @property {String} SESSION_END - `@@reactReduxFirebase/SESSION_END`
  * @property {String} FILE_UPLOAD_START - `@@reactReduxFirebase/FILE_UPLOAD_START`
  * @property {String} FILE_UPLOAD_ERROR - `@@reactReduxFirebase/FILE_UPLOAD_ERROR`
  * @property {String} FILE_UPLOAD_PROGRESS - `@@reactReduxFirebase/FILE_UPLOAD_PROGRESS`
@@ -53,9 +55,12 @@ export const actionTypes = {
   NO_VALUE: `${actionsPrefix}/NO_VALUE`,
   UNAUTHORIZED_ERROR: `${actionsPrefix}/UNAUTHORIZED_ERROR`,
   ERROR: `${actionsPrefix}/ERROR`,
+  SET_LISTENER: `${actionsPrefix}/SET_LISTENER`,
   UNSET_LISTENER: `${actionsPrefix}/UNSET_LISTENER`,
   AUTHENTICATION_INIT_STARTED: `${actionsPrefix}/AUTHENTICATION_INIT_STARTED`,
   AUTHENTICATION_INIT_FINISHED: `${actionsPrefix}/AUTHENTICATION_INIT_FINISHED`,
+  SESSION_START: `${actionsPrefix}/SESSION_START`,
+  SESSION_END: `${actionsPrefix}/SESSION_END`,
   FILE_UPLOAD_START: `${actionsPrefix}/FILE_UPLOAD_START`,
   FILE_UPLOAD_ERROR: `${actionsPrefix}/FILE_UPLOAD_ERROR`,
   FILE_UPLOAD_PROGRESS: `${actionsPrefix}/FILE_UPLOAD_PROGRESS`,
@@ -78,6 +83,11 @@ export const actionTypes = {
  * @description Default configuration options
  * @property {String} userProfile - `null` Location on Firebase where user
  * profiles are stored. Often set to `'users'`.
+ * @property {String} presence - `null` Location on Firebase where of currently
+ * online users is stored. Often set to `'presence'` or `'onlineUsers'`.
+ * @property {String} sessions - `sessions` Location on Firebase where user
+ * sessions are stored (only if presense is set). Often set to `'presence'` or
+ * `'onlineUsers'`.
  * @property {Boolean} enableLogging - `false` Whether or not firebase
  * database logging is enabled.
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
@@ -90,7 +100,7 @@ export const actionTypes = {
  * empty auth changes such as `undefined` on initialization
  * (see [#137](https://github.com/prescottprue/react-redux-firebase/issues/137)).
  * Requires `v1.5.0-alpha` or higher.
- * @property {Boolean} autoPopulateProfile - `true` Whether or not to
+ * @property {Boolean} autoPopulateProfile - `false` REMOVED FROM v2.0.0. Whether or not to
  * automatically populate profile with data loaded through
  * profileParamsToPopulate config.
  * @property {Boolean} setProfilePopulateResults - `true` Whether or not to
@@ -106,12 +116,14 @@ export const actionTypes = {
 */
 export const defaultConfig = {
   userProfile: null,
+  presence: null,
+  sessions: 'sessions',
   enableLogging: false,
   updateProfileOnLogin: true,
   enableRedirectHandling: true,
-  autoPopulateProfile: true,
+  autoPopulateProfile: false,
   setProfilePopulateResults: false,
-  dispatchOnUnsetListener: false,
+  dispatchOnUnsetListener: true,
   enableEmptyAuthChanges: false
 }
 

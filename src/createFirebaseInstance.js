@@ -1,6 +1,13 @@
 import { isObject } from 'lodash'
 import { authActions, queryActions, storageActions } from './actions'
 
+/**
+ * Create a firebase instance that has helpers attached for dispatching actions
+ * @param  {Object} firebase - Firebase instance which to extend
+ * @param  {Object} configs - Configuration object
+ * @param  {Function} dispatch - Action dispatch function
+ * @return {Object} Extended Firebase instance
+ */
 export const createFirebaseInstance = (firebase, configs, dispatch) => {
   // Enable Logging based on config
   if (configs.enableLogging) {
@@ -335,25 +342,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @description Firebase ref function
    * @return {database.Reference}
    */
- /**
-  * @name database
-  * @description Firebase database service instance including all Firebase storage methods
-  * @return {Database} Firebase database service
-  */
- /**
-  * @name storage
-  * @description Firebase storage service instance including all Firebase storage methods
-  * @return {Storage} Firebase storage service
-  */
-  /**
-   * @name auth
-   * @description Firebase auth service instance including all Firebase auth methods
-   * @return {Auth}
-   */
-
   const helpers = {
     ref: path => firebase.database().ref(path),
-    storage: () => firebase.storage(),
     set,
     setWithMeta,
     uniqueSet,

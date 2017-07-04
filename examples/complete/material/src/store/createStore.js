@@ -3,10 +3,7 @@ import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 import logger from 'redux-logger'
-import * as firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/database'
-import 'firebase/storage'
+import firebase from 'firebase'
 import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
@@ -17,7 +14,7 @@ export default (initialState = {}, history) => {
   // ======================================================
   const middleware = [
     thunk.withExtraArgument(getFirebase),
-    logger, // Uncomment to see actions in console
+    // logger, // Uncomment to see actions in console
     // This is where you add other middleware like redux-observable
   ]
 

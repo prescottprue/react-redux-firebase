@@ -12,9 +12,11 @@ export const firebase = {
 // For more details, visit https://prescottprue.gitbooks.io/react-redux-firebase/content/config.html
 export const reduxFirebase = {
   userProfile: 'users', // root that user profiles are written to
-  enableLogging: false, // enable/disable Firebase Database Logging
-  updateProfileOnLogin: false // enable/disable updating of profile on login
-  // profileDecorator: (userData) => ({ email: userData.email }) // customize format of user profile
+  // enableLogging: true, // enable/disable Firebase Database Logging
+  updateProfileOnLogin: false, // enable/disable updating of profile on login
+  presence: 'presence',
+  // profileParamsToPopulate: [{ child: 'cars', root: 'cars' }]
+  // profileFactory: (userData) => ({ email: userData.email }) // customize format of user profile
 }
 
 export const env = 'development'

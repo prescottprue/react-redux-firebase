@@ -1,7 +1,4 @@
 import {
-  dispatchLoginError,
-  dispatchUnauthorizedError,
-  dispatchLogin,
   init,
   unWatchUserProfile,
   watchUserProfile,
@@ -11,7 +8,7 @@ import {
   createUser,
   resetPassword,
   confirmPasswordReset,
-  verifyPasswordResetCode,
+  verifyPasswordResetCode
 } from '../../../src/actions/auth'
 import { promisesForPopulate } from '../../../src/utils/populate'
 
@@ -24,16 +21,20 @@ const fakeFirebase = {
     authUid: '123',
     config: {
       userProfile: 'users',
-      disableRedirectHandling: true,
-    },
+      disableRedirectHandling: true
+    }
   },
   database: () => ({
     ref: () => ({
+      val: () => ({ some: 'obj' }),
       child: () => ({
-        on: () => ({ val: () => { some: 'obj' } }),
-        off: () => Promise.resolve({ val: () => { some: 'obj' }}),
-        once: () => Promise.resolve({ val: () => { some: 'obj' }})
+        on: () => ({ val: () => ({ some: 'obj' }) }),
+        off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
+        once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
       })
+    }),
+    update: () => Promise.resolve({
+      val: () => ({ some: 'obj' })
     })
   }),
   auth: () => ({
@@ -47,7 +48,7 @@ const fakeFirebase = {
       Promise.resolve({}),
     createUserWithEmailAndPassword: (email, password) =>
       email === 'error'
-        ? Promise.reject({ code: 'asdfasdf' })
+        ? Promise.reject(new Error('asdfasdf'))
         : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
     signInWithCustomToken: () => {
       return Promise.resolve({
@@ -61,48 +62,33 @@ const fakeFirebase = {
     },
     signInWithEmailAndPassword: (email, password) =>
       email.indexOf('error2') !== -1
-        ? Promise.reject({ code: 'asdfasdf' })
+        ? Promise.reject(new Error('asdfasdf'))
         : email === 'error3'
-          ? Promise.reject({ code: 'auth/user-not-found' })
+          ? Promise.reject(new Error('auth/user-not-found'))
           : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
     sendPasswordResetEmail: (email) =>
       email === 'error'
-        ? Promise.reject({code: 'auth/user-not-found'})
+        ? Promise.reject({ code: 'auth/user-not-found' }) // eslint-disable-line prefer-promise-reject-errors
         : email === 'error2'
-          ? Promise.reject({code: 'asdfasdf'})
-          : Promise.resolve({some: 'val'}),
+          ? Promise.reject(new Error('asdfasdf'))
+          : Promise.resolve({ some: 'val' }),
     confirmPasswordReset: (code, password) =>
       password === 'error'
-        ? Promise.reject({code: code})
+        ? Promise.reject({ code: code }) // eslint-disable-line prefer-promise-reject-errors
         : Promise.resolve(),
     verifyPasswordResetCode: (code) => code === 'error'
-      ? Promise.reject({ code: 'some' })
+      ? Promise.reject(new Error('some'))
       : Promise.resolve('success')
   })
 }
 
 describe('Actions: Auth', () => {
-  describe('dispatchLoginError', () => {
-    it('calls dispatch with error', () => {
-      expect(dispatchLoginError(dispatch, { some: 'error' }))
-    })
-  })
-
-  describe('dispatchUnauthorizedError', () => {
-    it('calls dispatch with error', () => {
-      expect(dispatchUnauthorizedError(dispatch, { some: 'error' }))
-    })
-  })
-
-  describe('dispatchLogin', () => {
-    it('calls dispatch', () => {
-      expect(dispatchLogin(dispatch, { some: 'error' }))
-    })
-  })
-
   describe('init', () => {
-    it('calls firebases onAuthStateChanged', () => {
-      init(dispatch, fakeFirebase)
+    it("calls firebase's onAuthStateChanged", () => {
+      init(dispatch, Firebase)
+    })
+    it('Errors if Firebase instance is not passed', () => {
+      // expect(init(dispatch, {})).to.Throw
     })
   })
 
@@ -161,7 +147,6 @@ describe('Actions: Auth', () => {
       promisesForPopulate.restore()
       expect(functionSpy).to.be.calledOnce
     })
-
   })
 
   describe('createUserProfile', () => {
@@ -336,7 +321,6 @@ describe('Actions: Auth', () => {
           })
       })
     })
-
   })
 
   describe('verifyPasswordResetCode', () => {

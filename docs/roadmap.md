@@ -41,6 +41,7 @@
   * Use `storeAs` with populates - [#130](https://github.com/prescottprue/react-redux-firebase/issues/130)
 * `updateUser` method for updating currently authenticated user's user object (`/users/${uid}`)
 * `updateAuth` method for updating currently authenticated user's auth object [as seen in the Firebase docs](https://firebase.google.com/docs/auth/web/manage-users#get_a_users_provider-specific_profile_information) - [#129](https://github.com/prescottprue/react-redux-firebase/issues/129)
+* Ability to use different stores - [#148](https://github.com/prescottprue/react-redux-firebase/pull/148)
 * Expose Firebase messaging (`firebase.messaging()`)
 * Typescript typings - [#142](https://github.com/prescottprue/react-redux-firebase/issues/142)
 * `enableEmptyAuthChanges` config option added - [#137](https://github.com/prescottprue/react-redux-firebase/issues/137)
@@ -87,21 +88,24 @@
 
 #### Breaking Changes
 * Remove usage of `Immutable.js` and Immutable Maps (no more need for `pathToJS()` & `dataToJS()` to load data from redux)
+* Firebase is now initialized outside of `react-redux-firebase` - [#173](https://github.com/prescottprue/react-redux-firebase/issues), [#131](https://github.com/prescottprue/react-redux-firebase/issues), [#107](https://github.com/prescottprue/react-redux-firebase/issues)
 * reducer split into multiple nested reducers for a few reasons:
   * follows [standard for nesting of reducers using combine reducers](http://redux.js.org/docs/recipes/reducers/UpdatingNormalizedData.html)).
   * allows for separately importable reducers (for placing in other parts of redux other than `state.firebase`)
   * Improved rendering/update performance for `react` - [#84](https://github.com/prescottprue/react-redux-firebase/issues/84)
 
 #### Features
+* Support for keeping data on logout - [#125](https://github.com/prescottprue/react-redux-firebase/issues/125)
 * `react-native` index file referenced in `package.json` that makes it no longer necessary to pass `ReactNative` in config
 * `AuthRequired` decorator (or decorator factory) that forces auth to exist before rendering component
-* Possibility of delayed initialization - [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
+* Support [`react-native-firebase`](https://github.com/invertase/react-native-firebase) [#131](https://github.com/prescottprue/react-redux-firebase/issues/131)
 
 #### Enhancements/Fixes
 * Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance
 
-#### Enhancements
-* Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance
+#### Under Consideration
+* Possibility of delayed initialization - [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
+
 
 ### Long Term Goals
 * Optional Built in Role Management
