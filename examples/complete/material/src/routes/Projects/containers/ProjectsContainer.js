@@ -21,7 +21,7 @@ const populates = [
   { child: 'createdBy', root: 'users', keyProp: 'uid' }
 ]
 
-@UserIsAuthenticated
+// @UserIsAuthenticated
 @firebaseConnect([
   { path: 'projects', populates }
   // 'projects#populate=owner:users' // string equivalent

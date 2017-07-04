@@ -160,7 +160,7 @@ const authReducer = (
   switch (type) {
     case LOGIN:
     case AUTH_UPDATE_SUCCESS:
-      return { ...auth, isEmpty: false, isLoaded: true }
+      return { ...auth.toJSON(), isEmpty: false, isLoaded: true }
     case LOGIN_ERROR:
       // TODO: Support keeping data when logging out
       return { isLoaded: true, isEmpty: true }

@@ -24,7 +24,8 @@ const populates = [{ child: 'owner', root: 'users' }]
   // 'todos' // sync full list of todos
   // { path: 'todos', type: 'once' } // for loading once instead of binding
   // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
-  { path: 'todos', populates } // populate
+  { path: 'todos' }, // populate
+  // { path: 'cars' }, // populate
 ])
 @connect(
   // get auth, profile, and data from
@@ -100,9 +101,9 @@ export default class Home extends Component {
   }
 
   render () {
-    const { todos } = this.props
+    const { todos, profile, pProfile } = this.props
     const { error } = this.state
-
+    console.log('profile:', profile)
     return (
       <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>
         {

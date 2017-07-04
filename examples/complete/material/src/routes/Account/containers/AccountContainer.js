@@ -10,7 +10,7 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import AccountForm from '../components/AccountForm/AccountForm'
 import classes from './AccountContainer.scss'
 
-@UserIsAuthenticated // redirect to /login if user is not authenticated
+// @UserIsAuthenticated // redirect to /login if user is not authenticated
 @firebaseConnect() // add this.props.firebase
 @connect( // Map redux state to props
   ({ firebase: { auth, profile } }) => ({
