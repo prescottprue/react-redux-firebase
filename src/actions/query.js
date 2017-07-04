@@ -9,7 +9,13 @@ import {
   getQueryIdFromPath
 } from '../utils/query'
 
-const { START, SET, NO_VALUE, UNAUTHORIZED_ERROR, ERROR } = actionTypes
+const {
+  START,
+  SET,
+  NO_VALUE,
+  UNAUTHORIZED_ERROR,
+  ERROR
+} = actionTypes
 
 /**
  * @description Watch a specific event type
@@ -70,19 +76,21 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
   }
 
   const runQuery = (q, e, p, params) => {
-    dispatch({
-      type: START,
-      path: storeAs || path
-    })
+    dispatch({ type: START, path: storeAs || path })
 
     // Handle once queries
     if (e === 'once') {
       return q.once('value')
         .then(snapshot => {
           if (snapshot.val() !== null) {
+            const ordered = []
+            snapshot.forEach((child) => {
+              ordered.push({ key: child.key, ...child.val() })
+            })
             dispatch({
               type: SET,
               path: storeAs || path,
+              ordered: size(ordered) ? ordered : undefined,
               data: snapshot.val()
             })
           }
@@ -101,60 +109,51 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       let data = (e === 'child_removed') ? undefined : snapshot.val()
       const resultPath = storeAs || (e === 'value') ? p : `${p}/${snapshot.key}`
 
+      // create an array for preserving order of children under ordered
+      const ordered = []
+      if (e === 'child_added') {
+        ordered.push({ key: snapshot.key, ...snapshot.val() })
+      } else {
+        snapshot.forEach((child) => {
+          ordered.push({ key: child.key, ...child.val() })
+        })
+      }
+
       // Dispatch standard event if no populates exists
       if (!populates) {
-        const ordered = []
-        // preserve order of children under ordered
-        if (e === 'child_added') {
-          ordered.push({ key: snapshot.key, ...snapshot.val() })
-        } else {
-          snapshot.forEach((child) => {
-            ordered.push({ key: child.key, ...child.val() })
-          })
-        }
-
         return dispatch({
           type: SET,
           path: storeAs || resultPath,
-          ordered: size(ordered) ? ordered : undefined,
           data,
+          ordered: size(ordered) ? ordered : undefined,
           requesting: false,
           requested: true
         })
       }
 
       // TODO: Allow setting of unpopulated data before starting population through config
-      // TODO: Set ordered for populate queries
       // TODO: Allow config to toggle Combining into one SET action
       const dataKey = snapshot.key
       promisesForPopulate(firebase, dataKey, data, populates)
         .then((results) => {
           // dispatch child sets first so isLoaded is only set to true for
-          // populatedDataToJS after all data is in redux (Issue #121)
+          // populate after all data is in redux (Issue #121)
           forEach(results, (result, path) => {
             dispatch({
               type: SET,
               path,
-              data: result,
-              timestamp: Date.now(),
-              requesting: false,
-              requested: true
+              data: result
             })
           })
           dispatch({
             type: SET,
             path: storeAs || resultPath,
             data,
-            timestamp: Date.now(),
-            requesting: false,
-            requested: true
+            ordered: size(ordered) ? ordered : undefined
           })
         })
     }, (err) => {
-      dispatch({
-        type: UNAUTHORIZED_ERROR,
-        payload: err
-      })
+      dispatch({ type: UNAUTHORIZED_ERROR, payload: err })
     })
   }
 
@@ -167,7 +166,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
  * @param {String} event - Event for which to remove the watcher
  * @param {String} path - Path of watcher to remove
  */
-export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId = undefined }) => {
+export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId }) => {
   const watchPath = !storeAs ? path : `${path}@${storeAs}`
   unsetWatcher(firebase, dispatch, type, watchPath, queryId)
 }

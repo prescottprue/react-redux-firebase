@@ -22,18 +22,17 @@ const populates = [{ child: 'owner', root: 'users' }]
 
 @firebaseConnect([
   // 'todos' // sync full list of todos
+  // { path: 'todos', populates }, // gather data to populate owners (uid => object)
   // { path: 'todos', type: 'once' } // for loading once instead of binding
-  // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
-  { path: 'todos' }, // populate
-  // { path: 'cars' }, // populate
+  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
 ])
 @connect(
   // get auth, profile, and data from
   ({ firebase, firebase: { auth, profile, data: { todos } } }) => ({
     auth,
     profile,
-    // todos,
-    todos: populate(firebase, 'todos', populates) // if populating
+    todos,
+    // todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
     // todos: firebase.ordered.todos // if using ordering such as orderByChild
   })
 )

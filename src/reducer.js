@@ -10,7 +10,6 @@ const {
   LOGOUT,
   LOGIN_ERROR,
   NO_VALUE,
-  SET_ORDERED,
   SET_LISTENER,
   UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
@@ -19,12 +18,19 @@ const {
   AUTH_UPDATE_SUCCESS
 } = actionTypes
 
+/**
+ * Create a path array from path string
+ * @param  {String} path - Path seperated with slashes
+ * @return {Array} Path as Array
+ * @private
+ */
 const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
 
 /**
  * Trim leading slash from path for use with state
  * @param  {String} path - Path seperated with slashes
  * @return {String} Path seperated with dots
+ * @private
  */
 const getSlashStrPath = path => pathToArr(path).join('/')
 
@@ -32,8 +38,28 @@ const getSlashStrPath = path => pathToArr(path).join('/')
  * Convert path with slashes to dot seperated path (for use with lodash get/set)
  * @param  {String} path - Path seperated with slashes
  * @return {String} Path seperated with dots
+ * @private
  */
 const getDotStrPath = path => pathToArr(path).join('.')
+
+/**
+ * Reducer for isInitializing state. Changed by `AUTHENTICATION_INIT_STARTED`
+ * and `AUTHENTICATION_INIT_FINISHED` actions.
+ * @param  {Object} [state=false] - Current isInitializing redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
+ * @return {Object} Profile state after reduction
+ */
+export const isInitializingReducer = (state = false, action) => {
+  switch (action.type) {
+    case AUTHENTICATION_INIT_STARTED:
+      return true
+    case AUTHENTICATION_INIT_FINISHED:
+      return false
+    default:
+      return state
+  }
+}
 
 /**
  * Reducer for requesting state.Changed by `START`, `NO_VALUE`, and `SET` actions.
@@ -43,7 +69,7 @@ const getDotStrPath = path => pathToArr(path).join('.')
  * @param  {String} action.path - Path of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const requestingReducer = (state = {}, { type, path }) => {
+export const requestingReducer = (state = {}, { type, path }) => {
   switch (type) {
     case START:
       return {
@@ -69,7 +95,7 @@ const requestingReducer = (state = {}, { type, path }) => {
  * @param  {String} action.path - Path of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const requestedReducer = (state = {}, { type, path }) => {
+export const requestedReducer = (state = {}, { type, path }) => {
   switch (type) {
     case START:
       return {
@@ -95,7 +121,7 @@ const requestedReducer = (state = {}, { type, path }) => {
  * @param  {String} action.path - Path of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const timestampsReducer = (state = {}, { type, path }) => {
+export const timestampsReducer = (state = {}, { type, path }) => {
   switch (type) {
     case START:
     case NO_VALUE:
@@ -110,35 +136,32 @@ const timestampsReducer = (state = {}, { type, path }) => {
 }
 
 /**
- * Reducer for data state. Changed by `SET`, `SET_ORDERED`,`NO_VALUE`, and
- * `LOGOUT` actions.
+ * Creates reducer for data state. Used to create data and ordered reducers.
+ * Changed by `SET` or `SET_ORDERED` (if actionKey === 'ordered'),`NO_VALUE`,
+ * and `LOGOUT` actions.
  * @param  {Object} [state={}] - Current data redux state
  * @param  {Object} action - Object containing the action that was dispatched
  * @param  {String} action.type - Type of action that was dispatched
  * @param  {String} action.path - Path of action that was dispatched
  * @return {Object} Data state after reduction
+ * @private
  */
-const dataReducer = (state = {}, { type, path, data, ordered, preserve }) => {
-  switch (type) {
+const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
+  switch (action.type) {
     case SET:
       return {
         ...state,
-        ...set({}, getDotStrPath(path), data)
-      }
-    case SET_ORDERED:
-      return {
-        ...state,
-        ...set({}, getDotStrPath(path), ordered)
+        ...set({}, getDotStrPath(action.path), action[actionKey])
       }
     case NO_VALUE:
       return {
         ...state,
-        ...set({}, getDotStrPath(path), null)
+        ...set({}, getDotStrPath(action.path), null)
       }
     case LOGOUT:
       // support keeping data when logging out - #125
-      if (preserve) {
-        return pick(state, preserve) // pick returns a new object
+      if (action.preserve) {
+        return pick(state, action.preserve) // pick returns a new object
       }
       return {}
     default:
@@ -153,14 +176,18 @@ const dataReducer = (state = {}, { type, path, data, ordered, preserve }) => {
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const authReducer = (
-  state = { isLoaded: false, isEmpty: true },
-  { type, auth, preserve }
-) => {
-  switch (type) {
+export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) => {
+  switch (action.type) {
     case LOGIN:
     case AUTH_UPDATE_SUCCESS:
-      return { ...auth.toJSON(), isEmpty: false, isLoaded: true }
+      if (!action.auth) {
+        return {
+          isEmpty: true,
+          isLoaded: true
+        }
+      }
+      const auth = action.auth.toJSON ? action.auth.toJSON() : action.auth
+      return { ...auth, isEmpty: false, isLoaded: true }
     case LOGIN_ERROR:
       // TODO: Support keeping data when logging out
       return { isLoaded: true, isEmpty: true }
@@ -179,15 +206,19 @@ const authReducer = (
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const profileReducer = (
-  state = { isLoaded: false, isEmpty: true },
-  { type, profile }
-) => {
-  switch (type) {
+export const profileReducer = (state = { isLoaded: false, isEmpty: true }, action) => {
+  switch (action.type) {
     case SET_PROFILE:
+      if (!action.profile) {
+        return {
+          ...state,
+          isEmpty: true,
+          isLoaded: true
+        }
+      }
       return {
         ...state,
-        ...profile,
+        ...action.profile,
         isEmpty: false,
         isLoaded: true
       }
@@ -207,7 +238,7 @@ const profileReducer = (
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const errorsReducer = (state = [], action) => {
+export const errorsReducer = (state = [], action) => {
   switch (action.type) {
     case UNAUTHORIZED_ERROR: return [...state, action.authError]
     case LOGOUT: return []
@@ -215,6 +246,15 @@ const errorsReducer = (state = [], action) => {
   }
 }
 
+/**
+ * Reducer for listeners ids. Changed by `SET_LISTENER` and `UNSET_LISTENER`
+ * actions.
+ * @param  {Object} [state={}] - Current listenersById redux state
+ * @param  {Object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
+ * @return {Object} listenersById state after reduction (used in listeners)
+ * @private
+ */
 const listenersById = (state = {}, { type, path, payload }) => {
   switch (type) {
     case SET_LISTENER:
@@ -230,7 +270,16 @@ const listenersById = (state = {}, { type, path, payload }) => {
   }
 }
 
-const allListeners = (state = {}, { type, path, payload }) => {
+/**
+ * Reducer for listeners state. Changed by `UNAUTHORIZED_ERROR`
+ * and `LOGOUT` actions.
+ * @param  {Object} [state=[]] - Current authError redux state
+ * @param  {Object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
+ * @return {Object} allListeners state after reduction (used in listeners)
+ * @private
+ */
+const allListeners = (state = [], { type, path, payload }) => {
   switch (type) {
     case SET_LISTENER: return [...state, payload.id]
     case UNSET_LISTENER: return state.filter(lId => lId !== payload.id)
@@ -239,36 +288,39 @@ const allListeners = (state = {}, { type, path, payload }) => {
 }
 
 /**
- * Reducer for errors state. Changed by `UNAUTHORIZED_ERROR`
+ * Reducer for listeners state. Changed by `UNAUTHORIZED_ERROR`
  * and `LOGOUT` actions.
  * @param  {Object} [state=[]] - Current authError redux state
  * @param  {Object} action - Object containing the action that was dispatched
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-const listenersReducer = combineReducers({
+export const listenersReducer = combineReducers({
   byId: listenersById,
   allIds: allListeners
 })
 
 /**
- * Reducer for isInitializing state. Changed by `AUTHENTICATION_INIT_STARTED`
- * and `AUTHENTICATION_INIT_FINISHED` actions.
- * @param  {Object} [state=false] - Current isInitializing redux state
- * @param  {object} action - Object containing the action that was dispatched
+ * Reducer for data state. Changed by `SET`, `SET_ORDERED`,`NO_VALUE`, and
+ * `LOGOUT` actions.
+ * @param  {Object} [state={}] - Current data redux state
+ * @param  {Object} action - Object containing the action that was dispatched
  * @param  {String} action.type - Type of action that was dispatched
- * @return {Object} Profile state after reduction
+ * @param  {String} action.path - Path of action that was dispatched
+ * @return {Object} Data state after reduction
  */
-const isInitializingReducer = (state = false, action) => {
-  switch (action.type) {
-    case AUTHENTICATION_INIT_STARTED:
-      return true
-    case AUTHENTICATION_INIT_FINISHED:
-      return false
-    default:
-      return state
-  }
-}
+export const dataReducer = createDataReducer()
+
+/**
+ * Reducer for ordered state. Changed by `SET`, `SET_ORDERED`,`NO_VALUE`, and
+ * `LOGOUT` actions.
+ * @param  {Object} [state={}] - Current data redux state
+ * @param  {Object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
+ * @param  {String} action.path - Path of action that was dispatched
+ * @return {Object} Data state after reduction
+ */
+export const orderedReducer = createDataReducer('ordered')
 
 /**
  * @name firebaseStateReducer
@@ -288,6 +340,7 @@ export default combineReducers({
   requested: requestedReducer,
   timestamps: timestampsReducer,
   data: dataReducer,
+  ordered: orderedReducer,
   auth: authReducer,
   profile: profileReducer,
   listeners: listenersReducer,

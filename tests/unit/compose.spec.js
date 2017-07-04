@@ -174,7 +174,7 @@ describe('Compose', () => {
       }
     })
 
-    describe('updateProfile', () => {
+    describe.skip('updateProfile', () => {
       it('acccepts an object', () =>
         expect(store.firebase.updateProfile({ displayName: 'test' }))
           .to.eventually.become(undefined)

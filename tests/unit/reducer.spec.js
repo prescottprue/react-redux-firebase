@@ -3,11 +3,13 @@ import { firebaseStateReducer } from '../../src'
 import { actionTypes } from '../../src/constants'
 
 const initialState = {
-  auth: { isLoaded: false },
-  profile: { isLoaded: false },
+  auth: { isLoaded: false, isEmpty: true },
+  profile: { isLoaded: false, isEmpty: true },
   isInitializing: false,
   errors: [],
   data: {},
+  listeners: { allIds: [], byId: {} },
+  ordered: {},
   timestamps: {},
   requesting: {},
   requested: {}
@@ -16,8 +18,8 @@ const initialState = {
 const noError = { ...initialState, errors: [] }
 const loadedState = {
   ...noError,
-  auth: { isLoaded: true },
-  profile: { isLoaded: true }
+  auth: { isLoaded: true, isEmpty: true },
+  profile: { isLoaded: true, isEmpty: true }
 }
 const exampleData = { some: 'data' }
 const externalState = { data: { asdfasdf: {} } }
@@ -93,14 +95,14 @@ describe('reducer', () => {
 
   describe('UNSET_LISTENER action', () => {
     it('sets state', () => {
-      action = { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf' }
+      action = { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf', payload: { id: 1 } }
       expect(firebaseStateReducer({}, action))
         .to.deep.equal(initialState)
     })
   })
 
   describe('UNSET_LISTENER action', () => {
-    action = { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf' }
+    action = { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf', payload: { id: 1 } }
     it('sets state', () => {
       expect(firebaseStateReducer({}, action))
         .to.deep.equal(initialState)
@@ -112,7 +114,7 @@ describe('reducer', () => {
       action = { type: actionTypes.SET_PROFILE, profile }
       expect(firebaseStateReducer({}, action)).to.deep.equal({
         ...initialState,
-        profile: { ...profile, isLoaded: true }
+        profile: { ...profile, isLoaded: true, isEmpty: false }
       })
     })
 
@@ -121,7 +123,7 @@ describe('reducer', () => {
       expect(firebaseStateReducer({}, action))
         .to.deep.equal({
           ...initialState,
-          profile: { isLoaded: true }
+          profile: { isLoaded: true, isEmpty: true }
         })
     })
   })
@@ -136,6 +138,15 @@ describe('reducer', () => {
 
   describe('LOGIN action', () => {
     it('sets state', () => {
+      const auth = { some: 'value' }
+      action = { type: actionTypes.LOGIN, auth }
+      expect(firebaseStateReducer({}, action))
+        .to.deep.equal({
+          ...noError,
+          auth: { ...noError.auth, ...auth, isLoaded: true, isEmpty: false }
+        })
+    })
+    it.skip('sets empty if auth not provided', () => {
       action = { type: actionTypes.LOGIN }
       expect(firebaseStateReducer({}, action))
         .to.deep.equal(noError)
@@ -151,8 +162,8 @@ describe('reducer', () => {
         )
       ).to.deep.equal({
         ...initialState,
-        auth: { isLoaded: true },
-        profile: { isLoaded: true }
+        auth: { isLoaded: true, isEmpty: true },
+        profile: { isLoaded: true, isEmpty: true }
       })
     })
   })
@@ -185,18 +196,28 @@ describe('reducer', () => {
   describe('AUTH_UPDATE_SUCCESS action', () => {
     it('sets state', () => {
       const authUpdate = { email: 'newEmail' }
-      action = { type: actionTypes.AUTH_UPDATE_SUCCESS, payload: authUpdate }
+      action = { type: actionTypes.AUTH_UPDATE_SUCCESS, auth: authUpdate }
       expect(firebaseStateReducer({}, action))
-        .to.deep.equal(initialState)
+        .to.deep.equal({
+          ...noError,
+          auth: {
+            ...noError.auth,
+            ...authUpdate,
+            isEmpty: false,
+            isLoaded: true
+          }
+        })
     })
-  })
-
-  describe('AUTH_UPDATE_SUCCESS action', () => {
-    it('sets state', () => {
-      const authUpdate = { email: 'newEmail' }
-      action = { type: actionTypes.AUTH_UPDATE_SUCCESS, payload: authUpdate }
+    it('handles undefined auth', () => {
+      action = { type: actionTypes.AUTH_UPDATE_SUCCESS }
       expect(firebaseStateReducer({}, action))
-        .to.deep.equal({ ...initialState })
+        .to.deep.equal({
+          ...noError,
+          auth: {
+            isEmpty: true,
+            isLoaded: true
+          }
+        })
     })
   })
 })

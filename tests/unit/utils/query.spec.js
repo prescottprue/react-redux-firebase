@@ -7,7 +7,6 @@ import {
   applyParamsToQuery
 } from '../../../src/utils/query'
 
-let spy
 const fakeFirebase = {
   _: {
     authUid: '123',
@@ -71,11 +70,11 @@ describe('Utils: Query', () => {
       }
     })
     it('handles incrementating path watcher count', () => {
-      setWatcher(Firebase, 'once', '/todos')
+      setWatcher(Firebase, dispatch, 'once', '/todos')
       expect(Firebase._.watchers['once:/todos']).to.equal(2)
     })
     it('handles basic path', () => {
-      setWatcher(Firebase, 'once', '/todo')
+      setWatcher(Firebase, dispatch, 'once', '/todo')
       expect(Firebase._.watchers['once:/todo']).to.equal(1)
     })
   })
@@ -92,10 +91,6 @@ describe('Utils: Query', () => {
         'value:/todos': 1,
         'value:/todo': 2
       }
-      spy = sinon.spy(console, 'warn')
-    })
-    afterEach(() => {
-      console.warn.restore() // eslint-disable-line no-console
     })
     it('removes single watcher', () => {
       unsetWatcher(Firebase, dispatch, 'value', '/todos')
@@ -105,14 +100,6 @@ describe('Utils: Query', () => {
       Firebase._.config.dispatchOnUnsetListener = true
       unsetWatcher(Firebase, dispatch, 'value', '/todos')
       expect(Firebase._.watchers['value:/todos']).to.be.undefined
-    })
-
-    it('warns for deprecated method name', () => {
-      Firebase._.config.distpatchOnUnsetListener = true
-      // TODO: confirm that console.warn is called with correct message
-      unsetWatcher(Firebase, dispatch, 'value', '/todos')
-      expect(Firebase._.watchers['value:/todos']).to.be.undefined
-      expect(spy).to.have.been.calledWith('config.distpatchOnUnsetListener is Depreceated and will be removed in future versions. Please use config.dispatchOnUnsetListener (dispatch spelled correctly).')
     })
 
     it('decrements existings watcher count', () => {

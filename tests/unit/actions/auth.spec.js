@@ -1,7 +1,4 @@
 import {
-  dispatchLoginError,
-  dispatchUnauthorizedError,
-  dispatchLogin,
   init,
   unWatchUserProfile,
   watchUserProfile,
@@ -29,11 +26,15 @@ const fakeFirebase = {
   },
   database: () => ({
     ref: () => ({
+      val: () => ({ some: 'obj' }),
       child: () => ({
         on: () => ({ val: () => ({ some: 'obj' }) }),
         off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
         once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
       })
+    }),
+    update: () => Promise.resolve({
+      val: () => ({ some: 'obj' })
     })
   }),
   auth: () => ({
@@ -82,24 +83,6 @@ const fakeFirebase = {
 }
 
 describe('Actions: Auth', () => {
-  describe('dispatchLoginError', () => {
-    it('calls dispatch with error', () => {
-      expect(dispatchLoginError(dispatch, { some: 'error' }))
-    })
-  })
-
-  describe('dispatchUnauthorizedError', () => {
-    it('calls dispatch with error', () => {
-      expect(dispatchUnauthorizedError(dispatch, { some: 'error' }))
-    })
-  })
-
-  describe('dispatchLogin', () => {
-    it('calls dispatch', () => {
-      expect(dispatchLogin(dispatch, { some: 'error' }))
-    })
-  })
-
   describe('init', () => {
     it("calls firebase's onAuthStateChanged", () => {
       init(dispatch, Firebase)

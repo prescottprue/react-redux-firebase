@@ -149,7 +149,7 @@ export const populate = (state, path, populates, notSetValue) => {
   // TODO: Handle populating profile
   const pathArr = compact(path.split('/'))
   const dotPath = pathArr.join('.')
-  const data = pathArr.indexOf('profile') === -1 ? state.data : state
+  const data = pathArr.indexOf('profile') === -1 ? get(state, 'data') : state
   // Handle undefined child
   if (!state || !get(data, dotPath)) {
     return notSetValue
