@@ -57,7 +57,7 @@ const store = createStore(
   reducer,
   undefined,
   compose(
-   reactReduxFirebase(RNFirebase, reduxConfig), // pass in react-native-firebase instance instead of config
+   reactReduxFirebase(firebase, reduxConfig), // pass in react-native-firebase instance instead of config
    applyMiddleware(...middleware)
  )
 )
