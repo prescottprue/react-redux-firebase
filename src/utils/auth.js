@@ -42,19 +42,6 @@ const createAuthProvider = (firebase, providerName, scopes) => {
 }
 
 /**
- * Create custom auth credential with token.
- * @param  {Object} firebase - Internal firebase object
- * @param  {String} provider - Name of provider for which to create auth credential
- * @param  {String} token
- * @return {firebase.auth.AuthCredential}
- * @private
- */
-const createAuthCredential = (firebase, provider, token) => {
-  const params = provider === 'google' ? [null, token] : [token]
-  return firebase.auth[`${capitalize(provider)}AuthProvider`].credential(...params)
-}
-
-/**
  * @description Get correct login method and params order based on provided credentials
  * @param {Object} firebase - Internal firebase object
  * @param {Object} credentials - Login credentials
@@ -73,14 +60,11 @@ export const getLoginMethodAndParams = (firebase, { email, password, provider, t
     if (supportedAuthProviders.indexOf(provider.toLowerCase()) === -1) {
       throw new Error(`${provider} is not a valid Auth Provider`)
     }
+    if (token) {
+      throw new Error('provider with token no longer supported, use credential parameter instead')
+    }
     if (credential) {
       return { method: 'signInWithCredential', params: [ credential ] }
-    }
-    if (token) {
-      return {
-        method: 'signInWithCredential',
-        params: [ createAuthCredential(firebase, provider, token) ]
-      }
     }
     const authProvider = createAuthProvider(firebase, provider, scopes)
     if (type === 'popup') {

@@ -1,4 +1,4 @@
-import { isObject } from 'lodash'
+import { isObject, isFunction } from 'lodash'
 import { authActions, queryActions, storageActions } from './actions'
 
 /**
@@ -9,8 +9,9 @@ import { authActions, queryActions, storageActions } from './actions'
  * @return {Object} Extended Firebase instance
  */
 export const createFirebaseInstance = (firebase, configs, dispatch) => {
-  // Enable Logging based on config
-  if (configs.enableLogging) {
+  /* istanbul ignore next: Logging is external */
+  // Enable Logging based on config (handling instances without i.e RNFirebase)
+  if (configs.enableLogging && isFunction(firebase.database.enableLogging)) {
     firebase.database.enableLogging(configs.enableLogging)
   }
 
