@@ -45,6 +45,17 @@ export const createAuthProvider = (firebase, providerName, scopes) => {
   return provider
 }
 
+const _createAuthCredential = (firebase, providerName, token) => {
+  if (supportedAuthProviders.indexOf(providerName.toLowerCase()) === -1) {
+    throw new Error(`${providerName} is not a valid Auth Provider`)
+  }
+
+  if (providerName === 'google') {
+    return firebase.auth.GoogleAuthProvider.credential(null, token)
+  }
+  return firebase.auth[`${capitalize(providerName)}AuthProvider`].credential(token)
+}
+
 /**
  * @description Get correct login method and params order based on provided credentials
  * @param {Object} firebase - Internal firebase object
@@ -60,9 +71,10 @@ export const createAuthProvider = (firebase, providerName, scopes) => {
 export const getLoginMethodAndParams = (firebase, {email, password, provider, type, token, scopes}) => {
   if (provider) {
     if (token) {
+      const authCredential = _createAuthCredential(firebase, provider, token)
       return {
         method: 'signInWithCredential',
-        params: [ provider, token ]
+        params: [ authCredential ]
       }
     }
     const authProvider = createAuthProvider(firebase, provider, scopes)
