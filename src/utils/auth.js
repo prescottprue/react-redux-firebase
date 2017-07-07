@@ -6,22 +6,18 @@ import { supportedAuthProviders } from '../constants'
  * @param {Object} firebase - Internal firebase object
  * @param {String} providerName - Name of Auth Provider (i.e. google, github, facebook, twitter)
  * @param {Array|String} scopes - List of scopes to add to auth provider
- * @return {Object} provider - Auth Provider
+ * @return {firebase.auth.AuthCredential} provider - Auth Provider
  * @private
  */
-export const createAuthProvider = (firebase, providerName, scopes) => {
+const createAuthProvider = (firebase, providerName, scopes) => {
   // TODO: Verify scopes are valid before adding
   // TODO: Validate parameter inputs
-  // Verify providerName is valid
-  if (supportedAuthProviders.indexOf(providerName.toLowerCase()) === -1) {
-    throw new Error(`${providerName} is not a valid Auth Provider`)
-  }
-
   const provider = new firebase.auth[`${capitalize(providerName)}AuthProvider`]()
 
   // Custom Auth Parameters
-  if (firebase._.config.customAuthParameters && firebase._.config.customAuthParameters[providerName]) {
-    provider.setCustomParameters(firebase._.config.customAuthParameters[providerName])
+  const { customAuthParameters } = firebase._.config
+  if (customAuthParameters && customAuthParameters[providerName]) {
+    provider.setCustomParameters(customAuthParameters[providerName])
   }
 
   // Handle providers without scopes
@@ -46,6 +42,19 @@ export const createAuthProvider = (firebase, providerName, scopes) => {
 }
 
 /**
+ * Create custom auth credential with token.
+ * @param  {Object} firebase - Internal firebase object
+ * @param  {String} provider - Name of provider for which to create auth credential
+ * @param  {String} token
+ * @return {firebase.auth.AuthCredential}
+ * @private
+ */
+const createAuthCredential = (firebase, provider, token) => {
+  const params = provider === 'google' ? [null, token] : [token]
+  return firebase.auth[`${capitalize(provider)}AuthProvider`].credential(...params)
+}
+
+/**
  * @description Get correct login method and params order based on provided credentials
  * @param {Object} firebase - Internal firebase object
  * @param {Object} credentials - Login credentials
@@ -54,39 +63,33 @@ export const createAuthProvider = (firebase, providerName, scopes) => {
  * @param {String} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
  * @param {String} credentials.type - Popup or redirect (only needed for 3rd party provider login)
  * @param {String} credentials.token - Custom or provider token
- * @param {String} credentials.scopes - Scopes to add to provider (i.e. email)
+ * @param {firebase.auth.AuthCredential} credentials.credential - Custom or provider token
+ * @param {Array|String} credentials.scopes - Scopes to add to provider (i.e. email)
  * @private
  */
-export const getLoginMethodAndParams = (firebase, {email, password, provider, type, token, scopes}) => {
+export const getLoginMethodAndParams = (firebase, { email, password, provider, type, token, scopes, credential }) => {
   if (provider) {
+    // Verify providerName is valid
+    if (supportedAuthProviders.indexOf(provider.toLowerCase()) === -1) {
+      throw new Error(`${provider} is not a valid Auth Provider`)
+    }
+    if (credential) {
+      return { method: 'signInWithCredential', params: [ credential ] }
+    }
     if (token) {
       return {
         method: 'signInWithCredential',
-        params: [ provider, token ]
+        params: [ createAuthCredential(firebase, provider, token) ]
       }
     }
     const authProvider = createAuthProvider(firebase, provider, scopes)
     if (type === 'popup') {
-      return {
-        method: 'signInWithPopup',
-        params: [ authProvider ]
-      }
+      return { method: 'signInWithPopup', params: [ authProvider ] }
     }
-    return {
-      method: 'signInWithRedirect',
-      params: [ authProvider ]
-    }
+    return { method: 'signInWithRedirect', params: [ authProvider ] }
   }
   if (token) {
-    return {
-      method: 'signInWithCustomToken',
-      params: [ token ]
-    }
+    return { method: 'signInWithCustomToken', params: [ token ] }
   }
-  return {
-    method: 'signInWithEmailAndPassword',
-    params: [ email, password ]
-  }
+  return { method: 'signInWithEmailAndPassword', params: [ email, password ] }
 }
-
-export default { getLoginMethodAndParams }
