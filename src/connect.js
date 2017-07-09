@@ -43,6 +43,9 @@ export default (dataOrFn = []) => WrappedComponent => {
       store: PropTypes.object.isRequired
     };
 
+    static displayName = `FirebaseConnect(${WrappedComponent.displayName}`;
+    static WrappedComponent = WrappedComponent;
+
     componentWillMount () {
       const { firebase, dispatch } = this.context.store
 
