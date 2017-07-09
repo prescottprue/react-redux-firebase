@@ -2,7 +2,7 @@
 
 [react-native complete example app](/examples/complete/react-native)
 
-**NOTE**: Only works for versions `v1.4.0-beta` and higher. It is still in the early stages of support.
+**NOTE**: If you are looking to use native modules (`react-native-firebase` or other), [visit the `v2.0.0` docs](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules)
 
 ## Setup
 
@@ -13,10 +13,11 @@
 1. Copy your client id out of the `GoogleService-info.plist` file (should end in `.apps.googleusercontent.com`)
 1. Place the client id into `iosClientId` variable within the example
 
-
 ## Example App Snippets
 
 This snippet is a condensed version of [react-native complete example](/examples/complete/react-native).
+
+**NOTE**: The API used in this snippet [changes in `v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#jsweb), if you are starting a new project, the new syntax is suggested
 
 **store.js**
 ```js
@@ -236,7 +237,7 @@ We are going to use the project name Devshare for example here. For your project
 
 1. Make sure you import `RNGoogleSignin.h` in your `AppDelegate.m` like so:
 
-  ```objc
+  ```objectivec
   // add this line before @implementation AppDelegate
   #import <RNGoogleSignin/RNGoogleSignin.h>
 
@@ -259,7 +260,7 @@ Only one `openURL` method can be defined, so if you have multiple listeners whic
 
 **AppDelegate.m:**
 
-```objc
+```objectivec
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
 

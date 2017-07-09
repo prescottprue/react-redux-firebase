@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "1.4.0",
+  "version": "1.4.3",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "browser": "dist/react-redux-firebase.js",
   "main": "lib/index.js",
@@ -29,33 +29,14 @@
     "docs:watch": "npm run docs:prepare && gitbook serve",
     "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force"
   },
-  "contributors": [
-    {
-      "name": "Prescott Prue",
-      "email": "sprue.dev@gmail.com",
-      "url": "https://github.com/prescottprue"
-    },
-    {
-      "name": "Bojhan",
-      "url": "https://github.com/Bojhan"
-    },
-    {
-      "name": "Marshall",
-      "email": "mmoutenot@gmail.com",
-      "url": "https://github.com/mmoutenot"
-    },
-    {
-      "name": "Rahav Lussato",
-      "url": "https://github.com/RahavLussato"
-    }
-  ],
   "dependencies": {
     "es6-promise": "^4.1.0",
     "firebase": "^3.9.0",
     "hoist-non-react-statics": "^1.2.0",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "opencollective": "^1.0.3"
   },
   "peerDependencies": {
     "react": "^0.14.6 || ^15.0.0"
@@ -70,6 +51,7 @@
     "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-transform-class-properties": "^6.23.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-es2015": "^6.24.0",
@@ -93,6 +75,11 @@
     "eslint-plugin-react": "^6.10.3",
     "eslint-plugin-standard": "^2.2.0",
     "gitbook-cli": "^2.3.0",
+    "gitbook-plugin-anchorjs": "^1.1.1",
+    "gitbook-plugin-edit-link": "^2.0.2",
+    "gitbook-plugin-github": "^2.0.0",
+    "gitbook-plugin-prism": "^2.2.0",
+    "gitbook-plugin-versions-select": "^0.1.1",
     "istanbul": "^1.1.0-alpha.1",
     "jsdom": "^9.12.0",
     "mocha": "^3.2.0",
@@ -141,5 +128,10 @@
         "*.js"
       ]
     }
-  ]
+  ],
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-redux-firebase",
+    "logo": "https://opencollective.com/opencollective/logo.txt"
+  }
 }
