@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import getDisplayName from 'react-display-name'
 import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'
@@ -58,7 +59,7 @@ export default (dataOrFn = []) => WrappedComponent => {
       store: PropTypes.object.isRequired
     };
 
-    static displayName = `FirebaseConnect(${WrappedComponent.displayName}`;
+    static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)}`;
     static WrappedComponent = WrappedComponent;
 
     componentWillMount () {
