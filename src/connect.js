@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import getDisplayName from 'react-display-name'
 import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'
@@ -56,7 +57,11 @@ export default (dataOrFn = []) => WrappedComponent => {
 
     static contextTypes = {
       store: PropTypes.object.isRequired
-    };
+    }
+
+    static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)}`
+
+    static wrappedComponent = WrappedComponent
 
     componentWillMount () {
       const { firebase, dispatch } = this.context.store
