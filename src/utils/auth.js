@@ -58,11 +58,12 @@ export const createAuthProvider = (firebase, providerName, scopes) => {
  * @private
  */
 export const getLoginMethodAndParams = (firebase, {email, password, provider, type, token, scopes, credential}) => {
+  if (credential) {
+    return { method: 'signInWithCredential', params: [ credential ] }
+  }
   if (provider) {
-    if (credential) {
-      return { method: 'signInWithCredential', params: [ credential ] }
-    }
     if (token) {
+      console.warn('Provider + Token combination is deprecated and will be removed from the next major version. Use credential parameter.') // eslint-disable-line no-console
       return { method: 'signInWithCredential', params: [ provider, token ] }
     }
     const authProvider = createAuthProvider(firebase, provider, scopes)

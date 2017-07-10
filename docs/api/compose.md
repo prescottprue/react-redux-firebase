@@ -102,7 +102,8 @@ Sets data to Firebase.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { set } }) => (
   <button onClick={() => set('some/path', { here: 'is a value' })}>
@@ -144,7 +145,8 @@ Pushes data to Firebase.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { push } }) => (
   <button onClick={() => push('some/path', true)}>
@@ -184,7 +186,8 @@ Updates data on Firebase and sends new data.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { update } }) => (
   <button onClick={() => update('some/path', { here: 'is a value' })}>
@@ -224,7 +227,8 @@ Removes data from Firebase at a given path.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { remove } }) => (
   <button onClick={() => remove('some/path')}>
@@ -252,7 +256,8 @@ exist, otherwise it rejects.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { uniqueSet } }) => (
   <button onClick={() => uniqueSet('some/unique/path', true)}>
@@ -402,11 +407,54 @@ email is valid
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Containing user auth info
 
+# updateProfile
+
+Update the currently logged in user's profile object
+
+**Parameters**
+
+-   `profileUpdate` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Changes to apply to profile
+-   `profile`  
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+# updateAuth
+
+Update the currently logged in user's auth object. **Note**:
+changes Auth object **only**, not user's profile.
+
+**Parameters**
+
+-   `code` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Password reset code to verify
+-   `authUpdate`  
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+# updateEmail
+
+Update the currently logged in user's email. **Note**:
+changes email in Auth object only, not within user's profile.
+
+**Parameters**
+
+-   `newEmail` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** New email
+-   `email`  
+-   `updateInProfile` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to update user's
+    profile with email change.
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
 # ref
 
 Firebase ref function
 
 Returns **database.Reference** 
+
+# auth
+
+Firebase auth service instance including all Firebase auth methods
+
+Returns **Auth** 
 
 # database
 
@@ -420,11 +468,11 @@ Firebase storage service instance including all Firebase storage methods
 
 Returns **Storage** Firebase storage service
 
-# auth
+# messaging
 
-Firebase auth service instance including all Firebase auth methods
+Firebase messaging service instance including all Firebase messaging methods
 
-Returns **Auth** 
+Returns **Messaging** Firebase messaging service
 
 # getFirebase
 
