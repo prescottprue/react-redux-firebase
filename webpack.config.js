@@ -21,11 +21,15 @@ const config = {
       commonjs2: 'react',
       amd: 'react',
       root: 'React'
+    },
+    firebase: {
+      commonjs: 'firebase',
+      commonjs2: 'firebase',
+      amd: 'firebase',
+      root: 'Firebase'
     }
   },
-  plugins: [
-
-  ]
+  plugins: []
 }
 
 if (env === 'production') {
@@ -43,9 +47,7 @@ if (env === 'production') {
   )
 
   if (process.env.SIZE) {
-    config.plugins.push(
-      new BundleAnalyzerPlugin()
-    )
+    config.plugins.push(new BundleAnalyzerPlugin())
   }
 }
 

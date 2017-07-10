@@ -5,9 +5,9 @@ import TestUtils from 'react-addons-test-utils'
 import { createStore, compose, combineReducers } from 'redux'
 import getDisplayName from 'react-display-name'
 import reactReduxFirebase from '../../src/compose'
-import firebaseConnect from '../../src/connect'
+import firebaseConnect from '../../src/firebaseConnect'
 
-describe('Connect', () => {
+describe('firebaseConnect', () => {
   class Passthrough extends Component {
     render () {
       return <div>{JSON.stringify(this.props)}</div>

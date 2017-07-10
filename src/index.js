@@ -1,12 +1,13 @@
-import connect from './connect'
+import firebaseConnect, { createFirebaseConnect } from './firebaseConnect'
 import compose, { getFirebase } from './compose'
 import reducer from './reducer'
 import constants, { actionTypes } from './constants'
 import * as helpers from './helpers'
 
 export default {
-  firebase: connect,
-  firebaseConnect: connect,
+  firebase: firebaseConnect,
+  firebaseConnect,
+  createFirebaseConnect,
   firebaseStateReducer: reducer,
   reduxReactFirebase: compose,
   reactReduxFirebase: compose,
