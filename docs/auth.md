@@ -58,22 +58,29 @@ export default firebaseConnect()(SomeComponent)
       * email and password (runs `ref.authWithPassword(credentials)`) :
         ```js
         {
-            email: String
-            password: String
+          email: String,
+          password: String
         }
         ```
       * provider (runs `ref.authWithOAuthPopup(provider)` or `ref.authWithOAuthRedirect(provider)`) :
         ```js
         {
-            provider: "facebook | google | twitter",
-            type: "popup | redirect", // popup is default
+          provider: "facebook | google | twitter",
+          type: "popup | redirect" // popup is default
         }
         ```
-      * provider and token (runs `ref.authWithOAuthToken(provider, token)`) :
+      * credential (runs `ref.signInWithCredential(credential)`) :
         ```js
         {
-            provider: "facebook | google | twitter",
-            token : String
+          credential : firebase.auth.AuthCredential // created using specific provider
+        }
+        ```
+        The credential parameter is a firebase.auth.AuthCredential specific to the provider (i.e. `firebase.auth.GoogleAuthProvider.credential(null, 'some accessToken')`). For more details [please view the Firebase API reference](https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider#methods)
+      * provider and token (runs `ref.authWithOAuthToken(provider, token)`) **NOTE**: *Deprecated as of v1.5.0* :
+        ```js
+        {
+          provider: "facebook | google | twitter",
+          token : String
         }
         ```
 
@@ -83,9 +90,8 @@ export default firebaseConnect()(SomeComponent)
 
 ##### Examples
 
-   *Email*
+  *Email*
 ```js
-// Call with info
 this.props.firebase.login({
   email: 'test@test.com',
   password: 'testest1'
@@ -94,31 +100,42 @@ this.props.firebase.login({
 
   *OAuth Provider Redirect*
 ```js
- // Call with info
- this.props.firebase.login({
-   provider: 'google',
-   type: 'redirect'
- })
+this.props.firebase.login({
+  provider: 'google',
+  type: 'redirect'
+})
  ```
 
-   *OAuth Provider Popup*
+  *OAuth Provider Popup*
 ```js
-// Call with info
 this.props.firebase.login({
   provider: 'google',
   type: 'popup'
 })
 ```
 
+  *Credential*
+```js
+// `googleUser` from the onsuccess Google Sign In callback.
+this.props.firebase.login({
+  credential: firebase.auth.GoogleAuthProvider.credential(googleUser.getAuthResponse().id_token)
+})
+// or using an accessToken
+this.props.firebase.login({
+  credential: firebase.auth.GoogleAuthProvider.credential(null, 'some access token')
+})
+```
+
   *Token*
 ```js
-// Call with info
 this.props.firebase.login('someJWTAuthToken')
 ```
 
 ## createUser(credentials, profile)
 
 Similar to Firebase's `ref.createUser(credentials)` but with support for automatic profile setup (based on your userProfile config).
+
+**NOTE** This does not need to be used when using external authentication providers (Firebase creates the user automatically), and is meant to be used with email authentication only.
 
 ##### Parameters
 
@@ -152,6 +169,9 @@ createNewUser({
 
 ## logout()
 Logout from Firebase and delete all data from the store (`state.firebase.data` and `state.firebase.auth` are set to `null`).
+
+
+Looking to preserve data on logout? [`v2.0.0` supports the `preserve` config option](http://docs.react-redux-firebase.com/history/v2.0.0/docs/api/compose.html), which preserves data under the specified keys in state on logout.
 
 ##### Examples
 

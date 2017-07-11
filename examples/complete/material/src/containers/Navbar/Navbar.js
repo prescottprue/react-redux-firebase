@@ -9,14 +9,7 @@ import {
   isLoaded,
   isEmpty
 } from 'react-redux-firebase'
-import {
-  LIST_PATH,
-  ACCOUNT_PATH,
-  LOGIN_PATH,
-  SIGNUP_PATH
-} from 'constants'
-
-// Components
+import { LIST_PATH, ACCOUNT_PATH, LOGIN_PATH, SIGNUP_PATH } from 'constants'
 import AppBar from 'material-ui/AppBar'
 import IconMenu from 'material-ui/IconMenu'
 import IconButton from 'material-ui/IconButton'
@@ -39,13 +32,9 @@ const avatarStyles = {
 }
 
 @firebaseConnect()
-@connect(
-  ({ firebase }) => ({
-    authError: pathToJS(firebase, 'authError'),
-    auth: pathToJS(firebase, 'auth'),
-    account: pathToJS(firebase, 'profile')
-  })
-)
+@connect(({ firebase }) => ({
+  account: pathToJS(firebase, 'profile')
+}))
 export default class Navbar extends Component {
   static contextTypes = {
     router: PropTypes.object.isRequired

@@ -57,36 +57,23 @@ export const createAuthProvider = (firebase, providerName, scopes) => {
  * @param {String} credentials.scopes - Scopes to add to provider (i.e. email)
  * @private
  */
-export const getLoginMethodAndParams = (firebase, {email, password, provider, type, token, scopes}) => {
+export const getLoginMethodAndParams = (firebase, {email, password, provider, type, token, scopes, credential}) => {
+  if (credential) {
+    return { method: 'signInWithCredential', params: [ credential ] }
+  }
   if (provider) {
     if (token) {
-      return {
-        method: 'signInWithCredential',
-        params: [ provider, token ]
-      }
+      console.warn('Provider + Token combination is deprecated and will be removed from the next major version. Use credential parameter.') // eslint-disable-line no-console
+      return { method: 'signInWithCredential', params: [ provider, token ] }
     }
     const authProvider = createAuthProvider(firebase, provider, scopes)
     if (type === 'popup') {
-      return {
-        method: 'signInWithPopup',
-        params: [ authProvider ]
-      }
+      return { method: 'signInWithPopup', params: [ authProvider ] }
     }
-    return {
-      method: 'signInWithRedirect',
-      params: [ authProvider ]
-    }
+    return { method: 'signInWithRedirect', params: [ authProvider ] }
   }
   if (token) {
-    return {
-      method: 'signInWithCustomToken',
-      params: [ token ]
-    }
+    return { method: 'signInWithCustomToken', params: [ token ] }
   }
-  return {
-    method: 'signInWithEmailAndPassword',
-    params: [ email, password ]
-  }
+  return { method: 'signInWithEmailAndPassword', params: [ email, password ] }
 }
-
-export default { getLoginMethodAndParams }
