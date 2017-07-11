@@ -1,7 +1,7 @@
 {
   "gitbook": ">=3.2.1",
   "title": "React Redux Firebase",
-  "plugins": ["edit-link", "prism", "-highlight", "github", "anchorjs", "versions-select"],
+  "plugins": ["edit-link", "prism", "-highlight", "github", "anchorjs", "versions-select", "ga"],
   "pluginsConfig": {
     "edit-link": {
       "base": "https://github.com/prescottprue/react-redux-firebase/tree/master",
@@ -15,12 +15,19 @@
         "website": "build/gitbook.css"
       }
     },
+    "ga": {
+      "token": "UA-102355407-1"
+    },
     "versions": {
-      "gitbookConfigURL": "https://raw.githubusercontent.com/prescottprue/react-redux-firebase/v2.0.0/book.json",
+      "gitbookConfigURL": "https://raw.githubusercontent.com/prescottprue/react-redux-firebase/master/book.json",
       "options": [
         {
             "value": "http://docs.react-redux-firebase.com/history/v1.4.0/",
             "text": "Version 1.4.0"
+        },
+        {
+            "value": "http://docs.react-redux-firebase.com/history/v1.5.0/",
+            "text": "Version 1.5.0"
         },
         {
             "value": "http://docs.react-redux-firebase.com/history/v2.0.0/",
