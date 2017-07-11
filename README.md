@@ -251,8 +251,9 @@ Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby).
 View docs for recipes on integrations with:
 
 * [redux-thunk](/docs/recipes/thunks.md)
-* [redux-form](/docs/recipes/redux-form.md)
 * [redux-observable](/docs/recipes/redux-observable.md)
+* [redux-saga](/docs/recipes/redux-saga.md)
+* [redux-form](/docs/recipes/redux-form.md)
 * [redux-auth-wrapper](/docs/recipes/routing.md#advanced)
 * [redux-persist](/docs/recipes/redux-persist.md) - [improved integration with `v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/redux-persist.html)
 * [react-native](/docs/recipes/react-native.md)
