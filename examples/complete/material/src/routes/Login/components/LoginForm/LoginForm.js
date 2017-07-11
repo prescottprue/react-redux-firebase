@@ -8,35 +8,30 @@ import TextField from 'components/TextField'
 import { required, validateEmail } from 'utils/forms'
 import classes from './LoginForm.scss'
 
-export const LoginForm = ({ handleSubmit, submitting }) => (
+export const LoginForm = ({ handleSubmit, submitting }) =>
   <form className={classes.container} onSubmit={handleSubmit}>
     <Field
-      name='email'
+      name="email"
       component={TextField}
-      label='Email'
+      label="Email"
       validate={[required, validateEmail]}
     />
     <Field
-      name='password'
+      name="password"
       component={TextField}
-      label='Password'
-      type='password'
+      label="Password"
+      type="password"
       validate={[required]}
     />
     <div className={classes.submit}>
-      <RaisedButton
-        label='Login'
-        primary
-        type='submit'
-        disabled={submitting}
-      />
+      <RaisedButton label="Login" primary type="submit" disabled={submitting} />
     </div>
     <div className={classes.options}>
       <div className={classes.remember}>
         <Checkbox
-          name='remember'
-          value='remember'
-          label='Remember'
+          name="remember"
+          value="remember"
+          label="Remember"
           labelStyle={{ fontSize: '.8rem' }}
         />
       </div>
@@ -45,7 +40,6 @@ export const LoginForm = ({ handleSubmit, submitting }) => (
       </Link>
     </div>
   </form>
-)
 
 LoginForm.propTypes = {
   handleSubmit: PropTypes.func,

@@ -16,21 +16,17 @@ import NewProjectTile from '../components/NewProjectTile/NewProjectTile'
 import NewProjectDialog from '../components/NewProjectDialog/NewProjectDialog'
 import classes from './ProjectsContainer.scss'
 
-const populates = [
-  { child: 'createdBy', root: 'users', keyProp: 'uid' }
-]
+const populates = [{ child: 'createdBy', root: 'users', keyProp: 'uid' }]
 
 @UserIsAuthenticated
 @firebaseConnect([
   { path: 'projects', populates }
   // 'projects#populate=owner:users' // string equivalent
 ])
-@connect(
-  ({ firebase }, { params }) => ({
-    auth: pathToJS(firebase, 'auth'),
-    projects: populatedDataToJS(firebase, 'projects', populates)
-  })
-)
+@connect(({ firebase }, { params }) => ({
+  auth: pathToJS(firebase, 'auth'),
+  projects: populatedDataToJS(firebase, 'projects', populates)
+}))
 export default class Projects extends Component {
   static contextTypes = {
     router: React.PropTypes.object.isRequired
@@ -48,7 +44,7 @@ export default class Projects extends Component {
     addProjectModal: false
   }
 
-  newSubmit = (newProject) => {
+  newSubmit = newProject => {
     const { firebase: { pushWithMeta } } = this.props
     return pushWithMeta('projects', newProject)
       .then(() => this.setState({ newProjectModal: false }))
@@ -58,18 +54,17 @@ export default class Projects extends Component {
       })
   }
 
-  deleteProject = (key) => {
-    return this.props.firebase.remove(`projects/${key}`)
-      .then(() => {
-        // TODO: Show snackbar
-      })
+  deleteProject = key => {
+    return this.props.firebase.remove(`projects/${key}`).then(() => {
+      // TODO: Show snackbar
+    })
   }
 
   toggleModal = (name, project) => {
     this.setState({ [`${name}Modal`]: !this.state[`${name}Modal`] })
   }
 
-  render () {
+  render() {
     const { projects, auth } = this.props
 
     if (!isLoaded(projects, auth)) {
@@ -86,31 +81,29 @@ export default class Projects extends Component {
 
     return (
       <div className={classes.container}>
-        {
-          newProjectModal &&
-            <NewProjectDialog
-              open={newProjectModal}
-              onSubmit={this.newSubmit}
-              onRequestClose={() => this.toggleModal('newProject')}
-            />
-        }
+        {newProjectModal &&
+          <NewProjectDialog
+            open={newProjectModal}
+            onSubmit={this.newSubmit}
+            onRequestClose={() => this.toggleModal('newProject')}
+          />}
         <div className={classes.tiles}>
-          <NewProjectTile
-            onClick={() => this.toggleModal('newProject')}
-          />
-          {
-            !isEmpty(projects) &&
-               map(projects, (project, key) => (
-                 <ProjectTile
-                   key={`Project-${key}`}
-                   project={project}
-                   onCollabClick={this.collabClick}
-                   onSelect={() => this.context.router.push(`${LIST_PATH}/${key}`)}
-                   onDelete={() => this.deleteProject(key)}
-                   showDelete={auth && project.createdBy && project.createdBy.uid === auth.uid}
-                 />
-              ))
-          }
+          <NewProjectTile onClick={() => this.toggleModal('newProject')} />
+          {!isEmpty(projects) &&
+            map(projects, (project, key) =>
+              <ProjectTile
+                key={`Project-${key}`}
+                project={project}
+                onCollabClick={this.collabClick}
+                onSelect={() => this.context.router.push(`${LIST_PATH}/${key}`)}
+                onDelete={() => this.deleteProject(key)}
+                showDelete={
+                  auth &&
+                  project.createdBy &&
+                  project.createdBy.uid === auth.uid
+                }
+              />
+            )}
         </div>
       </div>
     )

@@ -13,15 +13,16 @@ const UNAUTHED_REDIRECT = 'UNAUTHED_REDIRECT'
  * @param {Component} componentToWrap - Component to wrap
  * @return {Component} wrappedComponent
  */
-export const UserIsAuthenticated = UserAuthWrapper({ // eslint-disable-line new-cap
+export const UserIsAuthenticated = UserAuthWrapper({
+  // eslint-disable-line new-cap
   wrapperDisplayName: 'UserIsAuthenticated',
   LoadingComponent: LoadingSpinner,
   authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
   authenticatingSelector: ({ firebase }) =>
-    (pathToJS(firebase, 'auth') === undefined) ||
-    (pathToJS(firebase, 'isInitializing') === true),
+    pathToJS(firebase, 'auth') === undefined ||
+    pathToJS(firebase, 'isInitializing') === true,
   predicate: auth => auth !== null,
-  redirectAction: newLoc => (dispatch) => {
+  redirectAction: newLoc => dispatch => {
     browserHistory.replace(newLoc)
     dispatch({
       type: UNAUTHED_REDIRECT,
@@ -38,7 +39,8 @@ export const UserIsAuthenticated = UserAuthWrapper({ // eslint-disable-line new-
  * @param {Component} componentToWrap - Component to wrap
  * @return {Component} wrappedComponent
  */
-export const UserIsNotAuthenticated = UserAuthWrapper({ // eslint-disable-line new-cap
+export const UserIsNotAuthenticated = UserAuthWrapper({
+  // eslint-disable-line new-cap
   wrapperDisplayName: 'UserIsNotAuthenticated',
   allowRedirectBack: false,
   LoadingComponent: LoadingSpinner,
@@ -47,10 +49,10 @@ export const UserIsNotAuthenticated = UserAuthWrapper({ // eslint-disable-line n
     props.location.query.redirect || LIST_PATH,
   authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
   authenticatingSelector: ({ firebase }) =>
-    (pathToJS(firebase, 'auth') === undefined) ||
-    (pathToJS(firebase, 'isInitializing') === true),
+    pathToJS(firebase, 'auth') === undefined ||
+    pathToJS(firebase, 'isInitializing') === true,
   predicate: auth => auth === null,
-  redirectAction: newLoc => (dispatch) => {
+  redirectAction: newLoc => dispatch => {
     browserHistory.replace(newLoc)
     dispatch({ type: AUTHED_REDIRECT })
   }

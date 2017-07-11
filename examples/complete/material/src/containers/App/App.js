@@ -15,18 +15,16 @@ export default class AppContainer extends Component {
     muiTheme: PropTypes.object
   }
 
-  getChildContext = () => (
-    {
-      muiTheme: getMuiTheme(Theme)
-    }
-  )
+  getChildContext = () => ({
+    muiTheme: getMuiTheme(Theme)
+  })
 
   static propTypes = {
     routes: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired
   }
 
-  render () {
+  render() {
     const { routes, store } = this.props
     return (
       <Provider store={store}>

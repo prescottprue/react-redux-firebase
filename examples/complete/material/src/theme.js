@@ -1,9 +1,16 @@
 import {
-  blueGrey100, blueGrey500, blueGrey700,
-  pinkA200, tealA100, lightBlue500,
-  grey900, white, grey400, darkBlack
+  blueGrey100,
+  blueGrey500,
+  blueGrey700,
+  pinkA200,
+  tealA100,
+  lightBlue500,
+  grey900,
+  white,
+  grey400,
+  darkBlack
 } from 'material-ui/styles/colors'
-import {fade} from 'material-ui/utils/colorManipulator'
+import { fade } from 'material-ui/utils/colorManipulator'
 import spacing from 'material-ui/styles/spacing'
 import zIndex from 'material-ui/styles/zIndex'
 
