@@ -11,29 +11,29 @@ const SignupForm = ({ handleSubmit, submitting }) => {
   return (
     <form className={classes.container} onSubmit={handleSubmit}>
       <Field
-        name='username'
+        name="username"
         component={TextField}
-        label='Username'
+        label="Username"
         validate={[required]}
       />
       <Field
-        name='email'
+        name="email"
         component={TextField}
-        label='Email'
+        label="Email"
         validate={[required, validateEmail]}
       />
       <Field
-        name='password'
+        name="password"
         component={TextField}
-        label='Password'
-        type='password'
+        label="Password"
+        type="password"
         validate={[required]}
       />
       <div className={classes.submit}>
         <RaisedButton
-          label='Signup'
+          label="Signup"
           primary
-          type='submit'
+          type="submit"
           disabled={submitting}
           style={buttonStyle}
         />

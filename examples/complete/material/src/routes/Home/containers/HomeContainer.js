@@ -27,15 +27,13 @@ import classes from './HomeContainer.scss'
   { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
   // { path: 'todos', populates } // populate
 ])
-@connect(
-  ({firebase}) => ({
-    auth: pathToJS(firebase, 'auth'),
-    account: pathToJS(firebase, 'profile'),
-    todos: dataToJS(firebase, 'todos')
-    // todos: populatedDataToJS(firebase, '/todos', populates), // if populating
-    // todos: orderedToJS(firebase, '/todos') // if using ordering such as orderByChild
-  })
-)
+@connect(({ firebase }) => ({
+  auth: pathToJS(firebase, 'auth'),
+  account: pathToJS(firebase, 'profile'),
+  todos: dataToJS(firebase, 'todos')
+  // todos: populatedDataToJS(firebase, '/todos', populates), // if populating
+  // todos: orderedToJS(firebase, '/todos') // if using ordering such as orderByChild
+}))
 export default class Home extends Component {
   static propTypes = {
     todos: PropTypes.oneOfType([
@@ -46,10 +44,7 @@ export default class Home extends Component {
       set: PropTypes.func.isRequired,
       remove: PropTypes.func.isRequired,
       push: PropTypes.func.isRequired,
-      database: PropTypes.oneOfType([
-        PropTypes.object,
-        PropTypes.func
-      ])
+      database: PropTypes.oneOfType([PropTypes.object, PropTypes.func])
     }),
     auth: PropTypes.shape({
       uid: PropTypes.string
@@ -68,7 +63,7 @@ export default class Home extends Component {
     return firebase.set(`/todos/${id}/done`, !todo.done)
   }
 
-  deleteTodo = (id) => {
+  deleteTodo = id => {
     const { todos, auth, firebase } = this.props
     if (!auth || !auth.uid) {
       return this.setState({ error: 'You must be Logged into Delete' })
@@ -78,15 +73,14 @@ export default class Home extends Component {
     if (todos[id].owner !== auth.uid) {
       return this.setState({ error: 'You must own todo to delete' })
     }
-    return firebase.remove(`/todos/${id}`)
-      .catch((err) => {
-        console.error('Error removing todo: ', err) // eslint-disable-line no-console
-        this.setState({ error: 'Error Removing todo' })
-        return Promise.reject(err)
-      })
+    return firebase.remove(`/todos/${id}`).catch(err => {
+      console.error('Error removing todo: ', err) // eslint-disable-line no-console
+      this.setState({ error: 'Error Removing todo' })
+      return Promise.reject(err)
+    })
   }
 
-  handleAdd = (newTodo) => {
+  handleAdd = newTodo => {
     // Attach user if logged in
     if (this.props.auth) {
       newTodo.owner = this.props.auth.uid
@@ -99,26 +93,27 @@ export default class Home extends Component {
     return this.props.firebase.push('/todos', newTodo)
   }
 
-  render () {
+  render() {
     const { todos } = this.props
     const { error } = this.state
 
     return (
-      <div className={classes.container} style={{ color: Theme.palette.primary2Color }}>
-        {
-          error
-            ? <Snackbar
+      <div
+        className={classes.container}
+        style={{ color: Theme.palette.primary2Color }}
+      >
+        {error
+          ? <Snackbar
               open={!!error}
               message={error}
               autoHideDuration={4000}
               onRequestClose={() => this.setState({ error: null })}
-              />
-            : null
-        }
+            />
+          : null}
         <div className={classes.info}>
           <span>data loaded from</span>
           <span>
-            <a href='https://redux-firebasev3.firebaseio.com/'>
+            <a href="https://redux-firebasev3.firebaseio.com/">
               redux-firebasev3.firebaseio.com
             </a>
           </span>
@@ -128,32 +123,24 @@ export default class Home extends Component {
           </span>
         </div>
         <div className={classes.todos}>
-          <NewTodoPanel
-            onNewClick={this.handleAdd}
-            disabled={false}
-          />
-          {
-            !isLoaded(todos)
-              ? <CircularProgress />
-              : <Paper className={classes.paper}>
+          <NewTodoPanel onNewClick={this.handleAdd} disabled={false} />
+          {!isLoaded(todos)
+            ? <CircularProgress />
+            : <Paper className={classes.paper}>
                 <Subheader>Todos</Subheader>
                 <List className={classes.list}>
-                  {
-                    todos &&
-                      map(todos, (todo, id) => (
-                        <TodoItem
-                          key={id}
-                          id={id}
-                          todo={todo}
-                          onCompleteClick={this.toggleDone}
-                          onDeleteClick={this.deleteTodo}
-                        />
-                      )
-                    )
-                  }
+                  {todos &&
+                    map(todos, (todo, id) =>
+                      <TodoItem
+                        key={id}
+                        id={id}
+                        todo={todo}
+                        onCompleteClick={this.toggleDone}
+                        onDeleteClick={this.deleteTodo}
+                      />
+                    )}
                 </List>
-              </Paper>
-          }
+              </Paper>}
         </div>
       </div>
     )

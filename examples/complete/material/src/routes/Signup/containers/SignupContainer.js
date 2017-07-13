@@ -15,14 +15,17 @@ import { UserIsNotAuthenticated } from 'utils/router'
 import SignupForm from '../components/SignupForm'
 import classes from './SignupContainer.scss'
 
-@UserIsNotAuthenticated // redirect to list page if logged in
-@firebaseConnect() // add this.props.firebase
-@connect( // map redux state to props
-  ({firebase}) => ({
+@UserIsNotAuthenticated
+@firebaseConnect()
+@connect(
+  // map redux state to props
+  ({ firebase }) => ({
     authError: pathToJS(firebase, 'authError')
   })
 )
-export default class Signup extends Component {
+export default // redirect to list page if logged in
+// add this.props.firebase
+class Signup extends Component {
   static propTypes = {
     firebase: PropTypes.object,
     authError: PropTypes.object
@@ -32,22 +35,21 @@ export default class Signup extends Component {
     snackCanOpen: false
   }
 
-  handleSignup = (creds) => {
+  handleSignup = creds => {
     const { createUser, login } = this.props.firebase
     const { email, username } = creds
     this.setState({ snackCanOpen: true })
     // create new user then login (redirect handled by decorator)
-    return createUser(creds, { email, username })
-      .then(() => login(creds))
+    return createUser(creds, { email, username }).then(() => login(creds))
   }
 
-  providerLogin = (provider) => {
+  providerLogin = provider => {
     this.setState({ snackCanOpen: true })
 
     return this.props.firebase.login({ provider })
   }
 
-  render () {
+  render() {
     const { authError } = this.props
     const { snackCanOpen } = this.state
 
@@ -56,30 +58,26 @@ export default class Signup extends Component {
         <Paper className={classes.panel}>
           <SignupForm onSubmit={this.handleSignup} />
         </Paper>
-        <div className={classes.or}>
-          or
-        </div>
+        <div className={classes.or}>or</div>
         <div className={classes.providers}>
           <GoogleButton onClick={() => this.providerLogin('google')} />
         </div>
         <div className={classes.login}>
-          <span className={classes.loginLabel}>
-            Already have an account?
-          </span>
+          <span className={classes.loginLabel}>Already have an account?</span>
           <Link className={classes.loginLink} to={LOGIN_PATH}>
             Login
           </Link>
         </div>
-        {
-          isLoaded(authError) && !isEmpty(authError) && snackCanOpen &&
-            <Snackbar
-              open={isLoaded(authError) && !isEmpty(authError) && snackCanOpen}
-              message={authError ? authError.message : 'Signup error'}
-              action='close'
-              autoHideDuration={3000}
-              onRequestClose={() => this.setState({ snackCanOpen: false })}
-            />
-        }
+        {isLoaded(authError) &&
+          !isEmpty(authError) &&
+          snackCanOpen &&
+          <Snackbar
+            open={isLoaded(authError) && !isEmpty(authError) && snackCanOpen}
+            message={authError ? authError.message : 'Signup error'}
+            action="close"
+            autoHideDuration={3000}
+            onRequestClose={() => this.setState({ snackCanOpen: false })}
+          />}
       </div>
     )
   }

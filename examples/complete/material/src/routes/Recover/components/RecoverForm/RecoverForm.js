@@ -7,7 +7,14 @@ import { required } from 'utils/forms'
 import { RECOVER_CODE_FORM_NAME } from 'constants'
 import classes from './RecoverForm.scss'
 
-export const RecoverForm = ({ account, handleSubmit, onRecoverClick, submitting, pristine, valid }) => (
+export const RecoverForm = ({
+  account,
+  handleSubmit,
+  onRecoverClick,
+  submitting,
+  pristine,
+  valid
+}) =>
   <form className={classes.container} onSubmit={handleSubmit}>
     <h4>Recover Using Code From Email</h4>
     <div>
@@ -16,27 +23,26 @@ export const RecoverForm = ({ account, handleSubmit, onRecoverClick, submitting,
       </Subheader>
     </div>
     <Field
-      name='code'
+      name="code"
       component={TextField}
-      label='Recover Code'
+      label="Recover Code"
       validate={[required]}
     />
     <Field
-      name='password'
+      name="password"
       component={TextField}
-      label='New Password'
+      label="New Password"
       validate={[required]}
     />
     <div className={classes.submit}>
       <RaisedButton
-        label='Recover'
+        label="Recover"
         primary
-        type='submit'
+        type="submit"
         disabled={submitting}
       />
     </div>
   </form>
-)
 
 RecoverForm.propTypes = {
   account: PropTypes.shape({

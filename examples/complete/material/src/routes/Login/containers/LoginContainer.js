@@ -15,14 +15,17 @@ import { SIGNUP_PATH } from 'constants'
 import LoginForm from '../components/LoginForm'
 import classes from './LoginContainer.scss'
 
-@UserIsNotAuthenticated // redirect to list page if logged in
-@firebaseConnect() // add this.props.firebase
-@connect( // map redux state to props
+@UserIsNotAuthenticated
+@firebaseConnect()
+@connect(
+  // map redux state to props
   ({ firebase }) => ({
     authError: pathToJS(firebase, 'authError')
   })
 )
-export default class Login extends Component {
+export default // redirect to list page if logged in
+// add this.props.firebase
+class Login extends Component {
   static propTypes = {
     firebase: PropTypes.shape({
       login: PropTypes.func.isRequired
@@ -42,10 +45,9 @@ export default class Login extends Component {
     return this.props.firebase.login(loginData)
   }
 
-  providerLogin = (provider) =>
-    this.handleLogin({ provider })
+  providerLogin = provider => this.handleLogin({ provider })
 
-  render () {
+  render() {
     const { authError } = this.props
     const { snackCanOpen } = this.state
 
@@ -54,29 +56,25 @@ export default class Login extends Component {
         <Paper className={classes.panel}>
           <LoginForm onSubmit={this.handleLogin} />
         </Paper>
-        <div className={classes.or}>
-          or
-        </div>
+        <div className={classes.or}>or</div>
         <div className={classes.providers}>
           <GoogleButton onClick={() => this.providerLogin('google')} />
         </div>
         <div className={classes.signup}>
-          <span className={classes.signupLabel}>
-            Need an account?
-          </span>
+          <span className={classes.signupLabel}>Need an account?</span>
           <Link className={classes.signupLink} to={SIGNUP_PATH}>
             Sign Up
           </Link>
         </div>
-        {
-          isLoaded(authError) && !isEmpty(authError) && snackCanOpen &&
-            <Snackbar
-              open={isLoaded(authError) && !isEmpty(authError) && snackCanOpen}
-              message={authError ? authError.message : 'Signup error'}
-              action='close'
-              autoHideDuration={3000}
-            />
-        }
+        {isLoaded(authError) &&
+          !isEmpty(authError) &&
+          snackCanOpen &&
+          <Snackbar
+            open={isLoaded(authError) && !isEmpty(authError) && snackCanOpen}
+            message={authError ? authError.message : 'Signup error'}
+            action="close"
+            autoHideDuration={3000}
+          />}
       </div>
     )
   }
