@@ -19,6 +19,7 @@
   * [Redux Form](/docs/recipes/redux-form.md)
   * [Redux Saga](/docs/recipes/redux-saga.md)
   * [React Native](/docs/recipes/react-native.md)
+  * [React Chrome Redux](/docs/recipes/react-chrome-redux.md)
   * [Server Side Rendering](/docs/recipes/ssr.md)
 * [API Reference](/docs/api/README.md)
   * [constants](/docs/api/constants.md)

@@ -36,8 +36,6 @@ let firebaseInstance
  * @property {Object} config.customAuthParameters - Object for setting which
  * customAuthParameters are passed to external auth providers.
  * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
- * @property {Function} config.uploadFileDataFactory - Factory for modifying
- * how file meta data is written during file uploads
  * @property {Array|String} config.profileParamsToPopulate - Parameters within
  * profile object to populate
  * @property {Boolean} config.autoPopulateProfile - Whether or not to
@@ -48,7 +46,8 @@ let firebaseInstance
  * the data path. For example: role paramter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
  * is loaded (places it in data/roles). (default: `false`)
- * @return {Function} That accepts a component a returns a wrapped version of component
+ * @return {Function} That accepts a component and returns a Component which
+ * wraps the provided component (higher order component).
  * @example <caption>Setup</caption>
  * import { createStore, compose } from 'redux'
  * import { reactReduxFirebase } from 'react-redux-firebase'
@@ -150,6 +149,7 @@ export default (fbConfig, otherConfig) => next =>
     }
 
     /**
+     * @private
      * @description Sets data to Firebase.
      * @param {String} path - Path to location on Firebase which to set
      * @param {Object|String|Boolean|Number} value - Value to write to Firebase
@@ -169,6 +169,7 @@ export default (fbConfig, otherConfig) => next =>
       rootRef.child(path).set(value, onComplete)
 
     /**
+     * @private
      * @description Sets data to Firebase along with meta data. Currently,
      * this includes createdAt and createdBy. *Warning* using this function
      * may have unintented consequences (setting createdAt even if data already
@@ -182,6 +183,7 @@ export default (fbConfig, otherConfig) => next =>
        withMeta('set', path, value, onComplete)
 
     /**
+     * @private
      * @description Pushes data to Firebase.
      * @param {String} path - Path to location on Firebase which to push
      * @param {Object|String|Boolean|Number} value - Value to push to Firebase
@@ -201,6 +203,7 @@ export default (fbConfig, otherConfig) => next =>
       rootRef.child(path).push(value, onComplete)
 
     /**
+     * @private
      * @description Pushes data to Firebase along with meta data. Currently,
      * this includes createdAt and createdBy.
      * @param {String} path - Path to location on Firebase which to set
@@ -212,6 +215,7 @@ export default (fbConfig, otherConfig) => next =>
       withMeta('push', path, value, onComplete)
 
     /**
+     * @private
      * @description Updates data on Firebase and sends new data.
      * @param {String} path - Path to location on Firebase which to update
      * @param {Object|String|Boolean|Number} value - Value to update to Firebase
@@ -231,6 +235,7 @@ export default (fbConfig, otherConfig) => next =>
       rootRef.child(path).update(value, onComplete)
 
     /**
+     * @private
      * @description Updates data on Firebase along with meta. *Warning*
      * using this function may have unintented consequences (setting
      * createdAt even if data already exists)
@@ -243,6 +248,7 @@ export default (fbConfig, otherConfig) => next =>
       withMeta('update', path, value, onComplete)
 
     /**
+     * @private
      * @description Removes data from Firebase at a given path.
      * @param {String} path - Path to location on Firebase which to remove
      * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -261,6 +267,7 @@ export default (fbConfig, otherConfig) => next =>
       rootRef.child(path).remove(onComplete)
 
     /**
+     * @private
      * @description Sets data to Firebase only if the path does not already
      * exist, otherwise it rejects.
      * @param {String} path - Path to location on Firebase which to set
@@ -290,6 +297,7 @@ export default (fbConfig, otherConfig) => next =>
         })
 
     /**
+     * @private
      * @description Upload a file to Firebase Storage with the option to store
      * its metadata in Firebase Database
      * @param {String} path - Path to location on Firebase which to set
@@ -302,6 +310,7 @@ export default (fbConfig, otherConfig) => next =>
       storageActions.uploadFile(dispatch, instance, { path, file, dbPath })
 
     /**
+     * @private
      * @description Upload multiple files to Firebase Storage with the option
      * to store their metadata in Firebase Database
      * @param {String} path - Path to location on Firebase which to set
@@ -314,6 +323,7 @@ export default (fbConfig, otherConfig) => next =>
       storageActions.uploadFiles(dispatch, instance, { path, files, dbPath })
 
     /**
+     * @private
      * @description Delete a file from Firebase Storage with the option to
      * remove its metadata in Firebase Database
      * @param {String} path - Path to location on Firebase which to set
@@ -324,6 +334,7 @@ export default (fbConfig, otherConfig) => next =>
       storageActions.deleteFile(dispatch, instance, { path, dbPath })
 
     /**
+     * @private
      * @description Watch event. **Note:** this method is used internally
      * so examples have not yet been created, and it may not work as expected.
      * @param {String} type - Type of watch event
@@ -335,6 +346,7 @@ export default (fbConfig, otherConfig) => next =>
       queryActions.watchEvent(instance, dispatch, { type, path, storeAs })
 
     /**
+     * @private
      * @description Unset a listener watch event. **Note:** this method is used
      * internally so examples have not yet been created, and it may not work
      * as expected.
@@ -347,6 +359,7 @@ export default (fbConfig, otherConfig) => next =>
       queryActions.unWatchEvent(instance, dispatch, eventName, eventPath, queryId)
 
     /**
+     * @private
      * @description Logs user into Firebase. For examples, visit the [auth section](/docs/auth.md)
      * @param {Object} credentials - Credentials for authenticating
      * @param {String} credentials.provider - External provider (google | facebook | twitter)
@@ -359,6 +372,7 @@ export default (fbConfig, otherConfig) => next =>
       authActions.login(dispatch, instance, credentials)
 
     /**
+     * @private
      * @description Logs user out of Firebase and empties firebase state from
      * redux store
      * @return {Promise}
@@ -367,6 +381,7 @@ export default (fbConfig, otherConfig) => next =>
       authActions.logout(dispatch, instance)
 
     /**
+     * @private
      * @description Creates a new user in Firebase authentication. If
      * `userProfile` config option is set, user profiles will be set to this
      * location.
@@ -380,6 +395,7 @@ export default (fbConfig, otherConfig) => next =>
       authActions.createUser(dispatch, instance, credentials, profile)
 
     /**
+     * @private
      * @description Sends password reset email
      * @param {Object} credentials - Credentials for authenticating
      * @param {String} credentials.email - Credentials for authenticating
@@ -389,6 +405,7 @@ export default (fbConfig, otherConfig) => next =>
       authActions.resetPassword(dispatch, instance, credentials)
 
     /**
+     * @private
      * @description Confirm that a user's password has been reset
      * @param {String} code - Password reset code to verify
      * @param {String} password - New Password to confirm reset to
@@ -398,6 +415,7 @@ export default (fbConfig, otherConfig) => next =>
       authActions.confirmPasswordReset(dispatch, instance, code, password)
 
     /**
+     * @private
      * @description Verify that a password reset code from a password reset
      * email is valid
      * @param {String} code - Password reset code to verify
@@ -410,21 +428,25 @@ export default (fbConfig, otherConfig) => next =>
      * @name ref
      * @description Firebase ref function
      * @return {database.Reference}
+     * @private
      */
    /**
     * @name database
     * @description Firebase database service instance including all Firebase storage methods
     * @return {Database} Firebase database service
+    * @private
     */
    /**
     * @name storage
     * @description Firebase storage service instance including all Firebase storage methods
     * @return {Storage} Firebase storage service
+    * @private
     */
     /**
      * @name auth
      * @description Firebase auth service instance including all Firebase auth methods
      * @return {Auth}
+     * @private
      */
     firebase.helpers = {
       ref: path => firebase.database().ref(path),
@@ -459,7 +481,7 @@ export default (fbConfig, otherConfig) => next =>
   }
 
 /**
- * @external
+ * @private
  * @description Expose Firebase instance created internally. Useful for
  * integrations into external libraries such as redux-thunk and redux-observable.
  * @example <caption>redux-thunk integration</caption>
