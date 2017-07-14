@@ -1,32 +1,12 @@
-import {
-  createAuthProvider,
-  getLoginMethodAndParams
-} from '../../../src/utils/auth'
+import { getLoginMethodAndParams } from '../../../src/utils/auth'
 
 describe('Utils: Auth', () => {
-  describe('createAuthProvider', () => {
-    // Skipped due to capatalize and auth provider function
-    it('creates valid Auth Provider', () => {
-      expect(createAuthProvider(firebase, 'google', ['email']))
-        .to.be.a.function
-    })
-    it('handles string list of scopes', () => {
-      expect(createAuthProvider(firebase, 'google', 'email'))
-        .to.be.a.function
-    })
-    it('handles customAuthParameters config option', () => {
-      firebase._.config.customAuthParameters = { google: [{prompt: 'select_account'}] }
-      expect(createAuthProvider(firebase, 'google', 'email'))
-        .to.be.a.function
-    })
+  describe('getLoginMethodAndParams', () => {
     it('throws for invalid provider', () => {
       const provider = 'asdf'
-      expect(() => createAuthProvider(firebase, provider, ['email']))
+      expect(() => getLoginMethodAndParams(firebase, { provider: 'asdf' }))
         .to.Throw(Error, `${provider} is not a valid Auth Provider`)
     })
-  })
-
-  describe('getLoginMethodAndParams', () => {
     it('google provider', () => {
       expect(getLoginMethodAndParams(firebase, { provider: 'google' }))
         .to.include.keys('method')
@@ -36,17 +16,45 @@ describe('Utils: Auth', () => {
       expect(getLoginMethodAndParams(firebase, { provider: 'twitter' }))
         .to.include.keys('method')
     })
+
     it('token', () => {
       expect(getLoginMethodAndParams(firebase, { token: 'asdf' }))
         .to.include.keys('method')
     })
-    it('token with provider', () => {
-      expect(getLoginMethodAndParams(firebase, { provider: 'google', token: 'asdf' }))
+
+    it('throws for token with provider: ', () => {
+      expect(() => getLoginMethodAndParams(firebase, { provider: 'google', token: 'asdf' }))
+        .to.Throw('provider with token no longer supported, use credential parameter instead')
+    })
+
+    it('credential', () => {
+      expect(getLoginMethodAndParams(firebase, { provider: 'google', credential: 'asdf' }))
         .to.include.keys('method')
     })
+
     it('popup', () => {
-      expect(getLoginMethodAndParams(firebase, { provider: 'google', type: 'popup' }))
-        .to.include.keys('method')
+      const creds = { provider: 'google', type: 'popup' }
+      const { method } = getLoginMethodAndParams(firebase, creds)
+      expect(method).to.equal('signInWithPopup')
+    })
+
+    it('handles scopes string', () => {
+      const creds = { provider: 'google', scopes: 'some' }
+      const { method } = getLoginMethodAndParams(firebase, creds)
+      expect(method).to.equal('signInWithRedirect')
+    })
+
+    it('handles scopes array', () => {
+      const creds = { provider: 'google', scopes: ['some'] }
+      const { method } = getLoginMethodAndParams(firebase, creds)
+      expect(method).to.equal('signInWithRedirect')
+    })
+
+    it('handles customAuthParameters config option', () => {
+      firebase._.config.customAuthParameters = { google: [{prompt: 'select_account'}] }
+      // spy = sinon.spy(firebase, 'auth.GoogleAuthProvider')
+      const { method } = getLoginMethodAndParams(firebase, { provider: 'google', scopes: ['some'] })
+      expect(method).to.equal('signInWithRedirect')
     })
   })
 })

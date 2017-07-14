@@ -57,16 +57,19 @@ export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => 
    * }))(fbWrapped)
    */
   class FirebaseConnect extends Component {
+    constructor (props, context) {
+      super(props, context)
+      this.firebase = null
+      this._firebaseEvents = []
+    }
+
     static contextTypes = {
       [storeKey]: PropTypes.object.isRequired
-    };
+    }
 
     static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)}`
 
     static wrappedComponent = WrappedComponent
-    _firebaseEvents = []
-
-    firebase = null
 
     componentWillMount () {
       const { firebase, dispatch } = this.context[storeKey]

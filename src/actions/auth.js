@@ -90,8 +90,8 @@ export const watchUserProfile = (dispatch, firebase) => {
 }
 
 /**
- * @description Create user profile if it does not already exist. `updateProifleOnLogin: false`
- * can be passed to config to dsiable updating. Profile factory is applied if it exists and is a function.
+ * @description Create user profile if it does not already exist. `updateProfileOnLogin: false`
+ * can be passed to config to disable updating. Profile factory is applied if it exists and is a function.
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @param {Object} userData - User data object (response from authenticating)
@@ -260,7 +260,7 @@ export const login = (dispatch, firebase, credentials) => {
       if (!userData) return Promise.resolve(null)
 
       // For email auth return uid (createUser is used for creating a profile)
-      if (userData.email) return userData.uid
+      if (method === 'signInWithEmailAndPassword') return userData.uid
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
       if (method === 'signInWithCustomToken') {
@@ -277,7 +277,7 @@ export const login = (dispatch, firebase, credentials) => {
       }
 
       // Create profile when logging in with external provider
-      const { user } = userData
+      const user = userData.user || userData
 
       return createUserProfile(
         dispatch,

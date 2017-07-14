@@ -29,7 +29,7 @@ const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
 /**
  * Trim leading slash from path for use with state
  * @param  {String} path - Path seperated with slashes
- * @return {String} Path seperated with dots
+ * @return {String} Path seperated with slashes
  * @private
  */
 const getSlashStrPath = path => pathToArr(path).join('/')

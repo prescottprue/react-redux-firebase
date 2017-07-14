@@ -11,6 +11,7 @@
   * allows any version of Firebase to be used
   * allows [`react-native-firebase`](https://github.com/invertase/react-native-firebase) to be passed (for using native modules instead of JS within `react-native`)
   * firebase is no longer a dependency (shrinks umd bundle size)
+* `profileParamsToPopulate` does not automatically populate profile, populated version can be loaded with `populate` (there will most likely be an option to enable auto populating before `v2.0.0` is out of pre-release)
 
 ### Pass In Firebase instance
 

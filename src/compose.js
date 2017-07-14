@@ -9,18 +9,17 @@ let firebaseInstance
  * @external
  * @description Middleware that handles configuration (placed in redux's
  * `compose` call)
- * @property {Object} fbConfig - Object containing Firebase config including
- * databaseURL or Firebase instance
- * @property {String} fbConfig.apiKey - Firebase apiKey
- * @property {String} fbConfig.authDomain - Firebase auth domain
- * @property {String} fbConfig.databaseURL - Firebase database url
- * @property {String} fbConfig.storageBucket - Firebase storage bucket
- * @property {Object} config - Containing react-redux-firebase specific config
- * such as userProfile
- * @property {String} config.userProfile - Location on firebase to store user
- * profiles
- * @property {Boolean} config.enableLogging - Whether or not to enable Firebase
- * database logging
+ * @property {Object} firebaseInstance - Initiated firebase instance (can also
+ * be library following Firebase JS API such as `react-native-firebase`)
+ * @property {Object} config - Containing react-redux-firebase specific configuration
+ * @property {String} config.userProfile - Location on firebase to store user profiles
+ * @property {Boolean} config.enableLogging - Whether or not to enable Firebase database logging.
+ * **Note**: Only works if instance has enableLogging function.
+ * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
+ * @property {Boolean} config.presence - Location on Firebase to store currently
+ * online users list. Often set to `'presence'` or `'onlineUsers'`.
+ * @property {Boolean} config.sessions - Location on Firebase where user
+ * sessions are stored (only if presense is set). Often set to `'sessions'` or `'onlineUsers'`.
  * @property {Boolean} config.updateProfileOnLogin - Whether or not to update
  * profile when logging in. (default: `false`)
  * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
@@ -36,15 +35,13 @@ let firebaseInstance
  * result is returned. Argument Pattern: `(authData, firebase, dispatch)`
  * @property {Object} config.customAuthParameters - Object for setting which
  * customAuthParameters are passed to external auth providers.
- * @property {Function} config.profileFactory - Factory for modifying how user
- * profile is saved.
  * @property {Function} config.uploadFileDataFactory - Factory for modifying
  * how file meta data is written during file uploads
  * @property {Array|String} config.profileParamsToPopulate - Parameters within
- * profile object to populate
- * @property {Boolean} config.autoPopulateProfile - Whether or not to
- * automatically populate profile with data loaded through
- * profileParamsToPopulate config. (default: `true`)
+ * profile object to populate. As of `v2.0.0` data is only loaded for population, not actually automatically populated
+ * (allows access to both unpopulated and populated profile data).
+ * @property {Boolean} config.autoPopulateProfile - **NOTE**: Not yet enabled for v2.0.0. Whether or not to
+ * automatically populate profile with data loaded through profileParamsToPopulate config. (default: `true`)
  * @property {Boolean} config.setProfilePopulateResults - Whether or not to
  * call SET actions for data that results from populating profile to redux under
  * the data path. For example: role paramter on profile populated from 'roles'

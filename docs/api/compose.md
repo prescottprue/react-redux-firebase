@@ -5,18 +5,17 @@ Middleware that handles configuration (placed in redux's
 
 **Properties**
 
--   `fbConfig` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing Firebase config including
-    databaseURL or Firebase instance
-    -   `fbConfig.apiKey` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Firebase apiKey
-    -   `fbConfig.authDomain` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Firebase auth domain
-    -   `fbConfig.databaseURL` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Firebase database url
-    -   `fbConfig.storageBucket` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Firebase storage bucket
--   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Containing react-redux-firebase specific config
-    such as userProfile
-    -   `config.userProfile` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Location on firebase to store user
-        profiles
-    -   `config.enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable Firebase
-        database logging
+-   `firebaseInstance` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Initiated firebase instance (can also
+    be library following Firebase JS API such as `react-native-firebase`)
+-   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Containing react-redux-firebase specific configuration
+    -   `config.userProfile` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Location on firebase to store user profiles
+    -   `config.enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable Firebase database logging.
+        **Note**: Only works if instance has enableLogging function.
+    -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user profile is saved.
+    -   `config.presence` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Location on Firebase to store currently
+        online users list. Often set to `'presence'` or `'onlineUsers'`.
+    -   `config.sessions` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Location on Firebase where user
+        sessions are stored (only if presense is set). Often set to `'sessions'` or `'onlineUsers'`.
     -   `config.updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to update
         profile when logging in. (default: `false`)
     -   `config.enableRedirectHandling` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable
@@ -32,15 +31,13 @@ Middleware that handles configuration (placed in redux's
         result is returned. Argument Pattern: `(authData, firebase, dispatch)`
     -   `config.customAuthParameters` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object for setting which
         customAuthParameters are passed to external auth providers.
-    -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user
-        profile is saved.
     -   `config.uploadFileDataFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying
         how file meta data is written during file uploads
     -   `config.profileParamsToPopulate` **([Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String))** Parameters within
-        profile object to populate
-    -   `config.autoPopulateProfile` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to
-        automatically populate profile with data loaded through
-        profileParamsToPopulate config. (default: `true`)
+        profile object to populate. As of `v2.0.0` data is only loaded for population, not actually automatically populated
+        (allows access to both unpopulated and populated profile data).
+    -   `config.autoPopulateProfile` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** **NOTE**: Not yet enabled for v2.0.0. Whether or not to
+        automatically populate profile with data loaded through profileParamsToPopulate config. (default: `true`)
     -   `config.setProfilePopulateResults` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to
         call SET actions for data that results from populating profile to redux under
         the data path. For example: role paramter on profile populated from 'roles'
@@ -74,20 +71,6 @@ const createStoreWithFirebase = compose(
 
 // Use Function later to create store
 const store = createStoreWithFirebase(rootReducer, initialState)
-```
-
-_Custom Auth Parameters_
-
-```javascript
-// Follow Setup example with the following config:
-const config = {
-  customAuthParameters: {
-     google: {
-       // prompts user to select account on every google login
-       prompt: 'select_account'
-     }
-  }
-}
 ```
 
 Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** That accepts a component and returns a Component which
