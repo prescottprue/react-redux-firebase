@@ -86,8 +86,8 @@ export const actionTypes = {
  * @property {String} presence - `null` Location on Firebase where of currently
  * online users is stored. Often set to `'presence'` or `'onlineUsers'`.
  * @property {String} sessions - `sessions` Location on Firebase where user
- * sessions are stored (only if presense is set). Often set to `'presence'` or
- * `'onlineUsers'`.
+ * sessions are stored (only if presense is set). Often set to `'sessions'` or
+ * `'userSessions'`.
  * @property {Boolean} enableLogging - `false` Whether or not firebase
  * database logging is enabled.
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
