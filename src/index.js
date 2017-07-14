@@ -1,5 +1,5 @@
 import { createFirebaseInstance } from './createFirebaseInstance'
-import firebaseConnect, { createFirebaseConnect } from './connect'
+import firebaseConnect, { createFirebaseConnect } from './firebaseConnect'
 import compose, { getFirebase } from './compose'
 import reducer from './reducer'
 import constants, { actionTypes } from './constants'

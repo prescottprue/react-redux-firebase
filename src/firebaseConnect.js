@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
+import getDisplayName from 'react-display-name'
 import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable } from './utils'
 
@@ -56,13 +57,19 @@ export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => 
    * }))(fbWrapped)
    */
   class FirebaseConnect extends Component {
+    constructor (props, context) {
+      super(props, context)
+      this.firebase = null
+      this._firebaseEvents = []
+    }
+
     static contextTypes = {
       [storeKey]: PropTypes.object.isRequired
-    };
+    }
 
-    _firebaseEvents = []
+    static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)}`
 
-    firebase = null
+    static wrappedComponent = WrappedComponent
 
     componentWillMount () {
       const { firebase, dispatch } = this.context[storeKey]
