@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import getDisplayName from 'react-display-name'
 import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
-import getDisplayName from 'react-display-name'
 import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable } from './utils'
 
