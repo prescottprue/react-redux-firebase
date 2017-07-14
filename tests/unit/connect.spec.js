@@ -1,10 +1,8 @@
 import React, { Children, Component } from 'react'
-import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import TestUtils from 'react-addons-test-utils'
 import getDisplayName from 'react-display-name'
-import TestUtils from 'react-addons-test-utils'
-import firebaseConnect from '../../src/connect'
+import firebaseConnect from '../../src/firebaseConnect'
 import reactReduxFirebase from '../../src/compose'
 import { createStore, compose, combineReducers } from 'redux'
 
