@@ -1,9 +1,12 @@
 import React, { Children, Component } from 'react'
+import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import TestUtils from 'react-addons-test-utils'
-import { createStore, compose, combineReducers } from 'redux'
-import connect from '../../src/connect'
+import getDisplayName from 'react-display-name'
+import TestUtils from 'react-addons-test-utils'
+import firebaseConnect from '../../src/connect'
 import reactReduxFirebase from '../../src/compose'
+import { createStore, compose, combineReducers } from 'redux'
 
 describe('Connect', () => {
   class Passthrough extends Component {
@@ -38,7 +41,7 @@ describe('Connect', () => {
     )(createStore)
     const store = createStoreWithMiddleware(combineReducers({ test: (state = {}) => state }))
 
-    @connect()
+    @firebaseConnect()
     class Container extends Component {
       render () {
         return <Passthrough {...this.props} />
@@ -56,5 +59,27 @@ describe('Connect', () => {
       testState: 'somethingElse'
     })
     expect(container.context.store).to.equal(store)
+  })
+
+  it('sets displayName static as FirebaseConnect{WrappedComponentName}', () => {
+    class Container extends Component {
+      render () {
+        return <Passthrough {...this.props} />
+      }
+    }
+
+    const containerPrime = firebaseConnect()(Container)
+    expect(containerPrime.displayName).to.equal(`FirebaseConnect(${getDisplayName(Container)}`)
+  })
+
+  it('sets WrappedComponent static as component which was wrapped', () => {
+    class Container extends Component {
+      render () {
+        return <Passthrough {...this.props} />
+      }
+    }
+
+    const containerPrime = firebaseConnect()(Container)
+    expect(containerPrime.wrappedComponent).to.equal(Container)
   })
 })

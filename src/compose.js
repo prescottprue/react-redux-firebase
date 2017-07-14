@@ -50,7 +50,8 @@ let firebaseInstance
  * the data path. For example: role paramter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
  * is loaded (places it in data/roles). (default: `false`)
- * @return {Function} That accepts a component a returns a wrapped version of component
+ * @return {Function} That accepts a component and returns a Component which
+ * wraps the provided component (higher order component).
  * @example <caption>Setup</caption>
  * import { createStore, compose } from 'redux'
  * import { reactReduxFirebase } from 'react-redux-firebase'
@@ -95,7 +96,7 @@ export default (fbConfig, otherConfig) => next =>
   }
 
 /**
- * @external
+ * @private
  * @description Expose Firebase instance created internally. Useful for
  * integrations into external libraries such as redux-thunk and redux-observable.
  * @example <caption>redux-thunk integration</caption>

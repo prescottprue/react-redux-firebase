@@ -76,45 +76,19 @@ const createStoreWithFirebase = compose(
 const store = createStoreWithFirebase(rootReducer, initialState)
 ```
 
-Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** That accepts a component a returns a wrapped version of component
-
-# getFirebase
-
-Expose Firebase instance created internally. Useful for
-integrations into external libraries such as redux-thunk and redux-observable.
-
-**Examples**
-
-_redux-thunk integration_
+_Custom Auth Parameters_
 
 ```javascript
-import { applyMiddleware, compose, createStore } from 'redux';
-import thunk from 'redux-thunk';
-import { reactReduxFirebase } from 'react-redux-firebase';
-import makeRootReducer from './reducers';
-import { getFirebase } from 'react-redux-firebase';
-
-const fbConfig = {} // your firebase config
-
-const store = createStore(
-  makeRootReducer(),
-  initialState,
-  compose(
-    applyMiddleware([
-      // Pass getFirebase function as extra argument
-      thunk.withExtraArgument(getFirebase)
-    ]),
-    reactReduxFirebase(fbConfig)
-  )
-);
-// then later
-export const addTodo = (newTodo) =>
- (dispatch, getState, getFirebase) => {
-   const firebase = getFirebase()
-   firebase
-     .push('todos', newTodo)
-     .then(() => {
-       dispatch({ type: 'SOME_ACTION' })
-     })
-};
+// Follow Setup example with the following config:
+const config = {
+  customAuthParameters: {
+     google: {
+       // prompts user to select account on every google login
+       prompt: 'select_account'
+     }
+  }
+}
 ```
+
+Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** That accepts a component and returns a Component which
+wraps the provided component (higher order component).

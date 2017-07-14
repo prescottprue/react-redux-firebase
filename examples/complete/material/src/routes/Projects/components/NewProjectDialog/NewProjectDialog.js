@@ -22,7 +22,7 @@ export default class NewProjectDialog extends Component {
     open: this.props.open || false
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.open) {
       this.setState({ open: true })
     }
@@ -35,38 +35,31 @@ export default class NewProjectDialog extends Component {
     }
   }
 
-  render () {
+  render() {
     const { open } = this.state
     const { handleSubmit } = this.props
 
     const actions = [
-      <FlatButton
-        label='Cancel'
-        secondary
-        onClick={this.close}
-      />,
-      <FlatButton
-        label='Create'
-        primary
-        onClick={this.props.submit}
-      />
+      <FlatButton label="Cancel" secondary onClick={this.close} />,
+      <FlatButton label="Create" primary onClick={this.props.submit} />
     ]
 
     return (
       <Dialog
-        title='New Project'
+        title="New Project"
         modal={false}
         actions={actions}
         open={open}
         onRequestClose={this.close}
-        contentClassName={classes.container}>
+        contentClassName={classes.container}
+      >
         <div className={classes.inputs}>
           <form onSubmit={handleSubmit}>
             <Field
-              name='name'
+              name="name"
               component={TextField}
               validate={[required]}
-              label='Project Name'
+              label="Project Name"
             />
           </form>
         </div>

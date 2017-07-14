@@ -98,7 +98,7 @@
 * Support for keeping data on logout - [#125](https://github.com/prescottprue/react-redux-firebase/issues/125)
 * `react-native` index file referenced in `package.json` that makes it no longer necessary to pass `ReactNative` in config
 * `AuthRequired` decorator (or decorator factory) that forces auth to exist before rendering component
-* Support [`react-native-firebase`](https://github.com/invertase/react-native-firebase) [#131](https://github.com/prescottprue/react-redux-firebase/issues/131)
+* Support native modules through [`react-native-firebase`](https://github.com/invertase/react-native-firebase) - [#131](https://github.com/prescottprue/react-redux-firebase/issues/131)
 
 #### Enhancements/Fixes
 * Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance

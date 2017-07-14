@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import getDisplayName from 'react-display-name'
 import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'
@@ -60,6 +61,9 @@ export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => 
       [storeKey]: PropTypes.object.isRequired
     };
 
+    static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)}`
+
+    static wrappedComponent = WrappedComponent
     _firebaseEvents = []
 
     firebase = null

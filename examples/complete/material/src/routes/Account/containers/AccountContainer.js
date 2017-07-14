@@ -18,7 +18,9 @@ import classes from './AccountContainer.scss'
     profile
   })
 )
-export default class Account extends Component {
+export default // redirect to /login if user is not authenticated
+// add this.props.firebase
+class Account extends Component {
   static propTypes = {
     profile: PropTypes.object,
     auth: PropTypes.shape({
@@ -40,7 +42,7 @@ export default class Account extends Component {
     })
   }
 
-  updateAccount = (newData) =>
+  updateAccount = newData =>
     this.props.firebase
       .updateProfile(newData)
       .catch((err) => {
