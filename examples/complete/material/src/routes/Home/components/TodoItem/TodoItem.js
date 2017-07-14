@@ -9,15 +9,12 @@ import { isObject } from 'lodash'
 export default class TodoItem extends Component {
   static propTypes = {
     todo: PropTypes.object.isRequired,
-    id: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     onDeleteClick: PropTypes.func,
     onCompleteClick: PropTypes.func
   }
 
-  render () {
+  render() {
     const { todo, id, onCompleteClick, onDeleteClick } = this.props
 
     return (
@@ -29,20 +26,18 @@ export default class TodoItem extends Component {
               onCheck={() => onCompleteClick(todo, todo._key || id)}
             />
           }
-          rightIcon={
-            <Delete onClick={() => onDeleteClick(todo._key || id)} />
-          }
+          rightIcon={<Delete onClick={() => onDeleteClick(todo._key || id)} />}
           secondaryText={
             <p>
-              <span className='TodoItem-Text'>
+              <span className="TodoItem-Text">
                 {todo.text}
-              </span><br />
-              <span className='TodoItem-Owner'>
-                Owner: {
-                  isObject(todo.owner)
+              </span>
+              <br />
+              <span className="TodoItem-Owner">
+                Owner:{' '}
+                {isObject(todo.owner)
                   ? todo.owner.displayName || todo.owner.username
-                  : todo.owner || 'No Owner'
-                }
+                  : todo.owner || 'No Owner'}
               </span>
             </p>
           }

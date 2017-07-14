@@ -20,7 +20,7 @@ export default class NewTodoPanel extends Component {
     newTodo.value = ''
   }
 
-  render () {
+  render() {
     const { disabled } = this.props
 
     return (
@@ -28,14 +28,14 @@ export default class NewTodoPanel extends Component {
         <Subheader>New Todo</Subheader>
         <div className={classes.inputSection}>
           <TextField
-            floatingLabelText='New Todo Text'
-            ref='newTodo'
-            onChange={({ target }) => this.setState({text: target.value})}
+            floatingLabelText="New Todo Text"
+            ref="newTodo"
+            onChange={({ target }) => this.setState({ text: target.value })}
           />
           <IconButton
             onClick={this.handleAdd}
             disabled={disabled}
-            tooltipPosition='top-center'
+            tooltipPosition="top-center"
             tooltip={disabled ? 'Login To Add Todo' : 'Add Todo'}
           >
             <ContentAdd />

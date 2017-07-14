@@ -23,7 +23,7 @@ export default class AppContainer extends Component {
     store: PropTypes.object.isRequired
   }
 
-  render () {
+  render() {
     const { routes, store } = this.props
     return (
       <Provider store={store}>

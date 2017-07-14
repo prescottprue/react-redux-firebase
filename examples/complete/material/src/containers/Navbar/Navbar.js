@@ -9,12 +9,7 @@ import {
   isLoaded,
   isEmpty
 } from 'react-redux-firebase'
-import {
-  LIST_PATH,
-  ACCOUNT_PATH,
-  LOGIN_PATH,
-  SIGNUP_PATH
-} from 'constants'
+import { LIST_PATH, ACCOUNT_PATH, LOGIN_PATH, SIGNUP_PATH } from 'constants'
 
 // Components
 import AppBar from 'material-ui/AppBar'
@@ -35,7 +30,12 @@ const buttonStyle = {
 const avatarStyles = {
   wrapper: { marginTop: 0 },
   button: { marginRight: '.5rem', width: '200px', height: '64px' },
-  buttonSm: { marginRight: '.5rem', width: '30px', height: '64px', padding: '0' }
+  buttonSm: {
+    marginRight: '.5rem',
+    width: '30px',
+    height: '64px',
+    padding: '0'
+  }
 }
 
 @firebaseConnect()
@@ -67,7 +67,7 @@ export default class Navbar extends Component {
     const iconButton = (
       <IconButton style={avatarStyles.button} disableTouchRipple>
         <div className={classes.avatar}>
-          <div className='hidden-mobile'>
+          <div className="hidden-mobile">
             <Avatar
               src={profileExists && profile.avatarUrl ? profile.avatarUrl : defaultUserImage}
             />
@@ -76,7 +76,7 @@ export default class Navbar extends Component {
             <span className={`${classes['avatar-text-name']} hidden-mobile`}>
               { profileExists && profile.displayName ? profile.displayName : 'User' }
             </span>
-            <DownArrow color='white' />
+            <DownArrow color="white" />
           </div>
         </div>
       </IconButton>
@@ -85,16 +85,10 @@ export default class Navbar extends Component {
     const mainMenu = (
       <div className={classes.menu}>
         <Link to={SIGNUP_PATH}>
-          <FlatButton
-            label='Sign Up'
-            style={buttonStyle}
-          />
+          <FlatButton label="Sign Up" style={buttonStyle} />
         </Link>
         <Link to={LOGIN_PATH}>
-          <FlatButton
-            label='Login'
-            style={buttonStyle}
-          />
+          <FlatButton label="Login" style={buttonStyle} />
         </Link>
       </div>
     )
@@ -120,7 +114,10 @@ export default class Navbar extends Component {
     return (
       <AppBar
         title={
-          <Link to={profileExists ? `${LIST_PATH}` : '/'} className={classes.brand}>
+          <Link
+            to={accountExists ? `${LIST_PATH}` : '/'}
+            className={classes.brand}
+          >
             material example
           </Link>
         }

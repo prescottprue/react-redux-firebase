@@ -2,14 +2,16 @@
 
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][npm-downloads-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Dependency Status][daviddm-image]][daviddm-url]
-[![License][license-image]][license-url]
+[![Quality][quality-image]][quality-url]
 [![Code Coverage][coverage-image]][coverage-url]
 [![Code Style][code-style-image]][code-style-url]
+[![License][license-image]][license-url]
+[![Build Status][travis-image]][travis-url]
+[![Dependency Status][daviddm-image]][daviddm-url]
+[![Backers on Open Collective][backers]](#backers)
 
 [![Gitter][gitter-image]][gitter-url]
-[<img src="http://npm.packagequality.com/badge/react-redux-firebase.png" align="right"/>](https://packagequality.com/#?package=react-redux-firebase)
+
 
 > Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 
@@ -31,7 +33,7 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 - Action Types and other Constants exported for external use (such as in `redux-observable`)
 - Firebase v3+ support
 - Server Side Rendering Support
-- [`react-native` support](/docs/recipes/react-native.md) using [native modules](/docs/recipes/react-native.md#native-modules) or [web sdk](/docs/recipes/react-native.md#jsweb)
+- [`react-native` support](/docs/recipes/react-native.md) using [native modules](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules) or [web sdk](/docs/recipes/react-native.md#jsweb)
 
 ## Install
 
@@ -39,10 +41,24 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 npm install --save react-redux-firebase
 ```
 
+#### Other Versions
+
+The above install command will install the `@latest` tag. You may also use the following tags when installing to get different versions:
+
+* `@next` - Next upcoming release. currently points to active progress with `v1.5.0-*` pre-releases
+* `@canary` - Most possible up to date code. Currently points to active progress with `v2.0.0-*` pre-releases. *Warning:* Syntax is different than current stable version.
+
+Other versions docs are available using the dropdown on the above docs link. For quick access:
+* [Version `1.5.0` Docs](http://docs.react-redux-firebase.com/history/v1.5.0/)
+* [Version `2.0.0` Docs](http://docs.react-redux-firebase.com/history/v2.0.0/)
+
+**Note:** Be aware of changes when using version that are tagged `@latest`. Please report any issues you encounter, and try to keep an eye on the [releases page](https://github.com/prescottprue/react-redux-firebase/releases) for relevant release info.
+
 ## Use
 
-Include reactReduxFirebase in your store compose function:
+**NOTE:** If you are just starting a new project, you might want to use [`v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/#use) has an even easier syntax. For clarity on the transition, view the [`v1` -> `v2` migration guide](http://docs.react-redux-firebase.com/history/v2.0.0/docs/v2-migration-guide.html)
 
+Include `reactReduxFirebase` in your store compose function and  `firebaseStateReducer` in your reducers:
 
 ```javascript
 import { createStore, combineReducers, compose } from 'redux'
@@ -182,7 +198,7 @@ In order to enable this functionality, you will most likely need to install a pl
 2. Add the following line to your `.babelrc`:
 ```json
 {
-    "plugins": ["transform-decorators-legacy"]
+  "plugins": ["transform-decorators-legacy"]
 }
 ```
 
@@ -225,12 +241,13 @@ Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby).
 View docs for recipes on integrations with:
 
 * [redux-thunk](/docs/recipes/thunks.md)
-* [redux-form](/docs/recipes/redux-form.md)
 * [redux-observable](/docs/recipes/redux-observable.md)
+* [redux-saga](/docs/recipes/redux-saga.md)
+* [redux-form](/docs/recipes/redux-form.md)
 * [redux-auth-wrapper](/docs/recipes/routing.md#advanced)
-* [redux-persist](/docs/recipes/redux-persist.md)
+* [redux-persist](/docs/recipes/redux-persist.md) - [improved integration with `v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/redux-persist.html)
 * [react-native](/docs/recipes/react-native.md)
-* [react-native-firebase](/docs/recipes/react-native.md#native-modules)
+* [react-native-firebase](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules) - requires `v2.0.0`
 
 ## Starting A Project
 
@@ -248,9 +265,10 @@ The [examples folder](/examples) contains full applications that can be copied/a
 
   This library was actually originally forked from redux-react-firebase, but adds extended functionality such as:
   * [populate functionality](http://react-redux-firebase.com/docs/populate) (similar to mongoDB or SQL JOIN)
+  * `react-native` support ([web/js](http://react-redux-firebase.com/docs/recipes/react-native.html) or native modules through [`react-native-firebase`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules))
+  * tons of [integrations](#integrations)
   * [`profileDecorator`](http://react-redux-firebase.com/docs/config) - change format of profile stored on Firebase
   * [`getFirebase`](http://react-redux-firebase.com/docs/thunks) - access to firebase instance that fires actions when methods are called
-  * [integrations](http://react-redux-firebase.com/docs/thunks) for [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org) - using `getFirebase`
   * [access to firebase's `storage`](http://react-redux-firebase.com/docs/storage) method`
   * `uniqueSet` method helper for only setting if location doesn't already exist
   * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)
@@ -279,19 +297,27 @@ The [examples folder](/examples) contains full applications that can be copied/a
   * Post Issues
   * Create Pull Requests
 
-## Patrons
+## Contributors
 
-Meet some of the outstanding companies and individuals that made it possible:
+This project exists thanks to all the people who contribute.
 
-  * [Reside Network Inc.](https://github.com/reside-eng)
+<a href="graphs/contributors"><img src="https://opencollective.com/react-redux-firebase/contributors.svg?width=890" /></a>
 
-## Thanks
+## Backers
 
-Special thanks to [Tiberiu Craciun](https://github.com/tiberiuc) for creating [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase), which this project was originally based on.
+Thank you to all our backers! 🙏
+
+* [Reside Network Inc.](https://github.com/reside-eng)
+
+<a href="https://opencollective.com/react-redux-firebase#backers" target="_blank"><img src="https://opencollective.com/react-redux-firebase/backers.svg?width=890"></a>
 
 [npm-image]: https://img.shields.io/npm/v/react-redux-firebase.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/react-redux-firebase
 [npm-downloads-image]: https://img.shields.io/npm/dm/react-redux-firebase.svg?style=flat-square
+[quality-image]: http://npm.packagequality.com/shield/react-redux-firebase.svg?style=flat-square
+[quality-url]: https://packagequality.com/#?package=react-redux-firebase
+[backers]:https://opencollective.com/react-redux-firebase/backers/badge.svg?style=flat-square&color=blue
+[become-a-backer]:https://opencollective.com/react-redux-firebase#backer
 [travis-image]: https://img.shields.io/travis/prescottprue/react-redux-firebase/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/prescottprue/react-redux-firebase
 [daviddm-image]: https://img.shields.io/david/prescottprue/react-redux-firebase.svg?style=flat-square
