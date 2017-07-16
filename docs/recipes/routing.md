@@ -15,13 +15,7 @@ Routing can be changed based on data by using react lifecycle hooks such as `com
 ```javascript
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import {
-  firebaseConnect,
-  helpers,
-  pathToJS,
-  isLoaded,
-  isEmpty
-} from 'react-redux-firebase'
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 
 @firebaseConnect()
 @connect(
@@ -66,8 +60,8 @@ export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',
   authSelector: ({ firebase: { auth } }) => auth,
   authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
-    isInitializing === true || auth === undefined,
-  predicate: auth => auth !== null,
+    !auth.isLoaded || isInitializing === true,
+  predicate: auth => !auth.isEmpty,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
     // routerActions.replace // if using react-router-redux
@@ -118,7 +112,6 @@ Just as easily as creating a wrapper for redirect if a user is not logged in, we
 ```javascript
 import { browserHistory } from 'react-router'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { pathToJS } from 'react-redux-firebase'
 
 export const UserIsNotAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsNotAuthenticated',
@@ -126,8 +119,8 @@ export const UserIsNotAuthenticated = UserAuthWrapper({
   failureRedirectPath: '/',
   authSelector: ({ firebase: { auth } }) => auth,
   authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
-    isInitializing === true || auth === undefined,
-  predicate: auth => auth === null,
+    !auth.isLoaded || isInitializing === true,
+  predicate: auth => auth.isEmpty,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
     dispatch({
