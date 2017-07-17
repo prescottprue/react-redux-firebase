@@ -15,7 +15,7 @@ To load a firebase location once instead of binding, the once option can be used
 ```
 
 ## orderByChild
-To order the query by a child within each object, user orderByChild.
+To order the query by a child within each object, use orderByChild.
 
 **Internal Method**: [ `orderByChild`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByChild)
 
