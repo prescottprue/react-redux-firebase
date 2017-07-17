@@ -10,15 +10,18 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import AccountForm from '../components/AccountForm/AccountForm'
 import classes from './AccountContainer.scss'
 
-@UserIsAuthenticated // redirect to /login if user is not authenticated
-@firebaseConnect() // add this.props.firebase
-@connect( // Map redux state to props
+@UserIsAuthenticated
+@firebaseConnect()
+@connect(
+  // Map redux state to props
   ({ firebase }) => ({
     auth: pathToJS(firebase, 'auth'),
     account: pathToJS(firebase, 'profile')
   })
 )
-export default class Account extends Component {
+export default // redirect to /login if user is not authenticated
+// add this.props.firebase
+class Account extends Component {
   static propTypes = {
     account: PropTypes.object,
     auth: PropTypes.shape({
@@ -40,7 +43,7 @@ export default class Account extends Component {
     })
   }
 
-  updateAccount = (newData) =>
+  updateAccount = newData =>
     this.props.firebase
       .updateProfile(newData)
       .catch((err) => {
@@ -48,7 +51,7 @@ export default class Account extends Component {
         // TODO: Display error to user
       })
 
-  render () {
+  render() {
     const { account } = this.props
 
     if (!isLoaded(account)) {
@@ -62,7 +65,7 @@ export default class Account extends Component {
             <div className={classes.avatar}>
               <img
                 className={classes.avatarCurrent}
-                src={account && account.avatarUrl || defaultUserImageUrl}
+                src={(account && account.avatarUrl) || defaultUserImageUrl}
                 onClick={this.toggleModal}
               />
             </div>

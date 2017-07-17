@@ -6,8 +6,9 @@ import Paper from 'material-ui/Paper'
 import RecoverForm from '../components/RecoverForm'
 import EmailForm from '../components/EmailForm'
 
-@firebaseConnect() // adds this.props.firebase
-export default class RecoverContainer extends Component {
+@firebaseConnect()
+export default // adds this.props.firebase
+class RecoverContainer extends Component {
   static propTypes = {
     firebase: PropTypes.object
   }
@@ -25,7 +26,7 @@ export default class RecoverContainer extends Component {
           open: true
         })
       })
-      .catch((err) => {
+      .catch(err => {
         console.error('Error updating account', err) // eslint-disable-line no-console
         this.setState({ message: err.message || 'Error' }) // show error snackbar
         return Promise.reject(err)
@@ -39,19 +40,19 @@ export default class RecoverContainer extends Component {
 
     return verifyPasswordResetCode(code)
       .then(() => confirmPasswordReset(code, password))
-      .then((res) => {
+      .then(res => {
         this.setState({ message: 'Password Changed Successfully' })
       })
-      .catch((err) => {
+      .catch(err => {
         console.error('Error updating account', err) // eslint-disable-line no-console
         this.setState({ message: err.message }) // show error snackbar
         return Promise.reject(err)
       })
   }
 
-  render () {
+  render() {
     return (
-      <div className='flex-column-center'>
+      <div className="flex-column-center">
         <Paper style={{ marginTop: '3rem' }}>
           <EmailForm onSubmit={this.sendRecoveryEmail} />
         </Paper>
