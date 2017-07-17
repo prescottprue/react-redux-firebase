@@ -120,7 +120,7 @@ import CircularProgress from 'material-ui/CircularProgress';
  * @param {Component} componentToWrap - Component to wrap
  * @return {Component} wrappedComponent
  */
-export const UserIsAdmin = UserAuthWrapper({ // eslint-disable-line new-cap
+export const UserIsAdmin = UserAuthWrapper({
   authSelector: ({ firebase }) => {
     const user = pathToJS(firebase, 'profile');
     if (user) {
@@ -160,11 +160,12 @@ import CircularProgress from 'material-ui/CircularProgress';
  * @param {Component} componentToWrap - Component to wrap
  * @return {Component} wrappedComponent
  */
-export const UserHasPermission = permission => UserAuthWrapper({ // eslint-disable-line new-cap
+export const UserHasPermission = permission => UserAuthWrapper({
   authSelector: ({ firebase }) => {
     const user = pathToJS(firebase, 'profile');
     if (user) {
-      return { ...pathToJS(firebase, 'auth'), { user } }; // attach profile for use in predicate
+      // attach profile for use in predicate
+      return { ...pathToJS(firebase, 'auth'), user };
     }
     return pathToJS(firebase, 'auth');
   },
