@@ -437,6 +437,7 @@ export default (fbConfig, otherConfig) => next =>
       authActions.verifyPasswordResetCode(dispatch, instance, code)
 
     /**
+     * @private
      * @description Update the currently logged in user's profile object
      * @param {String} profileUpdate - Changes to apply to profile
      * @return {Promise}
@@ -445,6 +446,7 @@ export default (fbConfig, otherConfig) => next =>
       authActions.updateProfile(dispatch, instance, profile)
 
     /**
+     * @private
      * @description Update the currently logged in user's auth object. **Note**:
      * changes Auth object **only**, not user's profile.
      * @param {String} code - Password reset code to verify
@@ -454,6 +456,7 @@ export default (fbConfig, otherConfig) => next =>
       authActions.updateAuth(dispatch, instance, authUpdate)
 
     /**
+     * @private
      * @description Update the currently logged in user's email. **Note**:
      * changes email in Auth object only, not within user's profile.
      * @param {String} newEmail - New email
@@ -474,6 +477,7 @@ export default (fbConfig, otherConfig) => next =>
     * @name auth
     * @description Firebase auth service instance including all Firebase auth methods
     * @return {Auth}
+    * @private
     */
    /**
     * @name database
@@ -491,6 +495,7 @@ export default (fbConfig, otherConfig) => next =>
      * @name messaging
      * @description Firebase messaging service instance including all Firebase messaging methods
      * @return {Messaging} Firebase messaging service
+     * @private
      */
     firebase.helpers = {
       ref: path => firebase.database().ref(path),
