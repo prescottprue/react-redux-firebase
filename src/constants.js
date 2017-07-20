@@ -90,6 +90,8 @@ export const actionTypes = {
  * `'userSessions'`.
  * @property {Boolean} enableLogging - `false` Whether or not firebase
  * database logging is enabled.
+ * @property {Array} preserveOnLougout - `null` Data parameters to preserve when
+ * logging out.
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
  * user profile when logging in.
  * @property {Boolean} enableRedirectHandling - `true` Whether or not to enable

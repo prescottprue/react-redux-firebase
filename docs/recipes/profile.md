@@ -1,5 +1,80 @@
-### Change Profile
-When signing up, you can modify how user profiles written to the database.
+# Profile
+
+Profile object is used to store data associated with a user.
+
+## Basic
+Include the `userProfile` parameter in config when setting up store middleware:
+
+```js
+const config = {
+  userProfile: 'users', // where profiles are stored in database
+}
+reactReduxFirebase(fbConfig, config)
+```
+
+Then later wrap a component with connect:
+
+```js
+import { connect } from 'react-redux'
+
+// grab profile from redux with connect
+connect(
+  (state) => ({
+    profile: state.firebase.profile // profile passed as props.profile
+  })
+)(SomeComponent) // pass component to be wrapped
+```
+
+## Update Profile
+
+The current users profile can be updated by using the `updateProfile` method:
+
+```js
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { firebaseConnect, isLoaded } from 'react-redux-firebase'
+
+@firebaseConnect()
+@connect(
+  ({ firebase: { profile } }) => ({
+    profile,
+  })
+)
+export default class UpdateProfilePage extends Component {
+  static propTypes = {
+    profile: PropTypes.object,
+  }
+
+  addRole = () => {
+    return this.props.updateProfile({ role: ''})
+  }
+
+  render() {
+    const { profile } = this.props
+    return (
+      <div>
+        <h2>Update User Profile</h2>
+        <span>
+          Click the button to update profile to include role parameter
+        </span>
+        <button onClick={this.addRole}>
+          Add Role To User
+        </button>
+        <div>
+          {
+            isLoaded(profile)
+              ? JSON.stringify(profile, null, 2)
+              : 'Loading...'
+          }
+        </div>
+      </div>
+    )
+  }
+}
+```
+## Change How Profiles Are Stored
+The way user profiles are written to the database can be modified by passing the `profileFactory` parameter .
 
 ```js
 // within your createStore.js or store.js file include the following config
@@ -14,7 +89,11 @@ const config = {
 }
 ```
 
-### Populate Parameters
+## List Online Users
+
+To list online users and/or track sessions, view the [presence recipe](/docs/recipes/auth.md#presence)
+
+## Populate Parameters
 If profile object contains an key or a list of keys as parameters, you can populate those parameters with the matching value from another location on firebase.
 
 #### List

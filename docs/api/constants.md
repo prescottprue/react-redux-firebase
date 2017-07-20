@@ -68,6 +68,8 @@ Default configuration options
     `'userSessions'`.
 -   `enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not firebase
     database logging is enabled.
+-   `preserveOnLougout` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** `null` Data parameters to preserve when
+    logging out.
 -   `updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to update
     user profile when logging in.
 -   `enableRedirectHandling` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to enable

@@ -75,3 +75,25 @@ export default class Login extends Component {
   }
 }
 ```
+
+## List of Online Users (Presence)
+
+Presence keeps a list of which users are currently online as well as a history of all user sessions.
+
+The logic that runs this is partially based on:
+* [blog post by Firebase](https://firebase.googleblog.com/2013/06/how-to-build-presence-system.html)/
+* [Firebase's Sample Presence App](https://firebase.google.com/docs/database/web/offline-capabilities#section-sample)
+
+## Basic
+Include the `userProfile` parameter in config when setting up store middleware:
+
+```js
+const config = {
+  userProfile: 'users', // where profiles are stored in database
+  presence: 'presence', // where list of online users is stored in database
+  sessions: 'sessions' // where list of user sessions is stored in database (presence must be enabled)
+}
+reactReduxFirebase(fbConfig, config)
+```
+
+Now when logging in through `login` method, user will be listed as online until they logout or end the session (close the tab or window).
