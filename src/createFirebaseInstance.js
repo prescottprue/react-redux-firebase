@@ -7,6 +7,7 @@ import { authActions, queryActions, storageActions } from './actions'
  * @param  {Object} configs - Configuration object
  * @param  {Function} dispatch - Action dispatch function
  * @return {Object} Extended Firebase instance
+ * @private
  */
 export const createFirebaseInstance = (firebase, configs, dispatch) => {
   /* istanbul ignore next: Logging is external */
@@ -313,7 +314,6 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @description Update user profile
    * @param {Object} profile - Profile data to place in new profile
    * @return {Promise}
-   * @private
    */
   const updateProfile = (profileUpdate) =>
     authActions.updateProfile(dispatch, instance, profileUpdate)
@@ -323,7 +323,6 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @param {Object} authUpdate - Update to be auth object
    * @param {Boolean} updateInProfile - Update in profile
    * @return {Promise}
-   * @private
    */
   const updateAuth = (authUpdate, updateInProfile) =>
     authActions.updateAuth(dispatch, instance, authUpdate, updateInProfile)
@@ -333,7 +332,6 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @param {String} newEmail - Update to be auth object
    * @param {Boolean} updateInProfile - Update in profile
    * @return {Promise}
-   * @private
    */
   const updateEmail = (newEmail, updateInProfile) =>
     authActions.updateEmail(dispatch, instance, newEmail, updateInProfile)
@@ -341,7 +339,22 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
   /**
    * @name ref
    * @description Firebase ref function
-   * @return {database.Reference}
+   * @return {firebase.database.Reference}
+   */
+  /**
+   * @name database
+   * @description Firebase database service instance including all Firebase storage methods
+   * @return {firebase.database.Database} Firebase database service
+   */
+  /**
+   * @name storage
+   * @description Firebase storage service instance including all Firebase storage methods
+   * @return {firebase.database.Storage} Firebase storage service
+   */
+  /**
+   * @name auth
+   * @description Firebase auth service instance including all Firebase auth methods
+   * @return {firebase.database.Auth}
    */
   const helpers = {
     ref: path => firebase.database().ref(path),

@@ -5,6 +5,10 @@ const files = [
     dest: 'connect.md'
   },
   {
+    src: 'createFirebaseInstance.js',
+    dest: 'firebaseInstance.md'
+  },
+  {
     src: 'compose.js',
     dest: 'compose.md'
   },

@@ -105,10 +105,6 @@ export interface listenerConfigFunc {
 
 export function buildChildList(data: any, list: any, p: any): any;
 
-export function customToJS(data: any, path: any, custom: any, notSetValue: any): any;
-
-export function dataToJS(data: any, path: any, notSetValue: any): any;
-
 export function firebase(...args: any[]): any;
 
 export function firebaseConnect(...args: any[]): any;
@@ -123,17 +119,15 @@ export function isEmpty(data: any): any;
 
 export function isLoaded(...args: any[]): any;
 
-export function orderedToJS(data: any, path: any, notSetValue: any): any;
+export function ordered(data: any, path: any, notSetValue: any): any;
 
-export function pathToJS(data: any, path: any, notSetValue: any): any;
+export function populate(data: any, path: any, populates: any, notSetValue: any): any;
 
-export function populatedDataToJS(data: any, path: any, populates: any, notSetValue: any): any;
+export function reactReduxFirebase(fbInstance: any, otherConfig: any, ...args: any[]): any;
 
-export function reactReduxFirebase(fbConfig: ConfigObject, otherConfig: any, ...args: any[]): any;
+export function reduxFirebase(fbInstance: any, otherConfig: any, ...args: any[]): any;
 
-export function reduxFirebase(fbConfig: ConfigObject, otherConfig: any, ...args: any[]): any;
-
-export function reduxReactFirebase(fbConfig: ConfigObject, otherConfig: any, ...args: any[]): any;
+export function reduxReactFirebase(fbInstance: any, otherConfig: any, ...args: any[]): any;
 
 export function toJS(data: any): any;
 
@@ -188,23 +182,15 @@ export namespace getFirebase {
 export namespace helpers {
     function buildChildList(data: any, list: any, p: any): any;
 
-    function customToJS(data: any, path: any, custom: any, notSetValue: any): any;
-
-    function dataToJS(data: any, path: any, notSetValue: any): any;
-
     function fixPath(path: any): any;
 
     function isEmpty(data: any): any;
 
     function isLoaded(...args: any[]): any;
 
-    function orderedToJS(data: any, path: any, notSetValue: any): any;
+    function ordered(data: any, path: any, notSetValue: any): any;
 
-    function pathToJS(data: any, path: any, notSetValue: any): any;
-
-    function populatedDataToJS(data: any, path: any, populates: any, notSetValue: any): any;
-
-    function toJS(data: any): any;
+    function populate(data: any, path: any, populates: any, notSetValue: any): any;
 
     namespace buildChildList {
         const prototype: {
