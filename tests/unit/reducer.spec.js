@@ -43,6 +43,37 @@ describe('reducer', () => {
       .to.equal(exampleData)
   })
 
+  it('handles undefined path', () => {
+    expect(
+      firebaseStateReducer(
+        exampleState,
+        { type: actionTypes.START }
+      )
+    ).to.equal(exampleState)
+  })
+
+  describe('START action', () => {
+    describe('sets requesting and requested when they are', () => {
+      it('empty', () => {
+        expect(
+          firebaseStateReducer(
+            exampleState,
+            { type: actionTypes.START, path: 'test' }
+          )
+        ).to.equal(exampleState)
+      })
+
+      it('already set', () => {
+        expect(
+          firebaseStateReducer(
+            exampleState,
+            { type: actionTypes.START, path: 'test' }
+          )
+        ).to.equal(exampleState)
+      })
+    })
+  })
+
   describe('SET action', () => {
     it('deletes data from state when data is null', () => {
       expect(

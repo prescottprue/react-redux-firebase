@@ -59,7 +59,7 @@ export default (dataOrFn = []) => WrappedComponent => {
       store: PropTypes.object.isRequired
     }
 
-    static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)}`
+    static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)})`
 
     static wrappedComponent = WrappedComponent
 
