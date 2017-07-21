@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "1.5.0-rc.1",
+  "version": "1.5.0-rc.2",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -19,7 +19,7 @@
     "build:umd:min": "cross-env BABEL_ENV=commonjs NODE_ENV=production webpack src/index.js dist/react-redux-firebase.min.js",
     "build:size": "cross-env SIZE=true BABEL_ENV=commonjs NODE_ENV=production webpack src/index.js dist/react-redux-firebase.min.js",
     "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
-    "watch": "npm run build:umd -- --watch",
+    "watch": "npm run build:commonjs -- --watch",
     "prepublish": "npm run clean && npm run build",
     "prepush": "npm run lint:fix",
     "docs:clean": "rimraf _book",
@@ -66,8 +66,7 @@
     "immutable": "^3.8.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
-    "prop-types": "^15.5.8",
-    "react-display-name": "^0.2.0"
+    "prop-types": "^15.5.8"
   },
   "peerDependencies": {
     "react": "^0.14.6 || ^15.0.0"

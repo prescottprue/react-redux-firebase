@@ -34,12 +34,9 @@ const fakeFirebase = {
           funcsObj.next({bytesTransferred: 12, totalBytes: 12})
           funcsObj.error()
           funcsObj.complete()
-          console.log('----------- typeof litent', typeof unListen)
-          return () => console.log('called')
+          return unListen
         },
-        then: () => {
-
-        }
+        then: () => Promise.resolve({})
       }),
       delete: () => Promise.resolve(({
 
@@ -55,9 +52,12 @@ describe('Actions: Storage', () => {
     beforeEach(() => {
       spy = sinon.spy(dispatch)
     })
+
     it('is exported', () => {
       expect(uploadFileWithProgress).to.be.a.function
     })
+
+    // unListen is not a function due to storage not being mocked correctly
     it.skip('runs given basic params', () =>
       uploadFileWithProgress(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
         .then((snap) => {
@@ -71,15 +71,25 @@ describe('Actions: Storage', () => {
     beforeEach(() => {
       spy = sinon.spy(dispatch)
     })
+
     it('is exported', () => {
       expect(uploadFile).to.be.a.function
     })
-    it.skip('runs given basic params', () =>
-      uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
-        .then((snap) => {
-          expect(spy).to.have.been.calledOnce
-          expect(snap).to.be.an.object
-        })
+
+    // unListen is not a function due to storage not being mocked correctly
+    it('runs given basic params', () =>
+      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' }  }))
+        .to
+        .eventually
+        .become({})
+    )
+
+    // unListen is not a function due to storage not being mocked correctly
+    it('handles dbPath', () =>
+      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' }, dbPath: 'projects'  }))
+        .to
+        .eventually
+        .become({})
     )
   })
 

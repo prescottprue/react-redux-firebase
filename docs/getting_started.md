@@ -91,7 +91,8 @@ View the [config section](/config.html) for full list of configuration options.
 ## Use in Components
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { firebaseConnect, isLoaded, isEmpty, dataToJS } from 'react-redux-firebase'
 

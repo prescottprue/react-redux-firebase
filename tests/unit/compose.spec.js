@@ -155,6 +155,14 @@ describe('Compose', () => {
       }
     })
 
+    describe('verifyPasswordResetCode', () => {
+      try {
+        helpers.verifyPasswordResetCode({ code: 'test', password: 'test' })
+      } catch (err) {
+        expect(err).to.be.an.object
+      }
+    })
+
     describe('updateProfile', () => {
       it('acccepts an object', () =>
         expect(helpers.updateProfile({ displayName: 'test' })).to.eventually.become(undefined)

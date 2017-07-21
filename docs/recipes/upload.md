@@ -6,7 +6,8 @@ This example component uses `react-dropzone` to allow for drag/drop uploading di
 **NOTE:** The third argument provided to the `uploadFiles` and `deleteFiles` calls below is the database path where File Metadata will be written/deleted from. This is out of convenience only, simply remove the third argument if you don't want metadata written/deleted to/from database.
 
 ```js
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { firebaseConnect, dataToJS } from 'react-redux-firebase'
 import { map } from 'lodash'

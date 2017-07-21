@@ -1,10 +1,21 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import getDisplayName from 'react-display-name'
 import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable } from './utils'
+
+/**
+ * Get the display name of a component.
+ * @param  {Object|Element|String} Item from which to get display name
+ * @return {String} Name of input component/element/string
+ * @private
+ */
+const getDisplayName = Component => (
+  Component.displayName ||
+  Component.name ||
+  (typeof Component === 'string' ? Component : 'Component')
+)
 
 /**
  * @name firebaseConnect
@@ -50,11 +61,11 @@ import { getEventsFromInput, createCallable } from './utils'
  */
 export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => WrappedComponent => {
   class FirebaseConnect extends Component {
-    constructor (props, context) {
-      super(props, context)
-      this._firebaseEvents = []
-      this.firebase = null
-    }
+    firebaseEvents = []
+
+    firebase = null
+
+    prevData = null
 
     static contextTypes = {
       [storeKey]: PropTypes.object.isRequired

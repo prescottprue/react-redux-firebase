@@ -111,7 +111,7 @@ export const watchUserProfile = (dispatch, firebase) => {
           })
         } else {
           // Convert each populate string in array into an array of once query promises
-          promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
+          promisesForPopulate(firebase, snap.key, snap.val(), profileParamsToPopulate)
             .then(data => {
               // Dispatch action with profile combined with populated parameters
               // Auto Populate profile

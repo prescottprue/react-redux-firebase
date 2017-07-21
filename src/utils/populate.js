@@ -134,10 +134,11 @@ export const promisesForPopulate = (firebase, dataKey, originalData, populatesIn
   let promisesArray = []
   let results = {}
 
-  // test if data is a single object, try generating populates and looking for the child
-  const populatesForData = getPopulateObj(isFunction(populatesIn)
-    ? populatesIn(dataKey, originalData)
-    : populatesIn)
+  const populatesForData = getPopulateObjs(
+    isFunction(populatesIn)
+      ? populatesIn(dataKey, originalData)
+      : populatesIn
+  )
 
   const dataHasPopulateChilds = every(populatesForData, (populate) => (
     has(originalData, populate.child)
