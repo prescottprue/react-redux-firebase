@@ -316,12 +316,10 @@ export default (fbConfig, otherConfig) => next =>
      * @param {File} file - File object to upload (usually first element from
      * array output of select-file or a drag/drop `onDrop`)
      * @param {String} dbPath - Database path to place uploaded file metadata
-     * @param {Object} opts - Options for uploading
-     * @param {String} opts.name - Different name for file
      * @return {Promise} Containing the File object
      */
     const uploadFile = (path, file, dbPath, opts) =>
-      storageActions.uploadFile(dispatch, instance, { path, file, dbPath, ...opts })
+      storageActions.uploadFile(dispatch, instance, { path, file, dbPath })
 
     /**
      * @private
@@ -331,11 +329,9 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Array} files - Array of File objects to upload (usually from
      * a select-file or a drag/drop `onDrop`)
      * @param {String} dbPath - Database path to place uploaded files metadata.
-     * @param {Object} opts - Options for uploading
-     * @param {String} opts.names - Different name for file
      * @return {Promise} Containing an array of File objects
      */
-    const uploadFiles = (path, files, dbPath, opts) =>
+    const uploadFiles = (path, files, dbPath) =>
       storageActions.uploadFiles(dispatch, instance, { path, files, dbPath })
 
     /**
