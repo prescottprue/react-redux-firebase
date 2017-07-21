@@ -14,7 +14,7 @@ export const reduxFirebase = {
   userProfile: 'users', // root that user profiles are written to
   enableLogging: false, // enable/disable Firebase Database Logging
   updateProfileOnLogin: false, // enable/disable updating of profile on login
-  // profileParamsToPopulate: ['role:roles'], // populate role parameter within profile
+  profileParamsToPopulate: [{ child: 'role', root: 'roles'}], // populate role parameter within profile
   // profileDecorator: (userData) => ({ email: userData.email }) // customize format of user profile
 }
 
