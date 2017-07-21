@@ -318,7 +318,7 @@ export default (fbConfig, otherConfig) => next =>
      * @param {String} dbPath - Database path to place uploaded file metadata
      * @return {Promise} Containing the File object
      */
-    const uploadFile = (path, file, dbPath, opts) =>
+    const uploadFile = (path, file, dbPath) =>
       storageActions.uploadFile(dispatch, instance, { path, file, dbPath })
 
     /**
