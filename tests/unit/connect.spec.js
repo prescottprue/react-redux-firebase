@@ -1,12 +1,12 @@
-import React, { createClass, Children, Component, PropTypes } from 'react'
+import React, { createClass, Children, Component, cloneElement, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import firebaseConnect from '../../src/connect'
-import reactReduxFirebase from '../../src/compose'
 import TestUtils from 'react-addons-test-utils'
 import { createStore, compose, combineReducers } from 'redux'
 import getDisplayName from 'react-display-name'
+import reactReduxFirebase from '../../src/compose'
+import firebaseConnect from '../../src/connect'
 
-describe('Connect', () => {
+describe('firebaseConnect', () => {
   class Passthrough extends Component {
     render () {
       return <div>{JSON.stringify(this.props)}</div>
@@ -18,8 +18,11 @@ describe('Connect', () => {
       return { store: this.props.store }
     }
 
+    state = { test: null, dynamic: '' }
+
     render () {
-      return Children.only(this.props.children)
+      return Children.only(
+        cloneElement(this.props.children, { testProp: this.state.test, dynamicProp: this.state.dynamic }))
     }
   }
 
@@ -33,15 +36,16 @@ describe('Connect', () => {
       : prev
   }
 
-
-  it('should receive the store in the context', () => {
+  const createContainer = () => {
     const createStoreWithMiddleware = compose(
       reactReduxFirebase(fbConfig, { userProfile: 'users' }),
       typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
     )(createStore)
     const store = createStoreWithMiddleware(combineReducers({ test: (state = {}) => state }))
 
-    @firebaseConnect()
+    @firebaseConnect((props) => [
+      `test/${props.dynamicProp}`
+    ])
     class Container extends Component {
       render() {
         return <Passthrough {...this.props} />
@@ -54,25 +58,66 @@ describe('Connect', () => {
       </ProviderMock>
     )
 
-    const container = TestUtils.findRenderedComponentWithType(tree, Container)
-    container.setState({
-      testState: 'somethingElse'
-    })
+    return {
+      container: TestUtils.findRenderedComponentWithType(tree, Container),
+      parent: TestUtils.findRenderedComponentWithType(tree, ProviderMock),
+      store
+    }
+  }
+
+  it('should receive the store in the context', () => {
+    const { container, store } = createContainer()
     expect(container.context.store).to.equal(store)
   })
 
-
-
-  it('sets displayName static as FirebaseConnect${WrappedComponentName}', () => {
-    class Container extends Component {
-      render() {
-        return <Passthrough {...this.props} />
-      }
-    }
-
-    const containerPrime = firebaseConnect()(Container)
-    expect(containerPrime.displayName).to.equal(`FirebaseConnect(${getDisplayName(Container)}`)
+  it('disables watchers on unmount', () => {
+    const { container, store } = createContainer()
+    ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(container).parentNode);
+    expect(container.context.store).to.equal(store)
   })
+
+  it('does not change watchers props changes that do not change listener paths', () => {
+    const { parent, store } = createContainer()
+    parent.setState({ test: 'somethingElse' })
+    // expect(parent.context.store).to.equal(store)
+  })
+
+  it('reapplies watchers when props change', () => {
+    const { parent, store } = createContainer()
+    parent.setState({
+      dynamic: 'somethingElse'
+    })
+    // expect(parent.context.store).to.equal(store)
+  })
+
+  describe('sets displayName static as ', () => {
+    describe('FirebaseConnect(${WrappedComponentName}) for', () => {
+      it('standard components', () => {
+        class TestContainer extends Component {
+          render() {
+            return <Passthrough {...this.props} />
+          }
+        }
+
+        const containerPrime = firebaseConnect()(TestContainer)
+        expect(containerPrime.displayName).to.equal(`FirebaseConnect(TestContainer)`)
+      })
+
+      it('string components', () => {
+        const str = 'Test'
+        const stringComp = firebaseConnect()('Test')
+        expect(stringComp.displayName).to.equal(`FirebaseConnect(${str})`)
+      })
+    })
+
+
+    it('"Component" for all other types', () => {
+      const stringComp = firebaseConnect()(<div></div>)
+      expect(stringComp.displayName).to.equal('FirebaseConnect(Component)')
+    })
+  })
+
+
 
   it('sets WrappedComponent static as component which was wrapped', () => {
     class Container extends Component {
