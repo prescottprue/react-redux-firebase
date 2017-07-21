@@ -41,7 +41,7 @@ let firebaseInstance
  * @property {Object} config.customAuthParameters - Object for setting which
  * customAuthParameters are passed to external auth providers.
  * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
- * @property {Function} config.uploadFileDataFactory - Factory for modifying
+ * @property {Function} config.fileMetadataFactory - Factory for modifying
  * how file meta data is written during file uploads
  * @property {Array|String} config.profileParamsToPopulate - Parameters within
  * profile object to populate

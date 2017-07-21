@@ -8,7 +8,7 @@ const generateCreateStore = (params) =>
     params ? omit(fbConfig, params) : fbConfig,
     {
       userProfile: 'users',
-      enableLogging: false,
+      enableLogging: params && params.enableLogging,
       enableRedirectHandling: false
     }
   ))(createStore)
@@ -18,11 +18,13 @@ describe('Compose', () => {
   it('is a function', () => {
     expect(composeFunc).to.be.a.function
   })
+
   it('returns an object', () => {
     expect(composeFunc(fbConfig)).to.be.a.function
   })
+
   it('allows enabling of Firebase database logging', () => {
-    expect(generateCreateStore()(reducer))
+    expect(generateCreateStore({ enableLogging: true })(reducer))
       .to.be.an.object
   })
 
@@ -190,10 +192,24 @@ describe('Compose', () => {
         expect(helpers.updateEmail({}, true)).to.eventually.become(undefined)
       )
     })
+    describe('verifyPasswordResetCode', () => {
+      try {
+        helpers.verifyPasswordResetCode({ code: 'test', password: 'test' })
+      } catch (err) {
+        expect(err).to.be.an.object
+      }
+    })
 
     describe('storage', () => {
       try {
         helpers.storage()
+      } catch(err) {
+        expect(err).to.be.an.object
+      }
+    })
+    describe('messaging', () => {
+      try {
+        helpers.messaging()
       } catch(err) {
         expect(err).to.be.an.object
       }
