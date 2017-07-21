@@ -200,6 +200,13 @@ describe('Compose', () => {
         expect(helpers.updateEmail({}, true)).to.eventually.become(undefined)
       )
     })
+    describe('verifyPasswordResetCode', () => {
+      try {
+        helpers.verifyPasswordResetCode({ code: 'test', password: 'test' })
+      } catch (err) {
+        expect(err).to.be.an.object
+      }
+    })
 
     describe('storage', () => {
       try {
