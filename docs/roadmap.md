@@ -49,6 +49,8 @@
 #### Enhancements/Fixes
 * Return correct promise from `firebase.auth().signOut()` - [#152](https://github.com/prescottprue/react-redux-firebase/issues/152)
 * Removed `browser` field from `package.json` so that webpack will point to `main` field - [#128](https://github.com/prescottprue/react-redux-firebase/issues/128)
+* Fix `uniqueSet` race condition - [#207](https://github.com/prescottprue/react-redux-firebase/issues/207)
+* improved testing of `firebaseConnect` HOC
 
 ## Future Minor Versions (`v1.6.0 - v1.*.*`)
 
@@ -65,6 +67,7 @@
 * Setting that allows for `waitForPopulate` to be turned off (i.e. return populated data as in becomes available). As of `v1.4.0-rc.2`, populate only sets `isLoaded` to true after all children are loaded, `waitForPopulate` would make this optional - [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
 * Integration for [`react-native-google-signin`](https://github.com/devfd/react-native-google-signin) to simplify react-native authentication implementation
 * Nested populates - [#85](https://github.com/prescottprue/react-redux-firebase/issues/85)
+* Renaming a file on upload (currently does not work due to HTML 5 File element being read only)
 
 #### Enhancements/Fixes
  *None Yet Planned*
