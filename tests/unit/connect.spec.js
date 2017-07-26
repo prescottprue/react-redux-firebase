@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import { createStore, compose, combineReducers } from 'redux'
-import getDisplayName from 'react-display-name'
 import reactReduxFirebase from '../../src/compose'
 import firebaseConnect from '../../src/firebaseConnect'
 
