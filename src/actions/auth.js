@@ -198,14 +198,17 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
     return Promise.resolve(userData)
   }
   const { database, _: { config } } = firebase
-  if (isFunction(config.profileFactory)) {
-    profile = config.profileFactory(userData, profile)
-  }
-  if (isFunction(config.profileDecorator)) {
-    if (isFunction(console.warn)) { // eslint-disable-line no-console
-      console.warn('profileDecorator is Depreceated and will be removed in future versions. Please use profileFactory.') // eslint-disable-line no-console
+  try {
+    if (isFunction(config.profileFactory)) {
+      profile = config.profileFactory(userData, profile)
     }
-    profile = config.profileDecorator(userData, profile)
+    if (isFunction(config.profileDecorator)) {
+      console.warn('profileDecorator is Depreceated and will be removed in future versions. Please use profileFactory.') // eslint-disable-line no-console
+      profile = config.profileDecorator(userData, profile)
+    }
+  } catch (err) {
+    console.error('Error occured within profileFactory function:', err.toString ? err.toString() : err) // eslint-disable-line no-console
+    return Promise.reject(err)
   }
   // Check for user's profile at userProfile path if provided
   return database()
