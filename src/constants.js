@@ -80,6 +80,8 @@ export const actionTypes = {
 }
 
 /** @constant
+ * @type {Object}
+ * @name defaultConfig
  * @description Default configuration options
  * @property {String} userProfile - `null` Location on Firebase where user
  * profiles are stored. Often set to `'users'`.

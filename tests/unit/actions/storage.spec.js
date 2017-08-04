@@ -33,12 +33,16 @@ const fakeFirebase = {
           funcsObj.next({bytesTransferred: 12, totalBytes: 12})
           funcsObj.error()
           funcsObj.complete()
-          return unListen
+          console.log('----------- typeof litent', typeof unListen)
+          return () => console.log('called')
+        },
+        then: () => {
+
         }
       }),
       delete: () => Promise.resolve(({
 
-      }))
+      })),
     })
   })
 }

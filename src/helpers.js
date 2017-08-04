@@ -19,7 +19,7 @@ import { getPopulateObjs } from './utils/populate'
 
 /**
  * @description Detect whether items are loaded yet or not
- * @param {Object} item - Item to check loaded status of. A comma seperated list is also acceptable.
+ * @param {Object} item - Item to check loaded status of. A comma separated list is also acceptable.
  * @return {Boolean} Whether or not item is loaded
  * @example
  * import React, { Component } from 'react'

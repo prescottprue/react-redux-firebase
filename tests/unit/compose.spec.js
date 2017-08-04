@@ -8,7 +8,7 @@ const generateCreateStore = (params) =>
     Firebase,
     {
       userProfile: 'users',
-      enableLogging: false,
+      enableLogging: params && params.enableLogging,
       enableRedirectHandling: false
     }
   ))(createStore)
@@ -25,7 +25,7 @@ describe('Compose', () => {
   })
 
   it('allows enabling of Firebase database logging', () => {
-    expect(generateCreateStore()(reducer))
+    expect(generateCreateStore({ enableLogging: true })(reducer))
       .to.be.an.object
   })
 
@@ -213,9 +213,25 @@ describe('Compose', () => {
       )
     })
 
+    describe('verifyPasswordResetCode', () => {
+      try {
+        store.firebase.verifyPasswordResetCode({ code: 'test', password: 'test' })
+      } catch (err) {
+        expect(err).to.be.an.object
+      }
+    })
+
     describe('storage', () => {
       try {
         store.firebase.storage()
+      } catch (err) {
+        expect(err).to.be.an.object
+      }
+    })
+
+    describe('messaging', () => {
+      try {
+        store.firebase.messaging()
       } catch (err) {
         expect(err).to.be.an.object
       }

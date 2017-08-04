@@ -151,7 +151,7 @@ import CircularProgress from 'material-ui/CircularProgress';
  * @param {Component} componentToWrap - Component to wrap
  * @return {Component} wrappedComponent
  */
-export const UserHasPermission = permission => UserAuthWrapper({ // eslint-disable-line new-cap
+export const UserHasPermission = permission => UserAuthWrapper({
   authSelector: ({ firebase: { profile, auth } }) => ({ auth, profile })
   authenticatingSelector: ({ firebase: { profile, auth, isInitializing } }) =>
     auth === undefined || profile === undefined || isInitializing === true,

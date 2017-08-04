@@ -72,7 +72,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => 
       [storeKey]: PropTypes.object.isRequired
     }
 
-    static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)}`
+    static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)})`
 
     static wrappedComponent = WrappedComponent
 

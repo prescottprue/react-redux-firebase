@@ -1,4 +1,5 @@
 # React Native
+**NOTE**: It is suggested that [you use `v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules) if you are using `react-native` (required for native modules through [`react-native-firebase`](https://github.com/invertase/react-native-firebase))
 
 Connecting to Firebase through react-native can be done with the default Firebase javascript library, or through native modules. Libraries such as [react-native-firebase](https://github.com/invertase/react-native-firebase) that preserve Firebase's web library syntax while providing access to native modules can be used with `react-redux-firebase`.
 
@@ -64,14 +65,7 @@ const store = createStore(
 ```
 The [react-native-firebase initial setup guide](http://invertase.io/react-native-firebase/#/initial-setup) has more information about how to setup your project for iOS/Android.
 
-## Creating Your Own
-
-We are going to use the project name Devshare for example here. For your project, use your project name everywhere where Devshare is used.
-
-### Start
-1. Make sure you have [`create-react-native-app`](https://github.com/react-community/create-react-native-app) installed, or install it using `npm install -g create-react-native-app`.
-1. Run `create-react-native-app Devshare` (again replace Devshare with the name of your project)
-1. After that is complete, eject using `yarn eject` or `npm run eject`
+Full project source: [react-native complete example app](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/react-native)
 
 ### Download Firebase Config
 1. Visit Overview page and click Add Firebase to iOS

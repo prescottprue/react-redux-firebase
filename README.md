@@ -45,18 +45,18 @@ npm install --save react-redux-firebase
 
 The above install command will install the `@latest` tag. You may also use the following tags when installing to get different versions:
 
-* `@next` - Next upcoming release. currently points to active progress with `v1.5.0-*` pre-releases
+* `@next` - Next upcoming release. Currently points to active progress with `v1.5.0-*` pre-releases
 * `@canary` - Most possible up to date code. Currently points to active progress with `v2.0.0-*` pre-releases. *Warning:* Syntax is different than current stable version.
 
 Other versions docs are available using the dropdown on the above docs link. For quick access:
 * [Version `1.5.0` Docs](http://docs.react-redux-firebase.com/history/v1.5.0/)
 * [Version `2.0.0` Docs](http://docs.react-redux-firebase.com/history/v2.0.0/)
 
-**Note:** Be aware of changes when using version that are tagged `@latest`. Please report any issues you encounter, and try to keep an eye on the [releases page](https://github.com/prescottprue/react-redux-firebase/releases) for relevant release info.
+Be aware of changes when using version that are tagged `@latest`. Please report any issues you encounter, and try to keep an eye on the [releases page](https://github.com/prescottprue/react-redux-firebase/releases) for updates.
 
 ## Use
 
-**NOTE:** If you are just starting a new project, you might want to use [`v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/#use) has an even easier syntax. For clarity on the transition, view the [`v1` -> `v2` migration guide](http://docs.react-redux-firebase.com/history/v2.0.0/docs/v2-migration-guide.html)
+**Note:** If you are just starting a new project, you may want to use [`v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/#use) since it is has an even easier syntax. For clarity on the transition, view the [`v1` -> `v2` migration guide](http://docs.react-redux-firebase.com/history/v2.0.0/docs/v2-migration-guide.html)
 
 Include `reactReduxFirebase` in your store compose function and  `firebaseStateReducer` in your reducers:
 
@@ -267,7 +267,7 @@ The [examples folder](/examples) contains full applications that can be copied/a
   * [populate functionality](http://react-redux-firebase.com/docs/populate) (similar to mongoDB or SQL JOIN)
   * `react-native` support ([web/js](http://react-redux-firebase.com/docs/recipes/react-native.html) or native modules through [`react-native-firebase`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules))
   * tons of [integrations](#integrations)
-  * [`profileDecorator`](http://react-redux-firebase.com/docs/config) - change format of profile stored on Firebase
+  * [`profileFactory`](http://react-redux-firebase.com/docs/config) - change format of profile stored on Firebase
   * [`getFirebase`](http://react-redux-firebase.com/docs/thunks) - access to firebase instance that fires actions when methods are called
   * [access to firebase's `storage`](http://react-redux-firebase.com/docs/storage) method`
   * `uniqueSet` method helper for only setting if location doesn't already exist
