@@ -56,6 +56,8 @@ export const actionTypes = {
 }
 
 /** @constant
+ * @type {Object}
+ * @name defaultConfig
  * @description Default configuration options
  * @property {String} userProfile - `null` Location on Firebase where user
  * profiles are stored. Often set to `'users'`.
@@ -78,7 +80,6 @@ export const actionTypes = {
  * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
  * Setting this to true allows an action to be called that removes data
  * from redux (which might not always be expected).
- * @type {Array}
 */
 export const defaultConfig = {
   userProfile: null,
