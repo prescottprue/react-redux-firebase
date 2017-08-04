@@ -63,6 +63,7 @@ Include `reactReduxFirebase` in your store compose function and  `firebaseStateR
 ```javascript
 import { createStore, combineReducers, compose } from 'redux'
 import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
+import * as firebase from 'firebase'
 
 // Add Firebase to reducers
 const rootReducer = combineReducers({
@@ -76,10 +77,14 @@ const config = {
   databaseURL: '<your-database-url>',
   storageBucket: '<your-storage-bucket>'
 }
+const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
 
-// Add redux Firebase to compose
+// initialize firebase instance
+firebase.initializeApp(config) // <- new to v2.*.*
+
+// Add reduxReduxFirebase to compose
 const createStoreWithFirebase = compose(
-  reactReduxFirebase(config, { userProfile: 'users' }),
+  reactReduxFirebase(firebase, rrfConfig), // firebase instance as first argument
 )(createStore)
 
 // Create store with reducers and initial state

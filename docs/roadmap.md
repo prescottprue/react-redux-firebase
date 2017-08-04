@@ -84,7 +84,7 @@
 **NOTE:** The changes are unconfirmed and will most likely change
 
 #### Progress
-* [`v2.0.0-alpha`](https://github.com/prescottprue/react-redux-firebase/tree/v2.0.0-alpha) has been started, view [the branch](https://github.com/prescottprue/react-redux-firebase/tree/v2.0.0-alpha)
+* All **pre-released** changes for v2.0.0 are located on [the `v2.0.0` branch](https://github.com/prescottprue/react-redux-firebase/tree/v2.0.0)
 
 #### Breaking Changes
 * Remove usage of `Immutable.js` and Immutable Maps (no more need for `pathToJS()` & `dataToJS()` to load data from redux)
@@ -99,18 +99,17 @@
 * `react-native` index file referenced in `package.json` that makes it no longer necessary to pass `ReactNative` in config
 * `AuthRequired` decorator (or decorator factory) that forces auth to exist before rendering component
 * Support native modules through [`react-native-firebase`](https://github.com/invertase/react-native-firebase) - [#131](https://github.com/prescottprue/react-redux-firebase/issues/131)
+* Track online users and sessions by passing `presence` config option
 
 #### Enhancements/Fixes
 * Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance
 
 #### Under Consideration
+* Allowing `presence` setting to accept a function for dynamically building presence path based on auth
 * Possibility of delayed initialization - [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
-
 
 ### Long Term Goals
 * Optional Built in Role Management
 * Multi-level population
 * Population rules suggestion/generation
 * Routing decorators (most likely to include `@AuthRequired`, `@DataLoaded` and `@RedirectOnAuth`)
-* `firebase-admin` integration - [#22](https://github.com/prescottprue/react-redux-firebase/issues/22)
-* `geoFire` integration - [#32](https://github.com/prescottprue/react-redux-firebase/issues/32)
