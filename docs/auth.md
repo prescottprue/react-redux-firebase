@@ -78,14 +78,31 @@ export default firebaseConnect()(SomeComponent)
         ```
 
 
+After logging in, profile and auth are available in redux state:
+
+```js
+import { connect } from 'react-redux'
+
+connect(() => ({
+  auth: pathToJS(firebase, 'auth'),
+  profile: pathToJS(firebase, 'profile')
+}))(SomeComponent)
+```
+
+For more information on how best to use these methods, visit the [auth recipes](/docs/recipes/auth.md)
+
 ##### Returns
-[**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with an object containing profile, user, (also credential if using oAuth provider) in case of success or the error otherwise.
+[**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with an object (or a string, see note) containing profile, user, (also credential if using oAuth provider) in case of success or the error otherwise.
+
+**NOTE**: For email authentication in `v1.4.*` and earlier - The user's UID (a [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)) is returned instead of an object. This will change in `v1.5.0` for consistency across all auth types.
 
 ##### Examples
 
+For complete usage examples visit the [auth recipes](/docs/recipes/auth.md)
+
    *Email*
 ```js
-// Call with info
+// NOTE: Account is not created during login for email auth. Use createUser
 this.props.firebase.login({
   email: 'test@test.com',
   password: 'testest1'
