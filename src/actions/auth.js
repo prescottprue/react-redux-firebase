@@ -526,15 +526,20 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
     type: actionTypes.PROFILE_UPDATE_START,
     payload: profileUpdate
   })
-  return database()
-    .ref(`${config.userProfile}/${authUid}`)
+  const profileRef = database().ref(`${config.userProfile}/${authUid}`)
+  return profileRef
     .update(profileUpdate)
-    .then((snap) => {
-      dispatch({
-        type: actionTypes.PROFILE_UPDATE_SUCCESS,
-        payload: snap.val()
-      })
-    })
+    .then(() =>
+       profileRef
+         .once('value')
+         .then((snap) => {
+           dispatch({
+             type: actionTypes.PROFILE_UPDATE_SUCCESS,
+             payload: snap.val()
+           })
+           return snap.val()
+         })
+   )
     .catch((payload) => {
       dispatch({
         type: actionTypes.PROFILE_UPDATE_ERROR,

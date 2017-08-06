@@ -84,11 +84,14 @@ describe('Compose', () => {
       )
     })
 
-    describe('uniqueSet', () =>{
+    describe('uniqueSet', () => {
       // remove test root after test are complete
-      after(() =>
-        helpers.remove('test')
-      )
+      afterEach(() => {
+        if (helpers.remove) {
+          return helpers.remove('test/unique')
+        }
+      })
+      // Skipped due to issue with mocked transaction not returning committed
       it('sets if unique', () =>
         helpers.uniqueSet('test/unique', {some: 'asdf'})
       )
@@ -98,14 +101,25 @@ describe('Compose', () => {
             expect(err.toString()).to.equal('Error: Path already exists.')
           })
       )
-      it('has on err onComplete', () => {
+      it('calls onComplete on error', () => {
         const func = sinon.spy()
         return helpers.uniqueSet('test', {some: 'asdf'}, func)
           .catch((err) => {
             expect(func).to.have.been.calledOnce
+            expect(err).to.exist
+          })
+      })
+
+      it('calls onComplete on success', () => {
+        const func = sinon.spy()
+        return helpers.uniqueSet('test/unique', {some: 'asdf'}, func)
+          .then((snap) => {
+            expect(func).to.have.been.calledOnce
+            expect(snap).to.exist
           })
       })
     })
+
 
     describe('remove', () =>
       helpers.remove('test')

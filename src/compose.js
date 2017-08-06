@@ -300,8 +300,8 @@ export default (fbConfig, otherConfig) => next =>
     const uniqueSet = (path, value, onComplete) =>
       rootRef.child(path)
         .transaction(d => d === null ? value : undefined)
-        .then(({ commited, snapshot }) => {
-          if (!commited) {
+        .then(({ committed, snapshot }) => {
+          if (!committed) {
             const newError = new Error('Path already exists.')
             if (onComplete) onComplete(newError)
             return Promise.reject(newError)
