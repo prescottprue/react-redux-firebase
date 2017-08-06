@@ -141,7 +141,7 @@ const setupPresence = (dispatch, firebase) => {
   const { config: { presence, sessions }, authUid } = firebase._
   let amOnline = ref.child('.info/connected')
   let onlineRef = ref.child(isFunction(presence) ? presence(firebase.auth().currentUser, firebase) : presence).child(authUid)
-  let sessionsRef = isFunction(sessions) ? sessions(firebase.auth().currentUser, firebase) : sessions;
+  let sessionsRef = isFunction(sessions) ? sessions(firebase.auth().currentUser, firebase) : sessions
   if (sessionsRef) {
     sessionsRef = ref.child(sessions)
   }
