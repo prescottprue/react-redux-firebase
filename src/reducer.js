@@ -1,6 +1,7 @@
-import { combineReducers } from 'redux'
-import { set, pick, omit } from 'lodash'
+import set from 'lodash/fp/set'
 import { actionTypes } from './constants'
+import { combineReducers } from 'redux'
+import { pick, omit } from 'lodash'
 
 const {
   START,
@@ -149,9 +150,9 @@ export const timestampsReducer = (state = {}, { type, path }) => {
 const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
   switch (action.type) {
     case SET:
-      return set(state, getDotStrPath(action.path), action[actionKey])
+      return set(getDotStrPath(action.path), action[actionKey], state)
     case NO_VALUE:
-      return set(state, getDotStrPath(action.path), null)
+      return set(getDotStrPath(action.path), null, state)
     case LOGOUT:
       // support keeping data when logging out - #125
       if (action.preserve) {
