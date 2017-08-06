@@ -43,7 +43,8 @@ Available on `this.props.firebase` and `getFirebase`.
 #### Example
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 
 @firebaseConnect()
@@ -79,7 +80,8 @@ Access to Firebase's `storage` is available. This is useful for calling methods 
 ##### File String Upload
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 
 @firebaseConnect()

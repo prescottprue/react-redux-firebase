@@ -85,11 +85,12 @@ export const actionTypes = {
  * @description Default configuration options
  * @property {String} userProfile - `null` Location on Firebase where user
  * profiles are stored. Often set to `'users'`.
- * @property {String} presence - `null` Location on Firebase where of currently
- * online users is stored. Often set to `'presence'` or `'onlineUsers'`.
- * @property {String} sessions - `sessions` Location on Firebase where user
+ * @property {String|Function} presence - `null` Location on Firebase where of currently
+ * online users is stored. Often set to `'presence'` or `'onlineUsers'`. If a function
+ * is passed, the arguments are: `(currentUser, firebase)`.
+ * @property {String|Function} sessions - `sessions` Location on Firebase where user
  * sessions are stored (only if presense is set). Often set to `'sessions'` or
- * `'userSessions'`.
+ * `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
  * @property {Boolean} enableLogging - `false` Whether or not firebase
  * database logging is enabled.
  * @property {Array} preserveOnLougout - `null` Data parameters to preserve when

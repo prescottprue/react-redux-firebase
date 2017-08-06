@@ -71,11 +71,12 @@ Default configuration options
 
 -   `userProfile` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `null` Location on Firebase where user
     profiles are stored. Often set to `'users'`.
--   `presence` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `null` Location on Firebase where of currently
-    online users is stored. Often set to `'presence'` or `'onlineUsers'`.
--   `sessions` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `sessions` Location on Firebase where user
+-   `presence` **([String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function))** `null` Location on Firebase where of currently
+    online users is stored. Often set to `'presence'` or `'onlineUsers'`. If a function
+    is passed, the arguments are: `(currentUser, firebase)`.
+-   `sessions` **([String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function))** `sessions` Location on Firebase where user
     sessions are stored (only if presense is set). Often set to `'sessions'` or
-    `'userSessions'`.
+    `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
 -   `enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not firebase
     database logging is enabled.
 -   `preserveOnLougout` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** `null` Data parameters to preserve when

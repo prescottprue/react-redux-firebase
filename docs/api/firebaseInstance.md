@@ -44,7 +44,8 @@ Sets data to Firebase.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { set } }) => (
   <button onClick={() => set('some/path', { here: 'is a value' })}>
@@ -86,7 +87,8 @@ Pushes data to Firebase.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { push } }) => (
   <button onClick={() => push('some/path', true)}>
@@ -126,7 +128,8 @@ Updates data on Firebase and sends new data.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { update } }) => (
   <button onClick={() => update('some/path', { here: 'is a value' })}>
@@ -166,7 +169,8 @@ Removes data from Firebase at a given path.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { remove } }) => (
   <button onClick={() => remove('some/path')}>
@@ -181,7 +185,8 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 ## uniqueSet
 
 Sets data to Firebase only if the path does not already
-exist, otherwise it rejects.
+exist, otherwise it rejects. Internally uses a Firebase transaction to
+prevent a race condition between seperate clients calling uniqueSet.
 
 **Parameters**
 
@@ -194,7 +199,8 @@ exist, otherwise it rejects.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { uniqueSet } }) => (
   <button onClick={() => uniqueSet('some/unique/path', true)}>

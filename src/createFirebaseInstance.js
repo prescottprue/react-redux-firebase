@@ -60,7 +60,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @return {Promise} Containing reference snapshot
    * @example <caption>Basic</caption>
-   * import React, { Component, PropTypes } from 'react'
+   * import React, { Component } from 'react'
+   * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'
    * const Example = ({ firebase: { set } }) => (
    *   <button onClick={() => set('some/path', { here: 'is a value' })}>
@@ -92,7 +93,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @return {Promise} Containing reference snapshot
    * @example <caption>Basic</caption>
-   * import React, { Component, PropTypes } from 'react'
+   * import React, { Component } from 'react'
+   * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'
    * const Example = ({ firebase: { push } }) => (
    *   <button onClick={() => push('some/path', true)}>
@@ -122,7 +124,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @return {Promise} Containing reference snapshot
    * @example <caption>Basic</caption>
-   * import React, { Component, PropTypes } from 'react'
+   * import React, { Component } from 'react'
+   * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'
    * const Example = ({ firebase: { update } }) => (
    *   <button onClick={() => update('some/path', { here: 'is a value' })}>
@@ -152,7 +155,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @return {Promise} Containing reference snapshot
    * @example <caption>Basic</caption>
-   * import React, { Component, PropTypes } from 'react'
+   * import React, { Component } from 'react'
+   * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'
    * const Example = ({ firebase: { remove } }) => (
    *   <button onClick={() => remove('some/path')}>
@@ -166,13 +170,15 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
 
   /**
    * @description Sets data to Firebase only if the path does not already
-   * exist, otherwise it rejects.
+   * exist, otherwise it rejects. Internally uses a Firebase transaction to
+   * prevent a race condition between seperate clients calling uniqueSet.
    * @param {String} path - Path to location on Firebase which to set
    * @param {Object|String|Boolean|Number} value - Value to write to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @return {Promise} Containing reference snapshot
    * @example <caption>Basic</caption>
-   * import React, { Component, PropTypes } from 'react'
+   * import React, { Component } from 'react'
+   * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'
    * const Example = ({ firebase: { uniqueSet } }) => (
    *   <button onClick={() => uniqueSet('some/unique/path', true)}>
@@ -183,14 +189,15 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    */
   const uniqueSet = (path, value, onComplete) =>
     rootRef.child(path)
-      .once('value')
-      .then(snap => {
-        if (snap.val && snap.val() !== null) {
-          const err = new Error('Path already exists.')
-          if (onComplete) onComplete(err)
-          return Promise.reject(err)
+      .transaction(d => d === null ? value : undefined)
+      .then(({ committed, snapshot }) => {
+        if (!committed) {
+          const newError = new Error('Path already exists.')
+          if (onComplete) onComplete(newError)
+          return Promise.reject(newError)
         }
-        return rootRef.child(path).set(value, onComplete)
+        if (onComplete) onComplete(snapshot)
+        return snapshot
       })
 
   /**

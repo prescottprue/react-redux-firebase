@@ -26,7 +26,8 @@ export default firebaseConnect()(SimpleComponent)
 #### Stateful Component
 
 ```js
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 
 @firebaseConnect()

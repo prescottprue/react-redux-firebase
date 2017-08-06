@@ -29,7 +29,9 @@ const config = {
       root: 'Firebase'
     }
   },
-  plugins: []
+  plugins: [
+    new webpack.optimize.ModuleConcatenationPlugin()
+  ]
 }
 
 if (env === 'production') {

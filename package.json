@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -62,13 +62,13 @@
     "prop-types": "^15.5.8"
   },
   "peerDependencies": {
-    "react": "^0.14.6 || ^15.0.0"
+    "react": "^0.14.6 || ^15.0.0-0 || ^16.0.0-0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
     "babel-core": "^6.24.0",
     "babel-eslint": "^7.2.1",
-    "babel-loader": "^6.4.1",
+    "babel-loader": "^7.1.1",
     "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-class-properties": "^6.23.0",
@@ -108,7 +108,7 @@
     "rimraf": "^2.6.1",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
-    "webpack": "^2.6.1",
+    "webpack": "^3.4.0",
     "webpack-bundle-analyzer": "^2.3.1",
     "ws": "^3.0.0",
     "xmlhttprequest": "^1.8.0"
