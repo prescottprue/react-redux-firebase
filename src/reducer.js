@@ -149,15 +149,9 @@ export const timestampsReducer = (state = {}, { type, path }) => {
 const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
   switch (action.type) {
     case SET:
-      return {
-        ...state,
-        ...set({}, getDotStrPath(action.path), action[actionKey])
-      }
+      return set(state, getDotStrPath(action.path), action[actionKey])
     case NO_VALUE:
-      return {
-        ...state,
-        ...set({}, getDotStrPath(action.path), null)
-      }
+      return set(state, getDotStrPath(action.path), null)
     case LOGOUT:
       // support keeping data when logging out - #125
       if (action.preserve) {
