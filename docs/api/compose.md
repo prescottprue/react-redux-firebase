@@ -23,9 +23,9 @@ Middleware that handles configuration (placed in redux's
     -   `config.enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable Firebase database logging.
         **Note**: Only works if instance has enableLogging function.
     -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user profile is saved.
-    -   `config.presence` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Location on Firebase to store currently
+    -   `config.presence` **([Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String))** Location on Firebase to store currently
         online users list. Often set to `'presence'` or `'onlineUsers'`.
-    -   `config.sessions` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Location on Firebase where user
+    -   `config.sessions` **([Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String))** Location on Firebase where user
         sessions are stored (only if presense is set). Often set to `'sessions'` or `'onlineUsers'`.
     -   `config.updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to update
         profile when logging in. (default: `false`)

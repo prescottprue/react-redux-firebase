@@ -140,24 +140,29 @@ const setupPresence = (dispatch, firebase) => {
   const ref = firebase.database().ref()
   const { config: { presence, sessions }, authUid } = firebase._
   let amOnline = ref.child('.info/connected')
-  let onlineRef = ref.child(presence).child(authUid)
-  let sessionsRef = ref.child(sessions)
+  let onlineRef = ref.child(isFunction(presence) ? presence(firebase.auth().currentUser, firebase) : presence).child(authUid)
+  let sessionsRef = isFunction(sessions) ? sessions(firebase.auth().currentUser, firebase) : sessions;
+  if (sessionsRef) {
+    sessionsRef = ref.child(sessions)
+  }
   amOnline.on('value', snapShot => {
     if (!snapShot.val()) return
     // user is online
-    // add session and set disconnect
-    dispatch({ type: actionTypes.SESSION_START, payload: authUid })
-    // add new session to sessions collection
-    const session = sessionsRef.push({
-      startedAt: firebase.database.ServerValue.TIMESTAMP,
-      user: authUid
-    })
-    // set authUid as priority for easy sorting
-    session.setPriority(authUid)
-    const endedRef = session.child('endedAt')
-    endedRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP, () => {
-      dispatch({ type: actionTypes.SESSION_END })
-    })
+    if (sessionsRef) {
+      // add session and set disconnect
+      dispatch({ type: actionTypes.SESSION_START, payload: authUid })
+      // add new session to sessions collection
+      const session = sessionsRef.push({
+        startedAt: firebase.database.ServerValue.TIMESTAMP,
+        user: authUid
+      })
+      // set authUid as priority for easy sorting
+      session.setPriority(authUid)
+      const endedRef = session.child('endedAt')
+      endedRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP, () => {
+        dispatch({ type: actionTypes.SESSION_END })
+      })
+    }
     // add correct session id to user
     // remove from presence list
     onlineRef.set(true)
