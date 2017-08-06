@@ -61,8 +61,9 @@ export default class Navbar extends Component {
   }
 
   render () {
-    const { profile } = this.props
+    const { profile, auth } = this.props
     const profileExists = isLoaded(profile) && !isEmpty(profile)
+    const authExists = isLoaded(auth) && !isEmpty(auth)
 
     const iconButton = (
       <IconButton style={avatarStyles.button} disableTouchRipple>
@@ -93,7 +94,7 @@ export default class Navbar extends Component {
       </div>
     )
 
-    const rightMenu = profileExists ? (
+    const rightMenu = authExists ? (
       <IconMenu
         iconButtonElement={iconButton}
         targetOrigin={{ horizontal: 'right', vertical: 'bottom' }}
@@ -115,7 +116,7 @@ export default class Navbar extends Component {
       <AppBar
         title={
           <Link
-            to={accountExists ? `${LIST_PATH}` : '/'}
+            to={authExists ? `${LIST_PATH}` : '/'}
             className={classes.brand}
           >
             material example
@@ -123,7 +124,7 @@ export default class Navbar extends Component {
         }
         showMenuIconButton={false}
         iconElementRight={rightMenu}
-        iconStyleRight={profileExists ? avatarStyles.wrapper : {}}
+        iconStyleRight={authExists ? avatarStyles.wrapper : {}}
         className={classes.appBar}
       />
     )
