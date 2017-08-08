@@ -105,10 +105,10 @@ export const buildChildList = (state, list, p) =>
     if (val === true) {
       getKey = key
     }
+    const dotRoot = compact(p.root.split('/')).join('.')
     const pathString = p.childParam
-      ? `${p.root}.${getKey}.${p.childParam}`
-      : `${p.root}.${getKey}`
-
+      ? `${dotRoot}.${getKey}.${p.childParam}`
+      : `${dotRoot}.${getKey}`
     // console.log('path string:', { pathString, state })
     // Set to child under key if populate child exists
     if (get(state.data, pathString)) {
