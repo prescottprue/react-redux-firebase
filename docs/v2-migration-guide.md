@@ -42,7 +42,10 @@ import * as firebase from 'firebase'
 
 const fbConfig = {} // object containing Firebase config
 firebase.initializeApp(fbConfig) // initialize firebase instance
-const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
+const rrfConfig = {
+  userProfile: 'users',
+  // enableRedirectHandling: false // include this if using react-native
+} // react-redux-firebase config
 
 const store = createStore(
  reducer,
@@ -139,6 +142,10 @@ import RNFirebase from 'react-native-firebase';
 
 const rnfConfig = { debug: true } // react-native-firebase config
 const firebase = RNFirebase.initializeApp(rnfConfig);
+const reduxConfig = {
+  userProfile: 'users',
+  enableRedirectHandling: false // since react-native does not support http
+}
 
 const store = createStore(
   reducer,

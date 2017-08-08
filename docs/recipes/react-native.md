@@ -1,18 +1,10 @@
 # React Native
-**NOTE**: It is suggested that [you use `v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules) if you are using `react-native` (required for native modules through [`react-native-firebase`](https://github.com/invertase/react-native-firebase))
 
 Connecting to Firebase through react-native can be done with the default Firebase javascript library, or through native modules. Libraries such as [react-native-firebase](https://github.com/invertase/react-native-firebase) that preserve Firebase's web library syntax while providing access to native modules can be used with `react-redux-firebase`.
 
-Regardless of which path you want to take, initial setup is the same, so we will begin there. Below are separate sections for the two different setups (native or web)
+Regardless of which path you want to take, initial setup is the same, so we will begin there. Below are separate sections for the two different setups ([native](#native-modules) or [web](#jsweb)).
 
-## Setup
-
-1. Click "Add Firebase To iOS"
-<!-- TODO: Confirm this and get a picture -->
-1. Download `GoogleService-info.plist`
-1. Place `GoogleService-info.plist` in the folder of whichever platform you are using (i.e. `/ios`)
-1. Copy your client id out of the `GoogleService-info.plist` file (should end in `.apps.googleusercontent.com`)
-1. Place the client id into `iosClientId` variable within the example
+**NOTE:** Make sure you include `enableRedirectHandling: false` when using react-native with `v2.0.0`. This is required to disable redirect handling (which uses http) since it is not supported in react-native. There has been discussion of a way to make this happen automatically, but for now it is required.
 
 ## JS/Web
 
@@ -30,10 +22,13 @@ import 'firebase/storage'
 
 const fbConfig = {} // object containing Firebase config
 firebase.initializeApp(fbConfig) // initialize firebase instance
+const reduxConfig = {
+  enableRedirectHandling: false // required
+}
 
 const store = createStore(
  reducer,
- undefined, //
+ undefined,
  compose(
    reactReduxFirebase(firebase, reduxConfig), // pass in firebase instance instead of config
    applyMiddleware(...middleware)
@@ -54,6 +49,10 @@ const configurationOptions = {
 
 const firebase = RNFirebase.initializeApp(configurationOptions);
 
+const reduxConfig = {
+  enableRedirectHandling: false // required
+}
+
 const store = createStore(
   reducer,
   undefined,
@@ -66,6 +65,16 @@ const store = createStore(
 The [react-native-firebase initial setup guide](http://invertase.io/react-native-firebase/#/initial-setup) has more information about how to setup your project for iOS/Android.
 
 Full project source: [react-native complete example app](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/react-native)
+
+
+### Setup
+
+1. Click "Add Firebase To iOS"
+<!-- TODO: Confirm this and get a picture -->
+1. Download `GoogleService-info.plist`
+1. Place `GoogleService-info.plist` in the folder of whichever platform you are using (i.e. `/ios`)
+1. Copy your client id out of the `GoogleService-info.plist` file (should end in `.apps.googleusercontent.com`)
+1. Place the client id into `iosClientId` variable within the example
 
 ### Download Firebase Config
 1. Visit Overview page and click Add Firebase to iOS

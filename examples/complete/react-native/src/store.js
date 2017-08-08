@@ -13,6 +13,7 @@ export default function configureStore (initialState, history) {
       {
         userProfile: 'users',
         enableLogging: false,
+        enableRedirectHandling: false
         // ReactNative: { AsyncStorage },
       }
     ),
