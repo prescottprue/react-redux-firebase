@@ -64,7 +64,7 @@ export const watchUserProfile = (dispatch, firebase) => {
         } else {
           // TODO: Share population logic with query action
           // Convert each populate string in array into an array of once query promises
-          promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
+          promisesForPopulate(firebase, snap.key, snap.val(), profileParamsToPopulate)
             .then(data => {
               // Fire actions for placement of data gathered in populate into redux
               forEach(data, (result, path) => {
