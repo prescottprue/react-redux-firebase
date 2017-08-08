@@ -35,7 +35,6 @@ describe('Utils: Populate', () => {
     it('handles basic populates', () => {
       expect(getPopulates(['populate=uid:users']))
     })
-
   })
 
   describe('getPopulateChild', () => {

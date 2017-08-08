@@ -12,7 +12,7 @@ import {
   createUser,
   resetPassword,
   confirmPasswordReset,
-  verifyPasswordResetCode,
+  verifyPasswordResetCode
 } from '../../../src/actions/auth'
 import { promisesForPopulate } from '../../../src/utils/populate'
 
@@ -25,15 +25,15 @@ const fakeFirebase = {
     authUid: '123',
     config: {
       userProfile: 'users',
-      disableRedirectHandling: true,
-    },
+      disableRedirectHandling: true
+    }
   },
   database: () => ({
     ref: () => ({
       child: () => ({
-        on: () => ({ val: () => { some: 'obj' } }),
-        off: () => Promise.resolve({ val: () => { some: 'obj' }}),
-        once: () => Promise.resolve({ val: () => { some: 'obj' }})
+        on: () => ({ val: () => ({ some: 'obj' }) }),
+        off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
+        once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
       })
     })
   }),
@@ -48,7 +48,7 @@ const fakeFirebase = {
       Promise.resolve({}),
     createUserWithEmailAndPassword: (email, password) =>
       email === 'error'
-        ? Promise.reject({ code: 'asdfasdf' })
+        ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
         : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
     signInWithCustomToken: () => {
       return Promise.resolve({
@@ -62,22 +62,22 @@ const fakeFirebase = {
     },
     signInWithEmailAndPassword: (email, password) =>
       email.indexOf('error2') !== -1
-        ? Promise.reject({ code: 'asdfasdf' })
+        ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
         : email === 'error3'
-          ? Promise.reject({ code: 'auth/user-not-found' })
+          ? Promise.reject({ code: 'auth/user-not-found' }) // eslint-disable-line prefer-promise-reject-errors
           : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
     sendPasswordResetEmail: (email) =>
       email === 'error'
-        ? Promise.reject({code: 'auth/user-not-found'})
+        ? Promise.reject({code: 'auth/user-not-found'}) // eslint-disable-line prefer-promise-reject-errors
         : email === 'error2'
-          ? Promise.reject({code: 'asdfasdf'})
+          ? Promise.reject({code: 'asdfasdf'}) // eslint-disable-line prefer-promise-reject-errors
           : Promise.resolve({some: 'val'}),
     confirmPasswordReset: (code, password) =>
       password === 'error'
-        ? Promise.reject({code: code})
+        ? Promise.reject({code: code}) // eslint-disable-line prefer-promise-reject-errors
         : Promise.resolve(),
     verifyPasswordResetCode: (code) => code === 'error'
-      ? Promise.reject({ code: 'some' })
+      ? Promise.reject({ code: 'some' }) // eslint-disable-line prefer-promise-reject-errors
       : Promise.resolve('success')
   })
 }
@@ -162,7 +162,6 @@ describe('Actions: Auth', () => {
       promisesForPopulate.restore()
       expect(functionSpy).to.be.calledOnce
     })
-
   })
 
   describe('createUserProfile', () => {
@@ -327,7 +326,6 @@ describe('Actions: Auth', () => {
       it('auth/weak-password', () => {
         return confirmPasswordReset(dispatch, fakeFirebase, 'auth/weak-password', 'error')
           .catch((err) => {
-            console.log('error:', err)
             expect(err.code).to.be.a.string
           })
       })
@@ -338,7 +336,6 @@ describe('Actions: Auth', () => {
           })
       })
     })
-
   })
 
   describe('verifyPasswordResetCode', () => {

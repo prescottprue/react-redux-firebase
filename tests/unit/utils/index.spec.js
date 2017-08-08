@@ -1,6 +1,4 @@
-/* global describe expect it */
 import { validateConfig } from '../../../src/utils'
-console.log('validateConfig', validateConfig)
 const validConfig = {
   databaseURL: 'asdfasdf',
   authDomain: 'asdfasdf',
