@@ -105,10 +105,10 @@ export const buildChildList = (state, list, p) =>
     if (val === true) {
       getKey = key
     }
+    const dotRoot = compact(p.root.split('/')).join('.')
     const pathString = p.childParam
-      ? `${p.root}.${getKey}.${p.childParam}`
-      : `${p.root}.${getKey}`
-
+      ? `${dotRoot}.${getKey}.${p.childParam}`
+      : `${dotRoot}.${getKey}`
     // console.log('path string:', { pathString, state })
     // Set to child under key if populate child exists
     if (get(state.data, pathString)) {
@@ -171,9 +171,10 @@ export const populate = (state, path, populates, notSetValue) => {
         // populate child is key
         if (isString(get(get(data, dotPath), p.child))) {
           const key = get(get(data, dotPath), p.child)
+          const dotRoot = compact(p.root.split('/')).join('.')
           const pathString = p.childParam
-            ? `${p.root}.${key}.${p.childParam}`
-            : `${p.root}.${key}`
+            ? `${dotRoot}.${key}.${p.childParam}`
+            : `${dotRoot}.${key}`
 
           if (get(data, pathString)) {
             return set({}, p.child, p.keyProp
@@ -211,9 +212,10 @@ export const populate = (state, path, populates, notSetValue) => {
         if (isString(get(child, p.child))) {
           const key = get(child, p.child)
           // attach child paramter if it exists
+          const dotRoot = compact(p.root.split('/')).join('.')
           const pathString = p.childParam
-            ? `${p.root}.${key}.${p.childParam}`
-            : `${p.root}.${key}`
+            ? `${dotRoot}.${key}.${p.childParam}`
+            : `${dotRoot}.${key}`
           if (get(data, pathString)) {
             return set({}, p.child, (p.keyProp
               ? { [p.keyProp]: key, ...get(data, pathString) }
