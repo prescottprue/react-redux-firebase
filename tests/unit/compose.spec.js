@@ -1,8 +1,7 @@
-/* global describe expect it */
 import { omit } from 'lodash'
-import { createStore, combineReducers, compose } from 'redux'
+import { createStore, compose } from 'redux'
 import composeFunc, { getFirebase } from '../../src/compose'
-const exampleData = { data: { some: 'data' } }
+
 const reducer = sinon.spy()
 const generateCreateStore = (params) =>
   compose(composeFunc(
@@ -85,11 +84,14 @@ describe('Compose', () => {
       )
     })
 
-    describe('uniqueSet', () =>{
+    describe('uniqueSet', () => {
       // remove test root after test are complete
-      after(() =>
-        helpers.remove('test')
-      )
+      afterEach(() => {
+        if (helpers.remove) {
+          return helpers.remove('test/unique')
+        }
+      })
+      // Skipped due to issue with mocked transaction not returning committed
       it('sets if unique', () =>
         helpers.uniqueSet('test/unique', {some: 'asdf'})
       )
@@ -99,11 +101,21 @@ describe('Compose', () => {
             expect(err.toString()).to.equal('Error: Path already exists.')
           })
       )
-      it('has on err onComplete', () => {
+      it('calls onComplete on error', () => {
         const func = sinon.spy()
-        helpers.uniqueSet('test', {some: 'asdf'}, func)
+        return helpers.uniqueSet('test', {some: 'asdf'}, func)
           .catch((err) => {
             expect(func).to.have.been.calledOnce
+            expect(err).to.exist
+          })
+      })
+
+      it('calls onComplete on success', () => {
+        const func = sinon.spy()
+        return helpers.uniqueSet('test/unique', {some: 'asdf'}, func)
+          .then((snap) => {
+            expect(func).to.have.been.calledOnce
+            expect(snap).to.exist
           })
       })
     })
@@ -168,14 +180,14 @@ describe('Compose', () => {
     describe('storage', () => {
       try {
         helpers.storage()
-      } catch(err) {
+      } catch (err) {
         expect(err).to.be.an.object
       }
     })
     describe('messaging', () => {
       try {
         helpers.messaging()
-      } catch(err) {
+      } catch (err) {
         expect(err).to.be.an.object
       }
     })

@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "browser": "dist/react-redux-firebase.js",
   "main": "lib/index.js",
@@ -8,7 +8,7 @@
   "jsnext:main": "es/index.js",
   "scripts": {
     "clean": "rimraf dist",
-    "lint": "eslint src/** test/**",
+    "lint": "eslint src/** tests/**/**",
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha -R spec --compilers js:babel-core/register ./tests/setup.js ./tests/**/*.spec.js",
     "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./tests/** --recursive --report lcov --compilers js:babel-register --require babel-polyfill",
@@ -32,11 +32,10 @@
   "dependencies": {
     "es6-promise": "^4.1.0",
     "firebase": "^3.9.0",
-    "hoist-non-react-statics": "^1.2.0",
+    "hoist-non-react-statics": "^2.2.0",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.4",
-    "react-display-name": "^0.2.0"
+    "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "react": "^0.14.6 || ^15.0.0"

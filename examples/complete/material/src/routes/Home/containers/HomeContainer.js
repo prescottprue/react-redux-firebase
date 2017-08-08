@@ -6,8 +6,8 @@ import {
   firebaseConnect,
   isLoaded,
   pathToJS,
-  dataToJS // needed for full list and once
-  // orderedToJS // needed for ordered list
+  dataToJS, // needed for full list and once
+  // orderedToJS, // needed for ordered list
   // populatedDataToJS // needed for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
@@ -19,19 +19,22 @@ import TodoItem from '../components/TodoItem'
 import NewTodoPanel from '../components/NewTodoPanel'
 import classes from './HomeContainer.scss'
 
-// const populates = [{ child: 'owner', root: 'users', keyProp: 'uid' }]
+const populates = [{ child: 'owner', root: 'users', keyProp: 'uid' }]
 
 @firebaseConnect([
   // 'todos' // sync full list of todos
   // { path: 'todos', type: 'once' } // for loading once instead of binding
   { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
   // { path: 'todos', populates } // populate
+  // { path: 'todos', storeAs: 'myTodos' } // store elsewhere in redux
 ])
 @connect(({ firebase }) => ({
   auth: pathToJS(firebase, 'auth'),
   account: pathToJS(firebase, 'profile'),
-  todos: dataToJS(firebase, 'todos')
-  // todos: populatedDataToJS(firebase, '/todos', populates), // if populating
+  todos: dataToJS(firebase, 'todos'),
+  // todos: orderedToJS(firebase, 'todos') // if looking for array
+  // todos: dataToJS(firebase, 'myTodos'), // if using storeAs
+  // todos: populatedDataToJS(firebase, 'todos', populates), // if populating
   // todos: orderedToJS(firebase, '/todos') // if using ordering such as orderByChild
 }))
 export default class Home extends Component {

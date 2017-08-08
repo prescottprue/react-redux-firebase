@@ -1,4 +1,3 @@
-/* global describe expect it beforeEach sinon */
 import {
   uploadFileWithProgress,
   uploadFile,
@@ -33,8 +32,7 @@ const fakeFirebase = {
           funcsObj.next({bytesTransferred: 12, totalBytes: 12})
           funcsObj.error()
           funcsObj.complete()
-          console.log('----------- typeof litent', typeof unListen)
-          return () => console.log('called')
+          return () => unListen
         },
         then: () => {
 
@@ -42,7 +40,7 @@ const fakeFirebase = {
       }),
       delete: () => Promise.resolve(({
 
-      })),
+      }))
     })
   })
 }

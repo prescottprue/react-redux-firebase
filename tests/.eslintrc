@@ -1,0 +1,17 @@
+extends: ../.eslintrc
+
+globals:
+  sinon: true
+  expect: true
+  after: true
+  afterEach: true
+  before: true
+  beforeEach: true
+  it: true
+  describe: true
+  Firebase: true
+  firebase: true
+  fbConfig: true
+
+rules:
+  no-unused-expressions: [0]

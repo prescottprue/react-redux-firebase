@@ -1,8 +1,7 @@
-import React, { createClass, Children, Component, cloneElement, PropTypes } from 'react'
+import React, { Children, Component, cloneElement, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import { createStore, compose, combineReducers } from 'redux'
-import getDisplayName from 'react-display-name'
 import reactReduxFirebase from '../../src/compose'
 import firebaseConnect from '../../src/connect'
 
@@ -30,10 +29,9 @@ describe('firebaseConnect', () => {
     store: PropTypes.object.isRequired
   }
 
-  function stringBuilder (prev = '', action) {
-    return action.type === 'APPEND'
-      ? prev + action.body
-      : prev
+  ProviderMock.propTypes = {
+    store: PropTypes.object,
+    children: PropTypes.node
   }
 
   const createContainer = () => {
@@ -47,14 +45,14 @@ describe('firebaseConnect', () => {
       `test/${props.dynamicProp}`
     ])
     class Container extends Component {
-      render() {
+      render () {
         return <Passthrough {...this.props} />
       }
     }
 
     const tree = TestUtils.renderIntoDocument(
       <ProviderMock store={store}>
-        <Container pass="through" />
+        <Container pass='through' />
       </ProviderMock>
     )
 
@@ -72,18 +70,18 @@ describe('firebaseConnect', () => {
 
   it('disables watchers on unmount', () => {
     const { container, store } = createContainer()
-    ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(container).parentNode);
+    ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(container).parentNode)
     expect(container.context.store).to.equal(store)
   })
 
   it('does not change watchers props changes that do not change listener paths', () => {
-    const { parent, store } = createContainer()
+    const { parent } = createContainer()
     parent.setState({ test: 'somethingElse' })
     // expect(parent.context.store).to.equal(store)
   })
 
   it('reapplies watchers when props change', () => {
-    const { parent, store } = createContainer()
+    const { parent } = createContainer()
     parent.setState({
       dynamic: 'somethingElse'
     })
@@ -91,10 +89,10 @@ describe('firebaseConnect', () => {
   })
 
   describe('sets displayName static as ', () => {
-    describe('FirebaseConnect(${WrappedComponentName}) for', () => {
+    describe('FirebaseConnect(${WrappedComponentName}) for', () => { // eslint-disable-line no-template-curly-in-string
       it('standard components', () => {
         class TestContainer extends Component {
-          render() {
+          render () {
             return <Passthrough {...this.props} />
           }
         }
@@ -110,18 +108,15 @@ describe('firebaseConnect', () => {
       })
     })
 
-
     it('"Component" for all other types', () => {
-      const stringComp = firebaseConnect()(<div></div>)
+      const stringComp = firebaseConnect()(<div />)
       expect(stringComp.displayName).to.equal('FirebaseConnect(Component)')
     })
   })
 
-
-
   it('sets WrappedComponent static as component which was wrapped', () => {
     class Container extends Component {
-      render() {
+      render () {
         return <Passthrough {...this.props} />
       }
     }
@@ -129,5 +124,4 @@ describe('firebaseConnect', () => {
     const containerPrime = firebaseConnect()(Container)
     expect(containerPrime.wrappedComponent).to.equal(Container)
   })
-
 })
