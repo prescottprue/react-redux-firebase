@@ -16,71 +16,35 @@ Then later wrap a component with connect:
 
 ```js
 import { connect } from 'react-redux'
+import { pathToJS } from 'react-redux-firebase'
 
 // grab profile from redux with connect
-connect(
-  (state) => ({
-    profile: state.firebase.profile // profile passed as props.profile
-  })
-)(SomeComponent) // pass component to be wrapped
+connect((state) => {
+  return {
+    profile: pathToJS(state.firebase, 'profile') // profile passed as props.profile
+  }
+}))(SomeComponent) // pass component to be wrapped
+
+// or with some shorthand:
+connect(({ firebase }) => ({
+  profile: pathToJS(state.firebase, 'profile') // profile passed as props.profile
+}))(SomeComponent) // pass component to be wrapped
 ```
 
 ## Update Profile
 
-The current users profile can be updated by using the `updateProfile` method:
+**NOTE:** This feature is only available in [`v1.5.*`](http://docs.react-redux-firebase.com/history/v1.5.0/docs/recipes/profile.html)
 
-```js
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded } from 'react-redux-firebase'
+The current users profile can be updated by using the `updateProfile` method, which is [only available in `v1.5.*`](http://docs.react-redux-firebase.com/history/v1.5.0/docs/recipes/profile.html).
 
-@firebaseConnect()
-@connect(
-  ({ firebase: { profile } }) => ({
-    profile,
-  })
-)
-export default class UpdateProfilePage extends Component {
-  static propTypes = {
-    profile: PropTypes.object,
-  }
-
-  addRole = () => {
-    return this.props.updateProfile({ role: ''})
-  }
-
-  render() {
-    const { profile } = this.props
-    return (
-      <div>
-        <h2>Update User Profile</h2>
-        <span>
-          Click the button to update profile to include role parameter
-        </span>
-        <button onClick={this.addRole}>
-          Add Role To User
-        </button>
-        <div>
-          {
-            isLoaded(profile)
-              ? JSON.stringify(profile, null, 2)
-              : 'Loading...'
-          }
-        </div>
-      </div>
-    )
-  }
-}
-```
 ## Change How Profiles Are Stored
-The way user profiles are written to the database can be modified by passing the `profileFactory` parameter .
+The way user profiles are written to the database can be modified by passing the `profileFactory` parameter.
 
 ```js
 // within your createStore.js or store.js file include the following config
 const config = {
   userProfile: 'users', // where profiles are stored in database
-  profileFactory: (userData) => { // how profiles are stored in database
+  profileFactory: (userData, profileData) => { // how profiles are stored in database
     const { user } = userData
     return {
       email: user.email
