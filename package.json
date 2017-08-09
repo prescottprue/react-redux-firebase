@@ -62,11 +62,11 @@
   "dependencies": {
     "es6-promise": "^4.1.0",
     "firebase": "^3.9.0",
-    "hoist-non-react-statics": "^1.2.0",
+    "hoist-non-react-statics": "^2.2.2",
     "immutable": "^3.8.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
-    "prop-types": "^15.5.8"
+    "prop-types": "^15.5.10"
   },
   "peerDependencies": {
     "react": "^0.14.6 || ^15.0.0-0 || ^16.0.0-0"
