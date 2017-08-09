@@ -1,3 +1,5 @@
 examples/**
 coverage/**
 node_modules/**
+_book/**
+_site/**

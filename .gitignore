@@ -5,7 +5,8 @@ coverage
 dist
 es
 lib
-_book
+_book/**
+_site/**
 # Logs
 *.log
 .DS_Store
