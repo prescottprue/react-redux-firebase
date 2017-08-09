@@ -1,7 +1,7 @@
 import { omit } from 'lodash'
-import { createStore, combineReducers, compose } from 'redux'
+import { createStore, compose } from 'redux'
 import composeFunc, { getFirebase } from '../../src/compose'
-const exampleData = { data: { some: 'data' } }
+
 const reducer = sinon.spy()
 const generateCreateStore = (params) =>
   compose(composeFunc(
@@ -122,7 +122,6 @@ describe('Compose', () => {
           })
       })
     })
-
 
     describe('remove', () => {
       it('removes data', () =>
@@ -255,18 +254,17 @@ describe('Compose', () => {
       it('exists', () => {
         try {
           helpers.storage()
-        } catch(err) {
+        } catch (err) {
           expect(err).to.be.an.object
         }
       })
-
     })
 
     describe('messaging', () => {
       it('exists', () => {
         try {
           helpers.messaging()
-        } catch(err) {
+        } catch (err) {
           expect(err).to.be.an.object
         }
       })

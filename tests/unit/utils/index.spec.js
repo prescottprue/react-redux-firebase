@@ -1,4 +1,3 @@
-/* global describe expect it */
 import { validateConfig } from '../../../src/utils'
 const validConfig = {
   databaseURL: 'asdfasdf',

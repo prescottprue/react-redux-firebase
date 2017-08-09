@@ -1,6 +1,5 @@
 import { fromJS } from 'immutable'
 import helpers from '../../src/helpers'
-import { buildChildList } from '../../src/helpers'
 
 const exampleData = {
   data: {
@@ -9,7 +8,7 @@ const exampleData = {
       CDF: {
         owner: 'ABC',
         notes: {
-          123: true,
+          123: true
         },
         collaborators: {
           ABC: true,
@@ -22,7 +21,7 @@ const exampleData = {
       OKF: {
         owner: 'asdfasdf',
         notes: {
-          123: true,
+          123: true
         },
         collaborators: {
           ABC: true,
@@ -35,7 +34,7 @@ const exampleData = {
           owner: 'ABC'
         },
         notes: {
-          123: true,
+          123: true
         },
         collaborators: {
           ABC: true,
@@ -59,13 +58,13 @@ const exampleData = {
       {
         owner: 'ABC',
         notes: {
-          123: true,
+          123: true
         },
         collaborators: {
           ABC: true,
           abc: true
         }
-      },
+      }
     ]
   },
   timestamp: { 'some/path': { test: 'key' } },
@@ -238,7 +237,7 @@ describe('Helpers:', () => {
           const path = 'projects/OKF'
           const rootName = 'users'
           const populates = [
-            { child: 'collaborators', root: rootName },
+            { child: 'collaborators', root: rootName }
           ]
           const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
           expect(populatedData)
@@ -264,11 +263,9 @@ describe('Helpers:', () => {
             .property('displayName', 'scott')
         })
       })
-
     })
 
     describe('list', () => {
-
       describe('single param', () => {
         it('populates value', () => {
           const path = 'projects'
@@ -297,7 +294,7 @@ describe('Helpers:', () => {
           const rootName = 'users'
           const valName = 'OKF'
           const populates = [
-            { child: 'collaborators', root: rootName },
+            { child: 'collaborators', root: rootName }
           ]
           const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
           expect(populatedData)
@@ -312,7 +309,7 @@ describe('Helpers:', () => {
           const rootName = 'users'
           const valName = 'OKF'
           const populates = [
-            { child: 'collaborators', root: rootName },
+            { child: 'collaborators', root: rootName }
           ]
           expect(helpers.populatedDataToJS(exampleState, path, populates))
             .to
@@ -335,7 +332,7 @@ describe('Helpers:', () => {
         const valName = 'CDF'
         const populates = [
           { child: 'owner', root: rootName },
-          { child: 'notes', root: 'notes' },
+          { child: 'notes', root: 'notes' }
         ]
         // check that notes are populated
         expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
@@ -358,7 +355,7 @@ describe('Helpers:', () => {
         const valName = 'CDF'
         const populates = [
           { child: 'owner', root: rootName },
-          { child: 'collaborators', root: rootName },
+          { child: 'collaborators', root: rootName }
         ]
         // TODO: Test both children are populated
         expect(helpers.populatedDataToJS(exampleState, `/${path}`, populates))
@@ -373,8 +370,6 @@ describe('Helpers:', () => {
           .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
       })
     })
-
-
   })
 
   describe('customToJS', () => {

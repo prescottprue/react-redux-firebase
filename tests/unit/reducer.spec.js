@@ -1,13 +1,6 @@
 import { fromJS } from 'immutable'
 import { firebaseStateReducer } from '../../src'
 import { actionTypes } from '../../src/constants'
-const emptyState = {
-  auth: undefined,
-  authError: undefined,
-  profile: undefined,
-  isInitializing: undefined,
-  data: {}
-}
 const initialState = {
   auth: undefined,
   authError: undefined,
@@ -18,13 +11,11 @@ const initialState = {
   requesting: {},
   requested: {}
 }
-const intializedState = Object.assign({}, initialState, { isInitializing: true })
 const noError = { authError: null }
 const noAuth = { auth: null, profile: null }
 const exampleData = { some: 'data' }
 const externalState = { data: { asdfasdf: {} } }
 const exampleState = fromJS({})
-const exampleEmptyState = fromJS(emptyState)
 
 describe('reducer', () => {
   it('is a function', () => {
@@ -132,7 +123,6 @@ describe('reducer', () => {
         )
       )
     })
-
   })
 
   describe('NO_VALUE action', () => {
@@ -167,8 +157,8 @@ describe('reducer', () => {
         ).toJS())
       ).to.equal(JSON.stringify({ profile }))
     })
+
     it('removes for no profile', () => {
-      const profile = { email: 'test@test.com' }
       expect(
         JSON.stringify(firebaseStateReducer(
           exampleState,

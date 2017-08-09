@@ -4,6 +4,7 @@
 
 -   [actionsPrefix](#actionsprefix)
 -   [actionTypes](#actiontypes)
+-   [defaultConfig](#defaultconfig)
 
 ## actionsPrefix
 
@@ -59,7 +60,7 @@ import { actionTypes } from 'react-redux-firebase'
 actionTypes.SET === '@@reactReduxFirebase/SET' // true
 ```
 
-## 
+## defaultConfig
 
 Default configuration options
 

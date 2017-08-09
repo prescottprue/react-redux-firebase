@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 import {
   uploadFileWithProgress,
   uploadFile,
@@ -34,13 +33,13 @@ const fakeFirebase = {
           funcsObj.next({bytesTransferred: 12, totalBytes: 12})
           funcsObj.error()
           funcsObj.complete()
-          return unListen
+          return () => unListen
         },
         then: () => Promise.resolve({})
       }),
       delete: () => Promise.resolve(({
 
-      })),
+      }))
     })
   })
 }
@@ -78,7 +77,7 @@ describe('Actions: Storage', () => {
 
     // unListen is not a function due to storage not being mocked correctly
     it('runs given basic params', () =>
-      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' }  }))
+      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } }))
         .to
         .eventually
         .become({})
@@ -86,7 +85,7 @@ describe('Actions: Storage', () => {
 
     // unListen is not a function due to storage not being mocked correctly
     it('handles dbPath', () =>
-      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' }, dbPath: 'projects'  }))
+      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' }, dbPath: 'projects' }))
         .to
         .eventually
         .become({})

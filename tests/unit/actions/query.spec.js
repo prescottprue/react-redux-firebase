@@ -1,17 +1,12 @@
-import queryAction from '../../../src/actions/query'
 import {
   watchEvent,
   unWatchEvent,
   watchEvents,
   unWatchEvents
 } from '../../../src/actions/query'
-import {
-  unsetWatcher
-} from '../../../src/utils/query'
-let spy, unWatch
-const dispatch = () => {
+let spy
+const dispatch = () => {}
 
-}
 describe('Actions: Query', () => {
   beforeEach(() => {
     spy = sinon.spy(dispatch)
