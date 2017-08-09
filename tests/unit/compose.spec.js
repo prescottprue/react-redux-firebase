@@ -13,6 +13,7 @@ const generateCreateStore = (params) =>
     }
   ))(createStore)
 const helpers = generateCreateStore()(reducer).firebase.helpers
+const profileData = { displayName: 'test', email: 'test@test.com' }
 
 describe('Compose', () => {
   it('is a function', () => {
@@ -84,32 +85,50 @@ describe('Compose', () => {
       )
     })
 
-    describe('uniqueSet', () =>{
+    describe('uniqueSet', () => {
       // remove test root after test are complete
-      after(() =>
-        helpers.remove('test')
-      )
+      afterEach(() => {
+        if (helpers.remove) {
+          return helpers.remove('test/unique')
+        }
+      })
+
       it('sets if unique', () =>
         helpers.uniqueSet('test/unique', {some: 'asdf'})
       )
+
       it('throws if not unique', () =>
         helpers.uniqueSet('test', {some: 'asdf'})
           .catch((err) => {
             expect(err.toString()).to.equal('Error: Path already exists.')
           })
       )
-      it('has on err onComplete', () => {
+
+      it('calls onComplete on error', () => {
         const func = sinon.spy()
         return helpers.uniqueSet('test', {some: 'asdf'}, func)
           .catch((err) => {
             expect(func).to.have.been.calledOnce
+            expect(err).to.exist
+          })
+      })
+
+      it('calls onComplete on success', () => {
+        const func = sinon.spy()
+        return helpers.uniqueSet('test/unique', {some: 'asdf'}, func)
+          .then((snap) => {
+            expect(func).to.have.been.calledOnce
+            expect(snap).to.exist
           })
       })
     })
 
-    describe('remove', () =>
-      helpers.remove('test')
-    )
+
+    describe('remove', () => {
+      it('removes data', () =>
+        helpers.remove('test')
+      )
+    })
 
     describe.skip('watchEvent', () => {
       it('starts watcher', () => {
@@ -131,42 +150,63 @@ describe('Compose', () => {
       }
     })
 
-    describe('logout', () =>
-      helpers.logout()
-    )
+    describe('logout', () => {
+      // TODO: Confirm that user is logged out and Firebase logout method is called
+      it('logs user out', () =>
+        helpers.logout()
+      )
+    })
 
-    describe('createUser', () =>
-      helpers.createUser({ email: 'test' }, { email: 'test' })
-    )
+    describe('createUser', () => {
+      it('creates a user in Firebase auth', () =>
+        expect(helpers.createUser({ email: 'test@test.com', password: 'test' }, profileData))
+          // seeing this message indicates that createUser was called internally (since api key is fake)
+          .to.be.rejectedWith('Your API key is invalid, please check you have copied it correctly.')
+      )
+
+      it('throws for incorrectly formatted email', () => {
+        expect(helpers.createUser({ email: 'test', password: 'test' }, { email: 'test' }))
+          .to.be.rejectedWith('The email address is badly formatted.')
+      })
+    })
 
     describe('resetPassword', () => {
-      try {
-        helpers.resetPassword({ email: 'test' })
-      } catch (err) {
-        expect(err).to.be.an.object
-      }
+      // TODO: Confirm Firebase method is called
+      it('throws for non-existant email', () => {
+        try {
+          helpers.resetPassword({ email: 'test' })
+        } catch (err) {
+          expect(err).to.be.an.object
+        }
+      })
     })
 
     describe('confirmPasswordReset', () => {
-      try {
-        helpers.confirmPasswordReset({ code: 'test', password: 'test' })
-      } catch (err) {
-        expect(err).to.be.an.object
-      }
+      // TODO: Confirm Firebase method is called
+      it('throws for non-existant email', () => {
+        try {
+          helpers.confirmPasswordReset({ code: 'test', password: 'test' })
+        } catch (err) {
+          expect(err).to.be.an.object
+        }
+      })
     })
 
     describe('verifyPasswordResetCode', () => {
-      try {
-        helpers.verifyPasswordResetCode({ code: 'test', password: 'test' })
-      } catch (err) {
-        expect(err).to.be.an.object
-      }
+      // TODO: Confirm Firebase method is called
+      it('throws for non-existant email', () => {
+        try {
+          helpers.verifyPasswordResetCode({ code: 'test', password: 'test' })
+        } catch (err) {
+          expect(err).to.be.an.object
+        }
+      })
     })
 
     describe('updateProfile', () => {
-      it('acccepts an object', () =>
-        expect(helpers.updateProfile({ displayName: 'test' })).to.eventually.become(undefined)
-      )
+      it('acccepts an object', () => {
+        return expect(helpers.updateProfile(profileData)).to.eventually.become(profileData)
+      })
     })
 
     describe('updateAuth', () => {
@@ -200,27 +240,36 @@ describe('Compose', () => {
         expect(helpers.updateEmail({}, true)).to.eventually.become(undefined)
       )
     })
+
     describe('verifyPasswordResetCode', () => {
-      try {
-        helpers.verifyPasswordResetCode({ code: 'test', password: 'test' })
-      } catch (err) {
-        expect(err).to.be.an.object
-      }
+      it('exists', () => {
+        try {
+          helpers.verifyPasswordResetCode({ code: 'test', password: 'test' })
+        } catch (err) {
+          expect(err).to.be.an.object
+        }
+      })
     })
 
     describe('storage', () => {
-      try {
-        helpers.storage()
-      } catch(err) {
-        expect(err).to.be.an.object
-      }
+      it('exists', () => {
+        try {
+          helpers.storage()
+        } catch(err) {
+          expect(err).to.be.an.object
+        }
+      })
+
     })
+
     describe('messaging', () => {
-      try {
-        helpers.messaging()
-      } catch(err) {
-        expect(err).to.be.an.object
-      }
+      it('exists', () => {
+        try {
+          helpers.messaging()
+        } catch(err) {
+          expect(err).to.be.an.object
+        }
+      })
     })
   })
 

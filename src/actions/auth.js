@@ -326,8 +326,8 @@ export const login = (dispatch, firebase, credentials) => {
       // Handle null response from getRedirectResult before redirect has happened
       if (!userData) return Promise.resolve(null)
 
-      // For email auth return uid (createUser is used for creating a profile)
-      if (userData.email) return userData.uid
+      // For email auth return authData (createUser is used for creating a profile)
+      if (userData.email) return userData
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
       if (method === 'signInWithCustomToken') {
@@ -526,15 +526,20 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
     type: actionTypes.PROFILE_UPDATE_START,
     payload: profileUpdate
   })
-  return database()
-    .ref(`${config.userProfile}/${authUid}`)
+  const profileRef = database().ref(`${config.userProfile}/${authUid}`)
+  return profileRef
     .update(profileUpdate)
-    .then((snap) => {
-      dispatch({
-        type: actionTypes.PROFILE_UPDATE_SUCCESS,
-        payload: snap.val()
-      })
-    })
+    .then(() =>
+       profileRef
+         .once('value')
+         .then((snap) => {
+           dispatch({
+             type: actionTypes.PROFILE_UPDATE_SUCCESS,
+             payload: snap.val()
+           })
+           return snap.val()
+         })
+   )
     .catch((payload) => {
       dispatch({
         type: actionTypes.PROFILE_UPDATE_ERROR,
