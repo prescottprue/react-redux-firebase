@@ -88,7 +88,7 @@ export default firebaseConnect()(SomeComponent)
 
 
 ##### Returns
-[**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with an object containing profile, user, (also credential if using oAuth provider) in case of success or the error otherwise.
+[**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) that resolve with the response from firebase's login method. `profile` parameter is also included if using oAuth provider.
 
 ##### Examples
 

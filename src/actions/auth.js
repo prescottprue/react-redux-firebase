@@ -326,8 +326,8 @@ export const login = (dispatch, firebase, credentials) => {
       // Handle null response from getRedirectResult before redirect has happened
       if (!userData) return Promise.resolve(null)
 
-      // For email auth return uid (createUser is used for creating a profile)
-      if (userData.email) return userData.uid
+      // For email auth return authData (createUser is used for creating a profile)
+      if (userData.email) return userData
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
       if (method === 'signInWithCustomToken') {
