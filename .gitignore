@@ -11,3 +11,4 @@ _site/**
 *.log
 .DS_Store
 examples/complete/react-native/ios/build
+/.idea
