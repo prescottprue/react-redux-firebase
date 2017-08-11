@@ -1,5 +1,5 @@
 const exec = require('child-process-promise').exec
-const { version } = require('../package.json')
+const version = require('../package.json').version
 
 /**
   NOTE: Split into two arrays because gsutil acts differently when
@@ -20,24 +20,42 @@ const second = [
 
 const project = 'docs.react-redux-firebase.com'
 
+/**
+ * Run shell command with error handling.
+ * @param  {String} cmd - Command to run
+ * @return {Promise}     [description]
+ * @private
+ */
 const runCommand = (cmd) => {
   const baseCommand = cmd.split(' ')[0]
   return exec(baseCommand)
-    .catch((err) => {
-      if (err.message.indexOf('not found') !== -1) {
-        return Promise.reject(new Error(`${baseCommand} must be installed to upload`))
-      }
-      return Promise.reject(err)
-    })
+    .catch((err) =>
+      err.message && err.message.indexOf('not found') !== -1
+        ? Promise.reject(new Error(`${baseCommand} must be installed to upload`))
+        : Promise.reject(err)
+    )
 }
 
+/**
+ * Upload file or folder to cloud storage. gsutil is used instead of
+ * google-cloud/storage module so that folders can be uploaded.
+ * @param  {[type]} fileOrFolder [description]
+ * @return {Promise} Resolve with an object containing stdout and uploadPath
+ * @private
+ */
 const upload = (fileOrFolder) => {
-  const prefix = `history/testing2/${version.split('-')[0]}`
+  const prefix = `history/${version.split('-')[0]}`
   const uploadPath = `${project}/${prefix}/${fileOrFolder.replace('_book/', '').replace('/**', '')}`
   return runCommand(`gsutil -m cp -r -a public-read ${fileOrFolder} gs://${uploadPath}`)
     .then((stdout) => ({ stdout, uploadPath }))
 }
 
+/**
+ * Upload list of files or folders to Google Cloud Storage
+ * @param  {Array} files - List of files/folders to upload
+ * @return {Promise} Resolves with an array of upload results
+ * @private
+ */
 const uploadList = (files) => {
   return Promise.all(
     files.map(file =>
