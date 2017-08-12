@@ -23,7 +23,7 @@ const project = 'docs.react-redux-firebase.com'
 /**
  * Run shell command with error handling.
  * @param  {String} cmd - Command to run
- * @return {Promise}     [description]
+ * @return {Promise} Resolves with stdout of running command
  * @private
  */
 const runCommand = (cmd) => {
@@ -39,14 +39,14 @@ const runCommand = (cmd) => {
 /**
  * Upload file or folder to cloud storage. gsutil is used instead of
  * google-cloud/storage module so that folders can be uploaded.
- * @param  {[type]} fileOrFolder [description]
+ * @param  {String} entityPath - Local path for entity (file/folder) to upload
  * @return {Promise} Resolve with an object containing stdout and uploadPath
  * @private
  */
-const upload = (fileOrFolder) => {
+const upload = (entityPath) => {
   const prefix = `history/${version.split('-')[0]}`
-  const uploadPath = `${project}/${prefix}/${fileOrFolder.replace('_book/', '').replace('/**', '')}`
-  return runCommand(`gsutil -m cp -r -a public-read ${fileOrFolder} gs://${uploadPath}`)
+  const uploadPath = `${project}/${prefix}/${entityPath.replace('_book/', '').replace('/**', '')}`
+  return runCommand(`gsutil -m cp -r -a public-read ${entityPath} gs://${uploadPath}`)
     .then((stdout) => ({ stdout, uploadPath }))
 }
 

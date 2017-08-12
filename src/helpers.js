@@ -109,7 +109,6 @@ export const buildChildList = (state, list, p) =>
     const pathString = p.childParam
       ? `${dotRoot}.${getKey}.${p.childParam}`
       : `${dotRoot}.${getKey}`
-    // console.log('path string:', { pathString, state })
     // Set to child under key if populate child exists
     if (get(state.data, pathString)) {
       return p.keyProp
@@ -155,7 +154,7 @@ export const populate = (state, path, populates, notSetValue) => {
     return notSetValue
   }
   // test if data is a single object vs a list of objects, try generating
-  // populates and testing for key presence
+  // populates and testing for key existence
   const populatesForData = getPopulateObjs(
     isFunction(populates)
       ? populates(last(split(path, '/')), get(data, dotPath))
