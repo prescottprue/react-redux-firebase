@@ -27,7 +27,7 @@ const populates = [{ child: 'owner', root: 'users' }]
   // { path: 'todos', type: 'once' } // for loading once instead of binding
   { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'] }, // 10 most recent
   // { path: 'todos', storeAs: 'myTodos' }, // store somewhere else in redux
-  // { path: 'todos', storeAs: 'myTodos2/B', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
+  // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
 ])
 // Get data from redux and pass in as props
 @connect(
