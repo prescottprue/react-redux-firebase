@@ -483,7 +483,7 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
             type: actionTypes.PROFILE_UPDATE_SUCCESS,
             payload: snap.val()
           })
-          return snap.val()
+          return snap
         })
     )
     .catch((payload) => {
