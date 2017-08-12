@@ -7,7 +7,7 @@ import {
   firebaseConnect,
   isLoaded,
   isEmpty,
-  populate // for populated list
+  // populate // for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
@@ -20,27 +20,30 @@ import classes from './HomeContainer.scss'
 
 const populates = [{ child: 'owner', root: 'users' }]
 
+// Pass an array of path settings to create Firebase queries
 @firebaseConnect([
   // 'todos' // sync full list of todos
   // { path: 'todos', populates }, // gather data to populate owners (uid => object)
   // { path: 'todos', type: 'once' } // for loading once instead of binding
-  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
+  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'] }, // 10 most recent
+  // { path: 'todos', storeAs: 'myTodos' }, // store somewhere else in redux
+  // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
 ])
+// Get data from redux and pass in as props
 @connect(
-  // get auth, profile, and data from
   ({ firebase, firebase: { auth, profile, data: { todos } } }) => ({
     auth,
     profile,
     todos,
     // todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
-    // todos: firebase.ordered.todos // if using ordering such as orderByChild
+    // todos: firebase.ordered.todos // if using ordering such as orderByChild or orderByKey
   })
 )
 export default class Home extends Component {
   static propTypes = {
     todos: PropTypes.oneOfType([
-      PropTypes.object, // object if using dataToJS
-      PropTypes.array // array if using orderedToJS
+      PropTypes.object, // object if using firebase.data
+      PropTypes.array // array if using firebase.ordered
     ]),
     firebase: PropTypes.shape({
       set: PropTypes.func.isRequired,

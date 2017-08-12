@@ -64,7 +64,7 @@ export const watchUserProfile = (dispatch, firebase) => {
         } else {
           // TODO: Share population logic with query action
           // Convert each populate string in array into an array of once query promises
-          promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
+          promisesForPopulate(firebase, snap.key, snap.val(), profileParamsToPopulate)
             .then(data => {
               // Fire actions for placement of data gathered in populate into redux
               forEach(data, (result, path) => {
@@ -262,7 +262,7 @@ export const init = (dispatch, firebase) => {
  */
 export const login = (dispatch, firebase, credentials) => {
   dispatchLoginError(dispatch, null)
-  let { method, params } = getLoginMethodAndParams(firebase, credentials)
+  const { method, params } = getLoginMethodAndParams(firebase, credentials)
 
   return firebase.auth()[method](...params)
     .then((userData) => {
@@ -270,7 +270,9 @@ export const login = (dispatch, firebase, credentials) => {
       if (!userData) return Promise.resolve(null)
 
       // For email auth return uid (createUser is used for creating a profile)
-      if (method === 'signInWithEmailAndPassword') return userData.uid
+      if (method === 'signInWithEmailAndPassword') {
+        return { user: userData }
+      }
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
       if (method === 'signInWithCustomToken') {
@@ -470,17 +472,20 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
   dispatch({ type: actionTypes.PROFILE_UPDATE_START, payload: profileUpdate })
 
   const { database, _: { config, authUid } } = firebase
-
-  return database()
-    .ref(`${config.userProfile}/${authUid}`)
+  const profileRef = database().ref(`${config.userProfile}/${authUid}`)
+  return profileRef
     .update(profileUpdate)
-    .then((snap) => {
-      dispatch({
-        type: actionTypes.PROFILE_UPDATE_SUCCESS,
-        payload: snap.val()
-      })
-      return snap.val()
-    })
+    .then(() =>
+      profileRef
+        .once('value')
+        .then((snap) => {
+          dispatch({
+            type: actionTypes.PROFILE_UPDATE_SUCCESS,
+            payload: snap.val()
+          })
+          return snap
+        })
+    )
     .catch((payload) => {
       dispatch({ type: actionTypes.PROFILE_UPDATE_ERROR, payload })
       return Promise.reject(payload)

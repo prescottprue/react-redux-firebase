@@ -85,7 +85,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           if (snapshot.val() !== null) {
             const ordered = []
             snapshot.forEach((child) => {
-              ordered.push({ key: child.key, ...child.val() })
+              ordered.push({ key: child.key, value: child.val() })
             })
             dispatch({
               type: SET,
@@ -112,10 +112,10 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       // create an array for preserving order of children under ordered
       const ordered = []
       if (e === 'child_added') {
-        ordered.push({ key: snapshot.key, ...snapshot.val() })
+        ordered.push({ key: snapshot.key, value: snapshot.val() })
       } else {
         snapshot.forEach((child) => {
-          ordered.push({ key: child.key, ...child.val() })
+          ordered.push({ key: child.key, value: child.val() })
         })
       }
 

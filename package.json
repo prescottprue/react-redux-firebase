@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "2.0.0-beta.4",
+  "version": "2.0.0-beta.5",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -28,7 +28,8 @@
     "docs:api": "node bin/api-docs-generate",
     "docs:build": "npm run docs:prepare && gitbook build -g prescottprue/react-redux-firebase && npm run docs:api",
     "docs:watch": "npm run docs:prepare && gitbook serve",
-    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force"
+    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force",
+    "docs:upload": "node bin/api-docs-upload"
   },
   "license": "MIT",
   "homepage": "https://github.com/prescottprue/react-redux-firebase#readme",
@@ -56,10 +57,10 @@
     "redux-react-firebase"
   ],
   "dependencies": {
-    "hoist-non-react-statics": "^1.2.0",
+    "hoist-non-react-statics": "^2.2.2",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
-    "prop-types": "^15.5.8"
+    "prop-types": "^15.5.10"
   },
   "peerDependencies": {
     "react": "^0.14.6 || ^15.0.0-0 || ^16.0.0-0"
@@ -69,8 +70,8 @@
     "babel-core": "^6.24.0",
     "babel-eslint": "^7.2.1",
     "babel-loader": "^7.1.1",
-    "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-transform-class-properties": "^6.23.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-object-assign": "^6.22.0",
@@ -81,6 +82,7 @@
     "babel-register": "^6.24.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
+    "child-process-promise": "^2.2.1",
     "codecov": "^2.1.0",
     "cross-env": "^1.0.7",
     "docdown": "^0.7.2",
