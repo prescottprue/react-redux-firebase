@@ -262,7 +262,7 @@ export const init = (dispatch, firebase) => {
  */
 export const login = (dispatch, firebase, credentials) => {
   dispatchLoginError(dispatch, null)
-  let { method, params } = getLoginMethodAndParams(firebase, credentials)
+  const { method, params } = getLoginMethodAndParams(firebase, credentials)
 
   return firebase.auth()[method](...params)
     .then((userData) => {
@@ -270,7 +270,9 @@ export const login = (dispatch, firebase, credentials) => {
       if (!userData) return Promise.resolve(null)
 
       // For email auth return uid (createUser is used for creating a profile)
-      if (method === 'signInWithEmailAndPassword') return userData.uid
+      if (method === 'signInWithEmailAndPassword') {
+        return { user: userData }
+      }
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
       if (method === 'signInWithCustomToken') {
