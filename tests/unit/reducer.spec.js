@@ -4,6 +4,7 @@ import { actionTypes } from '../../src/constants'
 
 const initialState = {
   auth: { isLoaded: false, isEmpty: true },
+  authError: {},
   profile: { isLoaded: false, isEmpty: true },
   isInitializing: false,
   errors: [],
@@ -230,15 +231,18 @@ describe('reducer', () => {
 
   describe('LOGIN_ERROR action', () => {
     it('sets state', () => {
+      const authError = { some: 'error' }
       expect(
         firebaseStateReducer(
           {},
-          { type: actionTypes.LOGIN_ERROR }
+          { type: actionTypes.LOGIN_ERROR, authError }
         )
       ).to.deep.equal({
         ...initialState,
         auth: { isLoaded: true, isEmpty: true },
-        profile: { isLoaded: true, isEmpty: true }
+        profile: { isLoaded: true, isEmpty: true },
+        errors: [ authError ],
+        authError
       })
     })
   })
@@ -264,7 +268,7 @@ describe('reducer', () => {
       const authError = { some: 'error' }
       action = { type: actionTypes.UNAUTHORIZED_ERROR, authError }
       expect(firebaseStateReducer({}, action))
-        .to.deep.equal({ ...initialState, errors: [authError] })
+        .to.deep.equal({ ...initialState, errors: [authError], authError })
     })
   })
 

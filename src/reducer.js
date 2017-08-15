@@ -223,11 +223,11 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} authError state after reduction
  */
-export const authErrorReducer = (state = { isLoaded: false, isEmpty: true }, action) => {
+export const authErrorReducer = (state = {}, action) => {
   switch (action.type) {
     case LOGIN:
     case LOGOUT:
-      return null
+      return {}
     case LOGIN_ERROR:
     case UNAUTHORIZED_ERROR:
       return action.authError
