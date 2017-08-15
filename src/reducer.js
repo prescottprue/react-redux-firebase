@@ -216,6 +216,27 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
 }
 
 /**
+ * Reducer for authError state. Changed by `LOGIN`, `LOGOUT`, `LOGIN_ERROR`, and
+ * `UNAUTHORIZED_ERROR` actions.
+ * @param  {Object} [state={}] - Current authError redux state
+ * @param  {Object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
+ * @return {Object} authError state after reduction
+ */
+export const authErrorReducer = (state = { isLoaded: false, isEmpty: true }, action) => {
+  switch (action.type) {
+    case LOGIN:
+    case LOGOUT:
+      return null
+    case LOGIN_ERROR:
+    case UNAUTHORIZED_ERROR:
+      return action.authError
+    default:
+      return state
+  }
+}
+
+/**
  * Reducer for profile state. Changed by `SET_PROFILE`, `LOGOUT`, and
  * `LOGIN_ERROR` actions.
  * @param  {Object} [state={isLoaded: false}] - Current profile redux state
@@ -257,7 +278,9 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
  */
 export const errorsReducer = (state = [], action) => {
   switch (action.type) {
-    case UNAUTHORIZED_ERROR: return [...state, action.authError]
+    case LOGIN_ERROR:
+    case UNAUTHORIZED_ERROR:
+      return [...state, action.authError]
     case LOGOUT: return []
     default: return state
   }
@@ -359,6 +382,7 @@ export default combineReducers({
   data: dataReducer,
   ordered: orderedReducer,
   auth: authReducer,
+  authError: authErrorReducer,
   profile: profileReducer,
   listeners: listenersReducer,
   isInitializing: isInitializingReducer,
