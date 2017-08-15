@@ -72,7 +72,7 @@
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
-    "eslint-plugin-standard": "^2.2.0",
+    "eslint-plugin-standard": "^3.0.1",
     "gitbook-cli": "^2.3.0",
     "istanbul": "^1.1.0-alpha.1",
     "jsdom": "^9.12.0",
