@@ -90,7 +90,7 @@ ASDF123: {
 ```
 
 ### Object
-Population can also be used to populate a parameter with an object. An example of this would be populating the owner parameter, which is an ID, with the matching key from the users list.
+Population can also be used to populate a parameter with an object. An example of this would be populating the `owner` parameter, which is an ID, with the matching key from the `users` list.
 
 ##### Example Query
 ```javascript
@@ -122,7 +122,7 @@ ASDF123: {
 
 ### Object's Parameter
 
-There is also the option to load a parameter from within a population object. An example of this could be populating the owner parameter with the displayName property of the user with a matching ID:
+There is also the option to load a parameter from within a population object. An example of this could be populating the `owner` parameter with the `email` property of the `user` with a matching ID:
 
 ##### Example
 ```javascript
