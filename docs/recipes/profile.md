@@ -35,7 +35,7 @@ connect(({ firebase }) => ({
 
 **NOTE:** This feature is only available in [`v1.5.*`](http://docs.react-redux-firebase.com/history/v1.5.0/docs/recipes/profile.html)
 
-The current users profile can be updated by using the `updateProfile` method, which is [only available in `v1.5.*`](http://docs.react-redux-firebase.com/history/v1.5.0/docs/recipes/profile.html).
+Profile of the current user can be updated by using the `updateProfile` method, which is [only available in `v1.5.*`](http://docs.react-redux-firebase.com/history/v1.5.0/docs/recipes/profile.html).
 
 ## Change How Profiles Are Stored
 The way user profiles are written to the database can be modified by passing the `profileFactory` parameter.
@@ -60,7 +60,7 @@ const config = {
 To list online users and/or track sessions, view the [presence recipe](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/auth.html#list-of-online-users-presence)
 
 ## Populate Parameters
-If profile object contains an key or a list of keys as parameters, you can populate those parameters with the matching value from another location on firebase.
+If profile object contains a key or a list of keys as parameters, you can populate those parameters with the matching value from another location on firebase.
 
 #### List
 profile.contacts contains a list of user UIDs that should be populated from the users list like so:

@@ -71,7 +71,7 @@ Default configuration options
     profileParamsToPopulate config.
 -   `setProfilePopulateResults` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to
     call SET actions for data that results from populating profile to redux under
-    the data path. For example: role paramter on profile populated from 'roles'
+    the data path. For example role parameter on profile populated from 'roles'
     root. True will call SET_PROFILE as well as a SET action with the role that
     is loaded (places it in data/roles).
 -   `distpatchOnUnsetListener` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not to

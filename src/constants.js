@@ -73,7 +73,7 @@ export const actionTypes = {
  * profileParamsToPopulate config.
  * @property {Boolean} setProfilePopulateResults - `true` Whether or not to
  * call SET actions for data that results from populating profile to redux under
- * the data path. For example: role paramter on profile populated from 'roles'
+ * the data path. For example role parameter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
  * is loaded (places it in data/roles).
  * @property {Boolean} distpatchOnUnsetListener - `false` Whether or not to

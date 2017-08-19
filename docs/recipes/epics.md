@@ -2,7 +2,7 @@
 Epics are particularly useful for responding to actions (often described as a "sidecar").
 
 ## Setup
-Examples below assume that you have setup `redux-observable` middleware so that firebase is available within your epics. Here is an example `combineEpics` function that adds `getFirebase` as third argument along with an epic that uses it:
+Examples below assume that you have setup `redux-observable` middleware so that firebase is available within your epics. Here is an example `combineEpics` function that adds `getFirebase` as the third argument along with an epic that uses it:
 
 ```javascript
 import { getFirebase } from 'react-redux-firebase'
@@ -20,7 +20,7 @@ const somethingEpic = (action$, store, getFirebase) =>
 ```
 
 ### Debounced Notifications
-Debounce writing to a ref on Firebase such as `/notifications` (useful so that tons of similar notifications aren't created).
+Debounce is writing to a ref on Firebase such as `/notifications` (useful so that tons of similar notifications aren't created).
 
 ```js
 const SEND_NOTIFICATION = 'SEND_NOTIFICATION';

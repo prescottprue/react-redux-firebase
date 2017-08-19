@@ -1,6 +1,6 @@
 # Routing Recipes
 
-These recipes assume that you are using [`react-router`](https://github.com/ReactTraining/react-router), but the principles should be applicable to any routing solution.
+These recipes assume that you are using [`react-router`](https://github.com/ReactTraining/react-router), but the principles should apply to any routing solution.
 
 #### React Router 4
 
@@ -10,7 +10,7 @@ Progress on supporting react-router 4 [is tracked within this issue](https://git
 
 ## Basic
 
-Routing can be changed based on data by using react lifecycle hooks such as `componentWillMount`, and `componentWillReceiveProps` to route users. This can be particularly useful when doing things such as route protection (only allowing user to view a route if they are logged in):
+Routing can be changed based on data by using react lifecycle hooks such as `componentWillMount`, and `componentWillReceiveProps` to route users. This can be particularly useful when doing things such as route protection (only allowing a user to view a route if they are logged in):
 
 ```javascript
 import React, { Component, PropTypes } from 'react'

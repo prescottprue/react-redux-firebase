@@ -14,7 +14,7 @@ import { metaParams, paramSplitChar } from './constants'
 
 /**
  * @description Detect whether items are loaded yet or not
- * @param {Object} item - Item to check loaded status of. A comma seperated list is also acceptable.
+ * @param {Object} item - Item to check loaded status of. A comma separated list is also acceptable.
  * @return {Boolean} Whether or not item is loaded
  * @example
  * import React, { Component, PropTypes } from 'react'
@@ -194,7 +194,7 @@ export const dataToJS = (data, path, notSetValue) => {
 
 /**
  * @description Convert parameter under "ordered" path of Immutable Map to a
- * Javascript array. This preserves order set by query.
+ * Javascript array. This preserves order set by a query.
  * @param {Map} firebase - Immutable Map to be converted to JS object (state.firebase)
  * @param {String} path - Path of parameter to load
  * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
