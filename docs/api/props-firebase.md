@@ -124,7 +124,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 ## uniqueSet
 
 Sets data to Firebase only if the path does not already
-exist, otherwise it rejects.
+exist. Otherwise, it rejects.
 
 **Parameters**
 

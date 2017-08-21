@@ -17,7 +17,7 @@ Detect whether items are loaded yet or not
 
 **Parameters**
 
--   `item` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma seperated list is also acceptable.
+-   `item` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma separated list is also acceptable.
 
 **Examples**
 
@@ -122,7 +122,7 @@ Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 ## orderedToJS
 
 Convert parameter under "ordered" path of Immutable Map to a
-Javascript array. This preserves order set by query.
+Javascript array. This preserves order set by a query.
 
 **Parameters**
 

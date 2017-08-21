@@ -6,13 +6,13 @@ Though there are many patterns, we are going to use the following terminology:
 
 **Role** - job function or title which defines authority level (i.e. admin or manager). A user has a role, a role as permissions.
 
-**Permissions** - approval of a mode of access (i.e. todos) . Multiple permissions can assigned to a single role.
+**Permissions** - approval of a mode of access (i.e. todos) . Multiple permissions can be assigned to a single role.
 
 ## Data Setup
 
 Add the Roles collection in Firebase. It should be a sibling of the `users` collection. For example:
 
-_Tip: you can import below JSON directly into Firebase. Alternatively you can populate it in the start of your application or when you deploy to Firebase._
+_Tip: you can import below JSON directly into Firebase. Alternatively, you can populate it in the start of your application or when you deploy to Firebase._
 
 ```js
 {
@@ -48,7 +48,7 @@ Each user should have a role parameter that correlates to a role. For example:
 
 ## Config
 
-In order for us to check our role for permissions, we will want to populate the role on profile. This will turn the role string (i.e. admin) into the object representing that role from the roles collection.
+In order for us to check our role for permissions, we will want to populate the role on a profile. This will turn the role string (i.e. admin) into the object representing that role from the roles collection.
 
 Make sure you have the following config when creating your store:
 
@@ -78,7 +78,7 @@ reactReduxFirebase(
 )
 ```
 
-**Note:** beware that the `role` parameter on each user will remain a string, and won't actually be "converted" into a object. Something that may be apparant to some developers, but not to others ;-)
+**Note:** beware that the `role` parameter on each user will remain a string, and won't be "converted" into an object. Something that may be apparent to some developers, but not to others ;-)
 
 ## Automatically assign role when user signs up
 

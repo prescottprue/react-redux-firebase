@@ -45,18 +45,18 @@ npm install --save react-redux-firebase
 
 The above install command will install the `@latest` tag. You may also use the following tags when installing to get different versions:
 
-* `@next` - Next upcoming release. Currently points to active progress with `v1.5.0-*` pre-releases
-* `@canary` - Most possible up to date code. Currently points to active progress with `v2.0.0-*` pre-releases. *Warning:* Syntax is different than current stable version.
+* `@next` - Next upcoming release. Currently, points to active progress with `v1.5.0-*` pre-releases
+* `@canary` - Most possible up to date code. Currently, points to active progress with `v2.0.0-*` pre-releases. *Warning:* Syntax is different than current stable version.
 
 Other versions docs are available using the dropdown on the above docs link. For quick access:
 * [Version `1.5.0` Docs](http://docs.react-redux-firebase.com/history/v1.5.0/)
 * [Version `2.0.0` Docs](http://docs.react-redux-firebase.com/history/v2.0.0/)
 
-Be aware of changes when using version that are tagged `@latest`. Please report any issues you encounter, and try to keep an eye on the [releases page](https://github.com/prescottprue/react-redux-firebase/releases) for updates.
+Be aware of changes when using a version that is tagged `@latest`. Please report any issues you encounter, and try to keep an eye on the [releases page](https://github.com/prescottprue/react-redux-firebase/releases) for updates.
 
 ## Use
 
-**Note:** If you are just starting a new project, you may want to use [`v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/#use) since it is has an even easier syntax. For clarity on the transition, view the [`v1` -> `v2` migration guide](http://docs.react-redux-firebase.com/history/v2.0.0/docs/v2-migration-guide.html)
+**Note:** If you are just starting a new project, you may want to use [`v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/#use) since it has an even easier syntax. For clarity on the transition, view the [`v1` -> `v2` migration guide](http://docs.react-redux-firebase.com/history/v2.0.0/docs/v2-migration-guide.html)
 
 Include `reactReduxFirebase` in your store compose function and  `firebaseStateReducer` in your reducers:
 
@@ -204,7 +204,7 @@ export default class SomeComponent extends Component {
 }
 ```
 
-In order to enable this functionality, you will most likely need to install a plugin (depending on your build setup). For Webpack and Babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
+To enable this functionality, you will most likely need to install a plugin (depending on your build setup). For Webpack and Babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
 
 1. run `npm i --save-dev babel-plugin-transform-decorators-legacy`
 2. Add the following line to your `.babelrc`:
