@@ -17,7 +17,7 @@ Though they are optional, it is highly recommended that you used decorators with
 
 A side by side comparison using [react-redux](https://github.com/reactjs/react-redux)'s `connect` function/HOC is the best way to illustrate the difference:
 
-```javascript
+```jsx
 class SomeComponent extends Component {
 
 }
@@ -25,7 +25,7 @@ export default connect()(SomeComponent)
 ```
 vs.
 
-```javascript
+```jsx
 @connect()
 export default class SomeComponent extends Component {
 
@@ -38,7 +38,7 @@ In order to enable this functionality, you will most likely need to install a pl
 2. Add the following line to your `.babelrc`:
 ```json
 {
-    "plugins": ["transform-decorators-legacy"]
+  "plugins": ["transform-decorators-legacy"]
 }
 ```
 
@@ -95,7 +95,7 @@ View the [config section](/config.html) for full list of configuration options.
 
 ## Use in Components
 
-```javascript
+```jsx
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -158,12 +158,12 @@ Alternatively, if you choose not to use decorators, your connect function will l
 
 ```javascript
 const wrappedTodos = firebaseConnect([
-  '/todos'
+  'todos'
 ])(Todos)
 
 export default connect(
-  ({firebase}) => ({
-    todos: dataToJS(firebase, 'todos'),
+  ({ firebase: { data: { todos } } }) => ({
+    todos,
   })
 )(wrappedTodos)
 
