@@ -1,6 +1,6 @@
 import { actionTypes } from './constants'
 import { pick, omit } from 'lodash'
-import { flow, set, merge } from 'lodash/fp'
+import { flow, setWith, merge } from 'lodash/fp'
 
 const {
   START,
@@ -40,7 +40,7 @@ const getSlashStrPath = path => pathToArr(path).join('/')
  * @return {String} Path seperated with dots
  * @private
  */
-const getDotStrPath = path => pathToArr(path).join('.')
+export const getDotStrPath = path => pathToArr(path).join('.')
 
 /**
  * Combine reducers utility (abreveated version of redux's combineReducer).
@@ -173,11 +173,11 @@ const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
   switch (action.type) {
     case SET:
       return flow(
-        set(getDotStrPath(action.path), action[actionKey]),
+        setWith(Object, getDotStrPath(action.path), action[actionKey]),
         merge(state)
       )({})
     case NO_VALUE:
-      return set(getDotStrPath(action.path), null, state)
+      return setWith(Object, getDotStrPath(action.path), null, state)
     case LOGOUT:
       // support keeping data when logging out - #125
       if (action.preserve) {
