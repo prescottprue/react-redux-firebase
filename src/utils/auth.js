@@ -63,14 +63,14 @@ export const getLoginMethodAndParams = (firebase, { email, password, provider, t
     if (token) {
       throw new Error('provider with token no longer supported, use credential parameter instead')
     }
-    if (credential) {
-      return { method: 'signInWithCredential', params: [ credential ] }
-    }
     const authProvider = createAuthProvider(firebase, provider, scopes)
     if (type === 'popup') {
       return { method: 'signInWithPopup', params: [ authProvider ] }
     }
     return { method: 'signInWithRedirect', params: [ authProvider ] }
+  }
+  if (credential) {
+    return { method: 'signInWithCredential', params: [ credential ] }
   }
   if (token) {
     return { method: 'signInWithCustomToken', params: [ token ] }
