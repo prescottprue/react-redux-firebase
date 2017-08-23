@@ -2,15 +2,14 @@
 
 Authentication data is attached to `auth`, and errors are attached to `authError`. You can get them within components like so:
 
-```js
+```jsx
 import { connect } from 'react-redux'
-import { pathToJS } from 'react-redux-firebase'
 @connect(
   // Map state to props
-  ({ firebase }) => ({
-    authError: pathToJS(firebase, 'authError'),
-    auth: pathToJS(firebase, 'auth'),
-    profile: pathToJS(firebase, 'profile')
+  ({ firebase: { authError, auth, profile } }) => ({
+    authError,
+    auth,
+    profile
   })
 )
 ```
@@ -21,7 +20,7 @@ All examples below assume you have wrapped your component using `firebaseConnect
 
 ###### Decorators
 
-```js
+```jsx
 import React, { Component } from 'react'
 import { firebaseConnect } from 'react-redux-firebase'
 
@@ -35,7 +34,7 @@ export default class SomeComponent extends Component {
 
 ###### No Decorators
 
-```js
+```jsx
 import React, { Component } from 'react'
 import { firebaseConnect } from 'react-redux-firebase'
 
@@ -52,9 +51,8 @@ export default firebaseConnect()(SomeComponent)
 
 ##### Parameters
 
-  * `credentials` ([**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) | [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))
-    * [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) - `ref.authWithCustomToken(credentials)` is used
-    * [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - cases:
+  * `credentials` ([**Object**][object-url])
+    * [**Object**][object-url] - cases:
       * email and password (runs `ref.authWithPassword(credentials)`) :
         ```js
         {
@@ -76,16 +74,20 @@ export default firebaseConnect()(SomeComponent)
             token : String
         }
         ```
-
+      * token (runs `ref.authWithCustomToken(credentials)`)
+        ```js
+        {
+          token : String
+        }
+        ```
 
 ##### Returns
-[**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with an object containing profile, user, (also credential if using oAuth provider) in case of success or the error otherwise.
+[**Promise**][promise-url] with an object containing profile, user, (also credential if using oAuth provider) in case of success or the error otherwise.
 
 ##### Examples
 
    *Email*
 ```js
-// Call with info
 this.props.firebase.login({
   email: 'test@test.com',
   password: 'testest1'
@@ -94,16 +96,14 @@ this.props.firebase.login({
 
   *OAuth Provider Redirect*
 ```js
- // Call with info
- this.props.firebase.login({
-   provider: 'google',
-   type: 'redirect'
- })
+this.props.firebase.login({
+  provider: 'google',
+  type: 'redirect'
+})
  ```
 
    *OAuth Provider Popup*
 ```js
-// Call with info
 this.props.firebase.login({
   provider: 'google',
   type: 'popup'
@@ -112,8 +112,7 @@ this.props.firebase.login({
 
   *Token*
 ```js
-// Call with info
-this.props.firebase.login('someJWTAuthToken')
+this.props.firebase.login({ token: 'someJWTAuthToken' })
 ```
 
 ## createUser(credentials, profile)
@@ -122,13 +121,13 @@ Similar to Firebase's `ref.createUser(credentials)` but with support for automat
 
 ##### Parameters
 
-* `credentials` [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
-  * `credentials.email` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) - User's email
-  * `credentials.password` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) - User's password
-  * `credentials.signIn` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) - Whether or not to sign in when user is signing up (defaults to `true`)
+* `credentials` [**Object**][object-url]
+  * `credentials.email` [**String**][string-url] - User's email
+  * `credentials.password` [**String**][string-url] - User's password
+  * `credentials.signIn` [**String**][string-url] - Whether or not to sign in when user is signing up (defaults to `true`)
 
-* `profile` [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)
-  * `profile.username` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
+* `profile` [**Object**][object-url]
+  * `profile.username` [**String**][string-url]
 
 ##### Examples
 ```js
@@ -148,7 +147,7 @@ createNewUser({
 ```
 
 ##### Returns
-[**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with `userData`
+[**Promise**][promise-url] with `userData`
 
 ## logout()
 Logout from Firebase and delete all data from the store (`state.firebase.data` and `state.firebase.auth` are set to `null`).
@@ -161,7 +160,7 @@ firebase.logout()
 ```
 
 ## resetPassword(credentials)
-Calls Firebase's `firebase.auth().resetPassword()`. If there is an error, it is added into redux state under `state.firebase.authError`, which can be loaded using `pathToJS(state.firebase, 'authError')`.
+Calls Firebase's `firebase.auth().resetPassword()`. If there is an error, it is added into redux state under `state.firebase.authError`.
 
 ##### Examples
 
@@ -174,15 +173,15 @@ firebase.resetPassword({
 ```
 
 ##### Parameters
-  * `credentials` [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - Credentials same as described in firebase docs
-  * `profile` [**Object**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - if initialized with userProfile support then profile will be saved into `${userProfile}/${auth.uid}`
+  * `credentials` [**Object**][object-url] - Credentials same as described in firebase docs
+  * `profile` [**Object**][object-url] - if initialized with userProfile support then profile will be saved into `${userProfile}/${auth.uid}`
 
 ##### Returns
-  [**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) with user's UID in case of success or the error otherwise.
+  [**Promise**][promise-url] with user's UID in case of success or the error otherwise.
   Always authenticate the new user in case of success
 
 ## confirmPasswordReset(code, newPassword)
-Calls Firebase's `firebase.auth().confirmPasswordReset()`. If there is an error, it is added into redux state under `state.firebase.authError`, which can be loaded using `pathToJS(state.firebase, 'authError')`.
+Calls Firebase's `firebase.auth().confirmPasswordReset()`. If there is an error, it is added into redux state under `state.firebase.authError`.
 
 ##### Examples
 
@@ -191,16 +190,16 @@ firebase.confirmPasswordReset('some reset code', 'myNewPassword')
 ```
 
 ##### Parameters
-  * `code` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - Password reset code
-  * `newPassword` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - New password to set for user
+  * `code` [**String**][string-url] - Password reset code
+  * `newPassword` [**String**][string-url] - New password to set for user
 
 ##### Returns
-  [**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+  [**Promise**][promise-url]
 
 ## verifyPasswordResetCode(code)
 Verify a password reset code from password reset email.
 
-Calls Firebase's `firebase.auth().verifyPasswordResetCode()`. If there is an error, it is added into redux state under `state.firebase.authError`, which can be loaded using `pathToJS(state.firebase, 'authError')`.
+Calls Firebase's `firebase.auth().verifyPasswordResetCode()`. If there is an error, it is added into redux state under `state.firebase.authError`.
 
 ##### Examples
 
@@ -209,7 +208,11 @@ firebase.verifyPasswordResetCode('some reset code')
 ```
 
 ##### Parameters
-  * `code` [**String**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) - Password reset code
+  * `code` [**String**][object-url] - Password reset code
 
 ##### Returns
-  [**Promise**](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) - Email associated with reset code
+  [**Promise**][promise-url] - Email associated with reset code
+
+[promise-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[string-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
+[object-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object

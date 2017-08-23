@@ -7,6 +7,7 @@
 -   [requestedReducer](#requestedreducer)
 -   [timestampsReducer](#timestampsreducer)
 -   [authReducer](#authreducer)
+-   [authErrorReducer](#autherrorreducer)
 -   [profileReducer](#profilereducer)
 -   [errorsReducer](#errorsreducer)
 -   [listenersReducer](#listenersreducer)
@@ -77,6 +78,19 @@ Reducer for auth state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR` actions.
     -   `action.type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
+
+## authErrorReducer
+
+Reducer for authError state. Changed by `LOGIN`, `LOGOUT`, `LOGIN_ERROR`, and
+`UNAUTHORIZED_ERROR` actions.
+
+**Parameters**
+
+-   `state` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current authError redux state (optional, default `{}`)
+-   `action` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
+    -   `action.type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+
+Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** authError state after reduction
 
 ## profileReducer
 

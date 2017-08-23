@@ -1,6 +1,6 @@
-import set from 'lodash/fp/set'
 import { actionTypes } from './constants'
 import { pick, omit } from 'lodash'
+import { flow, set, merge } from 'lodash/fp'
 
 const {
   START,
@@ -172,7 +172,10 @@ export const timestampsReducer = (state = {}, { type, path }) => {
 const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
   switch (action.type) {
     case SET:
-      return set(getDotStrPath(action.path), action[actionKey], state)
+      return flow(
+        set(getDotStrPath(action.path), action[actionKey]),
+        merge(state)
+      )({})
     case NO_VALUE:
       return set(getDotStrPath(action.path), null, state)
     case LOGOUT:
@@ -210,6 +213,27 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
       return { isLoaded: true, isEmpty: true }
     case LOGOUT:
       return { isLoaded: true, isEmpty: true }
+    default:
+      return state
+  }
+}
+
+/**
+ * Reducer for authError state. Changed by `LOGIN`, `LOGOUT`, `LOGIN_ERROR`, and
+ * `UNAUTHORIZED_ERROR` actions.
+ * @param  {Object} [state={}] - Current authError redux state
+ * @param  {Object} action - Object containing the action that was dispatched
+ * @param  {String} action.type - Type of action that was dispatched
+ * @return {Object} authError state after reduction
+ */
+export const authErrorReducer = (state = {}, action) => {
+  switch (action.type) {
+    case LOGIN:
+    case LOGOUT:
+      return {}
+    case LOGIN_ERROR:
+    case UNAUTHORIZED_ERROR:
+      return action.authError
     default:
       return state
   }
@@ -257,7 +281,9 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
  */
 export const errorsReducer = (state = [], action) => {
   switch (action.type) {
-    case UNAUTHORIZED_ERROR: return [...state, action.authError]
+    case LOGIN_ERROR:
+    case UNAUTHORIZED_ERROR:
+      return [...state, action.authError]
     case LOGOUT: return []
     default: return state
   }
@@ -359,6 +385,7 @@ export default combineReducers({
   data: dataReducer,
   ordered: orderedReducer,
   auth: authReducer,
+  authError: authErrorReducer,
   profile: profileReducer,
   listeners: listenersReducer,
   isInitializing: isInitializingReducer,
