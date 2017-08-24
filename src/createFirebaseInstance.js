@@ -12,11 +12,13 @@ import { authActions, queryActions, storageActions } from './actions'
 export const createFirebaseInstance = (firebase, configs, dispatch) => {
   /* istanbul ignore next: Logging is external */
   // Enable Logging based on config (handling instances without i.e RNFirebase)
-  if (configs.enableLogging && typeof firebase.database.enableLogging === 'function') {
+  if (
+    configs.enableLogging &&
+    firebase.database &&
+    typeof firebase.database.enableLogging === 'function'
+  ) {
     firebase.database.enableLogging(configs.enableLogging)
   }
-
-  const rootRef = firebase.database().ref()
 
   const instance = Object.defineProperty(firebase, '_', {
     value: {
@@ -48,9 +50,9 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
       if (instance.auth().currentUser) {
         dataWithMeta[`${prefix}By`] = instance.auth().currentUser.uid
       }
-      return rootRef.child(path)[method](dataWithMeta, onComplete)
+      return firebase.database().ref(path)[method](dataWithMeta, onComplete)
     }
-    return rootRef.child(path)[method](value, onComplete)
+    return firebase.database().ref(path)[method](value, onComplete)
   }
 
   /**
@@ -71,7 +73,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * export default firebaseConnect()(Example)
    */
   const set = (path, value, onComplete) =>
-    rootRef.child(path).set(value, onComplete)
+    firebase.database().ref(path).set(value, onComplete)
 
   /**
    * @description Sets data to Firebase along with meta data. Currently,
@@ -104,7 +106,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * export default firebaseConnect()(Example)
    */
   const push = (path, value, onComplete) =>
-    rootRef.child(path).push(value, onComplete)
+    firebase.database().ref(path).push(value, onComplete)
 
   /**
    * @description Pushes data to Firebase along with meta data. Currently,
@@ -135,7 +137,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * export default firebaseConnect()(Example)
    */
   const update = (path, value, onComplete) =>
-    rootRef.child(path).update(value, onComplete)
+    firebase.database().ref(path).update(value, onComplete)
 
   /**
    * @description Updates data on Firebase along with meta. *Warning*
@@ -166,7 +168,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * export default firebaseConnect()(Example)
    */
   const remove = (path, onComplete) =>
-    rootRef.child(path).remove(onComplete)
+    firebase.database().ref(path).remove(onComplete)
 
   /**
    * @description Sets data to Firebase only if the path does not already
@@ -188,7 +190,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * export default firebaseConnect()(Example)
    */
   const uniqueSet = (path, value, onComplete) =>
-    rootRef.child(path)
+    firebase.database()
+      .ref(path)
       .transaction(d => d === null ? value : undefined)
       .then(({ committed, snapshot }) => {
         if (!committed) {

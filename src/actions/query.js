@@ -47,7 +47,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       .child(path)
       .orderByKey()
       .limitToFirst(1)
-      .once('value', snapshot => {
+      .once('value')
+      .then(snapshot => {
         if (snapshot.val() === null) {
           dispatch({
             type: NO_VALUE,
@@ -55,7 +56,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           })
         }
         return snapshot
-      }, (err) => {
+      })
+      .catch(err => {
         // TODO: Handle catching unauthorized error
         // dispatch({
         //   type: UNAUTHORIZED_ERROR,
@@ -95,7 +97,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
             })
           }
           return snapshot
-        }, (err) => {
+        })
+        .catch(err => {
           dispatch({
             type: UNAUTHORIZED_ERROR,
             payload: err

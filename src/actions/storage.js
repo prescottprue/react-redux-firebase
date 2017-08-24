@@ -68,7 +68,7 @@ export const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
 export const uploadFile = (dispatch, firebase, { path, file, dbPath }) =>
   uploadFileWithProgress(dispatch, firebase, { path, file })
     .then((res) => {
-      if (!dbPath) {
+      if (!dbPath || typeof firebase.database !== 'function') {
         return res
       }
       const { metadata: { name, fullPath, downloadURLs } } = res
