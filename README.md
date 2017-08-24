@@ -80,11 +80,11 @@ const config = {
 const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
 
 // initialize firebase instance
-firebase.initializeApp(config) // <- new to v2.*.*
+const firebaseApp = firebase.initializeApp(config) // <- new to v2.*.*
 
 // Add reduxReduxFirebase to compose
 const createStoreWithFirebase = compose(
-  reactReduxFirebase(firebase, rrfConfig), // firebase instance as first argument
+  reactReduxFirebase(firebaseApp, rrfConfig), // firebase instance as first argument
 )(createStore)
 
 // Create store with reducers and initial state
@@ -206,7 +206,6 @@ In order to enable this functionality, you will most likely need to install a pl
   "plugins": ["transform-decorators-legacy"]
 }
 ```
-
 
 ## [Docs](http://react-redux-firebase.com)
 See full documentation at [react-redux-firebase.com](http://react-redux-firebase.com)

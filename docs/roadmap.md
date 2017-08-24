@@ -89,6 +89,7 @@
 #### Breaking Changes
 * Remove usage of `Immutable.js` and Immutable Maps (no more need for `pathToJS()` & `dataToJS()` to load data from redux)
 * Firebase is now initialized outside of `react-redux-firebase` - [#173](https://github.com/prescottprue/react-redux-firebase/issues), [#131](https://github.com/prescottprue/react-redux-firebase/issues), [#107](https://github.com/prescottprue/react-redux-firebase/issues)
+* `login` with custom token no longer internally decodes JWT (use `profileFactory` instead to include token data on profile)
 * reducer split into multiple nested reducers for a few reasons:
   * follows [standard for nesting of reducers using combine reducers](http://redux.js.org/docs/recipes/reducers/UpdatingNormalizedData.html)).
   * allows for separately importable reducers (for placing in other parts of redux other than `state.firebase`)
@@ -100,12 +101,12 @@
 * `AuthRequired` decorator (or decorator factory) that forces auth to exist before rendering component
 * Support native modules through [`react-native-firebase`](https://github.com/invertase/react-native-firebase) - [#131](https://github.com/prescottprue/react-redux-firebase/issues/131)
 * Track online users and sessions by passing `presence` config option
-
-#### Enhancements/Fixes
+* Detect Non-HTTP environments (such as with SSR) so that `enableRedirectHandling: false` is not required in config
+* Allowing `presence` setting to accept a function for dynamically building presence path based on auth
+* Firebase app can now be passed instead of full firebase lib (pass around a smaller object) - [#249](https://github.com/prescottprue/react-redux-firebase/issues/250), [#250](https://github.com/prescottprue/react-redux-firebase/issues/250)
 * Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance
 
 #### Under Consideration
-* Allowing `presence` setting to accept a function for dynamically building presence path based on auth
 * Possibility of delayed initialization - [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
 
 ### Long Term Goals

@@ -1,12 +1,10 @@
-import jwtDecode from 'jwt-decode'
 import {
-  omit,
   isArray,
   isString,
   isFunction,
   forEach
 } from 'lodash'
-import { actionTypes, defaultJWTProps } from '../constants'
+import { actionTypes } from '../constants'
 import { getLoginMethodAndParams } from '../utils/auth'
 import { promisesForPopulate } from '../utils/populate'
 
@@ -46,11 +44,10 @@ export const unWatchUserProfile = (firebase) => {
  * @private
  */
 export const watchUserProfile = (dispatch, firebase) => {
-  const authUid = firebase._.authUid
-  const userProfile = firebase._.config.userProfile
+  const { authUid, config: { userProfile } } = firebase._
   unWatchUserProfile(firebase)
 
-  if (firebase._.config.userProfile) {
+  if (userProfile && firebase.database) {
     firebase._.profileWatch = firebase.database()
       .ref()
       .child(`${userProfile}/${authUid}`)
@@ -100,20 +97,24 @@ export const watchUserProfile = (dispatch, firebase) => {
  * @private
  */
 export const createUserProfile = (dispatch, firebase, userData, profile) => {
-  const { database, _: { config } } = firebase
-  if (!config.userProfile) {
+  const { _: { config } } = firebase
+  if (!config.userProfile || !firebase.database) {
     return Promise.resolve(userData)
   }
-  try {
-    if (isFunction(config.profileFactory)) {
+
+  // use profileFactory if it exists in config
+  if (isFunction(config.profileFactory)) {
+    // catch errors in user provided profileFactory function
+    try {
       profile = config.profileFactory(userData, profile)
+    } catch (err) {
+      console.error('Error occured within profileFactory function:', err.message || err) // eslint-disable-line no-console
+      return Promise.reject(err)
     }
-  } catch (err) {
-    console.error('Error occured within profileFactory function:', err.toString ? err.toString() : err) // eslint-disable-line no-console
-    return Promise.reject(err)
   }
+
   // Check for user's profile at userProfile path if provided
-  return database()
+  return firebase.database()
     .ref()
     .child(`${config.userProfile}/${userData.uid}`)
     .once('value')
@@ -141,7 +142,10 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
  * @private
  */
 const setupPresence = (dispatch, firebase) => {
-  // TODO: Enable more settings here (enable/disable sessions, store past sessions)
+  // exit if database does not exist on firebase instance
+  if (!firebase.database) {
+    return
+  }
   const ref = firebase.database().ref()
   const { config: { presence, sessions }, authUid } = firebase._
   let amOnline = ref.child('.info/connected')
@@ -183,8 +187,11 @@ const setupPresence = (dispatch, firebase) => {
  * @private
  */
 export const init = (dispatch, firebase) => {
+  // exit if auth does not exist
+  if (!firebase.auth) {
+    return
+  }
   dispatch({ type: actionTypes.AUTHENTICATION_INIT_STARTED })
-
   firebase.auth().onAuthStateChanged(authData => {
     if (!authData) {
       // Run onAuthStateChanged if it exists in config and enableEmptyAuthChanges is set to true
@@ -195,9 +202,12 @@ export const init = (dispatch, firebase) => {
     }
 
     firebase._.authUid = authData.uid
+
+    // setup presence if settings exist
     if (firebase._.config.presence) {
       setupPresence(dispatch, firebase)
     }
+
     watchUserProfile(dispatch, firebase)
 
     dispatch({ type: actionTypes.LOGIN, auth: authData })
@@ -209,11 +219,16 @@ export const init = (dispatch, firebase) => {
   })
 
   // set redirect result callback if enableRedirectHandling set to true
-  if (firebase._.config.enableRedirectHandling) {
+  if (firebase._.config.enableRedirectHandling && (
+    typeof window !== 'undefined' &&
+    window.location &&
+    window.location.protocol &&
+    window.location.protocol.indexOf('http') !== -1
+  )) {
     firebase.auth().getRedirectResult()
       .then((authData) => {
         // Run onRedirectResult if it exists in config
-        if (firebase._.config.onRedirectResult) {
+        if (typeof firebase._.config.onRedirectResult === 'function') {
           firebase._.config.onRedirectResult(authData, firebase, dispatch)
         }
         if (authData && authData.user) {
@@ -236,7 +251,8 @@ export const init = (dispatch, firebase) => {
             }
           )
         }
-      }).catch((error) => {
+      })
+      .catch((error) => {
         dispatchLoginError(dispatch, error)
         return Promise.reject(error)
       })
@@ -276,15 +292,13 @@ export const login = (dispatch, firebase, credentials) => {
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
       if (method === 'signInWithCustomToken') {
-        // Extract the extra data in the JWT token for user object
-        const { stsTokenManager: { accessToken }, uid } = userData.toJSON()
-        const extraJWTData = omit(jwtDecode(accessToken), defaultJWTProps)
-
+        if (!firebase._.config.updateProfileOnLogin) {
+          return { user: userData }
+        }
         return createUserProfile(
           dispatch,
           firebase,
-          { uid },
-          { ...extraJWTData, uid }
+          userData
         )
       }
 

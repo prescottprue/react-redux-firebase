@@ -1,6 +1,6 @@
-import { set } from 'lodash'
-import { firebaseStateReducer } from '../../src'
+import { setWith } from 'lodash/fp'
 import { actionTypes } from '../../src/constants'
+import firebaseStateReducer, { getDotStrPath } from '../../src/reducer'
 
 const initialState = {
   auth: { isLoaded: false, isEmpty: true },
@@ -33,7 +33,6 @@ let childDotPath
 let initialData = {}
 const newData = { some: 'val' }
 const profile = { email: 'test@test.com' }
-const getDotPath = path => path.split('/').join('.')
 
 describe('reducer', () => {
   it('is a function', () => {
@@ -55,7 +54,7 @@ describe('reducer', () => {
     childKey = 'abc'
     childPath = `${path}/${childKey}`
     action = {}
-    childDotPath = getDotPath(childPath)
+    childDotPath = getDotStrPath(childPath)
   })
 
   // TODO: Do not write empty path to state
@@ -135,18 +134,29 @@ describe('reducer', () => {
         })
     })
 
+    it('sets data to state under paths that end in a number', () => {
+      action = { type: actionTypes.SET, path: 'test/123', data: exampleData }
+      expect(firebaseStateReducer({}, action).data)
+        .to.deep.equal({
+          ...initialState.data,
+          test: {
+            123: exampleData
+          }
+        })
+    })
+
     it('sets data to path with already existing value of null', () => {
       initialData = { data: { test: { [childKey]: null } } }
       action = { type: actionTypes.SET, path: childPath, data: newData }
       expect(firebaseStateReducer(initialData, action).data)
-        .to.deep.equal(set({}, childDotPath, newData))
+        .to.deep.equal(setWith(Object, childDotPath, newData, {}))
     })
 
     it('sets data to path with already existing parent of null', () => {
       initialData = { data: { test: null } }
       action = { type: actionTypes.SET, path: childPath, data: exampleData }
       expect(firebaseStateReducer(initialData, action).data)
-        .to.deep.equal(set({}, childDotPath, exampleData))
+        .to.deep.equal(setWith(Object, childDotPath, exampleData, {}))
     })
   })
 

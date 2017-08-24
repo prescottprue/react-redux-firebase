@@ -1,4 +1,5 @@
 const webpack = require('webpack')
+const path = require('path')
 const cssnano = require('cssnano')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -18,6 +19,10 @@ const webpackConfig = {
   resolve: {
     root: project.paths.client(),
     extensions: ['', '.js', '.jsx', '.json']
+  },
+  alias: {
+    // fix issue of loading multiple versions of react
+    react: path.resolve('./node_modules/react'),
   },
   module: {}
 }
@@ -113,10 +118,11 @@ if (!__TEST__) {
 // JavaScript / JSON
 webpackConfig.module.loaders = [{
   test: /\.(js|jsx)$/,
-  exclude: [ /node_modules/, /react-redux-firebase\/dist/ /* exclude any npm-linked modules here */ ],
+  exclude: [ /node_modules/, /react-redux-firebase\/lib\// /* exclude any npm-linked modules here */ ],
   loader: 'babel',
   query: project.compiler_babel
 }, {
+  exclude: [ /node_modules/, /react-redux-firebase\/lib\// /* exclude any npm-linked modules here */ ],
   test: /\.json$/,
   loader: 'json'
 }]

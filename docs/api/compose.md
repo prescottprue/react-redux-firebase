@@ -11,7 +11,7 @@ Middleware that handles configuration (placed in redux's
 
 **Parameters**
 
--   `fbConfig`  
+-   `fbApp`  
 -   `otherConfig`  
 
 **Properties**

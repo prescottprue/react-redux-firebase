@@ -146,23 +146,6 @@ export const supportedAuthProviders = [
 ]
 
 /** @constant
- * @description Default keys returned within JSON Web Token recieved when
- * authenticating with Firebase
- * @type {Array}
- * @private
-*/
-export const defaultJWTProps = [
-  'aud',
-  'auth_time',
-  'exp',
-  'firebase',
-  'iat',
-  'iss',
-  'sub',
-  'user_id'
-]
-
-/** @constant
  * @description Default initial props used when running firebase.initializeApp
  * @type {Array}
  * @private
@@ -190,7 +173,6 @@ export const metaParams = ['timestamp', 'requesting', 'requested']
 export const paramSplitChar = '/'
 
 export default {
-  defaultJWTProps,
   actionTypes,
   defaultConfig,
   supportedAuthProviders,

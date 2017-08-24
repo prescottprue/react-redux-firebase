@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "2.0.0-beta.6",
+  "version": "2.0.0-beta.7",
   "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -58,7 +58,6 @@
   ],
   "dependencies": {
     "hoist-non-react-statics": "^2.2.2",
-    "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10"
   },
