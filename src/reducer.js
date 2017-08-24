@@ -1,6 +1,6 @@
 import { actionTypes } from './constants'
-import { pick, omit } from 'lodash'
-import { flow, setWith, merge } from 'lodash/fp'
+import { pick, omit, get } from 'lodash'
+import { setWith, assign } from 'lodash/fp'
 
 const {
   START,
@@ -172,10 +172,9 @@ export const timestampsReducer = (state = {}, { type, path }) => {
 const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
   switch (action.type) {
     case SET:
-      return flow(
-        setWith(Object, getDotStrPath(action.path), action[actionKey]),
-        merge(state)
-      )({})
+      const previousData = get(state, getDotStrPath(action.path), {})
+      const mergedData = assign(previousData, action[actionKey])
+      return setWith(Object, getDotStrPath(action.path), mergedData, state)
     case NO_VALUE:
       return setWith(Object, getDotStrPath(action.path), null, state)
     case LOGOUT:
