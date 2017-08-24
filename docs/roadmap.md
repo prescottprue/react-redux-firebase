@@ -89,6 +89,7 @@
 #### Breaking Changes
 * Remove usage of `Immutable.js` and Immutable Maps (no more need for `pathToJS()` & `dataToJS()` to load data from redux)
 * Firebase is now initialized outside of `react-redux-firebase` - [#173](https://github.com/prescottprue/react-redux-firebase/issues), [#131](https://github.com/prescottprue/react-redux-firebase/issues), [#107](https://github.com/prescottprue/react-redux-firebase/issues)
+* `login` with custom token no longer internally decodes JWT (use `profileFactory` instead to include token data on profile)
 * reducer split into multiple nested reducers for a few reasons:
   * follows [standard for nesting of reducers using combine reducers](http://redux.js.org/docs/recipes/reducers/UpdatingNormalizedData.html)).
   * allows for separately importable reducers (for placing in other parts of redux other than `state.firebase`)
@@ -105,6 +106,7 @@
 * Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance
 
 #### Under Consideration
+* Detect Non HTTP environments (such as with SSR) so that `enableRedirectHandling: false` is not required in config 
 * Allowing `presence` setting to accept a function for dynamically building presence path based on auth
 * Possibility of delayed initialization - [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
 
