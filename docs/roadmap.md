@@ -101,13 +101,12 @@
 * `AuthRequired` decorator (or decorator factory) that forces auth to exist before rendering component
 * Support native modules through [`react-native-firebase`](https://github.com/invertase/react-native-firebase) - [#131](https://github.com/prescottprue/react-redux-firebase/issues/131)
 * Track online users and sessions by passing `presence` config option
-
-#### Enhancements/Fixes
+* Detect Non-HTTP environments (such as with SSR) so that `enableRedirectHandling: false` is not required in config
+* Allowing `presence` setting to accept a function for dynamically building presence path based on auth
+* Firebase app can now be passed instead of full firebase lib (pass around a smaller object) - [#249](https://github.com/prescottprue/react-redux-firebase/issues/250), [#250](https://github.com/prescottprue/react-redux-firebase/issues/250)
 * Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance
 
 #### Under Consideration
-* Detect Non HTTP environments (such as with SSR) so that `enableRedirectHandling: false` is not required in config 
-* Allowing `presence` setting to accept a function for dynamically building presence path based on auth
 * Possibility of delayed initialization - [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
 
 ### Long Term Goals
