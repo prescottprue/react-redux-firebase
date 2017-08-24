@@ -145,6 +145,36 @@ describe('reducer', () => {
         })
     })
 
+    it('sets data to path with already existing data', () => {
+      initialData = { data: { test: { [childKey]: { foo1: 'bar1' } } } }
+      action = { type: actionTypes.SET, path: childPath, data: { foo2: 'bar2' } }
+      expect(firebaseStateReducer(initialData, action).data)
+        .to.deep.equal({
+          ...initialState.data,
+          test: {
+            [childKey]: {
+              foo1: 'bar1',
+              foo2: 'bar2'
+            }
+          }
+        })
+    })
+
+    it('sets data to path with already existing data with numeric keys', () => {
+      initialData = { data: { test: { [childKey]: { 123: 'bar1' } } } }
+      action = { type: actionTypes.SET, path: childPath, data: { 124: 'bar2' } }
+      expect(firebaseStateReducer(initialData, action).data)
+        .to.deep.equal({
+          ...initialState.data,
+          test: {
+            [childKey]: {
+              123: 'bar1',
+              124: 'bar2'
+            }
+          }
+        })
+    })
+
     it('sets data to path with already existing value of null', () => {
       initialData = { data: { test: { [childKey]: null } } }
       action = { type: actionTypes.SET, path: childPath, data: newData }
