@@ -74,18 +74,17 @@ let firebaseInstance
  * // Use Function later to create store
  * const store = createStoreWithFirebase(rootReducer, initialState)
  */
-export default (fbConfig, otherConfig) => next =>
+export default (fbApp, otherConfig) => next =>
   (reducer, initialState, middleware) => {
     const store = next(reducer, initialState, middleware)
 
-    // firebase instance not being passed in as first argument
-    if (typeof fbConfig.database !== 'function') {
-      throw new Error('v2.0.0-beta and higher require passing a firebase instance. View the migration guide for details.')
+    // firebase library or app instance not being passed in as first argument
+    if (!fbApp.SDK_VERSION && !fbApp.firebase_ && !fbApp.database) {
+      throw new Error('v2.0.0-beta and higher require passing a firebase app instance or a firebase library instance. View the migration guide for details.')
     }
 
     const configs = { ...defaultConfig, ...otherConfig }
-    // validateConfig(configs)
-    firebaseInstance = createFirebaseInstance(fbConfig, configs, store.dispatch)
+    firebaseInstance = createFirebaseInstance(fbApp, configs, store.dispatch)
 
     authActions.init(store.dispatch, firebaseInstance)
     store.firebase = firebaseInstance

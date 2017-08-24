@@ -27,15 +27,28 @@ const populates = [
 
 ### Populate Profile Parameters
 
-To Populate parameters within profile/user object, include the `profileParamsToPopulate` parameter when [calling `reactReduxFirebase` in your compose function](/api/compose).
+To Populate parameters within profile/user object, include the `profileParamsToPopulate` parameter when [calling `reactReduxFirebase` in your compose function](/api/compose) as well as using `populate`.
+
+**NOTE** Using `profileParamsToPopulate` no longer automatically populates profile, you must use `populate`. Un-populated profile lives within state under `state.firebase.profile`.
 
 #### Examples
 
-##### Populate List of Items
+##### Populate Role
+
+Populating a user's role parameter from a list of roles (under `roles` collection).
 
 ```javascript
+export const profilePopulates = [{ child: 'role', root: 'roles' }]
 const config = {
   userProfile: 'users',
-  profileParamsToPopulate: [ 'todos:todos' ] // populate list of todos from todos ref
+  profileParamsToPopulate: profilePopulates // populate list of todos from todos ref
 }
+
+// In component
+@connect(
+  ({ firebase }) => ({
+    profile: firebase.profile,
+    populatedProfile: populate(firebase, 'profile', profilePopulates),
+  })
+)
 ```

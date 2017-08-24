@@ -3,7 +3,9 @@ import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 import logger from 'redux-logger'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
 import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
@@ -29,7 +31,7 @@ export default (initialState = {}, history) => {
     }
   }
 
-  firebase.initializeApp(fbConfig)
+  const firebaseApp = firebase.initializeApp(fbConfig)
 
   // ======================================================
   // Store Instantiation and HMR Setup
@@ -38,7 +40,7 @@ export default (initialState = {}, history) => {
     makeRootReducer(),
     initialState,
     compose(
-      reactReduxFirebase(firebase, reduxConfig),
+      reactReduxFirebase(firebaseApp, reduxConfig),
       applyMiddleware(...middleware),
       ...enhancers
     )

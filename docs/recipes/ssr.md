@@ -2,9 +2,12 @@
 
 ### Disable Redirect Handling
 
-By default a redirect handling listener is set up, which will not work if not in an environment with HTTP. Currently, for SSR, you must disable this redirect handling listener to keep an error from appearing (see [#251](https://github.com/prescottprue/react-redux-firebase/issues/251) for more info).
+Support automatically detecting non-HTTP environments has been added as of [`v2.0.0-beta.7`](https://github.com/prescottprue/react-redux-firebase/releases/tag/v2.0.0-beta.7), which means you can skip the rest of this section.
 
-Support automatically detecting non-HTTP environments (so that `enableRedirectHandling: false` is not required) is [on the roadmap](http://docs.react-redux-firebase.com/history/v2.0.0/docs/roadmap.html#under-consideration).
+If using earlier than `v2.0.0-beta.7`:
+
+By default a redirect handling listener is set up, which will not work in environments without HTTP. Currently, for SSR, you must disable this redirect handling listener to keep an error from appearing (see [#251](https://github.com/prescottprue/react-redux-firebase/issues/251) for more info).
+
 
 ```js
 // disable redirect listener setup (happens by default)
