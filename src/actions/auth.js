@@ -1,12 +1,10 @@
-import jwtDecode from 'jwt-decode'
 import {
-  omit,
   isArray,
   isString,
   isFunction,
   forEach
 } from 'lodash'
-import { actionTypes, defaultJWTProps } from '../constants'
+import { actionTypes } from '../constants'
 import { getLoginMethodAndParams } from '../utils/auth'
 import { promisesForPopulate } from '../utils/populate'
 
@@ -276,15 +274,13 @@ export const login = (dispatch, firebase, credentials) => {
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
       if (method === 'signInWithCustomToken') {
-        // Extract the extra data in the JWT token for user object
-        const { stsTokenManager: { accessToken }, uid } = userData.toJSON()
-        const extraJWTData = omit(jwtDecode(accessToken), defaultJWTProps)
-
+        if (!firebase._.config.updateProfileOnLogin) {
+          return { user: userData }
+        }
         return createUserProfile(
           dispatch,
           firebase,
-          { uid },
-          { ...extraJWTData, uid }
+          userData
         )
       }
 
