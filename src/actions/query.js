@@ -12,6 +12,7 @@ import {
 const {
   START,
   SET,
+  MERGE,
   NO_VALUE,
   UNAUTHORIZED_ERROR,
   ERROR
@@ -143,7 +144,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           // populate after all data is in redux (Issue #121)
           forEach(results, (result, path) => {
             dispatch({
-              type: SET,
+              type: MERGE,
               path,
               data: result
             })

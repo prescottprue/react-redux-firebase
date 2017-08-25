@@ -6,6 +6,7 @@ const {
   START,
   SET,
   SET_PROFILE,
+  MERGE,
   LOGIN,
   LOGOUT,
   LOGIN_ERROR,
@@ -160,8 +161,8 @@ export const timestampsReducer = (state = {}, { type, path }) => {
 
 /**
  * Creates reducer for data state. Used to create data and ordered reducers.
- * Changed by `SET` or `SET_ORDERED` (if actionKey === 'ordered'),`NO_VALUE`,
- * and `LOGOUT` actions.
+ * Changed by `SET` or `SET_ORDERED` (if actionKey === 'ordered'), `MERGE`,
+ * `NO_VALUE`, and `LOGOUT` actions.
  * @param  {Object} [state={}] - Current data redux state
  * @param  {Object} action - Object containing the action that was dispatched
  * @param  {String} action.type - Type of action that was dispatched
@@ -172,6 +173,8 @@ export const timestampsReducer = (state = {}, { type, path }) => {
 const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
   switch (action.type) {
     case SET:
+      return setWith(Object, getDotStrPath(action.path), action[actionKey], state)
+    case MERGE:
       const previousData = get(state, getDotStrPath(action.path), {})
       const mergedData = assign(previousData, action[actionKey])
       return setWith(Object, getDotStrPath(action.path), mergedData, state)
