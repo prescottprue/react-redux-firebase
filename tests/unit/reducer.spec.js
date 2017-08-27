@@ -145,6 +145,34 @@ describe('reducer', () => {
         })
     })
 
+    it('sets data to path with already existing data', () => {
+      initialData = { data: { test: { [childKey]: { foo1: 'bar1' } } } }
+      action = { type: actionTypes.SET, path: childPath, data: { foo2: 'bar2' } }
+      expect(firebaseStateReducer(initialData, action).data)
+        .to.deep.equal({
+          ...initialState.data,
+          test: {
+            [childKey]: {
+              foo2: 'bar2'
+            }
+          }
+        })
+    })
+
+    it('sets data to path with already existing data with numeric keys', () => {
+      initialData = { data: { test: { [childKey]: { 123: 'bar1' } } } }
+      action = { type: actionTypes.SET, path: childPath, data: { 124: 'bar2' } }
+      expect(firebaseStateReducer(initialData, action).data)
+        .to.deep.equal({
+          ...initialState.data,
+          test: {
+            [childKey]: {
+              124: 'bar2'
+            }
+          }
+        })
+    })
+
     it('sets data to path with already existing value of null', () => {
       initialData = { data: { test: { [childKey]: null } } }
       action = { type: actionTypes.SET, path: childPath, data: newData }
@@ -155,6 +183,78 @@ describe('reducer', () => {
     it('sets data to path with already existing parent of null', () => {
       initialData = { data: { test: null } }
       action = { type: actionTypes.SET, path: childPath, data: exampleData }
+      expect(firebaseStateReducer(initialData, action).data)
+        .to.deep.equal(setWith(Object, childDotPath, exampleData, {}))
+    })
+  })
+
+  describe('MERGE action', () => {
+    it.skip('deletes data from state when data is null', () => {
+      action = { type: actionTypes.MERGE, path: 'test' }
+      expect(firebaseStateReducer({}, action))
+        .to.deep.equal(initialState)
+    })
+
+    it('merge data to empty state under path', () => {
+      action = { type: actionTypes.MERGE, path, data: exampleData }
+      expect(firebaseStateReducer({}, action).data)
+        .to.deep.equal({
+          ...initialState.data,
+          [path]: exampleData
+        })
+    })
+
+    it('merge data to empty state under paths that end in a number', () => {
+      action = { type: actionTypes.MERGE, path: 'test/123', data: exampleData }
+      expect(firebaseStateReducer({}, action).data)
+        .to.deep.equal({
+          ...initialState.data,
+          test: {
+            123: exampleData
+          }
+        })
+    })
+
+    it('merges data to path with already existing data', () => {
+      initialData = { data: { test: { [childKey]: { foo1: 'bar1' } } } }
+      action = { type: actionTypes.MERGE, path: childPath, data: { foo2: 'bar2' } }
+      expect(firebaseStateReducer(initialData, action).data)
+        .to.deep.equal({
+          ...initialState.data,
+          test: {
+            [childKey]: {
+              foo1: 'bar1',
+              foo2: 'bar2'
+            }
+          }
+        })
+    })
+
+    it('merges data to path with already existing data with numeric keys', () => {
+      initialData = { data: { test: { [childKey]: { 123: 'bar1' } } } }
+      action = { type: actionTypes.MERGE, path: childPath, data: { 124: 'bar2' } }
+      expect(firebaseStateReducer(initialData, action).data)
+        .to.deep.equal({
+          ...initialState.data,
+          test: {
+            [childKey]: {
+              123: 'bar1',
+              124: 'bar2'
+            }
+          }
+        })
+    })
+
+    it('merge data to path with already existing value of null', () => {
+      initialData = { data: { test: { [childKey]: null } } }
+      action = { type: actionTypes.MERGE, path: childPath, data: newData }
+      expect(firebaseStateReducer(initialData, action).data)
+        .to.deep.equal(setWith(Object, childDotPath, newData, {}))
+    })
+
+    it('merge data to path with already existing parent of null', () => {
+      initialData = { data: { test: null } }
+      action = { type: actionTypes.MERGE, path: childPath, data: exampleData }
       expect(firebaseStateReducer(initialData, action).data)
         .to.deep.equal(setWith(Object, childDotPath, exampleData, {}))
     })
