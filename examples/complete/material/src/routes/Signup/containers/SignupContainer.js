@@ -7,7 +7,7 @@ import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
 import { LOGIN_PATH, LIST_PATH } from 'constants'
-import { UserIsNotAuthenticated } from 'utils/router'
+// import { UserIsNotAuthenticated } from 'utils/router'
 import SignupForm from '../components/SignupForm'
 import classes from './SignupContainer.scss'
 
@@ -74,7 +74,7 @@ export default class Signup extends Component {
           <Snackbar
             open={isLoaded(authError) && !isEmpty(authError) && snackCanOpen}
             message={authError ? authError.message : 'Signup error'}
-            action="close"
+            action='close'
             autoHideDuration={3000}
             onRequestClose={() => this.setState({ snackCanOpen: false })}
           />}

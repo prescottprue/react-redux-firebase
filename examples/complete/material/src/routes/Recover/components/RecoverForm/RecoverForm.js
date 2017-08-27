@@ -24,22 +24,22 @@ export const RecoverForm = ({
       </Subheader>
     </div>
     <Field
-      name="code"
+      name='code'
       component={TextField}
-      label="Recover Code"
+      label='Recover Code'
       validate={[required]}
     />
     <Field
-      name="password"
+      name='password'
       component={TextField}
-      label="New Password"
+      label='New Password'
       validate={[required]}
     />
     <div className={classes.submit}>
       <RaisedButton
-        label="Recover"
+        label='Recover'
         primary
-        type="submit"
+        type='submit'
         disabled={submitting}
       />
     </div>

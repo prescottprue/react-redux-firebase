@@ -2,32 +2,31 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Paper from 'material-ui/Paper'
 import { connect } from 'react-redux'
-import { firebaseConnect, pathToJS, isLoaded } from 'react-redux-firebase'
-import { reduxFirebase as rfConfig } from 'config'
-import { UserIsAuthenticated } from 'utils/router'
+import {
+  firebaseConnect,
+  isLoaded,
+  // populate
+} from 'react-redux-firebase'
+// import { reduxFirebase as rfConfig } from 'config'
+// import { UserIsAuthenticated } from 'utils/router'
 import defaultUserImageUrl from 'static/User.png'
 import LoadingSpinner from 'components/LoadingSpinner'
 import AccountForm from '../components/AccountForm/AccountForm'
 import classes from './AccountContainer.scss'
 
 // @UserIsAuthenticated // redirect to /login if user is not authenticated
-@firebaseConnect() // add this.props.firebase
-@connect( // Map redux state to props
-  ({ firebase: { auth, profile } }) => ({
-    auth,
-    profile
+@firebaseConnect()
+@connect(
+  ({ firebase: { profile } }) => ({
+    profile,
+    // profile: populate(firebase, 'profile', rfConfig.profileParamsToPopulate) // if populating profile
   })
 )
-export default // redirect to /login if user is not authenticated
-// add this.props.firebase
-class Account extends Component {
+export default class Account extends Component {
   static propTypes = {
     profile: PropTypes.object,
-    auth: PropTypes.shape({
-      uid: PropTypes.string
-    }),
     firebase: PropTypes.shape({
-      update: PropTypes.func.isRequired,
+      updateProfile: PropTypes.func.isRequired,
       logout: PropTypes.func.isRequired
     })
   }
@@ -43,14 +42,13 @@ class Account extends Component {
   }
 
   updateAccount = newData =>
-    this.props.firebase
-      .updateProfile(newData)
-      .catch((err) => {
+    this.props.firebase.updateProfile(newData)
+      .catch(err => {
         console.error('Error updating account', err) // eslint-disable-line no-console
         // TODO: Display error to user
       })
 
-  render () {
+  render() {
     const { profile } = this.props
 
     if (!isLoaded(profile)) {
@@ -64,7 +62,7 @@ class Account extends Component {
             <div className={classes.avatar}>
               <img
                 className={classes.avatarCurrent}
-                src={profile && profile.avatarUrl || defaultUserImageUrl}
+                src={(profile && profile.avatarUrl) || defaultUserImageUrl}
                 onClick={this.toggleModal}
               />
             </div>

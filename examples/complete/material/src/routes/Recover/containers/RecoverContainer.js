@@ -52,7 +52,7 @@ class RecoverContainer extends Component {
 
   render() {
     return (
-      <div className="flex-column-center">
+      <div className='flex-column-center'>
         <Paper style={{ marginTop: '3rem' }}>
           <EmailForm onSubmit={this.sendRecoveryEmail} />
         </Paper>

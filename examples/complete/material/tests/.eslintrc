@@ -1,0 +1,12 @@
+extends: '../.eslintrc'
+
+env:
+  mocha: true
+
+globals:
+  sinon: true
+  expect: true
+  should: true
+
+rules:
+  no-unused-expressions: 0

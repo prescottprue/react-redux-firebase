@@ -4,13 +4,12 @@ import { map } from 'lodash'
 import { connect } from 'react-redux'
 import {
   firebaseConnect,
-  populatedDataToJS,
-  pathToJS,
+  populate,
   isLoaded,
   isEmpty
 } from 'react-redux-firebase'
 import { LIST_PATH } from 'constants'
-import { UserIsAuthenticated } from 'utils/router'
+// import { UserIsAuthenticated } from 'utils/router'
 import LoadingSpinner from 'components/LoadingSpinner'
 import ProjectTile from '../components/ProjectTile/ProjectTile'
 import NewProjectTile from '../components/NewProjectTile/NewProjectTile'
@@ -25,14 +24,14 @@ const populates = [{ child: 'createdBy', root: 'users', keyProp: 'uid' }]
   // 'projects#populate=owner:users' // string equivalent
 ])
 @connect(
-  ({ firebase: { auth, data: { projects } } }, { params }) => ({
+  ({ firebase, firebase: { auth, data: { projects } } }, { params }) => ({
     auth,
-    projects
+    projects: populate(firebase, 'projects', populates)
   })
 )
 export default class Projects extends Component {
   static contextTypes = {
-    router: React.PropTypes.object.isRequired
+    router: PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -48,8 +47,6 @@ export default class Projects extends Component {
   }
 
   newSubmit = newProject => {
-    const { firebase: { pushWithMeta } } = this.props
-    console.log('this.props', this.props.firebase)
     return this.props.firebase.push('projects', newProject)
       .then(() => this.setState({ newProjectModal: false }))
       .catch(err => {

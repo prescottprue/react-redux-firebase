@@ -29,11 +29,11 @@ export default class TodoItem extends Component {
           rightIcon={<Delete onClick={() => onDeleteClick(todo._key || id)} />}
           secondaryText={
             <p>
-              <span className="TodoItem-Text">
+              <span className='TodoItem-Text'>
                 {todo.text}
               </span>
               <br />
-              <span className="TodoItem-Owner">
+              <span className='TodoItem-Owner'>
                 Owner:{' '}
                 {isObject(todo.owner)
                   ? todo.owner.displayName || todo.owner.username
