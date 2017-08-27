@@ -23,11 +23,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
 
   // use extendApp if firebaseApp is passed
   if (firebase.extendApp) {
-    firebase.extendApp({
-      _: defaultInternals,
-      // pass in ServerValue for TIMESTAMP
-      database: { ServerValue: firebase.firebase_.database.ServerValue }
-    })
+    firebase.extendApp({ _: defaultInternals })
   } else {
     // fall back to define property if extendApp is not defined
     Object.defineProperty(firebase, '_', {
