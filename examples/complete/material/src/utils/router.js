@@ -1,7 +1,6 @@
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 import { browserHistory } from 'react-router'
 import { LIST_PATH } from 'constants'
-import { pathToJS } from 'react-redux-firebase'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 const AUTHED_REDIRECT = 'AUTHED_REDIRECT'

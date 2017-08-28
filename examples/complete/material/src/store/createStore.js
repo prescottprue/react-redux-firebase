@@ -2,21 +2,23 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
-import logger from 'redux-logger'
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/database'
-import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
 import makeRootReducer from './reducers'
+import firebase from 'firebase'
+import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
+import { version } from '../../package.json'
 import { updateLocation } from './location'
 
-export default (initialState = {}, history) => {
+export default (initialState = {}) => {
+  // ======================================================
+  // Window Vars Config
+  // ======================================================
+  window.version = version
+
   // ======================================================
   // Middleware Configuration
   // ======================================================
   const middleware = [
-    thunk.withExtraArgument(getFirebase),
-    // logger, // Uncomment to see actions in console
+    thunk.withExtraArgument(getFirebase)
     // This is where you add other middleware like redux-observable
   ]
 
@@ -31,7 +33,8 @@ export default (initialState = {}, history) => {
     }
   }
 
-  const firebaseApp = firebase.initializeApp(fbConfig)
+  // Initialize Firebase instance
+  firebase.initializeApp(fbConfig)
 
   // ======================================================
   // Store Instantiation and HMR Setup
@@ -40,8 +43,8 @@ export default (initialState = {}, history) => {
     makeRootReducer(),
     initialState,
     compose(
-      reactReduxFirebase(firebaseApp, reduxConfig),
       applyMiddleware(...middleware),
+      reactReduxFirebase(firebase, reduxConfig), // pass firebase instance and config
       ...enhancers
     )
   )

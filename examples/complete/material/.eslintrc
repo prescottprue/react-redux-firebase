@@ -1,34 +1,25 @@
-{
-  "parser"  : "babel-eslint",
-  "extends" : [
-    "standard",
-    "standard-react",
-    "prettier/react"
-  ],
-  "plugins": [
-    "babel",
-    "prettier"
-  ],
-  "env"     : {
-    "browser" : true
-  },
-  "globals" : {
-    "__DEV__"      : false,
-    "__PROD__"     : false,
-    "__DEBUG__"    : false,
-    "__COVERAGE__" : false,
-    "__BASENAME__" : false
-  },
-  "rules": {
-    "semi" : [2, "never"],
-    "max-len": [2, 120, 2],
-    "generator-star-spacing": 0,
-    "babel/generator-star-spacing": 1,
-    "jsx-quotes": ["error", "prefer-single"],
-    "prettier/prettier": ["error", {
-      "singleQuote": true,
-      "trailingComma": "es6",
-      "semi": false
-    }]
-  }
-}
+root: true
+
+parser: babel-eslint
+
+extends: [standard, standard-react, prettier, prettier/react]
+plugins: [babel, react, prettier]
+
+env:
+  browser: true
+  es6: true
+  node: true
+
+ecmaFeatures:
+  jsx: true
+  modules: true
+
+globals:
+  __DEV__: false
+  __COVERAGE__: false
+  __TEST__: false
+
+rules:
+  semi: [2, 'never']
+  no-console: 'error'
+  jsx-quotes: ['error', 'prefer-single']

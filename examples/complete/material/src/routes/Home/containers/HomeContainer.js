@@ -6,7 +6,7 @@ import Theme from 'theme'
 import {
   firebaseConnect,
   isLoaded,
-  isEmpty,
+  isEmpty
   // populate // for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
@@ -18,28 +18,25 @@ import TodoItem from '../components/TodoItem'
 import NewTodoPanel from '../components/NewTodoPanel'
 import classes from './HomeContainer.scss'
 
-const populates = [{ child: 'owner', root: 'users' }]
+// const populates = [{ child: 'owner', root: 'users' }]
 
 // Pass an array of path settings to create Firebase queries
 @firebaseConnect([
   // 'todos' // sync full list of todos
   // { path: 'todos', populates }, // gather data to populate owners (uid => object)
   // { path: 'todos', type: 'once' } // for loading once instead of binding
-  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'] }, // 10 most recent
+  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'] } // 10 most recent
   // { path: 'todos', storeAs: 'myTodos' }, // store somewhere else in redux
   // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
 ])
-// Get data from redux and pass in as props
-@connect(
-  ({ firebase, firebase: { auth, profile, data: { todos } } }) => ({
-    auth,
-    profile,
-    todos,
-    // todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
-    // todos: firebase.ordered.todos // if using ordering such as orderByChild or orderByKey
-  })
-)
-export default class Home extends Component {
+@connect(({ firebase: { auth, data: { todos } } }) => ({
+  auth,
+  todos
+  // todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
+  // todos: firebase.ordered.todos // if using ordering such as orderByChild or orderByKey
+}))
+export default // Get data from redux and pass in as props
+class Home extends Component {
   static propTypes = {
     todos: PropTypes.oneOfType([
       PropTypes.object, // object if using firebase.data
@@ -98,8 +95,8 @@ export default class Home extends Component {
     return this.props.firebase.push('/todos', newTodo)
   }
 
-  render () {
-    const { todos, profile } = this.props
+  render() {
+    const { todos } = this.props
     const { error } = this.state
 
     return (
@@ -118,7 +115,7 @@ export default class Home extends Component {
         <div className={classes.info}>
           <span>data loaded from</span>
           <span>
-            <a href="https://redux-firebasev3.firebaseio.com/">
+            <a href='https://redux-firebasev3.firebaseio.com/'>
               redux-firebasev3.firebaseio.com
             </a>
           </span>

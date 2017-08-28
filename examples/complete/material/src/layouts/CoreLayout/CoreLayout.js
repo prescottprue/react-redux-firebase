@@ -1,5 +1,6 @@
 import React from 'react'
-import Navbar from 'containers/Navbar/Navbar'
+import PropTypes from 'prop-types'
+import Navbar from 'containers/Navbar'
 import classes from './CoreLayout.scss'
 import 'styles/core.scss'
 
@@ -12,7 +13,7 @@ export const CoreLayout = ({ children }) =>
   </div>
 
 CoreLayout.propTypes = {
-  children: React.PropTypes.element.isRequired
+  children: PropTypes.element.isRequired
 }
 
 export default CoreLayout
