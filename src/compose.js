@@ -27,6 +27,8 @@ let firebaseInstance
  * database logging
  * @property {Boolean} config.updateProfileOnLogin - Whether or not to update
  * profile when logging in. (default: `false`)
+ * @property {Boolean} config.resetBeforeLogin - Whether or not to empty profile
+ * and auth state on login
  * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
  * @property {Function} config.onAuthStateChanged - Function run when auth state
@@ -431,25 +433,31 @@ export default (fbConfig, otherConfig) => next =>
     /**
      * @name ref
      * @description Firebase ref function
-     * @return {database.Reference}
+     * @return {firebase.database.Reference}
      * @private
      */
-   /**
-    * @name database
-    * @description Firebase database service instance including all Firebase storage methods
-    * @return {Database} Firebase database service
-    * @private
-    */
-   /**
-    * @name storage
-    * @description Firebase storage service instance including all Firebase storage methods
-    * @return {Storage} Firebase storage service
-    * @private
-    */
+    /**
+     * @name database
+     * @description Firebase database service instance including all Firebase storage methods
+     * @return {firebase.database} Firebase database service
+     * @private
+     */
+    /**
+     * @name storage
+     * @description Firebase storage service instance including all Firebase storage methods
+     * @return {firebase.storage} Firebase storage service
+     * @private
+     */
+    /**
+     * @name messaging
+     * @description Firebase messaging service instance including all Firebase messaging methods
+     * @return {firebase.messaging} Firebase messaging service
+     * @private
+     */
     /**
      * @name auth
      * @description Firebase auth service instance including all Firebase auth methods
-     * @return {Auth}
+     * @return {firebase.auth} Firebase auth service
      * @private
      */
     firebase.helpers = {
@@ -473,7 +481,8 @@ export default (fbConfig, otherConfig) => next =>
       verifyPasswordResetCode,
       watchEvent,
       unWatchEvent,
-      storage: () => firebase.storage()
+      storage: () => firebase.storage(),
+      messaging: () => firebase.messaging()
     }
 
     authActions.init(dispatch, instance)
