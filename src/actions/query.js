@@ -1,6 +1,4 @@
-import { forEach, size } from 'lodash'
 import { actionTypes } from '../constants'
-import { promisesForPopulate } from '../utils/populate'
 import {
   orderedFromSnapshot,
   populateAndDispatch,
@@ -10,15 +8,6 @@ import {
   unsetWatcher,
   getQueryIdFromPath
 } from '../utils/query'
-
-const {
-  START,
-  SET,
-  MERGE,
-  NO_VALUE,
-  UNAUTHORIZED_ERROR,
-  ERROR
-} = actionTypes
 
 /**
  * @description Watch a specific event type
@@ -54,23 +43,19 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       .then(snapshot => {
         if (snapshot.val() === null) {
           dispatch({
-            type: NO_VALUE,
+            type: actionTypes.NO_VALUE,
             path: storeAs || path
           })
         }
         return snapshot
       })
       .catch(err => {
-        // TODO: Handle catching unauthorized error
-        // dispatch({
-        //   type: UNAUTHORIZED_ERROR,
-        //   payload: err
-        // })
         dispatch({
-          type: ERROR,
+          type: actionTypes.ERROR,
           path: storeAs || path,
           payload: err
         })
+        return Promise.reject(err)
       })
   }
 
@@ -81,7 +66,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
   }
 
   const runQuery = (q, e, p, params) => {
-    dispatch({ type: START, path: storeAs || path })
+    dispatch({ type: actionTypes.START, path: storeAs || path })
 
     // Handle once queries
     if (e === 'once') {
@@ -89,7 +74,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
         .then(snapshot => {
           if (snapshot.val() === null) {
             return dispatch({
-              type: NO_VALUE,
+              type: actionTypes.NO_VALUE,
               path: storeAs || path
             })
           }
@@ -97,13 +82,13 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           if (!populates) {
             // create an array for preserving order of children under ordered
             return dispatch({
-              type: SET,
+              type: actionTypes.SET,
               path: storeAs || path,
               data: snapshot.val(),
               ordered: orderedFromSnapshot(snapshot)
             })
           }
-          // populate data and dispatch
+          // populate and dispatch associated actions if populates exist
           return populateAndDispatch(firebase, dispatch, {
             path,
             storeAs,
@@ -114,7 +99,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
         })
         .catch(err => {
           dispatch({
-            type: UNAUTHORIZED_ERROR,
+            type: actionTypes.UNAUTHORIZED_ERROR,
             payload: err
           })
           return Promise.reject(err)
@@ -134,20 +119,23 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           ? [{ key: snapshot.key, value: snapshot.val() }]
           : orderedFromSnapshot(snapshot)
         return dispatch({
-          type: SET,
+          type: actionTypes.SET,
           path: storeAs || resultPath,
           data,
           ordered
         })
       }
+      // populate and dispatch associated actions if populates exist
       return populateAndDispatch(firebase, dispatch, {
         path,
         storeAs,
+        snapshot,
         data: snapshot.val(),
         populates
       })
     }, (err) => {
-      dispatch({ type: ERROR, payload: err })
+      dispatch({ type: actionTypes.ERROR, payload: err })
+      return Promise.reject(err)
     })
   }
 

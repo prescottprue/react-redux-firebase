@@ -6,8 +6,8 @@ import Theme from 'theme'
 import {
   firebaseConnect,
   isLoaded,
-  isEmpty
-  // populate // for populated list
+  isEmpty,
+  populate // for populated list
 } from 'react-redux-firebase'
 import CircularProgress from 'material-ui/CircularProgress'
 import Snackbar from 'material-ui/Snackbar'
@@ -18,21 +18,23 @@ import TodoItem from '../components/TodoItem'
 import NewTodoPanel from '../components/NewTodoPanel'
 import classes from './HomeContainer.scss'
 
-// const populates = [{ child: 'owner', root: 'users' }]
+const populates = [{ child: 'owner', root: 'users' }]
 
 // Pass an array of path settings to create Firebase queries
 @firebaseConnect([
   // 'todos' // sync full list of todos
-  // { path: 'todos', populates }, // gather data to populate owners (uid => object)
+  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'], populates }, // gather data to populate owners (uid => object)
   // { path: 'todos', type: 'once' } // for loading once instead of binding
-  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'] } // 10 most recent
+  // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'] } // 10 most recent
   // { path: 'todos', storeAs: 'myTodos' }, // store somewhere else in redux
   // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
 ])
-@connect(({ firebase: { auth, data: { todos } } }) => ({
+@connect(({ firebase, firebase: { auth, data: { todos } } }) => ({
   auth,
-  todos
-  // todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
+  // todos
+  todos: populate(firebase, 'todos', populates), // populate todos with users data from redux
+  // todos: populate(firebase, 'ordered/todos', populates) // populate todos with users data from redux
+  // todos: populate(firebase, 'ordered/todos', populates) // populate todos with users data from redux
   // todos: firebase.ordered.todos // if using ordering such as orderByChild or orderByKey
 }))
 export default // Get data from redux and pass in as props

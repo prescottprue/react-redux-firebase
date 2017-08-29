@@ -1,5 +1,5 @@
 import { actionTypes } from '../constants'
-import { promisesForPopulate } from '../populate'
+import { promisesForPopulate } from './populate'
 import { isNaN, forEach, isObject, size } from 'lodash'
 
 const tryParseToNumber = (value) => {

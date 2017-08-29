@@ -1,6 +1,7 @@
-/** @constant
- * @description Prefix for all actions within library
+/**
+ * @constant
  * @type {String}
+ * @description Prefix for all actions within library
  * @example
  * import { constants } from 'react-redux-firebase'
  * constants.actionsPrefix === '@@reactReduxFirebase' // true
@@ -82,7 +83,8 @@ export const actionTypes = {
   EMAIL_UPDATE_ERROR: `${actionsPrefix}/EMAIL_UPDATE_ERROR`
 }
 
-/** @constant
+/**
+ * @constant
  * @type {Object}
  * @name defaultConfig
  * @description Default configuration options
@@ -120,7 +122,6 @@ export const actionTypes = {
  * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
  * Setting this to true allows an action to be called that removes data
  * from redux (which might not always be expected).
- * @type {Object}
 */
 export const defaultConfig = {
   userProfile: null,
@@ -135,10 +136,11 @@ export const defaultConfig = {
   enableEmptyAuthChanges: false
 }
 
-/** @constant
+/**
+ * @constant
+ * @type {Array}
  * @description List of all external auth providers that are supported
  * (firebase's email/anonymous included by default).
- * @type {Array}
  * @private
 */
 export const supportedAuthProviders = [
@@ -148,38 +150,15 @@ export const supportedAuthProviders = [
   'facebook'
 ]
 
-/** @constant
- * @description Default initial props used when running firebase.initializeApp
+/**
+ * @constant
+ * @description Top level redux paths that can be populated
  * @type {Array}
  * @private
-*/
-export const defaultInitProps = [
-  'apiKey',
-  'authDomain',
-  'databaseURL',
-  'storageBucket',
-  'messagingSenderId'
-]
-
-/** @constant
- * @description Parameters stored by path string instead of full path
- * @type {Array}
- * @private
-*/
-export const metaParams = ['timestamp', 'requesting', 'requested']
-
-/** @constant
- * @description String Character used to split/join meta parameter keys
- * @type {Array}
- * @private
-*/
-export const paramSplitChar = '/'
+ */
+export const topLevelPaths = ['auth', 'profile', 'ordered', 'data']
 
 export default {
   actionTypes,
-  defaultConfig,
-  supportedAuthProviders,
-  defaultInitProps,
-  metaParams,
-  paramSplitChar
+  defaultConfig
 }
