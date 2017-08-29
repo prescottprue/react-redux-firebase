@@ -277,7 +277,10 @@ export const init = (dispatch, firebase) => {
  * @private
  */
 export const login = (dispatch, firebase, credentials) => {
-  dispatchLoginError(dispatch, null)
+  if (firebase._.config.resetBeforeLogin) {
+    dispatchLoginError(dispatch, null)
+  }
+
   const { method, params } = getLoginMethodAndParams(firebase, credentials)
 
   return firebase.auth()[method](...params)

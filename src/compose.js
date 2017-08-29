@@ -22,6 +22,8 @@ let firebaseInstance
  * sessions are stored (only if presense is set). Often set to `'sessions'` or `'onlineUsers'`.
  * @property {Boolean} config.updateProfileOnLogin - Whether or not to update
  * profile when logging in. (default: `false`)
+ * @property {Boolean} config.resetBeforeLogin - Whether or not to empty profile
+ * and auth state on login
  * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
  * @property {Function} config.onAuthStateChanged - Function run when auth state

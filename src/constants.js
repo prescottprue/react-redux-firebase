@@ -20,6 +20,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @property {String} LOGIN_ERROR - `@@reactReduxFirebase/LOGIN_ERROR`
  * @property {String} NO_VALUE - `@@reactReduxFirebase/NO_VALUE`
  * @property {String} UNAUTHORIZED_ERROR - `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
+ * @property {String} ERROR - `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
  * @property {String} SET_LISTENER - `@@reactReduxFirebase/SET_LISTENER`
  * @property {String} UNSET_LISTENER - `@@reactReduxFirebase/UNSET_LISTENER`
  * @property {String} AUTHENTICATION_INIT_STARTED - `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`

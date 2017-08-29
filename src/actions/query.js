@@ -2,6 +2,8 @@ import { forEach, size } from 'lodash'
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from '../utils/populate'
 import {
+  orderedFromSnapshot,
+  populateAndDispatch,
   applyParamsToQuery,
   getWatcherCount,
   setWatcher,
@@ -85,25 +87,37 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
     if (e === 'once') {
       return q.once('value')
         .then(snapshot => {
-          if (snapshot.val() !== null) {
-            const ordered = []
-            snapshot.forEach((child) => {
-              ordered.push({ key: child.key, value: child.val() })
-            })
-            dispatch({
-              type: SET,
-              path: storeAs || path,
-              ordered: size(ordered) ? ordered : undefined,
-              data: snapshot.val()
+          if (snapshot.val() === null) {
+            return dispatch({
+              type: NO_VALUE,
+              path: storeAs || path
             })
           }
-          return snapshot
+          // dispatch normal event if no populates exist
+          if (!populates) {
+            // create an array for preserving order of children under ordered
+            return dispatch({
+              type: SET,
+              path: storeAs || path,
+              data: snapshot.val(),
+              ordered: orderedFromSnapshot(snapshot)
+            })
+          }
+          // populate data and dispatch
+          return populateAndDispatch(firebase, dispatch, {
+            path,
+            storeAs,
+            snapshot,
+            data: snapshot.val(),
+            populates
+          })
         })
         .catch(err => {
           dispatch({
             type: UNAUTHORIZED_ERROR,
             payload: err
           })
+          return Promise.reject(err)
         })
     }
     // Handle all other queries
@@ -113,51 +127,27 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       let data = (e === 'child_removed') ? undefined : snapshot.val()
       const resultPath = storeAs || (e === 'value') ? p : `${p}/${snapshot.key}`
 
-      // create an array for preserving order of children under ordered
-      const ordered = []
-      if (e === 'child_added') {
-        ordered.push({ key: snapshot.key, value: snapshot.val() })
-      } else {
-        snapshot.forEach((child) => {
-          ordered.push({ key: child.key, value: child.val() })
-        })
-      }
-
       // Dispatch standard event if no populates exists
       if (!populates) {
+        // create an array for preserving order of children under ordered
+        const ordered = e === 'child_added'
+          ? [{ key: snapshot.key, value: snapshot.val() }]
+          : orderedFromSnapshot(snapshot)
         return dispatch({
           type: SET,
           path: storeAs || resultPath,
           data,
-          ordered: size(ordered) ? ordered : undefined,
-          requesting: false,
-          requested: true
+          ordered
         })
       }
-
-      // TODO: Allow setting of unpopulated data before starting population through config
-      // TODO: Allow config to toggle Combining into one SET action
-      const dataKey = snapshot.key
-      promisesForPopulate(firebase, dataKey, data, populates)
-        .then((results) => {
-          // dispatch child sets first so isLoaded is only set to true for
-          // populate after all data is in redux (Issue #121)
-          forEach(results, (result, path) => {
-            dispatch({
-              type: MERGE,
-              path,
-              data: result
-            })
-          })
-          dispatch({
-            type: SET,
-            path: storeAs || resultPath,
-            data,
-            ordered: size(ordered) ? ordered : undefined
-          })
-        })
+      return populateAndDispatch(firebase, dispatch, {
+        path,
+        storeAs,
+        data: snapshot.val(),
+        populates
+      })
     }, (err) => {
-      dispatch({ type: UNAUTHORIZED_ERROR, payload: err })
+      dispatch({ type: ERROR, payload: err })
     })
   }
 
