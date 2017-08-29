@@ -15,7 +15,7 @@
       "comments": false
     },
     "test": {
-      "plugins": ["transform-decorators-legacy"]
+      "plugins": ["transform-decorators-legacy", "transform-async-to-generator"]
     }
   }
 }

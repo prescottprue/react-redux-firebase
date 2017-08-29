@@ -19,17 +19,13 @@ describe('Actions: Query', () => {
     })
 
     it('runs given basic params', () => {
-      return watchEvent(firebase, dispatch, { type: 'once', path: 'projects' }, 'projects')
-        .then((snap) => {
-          expect(snap).to.be.an.object
-        })
-    }, 4000)
+      expect(watchEvent(firebase, dispatch, { type: 'once', path: 'projects' }, 'projects'))
+        .to.eventually.be.an.object
+    })
 
     it('runs given first_child', () => {
-      return watchEvent(firebase, dispatch, { type: 'first_child', path: 'projects' }, 'projects')
-        .then((snap) => {
-          expect(snap).to.be.an.object
-        })
+      expect(watchEvent(firebase, dispatch, { type: 'first_child', path: 'projects' }, 'projects'))
+        .to.eventually.be.an.object
     })
 
     it('runs value query', () => {

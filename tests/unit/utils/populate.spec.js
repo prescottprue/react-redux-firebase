@@ -6,6 +6,8 @@ import {
   getChildType,
   promisesForPopulate
 } from '../../../src/utils/populate'
+let res
+let populates
 
 describe('Utils: Populate', () => {
   describe('getPopulateObj', () => {
@@ -60,64 +62,48 @@ describe('Utils: Populate', () => {
   })
 
   describe('promisesForPopulate', () => {
-    it('handles non-existant single child', () =>
-      promisesForPopulate(Firebase, '', { uid: '123123' }, [{child: 'random', root: 'users'}])
-        .then((v) => {
-          expect(JSON.stringify(v)).to.equal(JSON.stringify({}))
-        })
-    )
+    it('handles non-existant single child', async () => {
+      populates = [{child: 'random', root: 'users'}]
+      res = await promisesForPopulate(Firebase, '', { uid: '123123' }, populates)
+      expect(Object.keys(res)).to.have.length(0)
+    })
 
-    it('populates single property containing a single item', () =>
-      promisesForPopulate(Firebase, '', { uid: '123' }, [{child: 'uid', root: 'users'}])
-        .then((v) => {
-          expect(v).to.exist
-          expect(v).to.have.keys('users')
-          expect(v.users['Iq5b0qK2NtgggT6U3bU6iZRGyma2']).to.be.an.object
-        })
-    )
+    it('populates single property containing a single item', async () => {
+      populates = [{child: 'uid', root: 'users'}]
+      res = await promisesForPopulate(Firebase, '', { uid }, populates)
+      expect(res).to.have.deep.property(`users.${uid}`)
+    })
 
-    it('populates single property containing a list', () =>
-      promisesForPopulate(Firebase, '', { collaborators: { 'Iq5b0qK2NtgggT6U3bU6iZRGyma2': true, '123': true } }, [{child: 'collaborators', root: 'users'}])
-        .then((v) => {
-          expect(v).to.exist
-          expect(v).to.have.keys('users')
-          expect(v.users['Iq5b0qK2NtgggT6U3bU6iZRGyma2']).to.be.an.object
-        })
-    )
+    it('populates single property containing a list', async () => {
+      populates = [{child: 'collaborators', root: 'users'}]
+      res = await promisesForPopulate(Firebase, '', { collaborators: { [uid]: true, 'ABC123': true } }, populates)
+      expect(res).to.have.deep.property(`users.${uid}`)
+    })
 
-    it('populates list with single property populate', () =>
-      promisesForPopulate(Firebase, '', { 1: { owner: 'Iq5b0qK2NtgggT6U3bU6iZRGyma2' } }, [{child: 'owner', root: 'users'}])
-        .then((v) => {
-          expect(v).to.have.keys('users')
-          expect(v.users['Iq5b0qK2NtgggT6U3bU6iZRGyma2']).to.be.an.object
-        })
-    )
+    describe('populates list', () => {
+      it('with single property populate', async () => {
+        populates = [{child: 'owner', root: 'users'}]
+        res = await promisesForPopulate(Firebase, '', { 1: { owner: uid } }, populates)
+        expect(res).to.have.deep.property(`users.${uid}`)
+      })
 
-    it('populates list with property containing array property', () =>
-      promisesForPopulate(Firebase, '', { 1: { collaborators: ['Iq5b0qK2NtgggT6U3bU6iZRGyma2', '123'] } }, [{child: 'collaborators', root: 'users'}])
-        .then((v) => {
-          expect(v).to.exist
-          expect(v).to.have.keys('users')
-          expect(v.users['Iq5b0qK2NtgggT6U3bU6iZRGyma2']).to.be.an.object
-        })
-    )
+      it('with property containing array property', async () => {
+        populates = [{child: 'collaborators', root: 'users'}]
+        res = await promisesForPopulate(Firebase, '', { 1: { collaborators: [uid, 'ABC123'] } }, populates)
+        expect(res).to.have.deep.property(`users.${uid}`)
+      })
 
-    it('populates list with property containing firebase list', () =>
-      promisesForPopulate(Firebase, '', { 1: { collaborators: { 'Iq5b0qK2NtgggT6U3bU6iZRGyma2': true, '123': true } } }, [{child: 'collaborators', root: 'users'}])
-        .then((v) => {
-          expect(v).to.exist
-          expect(v).to.have.keys('users')
-          expect(v.users['Iq5b0qK2NtgggT6U3bU6iZRGyma2']).to.be.an.object
-        })
-    )
+      it('with property containing key/true list', async () => {
+        populates = [{child: 'collaborators', root: 'users'}]
+        res = await promisesForPopulate(Firebase, '', { 1: { collaborators: { [uid]: true, 'ABC123': true } } }, populates)
+        expect(res).to.have.deep.property(`users.${uid}`)
+      })
 
-    it('populates list with property containing invalid child id', () =>
-      promisesForPopulate(Firebase, '', { 1: { collaborators: ['1111', '123'] } }, [{child: 'collaborators', root: 'users'}])
-        .then((v) => {
-          expect(v).to.exist
-          expect(v.users).to.have.keys('123') // sets valid child
-          expect(v.users).to.not.have.keys('111') // does not set invalid child
-        })
-    )
+      it('with property containing invalid child id', async () => {
+        res = await promisesForPopulate(Firebase, '', { 1: { collaborators: ['1111', '123'] } }, populates)
+        expect(res.users).to.have.keys('123') // sets valid child
+        expect(res.users).to.not.have.keys('111') // does not gather data for invalid child
+      })
+    })
   })
 })

@@ -151,11 +151,11 @@ describe('Actions: Auth', () => {
 
   describe('createUserProfile', () => {
     it('creates profile if config is enabled', () => {
-      return createUserProfile(dispatch, Firebase, { uid: '123', email: 'test@test.com', providerData: [{}] }, { some: 'asdf' })
-        .then((profile) => {
-          expect(profile).to.be.an.object
-        })
-    }, 4000)
+      const auth = { uid: '123', email: 'test@test.com', providerData: [{}] }
+      const profile = { some: 'asdf' }
+      expect(createUserProfile(dispatch, Firebase, auth, profile))
+        .to.eventually.be.an.object
+    })
   })
 
   describe('login', () => {
