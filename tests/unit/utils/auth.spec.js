@@ -1,4 +1,3 @@
-/* global firebase describe expect it */
 import {
   createAuthProvider,
   getLoginMethodAndParams

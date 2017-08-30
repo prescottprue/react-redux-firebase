@@ -1,4 +1,3 @@
-/* global describe expect it */
 import { deleteFile } from '../../../src/utils/storage'
 const fakeFirebase = {
   _: {

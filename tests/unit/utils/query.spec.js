@@ -1,4 +1,3 @@
-/* global describe expect it beforeEach */
 import {
   getWatchPath,
   setWatcher,

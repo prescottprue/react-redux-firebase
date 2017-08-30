@@ -29,13 +29,13 @@
  *None Yet Planned*
 
 #### Features
-* Config option for populated items updating when changed - [#69](https://github.com/prescottprue/react-redux-firebase/issues/69)
+* `preserveOnLogout` to preserve some data on logout (already supported in v2.0.0)
 * Population of ordered data (possibly `populatedOrderToJS`) - [#239](https://github.com/prescottprue/react-redux-firebase/issues/239)
+* `childAlias` to store populate result on another parameter - [#126](https://github.com/prescottprue/react-redux-firebase/issues/126)
+* `waitForPopulate` option to allow data to be returned before populated data as in becomes available. As of `v1.4.0-rc.2`, populate only sets `isLoaded` to true after all children are loaded, `waitForPopulate` would make this optional - [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
+* Config option for populated items updating when changed - [#69](https://github.com/prescottprue/react-redux-firebase/issues/69)
+* Improved support for batching of UI updates as the result of a database "array" loading - [#212](https://github.com/prescottprue/react-redux-firebase/issues/212)
 * Expose whole Firebase instance (warning: Using Firebase instance methods will not dispatch actions or update redux state)
-* Config option to not remove all data on logout (potential config syntax: `preserveOnLogout: ['todos']`)
-* Integration for [`react-native-firebase`](https://github.com/invertase/react-native-firebase) for using Firebase native modules instead of JS library (allowing for instance to be passed in). The syntax may be similar to [`v2.*.*` since it is already supported](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules).
-* Setting that allows for `waitForPopulate` to be turned off (i.e. return populated data as in becomes available). As of `v1.4.0-rc.2`, populate only sets `isLoaded` to true after all children are loaded, `waitForPopulate` would make this optional - [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
-
 
 #### Enhancements/Fixes
 * Fix `TypeError: Converting circular structure to JSON` (through update of firebase version) - [#230](https://github.com/prescottprue/react-redux-firebase/issues/230)
@@ -50,6 +50,7 @@
 #### Features
 * Nested populates [#85](https://github.com/prescottprue/react-redux-firebase/issues/85))
 * Support for universal environments (i.e. no `next` function) - [#199](https://github.com/prescottprue/react-redux-firebase/issues/199)
+* Option to clear redux data on `firebaseConnect` unmount - [#55](https://github.com/prescottprue/react-redux-firebase/issues/85)
 
 ## Upcoming Major Version (`v2.0.0`)
 
@@ -72,10 +73,9 @@
 * `react-native` index file referenced in `package.json` that makes it no longer necessary to pass `ReactNative` in config
 * `AuthRequired` decorator (or decorator factory) that forces auth to exist before rendering component
 * Support native modules through [`react-native-firebase`](https://github.com/invertase/react-native-firebase) - [#131](https://github.com/prescottprue/react-redux-firebase/issues/131)
+* Detect Non-HTTP environments (such as with SSR) so that `enableRedirectHandling: false` is not required in config
 * Track online users and sessions by passing `presence` config option
-
-#### Enhancements/Fixes
-* Implement [`firebase-server`](https://github.com/urish/firebase-server) for tests instead of using demo firebase instance
+* Support passing Firebase app passed instead of full firebase lib (pass around a smaller object) - [#249](https://github.com/prescottprue/react-redux-firebase/issues/250), [#250](https://github.com/prescottprue/react-redux-firebase/issues/250)
 
 #### Under Consideration
 * Allowing `presence` setting to accept a function for dynamically building presence path based on auth

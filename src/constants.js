@@ -19,6 +19,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @property {String} LOGIN_ERROR - `@@reactReduxFirebase/LOGIN_ERROR`
  * @property {String} NO_VALUE - `@@reactReduxFirebase/NO_VALUE`
  * @property {String} UNAUTHORIZED_ERROR - `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
+ * @property {String} ERROR - `@@reactReduxFirebase/ERROR`
  * @property {String} UNSET_LISTENER - `@@reactReduxFirebase/UNSET_LISTENER`
  * @property {String} AUTHENTICATION_INIT_STARTED - `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`
  * @property {String} AUTHENTICATION_INIT_FINISHED - `@@reactReduxFirebase/AUTHENTICATION_INIT_FINISHED`
@@ -65,6 +66,8 @@ export const actionTypes = {
  * database logging is enabled.
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
  * user profile when logging in.
+ * @property {Boolean} resetBeforeLogin - `true` Whether or not to reset auth
+ * and profile when logging in (see issue #254 for more details).
  * @property {Boolean} enableRedirectHandling - `true` Whether or not to enable
  * redirect handling. This must be disabled if environment is not http/https
  * such as with react-native.
@@ -84,6 +87,7 @@ export const actionTypes = {
 export const defaultConfig = {
   userProfile: null,
   enableLogging: false,
+  resetBeforeLogin: true,
   updateProfileOnLogin: true,
   enableRedirectHandling: true,
   autoPopulateProfile: true,
