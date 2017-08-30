@@ -293,6 +293,12 @@ Firebase ref function
 
 Returns [**database.Reference**](https://firebase.google.com/docs/reference/js/firebase.database.Reference) Firebase database reference
 
+## auth
+
+Firebase auth service instance including all Firebase auth methods
+
+Returns [**Auth**](https://firebase.google.com/docs/reference/js/firebase.auth.Auth)
+
 ## database
 
 Firebase database service instance including all Firebase storage methods
@@ -305,8 +311,8 @@ Firebase storage service instance including all Firebase storage methods
 
 Returns [**Storage**](https://firebase.google.com/docs/reference/js/firebase.storage.Storage) Firebase storage service
 
-## auth
+## messaging
 
-Firebase auth service instance including all Firebase auth methods
+Firebase messaging service instance including all Firebase messaging methods
 
-Returns [**Auth**](https://firebase.google.com/docs/reference/js/firebase.auth.Auth)
+Returns **firebase.messaging** Firebase messaging service
