@@ -64,23 +64,24 @@ Include `reactReduxFirebase` in your store compose function and  `firebaseStateR
 import { createStore, combineReducers, compose } from 'redux'
 import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
 
-// Add Firebase to reducers
-const rootReducer = combineReducers({
-  firebase: firebaseStateReducer
-})
-
-// Firebase config
-const config = {
+const firebaseConfig = {
   apiKey: '<your-api-key>',
   authDomain: '<your-auth-domain>',
   databaseURL: '<your-database-url>',
   storageBucket: '<your-storage-bucket>'
 }
 
+const reduxFirebaseConfig = { userProfile: 'users' }
+
 // Add redux Firebase to compose
 const createStoreWithFirebase = compose(
-  reactReduxFirebase(config, { userProfile: 'users' }),
+  reactReduxFirebase(firebaseConfig, reduxFirebaseConfig),
 )(createStore)
+
+// Add Firebase to reducers
+const rootReducer = combineReducers({
+  firebase: firebaseStateReducer
+})
 
 // Create store with reducers and initial state
 const initialState = {}
@@ -118,7 +119,7 @@ class Todos extends Component {
         console.log('Todo Created!')
       })
       .catch((err) => {
-        console.log('Error creating todo:', err) // error is also set to authError
+        console.log('Error creating todo:', err) // error is also set to state.firebase.authError
       })
   }
 
@@ -156,9 +157,9 @@ export default compose(
     'todos' // { path: 'todos' } // object notation
   ]),
   connect(
-    ({ firebase } }) => ({ // state.firebase
-      todos: dataToJS(firebase, 'todos'), // in v2 todos: firebase.data.todos
-      auth: pathToJS(firebase, 'auth') // in v2 todos: firebase.auth
+    (state) => ({
+      todos: dataToJS(state.firebase, 'todos'), // in v2 todos: state.firebase.data.todos
+      auth: pathToJS(state.firebase, 'auth') // in v2 todos: state.firebase.auth
     })
   )
 )(Todos)
@@ -280,7 +281,7 @@ The [examples folder](/examples) contains full applications that can be copied/a
     * tons of [integrations](#integrations)
     * [`profileFactory`](http://react-redux-firebase.com/docs/config) - change format of profile stored on Firebase
     * [`getFirebase`](http://react-redux-firebase.com/docs/thunks) - access to firebase instance that fires actions when methods are called
-    * [access to firebase's `storage`](http://react-redux-firebase.com/docs/storage) method
+    * [access to firebase's `storage`](http://react-redux-firebase.com/docs/storage) and `messaging` services
     * `uniqueSet` method helper for only setting if location doesn't already exist
     * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)
     * Action Types and other Constants are exposed for external usage (such as with `redux-observable`)
@@ -291,7 +292,7 @@ The [examples folder](/examples) contains full applications that can be copied/a
     I have been talking to the author of [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase) about combining, but we are not sure that the users of both want that at this point. Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby) if you haven't already since a ton of this type of discussion goes on there.
 
     #### What about [redux-firebase](https://github.com/colbyr/redux-firebase)?
-    The author of redux-firebase has agreed to share the npm namespace! Currently the plan is to make a framework agnostic version of the redux core logic of `react-redux-firebase`. Eventually `react-redux-firebase` and potentially other framework libraries can depend on that core (the new `redux-firebase`).
+    The author of [redux-firebase](https://github.com/colbyr/redux-firebase) has agreed to share the npm namespace! Currently the plan is to take the framework agnostic redux core logic of `react-redux-firebase` and place it into `redux-firebase`. Eventually `react-redux-firebase` and potentially other framework libraries can depend on that core (the new `redux-firebase`).
 
 2. Why use redux if I have Firebase to store state?
 
