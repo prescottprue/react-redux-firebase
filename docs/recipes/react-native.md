@@ -10,7 +10,7 @@ Regardless of which path you want to take, initial setup is the same, so we will
 
 Passing in an instance also allows for libraries with similar APIs (such as [`react-native-firebase`](https://github.com/invertase/react-native-firebase)) to be used instead:
 
-1. Follow [use instructions in README](/README.md#use)
+1. Follow [use instructions in README](http://react-redux-firebase.com/#use)
 1. When creating redux store pass `react-native-firebase` App instance into `reactReduxFirebase` when creating store:
 
   **createStore.js**
@@ -57,8 +57,6 @@ Full `react-native-firebase` example app source with styling available [in the r
   * Drag the `GoogleService-Info.plist` into the project -> check box saying copy
   * switch the identifier to the one you just gave Firebase
 1. Follow the [react-native-firebase initial setup guide](http://invertase.io/react-native-firebase/#/initial-setup)
-1. Copy src folder (including createStore, reducers etc)
-1. Reference src folder in `index.ios.js` and `index.android.js`
 
 ## JS/Web
 
