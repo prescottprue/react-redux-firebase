@@ -1,45 +1,43 @@
 import React from 'react'
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { View, Text, StyleSheet } from 'react-native'
-import { isLoaded, isEmpty, firebaseConnect } from 'react-redux-firebase';
-import MessageView from './MessageView';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableHighlight
+} from 'react-native';
 
-const testTodo = { text: 'Build Things', isComplete: false }
+const Todos = ({ todos, onItemTouch }) => (
+  <FlatList
+    data={todos.reverse()}
+    style={styles.list}
+    renderItem={({ item: { key, value } }) => (
+      <TouchableHighlight onPress={() => onItemTouch(key, value)}>
+        <View style={[styles.todo, value.done && styles.completed]}>
+          <Text>{value.text}</Text>
+          <Text>Done: {value.done === true ? 'True' : 'False'}</Text>
+        </View>
+      </TouchableHighlight>
+    )}
+  />
+)
 
-const Todos = ({ todos, firebase }) => {
-  if (!isLoaded(todos)) {
-    return <MessageView message="Loading..." />
+export default Todos;
+
+const styles = StyleSheet.create({
+  list: {
+    height: 350,
+  },
+  todo: {
+    borderWidth: 1,
+    borderColor: 'black',
+    flex: 1,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    backgroundColor: '#48BBEC',
+    padding: 15
+  },
+  completed: {
+    backgroundColor: '#cccccc'
   }
-  if (isEmpty(todos)) {
-    return (
-      <MessageView
-        message="No Todos Found"
-        onNewTouch={() => firebase.push('todos', testTodo)}
-        showNew
-      />
-    )
-  }
-  return (
-    <View>
-      <Text>Todos</Text>
-      {
-        Object.keys(todos).map((key, id) => (
-          <View key={key}>
-            <Text>{todos[key].text}</Text>
-            <Text>Complete: {JSON.stringify(todos[key].isComplete)}</Text>
-          </View>
-        ))
-      }
-    </View>
-  )
-};
-
-export default compose(
-  firebaseConnect([
-    { path: 'todos' } // create listener for firebase data -> redux
-  ]),
-  connect((state) => ({
-    todos: state.firebase.data.todos, // todos data from redux -> props.todos
-  }))
-)(Todos)
+});

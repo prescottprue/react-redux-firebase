@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import createStore from './createStore';
-import Todos from './Todos';
+import Home from './Home';
 
 // Store Initialization
 const initialState = { firebase: {} };
@@ -9,7 +9,7 @@ const store = createStore(initialState);
 
 const Main = () => (
   <Provider store={store}>
-    <Todos />
+    <Home />
   </Provider>
 );
 
