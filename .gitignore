@@ -9,4 +9,5 @@ _book
 # Logs
 *.log
 .DS_Store
+.idea
 examples/complete/react-native/ios/build

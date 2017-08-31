@@ -27,6 +27,8 @@ let firebaseInstance
  * database logging
  * @property {Boolean} config.updateProfileOnLogin - Whether or not to update
  * profile when logging in. (default: `false`)
+ * @property {Boolean} config.resetBeforeLogin - Whether or not to empty profile
+ * and auth state on login
  * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
  * @property {Function} config.onAuthStateChanged - Function run when auth state
@@ -50,7 +52,7 @@ let firebaseInstance
  * profileParamsToPopulate config. (default: `true`)
  * @property {Boolean} config.setProfilePopulateResults - Whether or not to
  * call SET actions for data that results from populating profile to redux under
- * the data path. For example: role paramter on profile populated from 'roles'
+ * the data path. For example role parameter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
  * is loaded (places it in data/roles). (default: `false`)
  * @return {Function} That accepts a component and returns a Component which
@@ -472,31 +474,49 @@ export default (fbConfig, otherConfig) => next =>
     /**
      * @name ref
      * @description Firebase ref function
-     * @return {database.Reference}
+     * @return {firebase.database.Reference}
+     * @private
+     */
+    /**
+     * @name database
+     * @description Firebase database service instance including all Firebase storage methods
+     * @return {firebase.database} Firebase database service
+     * @private
+     */
+    /**
+     * @name storage
+     * @description Firebase storage service instance including all Firebase storage methods
+     * @return {firebase.storage} Firebase storage service
+     * @private
+     */
+    /**
+     * @name messaging
+     * @description Firebase messaging service instance including all Firebase messaging methods
+     * @return {firebase.messaging} Firebase messaging service
      * @private
      */
    /**
     * @name auth
     * @description Firebase auth service instance including all Firebase auth methods
-    * @return {Auth}
+    * @return {firebase.auth}
     * @private
     */
    /**
     * @name database
     * @description Firebase database service instance including all Firebase storage methods
-    * @return {Database} Firebase database service
+    * @return {firebase.database} Firebase database service
     * @private
     */
    /**
     * @name storage
     * @description Firebase storage service instance including all Firebase storage methods
-    * @return {Storage} Firebase storage service
+    * @return {firebase.storage} Firebase storage service
     * @private
     */
     /**
      * @name messaging
      * @description Firebase messaging service instance including all Firebase messaging methods
-     * @return {Messaging} Firebase messaging service
+     * @return {firebase.messaging} Firebase messaging service
      * @private
      */
     firebase.helpers = {
