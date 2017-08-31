@@ -6,6 +6,47 @@ Regardless of which path you want to take, initial setup is the same, so we will
 
 **NOTE:** Make sure you include `enableRedirectHandling: false` when using react-native with `v2.0.0`. This is required to disable redirect handling (which uses http) since it is not supported in react-native. There has been discussion of a way to make this happen automatically, but for now it is required.
 
+
+## Native Modules
+
+Passing in an instance also allows for libraries with similar APIs (such as [`react-native-firebase`](https://github.com/invertase/react-native-firebase)) to be used instead:
+
+```js
+import RNFirebase from 'react-native-firebase';
+
+const configurationOptions = {
+  debug: true
+};
+
+const firebase = RNFirebase.initializeApp(configurationOptions);
+
+const reduxConfig = {
+  enableRedirectHandling: false // required
+}
+
+const store = createStore(
+  reducer,
+  undefined,
+  compose(
+   reactReduxFirebase(firebase, reduxConfig), // pass in react-native-firebase instance instead of config
+   applyMiddleware(...middleware)
+ )
+)
+```
+The [react-native-firebase initial setup guide](http://invertase.io/react-native-firebase/#/initial-setup) has more information about how to setup your project for iOS/Android.
+
+### Setup
+1. Run `create-react-native-app my-app`
+1. Enter the app folder `cd my-app`
+1. Run the eject command `yarn run eject` or `npm run eject` and choose "Regular React Native App"
+1. Run `npm i --save redux react-redux react-redux-firebase@canary redux-thunk`
+1. Open the xcode project in ios/myapp
+  * Drag the `GoogleService-Info.plist` into the project -> check box saying copy
+  * switch the identifier to the one you just gave Firebase
+1. Follow the [react-native-firebase initial setup guide](http://invertase.io/react-native-firebase/#/initial-setup)
+1. Copy src folder (including createStore, reducers etc)
+1. Reference src folder in `index.ios.js` and `index.android.js`
+
 ## JS/Web
 
 **NOTE**: Only works for versions `v2.0.0-alpha` and higher. For older versions please view the docs associated with previous version.
@@ -36,36 +77,7 @@ const store = createStore(
 )
 ```
 
-## Native Modules
-
-Passing in an instance also allows for libraries with similar APIs (such as [`react-native-firebase`](https://github.com/invertase/react-native-firebase)) to be used instead:
-
-```js
-import RNFirebase from 'react-native-firebase';
-
-const configurationOptions = {
-  debug: true
-};
-
-const firebase = RNFirebase.initializeApp(configurationOptions);
-
-const reduxConfig = {
-  enableRedirectHandling: false // required
-}
-
-const store = createStore(
-  reducer,
-  undefined,
-  compose(
-   reactReduxFirebase(firebase, reduxConfig), // pass in react-native-firebase instance instead of config
-   applyMiddleware(...middleware)
- )
-)
-```
-The [react-native-firebase initial setup guide](http://invertase.io/react-native-firebase/#/initial-setup) has more information about how to setup your project for iOS/Android.
-
 Full project source: [react-native complete example app](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/react-native)
-
 
 ### Setup
 
