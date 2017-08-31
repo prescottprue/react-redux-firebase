@@ -1,18 +1,28 @@
-# Dependency directory
+# ---- Dependency directory ----
 node_modules
+
+# ---- Logs ----
+*.log
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+/.idea
+
+# ---- Project ----
 examples/**/node_modules
+_book/**
+_site/**
 coverage
 dist
 es
 lib
-_book/**
-_site/**
-# Logs
-*.log
-.DS_Store
 examples/complete/react-native/ios/build
 examples/complete/react-native-firebase/ios/build
-/.idea
 
 # ---- React Native ----
 # Xcode
@@ -23,9 +33,6 @@ examples/complete/react-native-firebase/ios/build
 *.xcuserstate
 project.xcworkspace/
 xcuserdata/
-
-# Example
-example/demo/ios/demo.xcworkspace/
 
 # Built application files
 **/android/**/build/
@@ -60,13 +67,6 @@ android/.idea/scopes/scope_settings.xml
 android/.idea/vcs.xml
 **/android/**/*.iml
 ios/RnFirebase.xcodeproj/xcuserdata
-
-# OS-specific files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
 ehthumbs.db
 Thumbs.dbandroid/gradle
 android/gradlew
@@ -76,17 +76,9 @@ android/gradlew.bat
 android/gradle
 lib/.watchmanconfig
 .idea
-coverage
-yarn.lock
-
-tests/build
-tests/android/app/build
-tests/ios/Pods
-tests/firebase
 .gradle
 local.properties
 *.iml
-
 **/ios/Pods/**
 **/ios/build/**
 **/ios/ReactNativeFirebaseDemo.xcworkspace/

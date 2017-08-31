@@ -2,10 +2,10 @@ const exec = require('child-process-promise').exec
 const version = require('../package.json').version
 
 /**
-  NOTE: Split into two arrays because gsutil acts differently when
-  no files exist at a location. First array includes at least one file for each
-  folder that will be copied in the second.
-*/
+ * NOTE: Split into two arrays because gsutil acts differently when
+ * no files exist at a location. First array includes at least one file for each
+ * folder that will be copied in the second.
+ */
 const first = [
   '_book/index.html',
   '_book/search_index.json',
@@ -15,8 +15,7 @@ const first = [
 
 const second = [
   '_book/gitbook/**',
-  '_book/docs/recipes/**',
-  '_book/docs/api/**',
+  '_book/docs/**'
 ]
 
 const project = 'docs.react-redux-firebase.com'
@@ -27,8 +26,8 @@ const project = 'docs.react-redux-firebase.com'
  * @return {Promise} Resolves with stdout of running command
  * @private
  */
-const runCommand = (cmd) => {
-  return exec(cmd)
+const runCommand = (cmd) =>
+  exec(cmd)
     .catch((err) =>
       Promise.reject(
         err.message && err.message.indexOf('not found') !== -1
@@ -36,7 +35,6 @@ const runCommand = (cmd) => {
           : err
       )
     )
-}
 
 /**
  * Upload file or folder to cloud storage. gsutil is used instead of
@@ -66,7 +64,6 @@ const uploadList = (files) => {
     files.map(file =>
       upload(file)
         .then(({ uploadPath, output }) => {
-          console.log('output', output)
           console.log(`Successfully uploaded: ${uploadPath}`) // eslint-disable-line no-console
           return output
         })

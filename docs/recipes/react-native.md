@@ -6,34 +6,47 @@ Regardless of which path you want to take, initial setup is the same, so we will
 
 **NOTE:** Make sure you include `enableRedirectHandling: false` when using react-native with `v2.0.0`. This is required to disable redirect handling (which uses http) since it is not supported in react-native. There has been discussion of a way to make this happen automatically, but for now it is required.
 
-
 ## Native Modules
 
 Passing in an instance also allows for libraries with similar APIs (such as [`react-native-firebase`](https://github.com/invertase/react-native-firebase)) to be used instead:
 
-```js
-import RNFirebase from 'react-native-firebase';
+1. Follow [use instructions in README](/README.md#use)
+1. When creating redux store pass `react-native-firebase` App instance into `reactReduxFirebase` when creating store:
 
-const configurationOptions = {
-  debug: true
-};
+  **createStore.js**
+  ```js
+  import { compose, createStore } from 'redux';
+  import RNFirebase from 'react-native-firebase';
+  import { getFirebase, reactReduxFirebase } from 'react-redux-firebase';
+  import thunk from 'redux-thunk';
+  import makeRootReducer from './reducers';
 
-const firebase = RNFirebase.initializeApp(configurationOptions);
+  const reactNativeFirebaseConfig = {
+    debug: true
+  };
 
-const reduxConfig = {
-  enableRedirectHandling: false // required
-}
+  const reduxFirebaseConfig = {
+    userProfile: 'users', // save users profiles to 'users' collection
+  };
 
-const store = createStore(
-  reducer,
-  undefined,
-  compose(
-   reactReduxFirebase(firebase, reduxConfig), // pass in react-native-firebase instance instead of config
-   applyMiddleware(...middleware)
- )
-)
-```
-The [react-native-firebase initial setup guide](http://invertase.io/react-native-firebase/#/initial-setup) has more information about how to setup your project for iOS/Android.
+  export default (initialState = { firebase: {} }) => {
+    // initialize firebase
+    const firebase = RNFirebase.initializeApp(reactNativeFirebaseConfig);
+
+    const store = createStore(
+      makeRootReducer(),
+      initialState,
+      compose(
+       reactReduxFirebase(firebase, reduxFirebaseConfig), // pass initialized react-native-firebase app instance
+       // applyMiddleware can be placed here
+      )
+    );
+
+    return store;
+  };
+  ```
+
+Full `react-native-firebase` example app source with styling available [in the react-native-firebase complete example](https://github.com/prescottprue/react-redux-firebase/tree/v2.0.0/examples/complete/react-native-firebase).
 
 ### Setup
 1. Run `create-react-native-app my-app`
