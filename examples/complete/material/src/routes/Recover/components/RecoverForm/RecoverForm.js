@@ -15,7 +15,7 @@ export const RecoverForm = ({
   submitting,
   pristine,
   valid
-}) =>
+}) => (
   <form className={classes.container} onSubmit={handleSubmit}>
     <h4>Recover Using Code From Email</h4>
     <div>
@@ -44,6 +44,7 @@ export const RecoverForm = ({
       />
     </div>
   </form>
+)
 
 RecoverForm.propTypes = {
   account: PropTypes.shape({

@@ -7,7 +7,7 @@ export const TextField = ({
   label,
   meta: { touched, error },
   ...custom
-}) =>
+}) => (
   <MaterialTextField
     hintText={label}
     floatingLabelText={label}
@@ -15,6 +15,7 @@ export const TextField = ({
     {...input}
     {...custom}
   />
+)
 
 TextField.propTypes = {
   input: PropTypes.object,

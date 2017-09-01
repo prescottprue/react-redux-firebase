@@ -355,11 +355,21 @@ export default (fbConfig, otherConfig) => next =>
      * so examples have not yet been created, and it may not work as expected.
      * @param {String} type - Type of watch event
      * @param {String} dbPath - Database path on which to setup watch event
-     * @param {String} storeAs - Name of listener results within redux store
+     * @param {Object|String} options - Name of listener results within redux
+     * store. If string is passed, it is used as storeAs.
+     * @param {String} options.storeAs - Name of listener results within redux store
+     * @param {Array} options.queryParams - List of query parameters
+     * @param {Array} options.populates - Populates config
      * @return {Promise}
      */
-    const watchEvent = (type, path, storeAs) =>
-      queryActions.watchEvent(instance, dispatch, { type, path, storeAs })
+    const watchEvent = (type, path, options) =>
+      queryActions.watchEvent(
+        instance,
+        dispatch,
+        isObject(options)
+          ? { type, path, ...options }
+          : { type, path, storeAs: options }
+      )
 
     /**
      * @private
