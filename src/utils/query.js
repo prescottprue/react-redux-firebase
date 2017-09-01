@@ -44,9 +44,9 @@ export const getQueryIdFromPath = (path, event = undefined) => {
       return splittedParam[1]
     }
   }).filter(q => q) : undefined
-  return (queryId && queryId.length > 0)
+  return queryId && queryId.length > 0
       ? (event ? `${event}:/${queryId}` : queryId[0])
-      : ((isQuery) ? origPath : undefined)
+      : (isQuery ? origPath : undefined)
 }
 
 /**

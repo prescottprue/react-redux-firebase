@@ -14,24 +14,31 @@ import {
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} options - Event options object
- * @param {String} options.event - Type of event to watch for (defaults to value)
+ * @param {String} options.type - Type of event to watch for (defaults to value)
  * @param {String} options.path - Path to watch with watcher
+ * @param {Array} options.queryParams - List of parameters for the query
+ * @param {String} options.queryId - id of the query
+ * @param {Boolean} options.isQuery - id of the query
  * @param {String} options.storeAs - Location within redux to store value
  */
-export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery, storeAs }) => {
+export const watchEvent = (firebase, dispatch, options) => {
+  if (!firebase.database || typeof firebase.database !== 'function') {
+    throw new Error('Firebase database is required to create watchers')
+  }
+  const { type, path, populates, queryParams, queryId, isQuery, storeAs } = options
   const watchPath = !storeAs ? path : `${path}@${storeAs}`
-  const counter = getWatcherCount(firebase, type, watchPath, queryId)
-  queryId = queryId || getQueryIdFromPath(path)
+  const id = queryId || getQueryIdFromPath(path)
+  const counter = getWatcherCount(firebase, type, watchPath, id)
 
   if (counter > 0) {
-    if (queryId) {
-      unsetWatcher(firebase, dispatch, type, path, queryId)
+    if (id) {
+      unsetWatcher(firebase, dispatch, type, path, id)
     } else {
       return
     }
   }
 
-  setWatcher(firebase, dispatch, type, watchPath, queryId)
+  setWatcher(firebase, dispatch, type, watchPath, id)
 
   if (type === 'first_child') {
     return firebase.database()
@@ -55,7 +62,6 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           path: storeAs || path,
           payload: err
         })
-        return Promise.reject(err)
       })
   }
 
@@ -135,7 +141,6 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       })
     }, (err) => {
       dispatch({ type: actionTypes.ERROR, payload: err })
-      return Promise.reject(err)
     })
   }
 
