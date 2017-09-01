@@ -50,6 +50,9 @@ const exampleData = {
       123: {
         text: 'Some Text'
       }
+    },
+    missing: {
+      data: null
     }
   },
   ordered: {
@@ -112,6 +115,12 @@ describe('Helpers:', () => {
       expect(helpers.populate(exampleData, '/asdfasdfadsf', []))
         .to
         .equal(undefined)
+    })
+
+    it('returns null for null data', () => {
+      expect(helpers.populate(exampleData, '/missing/data', []))
+        .to
+        .equal(null)
     })
 
     it('returns unpopulated data for no populates', () => {
