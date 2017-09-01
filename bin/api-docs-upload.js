@@ -2,10 +2,10 @@ const exec = require('child-process-promise').exec
 const version = require('../package.json').version
 
 /**
-  NOTE: Split into two arrays because gsutil acts differently when
-  no files exist at a location. First array includes at least one file for each
-  folder that will be copied in the second.
-*/
+ * NOTE: Split into two arrays because gsutil acts differently when
+ * no files exist at a location. First array includes at least one file for each
+ * folder that will be copied in the second.
+ */
 const first = [
   '_book/index.html',
   '_book/search_index.json',
@@ -26,15 +26,15 @@ const project = 'docs.react-redux-firebase.com'
  * @return {Promise} Resolves with stdout of running command
  * @private
  */
-const runCommand = (cmd) => {
-  const baseCommand = cmd.split(' ')[0]
-  return exec(baseCommand)
+const runCommand = (cmd) =>
+  exec(cmd)
     .catch((err) =>
-      err.message && err.message.indexOf('not found') !== -1
-        ? Promise.reject(new Error(`${baseCommand} must be installed to upload`))
-        : Promise.reject(err)
+      Promise.reject(
+        err.message && err.message.indexOf('not found') !== -1
+          ? new Error(`${cmd.split(' ')[0]} must be installed to upload`)
+          : err
+      )
     )
-}
 
 /**
  * Upload file or folder to cloud storage. gsutil is used instead of
@@ -44,10 +44,13 @@ const runCommand = (cmd) => {
  * @private
  */
 const upload = (entityPath) => {
-  const prefix = `history/${version.split('-')[0]}`
+  const prefix = `history/v${version.split('-')[0]}`
   const uploadPath = `${project}/${prefix}/${entityPath.replace('_book/', '').replace('/**', '')}`
-  return runCommand(`gsutil -m cp -r -a public-read ${entityPath} gs://${uploadPath}`)
-    .then((stdout) => ({ stdout, uploadPath }))
+  const command = `gsutil -m cp -r -a public-read ${entityPath} gs://${uploadPath}`
+  return runCommand(command)
+    .then(({ stdout, stderr }) =>
+      stdout ? Promise.reject(stdout) : ({ output: stderr, uploadPath })
+    )
 }
 
 /**
@@ -60,16 +63,21 @@ const uploadList = (files) => {
   return Promise.all(
     files.map(file =>
       upload(file)
-        .then(({ uploadPath }) => {
+        .then(({ uploadPath, output }) => {
           console.log(`Successfully uploaded: ${uploadPath}`) // eslint-disable-line no-console
-          return file
+          return output
+        })
+        .catch((err) => {
+          console.log('error:', err.message || err) // eslint-disable-line no-console
+          return Promise.reject(err)
         })
     )
   )
 }
 
 (function () {
-  uploadList(first)
+  runCommand('gsutil') // check for existence of gsutil
+    .then(() => uploadList(first))
     .then(() => uploadList(second))
     .then(() => {
       console.log('Docs uploaded successfully') // eslint-disable-line no-console

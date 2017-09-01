@@ -53,6 +53,8 @@ Using [`redux-auth-wrapper`](https://github.com/mjrussell/redux-auth-wrapper) yo
 
 In order to only allow authenticated users to view a page, a `UserIsAuthenticated` Higher Order Component can be created:
 
+**redux-auth-wrapper v1**
+
 ```javascript
 import { browserHistory } from 'react-router'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
@@ -71,6 +73,34 @@ export const UserIsAuthenticated = UserAuthWrapper({
       payload: { message: 'You must be authenticated.' },
     })
   },
+})
+```
+**redux-auth-wrapper v2**
+
+```js
+import { connectedRouterRedirect } from 'redux-auth-wrapper'
+
+export const UserIsAuthenticated = connectedRouterRedirect({
+  redirectPath: (state, ownProps) => locationHelper.getRedirectQueryParam(ownProps) || '/login',
+  allowRedirectBack: true,
+  authenticatedSelector: ({ firebase: { auth } }) =>
+    auth && auth.isLoaded && !auth.isEmpty,
+  authenticatingSelector: ({ firebase: { auth } }) =>
+    auth === undefined || !auth.isLoaded,
+  AuthenticatingComponent: Loading,
+  wrapperDisplayName: 'UserIsAuthenticated',
+  redirectAction: routerActions.replace, // can be same as v1
+})
+
+export const UserIsNotAuthenticated = connectedRouterRedirect({
+  redirectPath: (state, ownProps) => locationHelper.getRedirectQueryParam(ownProps) || '/dashboard',
+  allowRedirectBack: false,
+  authenticatedSelector: ({ firebase: { auth } }) =>
+    auth && auth.isLoaded && !auth.isEmpty,
+  authenticatingSelector: ({ firebase: { auth } }) =>
+    auth === undefined || !auth.isLoaded,
+  wrapperDisplayName: 'UserIsNotAuthenticated',
+  redirectAction: routerActions.replace, // can be same as v1
 })
 ```
 
