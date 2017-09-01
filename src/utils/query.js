@@ -189,11 +189,7 @@ export const orderedFromSnapshot = (snapshot) => {
   const ordered = []
   if (snapshot.forEach) {
     snapshot.forEach((child) => {
-      if (isObject(child.val())) {
-        ordered.push({ key: child.key, ...child.val() })
-      } else {
-        ordered.push({ key: child.key, val: child.val() })
-      }
+      ordered.push({ key: child.key, value: child.val() })
     })
   }
   return size(ordered) ? ordered : undefined
