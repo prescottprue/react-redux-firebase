@@ -24,6 +24,7 @@ describe('Compose', () => {
     expect(composeFunc(fbConfig)).to.be.a.function
   })
 
+  // causes logging to be turned on during tests
   it('allows enabling of Firebase database logging', () => {
     expect(generateCreateStore({ enableLogging: true })(reducer))
       .to.be.an.object
@@ -204,14 +205,16 @@ describe('Compose', () => {
 
     describe('updateProfile', () => {
       it('acccepts an object', () => {
-        return expect(helpers.updateProfile(profileData)).to.eventually.become(profileData)
+        expect(helpers.updateProfile(profileData))
+          .to.eventually.become(profileData)
       })
     })
 
     describe('updateAuth', () => {
-      it('rejects when not authenticated', () =>
-        expect(helpers.updateAuth()).to.be.rejectedWith('User must be logged in to update auth.')
-      )
+      it('rejects when not authenticated', () => {
+        expect(helpers.updateAuth())
+          .to.be.rejectedWith('User must be logged in to update auth.')
+      })
 
       // TODO: test that update auth when authenticated
       it.skip('updates auth object if authenticated', () =>
