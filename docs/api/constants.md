@@ -27,12 +27,14 @@ Object containing all action types
 
 -   `START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/START`
 -   `SET` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/SET`
+-   `MERGE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/MERGE`
 -   `SET_PROFILE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/SET_PROFILE`
 -   `LOGIN` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/LOGIN`
 -   `LOGOUT` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/LOGOUT`
 -   `LOGIN_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/LOGIN_ERROR`
 -   `NO_VALUE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/NO_VALUE`
 -   `UNAUTHORIZED_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
+-   `ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
 -   `SET_LISTENER` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/SET_LISTENER`
 -   `UNSET_LISTENER` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/UNSET_LISTENER`
 -   `AUTHENTICATION_INIT_STARTED` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`

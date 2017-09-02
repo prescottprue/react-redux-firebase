@@ -24,9 +24,9 @@ Data is stored in redux under the path of the query for convince. This means tha
     queryParams: ['limitToFirst=20'],
   }
 ])
-@connect(({ firebase }) => ({
-  myTodos: dataToJS(firebase, 'myTodos'), // state.firebase.data.myTodos due to storeAs
-  allTodos: dataToJS(firebase, 'todos') // state.firebase.data.todos since no storeAs
+@connect((state) => ({
+  myTodos: state.firebase.data.myTodos, // due to storeAs
+  allTodos: state.firebase.data.todos // state.firebase.data.todos since no storeAs
 }))
 ```
 

@@ -110,7 +110,7 @@
     "rimraf": "^2.6.1",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
-    "webpack": "^3.4.0",
+    "webpack": "^3.5.5",
     "webpack-bundle-analyzer": "^2.3.1",
     "ws": "^3.0.0",
     "xmlhttprequest": "^1.8.0"
