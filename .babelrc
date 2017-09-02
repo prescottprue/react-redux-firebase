@@ -15,7 +15,11 @@
       "comments": false
     },
     "test": {
-      "plugins": ["transform-runtime", "transform-decorators-legacy", "transform-async-to-generator"]
+      "plugins": [
+        "transform-runtime",
+        "transform-decorators-legacy",
+        "transform-async-to-generator"
+      ]
     }
   }
 }
