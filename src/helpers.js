@@ -178,11 +178,17 @@ export const populate = (state, path, populates, notSetValue) => {
     : splitPath
   const dotPath = pathArr.join('.')
   // Gather data from top level if path is profile (handles populating profile)
-  const data = get(state, dotPath)
-  // return notSetValue of undefined child
-  if (!state || !data) {
+  const data = get(state, dotPath, notSetValue)
+
+  // Return notSetValue for undefined child
+  if (!state || data === notSetValue) {
     return notSetValue
   }
+  // Return null for null child
+  if (data === null) {
+    return null
+  }
+
   // check for if data is single object or a list of objects
   const populatesForData = getPopulateObjs(
     isFunction(populates)
