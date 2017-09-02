@@ -143,7 +143,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
  */
 const setupPresence = (dispatch, firebase) => {
   // exit if database does not exist on firebase instance
-  if (!firebase.database) {
+  if (!firebase.database || !firebase.database.ServerValue) {
     return
   }
   const ref = firebase.database().ref()
@@ -203,8 +203,8 @@ export const init = (dispatch, firebase) => {
 
     firebase._.authUid = authData.uid
 
-    // setup presence if settings exist
-    if (firebase._.config.presence) {
+    // setup presence if settings and database exist
+    if (firebase._.config.presence && firebase.database && firebase.database.ServerValue) {
       setupPresence(dispatch, firebase)
     }
 
@@ -277,7 +277,10 @@ export const init = (dispatch, firebase) => {
  * @private
  */
 export const login = (dispatch, firebase, credentials) => {
-  dispatchLoginError(dispatch, null)
+  if (firebase._.config.resetBeforeLogin) {
+    dispatchLoginError(dispatch, null)
+  }
+
   const { method, params } = getLoginMethodAndParams(firebase, credentials)
 
   return firebase.auth()[method](...params)

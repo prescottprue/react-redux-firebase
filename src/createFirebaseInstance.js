@@ -19,24 +19,15 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
   ) {
     firebase.database.enableLogging(configs.enableLogging)
   }
-  const defaultInternals = { watchers: {}, config: configs, authUid: null }
 
-  // use extendApp if firebaseApp is passed
-  if (firebase.extendApp) {
-    firebase.extendApp({
-      _: defaultInternals,
-      // pass in ServerValue for TIMESTAMP
-      database: { ServerValue: firebase.firebase_.database.ServerValue }
-    })
-  } else {
-    // fall back to define property if extendApp is not defined
-    Object.defineProperty(firebase, '_', {
-      value: defaultInternals,
-      writable: true,
-      enumerable: true,
-      configurable: true
-    })
-  }
+  // Add internal variables to firebase instance
+  const defaultInternals = { watchers: {}, config: configs, authUid: null }
+  Object.defineProperty(firebase, '_', {
+    value: defaultInternals,
+    writable: true,
+    enumerable: true,
+    configurable: true
+  })
 
   /**
    * @private

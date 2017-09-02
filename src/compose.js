@@ -22,6 +22,8 @@ let firebaseInstance
  * sessions are stored (only if presense is set). Often set to `'sessions'` or `'onlineUsers'`.
  * @property {Boolean} config.updateProfileOnLogin - Whether or not to update
  * profile when logging in. (default: `false`)
+ * @property {Boolean} config.resetBeforeLogin - Whether or not to empty profile
+ * and auth state on login
  * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
  * @property {Function} config.onAuthStateChanged - Function run when auth state
@@ -74,17 +76,17 @@ let firebaseInstance
  * // Use Function later to create store
  * const store = createStoreWithFirebase(rootReducer, initialState)
  */
-export default (fbApp, otherConfig) => next =>
+export default (instance, otherConfig) => next =>
   (reducer, initialState, middleware) => {
     const store = next(reducer, initialState, middleware)
 
     // firebase library or app instance not being passed in as first argument
-    if (!fbApp.SDK_VERSION && !fbApp.firebase_ && !fbApp.database) {
+    if (!instance.SDK_VERSION && !instance.firebase_ && !instance.database) {
       throw new Error('v2.0.0-beta and higher require passing a firebase app instance or a firebase library instance. View the migration guide for details.')
     }
 
     const configs = { ...defaultConfig, ...otherConfig }
-    firebaseInstance = createFirebaseInstance(fbApp, configs, store.dispatch)
+    firebaseInstance = createFirebaseInstance(instance.firebase_ || instance, configs, store.dispatch)
 
     authActions.init(store.dispatch, firebaseInstance)
     store.firebase = firebaseInstance

@@ -72,11 +72,6 @@ export const constants: {
         updateProfileOnLogin: boolean;
         userProfile: any;
     };
-    defaultInitProps: string[];
-    defaultJWTProps: string[];
-    metaParams: string[];
-    paramSplitChar: string;
-    supportedAuthProviders: string[];
 };
 
 /**

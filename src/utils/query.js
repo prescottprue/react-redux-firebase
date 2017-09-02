@@ -1,5 +1,6 @@
 import { actionTypes } from '../constants'
-import { isNaN } from 'lodash'
+import { promisesForPopulate } from './populate'
+import { isNaN, forEach, isObject, size } from 'lodash'
 
 const tryParseToNumber = (value) => {
   const result = Number(value)
@@ -43,9 +44,9 @@ export const getQueryIdFromPath = (path, event = undefined) => {
       return splittedParam[1]
     }
   }).filter(q => q) : undefined
-  return (queryId && queryId.length > 0)
+  return queryId && queryId.length > 0
       ? (event ? `${event}:/${queryId}` : queryId[0])
-      : ((isQuery) ? origPath : undefined)
+      : (isQuery ? origPath : undefined)
 }
 
 /**
@@ -89,6 +90,7 @@ export const getWatcherCount = (firebase, event, path, queryId = undefined) => {
  * @private
  * @description Remove/Unset a watcher
  * @param {Object} firebase - Internal firebase object
+ * @param {Function} dispatch - Redux's dispatch function
  * @param {String} event - Type of event to watch for
  * @param {String} path - Path to watch with watcher
  * @param {String} queryId - Id of query
@@ -176,4 +178,65 @@ export const applyParamsToQuery = (queryParams, query) => {
   }
 
   return query
+}
+
+/**
+ * Get ordered array from snapshot
+ * @param  {firebase.database.DataSnapshot} snapshot [description]
+ * @return {Array} Ordered list of children from snapshot
+ */
+export const orderedFromSnapshot = (snapshot) => {
+  const ordered = []
+  if (snapshot.forEach) {
+    snapshot.forEach((child) => {
+      ordered.push({ key: child.key, value: child.val() })
+    })
+  }
+  return size(ordered) ? ordered : undefined
+}
+
+/**
+ * Get data associated with populate settings, and dispatch
+ * @param {Object} firebase - Internal firebase object
+ * @param  {Function} dispatch - Redux's dispatch function
+ * @param  {Any} config.data - Original query data result
+ * @param  {Array} config.populates - List of populate settings
+ * @param  {String} config.path - Base query path
+ * @param  {String} config.storeAs - Location within redux in which to
+ * query results will be stored (path is used as default if not provided).
+ * @return {Promise} Promise that resolves after data for populates has been
+ * loaded and associated actions have been dispatched
+ * @private
+ */
+export const populateAndDispatch = (firebase, dispatch, config) => {
+  const { data, populates, snapshot, path, storeAs } = config
+  // TODO: Allow setting of unpopulated data before starting population through config
+  return promisesForPopulate(firebase, snapshot.key, data, populates)
+    .then((results) => {
+      // dispatch child sets first so isLoaded is only set to true for
+      // populatedDataToJS after all data is in redux (Issue #121)
+      // TODO: Allow config to toggle Combining into one SET action
+      // TODO: Set ordered for populate queries
+      forEach(results, (result, path) => {
+        dispatch({
+          type: actionTypes.MERGE,
+          path,
+          data: result
+        })
+      })
+      dispatch({
+        type: actionTypes.SET,
+        path: storeAs || path,
+        data,
+        ordered: orderedFromSnapshot(snapshot)
+      })
+      return results
+    })
+    .catch((err) => {
+      dispatch({
+        type: actionTypes.ERROR,
+        payload: err
+      })
+      return Promise.reject(err)
+    })
 }

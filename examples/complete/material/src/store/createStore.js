@@ -43,8 +43,9 @@ export default (initialState = {}) => {
     makeRootReducer(),
     initialState,
     compose(
+      // pass firebase or app instance and config
+      reactReduxFirebase(firebase, reduxConfig),
       applyMiddleware(...middleware),
-      reactReduxFirebase(firebase, reduxConfig), // pass firebase instance and config
       ...enhancers
     )
   )

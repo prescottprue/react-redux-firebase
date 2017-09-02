@@ -11,7 +11,7 @@ Middleware that handles configuration (placed in redux's
 
 **Parameters**
 
--   `fbApp`  
+-   `instance`  
 -   `otherConfig`  
 
 **Properties**
@@ -29,6 +29,8 @@ Middleware that handles configuration (placed in redux's
         sessions are stored (only if presense is set). Often set to `'sessions'` or `'onlineUsers'`.
     -   `config.updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to update
         profile when logging in. (default: `false`)
+    -   `config.resetBeforeLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to empty profile
+        and auth state on login
     -   `config.enableRedirectHandling` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable
         auth redirect handling listener. (default: `true`)
     -   `config.onAuthStateChanged` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function run when auth state

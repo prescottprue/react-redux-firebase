@@ -1,6 +1,34 @@
 # Queries
+Query listeners are attached by using the `firebaseConnect` higher order component. `firebaseConnect` accepts an array of paths for which to create queries. When listening to paths, it is possible to modify the query with any of [Firebase's included query methods](https://firebase.google.com/docs/reference/js/firebase.database.Query).
 
-When listening to paths, it is possible to modify the query with any of [Firebase's included query methods](https://firebase.google.com/docs/reference/js/firebase.database.Query). Below are examples using Firebase query methods as well as other methods that are included (such as 'populate').
+**NOTE:**
+By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use [`storeAs` (more below)](#storeAs).
+
+Below are examples using Firebase query methods as well as other methods that are included (such as 'populate').
+
+`firebaseConnect` is a Higher Order Component (wraps a provided component) that attaches listeners to relevant paths on Firebase when mounting, and removes them when unmounting.
+
+**storeAs**
+
+Data is stored in redux under the path of the query for convince. This means that two different queries to the same path (i.e. `todos`) will both place data into `state.data.todos` even if their query parameters are different. If you would like to store your query somewhere else in redux, use `storeAs`:
+
+```js
+@firebaseConnect([
+  {
+    path: 'todos',
+    storeAs: 'myTodos', // place in redux under "myTodos"
+    queryParams: ['orderByChild=createdBy', 'equalTo=123someuid'],
+  }
+  {
+    path: 'todos',
+    queryParams: ['limitToFirst=20'],
+  }
+])
+@connect((state) => ({
+  myTodos: state.firebase.data.myTodos, // due to storeAs
+  allTodos: state.firebase.data.todos // state.firebase.data.todos since no storeAs
+}))
+```
 
 ## once
 To load a firebase location once instead of binding, the once option can be used:

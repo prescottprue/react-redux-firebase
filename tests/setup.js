@@ -7,10 +7,11 @@ var chaiAsPromised = require('chai-as-promised')
 var sinonChai = require('sinon-chai')
 var jsdom = require('jsdom').jsdom
 var FirebaseServer = require('firebase-server')
+var uid = global.uid = 'Iq5b0qK2NtgggT6U3bU6iZRGyma2'
 
 new FirebaseServer(5000, 'localhost.firebaseio.test', { // eslint-disable-line no-new
   users: {
-    Iq5b0qK2NtgggT6U3bU6iZRGyma2: {
+    [uid]: {
       displayName: 'Tester'
     }
   }
@@ -47,6 +48,10 @@ var fbConfig = global.fbConfig = {
 try {
   Firebase.initializeApp(fbConfig)
 } catch (err) {}
+
+// Mock Other Firebase services not included in firebase-server
+// Firebase.storage = () => ({})
+// Firebase.messaging = () => ({})
 
 global.firebase = Object.defineProperty(Firebase, '_', {
   value: {

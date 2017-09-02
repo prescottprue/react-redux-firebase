@@ -21,7 +21,7 @@ import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 @firebaseConnect()
 @connect(
   ({ firebase: { auth } }) => ({
-    auth,
+    auth, // state.firebase.auth -> props.auth
   })
 )
 export default class ProtectedPage extends Component {
@@ -75,6 +75,7 @@ export const UserIsAuthenticated = UserAuthWrapper({
   },
 })
 ```
+
 **redux-auth-wrapper v2**
 
 ```js
