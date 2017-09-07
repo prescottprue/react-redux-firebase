@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { map } from 'lodash'
+import { map, get } from 'lodash'
 import { connect } from 'react-redux'
 import {
   firebaseConnect,
   populatedDataToJS,
   pathToJS,
+  dataToJS,
   isLoaded,
   isEmpty
 } from 'react-redux-firebase'
@@ -26,6 +27,7 @@ const populates = [{ child: 'createdBy', root: 'users' }]
 ])
 @connect(({ firebase }, { params }) => ({
   projects: populatedDataToJS(firebase, 'projects', populates),
+  unpopulatedProjects: dataToJS(firebase, 'projects'),
   auth: pathToJS(firebase, 'auth')
 }))
 export default class Projects extends Component {
@@ -35,8 +37,10 @@ export default class Projects extends Component {
 
   static propTypes = {
     children: PropTypes.object,
+    firebase: PropTypes.object.isRequired,
     projects: PropTypes.object,
-    firebase: PropTypes.object
+    unpopulatedProjects: PropTypes.object,
+    auth: PropTypes.object
   }
 
   state = {
@@ -54,7 +58,7 @@ export default class Projects extends Component {
       })
   }
 
-  deleteProject = ({ name }) => this.props.firebase.remove(`projects/${name}`)
+  deleteProject = key => this.props.firebase.remove(`projects/${key}`)
 
   toggleModal = (name, project) => {
     let newState = {}
@@ -62,15 +66,26 @@ export default class Projects extends Component {
     this.setState(newState)
   }
 
-  render() {
-    // Project Route is being loaded
-    if (this.props.children) return this.props.children
+  getDeleteVisible = key => {
+    const { auth, unpopulatedProjects } = this.props
+    return (
+      !isEmpty(this.props.auth) &&
+      get(unpopulatedProjects, `${key}.createdBy`) === auth.uid
+    )
+  }
 
-    const { projects } = this.props
+  render() {
+    const { projects, auth } = this.props
     const { newProjectModal } = this.state
 
-    if (!isLoaded(projects)) {
+    if (!isLoaded(projects, auth)) {
       return <LoadingSpinner />
+    }
+
+    // Project Route is being loaded
+    if (this.props.children) {
+      // pass all props to children routes
+      return React.cloneElement(this.props.children, this.props)
     }
 
     return (
@@ -91,7 +106,8 @@ export default class Projects extends Component {
                 project={project}
                 onCollabClick={this.collabClick}
                 onSelect={() => this.context.router.push(`${LIST_PATH}/${key}`)}
-                onDelete={this.deleteProject}
+                onDelete={() => this.deleteProject(key)}
+                showDelete={this.getDeleteVisible(key)}
               />
             ))}
         </div>

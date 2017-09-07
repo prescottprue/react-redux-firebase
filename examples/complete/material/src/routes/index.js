@@ -21,6 +21,7 @@ export const createRoutes = store => ({
     SignupRoute,
     ProjectsRoute(store), // async route definitions recieve store
     RecoverRoute(store), // async route definitions recieve store
+    /* Place all Routes above here so NotFoundRoute can act as a 404 page */
     NotFoundRoute(store) // async route definitions recieve store
   ]
 })

@@ -33,9 +33,5 @@ script:
   - npm run lint
   - npm run build
 
-addons:
-  code_climate:
-    repo_token: $CODE_CLIMATE
-
 after_success:
   - firebase-ci deploy -s # deploy without CI actions since createConfig is called earlier

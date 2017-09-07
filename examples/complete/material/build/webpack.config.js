@@ -54,7 +54,11 @@ const config = {
 // ------------------------------------
 config.module.rules.push({
   test: /\.(js|jsx)$/,
-  exclude: /node_modules/,
+  exclude: [
+    /node_modules/,
+    /react-redux-firebase\/dist/
+    /* place other npm linked packages here */
+  ],
   use: [
     {
       loader: 'babel-loader',

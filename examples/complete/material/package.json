@@ -10,21 +10,20 @@
     "build:prod": "echo \"build:prod is deprecated. Use npm run build.\" && npm run build",
     "start": "cross-env NODE_ENV=development webpack-dashboard -p 1234 -c cyan -m -t material -- node build/scripts/start",
     "start:simple": "cross-env NODE_ENV=development node build/scripts/start",
-    "format": "prettier --double-quote --no-semi --trailing-comma none --write \"src/**/*.js\"",
     "lint": "eslint .",
     "lint:fix": "npm run format && npm run lint -- --fix",
-    "codecov": "cat coverage/*/lcov.info | codecov",
+    "format": "prettier --single-quote --no-semi --trailing-comma none --write \"src/**/*.js\"",
     "prepush": "npm run lint"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/prescottprue/material.git"
+    "url": "git+https://github.com/testuser/material.git"
   },
-  "author": "prescottprue (https://github.com/prescottprue)",
+  "author": "testuser (https://github.com/testuser)",
   "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.4",
-    "material-ui": "^0.18.6",
+    "material-ui": "^0.19.1",
     "normalize.css": "^7.0.0",
     "object-assign": "^4.1.1",
     "promise": "^7.1.1",

@@ -7,7 +7,7 @@
  * environment specific settings can be applied.
  */
 
-export const env = "development"
+export const env = 'development'
 
 // Config for firebase
 export const firebase = {

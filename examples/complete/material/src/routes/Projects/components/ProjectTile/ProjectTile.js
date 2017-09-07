@@ -4,7 +4,6 @@ import Paper from 'material-ui/Paper'
 import { isObject } from 'lodash'
 import IconButton from 'material-ui/IconButton'
 import DeleteIcon from 'material-ui/svg-icons/action/delete'
-
 import classes from './ProjectTile.scss'
 
 export const ProjectTile = ({ project, onSelect, onDelete, showDelete }) => (
@@ -32,7 +31,7 @@ export const ProjectTile = ({ project, onSelect, onDelete, showDelete }) => (
 ProjectTile.propTypes = {
   project: PropTypes.object.isRequired,
   onSelect: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
   showDelete: PropTypes.bool
 }
 
