@@ -1,51 +1,52 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import GoogleButton from 'react-google-button'
+import Paper from 'material-ui/Paper'
+import Snackbar from 'material-ui/Snackbar'
+
 import { connect } from 'react-redux'
+import { UserIsNotAuthenticated } from 'utils/router'
 import {
   firebaseConnect,
   isLoaded,
   isEmpty,
   pathToJS
 } from 'react-redux-firebase'
-import Paper from 'material-ui/Paper'
-import Snackbar from 'material-ui/Snackbar'
-import { UserIsNotAuthenticated } from 'utils/router'
+
 import { SIGNUP_PATH } from 'constants'
 import LoginForm from '../components/LoginForm'
+
 import classes from './LoginContainer.scss'
 
-@UserIsNotAuthenticated
+@UserIsNotAuthenticated // redirect to list page if logged in
 @firebaseConnect()
-@connect(
-  // map redux state to props
-  ({ firebase }) => ({
-    authError: pathToJS(firebase, 'authError')
-  })
-)
-export default // redirect to list page if logged in
-// add this.props.firebase
-class Login extends Component {
+@connect(({ firebase }) => ({
+  authError: pathToJS(firebase, 'authError')
+}))
+export default class Login extends Component {
   static propTypes = {
     firebase: PropTypes.shape({
       login: PropTypes.func.isRequired
     }),
     authError: PropTypes.shape({
-      message: PropTypes.string
+      message: PropTypes.string // eslint-disable-line react/no-unused-prop-types
     })
   }
 
   state = {
-    // state of snackbar so it can be closed
     snackCanOpen: false
   }
 
   handleLogin = loginData => {
-    this.setState({ snackCanOpen: true })
+    this.setState({
+      snackCanOpen: true
+    })
+
     return this.props.firebase.login(loginData)
   }
 
-  providerLogin = provider => this.handleLogin({ provider })
+  providerLogin = provider => this.handleLogin({ provider, type: 'popup' })
 
   render() {
     const { authError } = this.props
@@ -67,14 +68,15 @@ class Login extends Component {
           </Link>
         </div>
         {isLoaded(authError) &&
-          !isEmpty(authError) &&
-          snackCanOpen &&
+        !isEmpty(authError) &&
+        snackCanOpen && (
           <Snackbar
             open={isLoaded(authError) && !isEmpty(authError) && snackCanOpen}
             message={authError ? authError.message : 'Signup error'}
             action="close"
             autoHideDuration={3000}
-          />}
+          />
+        )}
       </div>
     )
   }

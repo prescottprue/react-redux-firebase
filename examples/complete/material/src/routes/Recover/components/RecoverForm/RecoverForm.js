@@ -1,8 +1,9 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Field, reduxForm } from 'redux-form'
+import { TextField } from 'redux-form-material-ui'
 import RaisedButton from 'material-ui/RaisedButton'
 import Subheader from 'material-ui/Subheader'
-import TextField from 'components/TextField'
 import { required } from 'utils/forms'
 import { RECOVER_CODE_FORM_NAME } from 'constants'
 import classes from './RecoverForm.scss'
@@ -14,7 +15,7 @@ export const RecoverForm = ({
   submitting,
   pristine,
   valid
-}) =>
+}) => (
   <form className={classes.container} onSubmit={handleSubmit}>
     <h4>Recover Using Code From Email</h4>
     <div>
@@ -43,6 +44,7 @@ export const RecoverForm = ({
       />
     </div>
   </form>
+)
 
 RecoverForm.propTypes = {
   account: PropTypes.shape({

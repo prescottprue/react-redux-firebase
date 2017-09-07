@@ -28,7 +28,9 @@ const APP_ENTRY = project.paths.client('main.js')
 
 webpackConfig.entry = {
   app: __DEV__
-    ? [APP_ENTRY].concat(`webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr`)
+    ? [APP_ENTRY].concat(
+        `webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr`
+      )
     : [APP_ENTRY],
   vendor: project.compiler_vendors
 }
@@ -47,12 +49,12 @@ webpackConfig.output = {
 // ------------------------------------
 webpackConfig.plugins = [
   // Plugin to show any webpack warnings and prevent tests from running
-  function () {
+  function() {
     let errors = []
-    this.plugin('done', function (stats) {
+    this.plugin('done', function(stats) {
       if (stats.compilation.errors.length) {
         // Log each of the warnings
-        stats.compilation.errors.forEach(function (error) {
+        stats.compilation.errors.forEach(function(error) {
           errors.push(error.stack || error.message || error)
         })
 
@@ -111,15 +113,21 @@ if (!__TEST__) {
 // Loaders
 // ------------------------------------
 // JavaScript / JSON
-webpackConfig.module.loaders = [{
-  test: /\.(js|jsx)$/,
-  exclude: [ /node_modules/, /react-redux-firebase\/dist/ /* exclude any npm-linked modules here */ ],
-  loader: 'babel',
-  query: project.compiler_babel
-}, {
-  test: /\.json$/,
-  loader: 'json'
-}]
+webpackConfig.module.loaders = [
+  {
+    test: /\.(js|jsx)$/,
+    exclude: [
+      /node_modules/,
+      /react-redux-firebase\/dist/ /* exclude any npm-linked modules here */
+    ],
+    loader: 'babel',
+    query: project.compiler_babel
+  },
+  {
+    test: /\.json$/,
+    loader: 'json'
+  }
+]
 
 // ------------------------------------
 // Style Loaders
@@ -141,7 +149,9 @@ if (project.compiler_css_modules) {
   )
 }
 const isUsingCSSModules = !!PATHS_TO_TREAT_AS_CSS_MODULES.length
-const cssModulesRegex = new RegExp(`(${PATHS_TO_TREAT_AS_CSS_MODULES.join('|')})`)
+const cssModulesRegex = new RegExp(
+  `(${PATHS_TO_TREAT_AS_CSS_MODULES.join('|')})`
+)
 
 // Loaders for styles that need to be treated as CSS modules.
 if (isUsingCSSModules) {
@@ -155,22 +165,13 @@ if (isUsingCSSModules) {
   webpackConfig.module.loaders.push({
     test: /\.scss$/,
     include: cssModulesRegex,
-    loaders: [
-      'style',
-      cssModulesLoader,
-      'postcss',
-      'sass?sourceMap'
-    ]
+    loaders: ['style', cssModulesLoader, 'postcss', 'sass?sourceMap']
   })
 
   webpackConfig.module.loaders.push({
     test: /\.css$/,
     include: cssModulesRegex,
-    loaders: [
-      'style',
-      cssModulesLoader,
-      'postcss'
-    ]
+    loaders: ['style', cssModulesLoader, 'postcss']
   })
 }
 
@@ -179,21 +180,12 @@ const excludeCSSModules = isUsingCSSModules ? cssModulesRegex : false
 webpackConfig.module.loaders.push({
   test: /\.scss$/,
   exclude: excludeCSSModules,
-  loaders: [
-    'style',
-    BASE_CSS_LOADER,
-    'postcss',
-    'sass?sourceMap'
-  ]
+  loaders: ['style', BASE_CSS_LOADER, 'postcss', 'sass?sourceMap']
 })
 webpackConfig.module.loaders.push({
   test: /\.css$/,
   exclude: excludeCSSModules,
-  loaders: [
-    'style',
-    BASE_CSS_LOADER,
-    'postcss'
-  ]
+  loaders: ['style', BASE_CSS_LOADER, 'postcss']
 })
 
 webpackConfig.sassLoader = {
@@ -239,14 +231,18 @@ webpackConfig.module.loaders.push(
 // http://stackoverflow.com/questions/34133808/webpack-ots-parsing-error-loading-fonts/34133809#34133809
 if (!__DEV__ && !__TEST__) {
   debug('Apply ExtractTextPlugin to CSS loaders.')
-  webpackConfig.module.loaders.filter((loader) =>
-    loader.loaders && loader.loaders.find((name) => /css/.test(name.split('?')[0]))
-  ).forEach((loader) => {
-    const first = loader.loaders[0]
-    const rest = loader.loaders.slice(1)
-    loader.loader = ExtractTextPlugin.extract(first, rest.join('!'))
-    delete loader.loaders
-  })
+  webpackConfig.module.loaders
+    .filter(
+      loader =>
+        loader.loaders &&
+        loader.loaders.find(name => /css/.test(name.split('?')[0]))
+    )
+    .forEach(loader => {
+      const first = loader.loaders[0]
+      const rest = loader.loaders.slice(1)
+      loader.loader = ExtractTextPlugin.extract(first, rest.join('!'))
+      delete loader.loaders
+    })
 
   webpackConfig.plugins.push(
     new ExtractTextPlugin('[name].[contenthash].css', {

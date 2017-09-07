@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import IconButton from 'material-ui/IconButton'
 import Paper from 'material-ui/Paper'
 import TextField from 'material-ui/TextField'
@@ -35,8 +36,7 @@ export default class NewTodoPanel extends Component {
             onClick={this.handleAdd}
             disabled={disabled}
             tooltipPosition="top-center"
-            tooltip={disabled ? 'Login To Add Todo' : 'Add Todo'}
-          >
+            tooltip={disabled ? 'Login To Add Todo' : 'Add Todo'}>
             <ContentAdd />
           </IconButton>
         </div>

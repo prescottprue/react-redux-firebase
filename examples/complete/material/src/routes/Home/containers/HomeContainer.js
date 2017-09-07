@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { map } from 'lodash'
 import Theme from 'theme'
@@ -6,7 +7,7 @@ import {
   firebaseConnect,
   isLoaded,
   pathToJS,
-  dataToJS, // needed for full list and once
+  dataToJS // needed for full list and once
   // orderedToJS, // needed for ordered list
   // populatedDataToJS // needed for populated list
 } from 'react-redux-firebase'
@@ -19,7 +20,7 @@ import TodoItem from '../components/TodoItem'
 import NewTodoPanel from '../components/NewTodoPanel'
 import classes from './HomeContainer.scss'
 
-const populates = [{ child: 'owner', root: 'users', keyProp: 'uid' }]
+// const populates = [{ child: 'owner', root: 'users', keyProp: 'uid' }]
 
 @firebaseConnect([
   // 'todos' // sync full list of todos
@@ -31,7 +32,7 @@ const populates = [{ child: 'owner', root: 'users', keyProp: 'uid' }]
 @connect(({ firebase }) => ({
   auth: pathToJS(firebase, 'auth'),
   account: pathToJS(firebase, 'profile'),
-  todos: dataToJS(firebase, 'todos'),
+  todos: dataToJS(firebase, 'todos')
   // todos: orderedToJS(firebase, 'todos') // if looking for array
   // todos: dataToJS(firebase, 'myTodos'), // if using storeAs
   // todos: populatedDataToJS(firebase, 'todos', populates), // if populating
@@ -103,16 +104,15 @@ export default class Home extends Component {
     return (
       <div
         className={classes.container}
-        style={{ color: Theme.palette.primary2Color }}
-      >
-        {error
-          ? <Snackbar
-              open={!!error}
-              message={error}
-              autoHideDuration={4000}
-              onRequestClose={() => this.setState({ error: null })}
-            />
-          : null}
+        style={{ color: Theme.palette.primary2Color }}>
+        {error ? (
+          <Snackbar
+            open={!!error}
+            message={error}
+            autoHideDuration={4000}
+            onRequestClose={() => this.setState({ error: null })}
+          />
+        ) : null}
         <div className={classes.info}>
           <span>data loaded from</span>
           <span>
@@ -127,23 +127,25 @@ export default class Home extends Component {
         </div>
         <div className={classes.todos}>
           <NewTodoPanel onNewClick={this.handleAdd} disabled={false} />
-          {!isLoaded(todos)
-            ? <CircularProgress />
-            : <Paper className={classes.paper}>
-                <Subheader>Todos</Subheader>
-                <List className={classes.list}>
-                  {todos &&
-                    map(todos, (todo, id) =>
-                      <TodoItem
-                        key={id}
-                        id={id}
-                        todo={todo}
-                        onCompleteClick={this.toggleDone}
-                        onDeleteClick={this.deleteTodo}
-                      />
-                    )}
-                </List>
-              </Paper>}
+          {!isLoaded(todos) ? (
+            <CircularProgress />
+          ) : (
+            <Paper className={classes.paper}>
+              <Subheader>Todos</Subheader>
+              <List className={classes.list}>
+                {todos &&
+                  map(todos, (todo, id) => (
+                    <TodoItem
+                      key={id}
+                      id={id}
+                      todo={todo}
+                      onCompleteClick={this.toggleDone}
+                      onDeleteClick={this.deleteTodo}
+                    />
+                  ))}
+              </List>
+            </Paper>
+          )}
         </div>
       </div>
     )

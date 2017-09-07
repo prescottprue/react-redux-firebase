@@ -1,0 +1,38 @@
+dist: trusty
+
+sudo: false
+
+language: node_js
+
+node_js:
+ - 6.11.1 # runtime used within Firebase functions
+
+notifications:
+  email:
+    on_failure: change
+    on_success: change
+
+branches:
+  only:
+    - master
+    - stage
+    - prod
+
+cache:
+  bundler: true
+  directories:
+    - node_modules # NPM packages
+
+install:
+  - npm set progress=false
+  - npm i
+  - npm i -g firebase-ci
+
+script:
+  - firebase-ci createConfig
+  - npm run lint
+  - npm run test
+  - npm run build
+
+after_success:
+  - firebase-ci deploy -s # deploy without CI actions since createConfig is called earlier
