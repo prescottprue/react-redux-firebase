@@ -24,8 +24,8 @@ describe('Compose', () => {
     expect(composeFunc(fbConfig)).to.be.a.function
   })
 
-  // causes logging to be turned on during tests
-  it('allows enabling of Firebase database logging', () => {
+  // skipped because it causes logging to be turned on during tests
+  it.skip('allows enabling of Firebase database logging', () => {
     expect(generateCreateStore({ enableLogging: true })(reducer))
       .to.be.an.object
   })
