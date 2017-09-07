@@ -8,11 +8,5 @@
   margin: .5rem;
   padding: 1.3rem;
   overflow: hidden;
-  min-width: 300px;
-  @include tablet {
-    flex-basis: 40%;
-  }
-  @include mobile {
-    flex-basis: 80%;
-  }
+  width: 300px;
 }

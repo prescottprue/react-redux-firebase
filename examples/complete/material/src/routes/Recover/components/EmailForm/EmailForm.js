@@ -13,7 +13,7 @@ export const EmailForm = ({
   submitting,
   pristine,
   valid
-}) =>
+}) => (
   <form className={classes.container} onSubmit={handleSubmit}>
     <h4>Send Recovery Code To Email</h4>
     <Field
@@ -26,6 +26,7 @@ export const EmailForm = ({
       <RaisedButton label="Send" primary type="submit" disabled={submitting} />
     </div>
   </form>
+)
 
 EmailForm.propTypes = {
   account: PropTypes.shape({

@@ -6,9 +6,8 @@ import Paper from 'material-ui/Paper'
 import RecoverForm from '../components/RecoverForm'
 import EmailForm from '../components/EmailForm'
 
-@firebaseConnect()
-export default // adds this.props.firebase
-class RecoverContainer extends Component {
+@firebaseConnect() // adds this.props.firebase
+export default class RecoverContainer extends Component {
   static propTypes = {
     firebase: PropTypes.object
   }

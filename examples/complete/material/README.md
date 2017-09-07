@@ -16,8 +16,7 @@ While developing, you will probably rely mostly on `npm start`; however, there a
 |`npm run <script>`|Description|
 |------------------|-----------|
 |`start`|Serves your app at `localhost:3000`. HMR will be enabled in development.|
-|`build:dev`|Same as `build` but overrides `NODE_ENV` to "development".|
-|`build:prod`|Same as `build` but overrides `NODE_ENV` to "production".|
+|`build`|Build static files to public with `NODE_ENV` set to "production".|
 |`lint`|Lint all `.js` files.|
 |`lint:fix`|Lint and fix all `.js` files. [Read more on this](http://eslint.org/docs/user-guide/command-line-interface.html#fix).|
 

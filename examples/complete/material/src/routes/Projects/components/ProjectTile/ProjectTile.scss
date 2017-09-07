@@ -7,14 +7,7 @@
   height: 200px;
   margin: .5rem;
   padding: 1.3rem;
-  overflow: hidden;
-  min-width: 300px;
-  @include tablet {
-    flex-basis: 40%;
-  }
-  @include mobile {
-    flex-basis: 80%;
-  }
+  width: 300px;
 }
 .top {
   @extend .flex-row;
@@ -29,6 +22,9 @@
   color: $darkGray;
   cursor: pointer;
   transition: all 800ms cubic-bezier(0.25,0.1,0.25,1) 0ms;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
   &:hover {
     color: $accentColor;
   }

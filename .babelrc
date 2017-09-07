@@ -1,9 +1,8 @@
 {
   "presets": ["es2015", "react"],
   "plugins": [
-    "es6-promise",
-    "add-module-exports",
     "lodash",
+    "add-module-exports",
     "transform-object-rest-spread",
     "transform-object-assign",
     "transform-class-properties"
@@ -16,7 +15,11 @@
       "comments": false
     },
     "test": {
-      "plugins": ["transform-decorators-legacy"]
+      "plugins": [
+        "transform-runtime",
+        "transform-decorators-legacy",
+        "transform-async-to-generator"
+      ]
     }
   }
 }

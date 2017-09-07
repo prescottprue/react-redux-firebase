@@ -75,7 +75,6 @@ describe('Actions: Storage', () => {
       expect(uploadFile).to.be.a.function
     })
 
-    // unListen is not a function due to storage not being mocked correctly
     it('runs given basic params', () =>
       expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } }))
         .to
@@ -83,7 +82,6 @@ describe('Actions: Storage', () => {
         .become({})
     )
 
-    // unListen is not a function due to storage not being mocked correctly
     it('handles dbPath', () =>
       expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' }, dbPath: 'projects' }))
         .to
