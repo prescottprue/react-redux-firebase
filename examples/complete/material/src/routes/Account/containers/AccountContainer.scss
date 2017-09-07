@@ -12,8 +12,8 @@
 }
 .settings {
   @extend .flex-row-center;
-  width: 100%;
   align-items: center;
+  width: 100%;
 }
 .avatar {
   &Current {
@@ -21,14 +21,6 @@
     max-width: 13rem;
     height: auto;
     cursor: pointer;
-  }
-}
-
-.ImageManager {
-  @extend .flex-row;
-  .Preview {
-    width: 10rem;
-    height: auto;
   }
 }
 .meta {

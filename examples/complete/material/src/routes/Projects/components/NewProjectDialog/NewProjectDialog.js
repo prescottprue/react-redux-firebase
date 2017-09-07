@@ -1,68 +1,48 @@
-import React, { Component, PropTypes } from 'react'
-import { Field, reduxForm } from 'redux-form'
+import React from 'react'
+import PropTypes from 'prop-types'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
-import TextField from 'components/TextField'
-import { required } from 'utils/forms'
+import { Field, reduxForm } from 'redux-form'
+import { TextField } from 'redux-form-material-ui'
+import { required } from 'utils/form'
+import { NEW_PROJECT_FORM_NAME } from 'constants'
+
 import classes from './NewProjectDialog.scss'
 
-@reduxForm({
-  form: 'newProject'
-})
-export default class NewProjectDialog extends Component {
-  static propTypes = {
-    open: PropTypes.bool,
-    onRequestClose: PropTypes.func.isRequired,
-    submit: PropTypes.func.isRequired, // added by redux-form
-    handleSubmit: PropTypes.func.isRequired // added by redux-form
-  }
+export const NewProjectDialog = ({
+  open,
+  onRequestClose,
+  submit,
+  handleSubmit
+}) => (
+  <Dialog
+    title="New Project"
+    open={open}
+    onRequestClose={onRequestClose}
+    contentClassName={classes.container}
+    actions={[
+      <FlatButton label="Cancel" secondary onTouchTap={onRequestClose} />,
+      <FlatButton label="Create" primary onTouchTap={submit} />
+    ]}>
+    <form onSubmit={handleSubmit} className={classes.inputs}>
+      <Field
+        name="name"
+        component={TextField}
+        floatingLabelText="Project Name"
+        validate={[required]}
+      />
+    </form>
+  </Dialog>
+)
 
-  state = {
-    open: this.props.open || false
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.open) {
-      this.setState({ open: true })
-    }
-  }
-
-  close = () => {
-    this.setState({ open: false })
-    if (this.props.onRequestClose) {
-      this.props.onRequestClose()
-    }
-  }
-
-  render() {
-    const { open } = this.state
-    const { handleSubmit } = this.props
-
-    const actions = [
-      <FlatButton label="Cancel" secondary onClick={this.close} />,
-      <FlatButton label="Create" primary onClick={this.props.submit} />
-    ]
-
-    return (
-      <Dialog
-        title="New Project"
-        modal={false}
-        actions={actions}
-        open={open}
-        onRequestClose={this.close}
-        contentClassName={classes.container}
-      >
-        <div className={classes.inputs}>
-          <form onSubmit={handleSubmit}>
-            <Field
-              name="name"
-              component={TextField}
-              validate={[required]}
-              label="Project Name"
-            />
-          </form>
-        </div>
-      </Dialog>
-    )
-  }
+NewProjectDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onRequestClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
+  handleSubmit: PropTypes.func.isRequired, // added by redux-form
+  submit: PropTypes.func.isRequired // added by redux-form
 }
+
+export default reduxForm({
+  form: NEW_PROJECT_FORM_NAME
+})(NewProjectDialog)

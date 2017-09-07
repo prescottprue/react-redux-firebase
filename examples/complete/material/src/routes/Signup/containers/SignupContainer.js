@@ -1,6 +1,9 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import GoogleButton from 'react-google-button'
+import Paper from 'material-ui/Paper'
+import Snackbar from 'material-ui/Snackbar'
 import { connect } from 'react-redux'
 import {
   firebaseConnect,
@@ -8,24 +11,18 @@ import {
   isEmpty,
   pathToJS
 } from 'react-redux-firebase'
-import Paper from 'material-ui/Paper'
-import Snackbar from 'material-ui/Snackbar'
-import { LOGIN_PATH } from 'constants'
 import { UserIsNotAuthenticated } from 'utils/router'
+import { LIST_PATH, LOGIN_PATH } from 'constants'
 import SignupForm from '../components/SignupForm'
+
 import classes from './SignupContainer.scss'
 
-@UserIsNotAuthenticated
+@UserIsNotAuthenticated // redirect to list page if logged in
 @firebaseConnect()
-@connect(
-  // map redux state to props
-  ({ firebase }) => ({
-    authError: pathToJS(firebase, 'authError')
-  })
-)
-export default // redirect to list page if logged in
-// add this.props.firebase
-class Signup extends Component {
+@connect(({ firebase }) => ({
+  authError: pathToJS(firebase, 'authError')
+}))
+export default class Signup extends Component {
   static propTypes = {
     firebase: PropTypes.object,
     authError: PropTypes.object
@@ -36,22 +33,31 @@ class Signup extends Component {
   }
 
   handleSignup = creds => {
+    this.setState({
+      snackCanOpen: true
+    })
     const { createUser, login } = this.props.firebase
-    const { email, username } = creds
-    this.setState({ snackCanOpen: true })
-    // create new user then login (redirect handled by decorator)
-    return createUser(creds, { email, username }).then(() => login(creds))
+    createUser(creds, {
+      email: creds.email,
+      username: creds.username
+    }).then(() => {
+      login(creds)
+    })
   }
 
   providerLogin = provider => {
-    this.setState({ snackCanOpen: true })
+    this.setState({
+      snackCanOpen: true
+    })
 
-    return this.props.firebase.login({ provider })
+    this.props.firebase
+      .login({ provider, type: 'popup' })
+      .then(account => this.context.router.push(LIST_PATH))
   }
 
   render() {
-    const { authError } = this.props
     const { snackCanOpen } = this.state
+    const { authError } = this.props
 
     return (
       <div className={classes.container}>
@@ -69,15 +75,16 @@ class Signup extends Component {
           </Link>
         </div>
         {isLoaded(authError) &&
-          !isEmpty(authError) &&
-          snackCanOpen &&
+        !isEmpty(authError) &&
+        snackCanOpen && (
           <Snackbar
             open={isLoaded(authError) && !isEmpty(authError) && snackCanOpen}
             message={authError ? authError.message : 'Signup error'}
             action="close"
             autoHideDuration={3000}
             onRequestClose={() => this.setState({ snackCanOpen: false })}
-          />}
+          />
+        )}
       </div>
     )
   }

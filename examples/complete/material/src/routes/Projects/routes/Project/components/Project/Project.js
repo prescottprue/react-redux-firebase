@@ -1,19 +1,21 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import classes from './Project.scss'
 
-export const Project = ({ projects, params: { projectname } }) =>
+export const Project = ({ projects, params: { projectname } }) => (
   <div className={classes.container}>
-    {projects[projectname]
-      ? <div>
-          <h2>Project Container</h2>
-          <pre>
-            {JSON.stringify(projects[projectname], null, 2)}
-          </pre>
-        </div>
-      : <div className={classes.empty}>
-          <span>Project Not Found</span>
-        </div>}
+    {projects[projectname] ? (
+      <div>
+        <h2>Project Container</h2>
+        <pre>{JSON.stringify(projects[projectname], null, 2)}</pre>
+      </div>
+    ) : (
+      <div className={classes.empty}>
+        <span>Project Not Found</span>
+      </div>
+    )}
   </div>
+)
 
 Project.propTypes = {
   projects: PropTypes.object,

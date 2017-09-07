@@ -1,7 +1,8 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Field, reduxForm } from 'redux-form'
+import { TextField } from 'redux-form-material-ui'
 import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'components/TextField'
 import { required, email } from 'utils/forms'
 import { RECOVER_EMAIL_FORM_NAME } from 'constants'
 import classes from './EmailForm.scss'
@@ -12,7 +13,7 @@ export const EmailForm = ({
   submitting,
   pristine,
   valid
-}) =>
+}) => (
   <form className={classes.container} onSubmit={handleSubmit}>
     <h4>Send Recovery Code To Email</h4>
     <Field
@@ -25,6 +26,7 @@ export const EmailForm = ({
       <RaisedButton label="Send" primary type="submit" disabled={submitting} />
     </div>
   </form>
+)
 
 EmailForm.propTypes = {
   account: PropTypes.shape({
