@@ -12,8 +12,7 @@
     "start:simple": "cross-env NODE_ENV=development node build/scripts/start",
     "lint": "eslint .",
     "lint:fix": "npm run format && npm run lint -- --fix",
-    "format": "prettier --single-quote --no-semi --trailing-comma none --write \"src/**/*.js\"",
-    "prepush": "npm run lint"
+    "format": "prettier --single-quote --no-semi --trailing-comma none --write \"src/**/*.js\""
   },
   "repository": {
     "type": "git",
