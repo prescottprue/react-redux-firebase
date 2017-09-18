@@ -253,7 +253,7 @@ Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby).
 View docs for recipes on integrations with:
 
 * [redux-thunk](/docs/recipes/thunks.md)
-* [redux-observable](/docs/recipes/redux-observable.md)
+* [redux-observable](/docs/recipes/epics.md)
 * [redux-saga](/docs/recipes/redux-saga.md)
 * [redux-form](/docs/recipes/redux-form.md)
 * [redux-auth-wrapper](/docs/recipes/routing.md#advanced)
@@ -292,7 +292,7 @@ The [examples folder](/examples) contains full applications that can be copied/a
     I have been talking to the author of [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase) about combining, but we are not sure that the users of both want that at this point. Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby) if you haven't already since a ton of this type of discussion goes on there.
 
     #### What about [redux-firebase](https://github.com/colbyr/redux-firebase)?
-    The author of [redux-firebase](https://github.com/colbyr/redux-firebase) has agreed to share the npm namespace! Currently the plan is to take the framework agnostic redux core logic of `react-redux-firebase` and place it into `redux-firebase`. Eventually `react-redux-firebase` and potentially other framework libraries can depend on that core (the new `redux-firebase`).
+    The author of [redux-firebase](https://github.com/colbyr/redux-firebase) has agreed to share the npm namespace! Currently the plan is to take the framework agnostic redux core logic of `react-redux-firebase` and [place it into `redux-firebase`](https://github.com/prescottprue/redux-firebase)). Eventually `react-redux-firebase` and potentially other framework libraries can depend on that core (the new `redux-firebase`).
 
 2. Why use redux if I have Firebase to store state?
 
