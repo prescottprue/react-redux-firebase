@@ -96,11 +96,12 @@ export const getWatcherCount = (firebase, event, path, queryId = undefined) => {
 export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefined) => {
   let id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   path = path.split('#')[0]
-  if (firebase._.watchers[id] <= 1) {
-    delete firebase._.watchers[id]
+  const { watchers, config } = firebase._
+  if (watchers[id] <= 1) {
+    delete watchers[id]
     if (event !== 'first_child' && event !== 'once') {
       firebase.database().ref().child(path).off(event)
-      const { config } = firebase._
+      // TODO: Remove config.distpatchOnUnsetListener
       if (config.dispatchOnUnsetListener || config.distpatchOnUnsetListener) {
         if (config.distpatchOnUnsetListener && isFunction(console.warn)) {  // eslint-disable-line no-console
           console.warn('config.distpatchOnUnsetListener is Depreceated and will be removed in future versions. Please use config.dispatchOnUnsetListener (dispatch spelled correctly).') // eslint-disable-line no-console
@@ -108,8 +109,8 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefine
         dispatch({ type: UNSET_LISTENER, path })
       }
     }
-  } else if (firebase._.watchers[id]) {
-    firebase._.watchers[id]--
+  } else if (watchers[id]) {
+    watchers[id]--
   }
 }
 

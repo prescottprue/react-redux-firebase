@@ -1,8 +1,10 @@
 # Profile
 
-Profile object is used to store data associated with a user.
+Profile object is used to store data associated with a user. Using profile is in no way required, and will only be enabled if the `userProfile` config option is provided.
 
 ## Basic
+It is common to store the list of user profiles under a collection called "users" or "profiles". For this example we will use "users".
+
 Include the `userProfile` parameter in config when setting up store middleware:
 
 ```js

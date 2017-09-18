@@ -17,7 +17,7 @@ import NewProjectTile from '../components/NewProjectTile'
 import NewProjectDialog from '../components/NewProjectDialog'
 import classes from './ProjectsContainer.scss'
 
-const populates = [{ child: 'createdBy', root: 'users', keyProp: 'uid' }]
+const populates = [{ child: 'createdBy', root: 'users' }]
 
 @firebaseConnect(({ params, auth }) => [
   {
@@ -54,14 +54,16 @@ export default class Projects extends Component {
       .then(() => this.setState({ newProjectModal: false }))
       .catch(err => {
         // TODO: Show Snackbar
-        console.error('error creating new project', err) // eslint-disable-line
+        console.error("error creating new project", err) // eslint-disable-line
       })
   }
 
   deleteProject = key => this.props.firebase.remove(`projects/${key}`)
 
   toggleModal = (name, project) => {
-    this.setState({ [`${name}Modal`]: !this.state[`${name}Modal`] })
+    let newState = {}
+    newState[`${name}Modal`] = !this.state[`${name}Modal`]
+    this.setState(newState)
   }
 
   getDeleteVisible = key => {
@@ -100,7 +102,7 @@ export default class Projects extends Component {
           {!isEmpty(projects) &&
             map(projects, (project, key) => (
               <ProjectTile
-                key={`Project-${key}`}
+                key={`${project.name}-Collab-${key}`}
                 project={project}
                 onCollabClick={this.collabClick}
                 onSelect={() => this.context.router.push(`${LIST_PATH}/${key}`)}

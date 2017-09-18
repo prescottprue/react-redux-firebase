@@ -1,6 +1,6 @@
-/* global describe expect it */
 import { fromJS } from 'immutable'
 import helpers from '../../src/helpers'
+
 const exampleData = {
   data: {
     some: 'data',
@@ -27,6 +27,19 @@ const exampleData = {
           ABC: true,
           abc: true
         }
+      },
+      QRS: {
+        owner: 'ABC',
+        nested: {
+          owner: 'ABC'
+        },
+        notes: {
+          123: true
+        },
+        collaborators: {
+          ABC: true,
+          abc: true
+        }
       }
     },
     users: {
@@ -39,6 +52,20 @@ const exampleData = {
         text: 'Some Text'
       }
     }
+  },
+  ordered: {
+    projects: [
+      {
+        owner: 'ABC',
+        notes: {
+          123: true
+        },
+        collaborators: {
+          ABC: true,
+          abc: true
+        }
+      }
+    ]
   },
   timestamp: { 'some/path': { test: 'key' } },
   snapshot: { some: 'snapshot' }
@@ -118,6 +145,32 @@ describe('Helpers:', () => {
     })
   })
 
+  describe('orderedToJS', () => {
+    it('exists', () => {
+      expect(helpers).to.respondTo('orderedToJS')
+    })
+
+    it('passes notSetValue', () => {
+      expect(helpers.orderedToJS(null, '/some', exampleData))
+        .to
+        .equal(exampleData)
+    })
+
+    it('gets data from state', () => {
+      const path = 'projects'
+      expect(JSON.stringify(helpers.orderedToJS(exampleState, path, exampleData)))
+        .to
+        .equal(JSON.stringify(exampleData.ordered[path]))
+    })
+
+    it('returns state if its not an immutable Map', () => {
+      const fakeState = { }
+      expect(helpers.orderedToJS(fakeState, 'asdf'))
+        .to
+        .equal(fakeState)
+    })
+  })
+
   describe('populatedDataToJS', () => {
     it('exists', () => {
       expect(helpers).to.respondTo('populatedDataToJS')
@@ -152,7 +205,16 @@ describe('Helpers:', () => {
             .have
             .property('displayName', 'scott')
         })
-
+        it('handles child path', () => {
+          const path = 'projects/QRS'
+          const rootName = 'users'
+          const populates = [{ child: 'nested.owner', root: rootName }]
+          const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
+          expect(populatedData.nested.owner)
+            .to
+            .have
+            .property('displayName', 'scott')
+        })
         it('populates childParam', () => {
           const path = 'projects/CDF'
           const rootName = 'users'
@@ -183,6 +245,22 @@ describe('Helpers:', () => {
             .have
             .deep
             .property(`collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+        })
+      })
+
+      describe('config as function', () => {
+        it('populates values', () => {
+          const path = 'projects/CDF'
+          const rootName = 'users'
+          const populates = (projectKey, projectData) => ([
+            // configure populates with key / data tuple...
+            { child: 'owner', root: rootName }
+          ])
+          const populatedData = helpers.populatedDataToJS(exampleState, path, populates)
+          expect(populatedData.owner)
+            .to
+            .have
+            .property('displayName', 'scott')
         })
       })
     })

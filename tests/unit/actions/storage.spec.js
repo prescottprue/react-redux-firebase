@@ -22,7 +22,8 @@ const fakeFirebase = {
         on: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
         off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
         once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
-      })
+      }),
+      remove: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
     })
   }),
   storage: () => ({
@@ -34,9 +35,7 @@ const fakeFirebase = {
           funcsObj.complete()
           return () => unListen
         },
-        then: () => {
-
-        }
+        then: () => Promise.resolve({})
       }),
       delete: () => Promise.resolve(({
 
@@ -52,9 +51,12 @@ describe('Actions: Storage', () => {
     beforeEach(() => {
       spy = sinon.spy(dispatch)
     })
+
     it('is exported', () => {
       expect(uploadFileWithProgress).to.be.a.function
     })
+
+    // unListen is not a function due to storage not being mocked correctly
     it.skip('runs given basic params', () =>
       uploadFileWithProgress(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
         .then((snap) => {
@@ -68,15 +70,23 @@ describe('Actions: Storage', () => {
     beforeEach(() => {
       spy = sinon.spy(dispatch)
     })
+
     it('is exported', () => {
       expect(uploadFile).to.be.a.function
     })
-    it.skip('runs given basic params', () =>
-      uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
-        .then((snap) => {
-          expect(spy).to.have.been.calledOnce
-          expect(snap).to.be.an.object
-        })
+
+    it('runs given basic params', () =>
+      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } }))
+        .to
+        .eventually
+        .become({})
+    )
+
+    it('handles dbPath', () =>
+      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' }, dbPath: 'projects' }))
+        .to
+        .eventually
+        .become({})
     )
   })
 
@@ -97,11 +107,20 @@ describe('Actions: Storage', () => {
     it('is exported', () => {
       expect(deleteFile).to.be.a.function
     })
-    it('runs given basic params', () =>
-      deleteFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
-        .then((snap) => {
-          expect(snap).to.be.an.object
-        })
+
+    it('runs given path', () =>
+      expect(deleteFile(dispatch, fakeFirebase, { path: 'projects' }))
+        .to
+        .eventually
+        .become({path: 'projects'})
     )
+
+    it('runs given basic params', () => {
+      const metaObj = { path: 'projects/test.png', dbPath: 'test.png' }
+      return expect(deleteFile(dispatch, fakeFirebase, metaObj))
+        .to
+        .eventually
+        .become(metaObj)
+    })
   })
 })

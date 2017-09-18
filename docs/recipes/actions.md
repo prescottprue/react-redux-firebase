@@ -6,7 +6,8 @@ Firebase actions can be accessed within a component by using the `firebaseConnec
 
 #### Pure Component
 ```js
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 
 const SimpleComponent = () => (
@@ -26,7 +27,8 @@ export default firebaseConnect()(SimpleComponent)
 #### Stateful Component
 
 ```js
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 
 @firebaseConnect()

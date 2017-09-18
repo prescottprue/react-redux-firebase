@@ -33,6 +33,11 @@ let firebaseInstance
  * auth redirect handling listener. (default: `true`)
  * @property {Function} config.onAuthStateChanged - Function run when auth state
  * changes. Argument Pattern: `(authData, firebase, dispatch)`
+ * @property {Boolean} config.enableEmptyAuthChanges - Whether or not to enable
+ * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
+ * empty auth changes such as undefined on initialization. See
+ * [#137](https://github.com/prescottprue/react-redux-firebase/issues/137) for
+ * more details. (default: `false`)
  * @property {Function} config.onRedirectResult - Function run when redirect
  * result is returned. Argument Pattern: `(authData, firebase, dispatch)`
  * @property {Object} config.customAuthParameters - Object for setting which
@@ -160,7 +165,8 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Function} onComplete - Function to run on complete (`not required`)
      * @return {Promise} Containing reference snapshot
      * @example <caption>Basic</caption>
-     * import React, { Component, PropTypes } from 'react'
+     * import React, { Component } from 'react'
+     * import PropTypes from 'prop-types'
      * import { firebaseConnect } from 'react-redux-firebase'
      * const Example = ({ firebase: { set } }) => (
      *   <button onClick={() => set('some/path', { here: 'is a value' })}>
@@ -194,7 +200,8 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Function} onComplete - Function to run on complete (`not required`)
      * @return {Promise} Containing reference snapshot
      * @example <caption>Basic</caption>
-     * import React, { Component, PropTypes } from 'react'
+     * import React, { Component } from 'react'
+     * import PropTypes from 'prop-types'
      * import { firebaseConnect } from 'react-redux-firebase'
      * const Example = ({ firebase: { push } }) => (
      *   <button onClick={() => push('some/path', true)}>
@@ -226,7 +233,8 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Function} onComplete - Function to run on complete (`not required`)
      * @return {Promise} Containing reference snapshot
      * @example <caption>Basic</caption>
-     * import React, { Component, PropTypes } from 'react'
+     * import React, { Component } from 'react'
+     * import PropTypes from 'prop-types'
      * import { firebaseConnect } from 'react-redux-firebase'
      * const Example = ({ firebase: { update } }) => (
      *   <button onClick={() => update('some/path', { here: 'is a value' })}>
@@ -258,7 +266,8 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Function} onComplete - Function to run on complete (`not required`)
      * @return {Promise} Containing reference snapshot
      * @example <caption>Basic</caption>
-     * import React, { Component, PropTypes } from 'react'
+     * import React, { Component } from 'react'
+     * import PropTypes from 'prop-types'
      * import { firebaseConnect } from 'react-redux-firebase'
      * const Example = ({ firebase: { remove } }) => (
      *   <button onClick={() => remove('some/path')}>
@@ -280,7 +289,8 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Function} onComplete - Function to run on complete (`not required`)
      * @return {Promise} Containing reference snapshot
      * @example <caption>Basic</caption>
-     * import React, { Component, PropTypes } from 'react'
+     * import React, { Component } from 'react'
+     * import PropTypes from 'prop-types'
      * import { firebaseConnect } from 'react-redux-firebase'
      * const Example = ({ firebase: { uniqueSet } }) => (
      *   <button onClick={() => uniqueSet('some/unique/path', true)}>
@@ -345,11 +355,21 @@ export default (fbConfig, otherConfig) => next =>
      * so examples have not yet been created, and it may not work as expected.
      * @param {String} type - Type of watch event
      * @param {String} dbPath - Database path on which to setup watch event
-     * @param {String} storeAs - Name of listener results within redux store
+     * @param {Object|String} options - Name of listener results within redux
+     * store. If string is passed, it is used as storeAs.
+     * @param {String} options.storeAs - Name of listener results within redux store
+     * @param {Array} options.queryParams - List of query parameters
+     * @param {Array} options.populates - Populates config
      * @return {Promise}
      */
-    const watchEvent = (type, path, storeAs) =>
-      queryActions.watchEvent(instance, dispatch, { type, path, storeAs })
+    const watchEvent = (type, path, options) =>
+      queryActions.watchEvent(
+        instance,
+        dispatch,
+        isObject(options)
+          ? { type, path, ...options }
+          : { type, path, storeAs: options }
+      )
 
     /**
      * @private
@@ -431,6 +451,37 @@ export default (fbConfig, otherConfig) => next =>
       authActions.verifyPasswordResetCode(dispatch, instance, code)
 
     /**
+     * @private
+     * @description Update the currently logged in user's profile object
+     * @param {String} profileUpdate - Changes to apply to profile
+     * @return {Promise}
+     */
+    const updateProfile = (profile) =>
+      authActions.updateProfile(dispatch, instance, profile)
+
+    /**
+     * @private
+     * @description Update the currently logged in user's auth object. **Note**:
+     * changes Auth object **only**, not user's profile.
+     * @param {String} code - Password reset code to verify
+     * @return {Promise}
+     */
+    const updateAuth = (authUpdate) =>
+      authActions.updateAuth(dispatch, instance, authUpdate)
+
+    /**
+     * @private
+     * @description Update the currently logged in user's email. **Note**:
+     * changes email in Auth object only, not within user's profile.
+     * @param {String} newEmail - New email
+     * @param {Boolean} updateInProfile - Whether or not to update user's
+     * profile with email change.
+     * @return {Promise}
+     */
+    const updateEmail = (email, updateInProfile) =>
+      authActions.updateEmail(dispatch, instance, email, updateInProfile)
+
+    /**
      * @name ref
      * @description Firebase ref function
      * @return {firebase.database.Reference}
@@ -454,10 +505,28 @@ export default (fbConfig, otherConfig) => next =>
      * @return {firebase.messaging} Firebase messaging service
      * @private
      */
+   /**
+    * @name auth
+    * @description Firebase auth service instance including all Firebase auth methods
+    * @return {firebase.auth}
+    * @private
+    */
+   /**
+    * @name database
+    * @description Firebase database service instance including all Firebase storage methods
+    * @return {firebase.database} Firebase database service
+    * @private
+    */
+   /**
+    * @name storage
+    * @description Firebase storage service instance including all Firebase storage methods
+    * @return {firebase.storage} Firebase storage service
+    * @private
+    */
     /**
-     * @name auth
-     * @description Firebase auth service instance including all Firebase auth methods
-     * @return {firebase.auth} Firebase auth service
+     * @name messaging
+     * @description Firebase messaging service instance including all Firebase messaging methods
+     * @return {firebase.messaging} Firebase messaging service
      * @private
      */
     firebase.helpers = {
@@ -481,8 +550,11 @@ export default (fbConfig, otherConfig) => next =>
       verifyPasswordResetCode,
       watchEvent,
       unWatchEvent,
-      storage: () => firebase.storage(),
-      messaging: () => firebase.messaging()
+      updateProfile,
+      updateAuth,
+      updateEmail,
+      storage: (app) => firebase.storage(app),
+      messaging: (app) => firebase.messaging(app)
     }
 
     authActions.init(dispatch, instance)

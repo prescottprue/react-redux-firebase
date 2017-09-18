@@ -132,7 +132,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       // TODO: Allow setting of unpopulated data before starting population through config
       // TODO: Set ordered for populate queries
       // TODO: Allow config to toggle Combining into one SET action
-      promisesForPopulate(firebase, data, populates)
+      const dataKey = snapshot.key
+      promisesForPopulate(firebase, dataKey, data, populates)
         .then((results) => {
           // dispatch child sets first so isLoaded is only set to true for
           // populatedDataToJS after all data is in redux (Issue #121)
@@ -172,8 +173,10 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
  * @param {String} event - Event for which to remove the watcher
  * @param {String} path - Path of watcher to remove
  */
-export const unWatchEvent = (firebase, dispatch, event, path, queryId = undefined) =>
-    unsetWatcher(firebase, dispatch, event, path, queryId)
+export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId = undefined }) => {
+  const watchPath = !storeAs ? path : `${path}@${storeAs}`
+  unsetWatcher(firebase, dispatch, type, watchPath, queryId)
+}
 
 /**
  * @description Add watchers to a list of events
@@ -192,8 +195,8 @@ export const watchEvents = (firebase, dispatch, events) =>
  * @param {Array} events - List of events for which to remove watchers
  */
 export const unWatchEvents = (firebase, dispatch, events) =>
-    events.forEach(event =>
-      unWatchEvent(firebase, dispatch, event.type, event.path, event.queryId)
-    )
+  events.forEach(event =>
+    unWatchEvent(firebase, dispatch, event)
+  )
 
 export default { watchEvents, unWatchEvents }

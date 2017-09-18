@@ -1,12 +1,19 @@
 import {
   size,
+  set,
+  get,
+  has,
+  last,
+  split,
   map,
   some,
   first,
   drop,
   mapValues,
+  every,
   reduce,
   isString,
+  isFunction,
   defaultsDeep
 } from 'lodash'
 import { getPopulateObjs } from './utils/populate'
@@ -17,7 +24,8 @@ import { metaParams, paramSplitChar } from './constants'
  * @param {Object} item - Item to check loaded status of. A comma separated list is also acceptable.
  * @return {Boolean} Whether or not item is loaded
  * @example
- * import React, { Component, PropTypes } from 'react'
+ * import React, { Component } from 'react'
+ * import PropTypes from 'prop-types'
  * import { connect } from 'react-redux'
  * import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
  *
@@ -57,7 +65,8 @@ export const isLoaded = function () {
  * @param {Object} item - Item to check loaded status of. A comma seperated list is also acceptable.
  * @return {Boolean} Whether or not item is empty
  * @example
- * import React, { Component, PropTypes } from 'react'
+ * import React, { Component } from 'react'
+ * import PropTypes from 'prop-types'
  * import { connect } from 'react-redux'
  * import { firebaseConnect, isEmpty, dataToJS } from 'react-redux-firebase'
  *
@@ -288,64 +297,77 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
   if (!dataToJS(data, path, notSetValue)) {
     return dataToJS(data, path, notSetValue)
   }
-  const populateObjs = getPopulateObjs(populates)
-  // reduce array of populates to object of combined populated data
-  return reduce(
-    map(populateObjs, (p, obj) => {
-      // single item with iterable child
-      if (dataToJS(data, path)[p.child]) {
+  // test if data is a single object vs a list of objects, try generating
+  // populates and testing for key presence
+  const populatesForData = getPopulateObjs(isFunction(populates)
+    ? populates(last(split(path, '/')), dataToJS(data, path))
+    : populates)
+  const dataHasPopluateChilds = every(populatesForData, (populate) => (
+    has(dataToJS(data, path), populate.child)
+  ))
+
+  if (dataHasPopluateChilds) {
+    // Data is a single object, resolve populates directly
+    return reduce(
+      map(populatesForData, (p, obj) => {
         // populate child is key
-        if (isString(dataToJS(data, path)[p.child])) {
-          const key = dataToJS(data, path)[p.child]
+        if (isString(get(dataToJS(data, path), p.child))) {
+          const key = get(dataToJS(data, path), p.child)
           const pathString = p.childParam
             ? `${p.root}/${key}/${p.childParam}`
             : `${p.root}/${key}`
           if (dataToJS(data, pathString)) {
-            return {
-              [p.child]: p.keyProp
-                ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
-                : dataToJS(data, pathString)
-            }
+            return set({}, p.child, p.keyProp
+              ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
+              : dataToJS(data, pathString)
+            )
           }
 
           // matching child does not exist
           return dataToJS(data, path)
         }
-
-        return {
-          [p.child]: buildChildList(data, dataToJS(data, path)[p.child], p)
-        }
-      }
-      // list with child param in each item
-      return mapValues(dataToJS(data, path), (child, i) => {
+        return set({}, p.child, buildChildList(data, get(dataToJS(data, path), p.child), p))
+      }),
+      // combine data from all populates to one object starting with original data
+      (obj, v) => defaultsDeep(v, obj), dataToJS(data, path))
+  } else {
+    // Data is a map of objects, each value has parameters to be populated
+    return mapValues(dataToJS(data, path), (child, childKey) => {
+      const populatesForDataItem = getPopulateObjs(isFunction(populates)
+      ? populates(childKey, child)
+      : populates)
+      const resolvedPopulates = map(populatesForDataItem, (p, obj) => {
         // no matching child parameter
-        if (!child || !child[p.child]) {
+        if (!child || !get(child, p.child)) {
           return child
         }
         // populate child is key
-        if (isString(child[p.child])) {
-          const key = child[p.child]
+        if (isString(get(child, p.child))) {
+          const key = get(child, p.child)
           const pathString = p.childParam
             ? `${p.root}/${key}/${p.childParam}`
             : `${p.root}/${key}`
           if (dataToJS(data, pathString)) {
-            return {
-              [p.child]: p.keyProp
-                ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
-                : dataToJS(data, pathString)
-            }
+            return set({}, p.child, (p.keyProp
+              ? { [p.keyProp]: key, ...dataToJS(data, pathString) }
+              : dataToJS(data, pathString))
+            )
           }
           // matching child does not exist
           return child
         }
         // populate child list
-        return {
-          [p.child]: buildChildList(data, child[p.child], p)
-        }
+        return set({}, p.child, buildChildList(data, get(child, p.child), p))
       })
-    }),
-  // combine data from all populates to one object starting with original data
-  (obj, v) => defaultsDeep(v, obj), dataToJS(data, path))
+
+      // combine data from all populates to one object starting with original data
+      return reduce(
+        resolvedPopulates,
+        (obj, v) => defaultsDeep(v, obj),
+        child
+      )
+    })
+  }
 }
 
 /**

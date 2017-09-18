@@ -23,8 +23,6 @@ While developing, you will probably rely mostly on `npm start`; however, there a
 |`start`            |Serves your app at `localhost:3000` and displays [Webpack Dashboard](https://github.com/FormidableLabs/webpack-dashboard)|
 |`start:simple`     |Serves your app at `localhost:3000` without [Webpack Dashboard](https://github.com/FormidableLabs/webpack-dashboard)|
 |`build`            |Builds the application to ./dist|
-|`test`             |Runs unit tests with Karma. See [testing](#testing)|
-|`test:watch`       |Runs `test` in watch mode to re-run tests when changed|
 |`lint`             |[Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors|
 |`lint:fix`         |Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix)|
 
@@ -108,16 +106,6 @@ For more options on CI settings checkout the [firebase-ci docs](https://github.c
 1. Deploy to firebase: `firebase deploy`
 **NOTE:** You can use `firebase serve` to test how your application will work when deployed to Firebase, but make sure you run `npm run build` first.
 
-[npm-image]: https://img.shields.io/npm/v/material.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/material
-[travis-image]: https://img.shields.io/travis/testuser/material/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/testuser/material
-[daviddm-image]: https://img.shields.io/david/testuser/material.svg?style=flat-square
-[daviddm-url]: https://david-dm.org/testuser/material
-[climate-image]: https://img.shields.io/codeclimate/github/testuser/material.svg?style=flat-square
-[climate-url]: https://codeclimate.com/github/testuser/material
-[coverage-image]: https://img.shields.io/codeclimate/coverage/github/testuser/material.svg?style=flat-square
-[coverage-url]: https://codeclimate.com/github/testuser/material
 [license-image]: https://img.shields.io/npm/l/material.svg?style=flat-square
 [license-url]: https://github.com/testuser/material/blob/master/LICENSE
 [code-style-image]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square

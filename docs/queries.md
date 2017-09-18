@@ -7,6 +7,30 @@ By default the results of queries are stored in redux under the path of the quer
 
 Below are examples using Firebase query methods as well as other methods that are included (such as 'populate').
 
+`firebaseConnect` is a Higher Order Component (wraps a provided component) that attaches listeners to relevant paths on Firebase when mounting, and removes them when unmounting.
+
+**storeAs**
+
+Data is stored in redux under the path of the query for convince. This means that two different queries to the same path (i.e. `todos`) will both place data into `state.data.todos` even if their query parameters are different. If you would like to store your query somewhere else in redux, use `storeAs`:
+
+```js
+@firebaseConnect([
+  {
+    path: 'todos',
+    storeAs: 'myTodos', // place in redux under "myTodos"
+    queryParams: ['orderByChild=createdBy', 'equalTo=123someuid'],
+  }
+  {
+    path: 'todos',
+    queryParams: ['limitToFirst=20'],
+  }
+])
+@connect(({ firebase }) => ({
+  myTodos: dataToJS(firebase, 'myTodos'), // state.firebase.data.myTodos due to storeAs
+  allTodos: dataToJS(firebase, 'todos') // state.firebase.data.todos since no storeAs
+}))
+```
+
 ## once
 To load a firebase location once instead of binding, the once option can be used:
 
@@ -33,7 +57,6 @@ Ordering a list of todos by the text parameter of the todo item (placing them in
   // { path: '/todos', queryParams: [ 'orderByChild=text' ]} // object notation
 ])
 ```
-
 
 ## orderByKey
 Order a list by the key of each item. Since push keys contain time, this is also a way of ordering by when items were created.
