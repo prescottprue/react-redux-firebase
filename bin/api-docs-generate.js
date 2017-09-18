@@ -1,7 +1,7 @@
 const exec = require('child_process').exec
 const files = [
   {
-    src: 'connect.js',
+    src: 'firebaseConnect.js',
     dest: 'connect.md'
   },
   {

@@ -17,6 +17,7 @@
   * [Upload](/docs/recipes/upload.md)
   * [Redux Thunk](/docs/recipes/thunks.md)
   * [Redux Form](/docs/recipes/redux-form.md)
+  * [Redux Persist](/docs/recipes/redux-persist.md)
   * [Redux Saga](/docs/recipes/redux-saga.md)
   * [React Native](/docs/recipes/react-native.md)
   * [React Chrome Redux](/docs/recipes/react-chrome-redux.md)

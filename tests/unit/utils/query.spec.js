@@ -6,6 +6,7 @@ import {
   getQueryIdFromPath,
   applyParamsToQuery
 } from '../../../src/utils/query'
+let spy
 const fakeFirebase = {
   _: {
     authUid: '123',
@@ -86,11 +87,31 @@ describe('Utils: Query', () => {
         'value:/todos': 1,
         'value:/todo': 2
       }
+      spy = sinon.spy(console, 'warn')
     })
+    afterEach(() => {
+      console.warn.restore() // eslint-disable-line no-console
+    })
+
     it('removes single watcher', () => {
       unsetWatcher(Firebase, dispatch, 'value', '/todos')
       expect(Firebase._.watchers['value:/todos']).to.be.undefined
     })
+
+    it('handes dispatch on unset listener config', () => {
+      Firebase._.config.dispatchOnUnsetListener = true
+      unsetWatcher(Firebase, dispatch, 'value', '/todos')
+      expect(Firebase._.watchers['value:/todos']).to.be.undefined
+    })
+
+    it('warns for deprecated method name', () => {
+      Firebase._.config.distpatchOnUnsetListener = true
+      // TODO: confirm that console.warn is called with correct message
+      unsetWatcher(Firebase, dispatch, 'value', '/todos')
+      expect(Firebase._.watchers['value:/todos']).to.be.undefined
+      expect(spy).to.have.been.calledWith('config.distpatchOnUnsetListener is Depreceated and will be removed in future versions. Please use config.dispatchOnUnsetListener (dispatch spelled correctly).')
+    })
+
     it('decrements existings watcher count', () => {
       unsetWatcher(Firebase, dispatch, 'value', '/todo')
       expect(Firebase._.watchers['value:/todos']).to.equal(1)
@@ -188,6 +209,17 @@ describe('Utils: Query', () => {
           const child = 'emailAddress'
           const equalTo = '123example@gmail.com'
           const queryParams = createQueryFromParams([`orderByChild=${child}`, `equalTo=${equalTo}`])
+          expect(queryParams.child)
+            .to
+            .equal(child)
+          expect(queryParams.equalTo)
+            .to
+            .equal(equalTo)
+        })
+        it('does not parse if notParsed parameter passed', () => {
+          const child = 'emailAddress'
+          const equalTo = '123'
+          const queryParams = createQueryFromParams([`orderByChild=${child}`, 'notParsed', `equalTo=${equalTo}`])
           expect(queryParams.child)
             .to
             .equal(child)

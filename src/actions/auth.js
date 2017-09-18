@@ -11,12 +11,12 @@ import {
 } from 'lodash'
 import jwtDecode from 'jwt-decode'
 import { actionTypes, defaultJWTProps } from '../constants'
+import { getLoginMethodAndParams } from '../utils/auth'
 import {
   promisesForPopulate,
   getPopulateObjs,
   getChildType
 } from '../utils/populate'
-import { getLoginMethodAndParams } from '../utils/auth'
 
 const {
   SET,
@@ -111,7 +111,7 @@ export const watchUserProfile = (dispatch, firebase) => {
           })
         } else {
           // Convert each populate string in array into an array of once query promises
-          promisesForPopulate(firebase, snap.val(), profileParamsToPopulate)
+          promisesForPopulate(firebase, snap.key, snap.val(), profileParamsToPopulate)
             .then(data => {
               // Dispatch action with profile combined with populated parameters
               // Auto Populate profile
@@ -245,6 +245,10 @@ export const init = (dispatch, firebase) => {
 
   firebase.auth().onAuthStateChanged(authData => {
     if (!authData) {
+      // Run onAuthStateChanged if it exists in config and enableEmptyAuthChanges is set to true
+      if (isFunction(firebase._.config.onAuthStateChanged) && firebase._.config.enableEmptyAuthChanges) {
+        firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
+      }
       return dispatch({ type: LOGOUT })
     }
 
@@ -254,11 +258,12 @@ export const init = (dispatch, firebase) => {
     dispatchLogin(dispatch, authData)
 
     // Run onAuthStateChanged if it exists in config
-    if (firebase._.config.onAuthStateChanged) {
+    if (isFunction(firebase._.config.onAuthStateChanged)) {
       firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
     }
   })
 
+  // set redirect result callback if enableRedirectHandling set to true
   if (firebase._.config.enableRedirectHandling) {
     firebase.auth().getRedirectResult()
       .then((authData) => {
@@ -307,6 +312,8 @@ export const init = (dispatch, firebase) => {
  * @param {Object} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
  * @param {Object} credentials.type - Popup or redirect (only needed for 3rd party provider login)
  * @param {Object} credentials.token - Custom or provider token
+ * @param {firebase.auth.AuthCredential} credentials.credential - Custom or provider token
+ * @param {Array|String} credentials.scopes - Scopes to add to provider (i.e. email)
  * @return {Promise}
  * @private
  */
@@ -322,8 +329,8 @@ export const login = (dispatch, firebase, credentials) => {
       // Handle null response from getRedirectResult before redirect has happened
       if (!userData) return Promise.resolve(null)
 
-      // For email auth return uid (createUser is used for creating a profile)
-      if (userData.email) return userData.uid
+      // For email auth return authData (createUser is used for creating a profile)
+      if (userData.email) return userData
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
       if (method === 'signInWithCustomToken') {
@@ -368,11 +375,13 @@ export const login = (dispatch, firebase, credentials) => {
  * @private
  */
 export const logout = (dispatch, firebase) => {
-  firebase.auth().signOut()
-  dispatch({ type: LOGOUT })
-  firebase._.authUid = null
-  unWatchUserProfile(firebase)
-  return Promise.resolve(firebase)
+  return firebase.auth().signOut()
+    .then(() => {
+      dispatch({ type: LOGOUT })
+      firebase._.authUid = null
+      unWatchUserProfile(firebase)
+      return firebase
+    })
 }
 
 /**
@@ -505,6 +514,127 @@ export const verifyPasswordResetCode = (dispatch, firebase, code) => {
     })
 }
 
+/**
+ * @description Update user profile
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} userData - User data object (response from authenticating)
+ * @param {Object} profile - Profile data to place in new profile
+ * @return {Promise}
+ * @private
+ */
+export const updateProfile = (dispatch, firebase, profileUpdate) => {
+  const { database, _: { config, authUid } } = firebase
+  dispatch({
+    type: actionTypes.PROFILE_UPDATE_START,
+    payload: profileUpdate
+  })
+  const profileRef = database().ref(`${config.userProfile}/${authUid}`)
+  return profileRef
+    .update(profileUpdate)
+    .then(() =>
+       profileRef
+         .once('value')
+         .then((snap) => {
+           dispatch({
+             type: actionTypes.PROFILE_UPDATE_SUCCESS,
+             payload: snap.val()
+           })
+           return snap.val()
+         })
+   )
+    .catch((payload) => {
+      dispatch({
+        type: actionTypes.PROFILE_UPDATE_ERROR,
+        payload
+      })
+    })
+}
+
+ /**
+  * @description Update Auth Object. Internally calls
+  * `firebase.auth().currentUser.updateProfile` as seen [in the firebase docs](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile).
+  * @param {Function} dispatch - Action dispatch function
+  * @param {Object} firebase - Internal firebase object
+  * @param {Object} profileUpdate - Update to be auth object
+  * @return {Promise}
+  * @private
+  */
+export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
+  dispatch({
+    type: actionTypes.AUTH_UPDATE_START,
+    payload: authUpdate
+  })
+  if (!firebase.auth().currentUser) {
+    const msg = 'User must be logged in to update auth.'
+    dispatch({
+      type: actionTypes.AUTH_UPDATE_ERROR,
+      payload: msg
+    })
+    return Promise.reject(msg)
+  }
+  return firebase.auth().currentUser
+    .updateProfile(authUpdate)
+    .then((payload) => {
+      dispatch({
+        type: actionTypes.AUTH_UPDATE_SUCCESS,
+        payload: firebase.auth().currentUser
+      })
+      if (updateInProfile) {
+        return updateProfile(dispatch, firebase, authUpdate)
+      }
+      return payload
+    })
+    .catch((payload) => {
+      dispatch({
+        type: actionTypes.AUTH_UPDATE_ERROR,
+        payload
+      })
+    })
+}
+
+/**
+ * @description Update user's email. Internally calls
+ * `firebase.auth().currentUser.updateEmail` as seen [in the firebase docs](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile).
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {String} newEmail - Update to be auth object
+ * @return {Promise}
+ * @private
+ */
+export const updateEmail = (dispatch, firebase, newEmail, updateInProfile) => {
+  dispatch({
+    type: actionTypes.EMAIL_UPDATE_START,
+    payload: newEmail
+  })
+  if (!firebase.auth().currentUser) {
+    const msg = 'User must be logged in to update email.'
+    dispatch({
+      type: actionTypes.EMAIL_UPDATE_ERROR,
+      payload: msg
+    })
+    return Promise.reject(msg)
+  }
+  return firebase.auth().currentUser
+    .updateEmail(newEmail)
+    .then((payload) => {
+      dispatch({
+        type: actionTypes.EMAIL_UPDATE_SUCCESS,
+        payload: newEmail
+      })
+      if (updateInProfile) {
+        return updateProfile(dispatch, firebase, { email: newEmail })
+      }
+      return payload
+    })
+    .catch((payload) => {
+      dispatch({
+        type: actionTypes.EMAIL_UPDATE_ERROR,
+        payload
+      })
+    })
+}
+
 export default {
   dispatchLoginError,
   dispatchUnauthorizedError,
@@ -518,5 +648,8 @@ export default {
   createUser,
   resetPassword,
   confirmPasswordReset,
-  verifyPasswordResetCode
+  verifyPasswordResetCode,
+  updateAuth,
+  updateProfile,
+  updateEmail
 }

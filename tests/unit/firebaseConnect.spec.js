@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import { createStore, compose, combineReducers } from 'redux'
 import reactReduxFirebase from '../../src/compose'
-import firebaseConnect from '../../src/firebaseConnect'
+import firebaseConnect, { createFirebaseConnect } from '../../src/firebaseConnect'
 
 describe('firebaseConnect', () => {
   class Passthrough extends Component {
@@ -22,9 +22,10 @@ describe('firebaseConnect', () => {
 
     render () {
       return Children.only(
-        cloneElement(this.props.children,
-          { testProp: this.state.test, dynamicProp: this.state.dynamic }
-        ))
+        cloneElement(this.props.children, {
+          testProp: this.state.test,
+          dynamicProp: this.state.dynamic
+        }))
     }
   }
 
@@ -127,4 +128,8 @@ describe('firebaseConnect', () => {
     const containerPrime = firebaseConnect()(Container)
     expect(containerPrime.wrappedComponent).to.equal(Container)
   })
+})
+
+describe('createFirebaseConnect', () => {
+  createFirebaseConnect('store')
 })

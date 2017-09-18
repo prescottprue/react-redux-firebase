@@ -43,7 +43,7 @@ describe('Actions: Query', () => {
       expect(unWatchEvent).to.be.a.function
     })
     it('runs given basic params', () => {
-      expect(unWatchEvent(firebase, dispatch, 'once', 'projects')).to.be.a.function
+      expect(unWatchEvent(firebase, dispatch, { type: 'once', path: 'projects' })).to.be.a.function
     })
   })
 

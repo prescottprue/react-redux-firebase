@@ -29,7 +29,8 @@ Sets data to Firebase.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { set } }) => (
   <button onClick={() => set('some/path', { here: 'is a value' })}>
@@ -56,7 +57,8 @@ Pushes data to Firebase.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { push } }) => (
   <button onClick={() => push('some/path', true)}>
@@ -83,7 +85,8 @@ Updates data on Firebase and sends new data.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { update } }) => (
   <button onClick={() => update('some/path', { here: 'is a value' })}>
@@ -109,7 +112,8 @@ Removes data from Firebase at a given path.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { remove } }) => (
   <button onClick={() => remove('some/path')}>
@@ -137,7 +141,8 @@ exist. Otherwise, it rejects.
 _Basic_
 
 ```javascript
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 const Example = ({ firebase: { uniqueSet } }) => (
   <button onClick={() => uniqueSet('some/unique/path', true)}>
