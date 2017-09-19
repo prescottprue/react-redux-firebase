@@ -1,4 +1,4 @@
-# Redux Form Recipes
+# Redux Saga Recipes
 
 In order to use `react-redux-firebase` instance within sagas, pass it as the second argument of the run function `sagaMiddleware.run(helloSaga, getFirebase)`.
 
