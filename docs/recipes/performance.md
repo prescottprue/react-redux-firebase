@@ -6,28 +6,36 @@
 When optimizing performance in React application, minimizing re-renders of your components often comes first.
 
 #### How?
-Wait until after the `connect` function to convert to JS object from ImmutableJS map (`toJS` helper functions) if they are even necessary at all.
+Wait until after the `connect` function to convert to JS object from ImmutableJS map (`toJS` helper functions) if they are even necessary at all. This way common simple props comparison can correctly check for equality.
+
+##### ES6 Class (React's `PureComponent`)
+React [exports `PureComponent`](https://facebook.github.io/react/docs/react-api.html#react.purecomponent), which implements `shouldComponentUpdate()` with shallow prop and state comparison.
 
 ```js
-export const Todos = ({ todos }) => {
-  if (!isLoaded(todos)) {
-    return <div>Loading...</div>
+import React, { PureComponent } from 'react';
+import { compose } from 'redux';
+import { isLoaded, isEmpty, toJS } from 'react-redux-firebase';
+
+class Todos extends PureComponent {
+  render() {
+    const { todos } = this.props
+    if (!isLoaded(todos)) {
+      return <div>Loading...</div>
+    }
+    if (!isEmpty(todos)) {
+      return <div>There are no todos</div>
+    }
+    return (
+      toJS(todos) // convert ImmutableJS Map to Array
+        .map((todo, idx) => {
+          return (
+            <div key={`${todo.key}-${idx}`}> // key is unique to todo and its location in the list
+              <span>{todo.owner}</span>
+            </div>
+          )
+        })
+    )
   }
-  if (!isEmpty(todos)) {
-    return <div>There are no todos</div>
-  }
-  return (
-    todos
-    .valueSeq()
-    .map((todo, idx) => {
-      const todoVal = todo.toJS() // now we convert toJS instead of doing it in connect
-      return (
-        <div key={`${todo.key}-${idx}`}> // key is unique to todo and its location in the list
-          <span>{todo.owner}</span>
-        </div>
-      )
-    })
-  )
 }
 
 export default compose(
@@ -37,6 +45,46 @@ export default compose(
   connect((state) => {
     todos: state.firebase.getIn(['ordered', 'todos']) // pass the immutable map instead of converting to JS
   })
+)(Todos)
+```
+
+##### Functional (recompose's `pure`)
+
+What about with functional components? [`recompose`](https://github.com/acdlite/recompose) is a utility library for easily creating/working with functional components. One of the utilities `recompose` exports is called `pure`, which can be used like so:
+
+```js
+import React from 'react';
+import { compose } from 'redux';
+import { pure } from 'recompose';
+import { isLoaded, isEmpty, toJS } from 'react-redux-firebase';
+
+export const Todos = ({ todos }) => {
+  if (!isLoaded(todos)) {
+    return <div>Loading...</div>
+  }
+  if (!isEmpty(todos)) {
+    return <div>There are no todos</div>
+  }
+  return (
+    toJS(todos) // convert ImmutableJS Map to Array
+      .map((todo, idx) => {
+        return (
+          <div key={`${todo.key}-${idx}`}> // key is unique to todo and its location in the list
+            <span>{todo.owner}</span>
+          </div>
+        )
+      })
+  )
+}
+
+export default compose(
+  firebaseConnect([
+    'todos' // { path: 'todos' } // object notation
+  ]),
+  connect((state) => {
+    todos: state.firebase.getIn(['ordered', 'todos']) // pass the immutable map instead of converting to JS
+  }),
+  pure
 )(Todos)
 ```
 
