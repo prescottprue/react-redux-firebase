@@ -22,7 +22,9 @@ describe('firebaseConnect', () => {
 
     render () {
       return Children.only(
-        cloneElement(this.props.children, { testProp: this.state.test, dynamicProp: this.state.dynamic }))
+        cloneElement(this.props.children,
+          { testProp: this.state.test, dynamicProp: this.state.dynamic }
+        ))
     }
   }
 

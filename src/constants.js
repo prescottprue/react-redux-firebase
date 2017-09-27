@@ -21,7 +21,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @property {String} LOGIN_ERROR - `@@reactReduxFirebase/LOGIN_ERROR`
  * @property {String} NO_VALUE - `@@reactReduxFirebase/NO_VALUE`
  * @property {String} UNAUTHORIZED_ERROR - `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
- * @property {String} ERROR - `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
+ * @property {String} ERROR - `@@reactReduxFirebase/ERROR`
  * @property {String} SET_LISTENER - `@@reactReduxFirebase/SET_LISTENER`
  * @property {String} UNSET_LISTENER - `@@reactReduxFirebase/UNSET_LISTENER`
  * @property {String} AUTHENTICATION_INIT_STARTED - `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`
@@ -102,6 +102,8 @@ export const actionTypes = {
  * logging out.
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
  * user profile when logging in.
+ * @property {Boolean} resetBeforeLogin - `true` Whether or not to reset auth
+ * and profile when logging in (see issue #254 for more details).
  * @property {Boolean} enableRedirectHandling - `true` Whether or not to enable
  * redirect handling. This must be disabled if environment is not http/https
  * such as with react-native.
@@ -115,19 +117,21 @@ export const actionTypes = {
  * profileParamsToPopulate config.
  * @property {Boolean} setProfilePopulateResults - `true` Whether or not to
  * call SET actions for data that results from populating profile to redux under
- * the data path. For example: role paramter on profile populated from 'roles'
+ * the data path. For example role parameter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
  * is loaded (places it in data/roles).
  * @property {Boolean} dispatchOnUnsetListener - `false` Whether or not to
  * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
  * Setting this to true allows an action to be called that removes data
  * from redux (which might not always be expected).
+ * @type {Object}
 */
 export const defaultConfig = {
   userProfile: null,
   presence: null,
   sessions: 'sessions',
   enableLogging: false,
+  resetBeforeLogin: true,
   updateProfileOnLogin: true,
   enableRedirectHandling: true,
   autoPopulateProfile: false,

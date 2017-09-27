@@ -1,7 +1,26 @@
-import { getLoginMethodAndParams } from '../../../src/utils/auth'
+import {
+  createAuthProvider,
+  getLoginMethodAndParams
+} from '../../../src/utils/auth'
 
 describe('Utils: Auth', () => {
-  describe('getLoginMethodAndParams', () => {
+  describe('createAuthProvider', () => {
+    it('creates valid Auth Provider', () => {
+      expect(createAuthProvider(firebase, 'google', ['email']))
+        .to.be.a.function
+    })
+
+    it('handles string list of scopes', () => {
+      expect(createAuthProvider(firebase, 'google', 'email'))
+        .to.be.a.function
+    })
+
+    it('handles customAuthParameters config option', () => {
+      firebase._.config.customAuthParameters = { google: [{prompt: 'select_account'}] }
+      expect(createAuthProvider(firebase, 'google', 'email'))
+        .to.be.a.function
+    })
+
     it('throws for invalid provider', () => {
       const provider = 'asdf'
       expect(() => getLoginMethodAndParams(firebase, { provider: 'asdf' }))
@@ -11,6 +30,7 @@ describe('Utils: Auth', () => {
       expect(getLoginMethodAndParams(firebase, { provider: 'google' }))
         .to.include.keys('method')
     })
+
     it('twitter provider', () => {
       // TODO: Confirm that addScope
       expect(getLoginMethodAndParams(firebase, { provider: 'twitter' }))

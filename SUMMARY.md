@@ -23,6 +23,7 @@
   * [React Native](/docs/recipes/react-native.md)
   * [React Chrome Redux](/docs/recipes/react-chrome-redux.md)
   * [Server Side Rendering](/docs/recipes/ssr.md)
+  * [Performance](/docs/recipes/performance.md)
 * [API Reference](/docs/api/README.md)
   * [constants](/docs/api/constants.md)
   * [firebaseConnect](/docs/api/connect.md)

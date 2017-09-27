@@ -1,6 +1,6 @@
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from './populate'
-import { isNaN, forEach, isObject, size } from 'lodash'
+import { isNaN, forEach, size } from 'lodash'
 
 const tryParseToNumber = (value) => {
   const result = Number(value)
@@ -98,14 +98,15 @@ export const getWatcherCount = (firebase, event, path, queryId = undefined) => {
 export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefined) => {
   let id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   path = path.split('#')[0]
-  if (firebase._.watchers[id] <= 1) {
-    delete firebase._.watchers[id]
+  const { watchers } = firebase._
+  if (watchers[id] <= 1) {
+    delete watchers[id]
     if (event !== 'first_child' && event !== 'once') {
       firebase.database().ref().child(path).off(event)
       // TODO: Remove config.distpatchOnUnsetListener
     }
-  } else if (firebase._.watchers[id]) {
-    firebase._.watchers[id]--
+  } else if (watchers[id]) {
+    watchers[id]--
   }
 
   dispatch({ type: actionTypes.UNSET_LISTENER, path, payload: { id } })

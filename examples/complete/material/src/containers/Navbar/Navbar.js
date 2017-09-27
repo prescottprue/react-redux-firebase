@@ -122,7 +122,7 @@ export default class Navbar extends Component {
           </Link>
         }
         showMenuIconButton={false}
-        iconElementRight={rightMenu}
+        iconElementRight={isLoaded(auth, account) ? rightMenu : null}
         iconStyleRight={authExists ? avatarStyles.wrapper : {}}
         className={classes.appBar}
       />

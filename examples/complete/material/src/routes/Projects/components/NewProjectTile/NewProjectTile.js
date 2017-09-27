@@ -9,10 +9,11 @@ const iconStyle = { width: iconSize, height: iconSize }
 const color = '#979797'
 const hoverColor = '#616161'
 
-export const NewProjectTile = ({ onClick }) =>
+export const NewProjectTile = ({ onClick }) => (
   <Paper className={classes.container} onClick={onClick}>
     <ContentAddCircle color={color} hoverColor={hoverColor} style={iconStyle} />
   </Paper>
+)
 
 NewProjectTile.propTypes = {
   onClick: PropTypes.func

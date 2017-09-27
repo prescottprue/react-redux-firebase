@@ -10,33 +10,34 @@ import classes from './SignupForm.scss'
 const SignupForm = ({ pristine, submitting, handleSubmit }) =>
   <form className={classes.container} onSubmit={handleSubmit}>
     <Field
-      name='username'
+      name="username"
       component={TextField}
-      floatingLabelText='Username'
+      floatingLabelText="Username"
       validate={required}
     />
     <Field
-      name='email'
+      name="email"
       component={TextField}
-      floatingLabelText='Email'
+      floatingLabelText="Email"
       validate={[required, validateEmail]}
     />
     <Field
-      name='password'
+      name="password"
       component={TextField}
-      floatingLabelText='Password'
-      type='password'
+      floatingLabelText="Password"
+      type="password"
       validate={required}
     />
     <div className={classes.submit}>
       <RaisedButton
-        label='Signup'
+        label="Signup"
         primary
-        type='submit'
+        type="submit"
         disabled={pristine || submitting}
       />
     </div>
   </form>
+)
 
 SignupForm.propTypes = {
   pristine: PropTypes.bool.isRequired, // added by redux-form

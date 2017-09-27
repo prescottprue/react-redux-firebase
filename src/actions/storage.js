@@ -65,9 +65,11 @@ export const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
  * is included, object with snapshot, key and File is returned.
  * @private
  */
-export const uploadFile = (dispatch, firebase, { path, file, dbPath }) =>
-  uploadFileWithProgress(dispatch, firebase, { path, file })
+export const uploadFile = (dispatch, firebase, { path, file, dbPath, name }) => {
+  dispatch({ type: FILE_UPLOAD_START, payload: { path, file } })
+  return firebase.storage().ref(`${path}/${file.name}`).put(file)
     .then((res) => {
+      dispatch({ type: FILE_UPLOAD_COMPLETE, payload: file })
       if (!dbPath || !firebase.database) {
         return res
       }
@@ -84,6 +86,11 @@ export const uploadFile = (dispatch, firebase, { path, file, dbPath }) =>
         .push(fileData)
         .then(snapshot => ({ snapshot, key: snapshot.key, File: fileData }))
     })
+    .catch((err) => {
+      dispatch({ type: FILE_UPLOAD_ERROR, path, payload: err })
+      return Promise.reject(err)
+    })
+}
 
 /**
  * @description Upload multiple files to Firebase Storage with option to store

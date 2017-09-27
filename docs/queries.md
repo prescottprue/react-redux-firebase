@@ -1,6 +1,8 @@
 # Queries
 Query listeners are attached by using the `firebaseConnect` higher order component. `firebaseConnect` accepts an array of paths for which to create queries. When listening to paths, it is possible to modify the query with any of [Firebase's included query methods](https://firebase.google.com/docs/reference/js/firebase.database.Query).
 
+Query listeners are attached by using the `firebaseConnect` higher order component. `firebaseConnect` accepts an array of paths for which to create queries. When listening to paths, it is possible to modify the query with any of [Firebase's included query methods](https://firebase.google.com/docs/reference/js/firebase.database.Query).
+
 **NOTE:**
 By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use [`storeAs` (more below)](#storeAs).
 
@@ -56,7 +58,6 @@ Ordering a list of todos by the text parameter of the todo item (placing them in
   // { path: '/todos', queryParams: [ 'orderByChild=text' ]} // object notation
 ])
 ```
-
 
 ## orderByKey
 Order a list by the key of each item. Since push keys contain time, this is also a way of ordering by when items were created.
@@ -221,6 +222,41 @@ Can be used to keep internal parsing from happening. Useful when attempting to s
     ]
   }
 ])
+```
+
+
+## storeAs {#populate}
+
+By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use `storeAs`:
+
+#### Examples
+1. Querying the same path with different query parameters
+
+```js
+@firebaseConnect(props => [
+  { path: 'projects' }
+  { path: 'projects', storeAs: 'myProjects', queryParams: ['orderByChild=uid', '123'] }
+])
+@connect(({ firebase }, props) => ({
+  projects: populatedDataToJS(firebase, 'projects'),
+  myProjects: populatedDataToJS(firebase, 'myProjects'), // use storeAs path to gather from redux
+}))
+```
+
+## ordered {#ordered}
+
+In order to get ordered data, use `orderedToJS`
+
+#### Examples
+1. Get list of projects ordered by key
+
+```js
+@firebaseConnect(props => [
+  { path: 'projects', queryParams: ['orderByKey'] }
+])
+@connect(({ firebase }, props) => ({
+  projects: orderedToJS(firebase, 'projects'),
+}))
 ```
 
 ## Populate {#populate}

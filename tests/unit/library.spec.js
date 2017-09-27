@@ -1,4 +1,3 @@
-/* global describe expect it */
 import src from '../../src'
 
 describe('module', () => {

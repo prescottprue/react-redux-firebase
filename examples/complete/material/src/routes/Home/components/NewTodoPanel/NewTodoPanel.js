@@ -35,9 +35,8 @@ export default class NewTodoPanel extends Component {
           <IconButton
             onClick={this.handleAdd}
             disabled={disabled}
-            tooltipPosition='top-center'
-            tooltip={disabled ? 'Login To Add Todo' : 'Add Todo'}
-          >
+            tooltipPosition="top-center"
+            tooltip={disabled ? 'Login To Add Todo' : 'Add Todo'}>
             <ContentAdd />
           </IconButton>
         </div>

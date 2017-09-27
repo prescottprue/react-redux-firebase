@@ -14,6 +14,7 @@ import { promisesForPopulate } from '../../../src/utils/populate'
 
 let functionSpy
 let dispatchSpy
+let res
 const dispatch = sinon.spy()
 const fakeLogin = { email: 'test@tst.com', password: 'asdfasdf', role: 'admin' }
 const fakeFirebase = {
@@ -78,6 +79,8 @@ const fakeFirebase = {
         : Promise.resolve(),
     verifyPasswordResetCode: (code) => code === 'error'
       ? Promise.reject(new Error('some'))
+        ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
+        : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] })
       : Promise.resolve('success')
   })
 }
@@ -102,22 +105,27 @@ describe('Actions: Auth', () => {
     beforeEach(() => {
       functionSpy = sinon.spy(dispatch)
     })
+
     afterEach(() => {
       firebase._.config.profileParamsToPopulate = undefined
     })
+
     it('calls profile unwatch', () => {
       watchUserProfile(dispatch, fakeFirebase)
       expect(firebase._.profileWatch).to.be.a.function
     })
+
     it('sets profile watch function', () => {
       watchUserProfile(dispatch, firebase)
       expect(firebase._.profileWatch).to.be.a.function
     })
+
     it('sets populates using array', () => {
       firebase._.config.profileParamsToPopulate = ['asdfasdf']
       watchUserProfile(dispatch, firebase)
       expect(firebase._.profileWatch).to.be.a.function
     })
+
     it('sets populates using string', () => {
       firebase._.config.profileParamsToPopulate = 'asdfasdf'
       firebase._.config.setProfile = 'asdfasdf'
@@ -159,24 +167,26 @@ describe('Actions: Auth', () => {
   })
 
   describe('login', () => {
-    it('handles invalid email login', () =>
-      login(dispatch, fakeFirebase, fakeLogin)
-        .catch((err) => {
-          expect(err.code).to.equal('auth/user-not-found')
-        })
-    , 4000)
-    it('handles invalid token login', () =>
-      login(dispatch, fakeFirebase, { token: 'test@tst.com' })
-        .catch((err) => {
-          expect(err.code).to.equal('auth/invalid-custom-token')
-        })
-    , 4000)
-    it('handles token login', () =>
-      login(dispatch, fakeFirebase, { token: 'asdfasdf' }, { uid: 'asdfasdf' })
-        .then((authData) => {
-          expect(authData).to.be.an.object
-        })
-    , 4000)
+    it('handles invalid email login', async () => {
+      try {
+        await login(dispatch, firebase, fakeLogin)
+      } catch (err) {
+        expect(err.code).to.equal('auth/user-not-found')
+      }
+    })
+
+    it('handles invalid token login', async () => {
+      try {
+        await login(dispatch, firebase, { token: 'test@tst.com' })
+      } catch (err) {
+        expect(err.code).to.equal('auth/invalid-custom-token')
+      }
+    })
+
+    it('handles token login', async () => {
+      res = await login(dispatch, firebase, { token: 'asdfasdf' }, { uid: 'asdfasdf' })
+      expect(res).to.be.an.object
+    })
   })
 
   describe('logout', () => {
@@ -186,93 +196,100 @@ describe('Actions: Auth', () => {
     afterEach(() => {
       firebase.auth().signOut.restore()
     })
-    it('calls firebase.auth().signOut()', () => {
-      return logout(dispatch, firebase)
-        .then(() => {
-          expect(functionSpy).to.have.been.calledOnce
-        })
+
+    it('calls firebase.auth().signOut()', async () => {
+      await logout(dispatch, firebase)
+      expect(functionSpy).to.have.been.calledOnce
     })
 
-    it('sets authUid to null', () => {
+    it('sets authUid to null', async () => {
       fakeFirebase._.authUid = 'asdfasdf'
-      return logout(dispatch, fakeFirebase)
-        .then(() => {
-          expect(fakeFirebase._.authUid).to.be.null
-        })
+      await logout(dispatch, fakeFirebase)
+      expect(fakeFirebase._.authUid).to.be.null
     })
     // TODO: dispatch spy not being called
-    it.skip('calls dispatch', () => {
+    it.skip('calls dispatch', async () => {
       dispatchSpy = sinon.spy(dispatch)
-      return logout(dispatch, fakeFirebase)
-        .then(() => {
-          expect(dispatchSpy).to.have.been.calledOnce
-        })
+      await logout(dispatch, fakeFirebase)
+      expect(dispatchSpy).to.have.been.calledOnce
     })
   })
 
   describe('createUser', () => {
-    it('creates user', () =>
-      createUser(dispatch, fakeFirebase, fakeLogin, fakeLogin)
-        .then(userData => {
-          expect(userData).to.be.an.object
-        })
-    )
-    it('creates user without profile', () =>
-      createUser(dispatch, fakeFirebase, fakeLogin)
-        .then(userData => {
-          expect(userData).to.be.an.object
-        })
-    )
-    it('handles no email', () =>
-      createUser(dispatch, fakeFirebase, { password: fakeLogin.password })
-        .catch((err) => {
-          expect(err).to.be.an.object
-        })
-    )
-    it('handles no password', () =>
-      createUser(dispatch, fakeFirebase, { email: fakeLogin.email })
-        .catch((err) => {
-          expect(err).to.be.an.object
-        })
-    )
-    it('handles error with createUserWithEmailAndPassword', () =>
-      createUser(dispatch, fakeFirebase, { email: 'error', password: 'error' })
-        .catch((err) => {
-          expect(err).to.be.an.object
-        })
-    )
-    it('handles error with login', () =>
-      createUser(dispatch, fakeFirebase, { email: 'error2', password: 'error2' })
-        .catch((err) => {
-          expect(err).to.be.an.object
-        })
-    )
-    it('handles user-not-found error', () =>
-      createUser(dispatch, fakeFirebase, { email: 'error3', password: 'error2' })
-        .catch((err) => {
-          expect(err).to.be.an.object
-        })
-    )
+    it('creates user', async () => {
+      res = await createUser(dispatch, fakeFirebase, fakeLogin, fakeLogin)
+      expect(res).to.be.an.object
+    })
+
+    it('creates user without profile', async () => {
+      res = await createUser(dispatch, fakeFirebase, fakeLogin)
+      expect(res).to.be.an.object
+    })
+
+    it('handles no email', async () => {
+      try {
+        await createUser(dispatch, fakeFirebase, { password: fakeLogin.password })
+      } catch (err) {
+        expect(err).to.be.an.object
+      }
+    })
+
+    it('handles no password', async () => {
+      try {
+        await createUser(dispatch, fakeFirebase, { email: fakeLogin.email })
+      } catch (err) {
+        expect(err).to.be.an.object
+      }
+    })
+
+    it('handles error with createUserWithEmailAndPassword', async () => {
+      try {
+        await createUser(dispatch, fakeFirebase, { email: 'error', password: 'error' })
+      } catch (err) {
+        expect(err).to.be.an.object
+      }
+    })
+
+    it('handles error with login', async () => {
+      try {
+        await createUser(dispatch, fakeFirebase, { email: 'error2', password: 'error2' })
+      } catch (err) {
+        expect(err).to.be.an.object
+      }
+    })
+
+    it('handles user-not-found error', async () => {
+      try {
+        res = await createUser(dispatch, fakeFirebase, { email: 'error3', password: 'error2' })
+      } catch (err) {
+        expect(err.code).to.equal('auth/user-not-found')
+      }
+    })
   })
 
   describe('resetPassword', () => {
-    it('resets password for real user', () => {
-      return resetPassword(dispatch, fakeFirebase, 'test@test.com')
-        .catch((err) => {
-          expect(err.code).to.equal('auth/user-not-found')
-        })
+    it('resets password for real user', async () => {
+      try {
+        res = await resetPassword(dispatch, fakeFirebase, 'test@test.com')
+      } catch (err) {
+        expect(err.code).to.equal('auth/user-not-found')
+      }
     })
-    it('dispatches error for invalid user', () => {
-      return resetPassword(dispatch, fakeFirebase, 'error')
-        .catch((err) => {
-          expect(err.code).to.equal('auth/user-not-found')
-        })
+
+    it('dispatches error for invalid user', async () => {
+      try {
+        res = await resetPassword(dispatch, fakeFirebase, 'error')
+      } catch (err) {
+        expect(err.code).to.equal('auth/user-not-found')
+      }
     })
-    it('dispatches for all other errors', () => {
-      return resetPassword(dispatch, fakeFirebase, 'error2')
-        .catch((err) => {
-          expect(err.code).to.be.a.string
-        })
+
+    it('dispatches for all other errors', async () => {
+      try {
+        res = await resetPassword(dispatch, fakeFirebase, 'error2')
+      } catch (err) {
+        expect(err.code).to.be.a.string
+      }
     })
   })
 
@@ -283,59 +300,71 @@ describe('Actions: Auth', () => {
           expect(err).to.be.undefined
         })
     })
+
     describe('handles error code: ', () => {
-      it('auth/expired-action-code', () => {
-        return confirmPasswordReset(dispatch, fakeFirebase, 'auth/expired-action-code', 'error')
-          .catch((err) => {
-            expect(err.code).to.be.a.string
-          })
+      it('auth/expired-action-code', async () => {
+        try {
+          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/expired-action-code', 'error')
+        } catch (err) {
+          expect(err.code).to.be.a.string
+        }
       })
-      it('auth/invalid-action-code', () => {
-        return confirmPasswordReset(dispatch, fakeFirebase, 'auth/invalid-action-code', 'error')
-          .catch((err) => {
-            expect(err.code).to.be.a.string
-          })
+
+      it('auth/invalid-action-code', async () => {
+        try {
+          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/invalid-action-code', 'error')
+        } catch (err) {
+          expect(err.code).to.be.a.string
+        }
       })
-      it('auth/user-disabled', () => {
-        return confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-disabled', 'error')
-          .catch((err) => {
-            expect(err.code).to.be.a.string
-          })
+
+      it('auth/user-disabled', async () => {
+        try {
+          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-disabled', 'error')
+        } catch (err) {
+          expect(err.code).to.be.a.string
+        }
       })
-      it('auth/user-not-found', () => {
-        return confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-not-found', 'error')
-          .catch((err) => {
-            expect(err.code).to.be.a.string
-          })
+
+      it('auth/user-not-found', async () => {
+        try {
+          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-not-found', 'error')
+        } catch (err) {
+          expect(err.code).to.be.a.string
+        }
       })
-      it('auth/weak-password', () => {
-        return confirmPasswordReset(dispatch, fakeFirebase, 'auth/weak-password', 'error')
-          .catch((err) => {
-            expect(err.code).to.be.a.string
-          })
+
+      it('auth/weak-password', async () => {
+        try {
+          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/weak-password', 'error')
+        } catch (err) {
+          expect(err.code).to.be.a.string
+        }
       })
-      it('other', () => {
-        return confirmPasswordReset(dispatch, fakeFirebase, 'asdfasdf', 'error')
-          .catch((err) => {
-            expect(err.code).to.be.a.string
-          })
+
+      it('other', async () => {
+        try {
+          res = await confirmPasswordReset(dispatch, fakeFirebase, 'asdfasdf', 'error')
+        } catch (err) {
+          expect(err.code).to.be.a.string
+        }
       })
     })
   })
 
   describe('verifyPasswordResetCode', () => {
-    it('resolves for valid code', () => {
-      return verifyPasswordResetCode(dispatch, fakeFirebase, 'test')
-        .then((res) => {
-          expect(res).to.equal('success')
-        })
+    it('resolves for valid code', async () => {
+      res = await verifyPasswordResetCode(dispatch, fakeFirebase, 'test')
+      expect(res).to.equal('success')
     })
+
     describe('handles error code: ', () => {
-      it('other', () => {
-        return verifyPasswordResetCode(dispatch, fakeFirebase, 'error')
-          .catch((err) => {
-            expect(err.code).to.be.a.string
-          })
+      it('other', async () => {
+        try {
+          res = await verifyPasswordResetCode(dispatch, fakeFirebase, 'error')
+        } catch (err) {
+          expect(err.code).to.be.a.string
+        }
       })
     })
   })

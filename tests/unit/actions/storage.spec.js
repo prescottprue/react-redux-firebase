@@ -35,9 +35,7 @@ const fakeFirebase = {
           funcsObj.complete()
           return unListen
         },
-        then: () => {
-
-        }
+        then: () => Promise.resolve({})
       }),
       delete: () => Promise.resolve(({
 
@@ -76,12 +74,18 @@ describe('Actions: Storage', () => {
       expect(uploadFile).to.be.a.function
     })
 
-    it.skip('runs given basic params', () =>
-      uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
-        .then((snap) => {
-          expect(spy).to.have.been.calledOnce
-          expect(snap).to.be.an.object
-        })
+    it('runs given basic params', () =>
+      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } }))
+        .to
+        .eventually
+        .become({})
+    )
+
+    it('handles dbPath', () =>
+      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' }, dbPath: 'projects' }))
+        .to
+        .eventually
+        .become({})
     )
   })
 

@@ -152,7 +152,6 @@ describe('Helpers:', () => {
             .have
             .property('displayName', 'scott')
         })
-
         it('populates childParam', () => {
           const path = 'projects/CDF'
           const rootName = 'users'

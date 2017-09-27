@@ -1,6 +1,6 @@
 # Storage
 
-Firebase Storage is available within components by using `this.props.firebase.storage()`. This method is equivalent to Firebase's `firebase.storage()` method, meaning you can reference the [Firebase Storage Docs](https://firebase.google.com/docs/storage/web/upload-files) for full list of methods and examples.
+Firebase Storage is available within components by using `this.props.firebase.storage()`. This method is equivalent to Firebase's `firebase.storage()` method, meaning you can reference the [Firebase Storage Docs](https://firebase.google.com/docs/storage/web/upload-files) for the full list of methods and examples.
 
 For Examples of how to use these methods, please visit the [recipes section](/docs/recipes).
 

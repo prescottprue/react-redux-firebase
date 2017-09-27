@@ -273,6 +273,8 @@ export const init = (dispatch, firebase) => {
  * @param {Object} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
  * @param {Object} credentials.type - Popup or redirect (only needed for 3rd party provider login)
  * @param {Object} credentials.token - Custom or provider token
+ * @param {firebase.auth.AuthCredential} credentials.credential - Custom or provider token
+ * @param {Array|String} credentials.scopes - Scopes to add to provider (i.e. email)
  * @return {Promise}
  * @private
  */
@@ -486,9 +488,11 @@ export const verifyPasswordResetCode = (dispatch, firebase, code) => {
  * @private
  */
 export const updateProfile = (dispatch, firebase, profileUpdate) => {
-  dispatch({ type: actionTypes.PROFILE_UPDATE_START, payload: profileUpdate })
-
   const { database, _: { config, authUid } } = firebase
+  dispatch({
+    type: actionTypes.PROFILE_UPDATE_START,
+    payload: profileUpdate
+  })
   const profileRef = database().ref(`${config.userProfile}/${authUid}`)
   return profileRef
     .update(profileUpdate)
@@ -576,4 +580,21 @@ export const updateEmail = (dispatch, firebase, newEmail, updateInProfile) => {
       dispatch({ type: actionTypes.EMAIL_UPDATE_ERROR, payload })
       return Promise.reject(payload)
     })
+}
+
+export default {
+  dispatchLoginError,
+  unWatchUserProfile,
+  watchUserProfile,
+  init,
+  createUserProfile,
+  login,
+  logout,
+  createUser,
+  resetPassword,
+  confirmPasswordReset,
+  verifyPasswordResetCode,
+  updateAuth,
+  updateProfile,
+  updateEmail
 }

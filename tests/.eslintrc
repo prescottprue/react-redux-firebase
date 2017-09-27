@@ -7,8 +7,12 @@ globals:
   afterEach: true
   before: true
   beforeEach: true
+  it: true
+  describe: true
   Firebase: true
   firebase: true
+  fbConfig: true
+  uid: true
 
 rules:
   no-unused-expressions: [0]

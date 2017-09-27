@@ -98,12 +98,6 @@ describe('Utils: Populate', () => {
         res = await promisesForPopulate(Firebase, '', { 1: { collaborators: { [uid]: true, 'ABC123': true } } }, populates)
         expect(res).to.have.deep.property(`users.${uid}`)
       })
-
-      it('with property containing invalid child id', async () => {
-        res = await promisesForPopulate(Firebase, '', { 1: { collaborators: ['1111', '123'] } }, populates)
-        expect(res.users).to.have.keys('123') // sets valid child
-        expect(res.users).to.not.have.keys('111') // does not gather data for invalid child
-      })
     })
   })
 })

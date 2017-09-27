@@ -3,7 +3,12 @@
 [![License][license-image]][license-url]
 [![Code Style][code-style-image]][code-style-url]
 
-This is a "real-world" example and is deployed to [demo.react-redux-firebase.com](https://demo.react-redux-firebase.com). Project was based on the output of [`generator-react-firebase`](https://github.com/prescottprue/generator-react-firebase), which generates a full project starter with `react-redux-firebase` included.
+## What is Shown
+* Route protection using `redux-auth-wrapper`
+* Data input/validation using `redux-form`
+* Async & Sync route loading
+* Real CI and Deployment settings (including `prod` and `stage` environments)
+* Using different instances of Firebase based on environment
 
 ## Requirements
 * node `^5.0.0` (`6.11.0` suggested)
@@ -22,23 +27,10 @@ While developing, you will probably rely mostly on `npm start`; however, there a
 |`start`            |Serves your app at `localhost:3000` and displays [Webpack Dashboard](https://github.com/FormidableLabs/webpack-dashboard)|
 |`start:simple`     |Serves your app at `localhost:3000` without [Webpack Dashboard](https://github.com/FormidableLabs/webpack-dashboard)|
 |`build`            |Builds the application to ./dist|
-|`test`             |Runs unit tests with Karma. See [testing](#testing)|
-|`test:watch`       |Runs `test` in watch mode to re-run tests when changed|
 |`lint`             |[Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors|
 |`lint:fix`         |Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix)|
 
-Visit the config file ([`src/config.js`](/src/config.js)) to change config within the project.
-
-This usually gets ignored from git tracking (through `.gitignore`) because either:
-* it is built within a continuous integration environment based on environment/branch settings then deployed
-* your local version is deployed if you are using `firebase deploy`
-
-## What is Shown
-* Route protection using `redux-auth-wrapper`
-* Data input/validation using `redux-form`
-* Async & Sync route loading
-* Real CI and Deployment settings (including `prod` and `stage` environments)
-* Using different instances of Firebase based on environment
+[Husky](https://github.com/typicode/husky) is used to enable `prepush` hook capability. The `prepush` script currently runs `eslint`, which will keep you from pushing if there is any lint within your code. If you would like to disable this, remove the `prepush` script from the `package.json`.
 
 [Husky](https://github.com/typicode/husky) is used to enable `prepush` hook capability. The `prepush` script currently runs `eslint`, which will keep you from pushing if there is any lint within your code. If you would like to disable this, remove the `prepush` script from the `package.json`.
 
@@ -121,6 +113,6 @@ For more options on CI settings checkout the [firebase-ci docs](https://github.c
 **NOTE:** You can use `firebase serve` to test how your application will work when deployed to Firebase, but make sure you run `npm run build` first.
 
 [license-image]: https://img.shields.io/npm/l/material.svg?style=flat-square
-[license-url]: https://github.com/prescottprue/material/blob/master/LICENSE
+[license-url]: https://github.com/testuser/material/blob/master/LICENSE
 [code-style-image]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
 [code-style-url]: http://standardjs.com/

@@ -74,6 +74,7 @@ export default connect(({ firebase: data: { todos }, auth, profile }) => ({
   todos,
   profile, // pass profile data as this.props.profile
   auth // pass auth data as this.props.auth
+>>>>>>> master
 }))(fbWrapped)
 ```
 

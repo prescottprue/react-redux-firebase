@@ -27,7 +27,8 @@
         },
         {
             "value": "http://docs.react-redux-firebase.com/history/v1.5.0/",
-            "text": "Version 1.5.0"
+            "text": "Version 1.5.0",
+            "selected": true
         },
         {
             "value": "http://docs.react-redux-firebase.com/history/v2.0.0/",

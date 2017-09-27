@@ -54,7 +54,10 @@ const createAuthProvider = (firebase, providerName, scopes) => {
  * @param {Array|String} credentials.scopes - Scopes to add to provider (i.e. email)
  * @private
  */
-export const getLoginMethodAndParams = (firebase, { email, password, provider, type, token, scopes, credential }) => {
+export const getLoginMethodAndParams = (firebase, {email, password, provider, type, token, scopes, credential}) => {
+  if (credential) {
+    return { method: 'signInWithCredential', params: [ credential ] }
+  }
   if (provider) {
     // Verify providerName is valid
     if (supportedAuthProviders.indexOf(provider.toLowerCase()) === -1) {
@@ -68,9 +71,6 @@ export const getLoginMethodAndParams = (firebase, { email, password, provider, t
       return { method: 'signInWithPopup', params: [ authProvider ] }
     }
     return { method: 'signInWithRedirect', params: [ authProvider ] }
-  }
-  if (credential) {
-    return { method: 'signInWithCredential', params: [ credential ] }
   }
   if (token) {
     return { method: 'signInWithCustomToken', params: [ token ] }

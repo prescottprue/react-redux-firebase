@@ -49,9 +49,7 @@ if (env === 'production') {
   )
 
   if (process.env.SIZE) {
-    config.plugins.push(
-      new BundleAnalyzerPlugin()
-    )
+    config.plugins.push(new BundleAnalyzerPlugin())
   }
 }
 

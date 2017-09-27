@@ -31,14 +31,10 @@ export default class Account extends Component {
     })
   }
 
-  state = { modalOpen: false }
-
-  handleLogout = () => this.props.firebase.logout()
-
-  toggleModal = () => {
-    this.setState({
-      modalOpen: !this.state.modalOpen
-    })
+  updateAccount = newAccount => {
+    const { firebase: { update }, auth } = this.props
+    // corresponds to /users/${uid}
+    return update(`${fbReduxSettings.userProfile}/${auth.uid}`, newAccount)
   }
 
   updateAccount = newData =>
@@ -62,7 +58,13 @@ export default class Account extends Component {
             <div className={classes.avatar}>
               <img
                 className={classes.avatarCurrent}
-                src={(profile && profile.avatarUrl) || defaultUserImageUrl}
+                src={
+                  account && account.avatarUrl ? (
+                    account.avatarUrl
+                  ) : (
+                    defaultUserImageUrl
+                  )
+                }
                 onClick={this.toggleModal}
               />
             </div>
@@ -71,6 +73,7 @@ export default class Account extends Component {
                 initialValues={profile}
                 account={profile}
                 onSubmit={this.updateAccount}
+                initialValues={account}
               />
             </div>
           </div>

@@ -9,35 +9,35 @@ import { RECOVER_PATH, LOGIN_FORM_NAME } from 'constants'
 import { required, validateEmail } from 'utils/form'
 import classes from './LoginForm.scss'
 
-export const LoginForm = ({ pristine, submitting, handleSubmit }) =>
+export const LoginForm = ({ pristine, submitting, handleSubmit }) => (
   <form className={classes.container} onSubmit={handleSubmit}>
     <Field
       name='email'
       component={TextField}
-      floatingLabelText='Email'
+      floatingLabelText="Email"
       validate={[required, validateEmail]}
     />
     <Field
       name='password'
       component={TextField}
-      floatingLabelText='Password'
-      type='password'
+      floatingLabelText="Password"
+      type="password"
       validate={required}
     />
     <div className={classes.submit}>
       <RaisedButton
         label={submitting ? 'Loading' : 'Login'}
         primary
-        type='submit'
+        type="submit"
         disabled={pristine || submitting}
       />
     </div>
     <div className={classes.options}>
       <div className={classes.remember}>
         <Checkbox
-          name='remember'
-          value='remember'
-          label='Remember'
+          name="remember"
+          value="remember"
+          label="Remember"
           labelStyle={{ fontSize: '.8rem' }}
         />
       </div>
@@ -46,6 +46,7 @@ export const LoginForm = ({ pristine, submitting, handleSubmit }) =>
       </Link>
     </div>
   </form>
+)
 
 LoginForm.propTypes = {
   pristine: PropTypes.bool.isRequired, // added by redux-form

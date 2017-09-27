@@ -92,6 +92,15 @@ export const isEmpty = (...args) =>
   some(args, arg => !(arg && size(arg)) || arg.isEmpty === true)
 
 /**
+ * @description Fix path by adding "/" to path if needed
+ * @param {String} path - Path string to fix
+ * @return {String} - Fixed path
+ * @private
+ */
+export const fixPath = path =>
+  ((path.substring(0, 1) === '/') ? '' : '/') + path
+
+/**
  * @private
  * @description Build child list based on populate
  * @param {Object} data - Immutable Object to be converted to JS object (state.firebase)

@@ -2,7 +2,11 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import GoogleButton from 'react-google-button'
+import Paper from 'material-ui/Paper'
+import Snackbar from 'material-ui/Snackbar'
+
 import { connect } from 'react-redux'
+import { UserIsNotAuthenticated } from 'utils/router'
 import {
   firebaseConnect,
   isLoaded,
@@ -13,6 +17,7 @@ import Snackbar from 'material-ui/Snackbar'
 // import { UserIsNotAuthenticated } from 'utils/router'
 import { SIGNUP_PATH, LIST_PATH } from 'constants'
 import LoginForm from '../components/LoginForm'
+
 import classes from './LoginContainer.scss'
 
 // TODO: Uncomment redirect decorator v2.0.0 router util still requires update
@@ -33,24 +38,26 @@ export default class Login extends Component {
       login: PropTypes.func.isRequired
     }),
     authError: PropTypes.shape({
-      message: PropTypes.string
+      message: PropTypes.string // eslint-disable-line react/no-unused-prop-types
     })
   }
 
   state = {
-    // state of snackbar so it can be closed
     snackCanOpen: false
   }
 
   handleLogin = loginData => {
-    this.setState({ snackCanOpen: true })
+    this.setState({
+      snackCanOpen: true
+    })
+
     return this.props.firebase.login(loginData)
       .then(() => {
         return this.context.router.push(LIST_PATH) // v2.0.0 router util still requires update
       })
   }
 
-  providerLogin = provider => this.handleLogin({ provider })
+  providerLogin = provider => this.handleLogin({ provider, type: 'popup' })
 
   render() {
     const { authError } = this.props
@@ -72,14 +79,15 @@ export default class Login extends Component {
           </Link>
         </div>
         {isLoaded(authError) &&
-          !isEmpty(authError) &&
-          snackCanOpen &&
+        !isEmpty(authError) &&
+        snackCanOpen && (
           <Snackbar
             open={isLoaded(authError) && !isEmpty(authError) && snackCanOpen}
             message={authError ? authError.message : 'Signup error'}
             action='close'
             autoHideDuration={3000}
-          />}
+          />
+        )}
       </div>
     )
   }

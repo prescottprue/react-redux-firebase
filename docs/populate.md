@@ -93,7 +93,7 @@ ASDF123: {
 ```
 
 ### Object
-Population can also be used to populate a parameter with an object. An example of this would be populating the owner parameter, which is an ID, with the matching key from the users list.
+Population can also be used to populate a parameter with an object. An example of this would be populating the `owner` parameter, which is an ID, with the matching key from the `users` list.
 
 ##### Example Query
 ```javascript
@@ -123,9 +123,42 @@ ASDF123: {
 }
 ```
 
+##### Keep Object's Key
+
+Often when populating, you will want to keep the key that was originally there (before being replaced by populated value). This is supported through the use of `keyProp`:
+
+##### Example Query
+```javascript
+const populates = [
+  { child: 'owner', root: 'users', keyProp: 'key' }
+]
+@firebaseConnect([
+  { path: '/todos', populates }
+  // '/todos#populate=owner:users' // equivalent string notation
+])
+@connect(
+  ({ firebase }) => ({
+    todos: populatedDataToJS(firebase, 'todos', populates),
+  })
+)
+```
+
+##### Example Result
+
+```javascript
+ASDF123: {
+  text: 'Some Todo Item',
+  owner: {
+    key: 'Iq5b0qK2NtgggT6U3bU6iZRGyma2',
+    displayName: 'Scott Prue',
+    email: 'scott@prue.io'
+  }
+}
+```
+
 ### Object's Parameter
 
-There is also the option to load a parameter from within a population object. An example of this could be populating the owner parameter with the displayName property of the user with a matching ID:
+There is also the option to load a parameter from within a population object. An example of this could be populating the `owner` parameter with the `email` property of the `user` with a matching ID:
 
 ##### Example
 ```javascript

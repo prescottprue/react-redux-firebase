@@ -117,22 +117,20 @@ describe('Compose', () => {
         }
       })
 
-      it('calls onComplete on error', () => {
+      it('calls onComplete on success', async () => {
         const func = sinon.spy()
-        return store.firebase.uniqueSet('test', {some: 'asdf'}, func)
-          .catch((err) => {
-            expect(func).to.have.been.calledOnce
-            expect(err).to.exist
-          })
+        await store.firebase.uniqueSet(path, {some: 'asdf'}, func)
+        expect(func).to.have.been.calledOnce
       })
 
-      it('calls onComplete on success', () => {
+      it('calls onComplete on error', async () => {
         const func = sinon.spy()
-        return store.firebase.uniqueSet(path, {some: 'asdf'}, func)
-          .then((snap) => {
-            expect(func).to.have.been.calledOnce
-            expect(snap).to.exist
-          })
+        try {
+          await store.firebase.uniqueSet(path, {some: 'asdf'}, func)
+        } catch (err) {
+          expect(func).to.have.been.calledOnce
+          expect(err).to.exist
+        }
       })
     })
 
@@ -173,67 +171,6 @@ describe('Compose', () => {
       it('runs', () => {
         expect(store.firebase.createUser({ email: 'test' }, { email: 'test' }))
           .to.eventually.be.an.object
-      })
-    })
-
-    describe('resetPassword', async () => {
-      it('rejects when not authenticated', () => {
-        expect(store.firebase.resetPassword('test@test.com'))
-          .to.be.rejectedWith('User must be logged in to update email.')
-      })
-    })
-
-    describe('confirmPasswordReset', () => {
-      try {
-        store.firebase.confirmPasswordReset({ code: 'test', password: 'test' })
-      } catch (err) {
-        expect(err).to.be.an.object
-      }
-    })
-
-    describe('updateProfile', () => {
-      it('acccepts an object', async () => {
-        expect(store.firebase.updateProfile({ displayName: 'test' }))
-          .to.eventually.become(undefined)
-      })
-    })
-
-    describe('updateAuth', () => {
-      it('rejects when not authenticated', () => {
-        expect(store.firebase.updateAuth()).to.be.rejectedWith('User must be logged in to update auth.')
-      })
-
-      // TODO: test that update auth when authenticated
-      it.skip('updates auth object if authenticated', () => {
-        expect(store.firebase.updateAuth()).to.eventually.become(undefined)
-      })
-
-      // TODO: test that updateProfile is called if updateInProfile is true
-      it.skip('calls update profile if updateInProfile is true', () =>
-        expect(store.firebase.updateAuth({}, true)).to.eventually.become(undefined)
-      )
-    })
-
-    describe('updateEmail', () => {
-      it('rejects when not authenticated', () => {
-        expect(store.firebase.updateEmail())
-          .to.be.rejectedWith('User must be logged in to update email.')
-      })
-
-      // skipped due to invalid API key for fake DB
-      it.skip('updates auth object if authenticated', async () => {
-        await Firebase.auth().signInAnonymously()
-        const res = await store.firebase.updateEmail('some@email.com', true)
-        expect(res).to.equal(undefined)
-        firebase.auth().signOut() // reset auth
-      })
-
-      // TODO: test that updateProfile is called if updateInProfile is true
-      it.skip('update profile if updateInProfile is true', async () => {
-        const spy = sinon.spy(store.firebase, 'updateProfile')
-        const res = await store.firebase.updateEmail('some@email.com', true)
-        expect(res).to.equal(undefined)
-        expect(spy).to.have.been.calledOnce
       })
     })
 

@@ -14,26 +14,26 @@ export const NewProjectDialog = ({
   onRequestClose,
   submit,
   handleSubmit
-}) =>
+}) => (
   <Dialog
-    title='New Project'
+    title="New Project"
     open={open}
     onRequestClose={onRequestClose}
     contentClassName={classes.container}
     actions={[
-      <FlatButton label='Cancel' secondary onTouchTap={onRequestClose} />,
-      <FlatButton label='Create' primary onTouchTap={submit} />
-    ]}
-  >
+      <FlatButton label="Cancel" secondary onTouchTap={onRequestClose} />,
+      <FlatButton label="Create" primary onTouchTap={submit} />
+    ]}>
     <form onSubmit={handleSubmit} className={classes.inputs}>
       <Field
-        name='name'
+        name="name"
         component={TextField}
-        floatingLabelText='Project Name'
+        floatingLabelText="Project Name"
         validate={[required]}
       />
     </form>
   </Dialog>
+)
 
 NewProjectDialog.propTypes = {
   open: PropTypes.bool.isRequired,

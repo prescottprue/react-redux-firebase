@@ -123,6 +123,18 @@ export function reactReduxFirebase(fbInstance: any, otherConfig: any, ...args: a
 export function reduxFirebase(fbInstance: any, otherConfig: any, ...args: any[]): any;
 
 export function reduxReactFirebase(fbInstance: any, otherConfig: any, ...args: any[]): any;
+export function orderedToJS(data: any, path: any, notSetValue?: any): any;
+
+export function pathToJS(data: any, path: any, notSetValue?: any): any;
+
+export function populatedDataToJS(data: any, path: any, populates: any, notSetValue?: any): any;
+
+export function reactReduxFirebase(fbConfig: ConfigObject, otherConfig: any, ...args: any[]): any;
+
+export function reduxFirebase(fbConfig: ConfigObject, otherConfig: any, ...args: any[]): any;
+
+export function reduxReactFirebase(fbConfig: ConfigObject, otherConfig: any, ...args: any[]): any;
+>>>>>>> master
 
 export function toJS(data: any): any;
 

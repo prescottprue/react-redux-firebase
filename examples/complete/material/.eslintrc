@@ -22,4 +22,14 @@ globals:
 rules:
   semi: [2, 'never']
   no-console: 'error'
-  jsx-quotes: ['error', 'prefer-single']
+  jsx-quotes: ['error', 'prefer-double']
+  prettier/prettier: ['error', {
+    singleQuote: true,
+    trailingComma: 'es6',
+    semi: false,
+    bracketSpacing: true,
+    jsxBracketSameLine: true,
+    printWidth: 80,
+    tabWidth: 2,
+    useTabs: false
+  }]

@@ -11,12 +11,12 @@ import {
 import { LIST_PATH } from 'constants'
 // import { UserIsAuthenticated } from 'utils/router'
 import LoadingSpinner from 'components/LoadingSpinner'
-import ProjectTile from '../components/ProjectTile/ProjectTile'
-import NewProjectTile from '../components/NewProjectTile/NewProjectTile'
-import NewProjectDialog from '../components/NewProjectDialog/NewProjectDialog'
+import ProjectTile from '../components/ProjectTile'
+import NewProjectTile from '../components/NewProjectTile'
+import NewProjectDialog from '../components/NewProjectDialog'
 import classes from './ProjectsContainer.scss'
 
-const populates = [{ child: 'createdBy', root: 'users', keyProp: 'uid' }]
+const populates = [{ child: 'createdBy', root: 'users' }]
 
 // @UserIsAuthenticated
 @firebaseConnect([
@@ -35,15 +35,15 @@ export default class Projects extends Component {
   }
 
   static propTypes = {
+    children: PropTypes.object,
+    firebase: PropTypes.object.isRequired,
     projects: PropTypes.object,
-    firebase: PropTypes.object,
-    auth: PropTypes.object,
-    children: PropTypes.object
+    unpopulatedProjects: PropTypes.object,
+    auth: PropTypes.object
   }
 
   state = {
-    newProjectModal: false,
-    addProjectModal: false
+    newProjectModal: false
   }
 
   newSubmit = newProject => {
@@ -51,22 +51,29 @@ export default class Projects extends Component {
       .then(() => this.setState({ newProjectModal: false }))
       .catch(err => {
         // TODO: Show Snackbar
-        console.error('error creating new project', err) // eslint-disable-line
+        console.error("error creating new project", err) // eslint-disable-line
       })
   }
 
-  deleteProject = key => {
-    return this.props.firebase.remove(`projects/${key}`).then(() => {
-      // TODO: Show snackbar
-    })
-  }
+  deleteProject = key => this.props.firebase.remove(`projects/${key}`)
 
   toggleModal = (name, project) => {
-    this.setState({ [`${name}Modal`]: !this.state[`${name}Modal`] })
+    let newState = {}
+    newState[`${name}Modal`] = !this.state[`${name}Modal`]
+    this.setState(newState)
+  }
+
+  getDeleteVisible = key => {
+    const { auth, unpopulatedProjects } = this.props
+    return (
+      !isEmpty(this.props.auth) &&
+      get(unpopulatedProjects, `${key}.createdBy`) === auth.uid
+    )
   }
 
   render() {
     const { projects, auth } = this.props
+    const { newProjectModal } = this.state
 
     if (!isLoaded(projects, auth)) {
       return <LoadingSpinner />
@@ -75,36 +82,31 @@ export default class Projects extends Component {
     // Project Route is being loaded
     if (this.props.children) {
       // pass all props to children routes
-      return cloneElement(this.props.children, this.props)
+      return React.cloneElement(this.props.children, this.props)
     }
-
-    const { newProjectModal } = this.state
 
     return (
       <div className={classes.container}>
-        {newProjectModal &&
+        {newProjectModal && (
           <NewProjectDialog
             open={newProjectModal}
             onSubmit={this.newSubmit}
             onRequestClose={() => this.toggleModal('newProject')}
-          />}
+          />
+        )}
         <div className={classes.tiles}>
           <NewProjectTile onClick={() => this.toggleModal('newProject')} />
           {!isEmpty(projects) &&
-            map(projects, (project, key) =>
+            map(projects, (project, key) => (
               <ProjectTile
-                key={`Project-${key}`}
+                key={`${project.name}-Collab-${key}`}
                 project={project}
                 onCollabClick={this.collabClick}
                 onSelect={() => this.context.router.push(`${LIST_PATH}/${key}`)}
                 onDelete={() => this.deleteProject(key)}
-                showDelete={
-                  auth &&
-                  project.createdBy &&
-                  project.createdBy.uid === auth.uid
-                }
+                showDelete={this.getDeleteVisible(key)}
               />
-            )}
+            ))}
         </div>
       </div>
     )

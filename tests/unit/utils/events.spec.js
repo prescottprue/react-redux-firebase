@@ -1,4 +1,3 @@
-/* global describe expect it beforeEach */
 import { getEventsFromInput } from '../../../src/utils/events'
 
 describe('Utils: Events', () => {

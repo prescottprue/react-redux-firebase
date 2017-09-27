@@ -104,16 +104,15 @@ class Home extends Component {
     return (
       <div
         className={classes.container}
-        style={{ color: Theme.palette.primary2Color }}
-      >
-        {error
-          ? <Snackbar
-              open={!!error}
-              message={error}
-              autoHideDuration={4000}
-              onRequestClose={() => this.setState({ error: null })}
-            />
-          : null}
+        style={{ color: Theme.palette.primary2Color }}>
+        {error ? (
+          <Snackbar
+            open={!!error}
+            message={error}
+            autoHideDuration={4000}
+            onRequestClose={() => this.setState({ error: null })}
+          />
+        ) : null}
         <div className={classes.info}>
           <span>data loaded from</span>
           <span>
@@ -128,23 +127,25 @@ class Home extends Component {
         </div>
         <div className={classes.todos}>
           <NewTodoPanel onNewClick={this.handleAdd} disabled={false} />
-          {!isLoaded(todos)
-            ? <CircularProgress />
-            : <Paper className={classes.paper}>
-                <Subheader>Todos</Subheader>
-                <List className={classes.list}>
-                  {todos &&
-                    map(todos, (todo, id) =>
-                      <TodoItem
-                        key={id}
-                        id={id}
-                        todo={todo}
-                        onCompleteClick={this.toggleDone}
-                        onDeleteClick={this.deleteTodo}
-                      />
-                    )}
-                </List>
-              </Paper>}
+          {!isLoaded(todos) ? (
+            <CircularProgress />
+          ) : (
+            <Paper className={classes.paper}>
+              <Subheader>Todos</Subheader>
+              <List className={classes.list}>
+                {todos &&
+                  map(todos, (todo, id) => (
+                    <TodoItem
+                      key={id}
+                      id={id}
+                      todo={todo}
+                      onCompleteClick={this.toggleDone}
+                      onDeleteClick={this.deleteTodo}
+                    />
+                  ))}
+              </List>
+            </Paper>
+          )}
         </div>
       </div>
     )

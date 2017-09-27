@@ -1,8 +1,10 @@
 # Profile
 
-Profile object is used to store data associated with a user.
+Profile object is used to store data associated with a user. Using profile is in no way required, and will only be enabled if the `userProfile` config option is provided.
 
 ## Basic
+It is common to store the list of user profiles under a collection called "users" or "profiles". For this example we will use "users".
+
 Include the `userProfile` parameter in config when setting up store middleware:
 
 ```js
@@ -23,6 +25,10 @@ connect(
     profile: state.firebase.profile // profile passed as props.profile
   })
 )(SomeComponent) // pass component to be wrapped
+// or with some shorthand:
+connect(({ firebase: { profile } }) => ({
+  profile  // profile passed as props.profile
+}))(SomeComponent) // pass component to be wrapped
 ```
 
 ## Update Profile
@@ -80,7 +86,7 @@ The way user profiles are written to the database can be modified by passing the
 // within your createStore.js or store.js file include the following config
 const config = {
   userProfile: 'users', // where profiles are stored in database
-  profileFactory: (userData) => { // how profiles are stored in database
+  profileFactory: (userData, profileData) => { // how profiles are stored in database
     const { user } = userData
     return {
       email: user.email

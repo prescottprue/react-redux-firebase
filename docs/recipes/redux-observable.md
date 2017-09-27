@@ -1,6 +1,9 @@
 # redux-observable
 If you are using `redux-observable`, make sure to set up your redux-observable middleware so that firebase is available within your epics. Here is an example `combineEpics` function that adds `getFirebase` as third argument along with an epic that uses it:
 
+## Setup
+Examples below assume that you have setup `redux-observable` middleware so that firebase is available within your epics. Here is an example `combineEpics` function that adds `getFirebase` as the third argument along with an epic that uses it:
+
 ```javascript
 import { getFirebase } from 'react-redux-firebase'
 import { combineEpics } from 'redux-observable'
@@ -23,7 +26,7 @@ const somethingEpic = (action$, store, getFirebase) =>
 In the Angular world this has been called "3-Way Data Binding".
 
 ### Debounced Notifications
-Debounce writing to a ref on Firebase such as `/notifications` (useful so that tons of similar notifications aren't created).
+Debounce is writing to a ref on Firebase such as `/notifications` (useful so that tons of similar notifications aren't created).
 
 ```js
 const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
