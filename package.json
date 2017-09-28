@@ -107,7 +107,7 @@
     "react-addons-test-utils": "^15.4.2",
     "react-dom": "^15.4.2",
     "redux": "3.6.0",
-    "rimraf": "^2.6.1",
+    "rimraf": "^2.6.2",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.9.0",
     "webpack": "^3.5.5",

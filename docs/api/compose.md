@@ -6,8 +6,9 @@
 
 ## reactReduxFirebase
 
-Middleware that handles configuration (placed in redux's
-`compose` call)
+Redux store enhancer that accepts configuration options and adds
+store.firebase and store.firebaseAuth. Enhancers are most commonly placed in redux's `compose` call
+along side applyMiddleware.
 
 **Parameters**
 

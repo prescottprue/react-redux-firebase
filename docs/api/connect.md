@@ -2,38 +2,7 @@
 
 ### Table of Contents
 
--   [createFirebaseConnect](#createfirebaseconnect)
 -   [firebaseConnect](#firebaseconnect)
-
-## createFirebaseConnect
-
-WARNING!! Advanced feature, and only be used when needing to
-access a firebase instance created under a different store key
-
-**Parameters**
-
--   `storeKey` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of key of store to connect to (store that contains state.firebase) (optional, default `'store'`)
-
-**Examples**
-
-_Data_
-
-```javascript
-import { connect } from 'react-redux'
-import { createFirebaseConnect } from 'react-redux-firebase'
-
-// sync /todos from firebase (in other store) into redux
-const fbWrapped = createFirebaseConnect('someOtherName')(['todos'])
-
-// pass todos list from redux as this.props.todosList
-export default connect(({ firebase: data: { todos }, auth, profile }) => ({
-  todos,
-  profile, // pass profile data as this.props.profile
-  auth // pass auth data as this.props.auth
-}))(fbWrapped)
-```
-
-Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** that returns a firebaseConnect function, which is later used to wrap a component
 
 ## firebaseConnect
 
@@ -44,9 +13,8 @@ to provided firebase paths using React's Lifecycle hooks.
 
 **Parameters**
 
--   `watchArray` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
-    from Firebase. Can also be a function that returns the array. The function
-    is passed the current props and the firebase object.
+-   `storeKey`   (optional, default `'store'`)
+-   `watchArray` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync from Firebase. Can also be a function that returns the array. The function is passed the current props and the firebase object.
 
 **Examples**
 
@@ -62,7 +30,7 @@ _Data_
 
 ```javascript
 import { connect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
+import { firebaseConnect, dataToJS } from 'react-redux-firebase'
 
 // sync /todos from firebase into redux
 const fbWrapped = firebaseConnect([
@@ -70,11 +38,44 @@ const fbWrapped = firebaseConnect([
 ])(App)
 
 // pass todos list from redux as this.props.todosList
-export default connect(({ firebase: data: { todos }, auth, profile }) => ({
-  todos,
-  profile, // pass profile data as this.props.profile
-  auth // pass auth data as this.props.auth
->>>>>>> master
+export default connect(({ firebase }) => ({
+  todosList: dataToJS(firebase, 'todos'),
+  profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.profile
+  auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
+}))(fbWrapped)
+```
+
+_Data that depends on props_
+
+```javascript
+import { connect } from 'react-redux'
+import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+
+// sync /todos from firebase into redux
+const fbWrapped = firebaseConnect((props) => ([
+  `todos/${props.type}`
+])(App)
+
+// pass todos list for the specified type of todos from redux as `this.props.todosList`
+export default connect(({ firebase, type }) => ({
+  todosList: dataToJS(firebase, `data/todos/${type}`),
+}))(fbWrapped)
+```
+
+_Data that depends on auth state_
+
+```javascript
+import { connect } from 'react-redux'
+import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+
+// sync /todos from firebase into redux
+const fbWrapped = firebaseConnect((props, firebase) => ([
+  `todos/${firebase._.authUid}`
+])(App)
+
+// pass todos list for the specified type of todos from redux as `this.props.todosList`
+export default connect(({ firebase }) => ({
+  todosList: dataToJS(firebase, `data/todos/${firebase.getIn(['auth', 'uid'])}`),
 }))(fbWrapped)
 ```
 

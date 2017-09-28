@@ -130,6 +130,12 @@ export const actionTypes = {
  * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
  * Setting this to true allows an action to be called that removes data
  * from redux (which might not always be expected).
+ * @property {String} firebaseStateName - 'firebase' Assumed name of Firebase
+ * state (name given when passing reducer to combineReducers). Used in
+ * firebaseAuthIsLoaded promise (see #264).
+ * @property {Boolean} attachAuthIsLoaded - `true` Whether or not to attach
+ * firebaseAuthIsLoaded to store. authIsLoaded can be imported and used
+ * directly instead based on preference.
  * @type {Object}
 */
 export const defaultConfig = {
@@ -143,7 +149,9 @@ export const defaultConfig = {
   autoPopulateProfile: false,
   setProfilePopulateResults: false,
   dispatchOnUnsetListener: true,
-  enableEmptyAuthChanges: false
+  enableEmptyAuthChanges: false,
+  firebaseStateName: 'firebase',
+  attachAuthIsLoaded: true
 }
 
 /**
