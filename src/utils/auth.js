@@ -88,7 +88,7 @@ export const getLoginMethodAndParams = (firebase, {email, password, provider, ty
  * @return {Promise} - A promise that completes when Firebase auth is ready
  * in the store.
  */
-export const authIsLoaded = (store, stateName = 'firebaseState') => {
+export const authIsReady = (store, stateName = 'firebaseState') => {
   const isAuthReady = store => {
     const state = store.getState()
     const firebaseState = stateName ? state[stateName] : state
@@ -114,17 +114,17 @@ export const authIsLoaded = (store, stateName = 'firebaseState') => {
 }
 
 /**
- * Function that creates and authIsLoaded promise
+ * Function that creates and authIsReady promise
  * @param {Object} store - The Redux store on which we want to detect if
  * Firebase auth is ready.
- * @param {Object} config - Config options for authIsLoaded
- * @param {string} config.authIsLoaded - Config options for authIsLoaded
- * @param {string} config.firebaseStateName - Config options for authIsLoaded
+ * @param {Object} config - Config options for authIsReady
+ * @param {string} config.authIsReady - Config options for authIsReady
+ * @param {string} config.firebaseStateName - Config options for authIsReady
  * @return {Promise} - A promise that completes when Firebase auth is ready
  * in the store.
  */
-export const createAuthIsLoaded = (store, config) => {
-  return isFunction(config.authIsLoaded)
-    ? config.authIsLoaded
-    : authIsLoaded(store, config.firebaseStateName)
+export const createAuthIsReady = (store, config) => {
+  return isFunction(config.authIsReady)
+    ? config.authIsReady(store, config)
+    : authIsReady(store, config.firebaseStateName)
 }

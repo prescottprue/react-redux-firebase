@@ -52,7 +52,7 @@ export default (initialState = {}) => {
   store.asyncReducers = {}
 
   // optional way to listen for auth ready
-  store.firebaseAuthIsLoaded.then(() => {
+  store.firebaseAuthIsReady.then(() => {
     console.log('Auth has loaded') // eslint-disable-line no-console
   })
 

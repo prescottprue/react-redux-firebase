@@ -112,7 +112,7 @@ Default configuration options
     from redux (which might not always be expected).
 -   `firebaseStateName` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 'firebase' Assumed name of Firebase
     state (name given when passing reducer to combineReducers). Used in
-    firebaseAuthIsLoaded promise (see #264).
--   `attachAuthIsLoaded` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not to attach
-    firebaseAuthIsLoaded to store. authIsLoaded can be imported and used
+    firebaseAuthIsReady promise (see #264).
+-   `attachAuthIsReady` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to attach
+    firebaseAuthIsReady to store. authIsLoaded can be imported and used
     directly instead based on preference.

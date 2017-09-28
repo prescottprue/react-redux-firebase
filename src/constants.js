@@ -132,9 +132,9 @@ export const actionTypes = {
  * from redux (which might not always be expected).
  * @property {String} firebaseStateName - 'firebase' Assumed name of Firebase
  * state (name given when passing reducer to combineReducers). Used in
- * firebaseAuthIsLoaded promise (see #264).
- * @property {Boolean} attachAuthIsLoaded - `true` Whether or not to attach
- * firebaseAuthIsLoaded to store. authIsLoaded can be imported and used
+ * firebaseAuthIsReady promise (see #264).
+ * @property {Boolean} attachAuthIsReady - `true` Whether or not to attach
+ * firebaseAuthIsReady to store. authIsLoaded can be imported and used
  * directly instead based on preference.
  * @type {Object}
 */
@@ -151,7 +151,7 @@ export const defaultConfig = {
   dispatchOnUnsetListener: true,
   enableEmptyAuthChanges: false,
   firebaseStateName: 'firebase',
-  attachAuthIsLoaded: true
+  attachAuthIsReady: true
 }
 
 /**

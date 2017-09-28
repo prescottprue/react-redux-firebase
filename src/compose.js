@@ -1,5 +1,5 @@
 import { createFirebaseInstance } from './createFirebaseInstance'
-import { createAuthIsLoaded } from './utils/auth'
+import { createAuthIsReady } from './utils/auth'
 import { defaultConfig } from './constants'
 import { authActions } from './actions'
 
@@ -93,8 +93,8 @@ export default (instance, otherConfig) => next =>
     authActions.init(store.dispatch, firebaseInstance)
     store.firebase = firebaseInstance
 
-    if (configs.attachAuthIsLoaded) {
-      store.firebaseAuthIsLoaded = createAuthIsLoaded(store, configs)
+    if (configs.attachAuthIsReady) {
+      store.firebaseAuthIsReady = createAuthIsReady(store, configs)
     }
 
     return store
