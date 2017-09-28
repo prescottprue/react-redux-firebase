@@ -1,26 +1,7 @@
-import {
-  createAuthProvider,
-  getLoginMethodAndParams
-} from '../../../src/utils/auth'
+import { getLoginMethodAndParams } from '../../../src/utils/auth'
 
 describe('Utils: Auth', () => {
-  describe('createAuthProvider', () => {
-    it('creates valid Auth Provider', () => {
-      expect(createAuthProvider(firebase, 'google', ['email']))
-        .to.be.a.function
-    })
-
-    it('handles string list of scopes', () => {
-      expect(createAuthProvider(firebase, 'google', 'email'))
-        .to.be.a.function
-    })
-
-    it('handles customAuthParameters config option', () => {
-      firebase._.config.customAuthParameters = { google: [{prompt: 'select_account'}] }
-      expect(createAuthProvider(firebase, 'google', 'email'))
-        .to.be.a.function
-    })
-
+  describe('getLoginMethodAndParams', () => {
     it('throws for invalid provider', () => {
       const provider = 'asdf'
       expect(() => getLoginMethodAndParams(firebase, { provider: 'asdf' }))
