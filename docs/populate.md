@@ -191,9 +191,13 @@ Populating username with username from usernames ref.
 ```javascript
 const config = {
   userProfile: 'users',
-  profileParamsToPopulate: [ 'username:usernames' ]
+  profileParamsToPopulate: [
+    'displayName:displayNames',
+    // { child: 'displayName', root: 'displayNames' } // object notation
+  ]
 }
 ```
+
 ##### Initial Data
 
 ```javascript

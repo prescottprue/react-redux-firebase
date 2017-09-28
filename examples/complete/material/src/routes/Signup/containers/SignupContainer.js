@@ -36,12 +36,11 @@ export default class Signup extends Component {
     this.setState({
       snackCanOpen: true
     })
-    const { createUser, login } = this.props.firebase
-    createUser(creds, {
+    const { createUser } = this.props.firebase
+    // Logs user in after creation
+    return createUser(creds, {
       email: creds.email,
       username: creds.username
-    }).then(() => {
-      login(creds)
     })
   }
 
