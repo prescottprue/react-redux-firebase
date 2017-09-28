@@ -31,13 +31,11 @@ export default class TodoItem extends Component {
             <p>
               <span className="TodoItem-Text">{todo.text}</span>
               <br />
-              <span className='TodoItem-Owner'>
+              <span className="TodoItem-Owner">
                 Owner:{' '}
-                {isObject(todo.owner) ? (
-                  todo.owner.displayName || todo.owner.username
-                ) : (
-                  todo.owner || 'No Owner'
-                )}
+                {isObject(todo.owner)
+                  ? todo.owner.displayName || todo.owner.username
+                  : todo.owner || 'No Owner'}
               </span>
             </p>
           }

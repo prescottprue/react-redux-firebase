@@ -23,7 +23,7 @@ const populates = [{ child: 'owner', root: 'users' }]
 // Pass an array of path settings to create Firebase queries
 @firebaseConnect([
   // 'todos' // sync full list of todos
-  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'], populates }, // gather data to populate owners (uid => object)
+  { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'], populates } // gather data to populate owners (uid => object)
   // { path: 'todos', type: 'once' } // for loading once instead of binding
   // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'] } // 10 most recent
   // { path: 'todos', storeAs: 'myTodos' }, // store somewhere else in redux
@@ -32,13 +32,12 @@ const populates = [{ child: 'owner', root: 'users' }]
 @connect(({ firebase, firebase: { auth, data: { todos } } }) => ({
   auth,
   // todos
-  todos: populate(firebase, 'todos', populates), // populate todos with users data from redux
+  todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
   // todos: populate(firebase, 'ordered/todos', populates) // populate todos with users data from redux
   // todos: populate(firebase, 'ordered/todos', populates) // populate todos with users data from redux
   // todos: firebase.ordered.todos // if using ordering such as orderByChild or orderByKey
 }))
-export default // Get data from redux and pass in as props
-class Home extends Component {
+export default class Home extends Component {
   static propTypes = {
     todos: PropTypes.oneOfType([
       PropTypes.object, // object if using firebase.data
@@ -116,7 +115,7 @@ class Home extends Component {
         <div className={classes.info}>
           <span>data loaded from</span>
           <span>
-            <a href='https://redux-firebasev3.firebaseio.com/'>
+            <a href="https://redux-firebasev3.firebaseio.com/">
               redux-firebasev3.firebaseio.com
             </a>
           </span>
@@ -131,19 +130,24 @@ class Home extends Component {
             <CircularProgress />
           ) : (
             <Paper className={classes.paper}>
-              <Subheader>Todos</Subheader>
-              <List className={classes.list}>
-                {todos &&
-                  map(todos, (todo, id) => (
-                    <TodoItem
-                      key={id}
-                      id={id}
-                      todo={todo}
-                      onCompleteClick={this.toggleDone}
-                      onDeleteClick={this.deleteTodo}
-                    />
-                  ))}
-              </List>
+              {!isEmpty(todos) ? (
+                <div>
+                  <Subheader>Todos</Subheader>
+                  <List className={classes.list}>
+                    {map(todos, (todo, id) => (
+                      <TodoItem
+                        key={id}
+                        id={id}
+                        todo={todo}
+                        onCompleteClick={this.toggleDone}
+                        onDeleteClick={this.deleteTodo}
+                      />
+                    ))}
+                  </List>
+                </div>
+              ) : (
+                <div className={classes.list}>No Todos</div>
+              )}
             </Paper>
           )}
         </div>

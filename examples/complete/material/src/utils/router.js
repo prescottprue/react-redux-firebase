@@ -20,7 +20,7 @@ export const UserIsAuthenticated = UserAuthWrapper({
   authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
     !auth.isLoaded || isInitializing,
   predicate: auth => !auth.isEmpty,
-  redirectAction: newLoc => (dispatch) => {
+  redirectAction: newLoc => dispatch => {
     browserHistory.replace(newLoc)
     dispatch({
       type: UNAUTHED_REDIRECT,
@@ -49,7 +49,7 @@ export const UserIsNotAuthenticated = UserAuthWrapper({
   authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
     !auth.isLoaded || isInitializing,
   predicate: auth => auth.isEmpty,
-  redirectAction: newLoc => (dispatch) => {
+  redirectAction: newLoc => dispatch => {
     browserHistory.replace(newLoc)
     dispatch({ type: AUTHED_REDIRECT })
   }

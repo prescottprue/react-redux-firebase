@@ -17,13 +17,13 @@ export const EmailForm = ({
   <form className={classes.container} onSubmit={handleSubmit}>
     <h4>Send Recovery Code To Email</h4>
     <Field
-      name='email'
+      name="email"
       component={TextField}
-      label='Email'
+      label="Email"
       validate={[required, email]}
     />
     <div className={classes.submit}>
-      <RaisedButton label='Send' primary type='submit' disabled={submitting} />
+      <RaisedButton label="Send" primary type="submit" disabled={submitting} />
     </div>
   </form>
 )

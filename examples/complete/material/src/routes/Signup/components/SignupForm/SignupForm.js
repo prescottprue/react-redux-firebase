@@ -7,7 +7,7 @@ import { SIGNUP_FORM_NAME } from 'constants'
 import { required, validateEmail } from 'utils/form'
 import classes from './SignupForm.scss'
 
-const SignupForm = ({ pristine, submitting, handleSubmit }) =>
+const SignupForm = ({ pristine, submitting, handleSubmit }) => (
   <form className={classes.container} onSubmit={handleSubmit}>
     <Field
       name="username"

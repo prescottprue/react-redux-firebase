@@ -11,10 +11,10 @@ export const env = 'development'
 
 // Config for firebase
 export const firebase = {
-  apiKey: "AIzaSyCTUERDM-Pchn_UDTsfhVPiwM4TtNIxots",
-  authDomain: "redux-firebasev3.firebaseapp.com",
-  databaseURL: "https://redux-firebasev3.firebaseio.com",
-  storageBucket: "redux-firebasev3.appspot.com"
+  apiKey: 'AIzaSyCTUERDM-Pchn_UDTsfhVPiwM4TtNIxots',
+  authDomain: 'redux-firebasev3.firebaseapp.com',
+  databaseURL: 'https://redux-firebasev3.firebaseio.com',
+  storageBucket: 'redux-firebasev3.appspot.com'
 }
 
 // Config for react-redux-firebase
@@ -23,7 +23,7 @@ export const reduxFirebase = {
   userProfile: 'users', // root that user profiles are written to
   // enableLogging: false, // enable/disable Firebase Database Logging
   // presence: 'presence',
-  updateProfileOnLogin: false, // enable/disable updating of profile on login
+  updateProfileOnLogin: false // enable/disable updating of profile on login
   // profileParamsToPopulate: [{ child: 'cars', root: 'cars' }] // gather data for populating profile params
   // profileDecorator: (userData) => ({ email: userData.email }) // customize format of user profile
 }
