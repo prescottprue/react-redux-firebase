@@ -1,5 +1,15 @@
 {
-  "presets": ["es2015", "react"],
+  "presets": [
+    "react",
+    ["env", {
+      "targets": {
+        "chrome": 52,
+        "browsers": ["last 2 versions", "safari >= 7"]
+      },
+      "modules": false,
+      "loose": true
+    }]
+  ],
   "plugins": [
     "lodash",
     "add-module-exports",
@@ -9,7 +19,10 @@
   ],
   "env": {
     "es": {
-      "comments": false
+      "comments": false,
+      "plugins": [
+        "./bin/use-lodash-es"
+      ]
     },
     "commonjs": {
       "comments": false
