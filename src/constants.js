@@ -37,13 +37,16 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @property {String} FILE_DELETE_COMPLETE - `@@reactReduxFirebase/FILE_DELETE_COMPLETE`
  * @property {String} AUTH_UPDATE_START - `@@reactReduxFirebase/AUTH_UPDATE_START`
  * @property {String} AUTH_UPDATE_ERROR - `@@reactReduxFirebase/AUTH_UPDATE_ERROR`
- * @property {String} AUTH_UPDATE_COMPLETE - `@@reactReduxFirebase/AUTH_UPDATE_COMPLETE`
+ * @property {String} AUTH_UPDATE_SUCCESS - `@@reactReduxFirebase/AUTH_UPDATE_SUCCESS`
  * @property {String} PROFILE_UPDATE_START - `@@reactReduxFirebase/PROFILE_UPDATE_START`
  * @property {String} PROFILE_UPDATE_ERROR - `@@reactReduxFirebase/PROFILE_UPDATE_ERROR`
- * @property {String} PROFILE_UPDATE_COMPLETE - `@@reactReduxFirebase/PROFILE_UPDATE_COMPLETE`
+ * @property {String} PROFILE_UPDATE_SUCCESS - `@@reactReduxFirebase/PROFILE_UPDATE_SUCCESS`
  * @property {String} EMAIL_UPDATE_START - `@@reactReduxFirebase/EMAIL_UPDATE_START`
  * @property {String} EMAIL_UPDATE_ERROR - `@@reactReduxFirebase/EMAIL_UPDATE_ERROR`
- * @property {String} EMAIL_UPDATE_COMPLETE - `@@reactReduxFirebase/EMAIL_UPDATE_COMPLETE`
+ * @property {String} EMAIL_UPDATE_SUCCESS - `@@reactReduxFirebase/EMAIL_UPDATE_SUCCESS`
+ * @property {String} AUTH_RELOAD_START - `@@reactReduxFirebase/AUTH_RELOAD_START`
+ * @property {String} AUTH_RELOAD_ERROR - `@@reactReduxFirebase/AUTH_RELOAD_ERROR`
+ * @property {String} AUTH_RELOAD_SUCCESS - `@@reactReduxFirebase/AUTH_RELOAD_SUCCESS`
  * @example
  * import { actionTypes } from 'react-redux-firebase'
  * actionTypes.SET === '@@reactReduxFirebase/SET' // true
@@ -80,7 +83,10 @@ export const actionTypes = {
   PROFILE_UPDATE_ERROR: `${actionsPrefix}/PROFILE_UPDATE_ERROR`,
   EMAIL_UPDATE_START: `${actionsPrefix}/EMAIL_UPDATE_START`,
   EMAIL_UPDATE_SUCCESS: `${actionsPrefix}/EMAIL_UPDATE_SUCCESS`,
-  EMAIL_UPDATE_ERROR: `${actionsPrefix}/EMAIL_UPDATE_ERROR`
+  EMAIL_UPDATE_ERROR: `${actionsPrefix}/EMAIL_UPDATE_ERROR`,
+  AUTH_RELOAD_START: `${actionsPrefix}/AUTH_RELOAD_START`,
+  AUTH_RELOAD_ERROR: `${actionsPrefix}/AUTH_RELOAD_ERROR`,
+  AUTH_RELOAD_SUCCESS: `${actionsPrefix}/AUTH_RELOAD_SUCCESS`
 }
 
 /**

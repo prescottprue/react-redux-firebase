@@ -345,6 +345,12 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     authActions.updateEmail(dispatch, firebase, newEmail, updateInProfile)
 
   /**
+   * @description Reload user's auth object. Must be authenticated.
+   * @return {Promise}
+   */
+  const reloadAuth = () => authActions.reloadAuth(dispatch, firebase)
+
+  /**
    * @name ref
    * @description Firebase ref function
    * @return {firebase.database.Reference}
@@ -387,7 +393,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     confirmPasswordReset,
     verifyPasswordResetCode,
     watchEvent,
-    unWatchEvent
+    unWatchEvent,
+    reloadAuth
   }
 
   return Object.assign(firebase, helpers, { helpers })

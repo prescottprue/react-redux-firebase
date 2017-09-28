@@ -182,6 +182,14 @@ describe('Compose', () => {
       })
     })
 
+    describe('reloadAuth', () => {
+      it('calls reloadAuth Firebase method', () => {
+        expect(store.firebase.reloadAuth())
+           // message associated with calling reloadAuth on fake db
+          .to.be.rejectedWith('Must be logged in to reload auth')
+      })
+    })
+
     describe('storage', () => {
       it('is undefined if storage does not exist', () => {
         expect(() => store.firebase.storage())

@@ -582,6 +582,34 @@ export const updateEmail = (dispatch, firebase, newEmail, updateInProfile) => {
     })
 }
 
+/**
+ * @description Reload Auth state
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @return {Promise} Resolves with auth
+ */
+export const reloadAuth = (dispatch, firebase) => {
+  dispatch({ type: actionTypes.AUTH_RELOAD_START })
+
+  // reject and dispatch error if not logged in
+  if (!firebase.auth().currentUser) {
+    const err = new Error('Must be logged in to reload auth')
+    dispatch({ type: actionTypes.AUTH_RELOAD_ERROR, payload: err })
+    return Promise.reject(err)
+  }
+
+  return firebase.auth().currentUser.reload()
+    .then(() => {
+      const auth = firebase.auth().currentUser
+      dispatch({ type: actionTypes.AUTH_RELOAD_SUCCESS, payload: auth })
+      return auth
+    })
+    .catch((err) => {
+      dispatch({ type: actionTypes.AUTH_RELOAD_ERROR, payload: err })
+      return Promise.reject(err)
+    })
+}
+
 export default {
   dispatchLoginError,
   unWatchUserProfile,
@@ -596,5 +624,6 @@ export default {
   verifyPasswordResetCode,
   updateAuth,
   updateProfile,
-  updateEmail
+  updateEmail,
+  reloadAuth
 }
