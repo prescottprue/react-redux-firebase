@@ -1,35 +1,35 @@
+sudo: false
+
 language: node_js
 
 node_js:
-  - "6"
-  - "8"
+  - 6.11.3 # L.T.S
+  - 8 # Current
 
-sudo: false
-
-branches:
-  only:
-    - master
-
-script:
-  - npm run lint:fix
-  - npm run test:cov
-
-cache:
-  yarn: true
-  directories:
-    - node_modules
+notifications:
+  # Only send notifications when travis status changes
+  email:
+    on_failure: change
+    on_success: change
 
 addons:
   code_climate:
     repo_token: $CODE_CLIMATE
 
+cache:
+  directories:
+    - node_modules
+
+branches:
+  only:
+    - master
+    - v2.0.0
+
+script:
+  - npm run lint:fix
+  - npm run test:cov
+
 after_success:
   - npm install -g codeclimate-test-reporter
   - codeclimate-test-reporter < coverage/lcov.info
   - npm run codecov
-
-notifications:
-  email:
-    # Only send notifications when travis status changes
-    on_failure: change
-    on_success: change
