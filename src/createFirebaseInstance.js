@@ -351,6 +351,14 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
   const reloadAuth = () => authActions.reloadAuth(dispatch, firebase)
 
   /**
+   * @description Links the user account with the given credentials.
+   * @param {firebase.auth.AuthCredential} credential - The auth credential
+   * @return {Promise}
+   */
+  const linkWithCredential = (credential) =>
+    authActions.linkWithCredential(dispatch, firebase, credential)
+
+  /**
    * @name ref
    * @description Firebase ref function
    * @return {firebase.database.Reference}
@@ -394,7 +402,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     verifyPasswordResetCode,
     watchEvent,
     unWatchEvent,
-    reloadAuth
+    reloadAuth,
+    linkWithCredential
   }
 
   return Object.assign(firebase, helpers, { helpers })

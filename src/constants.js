@@ -47,6 +47,9 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @property {String} AUTH_RELOAD_START - `@@reactReduxFirebase/AUTH_RELOAD_START`
  * @property {String} AUTH_RELOAD_ERROR - `@@reactReduxFirebase/AUTH_RELOAD_ERROR`
  * @property {String} AUTH_RELOAD_SUCCESS - `@@reactReduxFirebase/AUTH_RELOAD_SUCCESS`
+ * @property {String} AUTH_LINK_START - `@@reactReduxFirebase/AUTH_LINK_START`
+ * @property {String} AUTH_LINK_ERROR - `@@reactReduxFirebase/AUTH_LINK_ERROR`
+ * @property {String} AUTH_LINK_SUCCESS - `@@reactReduxFirebase/AUTH_LINK_SUCCESS`
  * @example
  * import { actionTypes } from 'react-redux-firebase'
  * actionTypes.SET === '@@reactReduxFirebase/SET' // true
@@ -86,7 +89,10 @@ export const actionTypes = {
   EMAIL_UPDATE_ERROR: `${actionsPrefix}/EMAIL_UPDATE_ERROR`,
   AUTH_RELOAD_START: `${actionsPrefix}/AUTH_RELOAD_START`,
   AUTH_RELOAD_ERROR: `${actionsPrefix}/AUTH_RELOAD_ERROR`,
-  AUTH_RELOAD_SUCCESS: `${actionsPrefix}/AUTH_RELOAD_SUCCESS`
+  AUTH_RELOAD_SUCCESS: `${actionsPrefix}/AUTH_RELOAD_SUCCESS`,
+  AUTH_LINK_START: `${actionsPrefix}/AUTH_LINK_START`,
+  AUTH_LINK_ERROR: `${actionsPrefix}/AUTH_LINK_ERROR`,
+  AUTH_LINK_SUCCESS: `${actionsPrefix}/AUTH_LINK_SUCCESS`
 }
 
 /**

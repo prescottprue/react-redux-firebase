@@ -190,6 +190,14 @@ describe('Compose', () => {
       })
     })
 
+    describe('linkWithCredential', () => {
+      it('calls reloadAuth Firebase method', () => {
+        expect(store.firebase.linkWithCredential())
+           // message associated with calling reloadAuth on fake db
+          .to.be.rejectedWith('Must be logged in to reload auth')
+      })
+    })
+
     describe('storage', () => {
       it('is undefined if storage does not exist', () => {
         expect(() => store.firebase.storage())

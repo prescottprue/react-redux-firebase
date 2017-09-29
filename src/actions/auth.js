@@ -610,6 +610,33 @@ export const reloadAuth = (dispatch, firebase) => {
     })
 }
 
+/**
+ * @description Reload Auth state
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @return {Promise} Resolves with auth
+ */
+export const linkWithCredential = (dispatch, firebase, credential) => {
+  dispatch({ type: actionTypes.AUTH_LINK_START })
+
+  // reject and dispatch error if not logged in
+  if (!firebase.auth().currentUser) {
+    const err = new Error('Must be logged in to linkWithCredential')
+    dispatch({ type: actionTypes.AUTH_LINK_ERROR, payload: err })
+    return Promise.reject(err)
+  }
+
+  return firebase.auth().currentUser.linkWithCredential(credential)
+    .then((auth) => {
+      dispatch({ type: actionTypes.AUTH_LINK_SUCCESS, payload: auth })
+      return auth
+    })
+    .catch((err) => {
+      dispatch({ type: actionTypes.AUTH_LINK_ERROR, payload: err })
+      return Promise.reject(err)
+    })
+}
+
 export default {
   dispatchLoginError,
   unWatchUserProfile,
