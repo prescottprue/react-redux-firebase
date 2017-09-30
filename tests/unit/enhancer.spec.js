@@ -1,10 +1,9 @@
 import { createStore, compose } from 'redux'
-import composeFunc, { getFirebase } from '../../src/compose'
+import composeFunc, { getFirebase } from '../../src/enhancer'
 
 const reducer = sinon.spy()
-const valAtPath = (path) => {
-  return Firebase.ref(path).once('value').then((snap) => snap.val())
-}
+const valAtPath = (path) =>
+  Firebase.ref(path).once('value').then((snap) => snap.val())
 
 const generateCreateStore = (params) =>
   compose(composeFunc(

@@ -50,6 +50,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @property {String} AUTH_LINK_START - `@@reactReduxFirebase/AUTH_LINK_START`
  * @property {String} AUTH_LINK_ERROR - `@@reactReduxFirebase/AUTH_LINK_ERROR`
  * @property {String} AUTH_LINK_SUCCESS - `@@reactReduxFirebase/AUTH_LINK_SUCCESS`
+ * @property {String} AUTH_EMPTY_CHANGE - `@@reactReduxFirebase/AUTH_LINK_SUCCESS`
  * @example
  * import { actionTypes } from 'react-redux-firebase'
  * actionTypes.SET === '@@reactReduxFirebase/SET' // true
@@ -92,7 +93,8 @@ export const actionTypes = {
   AUTH_RELOAD_SUCCESS: `${actionsPrefix}/AUTH_RELOAD_SUCCESS`,
   AUTH_LINK_START: `${actionsPrefix}/AUTH_LINK_START`,
   AUTH_LINK_ERROR: `${actionsPrefix}/AUTH_LINK_ERROR`,
-  AUTH_LINK_SUCCESS: `${actionsPrefix}/AUTH_LINK_SUCCESS`
+  AUTH_LINK_SUCCESS: `${actionsPrefix}/AUTH_LINK_SUCCESS`,
+  AUTH_EMPTY_CHANGE: `${actionsPrefix}/AUTH_EMPTY_CHANGE`
 }
 
 /**

@@ -193,18 +193,20 @@ export const init = (dispatch, firebase) => {
   }
   dispatch({ type: actionTypes.AUTHENTICATION_INIT_STARTED })
   firebase.auth().onAuthStateChanged(authData => {
+    const { config } = firebase._
     if (!authData) {
       // Run onAuthStateChanged if it exists in config and enableEmptyAuthChanges is set to true
-      if (isFunction(firebase._.config.onAuthStateChanged) && firebase._.config.enableEmptyAuthChanges) {
+      if (isFunction(config.onAuthStateChanged) && config.enableEmptyAuthChanges) {
         firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
       }
-      return dispatch({ type: actionTypes.LOGOUT })
+
+      return dispatch({ type: actionTypes.AUTH_EMPTY_CHANGE })
     }
 
     firebase._.authUid = authData.uid
 
     // setup presence if settings and database exist
-    if (firebase._.config.presence && firebase.database && firebase.database.ServerValue) {
+    if (config.presence && firebase.database && firebase.database.ServerValue) {
       setupPresence(dispatch, firebase)
     }
 
@@ -213,8 +215,8 @@ export const init = (dispatch, firebase) => {
     dispatch({ type: actionTypes.LOGIN, auth: authData })
 
     // Run onAuthStateChanged if it exists in config
-    if (isFunction(firebase._.config.onAuthStateChanged)) {
-      firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
+    if (isFunction(config.onAuthStateChanged)) {
+      config.onAuthStateChanged(authData, firebase, dispatch)
     }
   })
 
