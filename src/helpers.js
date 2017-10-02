@@ -247,7 +247,7 @@ export const orderedToJS = (data, path, notSetValue) => {
 export const buildChildList = (data, list, p) =>
   mapValues(list, (val, key) => {
     let getKey = val
-     // Handle key: true lists
+    // Handle key: true lists
     if (val === true) {
       getKey = key
     }
@@ -334,8 +334,8 @@ export const populatedDataToJS = (data, path, populates, notSetValue) => {
     // Data is a map of objects, each value has parameters to be populated
     return mapValues(dataToJS(data, path), (child, childKey) => {
       const populatesForDataItem = getPopulateObjs(isFunction(populates)
-      ? populates(childKey, child)
-      : populates)
+        ? populates(childKey, child)
+        : populates)
       const resolvedPopulates = map(populatesForDataItem, (p, obj) => {
         // no matching child parameter
         if (!child || !get(child, p.child)) {

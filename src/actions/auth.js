@@ -220,12 +220,12 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
       !config.updateProfileOnLogin && profileSnap.val() !== null
         ? profileSnap.val()
         : profileSnap.ref.update(profile) // Update the profile
-            .then(() => profile)
-            .catch(err => {
-              // Error setting profile
-              dispatchUnauthorizedError(dispatch, err)
-              return Promise.reject(err)
-            })
+          .then(() => profile)
+          .catch(err => {
+            // Error setting profile
+            dispatchUnauthorizedError(dispatch, err)
+            return Promise.reject(err)
+          })
     )
     .catch(err => {
       // Error reading user profile
@@ -367,7 +367,7 @@ export const login = (dispatch, firebase, credentials) => {
           providerData: user.providerData
         }
       )
-      .then((profile) => ({ profile, ...userData }))
+        .then((profile) => ({ profile, ...userData }))
     })
     .catch(err => {
       dispatchLoginError(dispatch, err)
@@ -414,21 +414,21 @@ export const createUser = (dispatch, firebase, { email, password, signIn }, prof
       firebase.auth().currentUser || (!!signIn && signIn === false)
         ? createUserProfile(dispatch, firebase, userData, profile || { email })
         : login(dispatch, firebase, { email, password })
-            .then(() =>
-              createUserProfile(dispatch, firebase, userData, profile || { email })
-            )
-            .catch(err => {
-              if (err) {
-                switch (err.code) {
-                  case 'auth/user-not-found':
-                    dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
-                    break
-                  default:
-                    dispatchLoginError(dispatch, err)
-                }
+          .then(() =>
+            createUserProfile(dispatch, firebase, userData, profile || { email })
+          )
+          .catch(err => {
+            if (err) {
+              switch (err.code) {
+                case 'auth/user-not-found':
+                  dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
+                  break
+                default:
+                  dispatchLoginError(dispatch, err)
               }
-              return Promise.reject(err)
-            })
+            }
+            return Promise.reject(err)
+          })
     )
     .catch((err) => {
       dispatchLoginError(dispatch, err)
@@ -540,16 +540,16 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
   return profileRef
     .update(profileUpdate)
     .then(() =>
-       profileRef
-         .once('value')
-         .then((snap) => {
-           dispatch({
-             type: actionTypes.PROFILE_UPDATE_SUCCESS,
-             payload: snap.val()
-           })
-           return snap.val()
-         })
-   )
+      profileRef
+        .once('value')
+        .then((snap) => {
+          dispatch({
+            type: actionTypes.PROFILE_UPDATE_SUCCESS,
+            payload: snap.val()
+          })
+          return snap.val()
+        })
+    )
     .catch((payload) => {
       dispatch({
         type: actionTypes.PROFILE_UPDATE_ERROR,
@@ -558,7 +558,7 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
     })
 }
 
- /**
+/**
   * @description Update Auth Object. Internally calls
   * `firebase.auth().currentUser.updateProfile` as seen [in the firebase docs](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile).
   * @param {Function} dispatch - Action dispatch function

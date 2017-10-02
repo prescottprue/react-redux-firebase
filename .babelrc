@@ -1,5 +1,8 @@
 {
-  "presets": ["es2015", "react"],
+  "presets": [
+    "react",
+    "env"
+  ],
   "plugins": [
     "lodash",
     "add-module-exports",

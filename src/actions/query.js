@@ -1,15 +1,16 @@
-import { forEach, size } from 'lodash'
+import { forEach } from 'lodash'
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from '../utils/populate'
 import {
   applyParamsToQuery,
   getWatcherCount,
+  orderedFromSnapshot,
   setWatcher,
   unsetWatcher,
   getQueryIdFromPath
 } from '../utils/query'
 
-const { START, SET, NO_VALUE, UNAUTHORIZED_ERROR, ERROR } = actionTypes
+const { START, SET, UNAUTHORIZED_ERROR } = actionTypes
 
 /**
  * @description Watch a specific event type
@@ -44,7 +45,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       .once('value', snapshot => {
         if (snapshot.val() === null) {
           dispatch({
-            type: NO_VALUE,
+            type: actionTypes.NO_VALUE,
             timestamp: Date.now(),
             requesting: false,
             requested: true,
@@ -52,16 +53,18 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           })
         }
         return snapshot
-      }, (err) => {
+      })
+      .catch(err => {
         // TODO: Handle catching unauthorized error
         // dispatch({
         //   type: UNAUTHORIZED_ERROR,
         //   payload: err
         // })
         dispatch({
-          type: ERROR,
+          type: actionTypes.ERROR,
           payload: err
         })
+        return Promise.reject(err)
       })
   }
 
@@ -80,51 +83,40 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
       path: storeAs || path
     })
 
-    // Handle once queries
+    // Handle once queries (Promise)
     if (e === 'once') {
       return q.once('value')
         .then(snapshot => {
-          // TODO: Set ordered
-          // TODO: call SET always when empty
-          if (snapshot.val() !== null) {
-            dispatch({
-              type: SET,
-              path: storeAs || path,
-              data: snapshot.val()
-            })
-          }
-          return snapshot
-        }, (err) => {
           dispatch({
-            type: UNAUTHORIZED_ERROR,
+            type: SET,
+            path: storeAs || path,
+            data: snapshot.val(),
+            ordered: orderedFromSnapshot(snapshot)
+          })
+          return snapshot
+        })
+        .catch(err => {
+          dispatch({
+            type: actionTypes.ERROR,
             payload: err
           })
           return Promise.reject(err)
         })
     }
-    // Handle all other queries
 
+    // Handle all other queries (listener)
     /* istanbul ignore next: is run by tests but doesn't show in coverage */
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
       const resultPath = storeAs || (e === 'value') ? p : `${p}/${snapshot.key}`
-      const ordered = []
-      // preserve order of children under ordered
-      // TODO: Handle values that are not objects
-      if (e === 'child_added') {
-        ordered.push({ key: snapshot.key, ...snapshot.val() })
-      } else if (snapshot.forEach) {
-        snapshot.forEach((child) => {
-          ordered.push({ key: child.key, ...child.val() })
-        })
-      }
+      const ordered = orderedFromSnapshot(snapshot, e)
 
       // Dispatch standard event if no populates exists
       if (!populates) {
         return dispatch({
           type: SET,
           path: storeAs || resultPath,
-          ordered: size(ordered) ? ordered : null,
+          ordered,
           data,
           timestamp: Date.now(),
           requesting: false,
@@ -153,7 +145,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           dispatch({
             type: SET,
             path: storeAs || resultPath,
-            ordered: size(ordered) ? ordered : null,
+            ordered,
             data,
             timestamp: Date.now(),
             requesting: false,
@@ -189,9 +181,9 @@ export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId 
  * @param {Array} events - List of events for which to add watchers
  */
 export const watchEvents = (firebase, dispatch, events) =>
-    events.forEach(event =>
-      watchEvent(firebase, dispatch, event)
-    )
+  events.forEach(event =>
+    watchEvent(firebase, dispatch, event)
+  )
 
 /**
  * @description Remove watchers from a list of events
