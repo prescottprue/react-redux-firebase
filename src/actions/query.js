@@ -84,6 +84,8 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
     if (e === 'once') {
       return q.once('value')
         .then(snapshot => {
+          // TODO: Set ordered
+          // TODO: call SET always when empty
           if (snapshot.val() !== null) {
             dispatch({
               type: SET,
@@ -97,6 +99,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
             type: UNAUTHORIZED_ERROR,
             payload: err
           })
+          return Promise.reject(err)
         })
     }
     // Handle all other queries
@@ -105,23 +108,23 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
     q.on(e, snapshot => {
       let data = (e === 'child_removed') ? undefined : snapshot.val()
       const resultPath = storeAs || (e === 'value') ? p : `${p}/${snapshot.key}`
+      const ordered = []
+      // preserve order of children under ordered
+      // TODO: Handle values that are not objects
+      if (e === 'child_added') {
+        ordered.push({ key: snapshot.key, ...snapshot.val() })
+      } else if (snapshot.forEach) {
+        snapshot.forEach((child) => {
+          ordered.push({ key: child.key, ...child.val() })
+        })
+      }
 
       // Dispatch standard event if no populates exists
       if (!populates) {
-        const ordered = []
-        // preserve order of children under ordered
-        if (e === 'child_added') {
-          ordered.push({ key: snapshot.key, ...snapshot.val() })
-        } else {
-          snapshot.forEach((child) => {
-            ordered.push({ key: child.key, ...child.val() })
-          })
-        }
-
         return dispatch({
           type: SET,
           path: storeAs || resultPath,
-          ordered: size(ordered) ? ordered : undefined,
+          ordered: size(ordered) ? ordered : null,
           data,
           timestamp: Date.now(),
           requesting: false,
@@ -150,6 +153,7 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
           dispatch({
             type: SET,
             path: storeAs || resultPath,
+            ordered: size(ordered) ? ordered : null,
             data,
             timestamp: Date.now(),
             requesting: false,
