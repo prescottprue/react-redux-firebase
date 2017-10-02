@@ -86,14 +86,7 @@ export const actionTypes = {
  * user profile when logging in.
  * @property {Boolean} resetBeforeLogin - `true` Whether or not to reset auth
  * and profile when logging in (see issue #254 for more details).
- * @property {Boolean} enableRedirectHandling - `true` Whether or not to enable
- * redirect handling. This must be disabled if environment is not http/https
- * such as with react-native.
- * @property {Boolean} enableEmptyAuthChanges - `false` Whether or not to enable
- * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
- * empty auth changes such as `undefined` on initialization
- * (see [#137](https://github.com/prescottprue/react-redux-firebase/issues/137)).
- * Requires `v1.5.0-alpha` or higher.
+
  * @property {Boolean} autoPopulateProfile - `true` Whether or not to
  * automatically populate profile with data loaded through
  * profileParamsToPopulate config.
@@ -106,6 +99,20 @@ export const actionTypes = {
  * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
  * Setting this to true allows an action to be called that removes data
  * from redux (which might not always be expected).
+ * @property {Boolean} enableRedirectHandling - `true` Whether or not to enable
+ * redirect handling. This must be disabled if environment is not http/https
+ * such as with react-native.
+ * @property {Boolean} enableEmptyAuthChanges - `false` Whether or not to enable
+ * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
+ * empty auth changes such as `undefined` on initialization
+ * (see [#137](https://github.com/prescottprue/react-redux-firebase/issues/137)).
+ * Requires `v1.5.0-alpha` or higher.
+ * @property {Boolean} disableEmptyAuthDispatch - `false` Whether or not to
+ * enable dispatching of ``LOGOUT`` action when auth state changes are empty.
+ * When set to `true`, `LOGOUT` action will not be dispatched if auth state
+ * changes to an empty state (which **DOES** happen by default). This option
+ * does not exist in `v2.0.0` since another more specific action is dispatched
+ * in this situation (not `LOGOUT`).
  * @type {Object}
 */
 export const defaultConfig = {
@@ -113,11 +120,12 @@ export const defaultConfig = {
   enableLogging: false,
   resetBeforeLogin: true,
   updateProfileOnLogin: true,
-  enableRedirectHandling: true,
   autoPopulateProfile: true,
   setProfilePopulateResults: false,
   dispatchOnUnsetListener: false,
-  enableEmptyAuthChanges: false
+  enableRedirectHandling: true,
+  enableEmptyAuthChanges: false,
+  disableEmptyAuthDispatch: false
 }
 
 /** @constant
