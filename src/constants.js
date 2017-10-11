@@ -159,7 +159,7 @@ export const defaultConfig = {
   dispatchOnUnsetListener: true,
   enableEmptyAuthChanges: false,
   firebaseStateName: 'firebase',
-  attachAuthIsReady: true
+  attachAuthIsReady: false
 }
 
 /**

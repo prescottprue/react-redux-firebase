@@ -76,6 +76,80 @@ export default class Login extends Component {
 }
 ```
 
+## Wait For Auth To Be Ready
+
+```js
+import firebase from 'firebase'
+import { compose, createStore, applyMiddleware } from 'redux'
+import { reactReduxFirebase } from 'react-redux-firebase'
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: '<your-api-key>',
+  authDomain: '<your-auth-domain>',
+  databaseURL: '<your-database-url>',
+  storageBucket: '<your-storage-bucket>'
+}
+// react-redux-firebase options
+const config = {
+  userProfile: 'users', // firebase root where user profiles are stored
+  attachAuthIsReady: true, // attaches auth is ready promise to store
+  firebaseStateName: 'firebase' // should match the reducer name ('firebase' is default)
+}
+
+const createStore = (initialState = {}) => {
+  // Initialize Firebase instance
+  firebase.initializeApp(fbConfig)
+
+  // Add redux Firebase to compose
+  const createStoreWithFirebase = createStore(
+    rootReducer,
+    initialState,
+    compose(
+      reactReduxFirebase(firebase, config),
+      applyMiddleware(thunk.withExtraArgument(getFirebase))
+    )
+  )
+
+  // Create store with reducers and initial state
+  const store = createStoreWithFirebase(rootReducer, initialState)
+
+  // Listen for auth ready (promise available on store thanks to attachAuthIsReady: true config option)
+  store.firebaseAuthIsReady.then(() => {
+    console.log('Auth has loaded') // eslint-disable-line no-console
+  })
+  return store;
+}
+```
+
+In order for this to work, the promise must know the name of the location within redux that the state is being stored, which is the function of the `firebaseStateName` config option. By default the `firebaseStateName` parameter is `'firebase'` to match the getting started guide. If you are storing your firebase state under a different place within redux (i.e. the name given to the `firebaseStateReducer`) such as `'firebaseState'` you must pass that name as `firebaseStateName` in your config.
+
+#### Custom Auth Ready Logic
+
+If you want to write your own custom logic for the promise that actually confirms that auth is ready, you can pass a promise as the `authIsReady` config option.
+
+Here is an example showing the default logic:
+
+```js
+import { get } from 'lodash'
+
+const config = {
+  authIsReady: (store, firebaseStateName) => new Promise((resolve) => {
+    const firebaseAuthState =  && state[firebaseStateName].auth
+    if (get(store.getState(), `${firebaseStateName}.auth.isLoaded`)) {
+      resolve()
+    } else {
+      const unsubscribe = store.subscribe(() => {
+        if (get(store.getState(), `${firebaseStateName}.auth.isLoaded`)) {
+          unsubscribe()
+          resolve()
+        }
+      })
+    }
+  })
+}
+```
+
 ## List of Online Users (Presence)
 
 Presence keeps a list of which users are currently online as well as a history of all user sessions.

@@ -60,6 +60,10 @@ Object containing all action types
 -   `AUTH_RELOAD_START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_RELOAD_START`
 -   `AUTH_RELOAD_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_RELOAD_ERROR`
 -   `AUTH_RELOAD_SUCCESS` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_RELOAD_SUCCESS`
+-   `AUTH_LINK_START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_START`
+-   `AUTH_LINK_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_ERROR`
+-   `AUTH_LINK_SUCCESS` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_SUCCESS`
+-   `AUTH_EMPTY_CHANGE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_SUCCESS`
 
 **Examples**
 

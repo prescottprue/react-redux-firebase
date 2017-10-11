@@ -83,35 +83,48 @@ export const getLoginMethodAndParams = (firebase, {email, password, provider, ty
  * store using react-redux-firebase.
  * @param {Object} store - The Redux store on which we want to detect if
  * Firebase auth is ready.
- * @param {string} [stateName] - The attribute name of the react-redux-firebase reducer when using multiple combined reducers.
- *    'firebaseState' by default. Set this to `null` to indicate that the react-redux-firebase reducer is not in a combined reducer.
+ * @param {string} [stateName='firebase'] - The attribute name of the react-redux-firebase
+ * reducer when using multiple combined reducers. 'firebase' by default. Set
+ * this to `null` to indicate that the react-redux-firebase reducer is not in a
+ * combined reducer.
  * @return {Promise} - A promise that completes when Firebase auth is ready
  * in the store.
  */
-export const authIsReady = (store, stateName = 'firebaseState') => {
-  const isAuthReady = store => {
-    const state = store.getState()
-    const firebaseState = stateName ? state[stateName] : state
-    const firebaseAuthState = firebaseState && firebaseState.auth
-    if (!firebaseAuthState) {
-      throw new Error(`The Firebase auth state could not be found in the store under the attribute '${stateName ? stateName + '.' : ''}auth'. Make sure your react-redux-firebase reducer is correctly set in the store`)
-    }
-    return firebaseState.auth.isLoaded
+const isAuthReady = (store, stateName) => {
+  const state = store.getState()
+  const firebaseState = stateName ? state[stateName] : state
+  const firebaseAuthState = firebaseState && firebaseState.auth
+  if (!firebaseAuthState) {
+    throw new Error(`The Firebase auth state could not be found in the store under the attribute '${stateName ? `${stateName}.` : ''}auth'. Make sure your react-redux-firebase reducer is correctly set in the store`)
   }
+  return firebaseState.auth.isLoaded
+}
 
-  return new Promise(resolve => {
-    if (isAuthReady(store)) {
+/**
+ * Returns a promise that completes when Firebase Auth is ready in the given
+ * store using react-redux-firebase.
+ * @param {Object} store - The Redux store on which we want to detect if
+ * Firebase auth is ready.
+ * @param {string} [stateName='firebase'] - The attribute name of the react-redux-firebase
+ * reducer when using multiple combined reducers. 'firebase' by default. Set
+ * this to `null` to indicate that the react-redux-firebase reducer is not in a
+ * combined reducer.
+ * @return {Promise} - A promise that completes when Firebase auth is ready
+ * in the store.
+ */
+export const authIsReady = (store, stateName = 'firebase') =>
+  new Promise((resolve) => {
+    if (isAuthReady(store, stateName)) {
       resolve()
     } else {
       const unsubscribe = store.subscribe(() => {
-        if (isAuthReady(store)) {
+        if (isAuthReady(store, stateName)) {
           unsubscribe()
           resolve()
         }
       })
     }
   })
-}
 
 /**
  * Function that creates and authIsReady promise
