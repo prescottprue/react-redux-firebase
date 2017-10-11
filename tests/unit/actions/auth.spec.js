@@ -48,11 +48,11 @@ const fakeFirebase = {
     signOut: () =>
       Promise.resolve({}),
     createUserWithEmailAndPassword: (email, password) =>
-    email.indexOf('error') !== -1
-      ? Promise.reject(new Error('auth/user-not-found'))
-      : email === 'error'
-        ? Promise.reject(new Error('asdfasdf'))
-        : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
+      email.indexOf('error') !== -1
+        ? Promise.reject(new Error('auth/user-not-found'))
+        : email === 'error'
+          ? Promise.reject(new Error('asdfasdf'))
+          : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
     signInWithCustomToken: () => {
       return Promise.resolve({
         toJSON: () => ({

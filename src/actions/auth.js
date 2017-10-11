@@ -323,7 +323,7 @@ export const login = (dispatch, firebase, credentials) => {
           providerData: user.providerData
         }
       )
-      .then((profile) => ({ profile, ...userData }))
+        .then((profile) => ({ profile, ...userData }))
     })
     .catch(err => {
       dispatchLoginError(dispatch, err)
@@ -373,21 +373,21 @@ export const createUser = (dispatch, firebase, { email, password, signIn }, prof
       firebase.auth().currentUser || (!!signIn && signIn === false)
         ? createUserProfile(dispatch, firebase, userData, profile || { email })
         : login(dispatch, firebase, { email, password })
-            .then(() =>
-              createUserProfile(dispatch, firebase, userData, profile || { email })
-            )
-            .catch(err => {
-              if (err) {
-                switch (err.code) {
-                  case 'auth/user-not-found':
-                    dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
-                    break
-                  default:
-                    dispatchLoginError(dispatch, err)
-                }
+          .then(() =>
+            createUserProfile(dispatch, firebase, userData, profile || { email })
+          )
+          .catch(err => {
+            if (err) {
+              switch (err.code) {
+                case 'auth/user-not-found':
+                  dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
+                  break
+                default:
+                  dispatchLoginError(dispatch, err)
               }
-              return Promise.reject(err)
-            })
+            }
+            return Promise.reject(err)
+          })
     )
     .catch((err) => {
       dispatchLoginError(dispatch, err)
@@ -515,7 +515,7 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
     })
 }
 
- /**
+/**
   * @description Update Auth Object. Internally calls
   * `firebase.auth().currentUser.updateProfile` as seen [in the firebase docs](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile).
   * @param {Function} dispatch - Action dispatch function

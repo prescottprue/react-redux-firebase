@@ -110,7 +110,7 @@ export const fixPath = path =>
 export const buildChildList = (state, list, p) =>
   mapValues(list, (val, key) => {
     let getKey = val
-     // Handle key: true lists
+    // Handle key: true lists
     if (val === true) {
       getKey = key
     }

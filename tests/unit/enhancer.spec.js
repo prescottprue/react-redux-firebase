@@ -176,7 +176,7 @@ describe('Compose', () => {
     describe('verifyPasswordResetCode', () => {
       it('calls verifyPasswordResetCode Firebase method', () => {
         expect(store.firebase.verifyPasswordResetCode('testCode'))
-           // message associated with calling verifyPasswordResetCode on fake db
+        // message associated with calling verifyPasswordResetCode on fake db
           .to.be.rejectedWith('Your API key is invalid, please check you have copied it correctly.')
       })
     })
@@ -184,7 +184,7 @@ describe('Compose', () => {
     describe('reloadAuth', () => {
       it('calls reloadAuth Firebase method', () => {
         expect(store.firebase.reloadAuth())
-           // message associated with calling reloadAuth on fake db
+        // message associated with calling reloadAuth on fake db
           .to.be.rejectedWith('Must be logged in to reload auth')
       })
     })
@@ -192,7 +192,7 @@ describe('Compose', () => {
     describe('linkWithCredential', () => {
       it('calls reloadAuth Firebase method', () => {
         expect(store.firebase.linkWithCredential())
-           // message associated with calling reloadAuth on fake db
+        // message associated with calling reloadAuth on fake db
           .to.be.rejectedWith('Must be logged in to reload auth')
       })
     })

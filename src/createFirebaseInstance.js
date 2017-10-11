@@ -84,7 +84,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @return {Promise} Containing reference snapshot
    */
   const setWithMeta = (path, value, onComplete) =>
-     withMeta('set', path, value, onComplete)
+    withMeta('set', path, value, onComplete)
 
   /**
    * @description Pushes data to Firebase.
