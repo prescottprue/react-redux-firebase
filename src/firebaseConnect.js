@@ -22,7 +22,10 @@ const getDisplayName = Component => (
  * @description Function that creates a Higher Order Component that
  * automatically listens/unListens to provided firebase paths using
  * React's Lifecycle hooks.
- * @param {String} [storeKey='store'] - Name of key under which redux store lives
+ * **WARNING!!** This is an advanced feature, and should only be used when
+ * needing to access a firebase instance created under a different store key.
+ * @param {String} [storeKey='store'] - Name of redux store which contains
+ * Firebase state (state.firebase)
  * @return {Function} - HOC that accepts a watchArray and wraps a component
  * @example <caption>Basic</caption>
  * // this.props.firebase set on App component as firebase object with helpers
@@ -112,7 +115,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => 
  * export default firebaseConnect()(App)
  * @example <caption>Data</caption>
  * import { connect } from 'react-redux'
- * import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+ * import { firebaseConnect } from 'react-redux-firebase'
  *
  * // sync /todos from firebase into redux
  * const fbWrapped = firebaseConnect([

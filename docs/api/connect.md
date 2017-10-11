@@ -10,10 +10,13 @@
 Function that creates a Higher Order Component that
 automatically listens/unListens to provided firebase paths using
 React's Lifecycle hooks.
+**WARNING!!** This is an advanced feature, and should only be used when
+needing to access a firebase instance created under a different store key.
 
 **Parameters**
 
--   `storeKey` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of key under which redux store lives (optional, default `'store'`)
+-   `storeKey` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
+    Firebase state (state.firebase) (optional, default `'store'`)
 
 **Examples**
 
@@ -55,7 +58,7 @@ _Data_
 
 ```javascript
 import { connect } from 'react-redux'
-import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 // sync /todos from firebase into redux
 const fbWrapped = firebaseConnect([
