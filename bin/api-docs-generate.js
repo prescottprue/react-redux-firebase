@@ -9,8 +9,8 @@ const files = [
     dest: 'firebaseInstance.md'
   },
   {
-    src: 'compose.js',
-    dest: 'compose.md'
+    src: 'enhancer.js',
+    dest: 'enhancer.md'
   },
   {
     src: 'helpers.js',

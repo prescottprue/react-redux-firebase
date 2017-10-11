@@ -71,87 +71,87 @@ export const watchEvent = (firebase, dispatch, options) => {
     query = applyParamsToQuery(queryParams, query)
   }
 
-  const runQuery = (q, e, p, params) => {
-    dispatch({ type: actionTypes.START, path: storeAs || path })
+  dispatch({ type: actionTypes.START, path: storeAs || path })
 
-    // Handle once queries
-    if (e === 'once') {
-      return q.once('value')
-        .then(snapshot => {
-          if (snapshot.val() === null) {
-            return dispatch({
-              type: actionTypes.NO_VALUE,
-              path: storeAs || path
-            })
-          }
-          // dispatch normal event if no populates exist
-          if (!populates) {
-            // create an array for preserving order of children under ordered
-            return dispatch({
-              type: actionTypes.SET,
-              path: storeAs || path,
-              data: snapshot.val(),
-              ordered: orderedFromSnapshot(snapshot)
-            })
-          }
-          // populate and dispatch associated actions if populates exist
-          return populateAndDispatch(firebase, dispatch, {
-            path,
-            storeAs,
-            snapshot,
+  // Handle once queries
+  if (type === 'once') {
+    return query.once('value')
+      .then(snapshot => {
+        if (snapshot.val() === null) {
+          return dispatch({
+            type: actionTypes.NO_VALUE,
+            path: storeAs || path
+          })
+        }
+        // dispatch normal event if no populates exist
+        if (!populates) {
+          // create an array for preserving order of children under ordered
+          return dispatch({
+            type: actionTypes.SET,
+            path: storeAs || path,
             data: snapshot.val(),
-            populates
+            ordered: orderedFromSnapshot(snapshot)
           })
+        }
+        // populate and dispatch associated actions if populates exist
+        return populateAndDispatch(firebase, dispatch, {
+          path,
+          storeAs,
+          snapshot,
+          data: snapshot.val(),
+          populates
         })
-        .catch(err => {
-          dispatch({
-            type: actionTypes.UNAUTHORIZED_ERROR,
-            payload: err
-          })
-          return Promise.reject(err)
-        })
-    }
-    // Handle all other queries
-
-    /* istanbul ignore next: is run by tests but doesn't show in coverage */
-    q.on(e, snapshot => {
-      let data = (e === 'child_removed') ? undefined : snapshot.val()
-      const resultPath = storeAs || (e === 'value') ? p : `${p}/${snapshot.key}`
-
-      // Dispatch standard event if no populates exists
-      if (!populates) {
-        // create an array for preserving order of children under ordered
-        const ordered = e === 'child_added'
-          ? [{ key: snapshot.key, value: snapshot.val() }]
-          : orderedFromSnapshot(snapshot)
-        return dispatch({
-          type: actionTypes.SET,
-          path: storeAs || resultPath,
-          data,
-          ordered
-        })
-      }
-      // populate and dispatch associated actions if populates exist
-      return populateAndDispatch(firebase, dispatch, {
-        path,
-        storeAs,
-        snapshot,
-        data: snapshot.val(),
-        populates
       })
-    }, (err) => {
-      dispatch({ type: actionTypes.ERROR, payload: err })
-    })
+      .catch(err => {
+        dispatch({
+          type: actionTypes.UNAUTHORIZED_ERROR,
+          payload: err
+        })
+        return Promise.reject(err)
+      })
   }
+  // Handle all other queries
 
-  return runQuery(query, type, path, queryParams)
+  /* istanbul ignore next: is run by tests but doesn't show in coverage */
+  query.on(type, (snapshot) => {
+    let data = (type === 'child_removed') ? undefined : snapshot.val()
+    const resultPath = storeAs || (type === 'value') ? path : `${path}/${snapshot.key}`
+
+    // Dispatch standard event if no populates exists
+    if (!populates) {
+      // create an array for preserving order of children under ordered
+      const ordered = type === 'child_added'
+        ? [{ key: snapshot.key, value: snapshot.val() }]
+        : orderedFromSnapshot(snapshot)
+      return dispatch({
+        type: actionTypes.SET,
+        path: storeAs || resultPath,
+        data,
+        ordered
+      })
+    }
+    // populate and dispatch associated actions if populates exist
+    return populateAndDispatch(firebase, dispatch, {
+      path,
+      storeAs,
+      snapshot,
+      data: snapshot.val(),
+      populates
+    })
+  }, (err) => {
+    dispatch({ type: actionTypes.ERROR, payload: err })
+  })
 }
 
 /**
  * @description Remove watcher from an event
  * @param {Object} firebase - Internal firebase object
- * @param {String} event - Event for which to remove the watcher
- * @param {String} path - Path of watcher to remove
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} options - Settings for watcher removal
+ * @param {String} options.event - Event for which to remove the watcher
+ * @param {String} options.path - Path of watcher to remove
+ * @param {String} options.storeAs - storeAs path of watcher to remove
+ * @param {String} options.queryId - id of query for which to unset watcher
  */
 export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId }) => {
   const watchPath = !storeAs ? path : `${path}@${storeAs}`
@@ -165,9 +165,9 @@ export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId 
  * @param {Array} events - List of events for which to add watchers
  */
 export const watchEvents = (firebase, dispatch, events) =>
-    events.forEach(event =>
-      watchEvent(firebase, dispatch, event)
-    )
+  events.forEach(event =>
+    watchEvent(firebase, dispatch, event)
+  )
 
 /**
  * @description Remove watchers from a list of events

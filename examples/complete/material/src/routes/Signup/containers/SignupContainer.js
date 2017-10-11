@@ -6,8 +6,6 @@ import Paper from 'material-ui/Paper'
 import Snackbar from 'material-ui/Snackbar'
 import { connect } from 'react-redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
-import Paper from 'material-ui/Paper'
-import Snackbar from 'material-ui/Snackbar'
 import { LOGIN_PATH, LIST_PATH } from 'constants'
 // import { UserIsNotAuthenticated } from 'utils/router'
 import SignupForm from '../components/SignupForm'
@@ -77,16 +75,16 @@ export default class Signup extends Component {
           </Link>
         </div>
         {isLoaded(authError) &&
-        !isEmpty(authError) &&
-        snackCanOpen && (
-          <Snackbar
-            open={isLoaded(authError) && !isEmpty(authError) && snackCanOpen}
-            message={authError ? authError.message : 'Signup error'}
-            action='close'
-            autoHideDuration={3000}
-            onRequestClose={() => this.setState({ snackCanOpen: false })}
-          />
-        )}
+          !isEmpty(authError) &&
+          snackCanOpen && (
+            <Snackbar
+              open={isLoaded(authError) && !isEmpty(authError) && snackCanOpen}
+              message={authError ? authError.message : 'Signup error'}
+              action="close"
+              autoHideDuration={3000}
+              onRequestClose={() => this.setState({ snackCanOpen: false })}
+            />
+          )}
       </div>
     )
   }

@@ -15,6 +15,7 @@ const {
   UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
+  AUTH_LINK_SUCCESS,
   UNAUTHORIZED_ERROR,
   AUTH_UPDATE_SUCCESS
 } = actionTypes
@@ -210,6 +211,18 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
       }
       const auth = action.auth.toJSON ? action.auth.toJSON() : action.auth
       return { ...auth, isEmpty: false, isLoaded: true }
+    case AUTH_LINK_SUCCESS:
+      if (!action.payload) {
+        return {
+          isEmpty: true,
+          isLoaded: true
+        }
+      }
+      return {
+        ...(action.payload.toJSON ? action.payload.toJSON() : action.payload),
+        isEmpty: false,
+        isLoaded: true
+      }
     case LOGIN_ERROR:
       // TODO: Support keeping data when logging out
       return { isLoaded: true, isEmpty: true }

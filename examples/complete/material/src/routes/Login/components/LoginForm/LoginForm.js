@@ -12,13 +12,13 @@ import classes from './LoginForm.scss'
 export const LoginForm = ({ pristine, submitting, handleSubmit }) => (
   <form className={classes.container} onSubmit={handleSubmit}>
     <Field
-      name='email'
+      name="email"
       component={TextField}
       floatingLabelText="Email"
       validate={[required, validateEmail]}
     />
     <Field
-      name='password'
+      name="password"
       component={TextField}
       floatingLabelText="Password"
       type="password"

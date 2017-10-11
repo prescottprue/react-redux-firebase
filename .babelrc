@@ -1,5 +1,13 @@
 {
-  "presets": ["es2015", "react"],
+  "presets": [
+    "react",
+    ["env", {
+      "targets": {
+        "chrome": 52,
+        "browsers": ["last 2 versions", "safari >= 7"]
+      }
+    }]
+  ],
   "plugins": [
     "lodash",
     "add-module-exports",

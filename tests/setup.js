@@ -37,7 +37,7 @@ global.WebSocket = require('ws')
 var Firebase = global.Firebase = require('firebase')
 
 var fbConfig = global.fbConfig = {
-  apiKey: 'asdf', // placeholder
+  apiKey: 'AIzaSyCTUERDM-Pchn_UDTsfhVPiwM4TtNIxots', // placeholder
   authDomain: 'asdf', // placeholder
   databaseURL: 'ws://127.0.1:5000',
   storageBucket: 'asdf', // placeholder

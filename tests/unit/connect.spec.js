@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import firebaseConnect from '../../src/firebaseConnect'
-import reactReduxFirebase from '../../src/compose'
+import reactReduxFirebase from '../../src/enhancer'
 import { createStore, compose, combineReducers } from 'redux'
 
 describe('firebaseConnect', () => {

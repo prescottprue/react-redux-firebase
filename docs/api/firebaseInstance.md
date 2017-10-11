@@ -24,6 +24,8 @@
 -   [updateProfile](#updateprofile)
 -   [updateAuth](#updateauth)
 -   [updateEmail](#updateemail)
+-   [reloadAuth](#reloadauth)
+-   [linkWithCredential](#linkwithcredential)
 -   [ref](#ref)
 -   [database](#database)
 -   [storage](#storage)
@@ -382,6 +384,22 @@ Update user's email
 
 -   `newEmail` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Update to be auth object
 -   `updateInProfile` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Update in profile
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+## reloadAuth
+
+Reload user's auth object. Must be authenticated.
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+## linkWithCredential
+
+Links the user account with the given credentials.
+
+**Parameters**
+
+-   `credential` **firebase.auth.AuthCredential** The auth credential
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 

@@ -84,7 +84,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @return {Promise} Containing reference snapshot
    */
   const setWithMeta = (path, value, onComplete) =>
-     withMeta('set', path, value, onComplete)
+    withMeta('set', path, value, onComplete)
 
   /**
    * @description Pushes data to Firebase.
@@ -345,6 +345,20 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     authActions.updateEmail(dispatch, firebase, newEmail, updateInProfile)
 
   /**
+   * @description Reload user's auth object. Must be authenticated.
+   * @return {Promise}
+   */
+  const reloadAuth = () => authActions.reloadAuth(dispatch, firebase)
+
+  /**
+   * @description Links the user account with the given credentials.
+   * @param {firebase.auth.AuthCredential} credential - The auth credential
+   * @return {Promise}
+   */
+  const linkWithCredential = (credential) =>
+    authActions.linkWithCredential(dispatch, firebase, credential)
+
+  /**
    * @name ref
    * @description Firebase ref function
    * @return {firebase.database.Reference}
@@ -387,7 +401,9 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     confirmPasswordReset,
     verifyPasswordResetCode,
     watchEvent,
-    unWatchEvent
+    unWatchEvent,
+    reloadAuth,
+    linkWithCredential
   }
 
   return Object.assign(firebase, helpers, { helpers })

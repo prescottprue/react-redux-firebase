@@ -81,13 +81,13 @@ export const getPopulates = (params) => {
  */
 export const getPopulateChild = (firebase, populate, id) =>
   firebase.database()
-   .ref()
-   .child(`${populate.root}/${id}`)
-   .once('value')
-   .then(snap =>
-     // Return id if population value does not exist
-     snap.val()
-   )
+    .ref()
+    .child(`${populate.root}/${id}`)
+    .once('value')
+    .then(snap =>
+      // Return id if population value does not exist
+      snap.val()
+    )
 
 /**
  * @private

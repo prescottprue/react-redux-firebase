@@ -1,4 +1,5 @@
 import { createFirebaseInstance } from './createFirebaseInstance'
+import { createAuthIsReady } from './utils/auth'
 import { defaultConfig } from './constants'
 import { authActions } from './actions'
 
@@ -7,8 +8,9 @@ let firebaseInstance
 /**
  * @name reactReduxFirebase
  * @external
- * @description Middleware that handles configuration (placed in redux's
- * `compose` call)
+ * @description Redux store enhancer that accepts configuration options and adds
+ * store.firebase and store.firebaseAuth. Enhancers are most commonly placed in redux's `compose` call
+ * along side applyMiddleware.
  * @property {Object} firebaseInstance - Initiated firebase instance (can also
  * be library following Firebase JS API such as `react-native-firebase`)
  * @property {Object} config - Containing react-redux-firebase specific configuration
@@ -90,6 +92,10 @@ export default (instance, otherConfig) => next =>
 
     authActions.init(store.dispatch, firebaseInstance)
     store.firebase = firebaseInstance
+
+    if (configs.attachAuthIsReady) {
+      store.firebaseAuthIsReady = createAuthIsReady(store, configs)
+    }
 
     return store
   }

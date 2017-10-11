@@ -48,9 +48,11 @@ const fakeFirebase = {
     signOut: () =>
       Promise.resolve({}),
     createUserWithEmailAndPassword: (email, password) =>
-      email === 'error'
-        ? Promise.reject(new Error('asdfasdf'))
-        : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
+      email.indexOf('error') !== -1
+        ? Promise.reject(new Error('auth/user-not-found'))
+        : email === 'error'
+          ? Promise.reject(new Error('asdfasdf'))
+          : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
     signInWithCustomToken: () => {
       return Promise.resolve({
         toJSON: () => ({
@@ -184,8 +186,14 @@ describe('Actions: Auth', () => {
     })
 
     it('handles token login', async () => {
-      res = await login(dispatch, firebase, { token: 'asdfasdf' }, { uid: 'asdfasdf' })
-      expect(res).to.be.an.object
+      try {
+        await login(dispatch, firebase, { token: 'asdfasdf' }, { uid: 'asdfasdf' })
+      } catch (err) {
+        expect(err.message)
+          // message indicates firebase's internal auth method called
+          // invalid key is intentionally provided
+          .to.equal('The custom token format is incorrect. Please check the documentation.')
+      }
     })
   })
 
@@ -262,7 +270,7 @@ describe('Actions: Auth', () => {
       try {
         res = await createUser(dispatch, fakeFirebase, { email: 'error3', password: 'error2' })
       } catch (err) {
-        expect(err.code).to.equal('auth/user-not-found')
+        expect(err.message).to.equal('auth/user-not-found')
       }
     })
   })

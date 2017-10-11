@@ -51,6 +51,11 @@ export default (initialState = {}) => {
   )
   store.asyncReducers = {}
 
+  // optional way to listen for auth ready (requires attachAuthIsReady: true)
+  // store.firebaseAuthIsReady.then(() => {
+  //   console.log('Auth has loaded') // eslint-disable-line no-console
+  // })
+
   // To unsubscribe, invoke `store.unsubscribeHistory()` anytime
   store.unsubscribeHistory = browserHistory.listen(updateLocation(store))
 

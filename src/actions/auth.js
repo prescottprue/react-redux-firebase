@@ -193,18 +193,20 @@ export const init = (dispatch, firebase) => {
   }
   dispatch({ type: actionTypes.AUTHENTICATION_INIT_STARTED })
   firebase.auth().onAuthStateChanged(authData => {
+    const { config } = firebase._
     if (!authData) {
       // Run onAuthStateChanged if it exists in config and enableEmptyAuthChanges is set to true
-      if (isFunction(firebase._.config.onAuthStateChanged) && firebase._.config.enableEmptyAuthChanges) {
+      if (isFunction(config.onAuthStateChanged) && config.enableEmptyAuthChanges) {
         firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
       }
-      return dispatch({ type: actionTypes.LOGOUT })
+
+      return dispatch({ type: actionTypes.AUTH_EMPTY_CHANGE })
     }
 
     firebase._.authUid = authData.uid
 
     // setup presence if settings and database exist
-    if (firebase._.config.presence && firebase.database && firebase.database.ServerValue) {
+    if (config.presence && firebase.database && firebase.database.ServerValue) {
       setupPresence(dispatch, firebase)
     }
 
@@ -213,8 +215,8 @@ export const init = (dispatch, firebase) => {
     dispatch({ type: actionTypes.LOGIN, auth: authData })
 
     // Run onAuthStateChanged if it exists in config
-    if (isFunction(firebase._.config.onAuthStateChanged)) {
-      firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
+    if (isFunction(config.onAuthStateChanged)) {
+      config.onAuthStateChanged(authData, firebase, dispatch)
     }
   })
 
@@ -321,7 +323,7 @@ export const login = (dispatch, firebase, credentials) => {
           providerData: user.providerData
         }
       )
-      .then((profile) => ({ profile, ...userData }))
+        .then((profile) => ({ profile, ...userData }))
     })
     .catch(err => {
       dispatchLoginError(dispatch, err)
@@ -371,21 +373,21 @@ export const createUser = (dispatch, firebase, { email, password, signIn }, prof
       firebase.auth().currentUser || (!!signIn && signIn === false)
         ? createUserProfile(dispatch, firebase, userData, profile || { email })
         : login(dispatch, firebase, { email, password })
-            .then(() =>
-              createUserProfile(dispatch, firebase, userData, profile || { email })
-            )
-            .catch(err => {
-              if (err) {
-                switch (err.code) {
-                  case 'auth/user-not-found':
-                    dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
-                    break
-                  default:
-                    dispatchLoginError(dispatch, err)
-                }
+          .then(() =>
+            createUserProfile(dispatch, firebase, userData, profile || { email })
+          )
+          .catch(err => {
+            if (err) {
+              switch (err.code) {
+                case 'auth/user-not-found':
+                  dispatchLoginError(dispatch, new Error('The specified user account does not exist.'))
+                  break
+                default:
+                  dispatchLoginError(dispatch, err)
               }
-              return Promise.reject(err)
-            })
+            }
+            return Promise.reject(err)
+          })
     )
     .catch((err) => {
       dispatchLoginError(dispatch, err)
@@ -513,7 +515,7 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
     })
 }
 
- /**
+/**
   * @description Update Auth Object. Internally calls
   * `firebase.auth().currentUser.updateProfile` as seen [in the firebase docs](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile).
   * @param {Function} dispatch - Action dispatch function
@@ -582,6 +584,61 @@ export const updateEmail = (dispatch, firebase, newEmail, updateInProfile) => {
     })
 }
 
+/**
+ * @description Reload Auth state
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @return {Promise} Resolves with auth
+ */
+export const reloadAuth = (dispatch, firebase) => {
+  dispatch({ type: actionTypes.AUTH_RELOAD_START })
+
+  // reject and dispatch error if not logged in
+  if (!firebase.auth().currentUser) {
+    const err = new Error('Must be logged in to reload auth')
+    dispatch({ type: actionTypes.AUTH_RELOAD_ERROR, payload: err })
+    return Promise.reject(err)
+  }
+
+  return firebase.auth().currentUser.reload()
+    .then(() => {
+      const auth = firebase.auth().currentUser
+      dispatch({ type: actionTypes.AUTH_RELOAD_SUCCESS, payload: auth })
+      return auth
+    })
+    .catch((err) => {
+      dispatch({ type: actionTypes.AUTH_RELOAD_ERROR, payload: err })
+      return Promise.reject(err)
+    })
+}
+
+/**
+ * @description Reload Auth state
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @return {Promise} Resolves with auth
+ */
+export const linkWithCredential = (dispatch, firebase, credential) => {
+  dispatch({ type: actionTypes.AUTH_LINK_START })
+
+  // reject and dispatch error if not logged in
+  if (!firebase.auth().currentUser) {
+    const err = new Error('Must be logged in to linkWithCredential')
+    dispatch({ type: actionTypes.AUTH_LINK_ERROR, payload: err })
+    return Promise.reject(err)
+  }
+
+  return firebase.auth().currentUser.linkWithCredential(credential)
+    .then((auth) => {
+      dispatch({ type: actionTypes.AUTH_LINK_SUCCESS, payload: auth })
+      return auth
+    })
+    .catch((err) => {
+      dispatch({ type: actionTypes.AUTH_LINK_ERROR, payload: err })
+      return Promise.reject(err)
+    })
+}
+
 export default {
   dispatchLoginError,
   unWatchUserProfile,
@@ -596,5 +653,6 @@ export default {
   verifyPasswordResetCode,
   updateAuth,
   updateProfile,
-  updateEmail
+  updateEmail,
+  reloadAuth
 }

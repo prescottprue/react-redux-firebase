@@ -50,13 +50,20 @@ Object containing all action types
 -   `FILE_DELETE_COMPLETE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/FILE_DELETE_COMPLETE`
 -   `AUTH_UPDATE_START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_UPDATE_START`
 -   `AUTH_UPDATE_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_UPDATE_ERROR`
--   `AUTH_UPDATE_COMPLETE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_UPDATE_COMPLETE`
+-   `AUTH_UPDATE_SUCCESS` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_UPDATE_SUCCESS`
 -   `PROFILE_UPDATE_START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/PROFILE_UPDATE_START`
 -   `PROFILE_UPDATE_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/PROFILE_UPDATE_ERROR`
--   `PROFILE_UPDATE_COMPLETE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/PROFILE_UPDATE_COMPLETE`
+-   `PROFILE_UPDATE_SUCCESS` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/PROFILE_UPDATE_SUCCESS`
 -   `EMAIL_UPDATE_START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/EMAIL_UPDATE_START`
 -   `EMAIL_UPDATE_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/EMAIL_UPDATE_ERROR`
--   `EMAIL_UPDATE_COMPLETE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/EMAIL_UPDATE_COMPLETE`
+-   `EMAIL_UPDATE_SUCCESS` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/EMAIL_UPDATE_SUCCESS`
+-   `AUTH_RELOAD_START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_RELOAD_START`
+-   `AUTH_RELOAD_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_RELOAD_ERROR`
+-   `AUTH_RELOAD_SUCCESS` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_RELOAD_SUCCESS`
+-   `AUTH_LINK_START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_START`
+-   `AUTH_LINK_ERROR` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_ERROR`
+-   `AUTH_LINK_SUCCESS` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_SUCCESS`
+-   `AUTH_EMPTY_CHANGE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_SUCCESS`
 
 **Examples**
 
@@ -107,3 +114,9 @@ Default configuration options
     dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
     Setting this to true allows an action to be called that removes data
     from redux (which might not always be expected).
+-   `firebaseStateName` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 'firebase' Assumed name of Firebase
+    state (name given when passing reducer to combineReducers). Used in
+    firebaseAuthIsReady promise (see #264).
+-   `attachAuthIsReady` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to attach
+    firebaseAuthIsReady to store. authIsLoaded can be imported and used
+    directly instead based on preference.

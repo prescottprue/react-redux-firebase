@@ -22,12 +22,12 @@ export const AccountForm = ({ account, handleSubmit, submitting }) => (
       floatingLabelText="Avatar Url"
     />
     {!!account &&
-    !!account.providerData && (
-      <div>
-        <h4>Linked Accounts</h4>
-        <ProviderDataForm providerData={account.providerData} />
-      </div>
-    )}
+      !!account.providerData && (
+        <div>
+          <h4>Linked Accounts</h4>
+          <ProviderDataForm providerData={account.providerData} />
+        </div>
+      )}
     <RaisedButton
       primary
       label="Save"

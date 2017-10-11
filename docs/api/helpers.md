@@ -12,6 +12,7 @@ Detect whether items are loaded yet or not
 
 **Parameters**
 
+-   `args` **...any** 
 -   `item` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma separated list is also acceptable.
 
 **Examples**
@@ -31,7 +32,7 @@ Detect whether items are empty or not
 
 **Parameters**
 
--   `args` **...any**
+-   `args` **...any** 
 -   `item` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma seperated list is also acceptable.
 
 **Examples**
@@ -46,100 +47,6 @@ import { firebaseConnect, isEmpty } from 'react-redux-firebase'
 Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not item is empty
 
 ## populate
-## toJS
-
-Convert Immutable Map to a Javascript object
-
-**Parameters**
-
--   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Immutable Map to be converted to JS object (state.firebase)
-
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** data - Javascript version of Immutable Map
-
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Map
-
-## pathToJS
-
-Convert parameter from Immutable Map to a Javascript object
-
-**Parameters**
-
--   `data`  
--   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path from state.firebase to convert to JS object
--   `notSetValue` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to use if data is not available
--   `firebase` **[Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)** Immutable Map to be converted to JS object (state.firebase)
-
-**Examples**
-
-_Basic_
-
-```javascript
-import { connect } from 'react-redux'
-import { firebaseConnect, pathToJS } from 'react-redux-firebase'
-```
-
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Map
-
-## dataToJS
-
-Convert parameter under "data" path of Immutable Map to a Javascript object.
-**NOTE:** Setting a default value will cause `isLoaded` to always return true
-
-**Parameters**
-
--   `data`  
--   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
--   `notSetValue` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to return if value is not
-    found in redux. This will cause `isLoaded` to always return true (since
-    value is set from the start).
--   `firebase` **[Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)** Immutable Map to be converted to JS object (state.firebase)
-
-**Examples**
-
-_Basic_
-
-```javascript
-import { connect } from 'react-redux'
-import { firebaseConnect, dataToJS } from 'react-redux-firebase'
-```
-
-_Default Value_
-
-```javascript
-import { connect } from 'react-redux'
-import { firebaseConnect, dataToJS } from 'react-redux-firebase'
-const defaultValue = {
- 1: {
-   text: 'Example Todo'
- }
-}
-```
-
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Map
-
-## orderedToJS
-
-Convert parameter under "ordered" path of Immutable Map to a
-Javascript array. This preserves order set by a query.
-
-**Parameters**
-
--   `data`  
--   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
--   `notSetValue` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to return if value is not found
--   `firebase` **[Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)** Immutable Map to be converted to JS object (state.firebase)
-
-**Examples**
-
-_Basic_
-
-```javascript
-import { connect } from 'react-redux'
-import { firebaseConnect, orderedToJS } from 'react-redux-firebase'
-```
-
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Map
->>>>>>> master
 
 Convert parameter under "data" path of Immutable Object to a
 Javascript object with parameters populated based on populates array

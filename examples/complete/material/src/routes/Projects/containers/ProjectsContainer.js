@@ -1,6 +1,6 @@
 import React, { Component, cloneElement } from 'react'
 import PropTypes from 'prop-types'
-import { map } from 'lodash'
+import { map, get } from 'lodash'
 import { connect } from 'react-redux'
 import {
   firebaseConnect,
@@ -47,11 +47,12 @@ export default class Projects extends Component {
   }
 
   newSubmit = newProject => {
-    return this.props.firebase.push('projects', newProject)
+    return this.props.firebase
+      .push('projects', newProject)
       .then(() => this.setState({ newProjectModal: false }))
       .catch(err => {
         // TODO: Show Snackbar
-        console.error("error creating new project", err) // eslint-disable-line
+        console.error('error creating new project', err) // eslint-disable-line
       })
   }
 
@@ -82,7 +83,7 @@ export default class Projects extends Component {
     // Project Route is being loaded
     if (this.props.children) {
       // pass all props to children routes
-      return React.cloneElement(this.props.children, this.props)
+      return cloneElement(this.props.children, this.props)
     }
 
     return (

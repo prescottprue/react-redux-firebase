@@ -19,7 +19,7 @@ describe('(Layout) Core', function() {
   let _child
 
   beforeEach(function() {
-    _child = <h1 className='child'>Child</h1>
+    _child = <h1 className="child">Child</h1>
     _props = {
       children: _child
     }
