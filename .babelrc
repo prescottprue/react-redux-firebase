@@ -17,10 +17,7 @@
   ],
   "env": {
     "es": {
-      "comments": false,
-      "plugins": [
-        "./bin/use-lodash-es"
-      ]
+      "comments": false
     },
     "commonjs": {
       "comments": false
