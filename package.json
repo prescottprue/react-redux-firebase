@@ -27,7 +27,8 @@
     "docs:api": "node bin/api-docs-generate",
     "docs:build": "npm run docs:prepare && gitbook build -g prescottprue/react-redux-firebase && npm run docs:api",
     "docs:watch": "npm run docs:prepare && gitbook serve",
-    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force"
+    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force",
+    "docs:upload": "node bin/api-docs-upload"
   },
   "license": "MIT",
   "homepage": "https://github.com/prescottprue/react-redux-firebase#readme",
@@ -90,6 +91,7 @@
     "babel-register": "^6.24.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
+    "child-process-promise": "^2.2.1",
     "codecov": "^2.1.0",
     "cross-env": "^1.0.7",
     "docdown": "^0.7.2",
