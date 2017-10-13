@@ -19,9 +19,19 @@ const { START, SET, UNAUTHORIZED_ERROR } = actionTypes
  * @param {Object} options - Event options object
  * @param {String} options.event - Type of event to watch for (defaults to value)
  * @param {String} options.path - Path to watch with watcher
+ * @param {Array} options.queryParams - List of query parameters
  * @param {String} options.storeAs - Location within redux to store value
  */
-export const watchEvent = (firebase, dispatch, { type, path, populates, queryParams, queryId, isQuery, storeAs }) => {
+export const watchEvent = (firebase, dispatch, options) => {
+  let { queryId } = options
+  const {
+    type,
+    path,
+    populates,
+    queryParams,
+    isQuery,
+    storeAs
+  } = options
   const watchPath = !storeAs ? path : `${path}@${storeAs}`
   const counter = getWatcherCount(firebase, type, watchPath, queryId)
   queryId = queryId || getQueryIdFromPath(path)
@@ -166,10 +176,11 @@ export const watchEvent = (firebase, dispatch, { type, path, populates, queryPar
 /**
  * @description Remove watcher from an event
  * @param {Object} firebase - Internal firebase object
+ * @param {Function} dispatch - Action dispatch function
  * @param {String} event - Event for which to remove the watcher
  * @param {String} path - Path of watcher to remove
  */
-export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId = undefined }) => {
+export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId }) => {
   const watchPath = !storeAs ? path : `${path}@${storeAs}`
   unsetWatcher(firebase, dispatch, type, watchPath, queryId)
 }

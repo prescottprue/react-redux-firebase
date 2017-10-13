@@ -1,5 +1,5 @@
 import { actionTypes } from '../constants'
-import { isNaN, isFunction, size, isObject } from 'lodash'
+import { isNaN, isFunction, size, isObject, isString } from 'lodash'
 
 /**
  * @private
@@ -37,6 +37,9 @@ export const getWatchPath = (event, path) => {
  * @param {String} event - Type of query event
  */
 export const getQueryIdFromPath = (path, event = undefined) => {
+  if (!isString(path)) {
+    throw new Error('Query path must be a string')
+  }
   const origPath = path
   let pathSplitted = path.split('#')
   path = pathSplitted[0]

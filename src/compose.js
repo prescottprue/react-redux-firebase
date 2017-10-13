@@ -354,7 +354,7 @@ export default (fbConfig, otherConfig) => next =>
      * @description Watch event. **Note:** this method is used internally
      * so examples have not yet been created, and it may not work as expected.
      * @param {String} type - Type of watch event
-     * @param {String} dbPath - Database path on which to setup watch event
+     * @param {String} path - Database path on which to setup watch event
      * @param {Object|String} options - Name of listener results within redux
      * store. If string is passed, it is used as storeAs.
      * @param {String} options.storeAs - Name of listener results within redux store
@@ -376,13 +376,22 @@ export default (fbConfig, otherConfig) => next =>
      * @description Unset a listener watch event. **Note:** this method is used
      * internally so examples have not yet been created, and it may not work
      * as expected.
-     * @param {String} eventName - Type of watch event
-     * @param {String} eventPath - Database path on which to setup watch event
-     * @param {String} storeAs - Name of listener results within redux store
+     * @param {String} type - Type of watch event
+     * @param {String} path - Database path on which to setup watch event
+     * @param {Object|String} options - Name of listener results within redux
+     * store. If string is passed, it is used as queryId.
+     * @param {String} options.storeAs - Name of listener results within redux store
+     * @param {Array} options.queryParams - List of query parameters
      * @return {Promise}
      */
-    const unWatchEvent = (eventName, eventPath, queryId = undefined) =>
-      queryActions.unWatchEvent(instance, dispatch, eventName, eventPath, queryId)
+    const unWatchEvent = (type, path, options) =>
+      queryActions.unWatchEvent(
+        instance,
+        dispatch,
+        isObject(options)
+          ? { type, path, ...options }
+          : { type, path, storeAs: options }
+      )
 
     /**
      * @private
