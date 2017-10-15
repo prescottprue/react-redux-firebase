@@ -339,6 +339,49 @@ describe('reducer', () => {
     })
   })
 
+  describe('REMOVE action', () => {
+    it('sets data state to undefined', () => {
+      const path = 'test'
+      action = { type: actionTypes.REMOVE, path }
+      expect(firebaseStateReducer({}, action))
+        .to.deep.equal({
+          ...initialState,
+          data: { [path]: undefined },
+          ordered: { [path]: undefined }
+        })
+    })
+    it('sets ordered state to undefined', () => {
+      const path = 'test'
+      action = { type: actionTypes.REMOVE, path }
+      expect(firebaseStateReducer({}, action))
+        .to.deep.equal({
+          ...initialState,
+          data: { [path]: undefined },
+          ordered: { [path]: undefined }
+        })
+    })
+  })
+
+  describe('AUTH_EMPTY_CHANGE action', () => {
+    it('sets auth.isLoaded: true to state', () => {
+      action = { type: actionTypes.AUTH_EMPTY_CHANGE }
+      expect(firebaseStateReducer({}, action))
+        .to.deep.equal({
+          ...initialState,
+          auth: { isLoaded: true, isEmpty: true }
+        })
+    })
+    it('removes existing auth state', () => {
+      const auth = { some: 'value' }
+      action = { type: actionTypes.AUTH_EMPTY_CHANGE, auth }
+      expect(firebaseStateReducer({}, action))
+        .to.deep.equal({
+          ...initialState,
+          auth: { isLoaded: true, isEmpty: true }
+        })
+    })
+  })
+
   describe('LOGIN_ERROR action', () => {
     it('sets state', () => {
       const authError = { some: 'error' }

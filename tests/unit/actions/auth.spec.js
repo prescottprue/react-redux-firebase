@@ -16,6 +16,9 @@ let functionSpy
 let dispatchSpy
 let res
 const dispatch = sinon.spy()
+const onAuthStateChangedSpy = sinon.spy((f) => {
+  f({uid: 'asdfasdf'})
+})
 const fakeLogin = { email: 'test@tst.com', password: 'asdfasdf', role: 'admin' }
 const fakeFirebase = {
   _: {
@@ -39,9 +42,7 @@ const fakeFirebase = {
     })
   }),
   auth: () => ({
-    onAuthStateChanged: (f) => {
-      f({uid: 'asdfasdf'})
-    },
+    onAuthStateChanged: onAuthStateChangedSpy,
     getRedirectResult: (f) => {
       return Promise.resolve({uid: 'asdfasdf'})
     },
@@ -90,10 +91,11 @@ const fakeFirebase = {
 describe('Actions: Auth', () => {
   describe('init', () => {
     it("calls firebase's onAuthStateChanged", () => {
-      init(dispatch, Firebase)
+      init(dispatch, fakeFirebase)
+      expect(onAuthStateChangedSpy).to.have.been.calledOnce
     })
     it('Errors if Firebase instance is not passed', () => {
-      // expect(init(dispatch, {})).to.Throw
+      expect(init(dispatch, {})).to.Throw
     })
   })
 

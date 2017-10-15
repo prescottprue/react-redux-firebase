@@ -14,6 +14,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @description Object containing all action types
  * @property {String} START - `@@reactReduxFirebase/START`
  * @property {String} SET - `@@reactReduxFirebase/SET`
+ * @property {String} REMOVE - `@@reactReduxFirebase/REMOVE`
  * @property {String} MERGE - `@@reactReduxFirebase/MERGE`
  * @property {String} SET_PROFILE - `@@reactReduxFirebase/SET_PROFILE`
  * @property {String} LOGIN - `@@reactReduxFirebase/LOGIN`
@@ -58,6 +59,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
 export const actionTypes = {
   START: `${actionsPrefix}/START`,
   SET: `${actionsPrefix}/SET`,
+  REMOVE: `${actionsPrefix}/REMOVE`,
   MERGE: `${actionsPrefix}/MERGE`,
   SET_PROFILE: `${actionsPrefix}/SET_PROFILE`,
   LOGIN: `${actionsPrefix}/LOGIN`,
@@ -112,15 +114,19 @@ export const actionTypes = {
  * `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
  * @property {Boolean} enableLogging - `false` Whether or not firebase
  * database logging is enabled.
- * @property {Array} preserveOnLougout - `null` Data parameters to preserve when
+ * @property {Array} preserveOnLogout - `null` Data parameters to preserve when
  * logging out.
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
  * user profile when logging in.
  * @property {Boolean} resetBeforeLogin - `true` Whether or not to reset auth
- * and profile when logging in (see issue #254 for more details).
+ * and profile when logging in (see issue
+ * [#254](https://github.com/prescottprue/react-redux-firebase/issues/254)
+ * for more details).
  * @property {Boolean} enableRedirectHandling - `true` Whether or not to enable
  * redirect handling. This must be disabled if environment is not http/https
  * such as with react-native.
+ * @property {Function} onAuthStateChanged - `null` Function that runs when
+ * auth state changes.
  * @property {Boolean} enableEmptyAuthChanges - `false` Whether or not to enable
  * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
  * empty auth changes such as `undefined` on initialization
@@ -134,13 +140,16 @@ export const actionTypes = {
  * the data path. For example role parameter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
  * is loaded (places it in data/roles).
- * @property {Boolean} dispatchOnUnsetListener - `false` Whether or not to
+ * @property {Boolean} dispatchOnUnsetListener - `true` Whether or not to
  * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
  * Setting this to true allows an action to be called that removes data
  * from redux (which might not always be expected).
+ * @property {Boolean} dispatchRemoveAction - `true` Whether or not to
+ * dispatch REMOVE action when calling `remove`.
  * @property {String} firebaseStateName - 'firebase' Assumed name of Firebase
  * state (name given when passing reducer to combineReducers). Used in
- * firebaseAuthIsReady promise (see #264).
+ * firebaseAuthIsReady promise (see
+ * [#264](https://github.com/prescottprue/react-redux-firebase/issues/264)).
  * @property {Boolean} attachAuthIsReady - `true` Whether or not to attach
  * firebaseAuthIsReady to store. authIsLoaded can be imported and used
  * directly instead based on preference.
@@ -157,6 +166,7 @@ export const defaultConfig = {
   autoPopulateProfile: false,
   setProfilePopulateResults: false,
   dispatchOnUnsetListener: true,
+  dispatchRemoveAction: true,
   enableEmptyAuthChanges: false,
   firebaseStateName: 'firebase',
   attachAuthIsReady: false

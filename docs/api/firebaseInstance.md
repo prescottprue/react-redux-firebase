@@ -165,6 +165,7 @@ Removes data from Firebase at a given path.
 
 -   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path to location on Firebase which to remove
 -   `onComplete` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function to run on complete (`not required`)
+-   `options`  
 
 **Examples**
 
@@ -225,6 +226,8 @@ its metadata in Firebase Database
 -   `file` **File** File object to upload (usually first element from
     array output of select-file or a drag/drop `onDrop`)
 -   `dbPath` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Database path to place uploaded file metadata
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options
+    -   `options.name` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of the file
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Containing the File object
 
@@ -239,6 +242,8 @@ to store their metadata in Firebase Database
 -   `files` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of File objects to upload (usually from
     a select-file or a drag/drop `onDrop`)
 -   `dbPath` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Database path to place uploaded files metadata.
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options
+    -   `options.name` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of the file
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Containing an array of File objects
 

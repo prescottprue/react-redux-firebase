@@ -26,6 +26,8 @@ let firebaseInstance
  * profile when logging in. (default: `false`)
  * @property {Boolean} config.resetBeforeLogin - Whether or not to empty profile
  * and auth state on login
+ * @property {Array} config.perserveOnLogout - Data parameters to perserve when
+ * logging out. (default: `null`)
  * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
  * @property {Function} config.onAuthStateChanged - Function run when auth state

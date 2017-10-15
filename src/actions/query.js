@@ -1,3 +1,4 @@
+import { isFunction } from 'lodash'
 import { actionTypes } from '../constants'
 import {
   orderedFromSnapshot,
@@ -172,6 +173,7 @@ export const watchEvents = (firebase, dispatch, events) =>
 /**
  * @description Remove watchers from a list of events
  * @param {Object} firebase - Internal firebase object
+ * @param {Function} dispatch - Action dispatch function
  * @param {Array} events - List of events for which to remove watchers
  */
 export const unWatchEvents = (firebase, dispatch, events) =>
@@ -179,4 +181,34 @@ export const unWatchEvents = (firebase, dispatch, events) =>
     unWatchEvent(firebase, dispatch, event)
   )
 
-export default { watchEvents, unWatchEvents }
+/**
+ * @description Add watchers to a list of events
+ * @param {Object} firebase - Internal firebase object
+ * @param {Function} dispatch - Action dispatch function
+ * @param {String} path - Path of ref to be removed
+ * @param {Function} onComplete - Callback function that is called when removal is
+ * @param {Object} [options={}] - Configuration for removal
+ * @param {Boolean} [options.dispatchAction=true] - Whether or not to dispatch
+ * REMOVE action
+ * @return {Promise} Resolves with path
+ */
+export const remove = (firebase, dispatch, path, onComplete, options = {}) => {
+  const { dispatchAction = true } = options
+  const { dispatchRemoveAction } = firebase._.config
+  return firebase.database().ref(path).remove()
+    .then(() => {
+      if (dispatchRemoveAction && dispatchAction) {
+        dispatch({ type: actionTypes.REMOVE, path })
+      }
+      if (isFunction(onComplete)) {
+        onComplete()
+      }
+      return path
+    })
+    .catch((err) => {
+      dispatch({ type: actionTypes.ERROR, payload: err })
+      return Promise.reject(err)
+    })
+}
+
+export default { watchEvents, unWatchEvents, remove }

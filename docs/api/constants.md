@@ -27,6 +27,7 @@ Object containing all action types
 
 -   `START` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/START`
 -   `SET` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/SET`
+-   `REMOVE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/REMOVE`
 -   `MERGE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/MERGE`
 -   `SET_PROFILE` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/SET_PROFILE`
 -   `LOGIN` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/LOGIN`
@@ -88,15 +89,19 @@ Default configuration options
     `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
 -   `enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not firebase
     database logging is enabled.
--   `preserveOnLougout` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** `null` Data parameters to preserve when
+-   `preserveOnLogout` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** `null` Data parameters to preserve when
     logging out.
 -   `updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to update
     user profile when logging in.
 -   `resetBeforeLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to reset auth
-    and profile when logging in (see issue #254 for more details).
+    and profile when logging in (see issue
+    [#254](https://github.com/prescottprue/react-redux-firebase/issues/254)
+    for more details).
 -   `enableRedirectHandling` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to enable
     redirect handling. This must be disabled if environment is not http/https
     such as with react-native.
+-   `onAuthStateChanged` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** `null` Function that runs when
+    auth state changes.
 -   `enableEmptyAuthChanges` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not to enable
     empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
     empty auth changes such as `undefined` on initialization
@@ -110,13 +115,16 @@ Default configuration options
     the data path. For example role parameter on profile populated from 'roles'
     root. True will call SET_PROFILE as well as a SET action with the role that
     is loaded (places it in data/roles).
--   `dispatchOnUnsetListener` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not to
+-   `dispatchOnUnsetListener` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to
     dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
     Setting this to true allows an action to be called that removes data
     from redux (which might not always be expected).
+-   `dispatchRemoveAction` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to
+    dispatch REMOVE action when calling `remove`.
 -   `firebaseStateName` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 'firebase' Assumed name of Firebase
     state (name given when passing reducer to combineReducers). Used in
-    firebaseAuthIsReady promise (see #264).
+    firebaseAuthIsReady promise (see
+    [#264](https://github.com/prescottprue/react-redux-firebase/issues/264)).
 -   `attachAuthIsReady` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to attach
     firebaseAuthIsReady to store. authIsLoaded can be imported and used
     directly instead based on preference.

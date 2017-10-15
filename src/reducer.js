@@ -10,11 +10,13 @@ const {
   LOGIN,
   LOGOUT,
   LOGIN_ERROR,
+  REMOVE,
   NO_VALUE,
   SET_LISTENER,
   UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
+  AUTH_EMPTY_CHANGE,
   AUTH_LINK_SUCCESS,
   UNAUTHORIZED_ERROR,
   AUTH_UPDATE_SUCCESS
@@ -181,6 +183,8 @@ const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
       return setWith(Object, getDotStrPath(action.path), mergedData, state)
     case NO_VALUE:
       return setWith(Object, getDotStrPath(action.path), null, state)
+    case REMOVE:
+      return setWith(Object, getDotStrPath(action.path), undefined, state)
     case LOGOUT:
       // support keeping data when logging out - #125
       if (action.preserve) {
@@ -224,9 +228,10 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
         isLoaded: true
       }
     case LOGIN_ERROR:
-      // TODO: Support keeping data when logging out
+    case AUTH_EMPTY_CHANGE:
       return { isLoaded: true, isEmpty: true }
     case LOGOUT:
+    // TODO: Support keeping data when logging out
       return { isLoaded: true, isEmpty: true }
     default:
       return state
