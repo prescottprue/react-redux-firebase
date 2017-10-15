@@ -2,9 +2,10 @@ import {
   watchEvent,
   unWatchEvent,
   watchEvents,
-  unWatchEvents
+  unWatchEvents,
+  remove
 } from '../../../src/actions/query'
-
+import { actionTypes } from '../../../src/constants'
 let spy
 const dispatch = () => {}
 
@@ -80,6 +81,34 @@ describe('Actions: Query', () => {
       const events = [{path: 'test'}]
       spy = sinon.spy(events, 'forEach')
       expect(() => unWatchEvents(firebase, dispatch, events)).to.Throw
+    })
+  })
+
+  describe('remove', () => {
+    it('calls firebase.remove', async () => {
+      const path = 'test'
+      const removeSpy = sinon.spy(() => Promise.resolve({}))
+      const fake = { database: () => ({ ref: () => ({ remove: removeSpy }) }) }
+      await remove(fake, dispatch, path)
+      expect(removeSpy).to.have.been.calledOnce
+    })
+    it('dispatches REMOVE action by default', async () => {
+      const path = 'test'
+      const dispatchSpy = sinon.spy()
+      await remove(firebase, dispatchSpy, path)
+      expect(dispatchSpy).to.have.been.calledOnce
+      expect(dispatchSpy).to.have.been.calledWith({
+        type: actionTypes.REMOVE,
+        path
+      })
+    })
+    describe('options', () => {
+      it('dispatchAction: false prevents dispatch of REMOVE action', async () => {
+        const dispatchSpy = sinon.spy()
+        const options = { dispatchAction: false }
+        await remove(firebase, dispatchSpy, 'test', null, options)
+        expect(dispatchSpy).to.have.callCount(0)
+      })
     })
   })
 })

@@ -134,14 +134,20 @@ describe('Compose', () => {
     })
 
     describe('remove', () => {
-      it.skip('runs', async () => {
-        const res = await store.firebase.remove('test')
-        expect(res).to.equal({})
+      it('removes the value from Firebase', async () => {
+        // add data to be removed
+        await store.firebase.update('test', { some: 'asdf' })
+        // remove data
+        await store.firebase.remove('test')
+        const afterSnap = await store.firebase.ref('test').once('value')
+        // confirm data was removed
+        expect(afterSnap.val()).to.equal(null)
       })
     })
 
     describe('watchEvent', () => {
       it('starts watcher', () => {
+        // TODO: Confirm that watcher count is updated and watcher is set
         store.firebase.watchEvent('value', 'test')
       })
     })
