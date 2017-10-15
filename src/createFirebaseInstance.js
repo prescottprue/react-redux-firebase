@@ -208,10 +208,12 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @param {File} file - File object to upload (usually first element from
    * array output of select-file or a drag/drop `onDrop`)
    * @param {String} dbPath - Database path to place uploaded file metadata
+   * @param {Object} options - Options
+   * @param {String} options.name - Name of the file
    * @return {Promise} Containing the File object
    */
-  const uploadFile = (path, file, dbPath) =>
-    storageActions.uploadFile(dispatch, firebase, { path, file, dbPath })
+  const uploadFile = (path, file, dbPath, options) =>
+    storageActions.uploadFile(dispatch, firebase, { path, file, dbPath, options })
 
   /**
    * @description Upload multiple files to Firebase Storage with the option
@@ -220,10 +222,12 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @param {Array} files - Array of File objects to upload (usually from
    * a select-file or a drag/drop `onDrop`)
    * @param {String} dbPath - Database path to place uploaded files metadata.
+   * @param {Object} options - Options
+   * @param {String} options.name - Name of the file
    * @return {Promise} Containing an array of File objects
    */
-  const uploadFiles = (path, files, dbPath) =>
-    storageActions.uploadFiles(dispatch, firebase, { path, files, dbPath })
+  const uploadFiles = (path, files, dbPath, options) =>
+    storageActions.uploadFiles(dispatch, firebase, { path, files, dbPath, options })
 
   /**
    * @description Delete a file from Firebase Storage with the option to
