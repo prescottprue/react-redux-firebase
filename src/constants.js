@@ -114,15 +114,19 @@ export const actionTypes = {
  * `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
  * @property {Boolean} enableLogging - `false` Whether or not firebase
  * database logging is enabled.
- * @property {Array} preserveOnLougout - `null` Data parameters to preserve when
+ * @property {Array} preserveOnLogout - `null` Data parameters to preserve when
  * logging out.
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
  * user profile when logging in.
  * @property {Boolean} resetBeforeLogin - `true` Whether or not to reset auth
- * and profile when logging in (see issue #254 for more details).
+ * and profile when logging in (see issue
+ * [#254](https://github.com/prescottprue/react-redux-firebase/issues/254)
+ * for more details).
  * @property {Boolean} enableRedirectHandling - `true` Whether or not to enable
  * redirect handling. This must be disabled if environment is not http/https
  * such as with react-native.
+ * @property {Function} onAuthStateChanged - `null` Function that runs when
+ * auth state changes.
  * @property {Boolean} enableEmptyAuthChanges - `false` Whether or not to enable
  * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
  * empty auth changes such as `undefined` on initialization
@@ -144,7 +148,8 @@ export const actionTypes = {
  * dispatch REMOVE action when calling `remove`.
  * @property {String} firebaseStateName - 'firebase' Assumed name of Firebase
  * state (name given when passing reducer to combineReducers). Used in
- * firebaseAuthIsReady promise (see #264).
+ * firebaseAuthIsReady promise (see
+ * [#264](https://github.com/prescottprue/react-redux-firebase/issues/264)).
  * @property {Boolean} attachAuthIsReady - `true` Whether or not to attach
  * firebaseAuthIsReady to store. authIsLoaded can be imported and used
  * directly instead based on preference.
