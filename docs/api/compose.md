@@ -58,6 +58,7 @@ along side applyMiddleware.
         the data path. For example role parameter on profile populated from 'roles'
         root. True will call SET_PROFILE as well as a SET action with the role that
         is loaded (places it in data/roles). (default: `false`)
+    -   `config.preserveOnLogout` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Data parameters to preserve when logging out. (default: `null`)
 
 **Examples**
 
