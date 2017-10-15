@@ -136,10 +136,12 @@ export const actionTypes = {
  * the data path. For example role parameter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
  * is loaded (places it in data/roles).
- * @property {Boolean} dispatchOnUnsetListener - `false` Whether or not to
+ * @property {Boolean} dispatchOnUnsetListener - `true` Whether or not to
  * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
  * Setting this to true allows an action to be called that removes data
  * from redux (which might not always be expected).
+ * @property {Boolean} dispatchRemoveAction - `true` Whether or not to
+ * dispatch REMOVE action when calling `remove`.
  * @property {String} firebaseStateName - 'firebase' Assumed name of Firebase
  * state (name given when passing reducer to combineReducers). Used in
  * firebaseAuthIsReady promise (see #264).
@@ -159,6 +161,7 @@ export const defaultConfig = {
   autoPopulateProfile: false,
   setProfilePopulateResults: false,
   dispatchOnUnsetListener: true,
+  dispatchRemoveAction: true,
   enableEmptyAuthChanges: false,
   firebaseStateName: 'firebase',
   attachAuthIsReady: false
