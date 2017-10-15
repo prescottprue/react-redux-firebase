@@ -63,7 +63,7 @@ export const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
  * @param {String} config.dbPath - Datbase path to write file meta data to
  * @param {Object} config.options - Options
  * @param {String|Function} config.options.name - Name of file. If a function
- * is provided it recieves (fileObject, internalInstance, config) as arguments.
+ * is provided it recieves (fileObject, internalFirebase, config) as arguments.
  * @return {Promise} Resolves with meta object
  * @private
  */

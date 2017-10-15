@@ -10,6 +10,7 @@ const {
   LOGIN,
   LOGOUT,
   LOGIN_ERROR,
+  REMOVE,
   NO_VALUE,
   SET_LISTENER,
   UNSET_LISTENER,
@@ -182,6 +183,8 @@ const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
       return setWith(Object, getDotStrPath(action.path), mergedData, state)
     case NO_VALUE:
       return setWith(Object, getDotStrPath(action.path), null, state)
+    case REMOVE:
+      return setWith(Object, getDotStrPath(action.path), undefined, state)
     case LOGOUT:
       // support keeping data when logging out - #125
       if (action.preserve) {

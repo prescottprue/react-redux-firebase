@@ -14,6 +14,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @description Object containing all action types
  * @property {String} START - `@@reactReduxFirebase/START`
  * @property {String} SET - `@@reactReduxFirebase/SET`
+ * @property {String} REMOVE - `@@reactReduxFirebase/REMOVE`
  * @property {String} MERGE - `@@reactReduxFirebase/MERGE`
  * @property {String} SET_PROFILE - `@@reactReduxFirebase/SET_PROFILE`
  * @property {String} LOGIN - `@@reactReduxFirebase/LOGIN`
@@ -58,6 +59,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
 export const actionTypes = {
   START: `${actionsPrefix}/START`,
   SET: `${actionsPrefix}/SET`,
+  REMOVE: `${actionsPrefix}/REMOVE`,
   MERGE: `${actionsPrefix}/MERGE`,
   SET_PROFILE: `${actionsPrefix}/SET_PROFILE`,
   LOGIN: `${actionsPrefix}/LOGIN`,
