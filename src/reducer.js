@@ -15,6 +15,7 @@ const {
   UNSET_LISTENER,
   AUTHENTICATION_INIT_STARTED,
   AUTHENTICATION_INIT_FINISHED,
+  AUTH_EMPTY_CHANGE,
   AUTH_LINK_SUCCESS,
   UNAUTHORIZED_ERROR,
   AUTH_UPDATE_SUCCESS
@@ -224,10 +225,12 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
         isLoaded: true
       }
     case LOGIN_ERROR:
-      // TODO: Support keeping data when logging out
       return { isLoaded: true, isEmpty: true }
     case LOGOUT:
+    // TODO: Support keeping data when logging out
       return { isLoaded: true, isEmpty: true }
+    case AUTH_EMPTY_CHANGE:
+      return { ...state, isLoaded: true }
     default:
       return state
   }
