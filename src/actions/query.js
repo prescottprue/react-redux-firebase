@@ -185,15 +185,16 @@ export const unWatchEvents = (firebase, dispatch, events) =>
  * @description Add watchers to a list of events
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
- * @param {Object} config - Configuration for removal
  * @param {String} path - Path of ref to be removed
  * @param {Function} onComplete - Callback function that is called when removal is
- * complete
+ * @param {Object} [options={}] - Configuration for removal
+ * @param {Boolean} [options.dispatchAction=true] - Whether or not to dispatch
+ * REMOVE action
  * @return {Promise} Resolves with path
  */
-export const remove = (firebase, dispatch, config) => {
-  const { path, onComplete, dispatchAction = true } = config
-  firebase.database().ref(path).remove()
+export const remove = (firebase, dispatch, path, onComplete, options = {}) => {
+  const { dispatchAction = true } = options
+  return firebase.database().ref(path).remove()
     .then(() => {
       if (dispatchAction) {
         dispatch({ type: actionTypes.REMOVE, path })

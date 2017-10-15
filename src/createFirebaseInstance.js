@@ -165,8 +165,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * )
    * export default firebaseConnect()(Example)
    */
-  const remove = (path, onComplete) =>
-    queryActions.remove(firebase, dispatch, path, onComplete)
+  const remove = (path, onComplete, options) =>
+    queryActions.remove(firebase, dispatch, path, onComplete, options)
 
   /**
    * @description Sets data to Firebase only if the path does not already
