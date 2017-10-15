@@ -73,7 +73,9 @@ export const uploadFile = (dispatch, firebase, config) => {
     ? options.name(file, firebase, config)
     : options.name
   const filename = nameFromOptions || file.name
+
   dispatch({ type: FILE_UPLOAD_START, payload: { ...config, filename } })
+
   return firebase.storage().ref(`${path}/${filename}`).put(file)
     .then((uploadTaskSnaphot) => {
       if (!dbPath || !firebase.database) {
@@ -82,7 +84,7 @@ export const uploadFile = (dispatch, firebase, config) => {
           meta: { ...config, filename },
           payload: { uploadTaskSnaphot }
         })
-        return uploadTaskSnaphot
+        return { uploadTaskSnaphot }
       }
       const { metadata: { name, fullPath, downloadURLs } } = uploadTaskSnaphot
       const { fileMetadataFactory } = firebase._.config
@@ -96,18 +98,19 @@ export const uploadFile = (dispatch, firebase, config) => {
         .ref(dbPath)
         .push(fileData)
         .then((metaDataSnapshot) => {
-          dispatch({
-            type: FILE_UPLOAD_COMPLETE,
-            meta: { ...config, filename },
-            payload: { uploadTaskSnaphot, metaDataSnapshot }
-          })
-          return {
+          const payload = {
             snapshot: metaDataSnapshot,
             key: metaDataSnapshot.key,
             File: fileData,
             uploadTaskSnaphot,
             metaDataSnapshot
           }
+          dispatch({
+            type: FILE_UPLOAD_COMPLETE,
+            meta: { ...config, filename },
+            payload
+          })
+          return payload
         })
     })
     .catch((err) => {
