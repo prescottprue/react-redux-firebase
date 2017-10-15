@@ -69,9 +69,9 @@ export const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
  */
 export const uploadFile = (dispatch, firebase, config) => {
   const { path, file, dbPath, options = {} } = config
-  const nameFromOptions = options.name &&
-    isFunction(options.name) &&
-    options.name(file, firebase, config)
+  const nameFromOptions = options.name && isFunction(options.name)
+    ? options.name(file, firebase, config)
+    : options.name
   const filename = nameFromOptions || file.name
   dispatch({ type: FILE_UPLOAD_START, payload: { ...config, filename } })
   return firebase.storage().ref(`${path}/${filename}`).put(file)
