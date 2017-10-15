@@ -19,6 +19,11 @@ describe('Actions: Query', () => {
       expect(watchEvent).to.be.a.function
     })
 
+    it('throws if Firebase database has not been included', () => {
+      expect(() => watchEvent({}))
+        .to.Throw('Firebase database is required to create watchers')
+    })
+
     it('runs given basic params', () => {
       expect(watchEvent(firebase, dispatch, { type: 'once', path: 'projects' }, 'projects'))
         .to.eventually.be.an.object
@@ -102,6 +107,31 @@ describe('Actions: Query', () => {
         path
       })
     })
+    it('calls onComplete if provided', async () => {
+      const path = 'test'
+      const onCompleteSpy = sinon.spy()
+      await remove(firebase, dispatch, path, onCompleteSpy)
+      expect(onCompleteSpy).to.have.been.calledOnce
+    })
+    it('dispatches ERROR ', async () => {
+      const path = 'test'
+      const dispatchSpy = sinon.spy()
+      const removeSpy = sinon.spy(() => Promise.reject(path)) // eslint-disable-line prefer-promise-reject-errors
+      const fake = { database: () => ({ ref: () => ({ remove: removeSpy }) }) }
+      // Wrap in try/catch to catch thrown error
+      try {
+        await remove(fake, dispatchSpy, path)
+        expect(dispatchSpy).to.have.been.calledOnce
+        expect(dispatchSpy).to.have.been.calledWith({
+          type: actionTypes.REMOVE,
+          path
+        })
+      } catch (err) {
+        // confirm the thrown error is the one from the test
+        expect(err).to.equal(path)
+      }
+    })
+
     describe('options', () => {
       it('dispatchAction: false prevents dispatch of REMOVE action', async () => {
         const dispatchSpy = sinon.spy()
