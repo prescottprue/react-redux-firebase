@@ -93,7 +93,10 @@ describe('Actions: Query', () => {
     it('calls firebase.remove', async () => {
       const path = 'test'
       const removeSpy = sinon.spy(() => Promise.resolve({}))
-      const fake = { database: () => ({ ref: () => ({ remove: removeSpy }) }) }
+      const fake = {
+        database: () => ({ ref: () => ({ remove: removeSpy }) }),
+        _: firebase._
+      }
       await remove(fake, dispatch, path)
       expect(removeSpy).to.have.been.calledOnce
     })
@@ -113,11 +116,14 @@ describe('Actions: Query', () => {
       await remove(firebase, dispatch, path, onCompleteSpy)
       expect(onCompleteSpy).to.have.been.calledOnce
     })
-    it('dispatches ERROR ', async () => {
+    it('dispatches ERROR if remove call has an error', async () => {
       const path = 'test'
       const dispatchSpy = sinon.spy()
       const removeSpy = sinon.spy(() => Promise.reject(path)) // eslint-disable-line prefer-promise-reject-errors
-      const fake = { database: () => ({ ref: () => ({ remove: removeSpy }) }) }
+      const fake = {
+        database: () => ({ ref: () => ({ remove: removeSpy }) }),
+        _: firebase._
+      }
       // Wrap in try/catch to catch thrown error
       try {
         await remove(fake, dispatchSpy, path)

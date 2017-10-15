@@ -194,10 +194,10 @@ export const unWatchEvents = (firebase, dispatch, events) =>
  */
 export const remove = (firebase, dispatch, path, onComplete, options = {}) => {
   const { dispatchAction = true } = options
-  const { dispatchRemoveAction } = firebase._
+  const { dispatchRemoveAction } = firebase._.config
   return firebase.database().ref(path).remove()
     .then(() => {
-      if (dispatchAction && dispatchRemoveAction) {
+      if (dispatchRemoveAction && dispatchAction) {
         dispatch({ type: actionTypes.REMOVE, path })
       }
       if (isFunction(onComplete)) {
