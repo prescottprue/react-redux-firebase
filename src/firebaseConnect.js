@@ -3,19 +3,7 @@ import PropTypes from 'prop-types'
 import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'
-import { getEventsFromInput, createCallable } from './utils'
-
-/**
- * Get the display name of a component.
- * @param  {Object|Element|String} Item from which to get display name
- * @return {String} Name of input component/element/string
- * @private
- */
-const getDisplayName = Component => (
-  Component.displayName ||
-  Component.name ||
-  (typeof Component === 'string' ? Component : 'Component')
-)
+import { getEventsFromInput, createCallable, getDisplayName } from './utils'
 
 /**
  * @name createFirebaseConnect

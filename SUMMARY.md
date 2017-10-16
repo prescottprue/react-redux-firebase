@@ -28,6 +28,7 @@
 * [API Reference](/docs/api/README.md)
   * [constants](/docs/api/constants.md)
   * [firebaseConnect](/docs/api/connect.md)
+  * [firestoreConnect](/docs/api/firestoreConnect.md)
   * [firebaseStateReducer](/docs/api/reducer.md)
   * [reactReduxFirebase](/docs/api/enhancer.md)
   * [props.firebase](/docs/api/props-firebase.md)
