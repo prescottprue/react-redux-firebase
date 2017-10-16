@@ -34,7 +34,7 @@ export const watchEvent = (firebase, dispatch, options) => {
   } = options
   const watchPath = !storeAs ? path : `${path}@${storeAs}`
   const counter = getWatcherCount(firebase, type, watchPath, queryId)
-  queryId = queryId || getQueryIdFromPath(path)
+  queryId = queryId || getQueryIdFromPath(path, type)
 
   if (counter > 0) {
     if (queryId) {
