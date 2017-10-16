@@ -25,7 +25,11 @@ const config = {
   },
   resolve: {
     modules: [inProject(project.srcDir), 'node_modules'],
-    extensions: ['*', '.js', '.jsx', '.json']
+    extensions: ['*', '.js', '.jsx', '.json'],
+    alias: {
+      // fix issue of loading multiple versions of react
+      react: path.resolve('./node_modules/react')
+    }
   },
   externals: project.externals,
   module: {
@@ -54,7 +58,11 @@ const config = {
 // ------------------------------------
 config.module.rules.push({
   test: /\.(js|jsx)$/,
-  exclude: [/node_modules/, /react-redux-firebase\/es/],
+  exclude: [
+    /node_modules/,
+    /react-redux-firebase\/es/,
+    /redux-firestore\/es/,
+  ],
   use: [
     {
       loader: 'babel-loader',

@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router'
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 import makeRootReducer from './reducers'
 import firebase from 'firebase'
+import 'firebase/firestore' // make sure you add this for firestore
 import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
 import { version } from '../../package.json'
 import { updateLocation } from './location'
@@ -33,8 +34,9 @@ export default (initialState = {}) => {
     }
   }
 
-  // Initialize Firebase instance
+  // Initialize Firebase instance and Firestore (optional)
   firebase.initializeApp(fbConfig)
+  firebase.firestore()
 
   // ======================================================
   // Store Instantiation and HMR Setup

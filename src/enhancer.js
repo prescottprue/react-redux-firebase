@@ -1,3 +1,4 @@
+import { createFirestoreInstance } from 'redux-firestore'
 import { createFirebaseInstance } from './createFirebaseInstance'
 import { createAuthIsReady } from './utils/auth'
 import { defaultConfig } from './constants'
@@ -91,6 +92,9 @@ export default (instance, otherConfig) => next =>
 
     const configs = { ...defaultConfig, ...otherConfig }
     firebaseInstance = createFirebaseInstance(instance.firebase_ || instance, configs, store.dispatch)
+    if (configs.includeFirestore) {
+      firebaseInstance = createFirestoreInstance(instance.firebase_ || instance, configs, store.dispatch)
+    }
 
     authActions.init(store.dispatch, firebaseInstance)
     store.firebase = firebaseInstance
