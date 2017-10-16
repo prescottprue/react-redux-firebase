@@ -16,6 +16,10 @@ import { connect } from 'react-redux'
 import { isLoaded, isEmpty, toJS } from 'react-redux-firebase'
 
 class SomeThing extends PureComponent {
+  static contextTypes = {
+    store: PropTypes.object.isRequired
+  }
+
   static propTypes = {
     todosMap: PropTypes.object
   }

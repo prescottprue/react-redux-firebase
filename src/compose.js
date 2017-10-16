@@ -372,13 +372,11 @@ export default (fbConfig, otherConfig) => next =>
      *   }
      *
      *   componentWillMount() {
-     *     { firebase } = this.context.store
-     *     firebase.helpers.watchEvent('value', 'todos')
+     *     this.context.store.firebase.helpers.watchEvent('value', 'todos')
      *   }
      *
      *   componentWillUnmount() {
-     *     { firebase } = this.context.store
-     *     firebase.helpers.unWatchEvent('value', 'todos')
+     *     this.context.store.firebase.helpers.unWatchEvent('value', 'todos')
      *   }
      *
      *   render() {
