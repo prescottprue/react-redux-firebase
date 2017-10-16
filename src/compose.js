@@ -351,9 +351,8 @@ export default (fbConfig, otherConfig) => next =>
 
     /**
      * @private
-     * @description Watch event. **Note:** this method is used internally
-     * so examples have not yet been created, and it may not work as expected.
-     * @param {String} type - Type of watch event
+     * @description Create watch event for Firebase Realtime Database
+     * @param {String} type - Type of watch event ('value', 'once', etc)
      * @param {String} path - Database path on which to setup watch event
      * @param {Object|String} options - Name of listener results within redux
      * store. If string is passed, it is used as storeAs.
@@ -361,6 +360,50 @@ export default (fbConfig, otherConfig) => next =>
      * @param {Array} options.queryParams - List of query parameters
      * @param {Array} options.populates - Populates config
      * @return {Promise}
+     * @example <caption>Basic</caption>
+     * import React, { PureComponent } from 'react'
+     * import PropTypes from 'prop-types'
+     * import { connect } from 'react-redux'
+     * import { toJS, isLoaded, isEmpty } from 'react-redux-firebase'
+     *
+     * class SomeThing extends PureComponent {
+     *   static contextTypes = {
+     *     store: PropTypes.object.isRequired
+     *   }
+     *
+     *   componentWillMount() {
+     *     { firebase } = this.context.store
+     *     firebase.watchEvent('value', 'todos')
+     *   }
+     *
+     *   componentWillUnmount() {
+     *     { firebase } = this.context.store
+     *     firebase.unWatchEvent('value', 'todos')
+     *   }
+     *
+     *   render() {
+     *     const { todos } = this.props
+     *     const todoData = toJS(todos) // convert from immutable map to JS object
+     *     return (
+     *       <div>
+     *         <h2>Todos</h2>
+     *         <span>
+     *         {
+     *           !isLoaded(todosData)
+     *              ? <div>Loading</div>
+     *              : isEmpty(todosData)
+     *                ? <div>No Todos</div>
+     *                : JSON.stringify(toJS(todos), null, 2)
+     *         }
+     *         </span>
+     *       </div>
+     *     )
+     *   }
+     * }
+     *
+     * export default connect(({ firebase }) =>
+     *   todos: firebase.getIn(['data', 'todos']) // pass immutable map as prop
+     * )(SomeThing)
      */
     const watchEvent = (type, path, options) =>
       queryActions.watchEvent(
@@ -379,9 +422,9 @@ export default (fbConfig, otherConfig) => next =>
      * @param {String} type - Type of watch event
      * @param {String} path - Database path on which to setup watch event
      * @param {Object|String} options - Name of listener results within redux
-     * store. If string is passed, it is used as queryId.
-     * @param {String} options.storeAs - Name of listener results within redux store
-     * @param {Array} options.queryParams - List of query parameters
+     * store. If string is passed, it is used as storeAs.
+     * @param {String} options.storeAs - Where results are place within redux store
+     * @param {String} options.queryId - Id of query
      * @return {Promise}
      */
     const unWatchEvent = (type, path, options) =>

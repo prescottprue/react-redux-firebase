@@ -13,7 +13,7 @@ import {
 const { START, SET, UNAUTHORIZED_ERROR } = actionTypes
 
 /**
- * @description Watch a specific event type
+ * @description Watch a path in Firebase Real Time Database
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} options - Event options object
@@ -177,8 +177,14 @@ export const watchEvent = (firebase, dispatch, options) => {
  * @description Remove watcher from an event
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
- * @param {String} event - Event for which to remove the watcher
- * @param {String} path - Path of watcher to remove
+ * @param {Object} config - Config object
+ * @param {String} config.type - Type for which to remove the watcher (
+ * value, once, first_child etc.)
+ * @param {String} config.path - Path of watcher to remove
+ * @param {String} config.storeAs - Path which to store results within in
+ * redux store
+ * @param {String} config.queryId - Id of the query (used for idendifying)
+ * in internal watchers list
  */
 export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId }) => {
   const watchPath = !storeAs ? path : `${path}@${storeAs}`

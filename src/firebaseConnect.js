@@ -105,8 +105,11 @@ export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => 
  * @extends React.Component
  * @description Higher Order Component that automatically listens/unListens
  * to provided firebase paths using React's Lifecycle hooks.
- * @param {Array} watchArray - Array of objects or strings for paths to sync from Firebase. Can also be a function that returns the array. The function is passed the current props and the firebase object.
- * @return {Function} - that accepts a component to wrap and returns the wrapped component
+ * @param {Array} watchArray - Array of objects or strings for paths to sync
+ * from Firebase. Can also be a function that returns the array. The function is
+ * passed the current props and the firebase object.
+ * @return {Function} - that accepts a component to wrap and returns the
+ * wrapped component
  * @example <caption>Basic</caption>
  * // this.props.firebase set on App component as firebase object with helpers
  * import { firebaseConnect } from 'react-redux-firebase'
