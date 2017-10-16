@@ -54,11 +54,13 @@ export const createFirestoreConnect = (storeKey = 'store') =>
       firestoreHelpers.onSnapshot(this._firebaseEvents[0].path)
     }
 
+    // TODO: Remove listeners on unmount
     // componentWillUnmount () {
     //   const { firebase, dispatch } = this.context.store
     //   unWatchEvents(firebase, dispatch, this._firebaseEvents)
     // }
-    //
+
+    // TODO: Re-attach listeners on query path change
     // componentWillReceiveProps (np) {
     //   const { firebase, dispatch } = this.context.store
     //   const inputAsFunc = createCallable(dataOrFn)
@@ -99,7 +101,8 @@ export const createFirestoreConnect = (storeKey = 'store') =>
  * @extends React.Component
  * @description Higher Order Component that automatically listens/unListens
  * to provided Cloud Firestore paths using React's Lifecycle hooks. Make sure you
- * have required/imported Cloud Firestore before attempting to use.
+ * have required/imported Cloud Firestore before attempting to use. **Note** Populate
+ * is not yet supported.
  * @param {Array} watchArray - Array of objects or strings for paths to sync from
  * Firebase. Can also be a function that returns the array. The function is passed
  * the current props and the firebase object.

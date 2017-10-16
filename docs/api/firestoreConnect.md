@@ -39,7 +39,8 @@ Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Ref
 
 Higher Order Component that automatically listens/unListens
 to provided Cloud Firestore paths using React's Lifecycle hooks. Make sure you
-have required/imported Cloud Firestore before attempting to use.
+have required/imported Cloud Firestore before attempting to use. **Note** Populate
+is not yet supported.
 
 **Parameters**
 
