@@ -6,6 +6,7 @@ const exampleData = {
     projects: {
       CDF: {
         owner: 'ABC',
+        category: 'cat1',
         notes: {
           123: true
         },
@@ -15,7 +16,8 @@ const exampleData = {
         }
       },
       GHI: {
-        owner: 'ABC'
+        owner: 'ABC',
+        category: 'cat2'
       },
       OKF: {
         owner: 'asdfasdf',
@@ -29,9 +31,20 @@ const exampleData = {
       },
       QRS: {
         owner: 'ABC',
+        category: 'cat1',
         nested: {
           owner: 'ABC'
         },
+        notes: {
+          123: true
+        },
+        collaborators: {
+          ABC: true,
+          abc: true
+        }
+      },
+      TUV: {
+        owner: 'ABC',
         notes: {
           123: true
         },
@@ -44,6 +57,14 @@ const exampleData = {
     users: {
       ABC: {
         displayName: 'scott'
+      }
+    },
+    categories: {
+      cat1: {
+        displayName: 'magic'
+      },
+      cat2: {
+        displayName: 'animals'
       }
     },
     notes: {
@@ -209,6 +230,21 @@ describe('Helpers:', () => {
           const rootName = 'users'
           const valName = 'CDF'
           expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName }])[valName].owner)
+            .to
+            .have
+            .property('displayName', 'scott')
+        })
+
+        it('populates value even when others are missing', () => {
+          const path = 'projects'
+          const rootName = 'users'
+          const catRootName = 'categories'
+          const valName = 'TUV'
+          const populates = [
+            { child: 'owner', root: rootName },
+            { child: 'category', root: catRootName }
+          ]
+          expect(helpers.populate(exampleData, path, populates)[valName].owner)
             .to
             .have
             .property('displayName', 'scott')
