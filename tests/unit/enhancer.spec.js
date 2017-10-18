@@ -209,7 +209,8 @@ describe('Compose', () => {
           .to.Throw('store.firebase.storage is not a function')
       })
 
-      it('is exported if it exists', () => {
+      // TODO: create an instance with storage mocked
+      it.skip('is exported if it exists', () => {
         Firebase.storage = () => ({})
         expect(store.firebase.storage()).to.be.an.object
         Firebase.storage = undefined
@@ -222,7 +223,8 @@ describe('Compose', () => {
           .to.Throw('store.firebase.messaging is not a function')
       })
 
-      it('is exported if it exists', () => {
+      // TODO: create an instance with messaging mocked
+      it.skip('is exported if it exists', () => {
         Firebase.messaging = () => ({})
         expect(store.firebase.messaging()).to.be.an.object
         Firebase.messaging = undefined
