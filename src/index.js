@@ -2,6 +2,7 @@ import { reducer as firestoreReducer } from 'redux-firestore'
 import { createFirebaseInstance } from './createFirebaseInstance'
 import firebaseConnect, { createFirebaseConnect } from './firebaseConnect'
 import firestoreConnect, { createFirestoreConnect } from './firestoreConnect'
+import withFirebase, { createWithFirebase } from './withFirebase'
 import enhancer, { getFirebase } from './enhancer'
 import reducer from './reducer'
 import constants, { actionTypes } from './constants'
@@ -10,11 +11,13 @@ import * as helpers from './helpers'
 
 export default {
   firebase: firebaseConnect,
-  firebaseConnect,
-  firestoreConnect,
-  createFirebaseConnect,
-  createFirestoreConnect,
   createFirebaseInstance,
+  firebaseConnect,
+  createFirebaseConnect,
+  firestoreConnect,
+  createFirestoreConnect,
+  withFirebase,
+  createWithFirebase,
   firestoreReducer,
   firebaseStateReducer: reducer,
   reduxReactFirebase: enhancer,

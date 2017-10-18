@@ -22,8 +22,8 @@ import { getEventsFromInput, createCallable, getDisplayName } from './utils'
  * export default firebaseConnect()(SomeComponent)
  */
 export const createFirestoreConnect = (storeKey = 'store') =>
-(dataOrFn = []) => WrappedComponent => {
-  class FirestoreConnect extends Component {
+  (dataOrFn = []) => WrappedComponent => {
+    class FirestoreConnect extends Component {
     firebaseEvents = []
 
     firebase = null
@@ -91,10 +91,10 @@ export const createFirestoreConnect = (storeKey = 'store') =>
         />
       )
     }
-  }
+    }
 
-  return hoistStatics(FirestoreConnect, WrappedComponent)
-}
+    return hoistStatics(FirestoreConnect, WrappedComponent)
+  }
 
 /**
  * @name firestoreConnect
