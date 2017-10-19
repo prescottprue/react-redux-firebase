@@ -21,7 +21,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
   }
 
   // Add internal variables to firebase instance
-  const defaultInternals = { watchers: {}, config: configs, authUid: null }
+  const defaultInternals = { watchers: {}, listeners: {}, config: configs, authUid: null }
   Object.defineProperty(firebase, '_', {
     value: defaultInternals,
     writable: true,

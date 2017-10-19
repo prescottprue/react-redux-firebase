@@ -47,7 +47,7 @@ Include `reactReduxFirebase` in your store compose function and  `firebaseStateR
 import { createStore, combineReducers, compose } from 'redux'
 import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
 import firebase from 'firebase'
-// import 'firebase/firestore' // add this to use firestore
+// import 'firebase/firestore' // <- needed if using firestore
 
 const firebaseConfig = {
   apiKey: '<your-api-key>',
@@ -66,16 +66,18 @@ const rrfConfig = {
 firebase.initializeApp(config) // <- new to v2.*.*
 
 // initialize firestore
-// firebase.firestore() // <- only needed if using firestore
+// firebase.firestore() // <- needed if using firestore
 
 // Add reduxReduxFirebase enhancer when making store creator
 const createStoreWithFirebase = compose(
   reactReduxFirebase(firebase, rrfConfig), // firebase instance as first argument
+  // reduxFirestore(firebase) // <- needed if using firestore
 )(createStore)
 
 // Add Firebase to reducers
 const rootReducer = combineReducers({
-  firebase: firebaseStateReducer
+  firebase: firebaseStateReducer,
+  // firestore: firestoreReducer // <- needed if using firestore
 })
 
 // Create store with reducers and initial state
@@ -209,6 +211,7 @@ See full documentation at [react-redux-firebase.com](http://react-redux-firebase
 * [Getting Started](http://react-redux-firebase.com/docs/getting_started)
 * [Auth](http://react-redux-firebase.com/docs/auth)
 * [Queries](http://react-redux-firebase.com/docs/queries)
+* [Firestore](http://react-redux-firebase.com/docs/firestore)
 * [Populate](http://react-redux-firebase.com/docs/populate)
 * [API Reference](http://react-redux-firebase.com/docs/api)
 

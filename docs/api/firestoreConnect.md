@@ -26,9 +26,9 @@ _Basic_
 // this.props.firebase set on App component as firebase object with helpers
 import { createFirestoreConnect } from 'react-redux-firebase'
 // create firebase connect that uses another redux store
-const firebaseConnect = createFirestoreConnect('anotherStore')
+const firestoreConnect = createFirestoreConnect('anotherStore')
 // use the firebaseConnect to wrap a component
-export default firebaseConnect()(SomeComponent)
+export default firestoreConnect()(SomeComponent)
 ```
 
 Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** HOC that accepts a watchArray and wraps a component
@@ -58,23 +58,21 @@ import { firestoreConnect } from 'react-redux-firebase'
 export default firestoreConnect()(App)
 ```
 
-_Data_
+_Basic_
 
 ```javascript
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 
-// sync /todos from firebase into redux
-const fbWrapped = firestoreConnect([
-  'todos'
-])(App)
-
 // pass todos list from redux as this.props.todosList
-export default connect((state) => ({
-  todosList: state.firebase.data.todos,
-  profile: state.firebase.profile, // pass profile data as this.props.profile
-  auth: state.firebase.auth // pass auth data as this.props.auth
-}))(fbWrapped)
+export default compose(
+  firestoreConnect(['todos']), // sync todos collection from Firestore into redux
+  connect((state) => ({
+    todosList: state.firebase.data.todos,
+    profile: state.firebase.profile, // pass profile data as this.props.profile
+    auth: state.firebase.auth // pass auth data as this.props.auth
+  })
+)(fbWrapped)
 ```
 
 Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the wrapped component

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { compose, hoistStatics, setDisplayName, wrapDisplayName } from 'recompose'
+import PropTypes from 'prop-types'
+import hoistStatics from 'hoist-non-react-statics'
+import { wrapDisplayName } from 'recompose'
 import { createCallable } from './utils'
 
 /**
@@ -26,7 +28,13 @@ export const createFirestoreConnect = (storeKey = 'store') =>
       class FirestoreConnect extends Component {
         prevData = null
 
+        static contextTypes = {
+          [storeKey]: PropTypes.object.isRequired
+        }
+
         static wrappedComponent = WrappedComponent
+
+        static displayName = wrapDisplayName(FirestoreConnect, 'FirestoreConnect')
 
         componentWillMount () {
           const { firebase, firestore } = this.context[storeKey]
@@ -65,19 +73,19 @@ export const createFirestoreConnect = (storeKey = 'store') =>
         // }
 
         render () {
+          const { firebase, firestore } = this.context[storeKey]
           return (
             <WrappedComponent
               {...this.props}
               {...this.state}
+              firebase={{ ...firebase, ...firebase.helpers }}
+              firestore={firestore}
             />
           )
         }
       }
 
-      return compose(
-        setDisplayName(wrapDisplayName(WrappedComponent, 'FirestoreConnect')),
-        hoistStatics(FirestoreConnect)
-      )(WrappedComponent)
+      return hoistStatics(FirestoreConnect, WrappedComponent)
     }
 
 /**

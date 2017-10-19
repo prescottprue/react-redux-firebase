@@ -7,12 +7,13 @@ import {
   isLoaded,
   isEmpty
 } from 'react-redux-firebase'
-import GoogleButton from 'react-google-button'
 import TodoItem from './TodoItem'
 import './App.css'
+import { firebase as firebaseConf } from './config'
 
 const Home = ({ firestore, todos }) => {
-  const handleAdd = () => firebase.add('todos', { text: 'sample', done: false })
+  const handleAdd = () => firestore.add('todos', { text: 'sample', done: false })
+  console.log('todos;', todos)
   return (
     <div className='App'>
       <div className='App-header'>
@@ -22,8 +23,8 @@ const Home = ({ firestore, todos }) => {
         <h4>
           Loaded From
           <span className='App-Url'>
-            <a href='https://redux-firestore.firebaseio.com/'>
-              redux-firebasev3.firebaseio.com
+            <a href={firebaseConf.databaseURL}>
+              {firebaseConf.databaseURL}
             </a>
           </span>
         </h4>
@@ -33,9 +34,9 @@ const Home = ({ firestore, todos }) => {
             ? 'Loading'
             : isEmpty(todos)
               ? 'Todo list is empty'
-              : Object.keys(todos).map((key) => (
-                <TodoItem key={key} id={key} todo={todos[key]} />
-              ))
+              : todos.map((todo) =>
+                  <TodoItem key={todo.id} todo={todo} />
+                )
         }
         <h4>New Todo</h4>
         <button onClick={handleAdd}>
@@ -46,11 +47,18 @@ const Home = ({ firestore, todos }) => {
   )
 }
 
+Home.propTypes = {
+  firestore: PropTypes.shape({
+    add: PropTypes.func.isRequired,
+  }),
+  todos: PropTypes.array
+}
+
 export default compose(
   firestoreConnect(['todos']),
   connect(
     ({ firestore }) => ({
-      todos: firestore.data.todos,
+      todos: firestore.ordered.todos,
     })
   )
 )(Home)

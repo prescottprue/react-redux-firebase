@@ -2,8 +2,10 @@
 
 To correctly begin using firestore, make sure you have the following:
 * `v2.0.0-beta.11` or higher (most like to use `next` tag in package.json)
+* Install `redux-firestore` in your project using `npm i --save redux-firestore@latest`
 * `firestore` imported with `import 'firebase/firestore'`
 * `firestore` initialize with `firebase.firestore()`
+* `reduxFirestore` enhancer added to store creator
 * `firestoreReducer` added to your reducers (will be combinable with main before v2.0.0 release)
 
 Should look something similar to:
@@ -12,11 +14,8 @@ Should look something similar to:
 import { createStore, combineReducers, compose } from 'redux'
 import firebase from 'firebase'
 import 'firebase/firestore' // add this to use Firestore
-import {
-  reactReduxFirebase,
-  firebaseStateReducer,
-  firestoreReducer
-} from 'react-redux-firebase'
+import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
+import { reduxFirestore, firestoreReducer } from 'redux-firestore'
 
 const firebaseConfig = {
   apiKey: '<your-api-key>',
@@ -40,6 +39,7 @@ firebase.firestore()
 // Add reduxReduxFirebase enhancer when making store creator
 const createStoreWithFirebase = compose(
   reactReduxFirebase(firebase, rrfConfig),
+  reduxFirestore(firebase)
 )(createStore)
 
 // Add Firebase to reducers
