@@ -172,7 +172,6 @@ export const defaultConfig = {
   dispatchRemoveAction: true,
   enableEmptyAuthChanges: false,
   firebaseStateName: 'firebase',
-  firestoreNamespace: 'firestoreHelpers',
   attachAuthIsReady: false
 }
 
