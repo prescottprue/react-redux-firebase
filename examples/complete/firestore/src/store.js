@@ -4,6 +4,7 @@ import { firebase as fbConfig } from './config'
 import firebase from 'firebase'
 import 'firebase/firestore' // make sure you add this for firestore
 import { reactReduxFirebase } from 'react-redux-firebase'
+import { reduxFirestore } from 'redux-firestore'
 
 export default function configureStore (initialState, history) {
   // Initialize Firebase instance
@@ -18,6 +19,7 @@ export default function configureStore (initialState, history) {
         enableLogging: false
       }
     ),
+    reduxFirestore(firebase),
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
   )(createStore)
   const store = createStoreWithMiddleware(rootReducer)

@@ -153,8 +153,6 @@ export const actionTypes = {
  * @property {Boolean} attachAuthIsReady - `true` Whether or not to attach
  * firebaseAuthIsReady to store. authIsLoaded can be imported and used
  * directly instead based on preference.
- * @property {Boolean} includeFirestore - `true` Whether or not to include
- * firestore helpers (needed for use of firestoreConnect).
  * @property {Boolean} firestoreNamespace - `firestoreHelpers` Namespace for
  * firestore helpers (**WARNING** Changing this will break firestoreConnect HOC.
  * Do **NOT** change to `'firestore'`)
@@ -174,7 +172,6 @@ export const defaultConfig = {
   dispatchRemoveAction: true,
   enableEmptyAuthChanges: false,
   firebaseStateName: 'firebase',
-  includeFirestore: true,
   firestoreNamespace: 'firestoreHelpers',
   attachAuthIsReady: false
 }

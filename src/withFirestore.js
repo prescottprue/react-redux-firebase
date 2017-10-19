@@ -23,11 +23,10 @@ import { createWithStore } from './withStore'
  */
 export const createWithFirestore = (storeKey) => compose(
   createWithStore(storeKey),
-  withProps(({ store: { firebase, dispatch } }) => ({
-    firebase,
+  withProps(({ store: { firebase, firestore, dispatch } }) => ({
+    firebase: { ...firebase, ...firebase.helpers },
     dispatch,
-    ...firebase.firestore(),
-    ...firebase.firebaseUtils
+    firestore
   }))
 )
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { isEqual } from 'lodash'
-import hoistStatics from 'hoist-non-react-statics'
+import { hoistStatics } from 'recompose'
 import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable, getDisplayName } from './utils'
 
@@ -23,8 +23,10 @@ import { getEventsFromInput, createCallable, getDisplayName } from './utils'
  * // use the firebaseConnect to wrap a component
  * export default firebaseConnect()(SomeComponent)
  */
-export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => WrappedComponent => {
-  class FirebaseConnect extends Component {
+export const createFirebaseConnect = (storeKey = 'store') =>
+  (dataOrFn = []) =>
+    WrappedComponent => {
+      class FirebaseConnect extends Component {
     firebaseEvents = []
 
     firebase = null
@@ -85,10 +87,10 @@ export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => 
         />
       )
     }
-  }
+      }
 
-  return hoistStatics(FirebaseConnect, WrappedComponent)
-}
+      return hoistStatics(FirebaseConnect, WrappedComponent)
+    }
 
 /**
  * @name firebaseConnect
