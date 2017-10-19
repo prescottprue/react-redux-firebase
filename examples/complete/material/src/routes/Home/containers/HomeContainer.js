@@ -22,14 +22,14 @@ import classes from './HomeContainer.scss'
 const populates = [{ child: 'owner', root: 'users' }]
 
 // Pass an array of path settings to create Firebase queries
-@firebaseConnect([
-  'todos' // sync full list of todos
-  // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'], populates } // gather data to populate owners (uid => object)
-  // { path: 'todos', type: 'once' } // for loading once instead of binding
-  // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'] } // 10 most recent
-  // { path: 'todos', storeAs: 'myTodos' }, // store somewhere else in redux
-  // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
-])
+// @firebaseConnect([
+//   'todos' // sync full list of todos
+//   // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'], populates } // gather data to populate owners (uid => object)
+//   // { path: 'todos', type: 'once' } // for loading once instead of binding
+//   // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'] } // 10 most recent
+//   // { path: 'todos', storeAs: 'myTodos' }, // store somewhere else in redux
+//   // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
+// ])
 @firestoreConnect(['todos']) // get data from firestore
 @connect(({ firestore, firebase, firebase: { auth, data: { todos } } }) => ({
   auth,

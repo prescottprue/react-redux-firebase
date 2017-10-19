@@ -2,7 +2,8 @@ import {
   isArray,
   isString,
   isFunction,
-  forEach
+  forEach,
+  omit
 } from 'lodash'
 import { actionTypes } from '../constants'
 import { getLoginMethodAndParams } from '../utils/auth'
@@ -44,6 +45,16 @@ export const unWatchUserProfile = (firebase) => {
   }
 }
 
+const getProfileFromSnap = (snap) => {
+  if (snap && snap.val) {
+    return snap.val()
+  }
+  if (snap && snap.data && snap.exists) {
+    return snap.data()
+  }
+  return null
+}
+
 /**
  * Handle response from profile listener. Works with both Real Time Database and
  * Cloud Firestore.
@@ -58,19 +69,20 @@ const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
     profileParamsToPopulate,
     autoPopulateProfile
   } = firebase._.config
+  const profile = getProfileFromSnap(userProfileSnap)
   if (
     !profileParamsToPopulate ||
     (!isArray(profileParamsToPopulate) &&
       !isString(profileParamsToPopulate))
   ) {
-    dispatch({ type: actionTypes.SET_PROFILE, profile: userProfileSnap.val() })
+    dispatch({ type: actionTypes.SET_PROFILE, profile })
   } else {
     // TODO: Share population logic with query action
     // Convert each populate string in array into an array of once query promises
     promisesForPopulate(
       firebase,
       userProfileSnap.key,
-      userProfileSnap.val(),
+      profile,
       profileParamsToPopulate
     ).then((data) => {
       // Fire actions for placement of data gathered in populate into redux
@@ -86,7 +98,7 @@ const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
       })
       dispatch({
         type: actionTypes.SET_PROFILE,
-        profile: userProfileSnap.val()
+        profile
       })
       // Dispatch action with profile combined with populated parameters
       // Auto Populate profile
@@ -119,7 +131,7 @@ export const watchUserProfile = (dispatch, firebase) => {
         .firestore()
         .collection(userProfile)
         .doc(authUid)
-        .onSnapshot('value', userProfileSnap =>
+        .onSnapshot(userProfileSnap =>
           handleProfileWatchResponse(dispatch, firebase, userProfileSnap)
         )
     } else if (firebase.database) {
@@ -151,10 +163,9 @@ export const watchUserProfile = (dispatch, firebase) => {
  */
 export const createUserProfile = (dispatch, firebase, userData, profile) => {
   const { _: { config } } = firebase
-  if (!config.userProfile || !firebase.database) {
+  if (!config.userProfile || (!firebase.database && !firebase.firestore)) {
     return Promise.resolve(userData)
   }
-
   // use profileFactory if it exists in config
   if (isFunction(config.profileFactory)) {
     // catch errors in user provided profileFactory function
@@ -167,6 +178,27 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
       )
       return Promise.reject(err)
     }
+  }
+  if (config.useFirestoreForProfile) {
+    // Check for user's profile at userProfile path if provided
+    return firebase
+      .firestore()
+      .collection(config.userProfile)
+      .doc(userData.uid)
+      .get()
+      .then(
+        profileSnap =>
+          // update profile only if doesn't exist or if set by config
+          !config.updateProfileOnLogin && profileSnap.exists
+            ? profileSnap.data()
+            : profileSnap.ref.set(omit(profile, ['providerData'])) // fixes issue with bad write
+              .then(() => profile) // Update the profile
+      )
+      .catch((err) => {
+        // Error reading user profile
+        dispatch({ type: actionTypes.UNAUTHORIZED_ERROR, authError: err })
+        return Promise.reject(err)
+      })
   }
 
   // Check for user's profile at userProfile path if provided

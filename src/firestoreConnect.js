@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import hoistStatics from 'hoist-non-react-statics'
-import { getEventsFromInput, createCallable, getDisplayName } from './utils'
+import { createCallable, getDisplayName } from './utils'
 
 /**
  * @name createFirestoreConnect
@@ -22,12 +22,11 @@ import { getEventsFromInput, createCallable, getDisplayName } from './utils'
  * export default firebaseConnect()(SomeComponent)
  */
 export const createFirestoreConnect = (storeKey = 'store') =>
-  (dataOrFn = []) => WrappedComponent => {
-    class FirestoreConnect extends Component {
+(dataOrFn = []) =>
+WrappedComponent => {
+  class FirestoreConnect extends Component {
     firebaseEvents = []
-
     firebase = null
-
     prevData = null
 
     static contextTypes = {
@@ -45,13 +44,11 @@ export const createFirestoreConnect = (storeKey = 'store') =>
       }
       // Allow function to be passed
       const inputAsFunc = createCallable(dataOrFn)
-      this.prevData = inputAsFunc(this.props, firebase)
+      this.prevData = inputAsFunc(this.props, this.context.store)
 
       const { ref, helpers, storage, database, auth, firestore, firestoreHelpers } = firebase
       this.firebase = { ref, storage, database, auth, firestore, firestoreHelpers, ...helpers }
-
-      this._firebaseEvents = getEventsFromInput(this.prevData)
-      firestoreHelpers.onSnapshot(this._firebaseEvents[0].path)
+      firestoreHelpers.setListeners(this.prevData)
     }
 
     // TODO: Remove listeners on unmount
@@ -93,8 +90,8 @@ export const createFirestoreConnect = (storeKey = 'store') =>
     }
     }
 
-    return hoistStatics(FirestoreConnect, WrappedComponent)
-  }
+  return hoistStatics(FirestoreConnect, WrappedComponent)
+}
 
 /**
  * @name firestoreConnect
