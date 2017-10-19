@@ -128,3 +128,8 @@ Default configuration options
 -   `attachAuthIsReady` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to attach
     firebaseAuthIsReady to store. authIsLoaded can be imported and used
     directly instead based on preference.
+-   `includeFirestore` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to include
+    firestore helpers (needed for use of firestoreConnect).
+-   `firestoreNamespace` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `firestoreHelpers` Namespace for
+    firestore helpers (**WARNING** Changing this will break firestoreConnect HOC.
+    Do **NOT** change to `'firestore'`)

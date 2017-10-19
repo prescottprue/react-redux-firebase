@@ -1,3 +1,4 @@
+import { createFirestoreInstance } from 'redux-firestore'
 import { createFirebaseInstance } from './createFirebaseInstance'
 import { createAuthIsReady } from './utils/auth'
 import { defaultConfig } from './constants'
@@ -11,45 +12,45 @@ let firebaseInstance
  * @description Redux store enhancer that accepts configuration options and adds
  * store.firebase and store.firebaseAuth. Enhancers are most commonly placed in redux's `compose` call
  * along side applyMiddleware.
- * @property {Object} firebaseInstance - Initiated firebase instance (can also
+ * @param {Object} firebaseInstance - Initiated firebase instance (can also
  * be library following Firebase JS API such as `react-native-firebase`)
- * @property {Object} config - Containing react-redux-firebase specific configuration
- * @property {String} config.userProfile - Location on firebase to store user profiles
- * @property {Boolean} config.enableLogging - Whether or not to enable Firebase database logging.
+ * @param {Object} config - Containing react-redux-firebase specific configuration
+ * @param {String} config.userProfile - Location on firebase to store user profiles
+ * @param {Boolean} config.enableLogging - Whether or not to enable Firebase database logging.
  * **Note**: Only works if instance has enableLogging function.
- * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
- * @property {Boolean} config.presence - Location on Firebase to store currently
+ * @param {Function} config.profileFactory - Factory for modifying how user profile is saved.
+ * @param {Boolean} config.presence - Location on Firebase to store currently
  * online users list. Often set to `'presence'` or `'onlineUsers'`.
- * @property {Boolean} config.sessions - Location on Firebase where user
+ * @param {Boolean} config.sessions - Location on Firebase where user
  * sessions are stored (only if presense is set). Often set to `'sessions'` or `'onlineUsers'`.
- * @property {Boolean} config.updateProfileOnLogin - Whether or not to update
+ * @param {Boolean} config.updateProfileOnLogin - Whether or not to update
  * profile when logging in. (default: `false`)
- * @property {Boolean} config.resetBeforeLogin - Whether or not to empty profile
+ * @param {Boolean} config.resetBeforeLogin - Whether or not to empty profile
  * and auth state on login
- * @property {Array} config.perserveOnLogout - Data parameters to perserve when
+ * @param {Array} config.perserveOnLogout - Data parameters to perserve when
  * logging out. (default: `null`)
- * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
+ * @param {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
- * @property {Function} config.onAuthStateChanged - Function run when auth state
+ * @param {Function} config.onAuthStateChanged - Function run when auth state
  * changes. Argument Pattern: `(authData, firebase, dispatch)`
- * @property {Boolean} config.enableEmptyAuthChanges - Whether or not to enable
+ * @param {Boolean} config.enableEmptyAuthChanges - Whether or not to enable
  * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
  * empty auth changes such as undefined on initialization. See
  * [#137](https://github.com/prescottprue/react-redux-firebase/issues/137) for
  * more details. (default: `false`)
- * @property {Function} config.onRedirectResult - Function run when redirect
+ * @param {Function} config.onRedirectResult - Function run when redirect
  * result is returned. Argument Pattern: `(authData, firebase, dispatch)`
- * @property {Object} config.customAuthParameters - Object for setting which
+ * @param {Object} config.customAuthParameters - Object for setting which
  * customAuthParameters are passed to external auth providers.
- * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
- * @property {Function} config.fileMetadataFactory - Factory for modifying
+ * @param {Function} config.profileFactory - Factory for modifying how user profile is saved.
+ * @param {Function} config.fileMetadataFactory - Factory for modifying
  * how file meta data is written during file uploads
- * @property {Array|String} config.profileParamsToPopulate - Parameters within
+ * @param {Array|String} config.profileParamsToPopulate - Parameters within
  * profile object to populate. As of `v2.0.0` data is only loaded for population, not actually automatically populated
  * (allows access to both unpopulated and populated profile data).
- * @property {Boolean} config.autoPopulateProfile - **NOTE**: Not yet enabled for v2.0.0. Whether or not to
+ * @param {Boolean} config.autoPopulateProfile - **NOTE**: Not yet enabled for v2.0.0. Whether or not to
  * automatically populate profile with data loaded through profileParamsToPopulate config. (default: `true`)
- * @property {Boolean} config.setProfilePopulateResults - Whether or not to
+ * @param {Boolean} config.setProfilePopulateResults - Whether or not to
  * call SET actions for data that results from populating profile to redux under
  * the data path. For example role parameter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
@@ -91,6 +92,9 @@ export default (instance, otherConfig) => next =>
 
     const configs = { ...defaultConfig, ...otherConfig }
     firebaseInstance = createFirebaseInstance(instance.firebase_ || instance, configs, store.dispatch)
+    if (configs.includeFirestore) {
+      firebaseInstance = createFirestoreInstance(instance.firebase_ || instance, configs, store.dispatch)
+    }
 
     authActions.init(store.dispatch, firebaseInstance)
     store.firebase = firebaseInstance

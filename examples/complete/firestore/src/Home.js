@@ -3,34 +3,26 @@ import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import {
-  firebaseConnect,
+  firestoreConnect,
   isLoaded,
-  isEmpty,
-  dataToJS
+  isEmpty
 } from 'react-redux-firebase'
-import logo from './logo.svg'
+import GoogleButton from 'react-google-button'
 import TodoItem from './TodoItem'
 import './App.css'
-import GoogleButton from 'react-google-button'
 
-const Home = ({ firebase, todos }) => {
-  const handleAdd = () => {
-    return firebase.push('/todos', { text: this.input.value, done: false })
-      .then(() => {
-        this.input.value = ''
-      })
-  }
+const Home = ({ firestore, todos }) => {
+  const handleAdd = () => firebase.add('todos', { text: 'sample', done: false })
   return (
     <div className='App'>
       <div className='App-header'>
-        <h2>react-redux-firebase demo</h2>
-        <img src={logo} className='App-logo' alt='logo' />
+        <h2>firestore demo</h2>
       </div>
       <div className='App-todos'>
         <h4>
           Loaded From
           <span className='App-Url'>
-            <a href='https://redux-firebasev3.firebaseio.com/'>
+            <a href='https://redux-firestore.firebaseio.com/'>
               redux-firebasev3.firebaseio.com
             </a>
           </span>
@@ -46,7 +38,6 @@ const Home = ({ firebase, todos }) => {
               ))
         }
         <h4>New Todo</h4>
-        <input type='text' ref={ref => { this.input = ref }} />
         <button onClick={handleAdd}>
           Add
         </button>
@@ -56,10 +47,10 @@ const Home = ({ firebase, todos }) => {
 }
 
 export default compose(
-  firebaseConnect(['todos']),
+  firestoreConnect(['todos']),
   connect(
-    ({ firebase }) => ({
-      todos: firebase.data.todos,
+    ({ firestore }) => ({
+      todos: firestore.data.todos,
     })
   )
 )(Home)

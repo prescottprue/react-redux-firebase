@@ -1,7 +1,7 @@
 {
   "name": "react-redux-firebase",
-  "version": "2.0.0-beta.10",
-  "description": "Redux integration for Firebase. Comes with a Higher Order Component for use with React.",
+  "version": "2.0.0-beta.11",
+  "description": "Redux integration for Firebase. Comes with a Higher Order Components for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
@@ -11,8 +11,8 @@
     "clean": "rimraf es lib dist coverage",
     "lint": "eslint src/** tests/**",
     "lint:fix": "npm run lint -- --fix",
-    "test": "mocha -R spec ./tests/setup.js ./tests/** --recursive --compilers js:babel-core/register",
-    "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./tests/** --recursive --report lcov --compilers js:babel-register",
+    "test": "mocha -R spec ./tests/setup.js ./tests/** --recursive --require babel-register",
+    "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./tests/** --recursive --report lcov --require babel-register",
     "codecov": "cat coverage/*/lcov.info | codecov",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
@@ -21,7 +21,7 @@
     "build:size": "cross-env SIZE=true BABEL_ENV=commonjs NODE_ENV=production webpack src/index.js dist/react-redux-firebase.min.js",
     "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "watch": "npm run build:commonjs -- --watch",
-    "prepublish": "npm run clean && npm run build",
+    "prepare": "npm run clean && npm run build",
     "prepush": "npm run lint",
     "docs:clean": "rimraf _book",
     "docs:prepare": "gitbook install",
@@ -58,7 +58,8 @@
   "dependencies": {
     "hoist-non-react-statics": "^2.2.2",
     "lodash": "^4.17.4",
-    "prop-types": "^15.5.10"
+    "prop-types": "^15.5.10",
+    "redux-firestore": "latest"
   },
   "peerDependencies": {
     "react": "^0.14.6 || ^15.0.0-0 || ^16.0.0-0"

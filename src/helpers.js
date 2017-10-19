@@ -132,7 +132,7 @@ const populateChild = (state, child, p) => {
   // no matching child parameter
   const childVal = get(child, p.child)
   if (!child || !childVal) {
-    return child
+    return null
   }
   // populate child is key
   if (isString(childVal)) {
