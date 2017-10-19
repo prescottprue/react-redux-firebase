@@ -1,54 +1,41 @@
 # Authentication Methods
 
-Authentication data is attached to `auth`, and errors are attached to `authError`. You can get them within components like so:
+Authentication data is attached to `auth`, profile is attached to `profile` if you provide a value to the `userProfile` config option. You can get them within components like so:
 
 ```jsx
 import { connect } from 'react-redux'
-@connect(
+connect(
   // Map state to props
-  ({ firebase: { authError, auth, profile } }) => ({
-    authError,
+  ({ firebase: { auth, profile } }) => ({
     auth,
     profile
   })
 )
 ```
 
-If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `this.props.firebase.auth()` or `getFirebase().auth()`.
+If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()` or `getFirebase().auth()`.
 
 #### NOTE
-All examples below assume you have wrapped your component using `firebaseConnect`. This will make `this.props.firebase` available within your component:
-
-###### Decorators
+All examples below assume you have wrapped your component using `firebaseConnect`. This will make `props.firebase` available within your component:
 
 ```js
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 
-@firebaseConnect()
-export default class SomeComponent extends Component {
-  render() {
-    // this.props.firebase contains API
-  }
-}
-```
+const SomeComponent = (props) => (
+  // use props.firebase
+)
 
-###### No Decorators
+// Works same with class components (make sure you import Component from react)
+// class SomeComponent extends Component {
+//   render() {
+//     // use this.props.firebase
+//   }
+// }
 
-```js
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { firebaseConnect } from 'react-redux-firebase'
-
-class SomeComponent extends Component {
-  render() {
-    // this.props.firebase contains API
-  }
-}
 export default firebaseConnect()(SomeComponent)
 ```
-
 
 ## login(credentials)
 

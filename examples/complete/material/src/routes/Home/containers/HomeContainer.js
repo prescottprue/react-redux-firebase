@@ -5,7 +5,7 @@ import { map } from 'lodash'
 import Theme from 'theme'
 import {
   firebaseConnect,
-  firestoreConnect,
+  // firestoreConnect,
   isLoaded,
   isEmpty,
   populate // for populated list
@@ -22,22 +22,15 @@ import classes from './HomeContainer.scss'
 const populates = [{ child: 'owner', root: 'users' }]
 
 // Pass an array of path settings to create Firebase queries
-// @firebaseConnect([
-//   'todos' // sync full list of todos
-//   // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'], populates } // gather data to populate owners (uid => object)
-//   // { path: 'todos', type: 'once' } // for loading once instead of binding
-//   // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=10'] } // 10 most recent
-//   // { path: 'todos', storeAs: 'myTodos' }, // store somewhere else in redux
-//   // { path: 'todos', queryParams: ['orderByKey', 'limitToLast=5'] } // 10 most recent
-// ])
-@firestoreConnect(['todos']) // get data from firestore
+@firebaseConnect([
+  'todos' // sync full list of todos
+])
+// @firestoreConnect(['todos']) // get data from firestore
 @connect(({ firestore, firebase, firebase: { auth, data: { todos } } }) => ({
   auth,
-  todos: populate(firebase, 'todos', populates), // populate todos with users data from redux
-  // todos: populate(firebase, 'ordered/todos', populates) // populate todos with users data from redux
-  // todos: populate(firebase, 'ordered/todos', populates) // populate todos with users data from redux
+  todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
   // todos: firebase.ordered.todos // if using ordering such as orderByChild or orderByKey
-  todos: firestore.ordered.todos, // firestore data from firestoreConnect
+  // todos: firestore.ordered.todos, // firestore data from firestoreConnect
 }))
 export default class Home extends Component {
   static propTypes = {

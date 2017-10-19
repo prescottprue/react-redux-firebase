@@ -12,6 +12,8 @@ along side applyMiddleware.
 
 **Parameters**
 
+-   `instance`  
+-   `otherConfig`  
 -   `firebaseInstance` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Initiated firebase instance (can also
     be library following Firebase JS API such as `react-native-firebase`)
 -   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Containing react-redux-firebase specific configuration

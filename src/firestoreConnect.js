@@ -39,23 +39,21 @@ WrappedComponent => {
 
     componentWillMount () {
       const { firebase } = this.context[storeKey]
-      if (!firebase.firestore) {
-        throw new Error('Firestore must be included and enabled to use firestoreConnect')
-      }
-      // Allow function to be passed
-      const inputAsFunc = createCallable(dataOrFn)
-      this.prevData = inputAsFunc(this.props, this.context.store)
+      if (firebase.firestore) {
+        // Allow function to be passed
+        const inputAsFunc = createCallable(dataOrFn)
+        this.prevData = inputAsFunc(this.props, this.context[storeKey])
 
-      const { ref, helpers, storage, database, auth, firestore, firestoreHelpers } = firebase
-      this.firebase = { ref, storage, database, auth, firestore, firestoreHelpers, ...helpers }
-      firestoreHelpers.setListeners(this.prevData)
+        firebase.firestoreHelpers.setListeners(this.prevData)
+      }
     }
 
-    // TODO: Remove listeners on unmount
-    // componentWillUnmount () {
-    //   const { firebase, dispatch } = this.context.store
-    //   unWatchEvents(firebase, dispatch, this._firebaseEvents)
-    // }
+    componentWillUnmount () {
+      if (this.prevData) {
+        const { firebase } = this.context[storeKey]
+        firebase.firestoreHelpers.unsetListeners(this.prevData)
+      }
+    }
 
     // TODO: Re-attach listeners on query path change
     // componentWillReceiveProps (np) {
@@ -76,14 +74,15 @@ WrappedComponent => {
     // }
 
     render () {
+      const { firebase } = this.context[storeKey]
       return (
         <WrappedComponent
           {...this.props}
           {...this.state}
-          firebase={this.firebase}
+          firebase={{ firebase, ...firebase.helpers }}
           firestore={{
-            ...this.firebase.firestore(),
-            ...this.firebase.firestoreHelpers
+            ...firebase.firestore(),
+            ...firebase.firestoreHelpers
           }}
         />
       )
