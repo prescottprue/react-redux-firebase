@@ -12,12 +12,7 @@ import TodoItem from './TodoItem'
 import './App.css'
 
 const Home = ({ firestore, todos }) => {
-  const handleAdd = () => {
-    return firebase.push('/todos', { text: this.input.value, done: false })
-      .then(() => {
-        this.input.value = ''
-      })
-  }
+  const handleAdd = () => firebase.add('todos', { text: 'sample', done: false })
   return (
     <div className='App'>
       <div className='App-header'>
@@ -27,7 +22,7 @@ const Home = ({ firestore, todos }) => {
         <h4>
           Loaded From
           <span className='App-Url'>
-            <a href='https://redux-firebasev3.firebaseio.com/'>
+            <a href='https://redux-firestore.firebaseio.com/'>
               redux-firebasev3.firebaseio.com
             </a>
           </span>
@@ -43,7 +38,6 @@ const Home = ({ firestore, todos }) => {
               ))
         }
         <h4>New Todo</h4>
-        <input type='text' ref={ref => { this.input = ref }} />
         <button onClick={handleAdd}>
           Add
         </button>
