@@ -2,7 +2,7 @@ import { compose, withProps } from 'recompose'
 import { createWithStore } from './withStore'
 
 /**
- * @name createWithFirebase
+ * @name createWithFirestore
  * @description Function that creates a Higher Order Component that
  * automatically listens/unListens to provided firebase paths using
  * React's Lifecycle hooks.
@@ -21,7 +21,7 @@ import { createWithStore } from './withStore'
  * // use the withFirebase to wrap a component
  * export default withFirebase(SomeComponent)
  */
-export const createWithFirebase = (storeKey) => compose(
+export const createWithFirestore = (storeKey) => compose(
   createWithStore(storeKey),
   withProps(({ store: { firebase, dispatch } }) => ({
     firebase,
@@ -50,4 +50,4 @@ export const createWithFirebase = (storeKey) => compose(
  *
  * export default withFirebase(AddData)
  */
-export default createWithFirebase()
+export default createWithFirestore()

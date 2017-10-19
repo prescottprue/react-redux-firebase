@@ -3,6 +3,7 @@ import { createFirebaseInstance } from './createFirebaseInstance'
 import firebaseConnect, { createFirebaseConnect } from './firebaseConnect'
 import firestoreConnect, { createFirestoreConnect } from './firestoreConnect'
 import withFirebase, { createWithFirebase } from './withFirebase'
+import withFirestore, { createWithFirestore } from './withFirestore'
 import enhancer, { getFirebase } from './enhancer'
 import reducer from './reducer'
 import constants, { actionTypes } from './constants'
@@ -18,6 +19,8 @@ export default {
   createFirestoreConnect,
   withFirebase,
   createWithFirebase,
+  withFirestore,
+  createWithFirestore,
   firestoreReducer,
   firebaseReducer: reducer,
   firebaseStateReducer: reducer,

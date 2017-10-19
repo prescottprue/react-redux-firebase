@@ -56,9 +56,9 @@
     "redux-react-firebase"
   ],
   "dependencies": {
-    "hoist-non-react-statics": "^2.2.2",
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10",
+    "recompose": "^0.26.0",
     "redux-firestore": "latest"
   },
   "peerDependencies": {

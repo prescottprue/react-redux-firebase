@@ -9,7 +9,7 @@
     }]
   ],
   "plugins": [
-    "lodash",
+    ["lodash", { "id": ["lodash", "redux-firestore", "recompose"]}],
     "add-module-exports",
     "transform-object-rest-spread",
     "transform-object-assign",
