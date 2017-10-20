@@ -145,9 +145,9 @@ describe('Compose', () => {
       })
     })
 
-    describe('connect', () => {
-      it('starts connect', async () => {
-        await store.firebase.connect(['test'])
+    describe('firebaseWatch', () => {
+      it('starts firebaseWatch', async () => {
+        await store.firebase.firebaseWatch(['test'])
         expect(store.firebase.ref('test')).to.be.an.object
       })
     })

@@ -241,7 +241,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     storageActions.deleteFile(dispatch, firebase, { path, dbPath })
 
   /**
-   * @description Connect. Similar to the firebaseConnect Higher Order
+   * @description firebaseWatch. Similar to the firebaseConnect Higher Order
    * Component but presented as a function. Useful for populating your redux
    * state without React, e.g., for service side rendering.
    * @param {Array} watchArray - Array of objects or strings for paths to sync
@@ -251,7 +251,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * your watchArray generating function.
    * @return {Promise}
    */
-  const connect = (watchArray, props) => {
+  const firebaseWatch = (watchArray, props) => {
     const inputAsFunc = createCallable(watchArray)
     const prevData = inputAsFunc(props, firebase)
     const firebaseEvents = getEventsFromInput(prevData)
@@ -430,7 +430,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     unWatchEvent,
     reloadAuth,
     linkWithCredential,
-    connect
+    firebaseWatch
   }
 
   return Object.assign(firebase, helpers, { helpers })
