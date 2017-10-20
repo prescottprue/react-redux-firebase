@@ -1,5 +1,6 @@
 import { isObject } from 'lodash'
 import { authActions, queryActions, storageActions } from './actions'
+import { getEventsFromInput, createCallable } from './utils'
 
 /**
  * Create a firebase instance that has helpers attached for dispatching actions
@@ -240,6 +241,27 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     storageActions.deleteFile(dispatch, firebase, { path, dbPath })
 
   /**
+   * @description Connect. Similar to the firebaseConnect Higher Order
+   * Component but presented as a function. Useful for populating your redux
+   * state without React, e.g., for service side rendering.
+   * @param {Array} watchArray - Array of objects or strings for paths to sync
+   * from Firebase. Can also be a function that returns the array. The function
+   * is passed the props object specified as the next parameter.
+   * @param {Object} props - The props object that you would like to pass to
+   * your watchArray generating function.
+   * @return {Promise}
+   */
+  const connect = (watchArray, props) => {
+    const inputAsFunc = createCallable(watchArray)
+    const prevData = inputAsFunc(props, firebase)
+    const firebaseEvents = getEventsFromInput(prevData)
+    const promises = firebaseEvents.map(event =>
+      queryActions.watchEvent(firebase, dispatch, event))
+
+    return Promise.all(promises)
+  }
+
+  /**
    * @description Watch event. **Note:** this method is used internally
    * so examples have not yet been created, and it may not work as expected.
    * @param {String} type - Type of watch event
@@ -407,7 +429,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     watchEvent,
     unWatchEvent,
     reloadAuth,
-    linkWithCredential
+    linkWithCredential,
+    connect
   }
 
   return Object.assign(firebase, helpers, { helpers })
