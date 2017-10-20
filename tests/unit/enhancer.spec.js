@@ -145,10 +145,17 @@ describe('Compose', () => {
       })
     })
 
+    describe('firebaseWatch', () => {
+      it('starts firebaseWatch', async () => {
+        await store.firebase.firebaseWatch(['test'])
+        expect(store.firebase.ref('test')).to.be.an.object
+      })
+    })
+
     describe('watchEvent', () => {
-      it('starts watcher', () => {
-        // TODO: Confirm that watcher count is updated and watcher is set
-        store.firebase.watchEvent('value', 'test')
+      it('starts watcher', async () => {
+        await store.firebase.watchEvent('value', 'test')
+        expect(store.firebase.ref('test')).to.be.an.object
       })
     })
 
