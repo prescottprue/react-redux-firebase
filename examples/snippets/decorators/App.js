@@ -2,39 +2,24 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { map } from 'lodash'
 import { connect } from 'react-redux'
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty,
-  pathToJS,
-  dataToJS
-} from 'react-redux-firebase'
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import TodoItem from './TodoItem'
 
 @firebaseConnect([
-  '/todos'
+  'todos'
 ])
 @connect(
-  ({firebase}) => ({
-    todos: dataToJS(firebase, '/todos'),
-    profile: pathToJS(firebase, 'profile')
+  ({ firebase: { ordered } }) => ({
+    todos: ordered.todos
   })
 )
 export default class App extends Component {
   static propTypes = {
-    todos: PropTypes.object,
-    firebase: PropTypes.shape({
-      push: PropTypes.func.isRequired
-    })
+    todos: PropTypes.array
   }
+
   render () {
     const { firebase, todos } = this.props
-
-    const handleAdd = () => {
-      const { newTodo } = this.refs
-      firebase.push('/todos', { text: newTodo.value, done: false })
-      newTodo.value = ''
-    }
 
     const todosList = (!isLoaded(todos))
                         ? 'Loading'
@@ -46,7 +31,7 @@ export default class App extends Component {
     return (
       <div>
         <div className="App-header">
-          <h2>react-redux-firebase demo</h2>
+          <h2>react-redux-firebase decorators demo</h2>
         </div>
         <div className="App-todos">
           <h4>Todos List</h4>

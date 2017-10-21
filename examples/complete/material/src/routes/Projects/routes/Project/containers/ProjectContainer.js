@@ -1,20 +1,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty,
-  dataToJS
-} from 'react-redux-firebase'
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import LoadingSpinner from 'components/LoadingSpinner'
 import classes from './ProjectContainer.scss'
 
-// Get project path from firebase based on params prop (route params)
-@firebaseConnect(({ params }) => [`projects/${params.projectname}`])
+// Get project path from firebase based on params prop (route params from react-router)
+@firebaseConnect(({ params: { projectname } }) => [`projects/${projectname}`])
 // Map state to props
-@connect(({ firebase }, { params }) => ({
-  project: dataToJS(firebase, `projects/${params.projectname}`)
+@connect(({ firebase: { data } }, { params: { projectname } }) => ({
+  project: data.projects && data.projects[projectname]
+  // project: get(data, `projects.${projectname}`) // lodash's get can be used for convience
 }))
 export default class Project extends Component {
   static propTypes = {

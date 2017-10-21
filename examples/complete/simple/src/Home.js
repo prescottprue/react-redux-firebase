@@ -5,8 +5,7 @@ import { connect } from 'react-redux'
 import {
   firebaseConnect,
   isLoaded,
-  isEmpty,
-  dataToJS
+  isEmpty
 } from 'react-redux-firebase'
 import logo from './logo.svg'
 import TodoItem from './TodoItem'
