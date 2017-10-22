@@ -11,7 +11,7 @@
     "start": "cross-env NODE_ENV=development webpack-dashboard -p 1234 -c cyan -m -t material -- node build/scripts/start",
     "start:simple": "cross-env NODE_ENV=development node build/scripts/start",
     "lint": "eslint .",
-    "lint:fix": "npm run format && npm run lint -- --fix",
+    "lint:fix": "npm run lint -- --fix",
     "format": "prettier --single-quote --no-semi --trailing-comma none --write \"src/**/*.js\""
   },
   "repository": {
@@ -32,7 +32,7 @@
     "react-dom": "^15.5.4",
     "react-google-button": "^0.3.0",
     "react-redux": "^5.0.4",
-    "react-redux-firebase": "next",
+    "react-redux-firebase": "latest",
     "react-router": "^3.0.0",
     "react-tap-event-plugin": "^2.0.1",
     "redbox-react": "^1.3.6",

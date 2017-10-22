@@ -2,72 +2,53 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { map } from 'lodash'
 import { connect } from 'react-redux'
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty,
-  pathToJS,
-  dataToJS
-} from 'react-redux-firebase'
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import TodoItem from './TodoItem'
 
-@connect(
-  ({firebase}) => ({
-    auth: pathToJS(firebase, 'auth')
-  })
+const renderList = (list) =>
+  !isLoaded(list)
+    ? 'Loading'
+    : (isEmpty(list))
+      ? 'Todo list is empty'
+      : map(list, (todo, id) =>
+          <TodoItem key={id} id={id} todo={todo} />
+        )
+
+const MultipleQueries = ({ incompleteTodos, completeTodos }) => (
+  <div>
+    <div>
+      <h2>react-redux-firebase multiple queries demo</h2>
+    </div>
+    <div>
+      <h4>Incomplete Todos</h4>
+      {renderList(incompleteTodos)}
+      <h4>Complete Todos</h4>
+      {renderList(completeTodos)}
+    </div>
+  </div>
 )
-@firebaseConnect(({ auth }) => ([
-  {
-    path: 'projects',
-    storeAs: 'myProjects',
-    queryParams: [ `orderByChild=owner`, `equalTo=${auth ? auth.uid : '' }`] },
-  {
-    path: 'projects',
-    storeAs: 'anonymousProjects',
-    queryParams: [ `orderByChild=owner`, `equalTo=Anonymous`]
-  },
-]))
-@connect(
-  ({firebase}) => ({
-    personalProjects: dataToJS(firebase, '/myProjects'), // path matches storeAs
-    anonymousProjects: dataToJS(firebase, '/anonymousProjects') // path matches storeAs
-  })
-)
-export default class App extends Component {
-  static propTypes = {
-    personalProjects: PropTypes.object,
-    anonymousProjects: PropTypes.object
-  }
 
-  render () {
-    const { personalProjects, anonymousProjects } = this.props
-
-    const personalProjectsList = !isLoaded(personalProjects)
-      ? 'Loading'
-      : (isEmpty(personalProjects))
-        ? 'Todo list is empty'
-        : map(personalProjects, (todo, id) =>
-            <TodoItem key={id} id={id} todo={todo} />
-          )
-
-    const anonymousProjectsList = !isLoaded(anonymousProjects)
-                        ? 'Loading'
-                        : isEmpty(anonymousProjects)
-                          ? 'Todo list is empty'
-                          : map(anonymousProjects, (todo, id) =>
-                              <TodoItem key={id} id={id} todo={todo} />
-                            )
-    return (
-      <div>
-        <div>
-          <h2>react-redux-firebase multiple queries demo</h2>
-        </div>
-        <div>
-          <h4>Todos List</h4>
-          {personalProjectsList}
-          {anonymousProjectsList}
-        </div>
-      </div>
-    )
-  }
+MultipleQueries.propTypes = {
+  myProjects: PropTypes.object,
+  anonymousProjects: PropTypes.object
 }
+
+export default compose(
+  firebaseConnect([
+    {
+      path: 'todos',
+      storeAs: 'incompleteTodos',
+      queryParams: [ 'orderByChild=done', 'equalTo=true'] },
+    {
+      path: 'todos',
+      storeAs: 'completeTodos',
+      queryParams: [ 'orderByChild=done', 'equalTo=false']
+    },
+  ]),
+  connect(
+    ({ firebase: { data } }) => ({
+      incompleteTodos: data['incompleteTodos'], // path matches storeAs
+      completeTodos: data['completeTodos'] // path matches storeAs
+    })
+  )
+)
