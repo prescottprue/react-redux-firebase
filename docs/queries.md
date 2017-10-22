@@ -139,7 +139,7 @@ There are multiple types of queries
 ## once
 To load a firebase location once instead of binding, the once option can be used:
 
-**Internal Method**: [ `orderByPriority`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByPriority)
+**Internally Uses Firebase Method**: [ `orderByPriority`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByPriority)
 
 ```javascript
 firebaseConnect([
@@ -152,7 +152,7 @@ firebaseConnect([
 ## orderByChild
 To order the query by a child within each object, use orderByChild.
 
-**Internal Method**: [ `orderByChild`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByChild)
+**Internally Uses Firebase Method**: [ `orderByChild`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByChild)
 
 #### Example
 Ordering a list of todos by the text parameter of the todo item (placing them in alphabetical order).
@@ -167,7 +167,7 @@ firebaseConnect([
 ## orderByKey
 Order a list by the key of each item. Since push keys contain time, this is also a way of ordering by when items were created.
 
-**Internal Method**:
+**Internally Uses Firebase Method**:
 [ `orderByKey`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByKey)
 
 #### Example
@@ -183,7 +183,7 @@ firebaseConnect([
 ## orderByValue
 Order a list by the value of each object. Internally runs
 
-**Internal Method**: [ `orderByValue`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByValue)
+**Internally Uses Firebase Method**: [ `orderByValue`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByValue)
 
 #### Example
 Ordering a list of score's based on score's value
@@ -198,7 +198,7 @@ firebaseConnect([
 ## orderByPriority
 Order a list by the priority of each item.
 
-**Internal Method**: [ `orderByPriority`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByPriority)
+**Internally Uses Firebase Method**: [ `orderByPriority`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByPriority)
 
 #### Example
 Ordering a list based on priorities
@@ -213,7 +213,7 @@ firebaseConnect([
 ## limitToFirst
 Limit query results to the first n number of results.
 
-**Internal Method**: [ `limitToFirst`](https://firebase.google.com/docs/reference/js/firebase.database.Query#limitToFirst)
+**Internally Uses Firebase Method**: [ `limitToFirst`](https://firebase.google.com/docs/reference/js/firebase.database.Query#limitToFirst)
 
 #### Examples
 1. Displaying only the first todo item
@@ -236,7 +236,7 @@ Limit query results to the first n number of results.
 ## limitToLast
 Limit query results to the last n number of results
 
-**Internal Method**: [ `limitToLast`](https://firebase.google.com/docs/reference/js/firebase.database.Query#limitToLast)
+**Internally Uses Firebase Method**: [ `limitToLast`](https://firebase.google.com/docs/reference/js/firebase.database.Query#limitToLast)
 
 #### Examples
 1. Only the **last** todo item
@@ -258,9 +258,9 @@ Limit query results to the last n number of results
 
 ## startAt
 
-Limit query results to include a range starting at a specific number
+Start query at a specific location by providing the specific number or value
 
-**Internal Method**: [ `limitToLast`](https://firebase.google.com/docs/reference/js/firebase.database.Query#limitToLast)
+**Internally Uses Firebase Method**: [ `startAt`](https://firebase.google.com/docs/reference/js/firebase.database.Query#startAt)
 
 #### Examples
 
@@ -278,8 +278,19 @@ Limit query results to include a range starting at a specific number
     // { path: '/todos', queryParams: [ 'startAt=5', 'limitToFirst=10' ] } // object notation
   ])
   ```
+3. Non-number values
+```js
+@firebaseConnect([
+  'todos#startAt=val1&limitToFirst=10'
+  // { path: '/todos', queryParams: [ 'startAt=5', 'limitToFirst=10' ] } // object notation
+])
+```
 
 ## endAt
+
+End query at a specific location by providing the specific number or value
+
+**Internally Uses Firebase Method**: [ `endAt`](https://firebase.google.com/docs/reference/js/firebase.database.Query#endAt)
 
 #### Examples
 1. Usage with startAt
@@ -291,7 +302,9 @@ firebaseConnect([
 ```
 
 ## equalTo
-Limit query results with parameter equal to previous query method (i.e when used with orderByChild, it limits results with child equal to provided value). Internally runs [Firebase's `equalTo`](https://firebase.google.com/docs/reference/js/firebase.database.Query#equalTo).
+Limit query results with parameter equal to previous query method (i.e when used with orderByChild, it limits results with child equal to provided value).
+
+**Internally Uses Firebase Method**: [ `equalTo`](https://firebase.google.com/docs/reference/js/firebase.database.Query#equalTo)
 
 ### Parsing
 The following are internally parsed:
