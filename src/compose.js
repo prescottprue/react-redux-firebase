@@ -13,44 +13,44 @@ let firebaseInstance
  * @external
  * @description Middleware that handles configuration (placed in redux's
  * `compose` call)
- * @property {Object} fbConfig - Object containing Firebase config including
- * databaseURL
- * @property {String} fbConfig.apiKey - Firebase apiKey
- * @property {String} fbConfig.authDomain - Firebase auth domain
- * @property {String} fbConfig.databaseURL - Firebase database url
- * @property {String} fbConfig.storageBucket - Firebase storage bucket
- * @property {Object} config - Containing react-redux-firebase specific config
+ * @param {Object} fbConfig - Firebase config including databaseURL
+ * @param {String} fbConfig.apiKey - Firebase apiKey
+ * @param {String} fbConfig.authDomain - Firebase auth domain
+ * @param {String} fbConfig.databaseURL - Firebase database url
+ * @param {String} fbConfig.storageBucket - Firebase storage bucket
+ * @param {Object} config - Containing react-redux-firebase specific config
  * such as userProfile
- * @property {String} config.userProfile - Location on firebase to store user
+ * @param {String} config.userProfile - Location on firebase to store user
  * profiles
- * @property {Boolean} config.enableLogging - Whether or not to enable Firebase
+ * @param {Boolean} config.enableLogging - Whether or not to enable Firebase
  * database logging
- * @property {Boolean} config.updateProfileOnLogin - Whether or not to update
+ * @param {Boolean} config.updateProfileOnLogin - Whether or not to update
  * profile when logging in. (default: `false`)
- * @property {Boolean} config.resetBeforeLogin - Whether or not to empty profile
+ * @param {Boolean} config.resetBeforeLogin - Whether or not to empty profile
  * and auth state on login
- * @property {Boolean} config.enableRedirectHandling - Whether or not to enable
+ * @param {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
- * @property {Function} config.onAuthStateChanged - Function run when auth state
+ * @param {Function} config.onAuthStateChanged - Function run when auth state
  * changes. Argument Pattern: `(authData, firebase, dispatch)`
- * @property {Boolean} config.enableEmptyAuthChanges - Whether or not to enable
+ * @param {Boolean} config.enableEmptyAuthChanges - Whether or not to enable
  * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
  * empty auth changes such as undefined on initialization. See
  * [#137](https://github.com/prescottprue/react-redux-firebase/issues/137) for
  * more details. (default: `false`)
- * @property {Function} config.onRedirectResult - Function run when redirect
+ * @param {Function} config.onRedirectResult - Function run when redirect
  * result is returned. Argument Pattern: `(authData, firebase, dispatch)`
- * @property {Object} config.customAuthParameters - Object for setting which
+ * @param {Object} config.customAuthParameters - Object for setting which
  * customAuthParameters are passed to external auth providers.
- * @property {Function} config.profileFactory - Factory for modifying how user profile is saved.
- * @property {Function} config.fileMetadataFactory - Factory for modifying
+ * @param {Function} config.profileFactory - Factory for modifying how user
+ * profile is saved.
+ * @param {Function} config.fileMetadataFactory - Factory for modifying
  * how file meta data is written during file uploads
- * @property {Array|String} config.profileParamsToPopulate - Parameters within
+ * @param {Array|String} config.profileParamsToPopulate - Parameters within
  * profile object to populate
- * @property {Boolean} config.autoPopulateProfile - Whether or not to
+ * @param {Boolean} config.autoPopulateProfile - Whether or not to
  * automatically populate profile with data loaded through
  * profileParamsToPopulate config. (default: `true`)
- * @property {Boolean} config.setProfilePopulateResults - Whether or not to
+ * @param {Boolean} config.setProfilePopulateResults - Whether or not to
  * call SET actions for data that results from populating profile to redux under
  * the data path. For example role parameter on profile populated from 'roles'
  * root. True will call SET_PROFILE as well as a SET action with the role that
@@ -190,7 +190,7 @@ export default (fbConfig, otherConfig) => next =>
      * @return {Promise} Containing reference snapshot
      */
     const setWithMeta = (path, value, onComplete) =>
-       withMeta('set', path, value, onComplete)
+      withMeta('set', path, value, onComplete)
 
     /**
      * @private
@@ -351,16 +351,57 @@ export default (fbConfig, otherConfig) => next =>
 
     /**
      * @private
-     * @description Watch event. **Note:** this method is used internally
-     * so examples have not yet been created, and it may not work as expected.
-     * @param {String} type - Type of watch event
-     * @param {String} dbPath - Database path on which to setup watch event
+     * @description Create watch event for Firebase Realtime Database
+     * @param {String} type - Type of watch event ('value', 'once', etc)
+     * @param {String} path - Database path on which to setup watch event
      * @param {Object|String} options - Name of listener results within redux
      * store. If string is passed, it is used as storeAs.
      * @param {String} options.storeAs - Name of listener results within redux store
      * @param {Array} options.queryParams - List of query parameters
      * @param {Array} options.populates - Populates config
      * @return {Promise}
+     * @example <caption>Basic</caption>
+     * import React, { PureComponent } from 'react'
+     * import PropTypes from 'prop-types'
+     * import { connect } from 'react-redux'
+     * import { toJS, isLoaded, isEmpty } from 'react-redux-firebase'
+     *
+     * class SomeThing extends PureComponent {
+     *   static contextTypes = {
+     *     store: PropTypes.object.isRequired
+     *   }
+     *
+     *   componentWillMount() {
+     *     this.context.store.firebase.helpers.watchEvent('value', 'todos')
+     *   }
+     *
+     *   componentWillUnmount() {
+     *     this.context.store.firebase.helpers.unWatchEvent('value', 'todos')
+     *   }
+     *
+     *   render() {
+     *     const { todos } = this.props
+     *     const todoData = toJS(todos) // convert from immutable map to JS object
+     *     return (
+     *       <div>
+     *         <h2>Todos</h2>
+     *         <span>
+     *         {
+     *           !isLoaded(todosData)
+     *              ? <div>Loading</div>
+     *              : isEmpty(todosData)
+     *                ? <div>No Todos</div>
+     *                : JSON.stringify(toJS(todos), null, 2)
+     *         }
+     *         </span>
+     *       </div>
+     *     )
+     *   }
+     * }
+     *
+     * export default connect(({ firebase }) =>
+     *   todos: firebase.getIn(['data', 'todos']) // pass immutable map as prop
+     * )(SomeThing)
      */
     const watchEvent = (type, path, options) =>
       queryActions.watchEvent(
@@ -376,13 +417,22 @@ export default (fbConfig, otherConfig) => next =>
      * @description Unset a listener watch event. **Note:** this method is used
      * internally so examples have not yet been created, and it may not work
      * as expected.
-     * @param {String} eventName - Type of watch event
-     * @param {String} eventPath - Database path on which to setup watch event
-     * @param {String} storeAs - Name of listener results within redux store
+     * @param {String} type - Type of watch event
+     * @param {String} path - Database path on which to setup watch event
+     * @param {Object|String} options - Name of listener results within redux
+     * store. If string is passed, it is used as storeAs.
+     * @param {String} options.storeAs - Where results are place within redux store
+     * @param {String} options.queryId - Id of query
      * @return {Promise}
      */
-    const unWatchEvent = (eventName, eventPath, queryId = undefined) =>
-      queryActions.unWatchEvent(instance, dispatch, eventName, eventPath, queryId)
+    const unWatchEvent = (type, path, options) =>
+      queryActions.unWatchEvent(
+        instance,
+        dispatch,
+        isObject(options)
+          ? { type, path, ...options }
+          : { type, path, storeAs: options }
+      )
 
     /**
      * @private
@@ -505,19 +555,19 @@ export default (fbConfig, otherConfig) => next =>
      * @return {firebase.messaging} Firebase messaging service
      * @private
      */
-   /**
+    /**
     * @name auth
     * @description Firebase auth service instance including all Firebase auth methods
     * @return {firebase.auth}
     * @private
     */
-   /**
+    /**
     * @name database
     * @description Firebase database service instance including all Firebase storage methods
     * @return {firebase.database} Firebase database service
     * @private
     */
-   /**
+    /**
     * @name storage
     * @description Firebase storage service instance including all Firebase storage methods
     * @return {firebase.storage} Firebase storage service

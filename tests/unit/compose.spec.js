@@ -15,7 +15,7 @@ const generateCreateStore = (params) =>
 const helpers = generateCreateStore()(reducer).firebase.helpers
 const profileData = { displayName: 'test', email: 'test@test.com' }
 
-describe('Compose', () => {
+describe('Store Enhancer', () => {
   it('is a function', () => {
     expect(composeFunc).to.be.a.function
   })

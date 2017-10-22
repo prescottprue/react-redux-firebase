@@ -1,8 +1,13 @@
 import { actionTypes } from '../constants'
-import { isNaN, isFunction } from 'lodash'
+import { isNaN, isFunction, size, isObject, isString } from 'lodash'
 
-const { UNSET_LISTENER } = actionTypes
-
+/**
+ * @private
+ * @description Attempt to parse string into a number if possible. If not
+ * return original.
+ * @param  {String|Number} value - Value which to attempt to parse to number
+ * @return {Number} - Passed value converted to a number if possible
+ */
 const tryParseToNumber = (value) => {
   const result = Number(value)
   if (isNaN(result)) {
@@ -32,6 +37,9 @@ export const getWatchPath = (event, path) => {
  * @param {String} event - Type of query event
  */
 export const getQueryIdFromPath = (path, event = undefined) => {
+  if (!isString(path)) {
+    throw new Error('Query path must be a string')
+  }
   const origPath = path
   let pathSplitted = path.split('#')
   path = pathSplitted[0]
@@ -46,8 +54,8 @@ export const getQueryIdFromPath = (path, event = undefined) => {
     }
   }).filter(q => q) : undefined
   return (queryId && queryId.length > 0)
-      ? (event ? `${event}:/${queryId}` : queryId[0])
-      : ((isQuery) ? origPath : undefined)
+    ? (event ? `${event}:/${queryId}` : queryId[0])
+    : ((isQuery) ? origPath : undefined)
 }
 
 /**
@@ -93,7 +101,7 @@ export const getWatcherCount = (firebase, event, path, queryId = undefined) => {
  * @param {String} path - Path to watch with watcher
  * @param {String} queryId - Id of query
  */
-export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefined) => {
+export const unsetWatcher = (firebase, dispatch, event, path, queryId) => {
   let id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   path = path.split('#')[0]
   const { watchers, config } = firebase._
@@ -101,12 +109,11 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefine
     delete watchers[id]
     if (event !== 'first_child' && event !== 'once') {
       firebase.database().ref().child(path).off(event)
-      // TODO: Remove config.distpatchOnUnsetListener
       if (config.dispatchOnUnsetListener || config.distpatchOnUnsetListener) {
-        if (config.distpatchOnUnsetListener && isFunction(console.warn)) {  // eslint-disable-line no-console
+        if (config.distpatchOnUnsetListener && isFunction(console.warn)) { // eslint-disable-line no-console
           console.warn('config.distpatchOnUnsetListener is Depreceated and will be removed in future versions. Please use config.dispatchOnUnsetListener (dispatch spelled correctly).') // eslint-disable-line no-console
         }
-        dispatch({ type: UNSET_LISTENER, path })
+        dispatch({ type: actionTypes.UNSET_LISTENER, path })
       }
     }
   } else if (watchers[id]) {
@@ -115,7 +122,8 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId = undefine
 }
 
 /**
- * @description Modify query to include methods based on query parameters (such as orderByChild)
+ * @description Modify query to include methods based on query parameters (such
+ * as orderByChild).
  * @param {Array} queryParams - Array of query parameters to apply to query
  * @param {Object} query - Query object on which to apply query parameters
  * @return {FirebaseQuery}
@@ -181,4 +189,39 @@ export const applyParamsToQuery = (queryParams, query) => {
   }
 
   return query
+}
+
+/**
+ * @private
+ * @description Build ordered child object. If snaps's value is an object,
+ * it is spread, otherwise it is placed under the "value" parameter.
+ * @param  {firebase.database.DataSnapshot} snap [description]
+ * @return {Object} Child object containing key
+ */
+const buildOrderedChild = (snap) =>
+  isObject(snap.val())
+    ? { key: snap.key, ...snap.val() }
+    : { key: snap.key, value: snap.val() }
+
+/**
+ * @private
+ * @description Get ordered array from snapshot. Null is returned if no data.
+ * @param  {firebase.database.DataSnapshot} snapshot - Snap for which an
+ * ordered array will be created
+ * @return {Array} Ordered list of children from snapshot
+ */
+export const orderedFromSnapshot = (snapshot, queryType) => {
+  // TODO: Expose function for building ordered object to config
+  // For child added queries, return ordered child for that snapshot
+  if (queryType === 'child_added') {
+    return [buildOrderedChild(snapshot)]
+  }
+  // Children are looped over with an ordered object being built for each one
+  const ordered = []
+  if (snapshot.forEach) {
+    snapshot.forEach((child) => {
+      ordered.push(buildOrderedChild(child))
+    })
+  }
+  return size(ordered) ? ordered : null
 }

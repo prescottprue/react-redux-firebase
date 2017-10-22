@@ -2,7 +2,35 @@
 
 ### Table of Contents
 
+-   [createFirebaseConnect](#createfirebaseconnect)
 -   [firebaseConnect](#firebaseconnect)
+
+## createFirebaseConnect
+
+**Extends React.Component**
+
+Function for creating a firebaseConnect Higher Order Component
+connected to a specific store key. **NOTE** This is an advanced feature
+and is not neesesary except for in cases of running multiple redux stores
+in one application.
+
+**Parameters**
+
+-   `storeKey` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Key of store which `firebaseConnect`
+    will connect to for gathering store.firebase (optional, default `'store'`)
+
+**Examples**
+
+_Basic_
+
+```javascript
+import { createFirebaseConnect } from 'react-redux-firebase'
+const firebaseConnect = createFirebaseConnect('someOtherStore')(App)
+export default firebaseConnect()(SomeComponent)
+```
+
+Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** that creates a Higher Order Component (component that
+accepts a component to wrap and returns the wrapped component)
 
 ## firebaseConnect
 
@@ -13,8 +41,9 @@ to provided firebase paths using React's Lifecycle hooks.
 
 **Parameters**
 
--   `storeKey`   (optional, default `'store'`)
--   `watchArray` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync from Firebase. Can also be a function that returns the array. The function is passed the current props and the firebase object.
+-   `watchArray` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
+    from Firebase. Can also be a function that returns the array. The function is
+    passed the current props and the firebase object.
 
 **Examples**
 
@@ -79,4 +108,5 @@ export default connect(({ firebase }) => ({
 }))(fbWrapped)
 ```
 
-Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the wrapped component
+Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the
+wrapped component

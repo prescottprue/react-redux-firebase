@@ -1,4 +1,3 @@
-
 const exec = require('child-process-promise').exec
 const version = require('../package.json').version
 

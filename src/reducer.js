@@ -53,12 +53,12 @@ export default (state = initialState, action = {}) => {
     case START:
       pathArr = pathToArr(path)
       retVal = (requesting !== undefined)
-         ? state.setIn(['requesting', pathArr.join(paramSplitChar)], fromJS(requesting))
-         : state.deleteIn(['requesting', pathArr.join(paramSplitChar)])
+        ? state.setIn(['requesting', pathArr.join(paramSplitChar)], fromJS(requesting))
+        : state.deleteIn(['requesting', pathArr.join(paramSplitChar)])
 
       retVal = (requested !== undefined)
-         ? retVal.setIn(['requested', pathArr.join(paramSplitChar)], fromJS(requested))
-         : retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
+        ? retVal.setIn(['requested', pathArr.join(paramSplitChar)], fromJS(requested))
+        : retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
 
       return retVal
 
@@ -141,13 +141,13 @@ export default (state = initialState, action = {}) => {
 
     case LOGIN:
       return state.setIn(['auth'], fromJS(action.auth))
-                  .setIn(['authError'], null)
+        .setIn(['authError'], null)
 
     case LOGIN_ERROR:
       return state
-              .setIn(['authError'], action.authError)
-              .setIn(['auth'], null)
-              .setIn(['profile'], null)
+        .setIn(['authError'], action.authError)
+        .setIn(['auth'], null)
+        .setIn(['profile'], null)
 
     case AUTHENTICATION_INIT_STARTED:
       return initialState.setIn(['isInitializing'], true)

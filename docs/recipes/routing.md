@@ -9,28 +9,21 @@ Routing can be changed based on data by using react lifecycle hooks such as `com
 ```javascript
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
-import {
-  firebaseConnect,
-  helpers,
-  pathToJS,
-  isLoaded,
-  isEmpty
-} from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
-@firebaseConnect()
-@connect(
-  ({ firebase }) => ({
-    auth: pathToJS(firebase, 'auth'),
-  })
-)
-export default class ProtectedPage extends Component {
-  static propTypes = {
-    auth: PropTypes.object,
+export class ProtectedPage extends Component {
+  static contextTypes = {
+    router: PropTypes.object,
   }
 
-  componentWillReceiveProps({ auth }) {
-    if (auth && !auth.uid) {
+  static propTypes = {
+    authExists: PropTypes.bool,
+  }
+
+  componentWillReceiveProps({ authExists }) {
+    if (authExists) {
       this.context.router.push('/login') // redirect to /login if not authed
     }
   }
@@ -43,6 +36,20 @@ export default class ProtectedPage extends Component {
     )
   }
 }
+
+// Used to provide data to ProtectedPage component
+const enhance = compose(
+  firebaseConnect()
+  connect(
+    (state) => {
+      return {
+        authExists: !!state.firebase.get('auth'),
+      }
+    }
+  )
+)
+
+export enhance(ProtectedPage)
 ```
 
 ## Advanced

@@ -1,35 +1,71 @@
 # Queries
 
+Queries can be attached in two different ways:
+1. Manually - Call `watchEvents` and `unWatchEvents` directly (such as within component lifecycle hooks)
+2. Automatically - Using `firebaseConnect` HOC Wrapper (manages attaching/detaching listeners on component mount/dismount/props change)
+
+## Manually
+**NOTE** You must track and unmount all of then listeners you create in this way. [`firebaseConnect`](#automatically) has been created to [do this for you automatically](#automatically).
+
+`watchEvent` and `watchEvents` can be called directly to create listeners. Be careful when doing this though! You will have to track and unmount all of your listeners using either `unWatchEvent` or `unWatchEvents`. `firebaseConnect` has been created to [do this for you automatically](#automatically), but there are still times where it is nice to do it manually.
+
+```js
+import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { isLoaded, isEmpty, toJS } from 'react-redux-firebase'
+
+class SomeThing extends PureComponent {
+  static contextTypes = {
+    store: PropTypes.object.isRequired
+  }
+
+  static propTypes = {
+    todosMap: PropTypes.object
+  }
+
+  componentWillMount () {
+    this.context.store.firebase.helpers.watchEvent('value', 'todos')
+  }
+
+  componentWillUnMount () {
+    this.context.store.firebase.helpers.unWatchEvent('value', 'todos')
+  }
+
+  render () {
+    const { todosMap } = this.props
+
+    if (!isLoaded(todosMap)) {
+      return <div>Loading...</div>
+    }
+
+    if (isEmpty(todosMap)) {
+      return <div>No Todos Found</div>
+    }
+    const todos = toJS(todosMap) // convert ImmutableJS Map to JS Object (not needed in v2)
+
+    return <div>{JSON.stringify(todos, null, 2)}</div>
+  }
+}
+
+export default connect(
+  ({ firebase }) => ({
+    todosMap: firebase.getIn(['data', 'todos']) // pass ImmutableJS Map
+  })
+)(SomeThing)
+```
+
+## Automatically {#automatically}
+
 Query listeners are attached by using the `firebaseConnect` higher order component. `firebaseConnect` accepts an array of paths for which to create queries. When listening to paths, it is possible to modify the query with any of [Firebase's included query methods](https://firebase.google.com/docs/reference/js/firebase.database.Query).
 
 **NOTE:**
 By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use [`storeAs` (more below)](#storeAs).
 
-Below are examples using Firebase query methods as well as other methods that are included (such as 'populate').
+Below are examples using Firebase query config options as well as other options that are included (such as 'populate').
 
 `firebaseConnect` is a Higher Order Component (wraps a provided component) that attaches listeners to relevant paths on Firebase when mounting, and removes them when unmounting.
 
-**storeAs**
-
-Data is stored in redux under the path of the query for convince. This means that two different queries to the same path (i.e. `todos`) will both place data into `state.data.todos` even if their query parameters are different. If you would like to store your query somewhere else in redux, use `storeAs`:
-
-```js
-@firebaseConnect([
-  {
-    path: 'todos',
-    storeAs: 'myTodos', // place in redux under "myTodos"
-    queryParams: ['orderByChild=createdBy', 'equalTo=123someuid'],
-  }
-  {
-    path: 'todos',
-    queryParams: ['limitToFirst=20'],
-  }
-])
-@connect(({ firebase }) => ({
-  myTodos: dataToJS(firebase, 'myTodos'), // state.firebase.data.myTodos due to storeAs
-  allTodos: dataToJS(firebase, 'todos') // state.firebase.data.todos since no storeAs
-}))
-```
 
 ## once
 To load a firebase location once instead of binding, the once option can be used:
@@ -37,10 +73,9 @@ To load a firebase location once instead of binding, the once option can be used
 **Internally Uses Firebase Method**: [ `orderByPriority`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByPriority)
 
 ```javascript
-@firebaseConnect([
+firebaseConnect([
   { type: 'once', path: '/todos' }
 ])
-
 ```
 
 ## orderByChild
@@ -52,7 +87,7 @@ To order the query by a child within each object, use orderByChild.
 Ordering a list of todos by the text parameter of the todo item (placing them in alphabetical order).
 
 ```javascript
-@firebaseConnect([
+firebaseConnect([
   '/todos#orderByChild=text'
   // { path: '/todos', queryParams: [ 'orderByChild=text' ]} // object notation
 ])
@@ -68,7 +103,7 @@ Order a list by the key of each item. Since push keys contain time, this is also
 Ordering a list of todos based on their key (puts them in order of when they were created)
 
 ```javascript
-@firebaseConnect([
+firebaseConnect([
   '/todos#orderByKey'
   // { path: '/todos', queryParams: [ 'orderByKey' ]} // object notation
 ])
@@ -83,7 +118,7 @@ Order a list by the value of each object. Internally runs
 Ordering a list of score's based on score's value
 
 ```javascript
-@firebaseConnect([
+firebaseConnect([
   `scores#orderByValue`
   // { path: '/scores', queryParams: [ 'orderByValue' ] } // object notation
 ])
@@ -98,7 +133,7 @@ Order a list by the priority of each item.
 Ordering a list based on priorities
 
 ```javascript
-@firebaseConnect([
+firebaseConnect([
   `scores#orderByPriority`
   // { path: '/scores', queryParams: [ 'orderByPriority' ] } // object notation
 ])
@@ -113,7 +148,7 @@ Limit query results to the first n number of results.
 1. Displaying only the first todo item
 
   ```javascript
-  @firebaseConnect([
+  firebaseConnect([
     '/todos#limitToFirst'
     // { path: '/todos', queryParams: [ 'limitToFirst=1' ] } // object notation
   ])
@@ -121,7 +156,7 @@ Limit query results to the first n number of results.
 2. Displaying only the first 10 todo items
 
   ```javascript
-  @firebaseConnect([
+  firebaseConnect([
     '/todos#limitToFirst=10'
     // { path: '/todos', queryParams: [ 'orderByChild=createdBy', 'equalTo=123' ] } // object notation
   ])
@@ -136,7 +171,7 @@ Limit query results to the last n number of results
 1. Only the **last** todo item
 
   ```javascript
-  @firebaseConnect([
+  firebaseConnect([
     '/todos#limitToLast'
     // { path: '/todos', queryParams: [ 'limitToLast' ] } // object notation
   ])
@@ -144,7 +179,7 @@ Limit query results to the last n number of results
 2. Only the **last 10** todo items
 
   ```javascript
-  @firebaseConnect([
+  firebaseConnect([
     '/todos#limitToLast=10'
     // { path: '/todos', queryParams: [ 'limitToLast=10' ] } // object notation
   ])
@@ -160,21 +195,21 @@ Start query at a specific location by providing the specific number or value
 
 1. Starting at the fifth item
   ```js
-  @firebaseConnect([
+  firebaseConnect([
     'todos#startAt=5&limitToFirst=2'
     // { path: '/todos', queryParams: [ 'startAt=5', 'limitToFirst=2' ] } // object notation
   ])
   ```
 2. Paginate results
   ```js
-  @firebaseConnect([
+  firebaseConnect([
     'todos#startAt=5&limitToFirst=10'
     // { path: '/todos', queryParams: [ 'startAt=5', 'limitToFirst=10' ] } // object notation
   ])
   ```
 3. Non-number values
 ```js
-@firebaseConnect([
+firebaseConnect([
   'todos#startAt=val1&limitToFirst=10'
   // { path: '/todos', queryParams: [ 'startAt=5', 'limitToFirst=10' ] } // object notation
 ])
@@ -189,7 +224,7 @@ End query at a specific location by providing the specific number or value
 #### Examples
 1. Usage with startAt
 ```js
-@firebaseConnect([
+firebaseConnect([
   'todos#orderByChild=added&startAt=1&endAt=5'
   // { path: '/todos', queryParams: [ 'orderByChild=added', 'startAt=1', 'endAt=5' ] } // object notation
 ])
@@ -211,7 +246,7 @@ This means the actual value will be parsed instead of the string containing the 
 #### Examples
 1. Order by child parameter
 ```js
-@firebaseConnect([
+firebaseConnect([
   'todos#orderByChild=createdBy&equalTo=ASD123',
   // { path: '/todos', queryParams: [ 'orderByChild=createdBy', 'equalTo=ASD123' ] } // object notation
 ])
@@ -224,7 +259,7 @@ Can be used to keep internal parsing from happening. Useful when attempting to s
 #### Examples
 1. Order by child parameter equal to a number string. Equivalent of searching for `'123'` (where as not using `notParsed` would search for children equal to `123`)
 ```js
-@firebaseConnect([
+firebaseConnect([
   {
     path: '/todos',
     queryParams: [
@@ -236,25 +271,6 @@ Can be used to keep internal parsing from happening. Useful when attempting to s
 ])
 ```
 
-
-## storeAs {#populate}
-
-By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use `storeAs`:
-
-#### Examples
-1. Querying the same path with different query parameters
-
-```js
-@firebaseConnect(props => [
-  { path: 'projects' }
-  { path: 'projects', storeAs: 'myProjects', queryParams: ['orderByChild=uid', '123'] }
-])
-@connect(({ firebase }, props) => ({
-  projects: populatedDataToJS(firebase, 'projects'),
-  myProjects: populatedDataToJS(firebase, 'myProjects'), // use storeAs path to gather from redux
-}))
-```
-
 ## ordered {#ordered}
 
 In order to get ordered data, use `orderedToJS`
@@ -263,13 +279,91 @@ In order to get ordered data, use `orderedToJS`
 1. Get list of projects ordered by key
 
 ```js
-@firebaseConnect(props => [
-  { path: 'projects', queryParams: ['orderByKey'] }
-])
-@connect(({ firebase }, props) => ({
-  projects: orderedToJS(firebase, 'projects'),
-}))
+const path = 'projects'
+
+const enhance = compose(
+  firebaseConnect(props => [
+    { path, queryParams: ['orderByKey'] }
+  ]),
+  connect(({ firebase }) => ({
+    projects: firebase.getIn(['ordered', path]), // ImmutableJS Map
+  }))
+)
 ```
+
+## storeAs {#storeAs}
+
+By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use `storeAs`:
+
+```js
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseConnect } from 'react-redux-firebase'
+
+const enhance = compose(
+  firebaseConnect([
+    {
+      path: 'todos',
+      storeAs: 'myTodos', // place in redux under "myTodos"
+      queryParams: ['orderByChild=createdBy', 'equalTo=123someuid'],
+    }
+    {
+      path: 'todos',
+      queryParams: ['limitToFirst=20'],
+    }
+  ]),
+  connect(({ firebase }) => ({
+    myTodos: dataToJS(firebase, 'myTodos'), // state.firebase.data.myTodos due to storeAs
+    allTodos: dataToJS(firebase, 'todos') // state.firebase.data.todos since no storeAs
+  }))
+)
+
+// Wrap your component with the enhancer
+export default enhance(SomeComponent)
+```
+
+#### Examples
+1. Querying the same path with different query parameters
+
+```js
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseConnect, toJS } from 'react-redux-firebase'
+
+const enhance = compose(
+  firebaseConnect(props => [
+    { path: 'projects' },
+    {
+      path: 'projects',
+      storeAs: 'myProjects',
+      queryParams: ['orderByChild=uid', '123']
+    }
+  ])
+  connect(({ firebase }) => ({
+    myProjects: firebase.getIn(['data', 'myProjects']), // state.firebase.data.myProjects due to storeAs
+    allProjects: firebase.getIn(['data', 'projects']) // state.firebase.data.todos since no storeAs
+  }))
+)
+
+const SomeComponent = ({ myProjects, allProjects }) =>
+  <div>
+    <div>
+      <h2>My Projects</h2>
+      {JSON.stringify(toJS(myProjects, null, 2))}
+    </div>
+    <div>
+      <h2>All Projects</h2>
+      {JSON.stringify(toJS(allProjects, null, 2))}
+    </div>
+  </div>
+
+// Wrap your component with the enhancer
+export default enhance(SomeComponent)
+```
+
+#### Why?
+
+Data is stored in redux under the path of the query for convince. This means that two different queries to the same path (i.e. `todos`) will both place data into `state.data.todos` even if their query parameters are different.
 
 ## Populate {#populate}
 

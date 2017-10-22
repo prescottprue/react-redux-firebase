@@ -81,13 +81,13 @@ export const getPopulates = (params) => {
  */
 export const getPopulateChild = (firebase, populate, id) =>
   firebase.database()
-   .ref()
-   .child(`${populate.root}/${id}`)
-   .once('value')
-   .then(snap =>
-     // Return id if population value does not exist
-     snap.val()
-   )
+    .ref()
+    .child(`${populate.root}/${id}`)
+    .once('value')
+    .then(snap =>
+      // Return id if population value does not exist
+      snap.val()
+    )
 
 /**
  * @private
@@ -111,13 +111,13 @@ export const populateList = (firebase, list, p, results) => {
         p,
         populateKey
       )
-      .then(pc => {
-        if (pc) {
+        .then(pc => {
+          if (pc) {
           // write child to result object under root name if it is found
-          return set(results, `${p.root}.${populateKey}`, pc)
-        }
-        return results
-      })
+            return set(results, `${p.root}.${populateKey}`, pc)
+          }
+          return results
+        })
     })
   )
 }

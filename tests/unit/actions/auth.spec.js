@@ -20,6 +20,13 @@ let dispatchSpy
 let res
 const dispatch = sinon.spy()
 const fakeLogin = { email: 'test@tst.com', password: 'asdfasdf', role: 'admin' }
+const firebaseWithConfig = (config = {}) => ({
+  ...Firebase,
+  _: {
+    ...Firebase._,
+    config: { ...Firebase._.config, ...config }
+  }
+})
 const fakeFirebase = {
   _: {
     authUid: '123',
@@ -170,12 +177,42 @@ describe('Actions: Auth', () => {
   })
 
   describe('createUserProfile', () => {
-    it('creates profile if config is enabled', () => {
-      return createUserProfile(dispatch, Firebase, { uid: '123', email: 'test@test.com', providerData: [{}] }, { some: 'asdf' })
-        .then((profile) => {
-          expect(profile).to.be.an.object
-        })
-    }, 4000)
+    it('creates profile if config is enabled', async () => {
+      const userData = { uid: '123', email: 'test@test.com', providerData: [{}] }
+      const profile = await createUserProfile(dispatch, Firebase, userData, { some: 'asdf' })
+      expect(profile).to.be.an.object
+    })
+
+    it('resolves with userData if userProfile config option is not enabled', async () => {
+      const userData = { uid: '123', email: 'test@test.com', providerData: [{}] }
+      const fb = firebaseWithConfig({ userProfile: null })
+      const profile = await createUserProfile(dispatch, fb, userData, { some: 'asdf' })
+      expect(profile).to.equal(userData)
+    })
+
+    it('calls profileFactory if it exists', async () => {
+      const userData = { uid: '123', email: 'test@test.com', providerData: [{}] }
+      const profileFactory = sinon.spy()
+      const profile = await createUserProfile(dispatch, firebaseWithConfig({ profileFactory }), userData, { some: 'asdf' })
+      expect(profile).to.be.an.object
+      expect(profileFactory).to.have.been.calledOnce
+    })
+
+    it('calls profileDecorator if it exists and shows deprecation message', async () => {
+      const profileDecorator = sinon.spy(() => ({}))
+      const profile = await createUserProfile(dispatch, firebaseWithConfig({ profileDecorator }), {}, {})
+      expect(profile).to.be.an.object
+      expect(profileDecorator).to.have.been.calledOnce
+    })
+
+    it('rejects for error in profileFactory function', async () => {
+      const profileFactory = () => { throw new Error('test') }
+      try {
+        await createUserProfile(dispatch, firebaseWithConfig({ profileFactory }), {}, {})
+      } catch (err) {
+        expect(err).to.have.property('message', 'test')
+      }
+    })
   })
 
   describe('login', () => {

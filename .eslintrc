@@ -11,10 +11,6 @@ env:
   jasmine: true
   node: true
 
-ecmaFeatures:
-  jsx: true
-  modules: true
-
 rules:
   semi: [2, 'never']
   no-console: 'error'

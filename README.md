@@ -21,17 +21,13 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 
 ## Features
 - Integrated into redux
-- Support for updating and nested props
-- [Population capability](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
 - Out of the box support for authentication (with auto load user profile)
-- Firebase Storage Support
+- Full Firebase Platform Support Including Real Time Database, Firestore, and Storage
+- Automatic binding/unbinding of listeners using `firebaseConnect` Higher Order Component
+- [Population capability](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
 - Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed` )
 - queries support ( `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo` right now )
-- Automatic binding/unbinding
-- Declarative decorator syntax for React components
-- Tons of integrations including [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/)
-- Action Types and other Constants exported for external use (such as in `redux-observable`)
-- Firebase v3+ support
+- Tons of examples of integrations including [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/)
 - Server Side Rendering Support
 - [`react-native` support](/docs/recipes/react-native.md) using [native modules](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules) or [web sdk](/docs/recipes/react-native.md#jsweb)
 
@@ -45,7 +41,7 @@ npm install --save react-redux-firebase
 
 The above install command will install the `@latest` tag. You may also use the following tags when installing to get different versions:
 
-* `@canary` - Most possible up to date code. Currently, points to active progress with `v2.0.0-*` pre-releases. *Warning:* Syntax is different than current stable version.
+* `@next` - Most possible up to date code. Currently, points to active progress with `v2.0.0-*` pre-releases. *Warning:* Syntax is different than current stable version.
 
 Be aware of changes when using a version that is not tagged `@latest`. Please report any issues you encounter, and try to keep an eye on the [releases page](https://github.com/prescottprue/react-redux-firebase/releases) for updates.
 
@@ -56,8 +52,12 @@ Be aware of changes when using a version that is not tagged `@latest`. Please re
 Include `reactReduxFirebase` in your store compose function and  `firebaseStateReducer` in your reducers:
 
 ```javascript
+import React from 'react'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
 import { createStore, combineReducers, compose } from 'redux'
 import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
+import Todos from './Todos' // find code below
 
 const firebaseConfig = {
   apiKey: '<your-api-key>',
@@ -68,12 +68,12 @@ const firebaseConfig = {
 
 const reduxFirebaseConfig = { userProfile: 'users' }
 
-// Add redux Firebase to compose
+// Add reactReduxFirebase store enhancer
 const createStoreWithFirebase = compose(
   reactReduxFirebase(firebaseConfig, reduxFirebaseConfig),
 )(createStore)
 
-// Add Firebase to reducers
+// Add firebase to reducers
 const rootReducer = combineReducers({
   firebase: firebaseStateReducer
 })
@@ -81,82 +81,57 @@ const rootReducer = combineReducers({
 // Create store with reducers and initial state
 const initialState = {}
 const store = createStoreWithFirebase(rootReducer, initialState)
+
+// Setup react-redux so that connect HOC can be used
+const App = () => (
+  <Provider store={store}>
+    <Todos />
+  </Provider>
+);
+
+render(<App/>, document.getElementById('root'));
 ```
 
-In components:
+Todos component (`./Todos`):
 
 ```javascript
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types' // can also come from react if react <= 15.4.0
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty,
-  dataToJS,
-  pathToJS
-} from 'react-redux-firebase'
+import { firebaseConnect, isLoaded, isEmpty, toJS } from 'react-redux-firebase'
 
-class Todos extends Component {
-  static propTypes = {
-    todos: PropTypes.object,
-    auth: PropTypes.object,
-    firebase: PropTypes.object
-  }
+const Todos = ({ todos }) => (
+  <div>
+    <h1>Todos</h1>
+    <ul>
+      {
+        !isLoaded(todos)
+          ? 'Loading'
+          : isEmpty(todos)
+            ? 'Todo list is empty'
+            : toJS(todos).map(
+                (key, id) => (
+                  <TodoItem key={key} id={id} todo={todos[key]}/>
+                )
+              )
+      }
+    </ul>
+  </div>
+)
 
-  addTodo = () => {
-    const { newTodo } = this.refs
-    return this.props.firebase
-      .push('/todos', { text: newTodo.value, done: false })
-      .then(() => {
-        newTodo.value = ''
-        console.log('Todo Created!')
-      })
-      .catch((err) => {
-        console.log('Error creating todo:', err) // error is also set to state.firebase.authError
-      })
-  }
-
-  render() {
-    const { todos } = this.props;
-
-    // Build Todos list if todos exist and are loaded
-    const todosList = !isLoaded(todos)
-      ? 'Loading'
-      : isEmpty(todos)
-        ? 'Todo list is empty'
-        : Object.keys(todos).map(
-            (key, id) => (
-              <TodoItem key={key} id={id} todo={todos[key]}/>
-            )
-          )
-
-    return (
-      <div>
-        <h1>Todos</h1>
-        <ul>
-          {todosList}
-        </ul>
-        <input type="text" ref="newTodo" />
-        <button onClick={this.handleAdd}>
-          Add
-        </button>
-      </div>
-    )
-  }
+Todos.propTypes = {
+  todos: PropTypes.object,
+  firebase: PropTypes.object // comes from firebaseConnect
 }
 
 export default compose(
   firebaseConnect([
     'todos' // { path: 'todos' } // object notation
   ]),
-  connect(
-    (state) => ({
-      todos: dataToJS(state.firebase, 'todos'), // in v2 todos: state.firebase.data.todos
-      auth: pathToJS(state.firebase, 'auth') // in v2 todos: state.firebase.auth
-    })
-  )
+  connect((state) => ({
+    todos: state.firebase.getIn(['todos']), // in v2 todos: state.firebase.data.todos
+  }))
 )(Todos)
 ```
 
@@ -168,45 +143,10 @@ Alternatively, if you choose to use decorators:
 ])
 @connect(
   ({ firebase }) => ({
-    todos: dataToJS(firebase, 'todos'), // in v2 todos: firebase.data.todos
-    auth: pathToJS(firebase, 'auth') // in v2 todos: firebase.auth
+    todos: state.firebase.getIn(['todos']) // in v2 todos: firebase.data.todos
   })
 )
 export default class Todos extends Component {
-
-}
-```
-
-### Decorators
-
-Though they are optional, it is highly recommended that you use decorators with this library. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
-
-A side by side comparison using [react-redux](https://github.com/reactjs/react-redux)'s `connect` function/HOC is the best way to illustrate the difference:
-
-#### Without Decorators
-```javascript
-class SomeComponent extends Component {
-
-}
-export default connect()(SomeComponent)
-```
-vs.
-
-#### With Decorators
-```javascript
-@connect()
-export default class SomeComponent extends Component {
-
-}
-```
-
-To enable this functionality, you will most likely need to install a plugin (depending on your build setup). For Webpack and Babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
-
-1. run `npm i --save-dev babel-plugin-transform-decorators-legacy`
-2. Add the following line to your `.babelrc`:
-```json
-{
-  "plugins": ["transform-decorators-legacy"]
 }
 ```
 
