@@ -322,4 +322,3 @@ Returns [**Storage**](https://firebase.google.com/docs/reference/js/firebase.sto
 Firebase messaging service instance including all Firebase messaging methods
 
 Returns **firebase.messaging** Firebase messaging service
->>>>>>> master

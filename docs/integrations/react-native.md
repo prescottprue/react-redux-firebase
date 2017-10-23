@@ -266,8 +266,6 @@ AppRegistry.registerComponent('GoogleSigninSampleApp', () => GoogleSigninSampleA
 
 ```
 
->>>>>>> master
-
 ## Creating Your Own
 
 We are going to use the project name Devshare for example here. For your project, use your project name everywhere where Devshare is used.

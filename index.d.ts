@@ -134,7 +134,6 @@ export function reactReduxFirebase(fbConfig: ConfigObject, otherConfig: any, ...
 export function reduxFirebase(fbConfig: ConfigObject, otherConfig: any, ...args: any[]): any;
 
 export function reduxReactFirebase(fbConfig: ConfigObject, otherConfig: any, ...args: any[]): any;
->>>>>>> master
 
 export function toJS(data: any): any;
 
