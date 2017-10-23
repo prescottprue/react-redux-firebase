@@ -252,7 +252,7 @@ The [examples folder](/examples) contains full applications that can be copied/a
 
 This project exists thanks to all the people who contribute.
 
-<a href="graphs/contributors"><img src="https://opencollective.com/react-redux-firebase/contributors.svg?width=890" /></a>
+<a href="https://github.com/prescottprue/react-redux-firebase/graphs/contributors"><img src="https://opencollective.com/react-redux-firebase/contributors.svg?width=890" /></a>
 
 ## Backers
 
