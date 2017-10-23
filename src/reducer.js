@@ -250,7 +250,7 @@ export const authErrorReducer = (state = {}, action) => {
   switch (action.type) {
     case LOGIN:
     case LOGOUT:
-      return {}
+      return null
     case LOGIN_ERROR:
     case UNAUTHORIZED_ERROR:
       return action.authError
@@ -284,7 +284,6 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
         isLoaded: true
       }
     case LOGOUT:
-    case LOGIN_ERROR:
       return { isLoaded: true, isEmpty: true }
     default:
       return state

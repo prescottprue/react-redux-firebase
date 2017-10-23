@@ -167,7 +167,13 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * export default firebaseConnect()(Example)
    */
   const remove = (path, onComplete, options) =>
-    queryActions.remove(firebase, dispatch, path, onComplete, options)
+    queryActions.remove(firebase, dispatch, path, options)
+      .then(() => {
+        if (typeof onComplete === 'function') {
+          onComplete()
+        }
+        return path
+      })
 
   /**
    * @description Sets data to Firebase only if the path does not already
@@ -241,9 +247,36 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     storageActions.deleteFile(dispatch, firebase, { path, dbPath })
 
   /**
+   * @description Watch event. **Note:** this method is used internally
+   * so examples have not yet been created, and it may not work as expected.
+   * @param {String} type - Type of watch event
+   * @param {String} path - Path to location on Firebase which to set listener
+   * @param {String} storeAs - Name of listener results within redux store
+   * @param {Object} options - Event options object
+   * @param {Array} options.queryParams - List of parameters for the query
+   * @param {String} options.queryId - id of the query
+   * @return {Promise}
+   */
+  const watchEvent = (type, path, storeAs, options = {}) =>
+    queryActions.watchEvent(firebase, dispatch, { type, path, storeAs, ...options })
+
+  /**
+   * @description Unset a listener watch event. **Note:** this method is used
+   * internally so examples have not yet been created, and it may not work
+   * as expected.
+   * @param {String} type - Type of watch event
+   * @param {String} path - Path to location on Firebase which to unset listener
+   * @param {String} queryId - Id of the listener
+   * @param {Object} options - Event options object
+   * @return {Promise}
+   */
+  const unWatchEvent = (type, path, queryId, options = {}) =>
+    queryActions.unWatchEvent(firebase, dispatch, { type, path, queryId, ...options })
+
+  /**
    * @description firebaseWatch. Similar to the firebaseConnect Higher Order
    * Component but presented as a function. Useful for populating your redux
-   * state without React, e.g., for service side rendering.
+   * state without React, e.g., for server side rendering.
    * @param {Array} watchArray - Array of objects or strings for paths to sync
    * from Firebase. Can also be a function that returns the array. The function
    * is passed the props object specified as the next parameter.
@@ -254,35 +287,14 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
   const firebaseWatch = (watchArray, props) => {
     const inputAsFunc = createCallable(watchArray)
     const prevData = inputAsFunc(props, firebase)
-    const firebaseEvents = getEventsFromInput(prevData)
-    const promises = firebaseEvents.map(event =>
-      queryActions.watchEvent(firebase, dispatch, event))
-
-    return Promise.all(promises)
+    const queryConfigs = getEventsFromInput(prevData)
+    // TODO: Handle calling with non promise queries (must be once or first_child)
+    return Promise.all(
+      queryConfigs.map(queryConfig =>
+        queryActions.watchEvent(firebase, dispatch, queryConfig)
+      )
+    )
   }
-
-  /**
-   * @description Watch event. **Note:** this method is used internally
-   * so examples have not yet been created, and it may not work as expected.
-   * @param {String} type - Type of watch event
-   * @param {String} dbPath - Database path on which to setup watch event
-   * @param {String} storeAs - Name of listener results within redux store
-   * @return {Promise}
-   */
-  const watchEvent = (type, path, storeAs) =>
-    queryActions.watchEvent(firebase, dispatch, { type, path, storeAs })
-
-  /**
-   * @description Unset a listener watch event. **Note:** this method is used
-   * internally so examples have not yet been created, and it may not work
-   * as expected.
-   * @param {String} eventName - Type of watch event
-   * @param {String} eventPath - Database path on which to setup watch event
-   * @param {String} storeAs - Name of listener results within redux store
-   * @return {Promise}
-   */
-  const unWatchEvent = (type, path, queryId = undefined) =>
-    queryActions.unWatchEvent(firebase, dispatch, { type, path, queryId })
 
   /**
    * @description Logs user into Firebase. For examples, visit the [auth section](/docs/auth.md)
