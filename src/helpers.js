@@ -51,20 +51,16 @@ import { getDotStrPath } from './reducer'
  *   todos: getValueAt(firebase, 'data/todos/user1', defaultValue)
  * })
  */
-export const getValueAt = (data, path, notSetValue) => {
-  if (!data) {
+export const getValueAt = (firebase, path, notSetValue) => {
+  if (!firebase) {
     return notSetValue
   }
 
   const pathArr = `/${fixPath(path)}`.split(/\//).slice(1)
   const dotPath = getDotStrPath(pathArr)
-  const valueAtPath = get(data, dotPath)
+  const valueAtPath = get(firebase, dotPath)
 
-  if (has(data, dotPath)) {
-    return get(data, dotPath)
-  }
-
-  return data
+  return valueAtPath
 }
 
 /**
