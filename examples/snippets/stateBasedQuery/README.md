@@ -6,7 +6,7 @@ This example shows using data from redux state to be used in queries. A good exa
 
 ## What It Does
 
-1. Top level component uses `connect` function to bring `auth` from redux state into a prop name "auth":
+1. Top level component in `Home.js` uses `connect` function to bring `auth` from redux state into a prop name "auth":
   ```js
   const authWrappedComponent = connect(
     ({ firebase }) => ({
@@ -18,9 +18,7 @@ This example shows using data from redux state to be used in queries. A good exa
 1. That component then uses `isLoaded` and `isEmpty` to show different views based on auth state (logged in or not):
 
   ```js
-  render () {
-    const { auth } = this.props
-
+  const Home = ({ auth }) => {
     // handle initial loading of auth
     if (!isLoaded(auth)) {
       return <div>Loading...</div>
@@ -36,10 +34,10 @@ This example shows using data from redux state to be used in queries. A good exa
   }
   ```
 
-1. Todos then uses `auth.uid` as part of a query for todos:
+1. The component in `Todos.js` then uses `auth.uid` as part of a query for todos:
 
   ```js
-  const fbWrappedComponent = firebaseConnect(({ auth }) => ([ // auth comes from props
+  firebaseConnect(({ auth }) => ([ // auth comes from props
     {
       path: 'todos',
       queryParams: ['orderByChild=uid', `equalTo=${auth}`]

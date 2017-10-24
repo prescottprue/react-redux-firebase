@@ -112,7 +112,7 @@ const enhance = compose(
 export default enhance(SomeComponent)
 ```
 
-### Use Firestore
+### Use Firestore {#firestore}
 
 If you would like to instantiate a Firebase instance outside of `react-redux-firebase`, you can pass it in as the first argument like so:
 

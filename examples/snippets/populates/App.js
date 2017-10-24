@@ -5,6 +5,8 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { firebaseConnect, populate, isLoaded } from 'react-redux-firebase'
 
+// NOTE: In real application don't forget to use Provider from react-redux
+// or firebaseConnect/withFirebase will not work
 const Projects = ({ projects }) => (
   <div>
     <h2>react-redux-firebase populate snippet</h2>
