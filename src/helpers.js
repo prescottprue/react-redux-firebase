@@ -16,6 +16,59 @@ import {
 } from 'lodash'
 import { topLevelPaths } from './constants'
 import { getPopulateObjs } from './utils/populate'
+import { getDotStrPath } from './reducer'
+
+/**
+ * @description Get a value from firebase using slash notation.  This enables an easy
+ * migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
+ * **NOTE:** Setting a default value will cause `isLoaded` to always return true
+ * @param {Object} firebase - Firebase instance (state.firebase)
+ * @param {String} path - Path of parameter to load
+ * @param {Object|String|Boolean} notSetValue - Value to return if value is not
+ * found in redux. This will cause `isLoaded` to always return true (since
+ * value is set from the start).
+ * @return {Object} Data located at path within firebase.
+ * @example <caption>Basic</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, getVal } from 'react-redux-firebase'
+ *
+ * @firebaseConnect(['/todos/user1'])
+ * @connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.data.todos
+ *   todos: getVal(firebase, 'data/todos/user1')
+ * })
+ * @example <caption>Basic</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, getVal } from 'react-redux-firebase'
+ * // easily replace pathToJS with getVal
+ * @connect(({ firebase }) => ({
+ *   // this.props.auth loaded from state.firebase.auth
+ *   auth: getVal(firebase, 'auth')
+ * })
+ * @example <caption>Default Value</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, getVal } from 'react-redux-firebase'
+ * const defaultValue = {
+ *  1: {
+ *    text: 'Example Todo'
+ *  }
+ * }
+ * @firebaseConnect(['/todos/user1'])
+ * @connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.data.todos
+ *   todos: getVal(firebase, 'data/todos/user1', defaultValue)
+ * })
+ */
+export const getVal = (firebase, path, notSetValue) => {
+  if (!firebase) {
+    return notSetValue
+  }
+
+  const dotPath = getDotStrPath(path)
+  const valueAtPath = get(firebase, dotPath, notSetValue)
+
+  return valueAtPath
+}
 
 /**
  * @description Detect whether items are loaded yet or not
