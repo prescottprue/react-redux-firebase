@@ -29,8 +29,12 @@ along side applyMiddleware.
         profile when logging in. (default: `false`)
     -   `config.resetBeforeLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to empty profile
         and auth state on login
-    -   `config.perserveOnLogout` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Data parameters to perserve when
-        logging out. (default: `null`)
+    -   `config.perserveOnLogout` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** Data parameters to perserve
+        when logging out. If Array is passed, each item represents keys
+        within state.firebase.data preserve. If an object is passed, Keys associate
+        with parts of state to preserve, and the values are Arrays which
+        associate with which keys to preserve form that section of state.
+        (default: `null`)
     -   `config.enableRedirectHandling` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable
         auth redirect handling listener. (default: `true`)
     -   `config.onAuthStateChanged` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function run when auth state

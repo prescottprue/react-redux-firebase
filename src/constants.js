@@ -68,6 +68,7 @@ export const actionTypes = {
   NO_VALUE: `${actionsPrefix}/NO_VALUE`,
   UNAUTHORIZED_ERROR: `${actionsPrefix}/UNAUTHORIZED_ERROR`,
   ERROR: `${actionsPrefix}/ERROR`,
+  CLEAR_ERRORS: `${actionsPrefix}/CLEAR_ERRORS`,
   SET_LISTENER: `${actionsPrefix}/SET_LISTENER`,
   UNSET_LISTENER: `${actionsPrefix}/UNSET_LISTENER`,
   AUTHENTICATION_INIT_STARTED: `${actionsPrefix}/AUTHENTICATION_INIT_STARTED`,
@@ -114,8 +115,11 @@ export const actionTypes = {
  * `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
  * @property {Boolean} enableLogging - `false` Whether or not firebase
  * database logging is enabled.
- * @property {Array} preserveOnLogout - `null` Data parameters to preserve when
- * logging out.
+ * @property {Array|Object} preserveOnLogout - `null` Data parameters to
+ * preserve when logging out. If Array is passed, each item represents keys
+ * within state.firebase.data preserve. If an object is passed, Keys associate
+ * with parts of state to preserve, and the values are Arrays which
+ * associate with which keys to preserve form that section of state.
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
  * user profile when logging in.
  * @property {Boolean} resetBeforeLogin - `true` Whether or not to reset auth

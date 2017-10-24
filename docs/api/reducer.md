@@ -13,7 +13,7 @@
 -   [listenersReducer](#listenersreducer)
 -   [dataReducer](#datareducer)
 -   [orderedReducer](#orderedreducer)
--   [firebaseStateReducer](#firebasestatereducer)
+-   [firebaseReducer](#firebasereducer)
 
 ## isInitializingReducer
 
@@ -107,14 +107,16 @@ Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 
 ## errorsReducer
 
-Reducer for errors state. Changed by `UNAUTHORIZED_ERROR`
+Reducer for errors state. Changed by `UNAUTHORIZED_ERROR`, `CLEAR_ERRORS`,
 and `LOGOUT` actions.
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current authError redux state (optional, default `[]`)
+-   `state` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current errors redux state (optional, default `[]`)
 -   `action` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
     -   `action.type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+    -   `action.preserve` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** `not required` Filter function for
+        preserving errors
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
 
@@ -125,7 +127,7 @@ and `LOGOUT` actions.
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current authError redux state (optional, default `[]`)
+-   `state` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current listeners redux state (optional, default `[]`)
 -   `action` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
     -   `action.type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
 
@@ -159,16 +161,16 @@ Reducer for ordered state. Changed by `SET`, `SET_ORDERED`,`NO_VALUE`, and
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data state after reduction
 
-## firebaseStateReducer
+## firebaseReducer
 
-Reducer for react redux firebase. This function is called
+Main reducer for react-redux-firebase. This function is called
 automatically by redux every time an action is fired. Based on which action
 is called and its payload, the reducer will update redux state with relevant
 changes.
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current Redux State
+-   `state` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current Firebase Redux State (state.firebase)
 -   `action` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Action which will modify state
     -   `action.type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of Action being called
     -   `action.path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched

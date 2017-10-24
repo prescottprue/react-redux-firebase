@@ -2,9 +2,80 @@
 
 ### Table of Contents
 
+-   [getVal](#getval)
 -   [isLoaded](#isloaded)
 -   [isEmpty](#isempty)
 -   [populate](#populate)
+
+## getVal
+
+Get a value from firebase using slash notation.  This enables an easy
+migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
+**NOTE:** Setting a default value will cause `isLoaded` to always return true
+
+**Parameters**
+
+-   `firebase` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase instance (state.firebase)
+-   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
+-   `notSetValue` **Any** Value to return if value is not
+    found in redux. This will cause `isLoaded` to always return true (since
+    value is set from the start).
+
+**Examples**
+
+_Basic_
+
+```javascript
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseConnect, getVal } from 'react-redux-firebase'
+
+const enhance = compose(
+  firebaseConnect(['/todos/user1']),
+  connect(({ firebase }) => ({
+    // this.props.todos loaded from state.firebase.data.todos
+    todos: getVal(firebase, 'data/todos/user1')
+  })
+)
+export default enhance(SomeComponent)
+```
+
+_Base Paths_
+
+```javascript
+import { connect } from 'react-redux'
+import { firebaseConnect, getVal } from 'react-redux-firebase'
+// easily replace pathToJS with getVal
+
+export default connect(({ firebase }) => ({
+  // this.props.auth loaded from state.firebase.auth
+  auth: getVal(firebase, 'auth'),
+  profile: getVal(firebase, 'profile')
+})(SomeComponent)
+```
+
+_Default Value_
+
+```javascript
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseConnect, getVal } from 'react-redux-firebase'
+const defaultValue = {
+ 1: {
+   text: 'Example Todo'
+ }
+}
+const enhance = compose(
+  firebaseConnect(['/todos/user1'])
+  connect(({ firebase }) => ({
+    // this.props.todos loaded from state.firebase.data.todos
+    todos: getVal(firebase, 'data/todos/user1', defaultValue)
+  })
+)
+export default enhance(SomeComponent)
+```
+
+Returns **Any** Data located at path within firebase.
 
 ## isLoaded
 
@@ -13,7 +84,8 @@ Detect whether items are loaded yet or not
 **Parameters**
 
 -   `args` **...any** 
--   `item` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma separated list is also acceptable.
+-   `item` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma separated
+    list is also acceptable.
 
 **Examples**
 
@@ -33,7 +105,8 @@ Detect whether items are empty or not
 **Parameters**
 
 -   `args` **...any** 
--   `item` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma seperated list is also acceptable.
+-   `item` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma seperated list
+    is also acceptable.
 
 **Examples**
 
@@ -48,16 +121,14 @@ Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 ## populate
 
-Convert parameter under "data" path of Immutable Object to a
-Javascript object with parameters populated based on populates array
+Populate with data from redux.
 
 **Parameters**
 
--   `state`  
+-   `state` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase state object (state.firebase in redux store)
 -   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
--   `populates` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of populate objects
+-   `populates` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of populate config objects
 -   `notSetValue` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to return if value is not found
--   `firebase` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Immutable Object to be converted to JS object (state.firebase)
 
 **Examples**
 
