@@ -45,5 +45,4 @@ export default (initialState = {}, history) => {
 
 // when calling saga, pass getFirebase
 sagaMiddleware.run(helloSaga, getFirebase)
-
 ```
