@@ -16,6 +16,56 @@ import {
 } from 'lodash'
 import { topLevelPaths } from './constants'
 import { getPopulateObjs } from './utils/populate'
+import { getDotStrPath } from './reducer'
+
+/**
+ * @description Get a value from firebase using slash notation.  This enables an easy
+ * migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
+ * **NOTE:** Setting a default value will cause `isLoaded` to always return true
+ * @param {Object} firebase - Firebase instance (state.firebase)
+ * @param {String} path - Path of parameter to load
+ * @param {Object|String|Boolean} notSetValue - Value to return if value is not
+ * found in redux. This will cause `isLoaded` to always return true (since
+ * value is set from the start).
+ * @return {Object} Data located at path within firebase.
+ * @example <caption>Basic</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, getValueAt } from 'react-redux-firebase'
+ *
+ * @firebaseConnect(['/todos/user1'])
+ * @connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.data.todos
+ *   todos: getValueAt(firebase, 'data/todos/user1')
+ * })
+ * @example <caption>Default Value</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, getValueAt } from 'react-redux-firebase'
+ * const defaultValue = {
+ *  1: {
+ *    text: 'Example Todo'
+ *  }
+ * }
+ * @firebaseConnect(['/todos/user1'])
+ * @connect(({ firebase }) => ({
+ *   // this.props.todos loaded from state.firebase.data.todos
+ *   todos: getValueAt(firebase, 'data/todos/user1', defaultValue)
+ * })
+ */
+export const getValueAt = (data, path, notSetValue) => {
+  if (!data) {
+    return notSetValue
+  }
+
+  const pathArr = `/${fixPath(path)}`.split(/\//).slice(1)
+  const dotPath = getDotStrPath(pathArr)
+  const valueAtPath = get(data, dotPath)
+
+  if (has(data, dotPath)) {
+    return get(data, dotPath)
+  }
+
+  return data
+}
 
 /**
  * @description Detect whether items are loaded yet or not
