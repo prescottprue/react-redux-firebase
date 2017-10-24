@@ -1,4 +1,4 @@
-import { isFunction } from 'lodash'
+import { isArray } from 'lodash'
 import { actionTypes } from '../constants'
 import {
   orderedFromSnapshot,
@@ -165,10 +165,12 @@ export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId 
  * @param {Function} dispatch - Action dispatch function
  * @param {Array} events - List of events for which to add watchers
  */
-export const watchEvents = (firebase, dispatch, events) =>
-  events.forEach(event =>
-    watchEvent(firebase, dispatch, event)
-  )
+export const watchEvents = (firebase, dispatch, events) => {
+  if (!isArray(events)) {
+    throw new Error('Events config must be an Array')
+  }
+  return events.map(event => watchEvent(firebase, dispatch, event))
+}
 
 /**
  * @description Remove watchers from a list of events
@@ -186,22 +188,18 @@ export const unWatchEvents = (firebase, dispatch, events) =>
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
  * @param {String} path - Path of ref to be removed
- * @param {Function} onComplete - Callback function that is called when removal is
  * @param {Object} [options={}] - Configuration for removal
  * @param {Boolean} [options.dispatchAction=true] - Whether or not to dispatch
  * REMOVE action
  * @return {Promise} Resolves with path
  */
-export const remove = (firebase, dispatch, path, onComplete, options = {}) => {
+export const remove = (firebase, dispatch, path, options = {}) => {
   const { dispatchAction = true } = options
   const { dispatchRemoveAction } = firebase._.config
   return firebase.database().ref(path).remove()
     .then(() => {
       if (dispatchRemoveAction && dispatchAction) {
         dispatch({ type: actionTypes.REMOVE, path })
-      }
-      if (isFunction(onComplete)) {
-        onComplete()
       }
       return path
     })

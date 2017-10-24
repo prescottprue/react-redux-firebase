@@ -12,6 +12,7 @@
   * allows [`react-native-firebase`](https://github.com/invertase/react-native-firebase) to be passed (for using native modules instead of JS within `react-native`)
   * firebase is no longer a dependency (shrinks umd bundle size)
 * `profileParamsToPopulate` does not automatically populate profile, populated version can be loaded with `populate` (there will most likely be an option to enable auto populating before `v2.0.0` is out of pre-release)
+* Firestore is supported (setup shown below)
 
 ### Pass In Firebase instance
 
@@ -20,6 +21,7 @@ If you would like to instantiate a Firebase instance outside of `react-redux-fir
 #### `v1.*.*`
 
 ```js
+import { compose, createStore } from 'redux'
 import { reactReduxFirebase } from 'react-redux-firebase'
 const fbConfig = {} // object containing Firebase config
 const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
@@ -36,23 +38,35 @@ const store = createStore(
 
 #### `v2.*.*`
 
+* Pass Firebase Instance in place of
+* `firebaseReducer` is now available to use in place of `firebaseStateReducer` (which is still available)
+
 ```js
-import { reactReduxFirebase } from 'react-redux-firebase'
-import * as firebase from 'firebase'
+import { createStore, combineReducers, compose } from 'redux'
+import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
+import firebase from 'firebase'
+// import 'firebase/firestore' // <- needed if using firestore
 
 const fbConfig = {} // object containing Firebase config
-firebase.initializeApp(fbConfig) // initialize firebase instance
-const rrfConfig = {
-  userProfile: 'users',
-  // enableRedirectHandling: false // include this if using react-native
-} // react-redux-firebase config
+const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
+
+// initialize firebase instance
+firebase.initializeApp(config) // <- new to v2.*.*
+// firebase.firestore() // <- needed if using firestore
+
+// Add Firebase to reducers
+const rootReducer = combineReducers({
+  firebase: firebaseReducer,
+  // firestore: firestoreReducer // <- needed if using firestore
+})
 
 const store = createStore(
- reducer,
+ rootReducer,
  initialState,
  compose(
    reactReduxFirebase(firebase, rrfConfig), // pass in firebase instance instead of config
-   applyMiddleware(...middleware)
+   // reduxFirestore(firebase) // <- needed if using firestore
+  //  applyMiddleware(...middleware) // to add other middleware
  )
 )
 ```
@@ -62,37 +76,93 @@ const store = createStore(
 #### `v1.*.*`
 
 ```js
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { firebaseConnect, dataToJS, pathToJS } from 'react-redux-firebase';
 
-@firebaseConnect(['todos'])
-@connect(
-  ({ firebase }) => ({
-    todos: dataToJS(firebase, 'todos'),
-    auth: pathToJS(firebase, 'auth')
-  })
+const enhance = compose(
+  firebaseConnect(['todos']),
+  connect(
+    ({ firebase }) => ({
+      todos: dataToJS(firebase, 'todos'),
+      auth: pathToJS(firebase, 'auth')
+    })
+  )
 )
+
+export default enhance(SomeComponent)
 ```
 
 #### `v2.*.*`
 
 ```js
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase';
 
-@firebaseConnect(['todos'])
-@connect(
-  ({ firebase: { auth, data: { todos }} }) => ({
-    todos,
-    auth
-  })
+const enhance = compose(
+  firebaseConnect(['todos']),
+  connect(
+    ({ firebase: { auth, data: { todos }} }) => ({
+      todos,
+      auth
+    })
+  )
 )
+export default enhance(SomeComponent)
 ```
+
+### Use Firestore {#firestore}
+
+If you would like to instantiate a Firebase instance outside of `react-redux-firebase`, you can pass it in as the first argument like so:
+
+#### `v1.*.*`
+
+v1 does not support Firestore usage
+
+#### `v2.*.*`
+
+1. Install `redux-firestore` using `npm i --save redux-firestore`
+1. Include firestore initialization and pass the `reduxFirestore` store enhancer like so:
+
+  ```js
+  import { createStore, combineReducers, compose } from 'redux'
+  import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
+  import { reduxFirestore, firestoreReducer } from 'redux-firestore'
+  import firebase from 'firebase'
+  import 'firebase/firestore' // <- needed if using firestore
+
+  const fbConfig = {} // object containing Firebase config
+  const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
+
+  // initialize firebase instance
+  firebase.initializeApp(config) // <- new to v2.*.*
+  firebase.firestore() // <- needed if using firestore
+
+  // Add Firebase to reducers
+  const rootReducer = combineReducers({
+    firebase: firebaseReducer,
+    firestore: firestoreReducer // <- needed if using firestore
+  })
+
+  const store = createStore(
+   rootReducer,
+   initialState,
+   compose(
+     reactReduxFirebase(firebase, rrfConfig), // pass in firebase instance instead of config
+     reduxFirestore(firebase) // <- needed if using firestore
+    //  applyMiddleware(...middleware) // to add other middleware
+   )
+  )
+  ```
+
+For examples of usage, please visit the [Firestore section](/docs/firestore)
 
 ### Population
 
 ##### `v1.*.*`
 ```js
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import {
   firebaseConnect,
@@ -102,36 +172,45 @@ import {
 
 const populates = [{ child: 'owner', root: 'users' }]
 
-@firebaseConnect([
-  { path: '/todos', populates }
-  // '/todos#populate=owner:displayNames', // equivalent string notation
-])
-@connect(
-  ({ firebase }) => ({
-    todos: populatedDataToJS(firebase, 'todos', populates),
-    auth: pathToJS(firebase, 'auth')
-  })
+const enhance = compose(
+  firebaseConnect([
+    { path: '/todos', populates }
+    // '/todos#populate=owner:displayNames', // equivalent string notation
+  ]),
+  connect(
+    ({ firebase }) => ({
+      todos: populatedDataToJS(firebase, 'todos', populates),
+      auth: pathToJS(firebase, 'auth')
+    })
+  )
 )
+
+export default enhance(SomeComponent)
 ```
 
 ##### `v2.*.*`
 ```js
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { firebaseConnect, populate } from 'react-redux-firebase'
 
 const populates = [{ child: 'owner', root: 'users' }]
 
-@firebaseConnect([
-  { path: 'todos', populates }
-  // '/todos#populate=owner:users', // equivalent string notation
-])
-@connect(
-  ({ firebase }) => ({
-    todos: populate(firebase, 'todos', populates),
-  })
+const enhance = compose(
+  firebaseConnect([
+    { path: 'todos', populates }
+    // '/todos#populate=owner:users', // equivalent string notation
+  ]),
+  connect(
+    ({ firebase }) => ({
+      todos: populate(firebase, 'todos', populates),
+    })
+  )
 )
+export default enhance(SomeComponent)
 ```
 
+### Integrations
 
 #### [react-native-firebase](https://github.com/invertase/react-native-firebase)
 

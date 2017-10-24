@@ -1,5 +1,5 @@
 import { actionTypes } from './constants'
-import { pick, omit, get } from 'lodash'
+import { pick, omit, get, isArray, isObject } from 'lodash'
 import { setWith, assign } from 'lodash/fp'
 
 const {
@@ -10,6 +10,7 @@ const {
   LOGIN,
   LOGOUT,
   LOGIN_ERROR,
+  CLEAR_ERRORS,
   REMOVE,
   NO_VALUE,
   SET_LISTENER,
@@ -188,7 +189,14 @@ const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
     case LOGOUT:
       // support keeping data when logging out - #125
       if (action.preserve) {
-        return pick(state, action.preserve) // pick returns a new object
+        if (isArray(action.preserve)) {
+          return pick(state, action.preserve) // pick returns a new object
+        } else if (isObject(action.preserve)) {
+          return action.preserve[actionKey]
+            ? pick(state, action.preserve[actionKey])
+            : {}
+        }
+        throw new Error('Invalid preserve parameter. It must be an Object or an Array')
       }
       return {}
     default:
@@ -231,7 +239,10 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
     case AUTH_EMPTY_CHANGE:
       return { isLoaded: true, isEmpty: true }
     case LOGOUT:
-    // TODO: Support keeping data when logging out
+      // Support keeping data when logging out
+      if (action.preserve && action.preserve.auth) {
+        return pick(state, action.preserve.auth) // pick returns a new object
+      }
       return { isLoaded: true, isEmpty: true }
     default:
       return state
@@ -246,11 +257,11 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} authError state after reduction
  */
-export const authErrorReducer = (state = {}, action) => {
+export const authErrorReducer = (state = null, action) => {
   switch (action.type) {
     case LOGIN:
     case LOGOUT:
-      return {}
+      return null
     case LOGIN_ERROR:
     case UNAUTHORIZED_ERROR:
       return action.authError
@@ -284,7 +295,10 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
         isLoaded: true
       }
     case LOGOUT:
-    case LOGIN_ERROR:
+      // Support keeping data when logging out
+      if (action.preserve && action.preserve.profile) {
+        return pick(state, action.preserve.profile) // pick returns a new object
+      }
       return { isLoaded: true, isEmpty: true }
     default:
       return state
@@ -292,20 +306,35 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
 }
 
 /**
- * Reducer for errors state. Changed by `UNAUTHORIZED_ERROR`
+ * Reducer for errors state. Changed by `UNAUTHORIZED_ERROR`, `CLEAR_ERRORS`,
  * and `LOGOUT` actions.
- * @param  {Object} [state=[]] - Current authError redux state
+ * @param  {Object} [state=[]] - Current errors redux state
  * @param  {Object} action - Object containing the action that was dispatched
  * @param  {String} action.type - Type of action that was dispatched
+ * @param  {Function} action.preserve - `not required` Filter function for
+ * preserving errors
  * @return {Object} Profile state after reduction
  */
 export const errorsReducer = (state = [], action) => {
   switch (action.type) {
     case LOGIN_ERROR:
     case UNAUTHORIZED_ERROR:
+      if (!isArray(state)) {
+        throw new Error('Errors state must be an array')
+      }
       return [...state, action.authError]
-    case LOGOUT: return []
-    default: return state
+    case LOGOUT:
+    case CLEAR_ERRORS:
+      // Support keeping errors through a filter function
+      if (action.preserve && action.preserve.errors) {
+        if (typeof action.preserve.errors !== 'function') {
+          throw new Error('Preserve for the errors state currently only supports functions')
+        }
+        return state.filter(action.preserve.errors) // run filter function on state
+      }
+      return []
+    default:
+      return state
   }
 }
 
@@ -336,7 +365,7 @@ const listenersById = (state = {}, { type, path, payload }) => {
 /**
  * Reducer for listeners state. Changed by `UNAUTHORIZED_ERROR`
  * and `LOGOUT` actions.
- * @param  {Object} [state=[]] - Current authError redux state
+ * @param  {Object} [state=[]] - Current allListeners redux state
  * @param  {Object} action - Object containing the action that was dispatched
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} allListeners state after reduction (used in listeners)
@@ -353,7 +382,7 @@ const allListeners = (state = [], { type, path, payload }) => {
 /**
  * Reducer for listeners state. Changed by `UNAUTHORIZED_ERROR`
  * and `LOGOUT` actions.
- * @param  {Object} [state=[]] - Current authError redux state
+ * @param  {Object} [state=[]] - Current listeners redux state
  * @param  {Object} action - Object containing the action that was dispatched
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
@@ -386,12 +415,12 @@ export const dataReducer = createDataReducer()
 export const orderedReducer = createDataReducer('ordered')
 
 /**
- * @name firebaseStateReducer
- * @description Reducer for react redux firebase. This function is called
+ * @name firebaseReducer
+ * @description Main reducer for react-redux-firebase. This function is called
  * automatically by redux every time an action is fired. Based on which action
  * is called and its payload, the reducer will update redux state with relevant
  * changes.
- * @param {Object} state - Current Redux State
+ * @param {Object} state - Current Firebase Redux State (state.firebase)
  * @param {Object} action - Action which will modify state
  * @param {String} action.type - Type of Action being called
  * @param  {String} action.path - Path of action that was dispatched

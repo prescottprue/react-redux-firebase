@@ -89,8 +89,11 @@ Default configuration options
     `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
 -   `enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not firebase
     database logging is enabled.
--   `preserveOnLogout` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** `null` Data parameters to preserve when
-    logging out.
+-   `preserveOnLogout` **([Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))** `null` Data parameters to
+    preserve when logging out. If Array is passed, each item represents keys
+    within state.firebase.data preserve. If an object is passed, Keys associate
+    with parts of state to preserve, and the values are Arrays which
+    associate with which keys to preserve form that section of state.
 -   `updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to update
     user profile when logging in.
 -   `resetBeforeLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to reset auth
@@ -128,8 +131,6 @@ Default configuration options
 -   `attachAuthIsReady` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to attach
     firebaseAuthIsReady to store. authIsLoaded can be imported and used
     directly instead based on preference.
--   `includeFirestore` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to include
-    firestore helpers (needed for use of firestoreConnect).
 -   `firestoreNamespace` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `firestoreHelpers` Namespace for
     firestore helpers (**WARNING** Changing this will break firestoreConnect HOC.
     Do **NOT** change to `'firestore'`)

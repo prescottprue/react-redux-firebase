@@ -15,6 +15,7 @@
 -   [deleteFile](#deletefile)
 -   [watchEvent](#watchevent)
 -   [unWatchEvent](#unwatchevent)
+-   [promiseEvents](#promiseevents)
 -   [login](#login)
 -   [logout](#logout)
 -   [createUser](#createuser)
@@ -267,9 +268,11 @@ so examples have not yet been created, and it may not work as expected.
 **Parameters**
 
 -   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of watch event
--   `path`  
+-   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path to location on Firebase which to set listener
 -   `storeAs` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of listener results within redux store
--   `dbPath` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Database path on which to setup watch event
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Event options object (optional, default `{}`)
+    -   `options.queryParams` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** List of parameters for the query
+    -   `options.queryId` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** id of the query
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 
@@ -281,24 +284,43 @@ as expected.
 
 **Parameters**
 
--   `type`  
--   `path`  
--   `queryId`   (optional, default `undefined`)
--   `eventName` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of watch event
--   `eventPath` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Database path on which to setup watch event
--   `storeAs` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of listener results within redux store
+-   `type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of watch event
+-   `path` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Path to location on Firebase which to unset listener
+-   `queryId` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Id of the listener
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Event options object (optional, default `{}`)
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+## promiseEvents
+
+Similar to the firebaseConnect Higher Order Component but
+presented as a function (not a React Component). Useful for populating
+your redux state without React, e.g., for server side rendering. Only
+`once` type should be used as other query types such as `value` do not
+return a Promise.
+
+**Parameters**
+
+-   `watchArray` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
+    from Firebase. Can also be a function that returns the array. The function
+    is passed the props object specified as the next parameter.
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The options object that you would like to pass to
+    your watchArray generating function.
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 
 ## login
 
-Logs user into Firebase. For examples, visit the [auth section](/docs/auth.md)
+Logs user into Firebase. For examples, visit the
+[auth section](/docs/auth.md)
 
 **Parameters**
 
 -   `credentials` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Credentials for authenticating
-    -   `credentials.provider` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** External provider (google | facebook | twitter)
-    -   `credentials.type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of external authentication (popup | redirect) (only used with provider)
+    -   `credentials.provider` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** External provider (google |
+        facebook | twitter)
+    -   `credentials.type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of external authentication
+        (popup | redirect) (only used with provider)
     -   `credentials.email` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Credentials for authenticating
     -   `credentials.password` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Credentials for authenticating (only used with email)
 

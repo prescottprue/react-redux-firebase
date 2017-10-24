@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
+import { getDisplayName } from 'recompose'
 import { watchEvents, unWatchEvents } from './actions/query'
-import { getEventsFromInput, createCallable, getDisplayName } from './utils'
+import { getEventsFromInput, createCallable } from './utils'
 
 /**
  * @name createFirebaseConnect
@@ -23,72 +24,74 @@ import { getEventsFromInput, createCallable, getDisplayName } from './utils'
  * // use the firebaseConnect to wrap a component
  * export default firebaseConnect()(SomeComponent)
  */
-export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => WrappedComponent => {
-  class FirebaseConnect extends Component {
-    firebaseEvents = []
+export const createFirebaseConnect = (storeKey = 'store') =>
+  (dataOrFn = []) =>
+    WrappedComponent => {
+      class FirebaseConnect extends Component {
+        firebaseEvents = []
 
-    firebase = null
+        firebase = null
 
-    prevData = null
+        prevData = null
 
-    static contextTypes = {
-      [storeKey]: PropTypes.object.isRequired
-    }
+        static contextTypes = {
+          [storeKey]: PropTypes.object.isRequired
+        }
 
-    static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)})`
+        static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)})`
 
-    static wrappedComponent = WrappedComponent
+        static wrappedComponent = WrappedComponent
 
-    componentWillMount () {
-      const { firebase, dispatch } = this.context[storeKey]
+        componentWillMount () {
+          const { firebase, dispatch } = this.context[storeKey]
 
-      // Allow function to be passed
-      const inputAsFunc = createCallable(dataOrFn)
-      this.prevData = inputAsFunc(this.props, firebase)
+          // Allow function to be passed
+          const inputAsFunc = createCallable(dataOrFn)
+          this.prevData = inputAsFunc(this.props, firebase)
 
-      const { ref, helpers, storage, database, auth } = firebase
-      this.firebase = { ref, storage, database, auth, ...helpers }
+          const { ref, helpers, storage, database, auth } = firebase
+          this.firebase = { ref, storage, database, auth, ...helpers }
 
-      this._firebaseEvents = getEventsFromInput(this.prevData)
+          this._firebaseEvents = getEventsFromInput(this.prevData)
 
-      watchEvents(firebase, dispatch, this._firebaseEvents)
-    }
+          watchEvents(firebase, dispatch, this._firebaseEvents)
+        }
 
-    componentWillUnmount () {
-      const { firebase, dispatch } = this.context.store
-      unWatchEvents(firebase, dispatch, this._firebaseEvents)
-    }
+        componentWillUnmount () {
+          const { firebase, dispatch } = this.context.store
+          unWatchEvents(firebase, dispatch, this._firebaseEvents)
+        }
 
-    componentWillReceiveProps (np) {
-      const { firebase, dispatch } = this.context.store
-      const inputAsFunc = createCallable(dataOrFn)
-      const data = inputAsFunc(np, firebase)
+        componentWillReceiveProps (np) {
+          const { firebase, dispatch } = this.context.store
+          const inputAsFunc = createCallable(dataOrFn)
+          const data = inputAsFunc(np, firebase)
 
-      // Handle a data parameter having changed
-      if (!isEqual(data, this.prevData)) {
-        this.prevData = data
-        // UnWatch all current events
-        unWatchEvents(firebase, dispatch, this._firebaseEvents)
-        // Get watch events from new data
-        this._firebaseEvents = getEventsFromInput(data)
-        // Watch new events
-        watchEvents(firebase, dispatch, this._firebaseEvents)
+          // Handle a data parameter having changed
+          if (!isEqual(data, this.prevData)) {
+            this.prevData = data
+            // UnWatch all current events
+            unWatchEvents(firebase, dispatch, this._firebaseEvents)
+            // Get watch events from new data
+            this._firebaseEvents = getEventsFromInput(data)
+            // Watch new events
+            watchEvents(firebase, dispatch, this._firebaseEvents)
+          }
+        }
+
+        render () {
+          return (
+            <WrappedComponent
+              {...this.props}
+              {...this.state}
+              firebase={this.firebase}
+            />
+          )
+        }
       }
-    }
 
-    render () {
-      return (
-        <WrappedComponent
-          {...this.props}
-          {...this.state}
-          firebase={this.firebase}
-        />
-      )
+      return hoistStatics(FirebaseConnect, WrappedComponent)
     }
-  }
-
-  return hoistStatics(FirebaseConnect, WrappedComponent)
-}
 
 /**
  * @name firebaseConnect

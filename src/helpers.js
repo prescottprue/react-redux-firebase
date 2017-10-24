@@ -16,10 +16,74 @@ import {
 } from 'lodash'
 import { topLevelPaths } from './constants'
 import { getPopulateObjs } from './utils/populate'
+import { getDotStrPath } from './reducer'
+
+/**
+ * @description Get a value from firebase using slash notation.  This enables an easy
+ * migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
+ * **NOTE:** Setting a default value will cause `isLoaded` to always return true
+ * @param {Object} firebase - Firebase instance (state.firebase)
+ * @param {String} path - Path of parameter to load
+ * @param {Any} notSetValue - Value to return if value is not
+ * found in redux. This will cause `isLoaded` to always return true (since
+ * value is set from the start).
+ * @return {Any} Data located at path within firebase.
+ * @example <caption>Basic</caption>
+ * import { compose } from 'redux'
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, getVal } from 'react-redux-firebase'
+ *
+ * const enhance = compose(
+ *   firebaseConnect(['/todos/user1']),
+ *   connect(({ firebase }) => ({
+ *     // this.props.todos loaded from state.firebase.data.todos
+ *     todos: getVal(firebase, 'data/todos/user1')
+ *   })
+ * )
+ * export default enhance(SomeComponent)
+ * @example <caption>Base Paths</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, getVal } from 'react-redux-firebase'
+ * // easily replace pathToJS with getVal
+ *
+ * export default connect(({ firebase }) => ({
+ *   // this.props.auth loaded from state.firebase.auth
+ *   auth: getVal(firebase, 'auth'),
+ *   profile: getVal(firebase, 'profile')
+ * })(SomeComponent)
+ * @example <caption>Default Value</caption>
+ * import { compose } from 'redux'
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, getVal } from 'react-redux-firebase'
+ * const defaultValue = {
+ *  1: {
+ *    text: 'Example Todo'
+ *  }
+ * }
+ * const enhance = compose(
+ *   firebaseConnect(['/todos/user1'])
+ *   connect(({ firebase }) => ({
+ *     // this.props.todos loaded from state.firebase.data.todos
+ *     todos: getVal(firebase, 'data/todos/user1', defaultValue)
+ *   })
+ * )
+ * export default enhance(SomeComponent)
+ */
+export const getVal = (firebase, path, notSetValue) => {
+  if (!firebase) {
+    return notSetValue
+  }
+
+  const dotPath = getDotStrPath(path)
+  const valueAtPath = get(firebase, dotPath, notSetValue)
+
+  return valueAtPath
+}
 
 /**
  * @description Detect whether items are loaded yet or not
- * @param {Object} item - Item to check loaded status of. A comma separated list is also acceptable.
+ * @param {Object} item - Item to check loaded status of. A comma separated
+ * list is also acceptable.
  * @return {Boolean} Whether or not item is loaded
  * @example
  * import React, { Component } from 'react'
@@ -57,7 +121,8 @@ export const isLoaded = (...args) =>
 
 /**
  * @description Detect whether items are empty or not
- * @param {Object} item - Item to check loaded status of. A comma seperated list is also acceptable.
+ * @param {Object} item - Item to check loaded status of. A comma seperated list
+ * is also acceptable.
  * @return {Boolean} Whether or not item is empty
  * @example
  * import React, { Component } from 'react'
@@ -102,12 +167,12 @@ export const fixPath = path =>
 
 /**
  * @private
- * @description Build child list based on populate
- * @param {Object} data - Immutable Object to be converted to JS object (state.firebase)
+ * @description Build child list based on populate config
+ * @param {Object} data - Firebase state object
  * @param {Object} list - Path of parameter to load
  * @param {Object} populate - Object with population settings
  */
-export const buildChildList = (state, list, p) =>
+const buildChildList = (state, list, p) =>
   mapValues(list, (val, key) => {
     let getKey = val
     // Handle key: true lists
@@ -128,6 +193,14 @@ export const buildChildList = (state, list, p) =>
     return val === true ? val : getKey
   })
 
+/**
+ * @private
+ * @description Populate a child based on config. Handles list population
+ * by making use of buildChildList.
+ * @param {Object} state - Firebase state object
+ * @param {Object} child - Path of parameter to load
+ * @param {Object} populate - Object with population settings
+ */
 const populateChild = (state, child, p) => {
   // no matching child parameter
   const childVal = get(child, p.child)
@@ -156,11 +229,10 @@ const populateChild = (state, child, p) => {
 }
 
 /**
- * @description Convert parameter under "data" path of Immutable Object to a
- * Javascript object with parameters populated based on populates array
- * @param {Object} firebase - Immutable Object to be converted to JS object (state.firebase)
+ * @description Populate with data from redux.
+ * @param {Object} state - Firebase state object (state.firebase in redux store)
  * @param {String} path - Path of parameter to load
- * @param {Array} populates - Array of populate objects
+ * @param {Array} populates - Array of populate config objects
  * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
  * @return {Object} Data located at path within Immutable Object
  * @example <caption>Basic</caption>

@@ -26,7 +26,7 @@ branches:
     - v2.0.0
 
 script:
-  - npm run lint:fix
+  - npm run lint
   - npm run test:cov
 
 after_success:

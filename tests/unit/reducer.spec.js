@@ -4,7 +4,7 @@ import firebaseStateReducer, { getDotStrPath } from '../../src/reducer'
 
 const initialState = {
   auth: { isLoaded: false, isEmpty: true },
-  authError: {},
+  authError: null,
   profile: { isLoaded: false, isEmpty: true },
   isInitializing: false,
   errors: [],
@@ -16,7 +16,7 @@ const initialState = {
   requested: {}
 }
 
-const noError = { ...initialState, errors: [] }
+const noError = { ...initialState, errors: [], authError: null }
 const loadedState = {
   ...noError,
   auth: { isLoaded: true, isEmpty: true },
@@ -393,7 +393,7 @@ describe('reducer', () => {
       ).to.deep.equal({
         ...initialState,
         auth: { isLoaded: true, isEmpty: true },
-        profile: { isLoaded: true, isEmpty: true },
+        profile: { isLoaded: false, isEmpty: true },
         errors: [ authError ],
         authError
       })
@@ -437,7 +437,8 @@ describe('reducer', () => {
             ...authUpdate,
             isEmpty: false,
             isLoaded: true
-          }
+          },
+          authError: null
         })
     })
     it('handles undefined auth', () => {
@@ -448,7 +449,8 @@ describe('reducer', () => {
           auth: {
             isEmpty: true,
             isLoaded: true
-          }
+          },
+          authError: null
         })
     })
   })
@@ -456,8 +458,8 @@ describe('reducer', () => {
   describe('SET_LISTENER action', () => {
     it('sets id to allIds in listeners state', () => {
       action = { type: actionTypes.SET_LISTENER, path: 'test', payload: { id: 'asdf' } }
-      expect(firebaseStateReducer({}, action).listeners)
-        .to.deep.have.property('allIds.0', 'asdf')
+      expect(firebaseStateReducer({}, action))
+        .to.have.deep.property('listeners.allIds.0', 'asdf')
     })
 
     it('sets listener data to byId in listeners state', () => {
@@ -466,6 +468,34 @@ describe('reducer', () => {
       action = { type: actionTypes.SET_LISTENER, path, payload: { id } }
       expect(firebaseStateReducer({}, action))
         .to.have.deep.property(`listeners.byId.${id}.path`, path)
+    })
+  })
+
+  describe('CLEAR_ERRORS action', () => {
+    it('clears errors', () => {
+      action = { type: actionTypes.CLEAR_ERRORS }
+      expect(firebaseStateReducer({ errors: [{test: 'test'}] }, action).errors)
+        .to.have.a.lengthOf(0)
+    })
+
+    describe('preserve option', () => {
+      it('passes through non object preserve parameters (backwards compatibility)', () => {
+        action = { type: actionTypes.CLEAR_ERRORS, preserve: [] }
+        expect(firebaseStateReducer({ errors: [{test: 'test'}] }, action).errors)
+          .to.have.a.lengthOf(0)
+      })
+
+      it('supports perserving data through the perserve parameter', () => {
+        action = { type: actionTypes.CLEAR_ERRORS, preserve: { errors: () => true } }
+        expect(firebaseStateReducer({ errors: [{test: 'test'}] }, action).errors)
+          .to.have.a.lengthOf(1)
+      })
+
+      it('throws for non function preserve values', () => {
+        action = { type: actionTypes.CLEAR_ERRORS, preserve: { errors: true } }
+        expect(() => firebaseStateReducer({ errors: [{test: 'test'}] }, action))
+          .to.Throw('Preserve for the errors state currently only supports functions')
+      })
     })
   })
 

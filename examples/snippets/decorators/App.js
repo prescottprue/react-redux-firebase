@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { map } from 'lodash'
 import { connect } from 'react-redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import TodoItem from './TodoItem'
@@ -25,7 +24,7 @@ export default class App extends Component {
                         ? 'Loading'
                         : (isEmpty(todos))
                           ? 'Todo list is empty'
-                          : map(todos, (todo, id) => (
+                          : todos.map((todo, id) => (
                               <TodoItem key={id} id={id} todo={todo} />
                             ))
     return (

@@ -1,4 +1,4 @@
-# State Based Query Example
+# Populates Snippet
 
 This example shows using data from redux state to be used in queries. A good example of this is querying based on the current user's UID.
 
@@ -12,15 +12,15 @@ This example shows using data from redux state to be used in queries. A good exa
     { child: 'owner', root: 'users' },
   ]
 
-  @firebaseConnect([
+  firebaseConnect([
     { path: 'projects', populates },
   ])
   ```
 
-1. Next is the `@connect` function which allows us to grab from redux state and pass that data in as props to the component. In this case we are going to get projects with the owner parameter on each project replaced with the matching user:
+1. Next is the `connect` HOC which allows us to grab from redux state and pass that data in as props to the component. In this case we are going to get projects with the owner parameter on each project replaced with the matching user:
 
   ```js
-  @connect(
+  connect(
     ({firebase}) => ({
       projects: populatedDataToJS(firebase, 'projects', populates),
     })

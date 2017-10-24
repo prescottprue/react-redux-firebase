@@ -1,4 +1,3 @@
-import { createFirestoreInstance } from 'redux-firestore'
 import { createFirebaseInstance } from './createFirebaseInstance'
 import { createAuthIsReady } from './utils/auth'
 import { defaultConfig } from './constants'
@@ -27,8 +26,12 @@ let firebaseInstance
  * profile when logging in. (default: `false`)
  * @param {Boolean} config.resetBeforeLogin - Whether or not to empty profile
  * and auth state on login
- * @param {Array} config.perserveOnLogout - Data parameters to perserve when
- * logging out. (default: `null`)
+ * @param {Object|Array} config.perserveOnLogout - Data parameters to perserve
+ * when logging out. If Array is passed, each item represents keys
+ * within state.firebase.data preserve. If an object is passed, Keys associate
+ * with parts of state to preserve, and the values are Arrays which
+ * associate with which keys to preserve form that section of state.
+ * (default: `null`)
  * @param {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
  * @param {Function} config.onAuthStateChanged - Function run when auth state
@@ -92,9 +95,6 @@ export default (instance, otherConfig) => next =>
 
     const configs = { ...defaultConfig, ...otherConfig }
     firebaseInstance = createFirebaseInstance(instance.firebase_ || instance, configs, store.dispatch)
-    if (configs.includeFirestore) {
-      firebaseInstance = createFirestoreInstance(instance.firebase_ || instance, configs, store.dispatch)
-    }
 
     authActions.init(store.dispatch, firebaseInstance)
     store.firebase = firebaseInstance

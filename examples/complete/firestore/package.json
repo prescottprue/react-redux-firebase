@@ -6,13 +6,15 @@
     "react-scripts": "0.4.1"
   },
   "dependencies": {
+    "firebase": "^4.5.2",
     "prop-types": "^15.5.8",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
+    "react-google-button": "*",
     "react-redux": "^4.4.5",
     "react-redux-firebase": "next",
-    "react-google-button": "*",
-    "redux": "^3.6.0"
+    "redux": "^3.6.0",
+    "redux-firestore": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
