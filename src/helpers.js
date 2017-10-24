@@ -30,24 +30,24 @@ import { getDotStrPath } from './reducer'
  * @return {Object} Data located at path within firebase.
  * @example <caption>Basic</caption>
  * import { connect } from 'react-redux'
- * import { firebaseConnect, getValueAt } from 'react-redux-firebase'
+ * import { firebaseConnect, getVal } from 'react-redux-firebase'
  *
  * @firebaseConnect(['/todos/user1'])
  * @connect(({ firebase }) => ({
  *   // this.props.todos loaded from state.firebase.data.todos
- *   todos: getValueAt(firebase, 'data/todos/user1')
+ *   todos: getVal(firebase, 'data/todos/user1')
  * })
  * @example <caption>Basic</caption>
  * import { connect } from 'react-redux'
- * import { firebaseConnect, getValueAt } from 'react-redux-firebase'
- * // easily replace pathToJS with getValueAt
+ * import { firebaseConnect, getVal } from 'react-redux-firebase'
+ * // easily replace pathToJS with getVal
  * @connect(({ firebase }) => ({
  *   // this.props.auth loaded from state.firebase.auth
- *   auth: getValueAt(firebase, 'auth')
+ *   auth: getVal(firebase, 'auth')
  * })
  * @example <caption>Default Value</caption>
  * import { connect } from 'react-redux'
- * import { firebaseConnect, getValueAt } from 'react-redux-firebase'
+ * import { firebaseConnect, getVal } from 'react-redux-firebase'
  * const defaultValue = {
  *  1: {
  *    text: 'Example Todo'
@@ -56,16 +56,16 @@ import { getDotStrPath } from './reducer'
  * @firebaseConnect(['/todos/user1'])
  * @connect(({ firebase }) => ({
  *   // this.props.todos loaded from state.firebase.data.todos
- *   todos: getValueAt(firebase, 'data/todos/user1', defaultValue)
+ *   todos: getVal(firebase, 'data/todos/user1', defaultValue)
  * })
  */
-export const getValueAt = (firebase, path, notSetValue) => {
+export const getVal = (firebase, path, notSetValue) => {
   if (!firebase) {
     return notSetValue
   }
 
   const dotPath = getDotStrPath(path)
-  const valueAtPath = get(firebase, dotPath)
+  const valueAtPath = get(firebase, dotPath, notSetValue)
 
   return valueAtPath
 }
