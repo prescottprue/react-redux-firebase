@@ -263,10 +263,13 @@ const setupPresence = (dispatch, firebase) => {
         startedAt: firebase.database.ServerValue.TIMESTAMP,
         user: authUid
       })
-      // set authUid as priority for easy sorting
-      session.setPriority(authUid)
-      const endedRef = session.child('endedAt')
-      endedRef
+      // Support versions of react-native-firebase that do not have setPriority
+      // on firebase.database.ThenableReference
+      if (isFunction(session.setPriority)) {
+        // set authUid as priority for easy sorting
+        session.setPriority(authUid)
+      }
+      session.child('endedAt')
         .onDisconnect()
         .set(firebase.database.ServerValue.TIMESTAMP, () => {
           dispatch({ type: actionTypes.SESSION_END })
