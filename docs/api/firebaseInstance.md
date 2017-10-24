@@ -15,7 +15,7 @@
 -   [deleteFile](#deletefile)
 -   [watchEvent](#watchevent)
 -   [unWatchEvent](#unwatchevent)
--   [firebaseWatch](#firebasewatch)
+-   [promiseEvents](#promiseevents)
 -   [login](#login)
 -   [logout](#logout)
 -   [createUser](#createuser)
@@ -291,31 +291,36 @@ as expected.
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 
-## firebaseWatch
+## promiseEvents
 
-firebaseWatch. Similar to the firebaseConnect Higher Order
-Component but presented as a function. Useful for populating your redux
-state without React, e.g., for server side rendering.
+Similar to the firebaseConnect Higher Order Component but
+presented as a function (not a React Component). Useful for populating
+your redux state without React, e.g., for server side rendering. Only
+`once` type should be used as other query types such as `value` do not
+return a Promise.
 
 **Parameters**
 
 -   `watchArray` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
     from Firebase. Can also be a function that returns the array. The function
     is passed the props object specified as the next parameter.
--   `props` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The props object that you would like to pass to
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** The options object that you would like to pass to
     your watchArray generating function.
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 
 ## login
 
-Logs user into Firebase. For examples, visit the [auth section](/docs/auth.md)
+Logs user into Firebase. For examples, visit the
+[auth section](/docs/auth.md)
 
 **Parameters**
 
 -   `credentials` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Credentials for authenticating
-    -   `credentials.provider` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** External provider (google | facebook | twitter)
-    -   `credentials.type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of external authentication (popup | redirect) (only used with provider)
+    -   `credentials.provider` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** External provider (google |
+        facebook | twitter)
+    -   `credentials.type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of external authentication
+        (popup | redirect) (only used with provider)
     -   `credentials.email` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Credentials for authenticating
     -   `credentials.password` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Credentials for authenticating (only used with email)
 

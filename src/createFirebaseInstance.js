@@ -274,19 +274,21 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     queryActions.unWatchEvent(firebase, dispatch, { type, path, queryId, ...options })
 
   /**
-   * @description firebaseWatch. Similar to the firebaseConnect Higher Order
-   * Component but presented as a function. Useful for populating your redux
-   * state without React, e.g., for server side rendering.
+   * @description Similar to the firebaseConnect Higher Order Component but
+   * presented as a function (not a React Component). Useful for populating
+   * your redux state without React, e.g., for server side rendering. Only
+   * `once` type should be used as other query types such as `value` do not
+   * return a Promise.
    * @param {Array} watchArray - Array of objects or strings for paths to sync
    * from Firebase. Can also be a function that returns the array. The function
    * is passed the props object specified as the next parameter.
-   * @param {Object} props - The props object that you would like to pass to
+   * @param {Object} options - The options object that you would like to pass to
    * your watchArray generating function.
    * @return {Promise}
    */
-  const firebaseWatch = (watchArray, props) => {
+  const promiseEvents = (watchArray, options) => {
     const inputAsFunc = createCallable(watchArray)
-    const prevData = inputAsFunc(props, firebase)
+    const prevData = inputAsFunc(options, firebase)
     const queryConfigs = getEventsFromInput(prevData)
     // TODO: Handle calling with non promise queries (must be once or first_child)
     return Promise.all(
@@ -297,10 +299,13 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
   }
 
   /**
-   * @description Logs user into Firebase. For examples, visit the [auth section](/docs/auth.md)
+   * @description Logs user into Firebase. For examples, visit the
+   * [auth section](/docs/auth.md)
    * @param {Object} credentials - Credentials for authenticating
-   * @param {String} credentials.provider - External provider (google | facebook | twitter)
-   * @param {String} credentials.type - Type of external authentication (popup | redirect) (only used with provider)
+   * @param {String} credentials.provider - External provider (google |
+   * facebook | twitter)
+   * @param {String} credentials.type - Type of external authentication
+   * (popup | redirect) (only used with provider)
    * @param {String} credentials.email - Credentials for authenticating
    * @param {String} credentials.password - Credentials for authenticating (only used with email)
    * @return {Promise} Containing user's auth data
@@ -442,7 +447,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     unWatchEvent,
     reloadAuth,
     linkWithCredential,
-    firebaseWatch
+    promiseEvents
   }
 
   return Object.assign(firebase, helpers, { helpers })
