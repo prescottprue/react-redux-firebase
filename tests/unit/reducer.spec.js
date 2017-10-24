@@ -16,7 +16,7 @@ const initialState = {
   requested: {}
 }
 
-const noError = { ...initialState, errors: [] }
+const noError = { ...initialState, errors: [], authError: null }
 const loadedState = {
   ...noError,
   auth: { isLoaded: true, isEmpty: true },
@@ -393,7 +393,7 @@ describe('reducer', () => {
       ).to.deep.equal({
         ...initialState,
         auth: { isLoaded: true, isEmpty: true },
-        profile: { isLoaded: true, isEmpty: true },
+        profile: { isLoaded: false, isEmpty: true },
         errors: [ authError ],
         authError
       })

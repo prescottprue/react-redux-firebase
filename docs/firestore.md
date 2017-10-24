@@ -17,12 +17,7 @@ import 'firebase/firestore' // add this to use Firestore
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
 import { reduxFirestore, firestoreReducer } from 'redux-firestore'
 
-const firebaseConfig = {
-  apiKey: '<your-api-key>',
-  authDomain: '<your-auth-domain>',
-  databaseURL: '<your-database-url>',
-  storageBucket: '<your-storage-bucket>'
-}
+const firebaseConfig = {}
 
 // react-redux-firebase config
 const rrfConfig = {
@@ -71,7 +66,7 @@ const rrfConfig = {
 Firestore queries can be created in two ways:
 
 * [Automatically](#firestoreConnect) - Using `firestoreConnect` HOC (manages mounting/unmounting)
-* [Manually](#manual) - Using `setListeners` or `setListener` (requires managing of listeners)
+* [Manually](#manual) - Using `get`, or by setting listeners with `setListeners`/`setListener` (requires managing of listeners)
 
 ### Automatic {#firestoreConnect}
 
@@ -160,37 +155,64 @@ export default connect((state) => ({
 
 ##### Functional Components
 
-It is common to make react components "stateless" meaning that the component is just a function. This can be useful, but then can limit usage of lifecycle hooks and other features of Component Classes. [`recompose` helps solve this](https://github.com/acdlite/recompose/blob/master/docs/API.md) by providing Higher Order Component functions such as `withContext`, `lifecycle`, and `withHandlers`.
+It is common to make react components "stateless" meaning that the component is just a function.
 
 ```js
-import { compose, withHandlers, lifecycle } from 'recompose'
-import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { withFirestore, isLoaded, isEmpty } from 'react-redux-firebase'
 
-const withStore = compose(
-  withContext({ store: PropTypes.object }, () => {}),
-  getContext({ store: PropTypes.object }),
+const Todos = ({ firestore, todos }) => (
+  <div>
+    <button onClick={() => firestore.get('todos')}>Get Todos</button>
+    {
+      !isLoaded(todos)
+        ? 'Loading'
+        : isEmpty(todos)
+          ? 'Todo list is empty'
+          : todos.map((todo) =>
+              <TodoItem key={todo.id} todo={todo} />
+            )
+    }
+  <div>
 )
 
+export default compose(
+  withFirestore,
+  connect((state) => ({
+    todos: state.firestore.ordered.todos
+  }))
+)(Todos)
+```
+
+This can be useful, but then can limit usage of lifecycle hooks and other features of Component Classes.
+
+
+[`recompose` helps solve this](https://github.com/acdlite/recompose/blob/master/docs/API.md) by providing Higher Order Component functions such as `lifecycle`, and `withHandlers`.
+
+```js
+import { connect } from 'react-redux'
+import { withFirestore } from 'react-redux-firebase'
+import { compose, withHandlers, lifecycle } from 'recompose'
+
 const enhance = compose(
-  withStore,
+  withFirestore, // add firestore to props
   withHandlers({
-    onDoneClick: props => (key, done = false) =>
-      props.store.firestore.update('todos', key, { done }),
-    onNewSubmit: props => newTodo =>
-      props.store.firestore.add('todos', { ...newTodo, owner: 'Anonymous' }),
+    loadData: props => path => props.firestore.get(path)
   }),
   lifecycle({
-    componentWillMount(props) {
-      props.store.firestore.get('todos')
+    componentWillMount() {
+      this.props.loadData('todos')
+      // this.props.firestore.get('todos') // equivalent without withHandlers
     }
   }),
-  connect(({ firebase }) => ({ // state.firebase
-    todos: firebase.ordered.todos,
+  connect((state) => ({
+    todos: state.firestore.ordered.todos,
   }))
 )
 
 export default enhance(SomeComponent)
 ```
+
 
 For more information [on using recompose visit the docs](https://github.com/acdlite/recompose/blob/master/docs/API.md)
 

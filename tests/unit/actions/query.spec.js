@@ -64,9 +64,13 @@ describe('Actions: Query', () => {
 
     it('runs given basic params', () => {
       const events = [{type: 'once', path: 'test'}]
-      spy = sinon.spy(events, 'forEach')
+      spy = sinon.spy(events, 'map')
       watchEvents(firebase, dispatch, events)
       expect(spy).to.be.calledOnce
+    })
+
+    it('throws if not passed array', () => {
+      expect(() => watchEvents(firebase, dispatch, {})).to.Throw('Events config must be an Array')
     })
   })
 
@@ -100,6 +104,7 @@ describe('Actions: Query', () => {
       await remove(fake, dispatch, path)
       expect(removeSpy).to.have.been.calledOnce
     })
+
     it('dispatches REMOVE action by default', async () => {
       const path = 'test'
       const dispatchSpy = sinon.spy()
@@ -110,12 +115,14 @@ describe('Actions: Query', () => {
         path
       })
     })
-    it('calls onComplete if provided', async () => {
+
+    it.skip('calls onComplete if provided', async () => {
       const path = 'test'
       const onCompleteSpy = sinon.spy()
       await remove(firebase, dispatch, path, onCompleteSpy)
       expect(onCompleteSpy).to.have.been.calledOnce
     })
+
     it('dispatches ERROR if remove call has an error', async () => {
       const path = 'test'
       const dispatchSpy = sinon.spy()
@@ -142,7 +149,7 @@ describe('Actions: Query', () => {
       it('dispatchAction: false prevents dispatch of REMOVE action', async () => {
         const dispatchSpy = sinon.spy()
         const options = { dispatchAction: false }
-        await remove(firebase, dispatchSpy, 'test', null, options)
+        await remove(firebase, dispatchSpy, 'test', options)
         expect(dispatchSpy).to.have.callCount(0)
       })
     })
