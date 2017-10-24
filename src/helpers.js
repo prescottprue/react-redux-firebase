@@ -56,8 +56,7 @@ export const getValueAt = (firebase, path, notSetValue) => {
     return notSetValue
   }
 
-  const pathArr = `/${fixPath(path)}`.split(/\//).slice(1)
-  const dotPath = getDotStrPath(pathArr)
+  const dotPath = getDotStrPath(path)
   const valueAtPath = get(firebase, dotPath)
 
   return valueAtPath
