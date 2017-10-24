@@ -37,6 +37,14 @@ import { getDotStrPath } from './reducer'
  *   // this.props.todos loaded from state.firebase.data.todos
  *   todos: getValueAt(firebase, 'data/todos/user1')
  * })
+ * @example <caption>Basic</caption>
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect, getValueAt } from 'react-redux-firebase'
+ * // easily replace pathToJS with getValueAt
+ * @connect(({ firebase }) => ({
+ *   // this.props.auth loaded from state.firebase.auth
+ *   auth: getValueAt(firebase, 'auth')
+ * })
  * @example <caption>Default Value</caption>
  * import { connect } from 'react-redux'
  * import { firebaseConnect, getValueAt } from 'react-redux-firebase'
