@@ -26,7 +26,7 @@ const rrfConfig = {
 }
 
 // initialize firebase instance
-firebase.initializeApp(config) // <- new to v2.*.*
+firebase.initializeApp(firebaseConfig) // <- new to v2.*.*
 
 // initialize Firestore
 firebase.firestore()
