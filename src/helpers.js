@@ -61,7 +61,7 @@ import { getDotStrPath } from './reducer'
  *  }
  * }
  * const enhance = compose(
- *   firebaseConnect(['/todos/user1'])
+ *   firebaseConnect(['/todos/user1']),
  *   connect(({ firebase }) => ({
  *     // this.props.todos loaded from state.firebase.data.todos
  *     todos: getVal(firebase, 'data/todos/user1', defaultValue)

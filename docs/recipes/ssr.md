@@ -1,5 +1,25 @@
 # Server Side Rendering
 
+
+## Preload Data
+
+`promiseEvents`, which is similar to `firebaseConnect` expected it is presented as a function instead of a React Component.
+
+After creating your store:
+
+```js
+store.firebase // getFirebase can also be used
+  .promiseEvents([
+    { path: 'todos' },
+    { path: 'users' }
+  ])
+  .then(() => {
+    console.log('data is loaded into redux store')
+  })
+```
+
+## Troubleshooting
+
 ### Include XMLHttpRequest
 
 ```js
