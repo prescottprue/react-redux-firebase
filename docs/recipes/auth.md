@@ -1,80 +1,56 @@
 # Auth Recipes
 
-## Google Login
-
-Here is an example of a component that shows a Google login button if the user is not logged in, and a welcome message if they are. The initial loading state is handled with a simple "loading" message
+Auth recipes assume that you have passed the following config when creating your store:
 
 ```js
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import GoogleButton from 'react-google-button'
-import { connect } from 'react-redux'
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty
-} from 'react-redux-firebase'
-
-@firebaseConnect() // add this.props.firebase
-@connect( // map redux state to props
-  ({ firebase: { authError } }) => ({
-    authError
-  })
-)
-export default class Login extends Component {
-  static propTypes = {
-    firebase: PropTypes.shape({
-      login: PropTypes.func.isRequired
-    })
-  }
-
-  state = {
-    isLoading: false
-  }
-
-  googleLogin = loginData => {
-    this.setState({ isLoading: true })
-    return this.props.firebase
-      .login({ provider: 'google' })
-      .then(() => {
-        this.setState({ isLoading: false })
-        // this is where you can redirect to another route
-      })
-      .catch((error) => {
-        this.setState({ isLoading: false })
-        console.log('there was an error', error)
-        console.log('error prop:', this.props.authError) // thanks to connect
-      })
-  }
-
-  render () {
-    const { authError } = this.props
-    const { snackCanOpen } = this.state
-
-    if (!isLoaded(auth)) {
-      return (
-        <div>
-          <span>Loading</span>
-        </div>
-      )
-    }
-
-    if (isEmpty(auth)) {
-      return (
-        <div>
-          <span>Login page</span>
-          <GoogleButton onClick={this.googleLogin} />
-        </div>
-      )
-    }
-
-    return (
-      <p>Welcome!</p>
-    )
-
-  }
+const rrfConfig = {
+  userProfile: 'users', // can be any string path
 }
 ```
+
+## Google Login
+
+Here is an example of a component that shows a Google login button if the user is not logged in, and a welcome message if they are. The initial loading state is handled with a simple "Loading..." message:
+
+```js
+import React from 'react'
+import PropTypes from 'prop-types'
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+// import GoogleButton from 'react-google-button' // optional
+
+export const LoginPage = ({ firebase, auth }) => (
+  <div className={classes.container}>
+    <button // <GoogleButton/> button can be used instead
+      onClick={() => firebase.login({ provider: 'google', type: 'popup' })}
+    >Login With Google</button>
+    <div>
+      <h2>Auth</h2>
+      {
+        isLoaded(auth)
+        ? <span>Loading...</span>
+        : isEmpty(auth)
+          ? <span>Not Authed</span>
+          : <pre>{JSON.stringify(auth, null, 2)}</pre>
+      }
+    </div>
+  </div>
+)
+
+LoginPage.propTypes = {
+  firebase: PropTypes.shape({
+    login: PropTypes.func.isRequired
+  }),
+  auth: PropTypes.object
+}
+
+export default compose(
+  firebaseConnect(), // withFirebase can also be used
+  connect(({ firebase: { auth } }) => ({ auth }))
+)(LoginPage)
+```
+
 
 ## Wait For Auth To Be Ready
 

@@ -292,15 +292,13 @@ const setupPresence = (dispatch, firebase) => {
 const handleAuthStateChange = (dispatch, firebase, authData) => {
   const { config } = firebase._
   if (!authData) {
-    // Run onAuthStateChanged if it exists in config and enableEmptyAuthChanges is set to true
-    if (
-      isFunction(config.onAuthStateChanged) &&
-      config.enableEmptyAuthChanges
-    ) {
-      firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
+    if (config.enableEmptyAuthChanges) {
+      // Run onAuthStateChanged if it exists in config and enableEmptyAuthChanges is set to true
+      if (isFunction(config.onAuthStateChanged)) {
+        firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
+      }
+      dispatch({ type: actionTypes.AUTH_EMPTY_CHANGE })
     }
-
-    dispatch({ type: actionTypes.AUTH_EMPTY_CHANGE })
   } else {
     firebase._.authUid = authData.uid // eslint-disable-line no-param-reassign
 
