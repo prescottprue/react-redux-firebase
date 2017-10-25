@@ -3,11 +3,19 @@ import {
   isString,
   isFunction,
   forEach,
-  omit
+  omit,
+  get,
+  set,
+  mapValues,
+  map
 } from 'lodash'
 import { actionTypes } from '../constants'
 import { getLoginMethodAndParams } from '../utils/auth'
-import { promisesForPopulate } from '../utils/populate'
+import {
+  promisesForPopulate,
+  getPopulateObjs,
+  getChildType
+} from '../utils/populate'
 
 /**
  * @description Dispatch login error action
@@ -96,16 +104,52 @@ const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
           requested: true
         })
       })
-      dispatch({
-        type: actionTypes.SET_PROFILE,
-        profile
-      })
-      // Dispatch action with profile combined with populated parameters
-      // Auto Populate profile
-      if (autoPopulateProfile) {
-        console.warn( // eslint-disable-line no-console
-          'Auto populate is no longer supported. We are working on backwards compatibility for v2.0.0'
-        )
+      if (!autoPopulateProfile) {
+        // Dispatch action with profile combined with populated parameters
+        dispatch({ type: actionTypes.SET_PROFILE, profile })
+      } else {
+        // Auto Populate profile
+        // TODO: Share population logic
+        const populates = getPopulateObjs(profileParamsToPopulate)
+        const profile = userProfileSnap.val()
+        forEach(populates, (p) => {
+          const child = get(profile, p.child)
+          const childType = getChildType(child)
+          let populatedChild
+
+          switch (childType) {
+            case 'object':
+              populatedChild = mapValues(
+                child,
+                (value, key) => {
+                  if (value) { // Only populate keys with truthy values
+                    return get(data, `${p.root}.${key}`)
+                  }
+                  return value
+                })
+              break
+
+            case 'string':
+              populatedChild = get(data, `${p.root}.${child}`)
+              break
+
+            case 'array':
+              populatedChild = map(
+                child,
+                (key) => get(data, `${p.root}.${key}`)
+              )
+              break
+
+            default:
+              populatedChild = child
+          }
+          // Overwrite the child value with the populated child
+          set(profile, p.child, populatedChild)
+        })
+        dispatch({
+          type: actionTypes.SET_PROFILE,
+          profile
+        })
       }
     })
   }
