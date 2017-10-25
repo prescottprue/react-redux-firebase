@@ -25,6 +25,8 @@ export const reduxFirebase = {
   userProfile: 'users', // root that user profiles are written to
   // enableLogging: false, // enable/disable Firebase Database Logging
   // presence: 'presence',
+  // autoPopulateProfile: true, // keep auto population of profile from v1
+  // profileParamsToPopulate: ['cars:cars'], // create queries for profile population (remember to use populate)
   updateProfileOnLogin: false, // enable/disable updating of profile on login
   // useFirestoreForProfile: true, // Use Firestore to store profile
   // profileParamsToPopulate: [{ child: 'cars', root: 'cars' }] // gather data for populating profile params

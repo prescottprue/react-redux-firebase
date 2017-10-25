@@ -3,18 +3,14 @@ import {
   isString,
   isFunction,
   forEach,
-  omit,
-  get,
-  set,
-  mapValues,
-  map
+  omit
 } from 'lodash'
 import { actionTypes } from '../constants'
+import { populate } from '../helpers'
 import { getLoginMethodAndParams } from '../utils/auth'
 import {
   promisesForPopulate,
-  getPopulateObjs,
-  getChildType
+  getPopulateObjs
 } from '../utils/populate'
 
 /**
@@ -72,7 +68,7 @@ const getProfileFromSnap = (snap) => {
  * Snapshot from profile watcher
  * @private
  */
-const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
+export const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
   const {
     profileParamsToPopulate,
     autoPopulateProfile
@@ -109,46 +105,11 @@ const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
         dispatch({ type: actionTypes.SET_PROFILE, profile })
       } else {
         // Auto Populate profile
-        // TODO: Share population logic
         const populates = getPopulateObjs(profileParamsToPopulate)
         const profile = userProfileSnap.val()
-        forEach(populates, (p) => {
-          const child = get(profile, p.child)
-          const childType = getChildType(child)
-          let populatedChild
-
-          switch (childType) {
-            case 'object':
-              populatedChild = mapValues(
-                child,
-                (value, key) => {
-                  if (value) { // Only populate keys with truthy values
-                    return get(data, `${p.root}.${key}`)
-                  }
-                  return value
-                })
-              break
-
-            case 'string':
-              populatedChild = get(data, `${p.root}.${child}`)
-              break
-
-            case 'array':
-              populatedChild = map(
-                child,
-                (key) => get(data, `${p.root}.${key}`)
-              )
-              break
-
-            default:
-              populatedChild = child
-          }
-          // Overwrite the child value with the populated child
-          set(profile, p.child, populatedChild)
-        })
         dispatch({
           type: actionTypes.SET_PROFILE,
-          profile
+          profile: populate({ profile, data }, 'profile', populates)
         })
       }
     })

@@ -34,7 +34,7 @@ export const createFirestoreConnect = (storeKey = 'store') =>
 
         static wrappedComponent = WrappedComponent
 
-        static displayName = wrapDisplayName(FirestoreConnect, 'FirestoreConnect')
+        static displayName = wrapDisplayName(WrappedComponent, 'FirestoreConnect')
 
         componentWillMount () {
           const { firebase, firestore } = this.context[storeKey]
@@ -48,8 +48,8 @@ export const createFirestoreConnect = (storeKey = 'store') =>
         }
 
         componentWillUnmount () {
-          if (this.prevData) {
-            const { firestore } = this.context[storeKey]
+          const { firebase, firestore } = this.context[storeKey]
+          if (firebase.firestore && this.prevData) {
             firestore.unsetListeners(this.prevData)
           }
         }
