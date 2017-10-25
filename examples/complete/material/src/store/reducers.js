@@ -4,6 +4,7 @@ import {
   firebaseStateReducer as firebase /*,
   firestoreReducer */
 } from 'react-redux-firebase'
+import { reducer as notifications } from 'modules/notification'
 import locationReducer from './location'
 
 export const makeRootReducer = asyncReducers => {
@@ -13,6 +14,7 @@ export const makeRootReducer = asyncReducers => {
     // firestore: firestoreReducer,
     form,
     location: locationReducer,
+    notifications,
     ...asyncReducers
   })
 }
