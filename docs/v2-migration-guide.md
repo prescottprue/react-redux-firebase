@@ -15,6 +15,7 @@
 * `profileParamsToPopulate` does not automatically populate profile, populated version can be loaded with `populate` (there will most likely be an option to enable auto populating before `v2.0.0` is out of pre-release)
 * Firestore is supported (setup shown below)
 * `LOGOUT` is no longer dispatched on empty auth state changes (`enableEmptyAuthChanges: true` can be passed to dispatch `AUTH_EMPTY_CHANGE` action in its place)
+* `enableEmptyAuthChanges` is no longer an option, it has been replaced by `preserveOnEmptyAuthChange` (see [empty auth](#emptyAuth) below)
 
 ### Pass In Firebase instance
 
@@ -287,6 +288,30 @@ const enhance = compose(
   )
 )
 export default enhance(SomeComponent)
+```
+
+### Empty Auth {#emptyAuth}
+
+`enableEmptyAuthChanges`, which was created for [https://github.com/prescottprue/react-redux-firebase/issues/137]() no longer exists. It has been replaced by `preserveOnEmptyAuthChange` so that an action is still dispatched, and configuration can control what is preserved:
+
+**`v1.*.*`**
+
+```js
+const config = {
+  userProfile: 'users'
+  enableEmptyAuthChanges: false // disable all empty auth changes (no action dispatch)
+}
+```
+
+**`v2.*.*`**
+
+```js
+const config = {
+  userProfile: 'users'
+  preserveOnEmptyAuthChange: { // action still dispatched
+    profile: ['displayName'] // preserve just firebase.profile.displayName
+  }
+}
 ```
 
 ### Integrations
