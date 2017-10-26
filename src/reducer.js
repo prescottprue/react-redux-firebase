@@ -295,6 +295,7 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
         isLoaded: true
       }
     case LOGOUT:
+    case AUTH_EMPTY_CHANGE:
       // Support keeping data when logging out
       if (action.preserve && action.preserve.profile) {
         return pick(state, action.preserve.profile) // pick returns a new object

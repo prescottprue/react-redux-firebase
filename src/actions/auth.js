@@ -303,7 +303,6 @@ const handleAuthStateChange = (dispatch, firebase, authData) => {
         firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
       }
       dispatch({ type: actionTypes.AUTH_EMPTY_CHANGE })
-      dispatch({ type: actionTypes.SET_PROFILE })
     }
   } else {
     firebase._.authUid = authData.uid // eslint-disable-line no-param-reassign
