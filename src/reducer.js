@@ -237,11 +237,13 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
       }
     case LOGIN_ERROR:
     case AUTH_EMPTY_CHANGE:
-      return { isLoaded: true, isEmpty: true }
     case LOGOUT:
       // Support keeping data when logging out
       if (action.preserve && action.preserve.auth) {
-        return pick(state, action.preserve.auth) // pick returns a new object
+        return pick(
+          { ...state, isLoaded: true, isEmpty: true },
+          action.preserve.auth
+        ) // pick returns a new object
       }
       return { isLoaded: true, isEmpty: true }
     default:
@@ -295,9 +297,13 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
         isLoaded: true
       }
     case LOGOUT:
+    case AUTH_EMPTY_CHANGE:
       // Support keeping data when logging out
       if (action.preserve && action.preserve.profile) {
-        return pick(state, action.preserve.profile) // pick returns a new object
+        return pick(
+          { ...state, isLoaded: true, isEmpty: true },
+          action.preserve.profile
+        ) // pick returns a new object
       }
       return { isLoaded: true, isEmpty: true }
     default:

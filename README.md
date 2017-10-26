@@ -36,25 +36,20 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 ## Install
 
 ```bash
-npm install --save react-redux-firebase
+npm install --save react-redux-firebase@next
 ```
 
 ## Use
 
-Include `reactReduxFirebase` in your store compose function and  `firebaseStateReducer` in your reducers:
+Include `reactReduxFirebase` in your store compose function and  `firebaseReducer` in your reducers:
 
 ```javascript
 import { createStore, combineReducers, compose } from 'redux'
-import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
+import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
 import firebase from 'firebase'
 // import 'firebase/firestore' // <- needed if using firestore
 
-const firebaseConfig = {
-  apiKey: '<your-api-key>',
-  authDomain: '<your-auth-domain>',
-  databaseURL: '<your-database-url>',
-  storageBucket: '<your-storage-bucket>'
-}
+const firebaseConfig = {}
 
 // react-redux-firebase config
 const rrfConfig = {
@@ -278,8 +273,6 @@ This project exists thanks to all the people who contribute.
 Thank you to all our backers! 🙏
 
 * [Reside Network Inc.](https://github.com/reside-eng)
-
-<a href="https://opencollective.com/react-redux-firebase#backers" target="_blank"><img src="https://opencollective.com/react-redux-firebase/backers.svg?width=890"></a>
 
 [npm-image]: https://img.shields.io/npm/v/react-redux-firebase.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/react-redux-firebase

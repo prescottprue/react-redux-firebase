@@ -32,15 +32,14 @@ let firebaseInstance
  * with parts of state to preserve, and the values are Arrays which
  * associate with which keys to preserve form that section of state.
  * (default: `null`)
+ * @param {Object} config.preserveOnEmptyAuthChange - `null` Data parameters to
+ * preserve when logging out. Keys associate with parts of state to preserve,
+ * and the values are Arrays contain keys for keys within that slice of state
+ * to preserve.
  * @param {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
  * @param {Function} config.onAuthStateChanged - Function run when auth state
  * changes. Argument Pattern: `(authData, firebase, dispatch)`
- * @param {Boolean} config.enableEmptyAuthChanges - Whether or not to enable
- * empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
- * empty auth changes such as undefined on initialization. See
- * [#137](https://github.com/prescottprue/react-redux-firebase/issues/137) for
- * more details. (default: `false`)
  * @param {Function} config.onRedirectResult - Function run when redirect
  * result is returned. Argument Pattern: `(authData, firebase, dispatch)`
  * @param {Object} config.customAuthParameters - Object for setting which

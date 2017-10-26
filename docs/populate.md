@@ -2,23 +2,31 @@
 
 Populate allows you to replace IDs within your data with other data from Firebase. This is very useful when trying to keep your data flat. Some would call it a _join_, but it was modeled after [the mongo populate method](http://mongoosejs.com/docs/populate.html).
 
-Initial data from populate is placed into redux in a normalized pattern [following defined redux practice of normalizing](http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html). `populatedDataToJS` helper used in the `connect` function then builds populated data out of normalized data within redux (**NOTE:** This does not apply if you are using `v1.1.5` or earlier).
+Initial data from populate is placed into redux in a normalized pattern [following defined redux practice of normalizing](http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html). `populate` helper used within the `connect` function then builds populated data out of normalized data within redux (**NOTE:** This does not apply if you are using `v1.1.5` or earlier).
 
 A basic implementation can look like so:
 ```javascript
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseConnect } from 'react-redux-firebase'
+
 const populates = [
   { child: 'owner', root: 'users' } // replace owner with user object
 ]
 
-@firebaseConnect([
-  // passing populates parameter also creates all necessary child queries
-  { path: 'todos', populates }
-])
-@connect(({ firebase }) => ({
-  // populate original from data within separate paths redux
-  todos: populate(firebase, 'todos', populates),
-  // dataToJS(firebase, 'todos') for unpopulated todos
-}))
+const enhance = compose(
+  firebaseConnect([
+    // passing populates parameter also creates all necessary child queries
+    { path: 'todos', populates }
+  ]),
+  connect(({ firebase }) => ({
+    // populate original from data within separate paths redux
+    todos: populate(firebase, 'todos', populates),
+    // firebase.ordered.todos or firebase.data.todos for unpopulated todos
+  }))
+)
+
+export default enhance(SomeComponent)
 ```
 
 ## Some Things To Note
@@ -73,14 +81,16 @@ When trying to replace the owner parameter with a string such as a displayName f
 const populates = [
   { child: 'owner', root: 'displayNames' }
 ]
-@firebaseConnect([
-  { path: '/todos', populates }
-  // '/todos#populate=owner:displayNames', // equivalent string notation
-])
-@connect(
-  ({ firebase }) => ({
-    todos: populate(firebase, 'todos', populates),
-  })
+const enhance = compose(
+  firebaseConnect([
+    { path: '/todos', populates }
+    // '/todos#populate=owner:displayNames', // equivalent string notation
+  ]),
+  connect(
+    ({ firebase }) => ({
+      todos: populate(firebase, 'todos', populates),
+    })
+  )
 )
 ```
 
@@ -100,14 +110,16 @@ Population can also be used to populate a parameter with an object. An example o
 const populates = [
   { child: 'owner', root: 'users' }
 ]
-@firebaseConnect([
-  { path: '/todos', populates }
-  // '/todos#populate=owner:users' // equivalent string notation
-])
-@connect(
-  ({ firebase }) => ({
-    todos: populate(firebase, 'todos', populates),
-  })
+const enhance = compose(
+  firebaseConnect([
+    { path: '/todos', populates }
+    // '/todos#populate=owner:users' // equivalent string notation
+  ]),
+  connect(
+    ({ firebase }) => ({
+      todos: populate(firebase, 'todos', populates),
+    })
+  )
 )
 ```
 
@@ -132,14 +144,16 @@ Often when populating, you will want to keep the key that was originally there (
 const populates = [
   { child: 'owner', root: 'users', keyProp: 'key' }
 ]
-@firebaseConnect([
-  { path: '/todos', populates }
-  // '/todos#populate=owner:users' // equivalent string notation
-])
-@connect(
-  ({ firebase }) => ({
-    todos: populatedDataToJS(firebase, 'todos', populates),
-  })
+
+const enhance = compose(
+  firebaseConnect([
+    { path: '/todos', populates }
+  ]),
+  connect(
+    ({ firebase }) => ({
+      todos: populate(firebase, 'todos', populates),
+    })
+  )
 )
 ```
 
@@ -165,14 +179,17 @@ There is also the option to load a parameter from within a population object. An
 const populates = [
   { child: 'owner', root: 'users', childParam: 'email' }
 ]
-@firebaseConnect([
- { path: '/todos', populates }
- // '/todos#populate=owner:users:email' // equivalent string notation
-])
-@connect(
-  ({ firebase }) => ({
-    todos: populate(firebase, 'todos', populates),
-  })
+
+const enhance = compose(
+  firebaseConnect([
+   { path: '/todos', populates }
+   // '/todos#populate=owner:users:email' // equivalent string notation
+  ]),
+  connect(
+    ({ firebase }) => ({
+      todos: populate(firebase, 'todos', populates),
+    })
+  )
 )
 ```
 
@@ -197,8 +214,7 @@ Populating username with username from usernames ref.
 const config = {
   userProfile: 'users',
   profileParamsToPopulate: [
-    'displayName:displayNames',
-    // { child: 'displayName', root: 'displayNames' } // object notation
+    { child: 'displayName', root: 'displayNames' } // object notation
   ]
 }
 ```
@@ -215,6 +231,7 @@ const config = {
   }
 }
 ```
+
 ##### Example Result
 
 ```javascript

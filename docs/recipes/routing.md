@@ -12,13 +12,16 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 
-@firebaseConnect()
-@connect(
-  ({ firebase: { auth } }) => ({
-    auth, // state.firebase.auth -> props.auth
-  })
+const enhance = compose(
+  firebaseConnect(),
+  connect(
+    ({ firebase: { auth } }) => ({
+      auth, // state.firebase.auth -> props.auth
+    })
+  )
 )
-export default class ProtectedPage extends Component {
+
+class ProtectedPage extends Component {
   static propTypes = {
     auth: PropTypes.object,
   }
@@ -37,6 +40,8 @@ export default class ProtectedPage extends Component {
     )
   }
 }
+
+export default enhance(ProtectedPage)
 ```
 
 ## Advanced

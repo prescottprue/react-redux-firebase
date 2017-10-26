@@ -6,8 +6,12 @@ import {
   omit
 } from 'lodash'
 import { actionTypes } from '../constants'
+import { populate } from '../helpers'
 import { getLoginMethodAndParams } from '../utils/auth'
-import { promisesForPopulate } from '../utils/populate'
+import {
+  promisesForPopulate,
+  getPopulateObjs
+} from '../utils/populate'
 
 /**
  * @description Dispatch login error action
@@ -46,9 +50,11 @@ export const unWatchUserProfile = (firebase) => {
 }
 
 const getProfileFromSnap = (snap) => {
+  // Real Time Database
   if (snap && snap.val) {
     return snap.val()
   }
+  // Firestore
   if (snap && snap.data && snap.exists) {
     return snap.data()
   }
@@ -64,7 +70,7 @@ const getProfileFromSnap = (snap) => {
  * Snapshot from profile watcher
  * @private
  */
-const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
+export const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
   const {
     profileParamsToPopulate,
     autoPopulateProfile
@@ -77,8 +83,7 @@ const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
   ) {
     dispatch({ type: actionTypes.SET_PROFILE, profile })
   } else {
-    // TODO: Share population logic with query action
-    // Convert each populate string in array into an array of once query promises
+    // Convert array of populate config into an array of once query promises
     promisesForPopulate(
       firebase,
       userProfileSnap.key,
@@ -96,16 +101,17 @@ const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
           requested: true
         })
       })
-      dispatch({
-        type: actionTypes.SET_PROFILE,
-        profile
-      })
-      // Dispatch action with profile combined with populated parameters
-      // Auto Populate profile
-      if (autoPopulateProfile) {
-        console.warn( // eslint-disable-line no-console
-          'Auto populate is no longer supported. We are working on backwards compatibility for v2.0.0'
-        )
+      if (!autoPopulateProfile) {
+        // Dispatch action with profile combined with populated parameters
+        dispatch({ type: actionTypes.SET_PROFILE, profile })
+      } else {
+        // Auto Populate profile
+        const populates = getPopulateObjs(profileParamsToPopulate)
+        const profile = userProfileSnap.val()
+        dispatch({
+          type: actionTypes.SET_PROFILE,
+          profile: populate({ profile, data }, 'profile', populates)
+        })
       }
     })
   }
@@ -263,10 +269,13 @@ const setupPresence = (dispatch, firebase) => {
         startedAt: firebase.database.ServerValue.TIMESTAMP,
         user: authUid
       })
-      // set authUid as priority for easy sorting
-      session.setPriority(authUid)
-      const endedRef = session.child('endedAt')
-      endedRef
+      // Support versions of react-native-firebase that do not have setPriority
+      // on firebase.database.ThenableReference
+      if (isFunction(session.setPriority)) {
+        // set authUid as priority for easy sorting
+        session.setPriority(authUid)
+      }
+      session.child('endedAt')
         .onDisconnect()
         .set(firebase.database.ServerValue.TIMESTAMP, () => {
           dispatch({ type: actionTypes.SESSION_END })
@@ -290,23 +299,18 @@ const handleAuthStateChange = (dispatch, firebase, authData) => {
   const { config } = firebase._
   if (!authData) {
     // Run onAuthStateChanged if it exists in config and enableEmptyAuthChanges is set to true
-    if (
-      isFunction(config.onAuthStateChanged) &&
-      config.enableEmptyAuthChanges
-    ) {
+    if (isFunction(config.onAuthStateChanged)) {
       firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
     }
-
-    dispatch({ type: actionTypes.AUTH_EMPTY_CHANGE })
+    dispatch({
+      type: actionTypes.AUTH_EMPTY_CHANGE,
+      preserve: config.preserveOnEmptyAuthChange
+    })
   } else {
     firebase._.authUid = authData.uid // eslint-disable-line no-param-reassign
 
     // setup presence if settings and database exist
-    if (
-      config.presence &&
-      firebase.database &&
-      firebase.database.ServerValue
-    ) {
+    if (config.presence) {
       setupPresence(dispatch, firebase)
     }
 

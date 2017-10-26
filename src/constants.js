@@ -118,8 +118,12 @@ export const actionTypes = {
  * @property {Array|Object} preserveOnLogout - `null` Data parameters to
  * preserve when logging out. If Array is passed, each item represents keys
  * within state.firebase.data preserve. If an object is passed, Keys associate
- * with parts of state to preserve, and the values are Arrays which
- * associate with which keys to preserve form that section of state.
+ * with parts of state to preserve, and the values are Arrays contain keys
+ * for keys within that slice of state to preserve.
+ * @property {Object} preserveOnEmptyAuthChange - `null` Data parameters to
+ * preserve when logging out. Keys associate with parts of state to preserve,
+ * and the values are Arrays contain keys for keys within that slice of state
+ * to preserve.
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
  * user profile when logging in.
  * @property {Boolean} resetBeforeLogin - `true` Whether or not to reset auth
@@ -167,6 +171,8 @@ export const defaultConfig = {
   presence: null,
   sessions: 'sessions',
   enableLogging: false,
+  preserveOnLogout: null,
+  preserveOnEmptyAuthChange: null,
   resetBeforeLogin: true,
   updateProfileOnLogin: true,
   enableRedirectHandling: true,
@@ -174,7 +180,7 @@ export const defaultConfig = {
   setProfilePopulateResults: false,
   dispatchOnUnsetListener: true,
   dispatchRemoveAction: true,
-  enableEmptyAuthChanges: false,
+  enableEmptyAuthChanges: true,
   firebaseStateName: 'firebase',
   attachAuthIsReady: false
 }

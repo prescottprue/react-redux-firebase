@@ -2,7 +2,6 @@ import { createStore, compose } from 'redux'
 import rootReducer from './reducer'
 import { firebase as fbConfig } from './config'
 import { reactReduxFirebase } from 'react-redux-firebase'
-import { AsyncStorage } from 'react-native'
 import firebase from 'firebase'
 
 firebase.initializeApp(fbConfig)
@@ -12,9 +11,7 @@ export default function configureStore (initialState, history) {
     reactReduxFirebase(firebase,
       {
         userProfile: 'users',
-        enableLogging: false,
-        enableRedirectHandling: false
-        // ReactNative: { AsyncStorage },
+        enableLogging: false
       }
     ),
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f

@@ -3,6 +3,7 @@ import {
   unWatchUserProfile,
   watchUserProfile,
   createUserProfile,
+  handleProfileWatchResponse,
   login,
   logout,
   createUser,
@@ -10,11 +11,14 @@ import {
   confirmPasswordReset,
   verifyPasswordResetCode
 } from '../../../src/actions/auth'
-import { promisesForPopulate } from '../../../src/utils/populate'
+import { actionTypes } from '../../../src/constants'
+// import { promisesForPopulate } from '../../../src/utils/populate'
 
 let functionSpy
 let dispatchSpy
 let res
+let profile
+let profileSnap
 const dispatch = sinon.spy()
 const onAuthStateChangedSpy = sinon.spy((f) => {
   f({uid: 'asdfasdf'})
@@ -88,8 +92,8 @@ const fakeFirebase = {
   })
 }
 
-describe('Actions: Auth', () => {
-  describe('init', () => {
+describe('Actions: Auth -', () => {
+  describe('init -', () => {
     it("calls firebase's onAuthStateChanged", () => {
       init(dispatch, fakeFirebase)
       expect(onAuthStateChangedSpy).to.have.been.calledOnce
@@ -99,24 +103,62 @@ describe('Actions: Auth', () => {
     })
   })
 
-  describe('unWatchUserProfile', () => {
+  describe('unWatchUserProfile -', () => {
     it('calls profile unwatch', () => {
-      expect(unWatchUserProfile(firebase))
+      fakeFirebase._.profileWatch = () => {}
+      unWatchUserProfile(fakeFirebase)
+      expect(fakeFirebase._.profileWatch).to.equal(null)
     })
   })
 
-  describe('watchUserProfile', () => {
+  describe('handleProfileWatchResponse -', () => {
+    beforeEach(() => {
+      dispatchSpy = sinon.spy()
+      firebase._.config.profileParamsToPopulate = undefined
+      firebase._.profileWatch = undefined
+      profile = { email: 'test@test.com' }
+      profileSnap = { val: () => profile }
+    })
+    describe('profileParamsToPopulate setting -', () => {
+      it('undefined - dispatches SET_PROFILE with profile', () => {
+        firebase._.config.profileParamsToPopulate = undefined
+        handleProfileWatchResponse(dispatchSpy, firebase, profileSnap)
+        expect(dispatchSpy)
+          .to.be.calledWith({
+            type: actionTypes.SET_PROFILE,
+            profile
+          })
+      })
+
+      it('{} - dispatches SET_PROFILE with profile (not supported)', () => {
+        firebase._.config.profileParamsToPopulate = {}
+        handleProfileWatchResponse(dispatchSpy, firebase, profileSnap)
+        expect(dispatchSpy)
+          .to.be.calledWith({
+            type: actionTypes.SET_PROFILE,
+            profile
+          })
+      })
+
+      it('Array - dispatches SET_PROFILE with populated profile', () => {
+        firebase._.config.profileParamsToPopulate = []
+        handleProfileWatchResponse(dispatchSpy, firebase, profileSnap)
+        // TODO: Come up with better way to test populate is called other than that dispatch is not
+        expect(dispatchSpy).to.have.callCount(0)
+        // expect(dispatchSpy)
+        //   .to.be.calledWith({ type: actionTypes.SET_PROFILE })
+      })
+    })
+  })
+
+  describe('watchUserProfile -', () => {
     beforeEach(() => {
       functionSpy = sinon.spy(dispatch)
+      firebase._.config.profileWatch = null
     })
 
     afterEach(() => {
       firebase._.config.profileParamsToPopulate = undefined
-    })
-
-    it('calls profile unwatch', () => {
-      watchUserProfile(dispatch, fakeFirebase)
-      expect(firebase._.profileWatch).to.be.a.function
     })
 
     it('sets profile watch function', () => {
@@ -124,47 +166,44 @@ describe('Actions: Auth', () => {
       expect(firebase._.profileWatch).to.be.a.function
     })
 
-    it('sets populates using array', () => {
-      firebase._.config.profileParamsToPopulate = ['asdfasdf']
-      watchUserProfile(dispatch, firebase)
-      expect(firebase._.profileWatch).to.be.a.function
-    })
+    describe('populates -', () => {
+      it('skips populating data into profile by default', () => {
+        firebase._.config.profileParamsToPopulate = 'role:roles'
+        watchUserProfile(dispatch, firebase)
+        expect(firebase._.profileWatch).to.be.a.function
+      })
 
-    it('sets populates using string', () => {
-      firebase._.config.profileParamsToPopulate = 'asdfasdf'
-      firebase._.config.setProfile = 'asdfasdf'
-      watchUserProfile(dispatch, firebase)
-      expect(firebase._.profileWatch).to.be.a.function
-    })
+      it('sets populates to profile autoPopulateProfile is true', () => {
+        firebase._.config.profileParamsToPopulate = 'role:roles'
+        firebase._.config.autoPopulateProfile = true
+        watchUserProfile(functionSpy, firebase)
+        expect(firebase._.profileWatch).to.be.a.function
+        // TODO: Find a better way to confirm population is happening other than that dispatch is not being called
+        expect(functionSpy).to.have.callCount(0)
+      })
 
-    it('sets populates to profile by default', () => {
-      firebase._.config.profileParamsToPopulate = 'role:roles'
-      watchUserProfile(dispatch, firebase)
-      expect(firebase._.profileWatch).to.be.a.function
-    })
+      it('skips populating data into profile if autoPopulateProfile is false', () => {
+        firebase._.config.profileParamsToPopulate = 'role:roles'
+        firebase._.config.autoPopulateProfile = false
+        watchUserProfile(functionSpy, firebase)
+        // TODO: Find a better way to confirm population is happening other than that dispatch is not being called
+        expect(functionSpy).to.have.callCount(0)
+      })
 
-    it('skips populating data into profile if autoPopulateProfile is false', () => {
-      firebase._.config.profileParamsToPopulate = 'role:roles'
-      firebase._.config.autoPopulateProfile = false
-      watchUserProfile(dispatch, firebase)
-      expect(firebase._.profileWatch).to.be.a.function
-    })
-
-    // TODO: Find a way to test promisesForPopulate within watchUserProfile
-    it.skip('calls set actions for populate data if setProfilePopulateResults is true', () => {
-      firebase._.config.profileParamsToPopulate = 'role:roles'
-      sinon.stub(promisesForPopulate)
-      firebase._.config.setProfilePopulateResults = true
-      watchUserProfile(dispatch, firebase)
-      promisesForPopulate.restore()
-      expect(functionSpy).to.be.calledOnce
+      // TODO: Find a way to test promisesForPopulate within watchUserProfile
+      it.skip('calls set actions for populate data if setProfilePopulateResults is true', () => {
+        firebase._.config.profileParamsToPopulate = 'role:roles'
+        firebase._.config.setProfilePopulateResults = true
+        watchUserProfile(dispatch, firebase)
+        expect(functionSpy).to.be.calledOnce
+      })
     })
   })
 
   describe('createUserProfile', () => {
     it('creates profile if config is enabled', () => {
       const auth = { uid: '123', email: 'test@test.com', providerData: [{}] }
-      const profile = { some: 'asdf' }
+      profile = { some: 'asdf' }
       expect(createUserProfile(dispatch, Firebase, auth, profile))
         .to.eventually.be.an.object
     })

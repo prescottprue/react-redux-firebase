@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
-import { firebaseConnect } from 'react-redux-firebase';
+import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { connect } from 'react-redux';
 import {
   AppRegistry,
@@ -49,20 +49,13 @@ export default class SigninSampleApp extends Component {
   state = {
     isLoading: false
   }
+
   componentDidMount() {
     this._setupGoogleSignin();
   }
 
   render() {
-    const { auth } = this.props
-    // auth always null?
-    // if (!isLoaded(auth)) {
-    //   return (
-    //     <View style={styles.container}>
-    //       <Text>Loading...</Text>
-    //     </View>
-    //   )
-    // }
+    const { auth, firebase } = this.props
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
@@ -74,7 +67,7 @@ export default class SigninSampleApp extends Component {
         </View>
       )
     }
-    if (!this.props.auth) {
+    if (isEmpty(auth)) {
       return (
         <View style={styles.container}>
           <Text style={{marginBottom: 20}}>
@@ -92,19 +85,19 @@ export default class SigninSampleApp extends Component {
     return (
       <View style={styles.container}>
         <Text style={{fontSize: 18, fontWeight: 'bold', marginBottom: 20}}>
-          Welcome {this.props.auth.displayName}
+          Welcome {auth.displayName}
         </Text>
         <Text>
-          Your email is: {this.props.auth.email}</Text>
+          Your email is: {auth.email}</Text>
 
         <View style={{marginTop: 50}}>
-          <Button title="Log Out" onPress={() => this._signOut()} />
+          <Button title="Log Out" onPress={this._signOut} />
         </View>
       </View>
     );
   }
   // based on google signin example
-  async _setupGoogleSignin() {
+  _setupGoogleSignin = async () => {
     this.setState({ isLoading: true })
     try {
       await GoogleSignin.hasPlayServices({ autoResolve: true });
@@ -125,31 +118,25 @@ export default class SigninSampleApp extends Component {
     }
   }
 
-  _signIn() {
+  _signIn = async () => {
     const { auth } = this.props.firebase
     this.setState({ isLoading: true })
-    return GoogleSignin.signIn()
-      .then((user) => {
-        const creds = auth.GoogleAuthProvider.credential(null, user.accessToken)
-        return auth()
-          .signInWithCredential(creds)
-          .then(() => {
-            this.setState({ isLoading: false })
-          })
-          .catch((err) => {
-            console.error('error authing with firebase:', err)
-            this.setState({ isLoading: false })
-            return Promise.reject(err)
-          })
-      })
-      .catch((err) => {
-        console.log('WRONG SIGNIN', err);
-      })
+    try {
+      const user = await GoogleSignin.signIn()
+      const creds = auth.GoogleAuthProvider.credential(null, user.accessToken)
+      await auth().signInWithCredential(creds)
+      this.setState({ isLoading: false })
+      return user
+    } catch (err) {
+      console.error('Error authing with firebase:', err.message || err)
+      this.setState({ isLoading: false })
+      throw err
+    }
   }
 
-  _signOut() {
-    return GoogleSignin.revokeAccess()
-      .then(() => GoogleSignin.signOut())
-      .then(() => this.props.firebase.logout())
+  _signOut = async () => {
+    await GoogleSignin.revokeAccess()
+    await GoogleSignin.signOut()
+    return await this.props.firebase.logout()
   }
 }

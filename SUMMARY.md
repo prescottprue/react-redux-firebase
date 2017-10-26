@@ -17,7 +17,6 @@
   * [Populate](/docs/recipes/populate.md)
   * [Upload](/docs/recipes/upload.md)
   * [Server Side Rendering](/docs/recipes/ssr.md)
-  * [Performance](/docs/recipes/performance.md)
 * [Integrations](/docs/integrations/README.md)
   * [Redux Thunk](/docs/integrations/thunks.md)
   * [Redux Form](/docs/integrations/redux-form.md)
