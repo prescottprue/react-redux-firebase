@@ -92,8 +92,12 @@ Default configuration options
 -   `preserveOnLogout` **([Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object))** `null` Data parameters to
     preserve when logging out. If Array is passed, each item represents keys
     within state.firebase.data preserve. If an object is passed, Keys associate
-    with parts of state to preserve, and the values are Arrays which
-    associate with which keys to preserve form that section of state.
+    with parts of state to preserve, and the values are Arrays contain keys
+    for keys within that slice of state to preserve.
+-   `preserveOnEmptyAuthChange` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** `null` Data parameters to
+    preserve when logging out. Keys associate with parts of state to preserve,
+    and the values are Arrays contain keys for keys within that slice of state
+    to preserve.
 -   `updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to update
     user profile when logging in.
 -   `resetBeforeLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to reset auth
