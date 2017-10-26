@@ -50,9 +50,11 @@ export const unWatchUserProfile = (firebase) => {
 }
 
 const getProfileFromSnap = (snap) => {
+  // Real Time Database
   if (snap && snap.val) {
     return snap.val()
   }
+  // Firestore
   if (snap && snap.data && snap.exists) {
     return snap.data()
   }
@@ -81,8 +83,7 @@ export const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) 
   ) {
     dispatch({ type: actionTypes.SET_PROFILE, profile })
   } else {
-    // TODO: Share population logic with query action
-    // Convert each populate string in array into an array of once query promises
+    // Convert array of populate config into an array of once query promises
     promisesForPopulate(
       firebase,
       userProfileSnap.key,

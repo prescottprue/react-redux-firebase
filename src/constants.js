@@ -174,7 +174,7 @@ export const defaultConfig = {
   setProfilePopulateResults: false,
   dispatchOnUnsetListener: true,
   dispatchRemoveAction: true,
-  enableEmptyAuthChanges: false,
+  enableEmptyAuthChanges: true,
   firebaseStateName: 'firebase',
   attachAuthIsReady: false
 }

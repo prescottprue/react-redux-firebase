@@ -144,14 +144,14 @@ Often when populating, you will want to keep the key that was originally there (
 const populates = [
   { child: 'owner', root: 'users', keyProp: 'key' }
 ]
+
 const enhance = compose(
   firebaseConnect([
     { path: '/todos', populates }
-    // '/todos#populate=owner:users' // equivalent string notation
   ]),
-  @connect(
+  connect(
     ({ firebase }) => ({
-      todos: populatedDataToJS(firebase, 'todos', populates),
+      todos: populate(firebase, 'todos', populates),
     })
   )
 )
@@ -179,14 +179,17 @@ There is also the option to load a parameter from within a population object. An
 const populates = [
   { child: 'owner', root: 'users', childParam: 'email' }
 ]
-@firebaseConnect([
- { path: '/todos', populates }
- // '/todos#populate=owner:users:email' // equivalent string notation
-])
-@connect(
-  ({ firebase }) => ({
-    todos: populate(firebase, 'todos', populates),
-  })
+
+const enhance = compose(
+  firebaseConnect([
+   { path: '/todos', populates }
+   // '/todos#populate=owner:users:email' // equivalent string notation
+  ]),
+  connect(
+    ({ firebase }) => ({
+      todos: populate(firebase, 'todos', populates),
+    })
+  )
 )
 ```
 
@@ -211,8 +214,7 @@ Populating username with username from usernames ref.
 const config = {
   userProfile: 'users',
   profileParamsToPopulate: [
-    'displayName:displayNames',
-    // { child: 'displayName', root: 'displayNames' } // object notation
+    { child: 'displayName', root: 'displayNames' } // object notation
   ]
 }
 ```
@@ -229,6 +231,7 @@ const config = {
   }
 }
 ```
+
 ##### Example Result
 
 ```javascript

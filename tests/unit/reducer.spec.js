@@ -1,6 +1,6 @@
 import { setWith } from 'lodash/fp'
 import { actionTypes } from '../../src/constants'
-import firebaseStateReducer, { getDotStrPath } from '../../src/reducer'
+import firebaseReducer, { getDotStrPath } from '../../src/reducer'
 
 const initialState = {
   auth: { isLoaded: false, isEmpty: true },
@@ -17,11 +17,6 @@ const initialState = {
 }
 
 const noError = { ...initialState, errors: [], authError: null }
-const loadedState = {
-  ...noError,
-  auth: { isLoaded: true, isEmpty: true },
-  profile: { isLoaded: true, isEmpty: true }
-}
 const exampleData = { some: 'data' }
 const externalState = { data: { asdfasdf: {} } }
 
@@ -36,15 +31,23 @@ const profile = { email: 'test@test.com' }
 
 describe('reducer', () => {
   it('is a function', () => {
-    expect(firebaseStateReducer).to.be.a.function
+    expect(firebaseReducer).to.be.a.function
+  })
+
+  describe('throws for invalid initial state', () => {
+    it('in errors', () => {
+      action = { type: actionTypes.UNAUTHORIZED_ERROR }
+      expect(() => firebaseReducer({ errors: null }, action))
+        .to.throw('Errors state must be an array')
+    })
   })
 
   it.skip('handles no initialState', () => {
-    expect(firebaseStateReducer(undefined, {})).to.equal(initialState)
+    expect(firebaseReducer(undefined, {})).to.equal(initialState)
   })
 
   it('returns state by default', () => {
-    expect(firebaseStateReducer(externalState, {}))
+    expect(firebaseReducer(externalState, {}))
       .to.have.property('data', externalState.data)
   })
 
@@ -61,26 +64,26 @@ describe('reducer', () => {
   describe.skip('empty path', () => {
     it('empty path', () => {
       action = { type: actionTypes.START, profile }
-      expect(firebaseStateReducer({}, action)).to.deep.equal({...initialState})
+      expect(firebaseReducer({}, action)).to.deep.equal({...initialState})
     })
   })
 
   describe('START action', () => {
     it('sets requested state for path', () => {
       action = { type: actionTypes.START, path: 'some' }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.have.deep.property(`requested.${action.path}`)
     })
 
     it('sets requesting state for path', () => {
       action = { type: actionTypes.START, path: 'some' }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.have.deep.property(`requesting.${action.path}`)
     })
 
     it('sets timestamps state for path', () => {
       action = { type: actionTypes.START, path: 'some' }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.have.deep.property(`timestamps.${action.path}`)
     })
   })
@@ -88,7 +91,7 @@ describe('reducer', () => {
   // Skipped due to empty path being written in reducer (not expected)
   it.skip('handles undefined path', () => {
     expect(
-      firebaseStateReducer(
+      firebaseReducer(
         exampleData,
         { type: actionTypes.START }
       )
@@ -100,7 +103,7 @@ describe('reducer', () => {
     describe('sets requesting and requested when they are', () => {
       it('empty', () => {
         expect(
-          firebaseStateReducer(
+          firebaseReducer(
             exampleData,
             { type: actionTypes.START, path: 'test' }
           )
@@ -109,7 +112,7 @@ describe('reducer', () => {
 
       it('already set', () => {
         expect(
-          firebaseStateReducer(
+          firebaseReducer(
             exampleData,
             { type: actionTypes.START, path: 'test' }
           )
@@ -121,13 +124,13 @@ describe('reducer', () => {
   describe('SET action', () => {
     it.skip('deletes data from state when data is null', () => {
       action = { type: actionTypes.SET, path: 'test' }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.deep.equal(initialState)
     })
 
     it('sets data to state under path', () => {
       action = { type: actionTypes.SET, path, data: exampleData }
-      expect(firebaseStateReducer({}, action).data)
+      expect(firebaseReducer({}, action).data)
         .to.deep.equal({
           ...initialState.data,
           [path]: exampleData
@@ -136,7 +139,7 @@ describe('reducer', () => {
 
     it('sets data to state under paths that end in a number', () => {
       action = { type: actionTypes.SET, path: 'test/123', data: exampleData }
-      expect(firebaseStateReducer({}, action).data)
+      expect(firebaseReducer({}, action).data)
         .to.deep.equal({
           ...initialState.data,
           test: {
@@ -148,7 +151,7 @@ describe('reducer', () => {
     it('sets data to path with already existing data', () => {
       initialData = { data: { test: { [childKey]: { foo1: 'bar1' } } } }
       action = { type: actionTypes.SET, path: childPath, data: { foo2: 'bar2' } }
-      expect(firebaseStateReducer(initialData, action).data)
+      expect(firebaseReducer(initialData, action).data)
         .to.deep.equal({
           ...initialState.data,
           test: {
@@ -162,7 +165,7 @@ describe('reducer', () => {
     it('sets data to path with already existing data with numeric keys', () => {
       initialData = { data: { test: { [childKey]: { 123: 'bar1' } } } }
       action = { type: actionTypes.SET, path: childPath, data: { 124: 'bar2' } }
-      expect(firebaseStateReducer(initialData, action).data)
+      expect(firebaseReducer(initialData, action).data)
         .to.deep.equal({
           ...initialState.data,
           test: {
@@ -176,28 +179,28 @@ describe('reducer', () => {
     it('sets data to path with already existing value of null', () => {
       initialData = { data: { test: { [childKey]: null } } }
       action = { type: actionTypes.SET, path: childPath, data: newData }
-      expect(firebaseStateReducer(initialData, action).data)
+      expect(firebaseReducer(initialData, action).data)
         .to.deep.equal(setWith(Object, childDotPath, newData, {}))
     })
 
     it('sets data to path with already existing parent of null', () => {
       initialData = { data: { test: null } }
       action = { type: actionTypes.SET, path: childPath, data: exampleData }
-      expect(firebaseStateReducer(initialData, action).data)
+      expect(firebaseReducer(initialData, action).data)
         .to.deep.equal(setWith(Object, childDotPath, exampleData, {}))
     })
   })
 
-  describe('MERGE action', () => {
+  describe('MERGE action -', () => {
     it.skip('deletes data from state when data is null', () => {
       action = { type: actionTypes.MERGE, path: 'test' }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.deep.equal(initialState)
     })
 
     it('merge data to empty state under path', () => {
       action = { type: actionTypes.MERGE, path, data: exampleData }
-      expect(firebaseStateReducer({}, action).data)
+      expect(firebaseReducer({}, action).data)
         .to.deep.equal({
           ...initialState.data,
           [path]: exampleData
@@ -206,7 +209,7 @@ describe('reducer', () => {
 
     it('merge data to empty state under paths that end in a number', () => {
       action = { type: actionTypes.MERGE, path: 'test/123', data: exampleData }
-      expect(firebaseStateReducer({}, action).data)
+      expect(firebaseReducer({}, action).data)
         .to.deep.equal({
           ...initialState.data,
           test: {
@@ -218,7 +221,7 @@ describe('reducer', () => {
     it('merges data to path with already existing data', () => {
       initialData = { data: { test: { [childKey]: { foo1: 'bar1' } } } }
       action = { type: actionTypes.MERGE, path: childPath, data: { foo2: 'bar2' } }
-      expect(firebaseStateReducer(initialData, action).data)
+      expect(firebaseReducer(initialData, action).data)
         .to.deep.equal({
           ...initialState.data,
           test: {
@@ -233,7 +236,7 @@ describe('reducer', () => {
     it('merges data to path with already existing data with numeric keys', () => {
       initialData = { data: { test: { [childKey]: { 123: 'bar1' } } } }
       action = { type: actionTypes.MERGE, path: childPath, data: { 124: 'bar2' } }
-      expect(firebaseStateReducer(initialData, action).data)
+      expect(firebaseReducer(initialData, action).data)
         .to.deep.equal({
           ...initialState.data,
           test: {
@@ -248,46 +251,46 @@ describe('reducer', () => {
     it('merge data to path with already existing value of null', () => {
       initialData = { data: { test: { [childKey]: null } } }
       action = { type: actionTypes.MERGE, path: childPath, data: newData }
-      expect(firebaseStateReducer(initialData, action).data)
+      expect(firebaseReducer(initialData, action).data)
         .to.deep.equal(setWith(Object, childDotPath, newData, {}))
     })
 
     it('merge data to path with already existing parent of null', () => {
       initialData = { data: { test: null } }
       action = { type: actionTypes.MERGE, path: childPath, data: exampleData }
-      expect(firebaseStateReducer(initialData, action).data)
+      expect(firebaseReducer(initialData, action).data)
         .to.deep.equal(setWith(Object, childDotPath, exampleData, {}))
     })
   })
 
-  describe('NO_VALUE action', () => {
+  describe('NO_VALUE action -', () => {
     it('sets path to null', () => {
       action = { type: actionTypes.NO_VALUE, path }
-      expect(firebaseStateReducer({}, action).data)
+      expect(firebaseReducer({}, action).data)
         .to.deep.equal({ [path]: null })
     })
   })
 
-  describe('UNSET_LISTENER action', () => {
+  describe('UNSET_LISTENER action -', () => {
     it('sets state', () => {
       action = { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf', payload: { id: 1 } }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.deep.equal(initialState)
     })
   })
 
-  describe('UNSET_LISTENER action', () => {
+  describe('UNSET_LISTENER action -', () => {
     action = { type: actionTypes.UNSET_LISTENER, path: 'asdfasdf', payload: { id: 1 } }
     it('sets state', () => {
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.deep.equal(initialState)
     })
   })
 
-  describe('SET_PROFILE action', () => {
+  describe('SET_PROFILE action -', () => {
     it('sets profile to state', () => {
       action = { type: actionTypes.SET_PROFILE, profile }
-      expect(firebaseStateReducer({}, action)).to.deep.equal({
+      expect(firebaseReducer({}, action)).to.deep.equal({
         ...initialState,
         profile: { ...profile, isLoaded: true, isEmpty: false }
       })
@@ -295,7 +298,7 @@ describe('reducer', () => {
 
     it('removes for no profile', () => {
       action = { type: actionTypes.SET_PROFILE }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.deep.equal({
           ...initialState,
           profile: { isLoaded: true, isEmpty: true }
@@ -303,29 +306,83 @@ describe('reducer', () => {
     })
   })
 
-  describe('LOGOUT action', () => {
-    it('sets state', () => {
+  describe('LOGOUT action -', () => {
+    it('resets data state to {}', () => {
       action = { type: actionTypes.LOGOUT }
-      expect(firebaseStateReducer({}, action))
-        .to.deep.equal(loadedState)
+      const res = firebaseReducer({ data: { todos: [{}] } }, action)
+      expect(res).to.have.property('data')
+      expect(res.data).to.be.empty
     })
 
-    it('supports preserving certain data in state', () => {
+    it('resets ordered state to {}', () => {
+      action = { type: actionTypes.LOGOUT }
+      const res = firebaseReducer({ ordered: { todos: [{}] } }, action)
+      expect(res).to.have.property('ordered')
+      expect(res.ordered).to.be.empty
+    })
+
+    it('clears auth state', () => {
+      action = { type: actionTypes.LOGOUT }
+      const res = firebaseReducer({ auth: { isEmpty: false } }, action)
+      expect(res).to.have.deep.property('auth.isLoaded', true)
+      expect(res).to.have.deep.property('auth.isEmpty', true)
+    })
+
+    it('supports preserving data in state.data', () => {
       const preservePath = 'todos'
       const todos = [{ a: 'todo' }]
       initialData = { data: { [preservePath]: todos } }
       action = { type: actionTypes.LOGOUT, preserve: [preservePath] }
       // load todos into state and confirm they are kept on logout
-      expect(firebaseStateReducer(initialData, action).data)
-        .to.have.property(preservePath, todos)
+      expect(firebaseReducer(initialData, action))
+        .to.have.deep.property(`data.${preservePath}`, todos)
+    })
+
+    it('supports preserving data in state.ordered', () => {
+      const preservePath = 'todos'
+      const todos = [{ a: 'todo' }]
+      initialData = { ordered: { todos } }
+      action = { type: actionTypes.LOGOUT, preserve: { ordered: [preservePath] } }
+      // load todos into state and confirm they are kept on logout
+      expect(firebaseReducer(initialData, action))
+        .to.have.deep.property(`ordered.${preservePath}`, todos)
+    })
+
+    it('supports preserving data in state.auth', () => {
+      const preservePath = 'displayName'
+      const displayName = 'tester'
+      initialData = { auth: { isEmpty: false, displayName } }
+      action = { type: actionTypes.LOGOUT, preserve: { auth: [preservePath] } }
+      // load todos into state and confirm they are kept on logout
+      expect(firebaseReducer(initialData, action))
+        .to.have.deep.property(`auth.${preservePath}`, displayName)
+    })
+
+    it('supports preserving data in state.profile', () => {
+      const preservePath = 'displayName'
+      const displayName = 'tester'
+      initialData = { profile: { isEmpty: false, displayName } }
+      action = { type: actionTypes.LOGOUT, preserve: { profile: [preservePath] } }
+      // load todos into state and confirm they are kept on logout
+      expect(firebaseReducer(initialData, action))
+        .to.have.deep.property(`profile.${preservePath}`, displayName)
+    })
+
+    it('throws for invalid preserve parameter', () => {
+      const todos = [{ a: 'todo' }]
+      initialData = { ordered: { todos } }
+      action = { type: actionTypes.LOGOUT, preserve: 'ordered.todos' }
+      // load todos into state and confirm they are kept on logout
+      expect(() => firebaseReducer(initialData, action))
+        .to.throw('Invalid preserve parameter. It must be an Object or an Array')
     })
   })
 
-  describe('LOGIN action', () => {
+  describe('LOGIN action -', () => {
     it('sets state', () => {
       const auth = { some: 'value' }
       action = { type: actionTypes.LOGIN, auth }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.deep.equal({
           ...noError,
           auth: { ...noError.auth, ...auth, isLoaded: true, isEmpty: false }
@@ -334,16 +391,16 @@ describe('reducer', () => {
 
     it.skip('sets empty if auth not provided', () => {
       action = { type: actionTypes.LOGIN }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.deep.equal(noError)
     })
   })
 
-  describe('REMOVE action', () => {
+  describe('REMOVE action -', () => {
     it('sets data state to undefined', () => {
       const path = 'test'
       action = { type: actionTypes.REMOVE, path }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.deep.equal({
           ...initialState,
           data: { [path]: undefined },
@@ -353,7 +410,7 @@ describe('reducer', () => {
     it('sets ordered state to undefined', () => {
       const path = 'test'
       action = { type: actionTypes.REMOVE, path }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.deep.equal({
           ...initialState,
           data: { [path]: undefined },
@@ -362,31 +419,71 @@ describe('reducer', () => {
     })
   })
 
-  describe('AUTH_EMPTY_CHANGE action', () => {
-    it('sets auth.isLoaded: true to state', () => {
+  describe('AUTH_EMPTY_CHANGE action -', () => {
+    it('sets auth.isLoaded: true (matches v1 LOGOUT action)', () => {
       action = { type: actionTypes.AUTH_EMPTY_CHANGE }
-      expect(firebaseStateReducer({}, action))
-        .to.deep.equal({
-          ...initialState,
-          auth: { isLoaded: true, isEmpty: true }
-        })
+      expect(firebaseReducer({}, action))
+        .to.have.deep.property('auth.isLoaded', true)
     })
+
+    it('sets profile.isLoaded: true (matches v1 LOGOUT action)', () => {
+      action = { type: actionTypes.AUTH_EMPTY_CHANGE }
+      expect(firebaseReducer({}, action))
+        .to.have.deep.property('profile.isLoaded', true)
+    })
+
     it('removes existing auth state', () => {
-      const auth = { some: 'value' }
-      action = { type: actionTypes.AUTH_EMPTY_CHANGE, auth }
-      expect(firebaseStateReducer({}, action))
-        .to.deep.equal({
-          ...initialState,
-          auth: { isLoaded: true, isEmpty: true }
-        })
+      const auth = { some: 'value', isLoaded: true, isEmpty: false }
+      action = { type: actionTypes.AUTH_EMPTY_CHANGE }
+      expect(firebaseReducer({ auth }, action))
+        .to.not.have.deep.property('auth.some')
     })
   })
 
-  describe('LOGIN_ERROR action', () => {
+  describe('AUTH_LINK_SUCCESS action -', () => {
+    describe('dispatched with payload -', () => {
+      it('sets auth.isEmpty: false', () => {
+        action = { type: actionTypes.AUTH_LINK_SUCCESS, payload: { uid } }
+        expect(firebaseReducer({ auth: { isEmpty: true } }, action))
+          .to.have.deep.property('auth.isEmpty', false)
+      })
+
+      it('sets auth data', () => {
+        action = { type: actionTypes.AUTH_LINK_SUCCESS, payload: { uid } }
+        expect(firebaseReducer({}, action))
+          .to.have.deep.property('auth.uid', uid)
+      })
+
+      it('calls .toJSON() if it exists', () => {
+        const toJSON = sinon.spy(() => ({ email: 'test' }))
+        action = { type: actionTypes.AUTH_LINK_SUCCESS, payload: { toJSON } }
+        expect(firebaseReducer({}, action))
+          .to.have.deep.property('auth.email', 'test')
+        expect(toJSON).to.have.been.calledOnce
+      })
+    })
+
+    describe('dispatched without payload -', () => {
+      it('removes existing auth state', () => {
+        const auth = { uid: 'value', isLoaded: true, isEmpty: false }
+        action = { type: actionTypes.AUTH_LINK_SUCCESS }
+        expect(firebaseReducer({ auth }, action))
+          .to.not.have.deep.property('auth.uid')
+      })
+
+      it('sets auth.isEmpty: true', () => {
+        action = { type: actionTypes.AUTH_LINK_SUCCESS }
+        expect(firebaseReducer({ auth: { isEmpty: false } }, action))
+          .to.have.deep.property('auth.isEmpty', true)
+      })
+    })
+  })
+
+  describe('LOGIN_ERROR action -', () => {
     it('sets state', () => {
       const authError = { some: 'error' }
       expect(
-        firebaseStateReducer(
+        firebaseReducer(
           {},
           { type: actionTypes.LOGIN_ERROR, authError }
         )
@@ -403,7 +500,7 @@ describe('reducer', () => {
   describe('AUTHENTICATION_INIT_STARTED action', () => {
     it('sets isInitializing to true', () => {
       action = { type: actionTypes.AUTHENTICATION_INIT_STARTED }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.have.property('isInitializing', true)
     })
   })
@@ -411,7 +508,7 @@ describe('reducer', () => {
   describe('AUTHENTICATION_INIT_FINISHED action', () => {
     it('sets isInitializing to false', () => {
       action = { type: actionTypes.AUTHENTICATION_INIT_FINISHED }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.have.property('isInitializing', false)
     })
   })
@@ -420,45 +517,49 @@ describe('reducer', () => {
     it('sets state', () => {
       const authError = { some: 'error' }
       action = { type: actionTypes.UNAUTHORIZED_ERROR, authError }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.deep.equal({ ...initialState, errors: [authError], authError })
     })
   })
 
-  describe('AUTH_UPDATE_SUCCESS action', () => {
-    it('sets state', () => {
-      const authUpdate = { email: 'newEmail' }
-      action = { type: actionTypes.AUTH_UPDATE_SUCCESS, auth: authUpdate }
-      expect(firebaseStateReducer({}, action))
-        .to.deep.equal({
-          ...noError,
-          auth: {
-            ...noError.auth,
-            ...authUpdate,
-            isEmpty: false,
-            isLoaded: true
-          },
-          authError: null
-        })
+  describe('AUTH_UPDATE_SUCCESS action -', () => {
+    describe('provided auth - ', () => {
+      it('sets auth.isLoaded: true', () => {
+        const authUpdate = { email: 'newEmail' }
+        action = { type: actionTypes.AUTH_UPDATE_SUCCESS, auth: authUpdate }
+        expect(firebaseReducer({}, action))
+          .to.have.deep.property('auth.isLoaded', true)
+      })
+
+      it('sets data to auth state', () => {
+        const authUpdate = { email: 'newEmail' }
+        action = { type: actionTypes.AUTH_UPDATE_SUCCESS, auth: authUpdate }
+        expect(firebaseReducer({}, action))
+          .to.have.deep.property('auth.email', authUpdate.email)
+      })
+
+      it('calls .toJSON() if it exists', () => {
+        const toJSON = sinon.spy(() => ({ email: 'test' }))
+        action = { type: actionTypes.AUTH_UPDATE_SUCCESS, auth: { toJSON } }
+        expect(firebaseReducer({}, action))
+          .to.have.deep.property('auth.email', 'test')
+        expect(toJSON).to.have.been.calledOnce
+      })
     })
-    it('handles undefined auth', () => {
-      action = { type: actionTypes.AUTH_UPDATE_SUCCESS }
-      expect(firebaseStateReducer({}, action))
-        .to.deep.equal({
-          ...noError,
-          auth: {
-            isEmpty: true,
-            isLoaded: true
-          },
-          authError: null
-        })
+
+    describe('provided no auth - ', () => {
+      it('sets auth.isEmpty: true', () => {
+        action = { type: actionTypes.AUTH_UPDATE_SUCCESS }
+        expect(firebaseReducer({ auth: { isEmpty: false } }, action))
+          .to.have.deep.property('auth.isEmpty', true)
+      })
     })
   })
 
   describe('SET_LISTENER action', () => {
     it('sets id to allIds in listeners state', () => {
       action = { type: actionTypes.SET_LISTENER, path: 'test', payload: { id: 'asdf' } }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.have.deep.property('listeners.allIds.0', 'asdf')
     })
 
@@ -466,7 +567,7 @@ describe('reducer', () => {
       const path = 'test'
       const id = 'asdf'
       action = { type: actionTypes.SET_LISTENER, path, payload: { id } }
-      expect(firebaseStateReducer({}, action))
+      expect(firebaseReducer({}, action))
         .to.have.deep.property(`listeners.byId.${id}.path`, path)
     })
   })
@@ -474,26 +575,26 @@ describe('reducer', () => {
   describe('CLEAR_ERRORS action', () => {
     it('clears errors', () => {
       action = { type: actionTypes.CLEAR_ERRORS }
-      expect(firebaseStateReducer({ errors: [{test: 'test'}] }, action).errors)
+      expect(firebaseReducer({ errors: [{test: 'test'}] }, action).errors)
         .to.have.a.lengthOf(0)
     })
 
     describe('preserve option', () => {
       it('passes through non object preserve parameters (backwards compatibility)', () => {
         action = { type: actionTypes.CLEAR_ERRORS, preserve: [] }
-        expect(firebaseStateReducer({ errors: [{test: 'test'}] }, action).errors)
+        expect(firebaseReducer({ errors: [{test: 'test'}] }, action).errors)
           .to.have.a.lengthOf(0)
       })
 
       it('supports perserving data through the perserve parameter', () => {
         action = { type: actionTypes.CLEAR_ERRORS, preserve: { errors: () => true } }
-        expect(firebaseStateReducer({ errors: [{test: 'test'}] }, action).errors)
+        expect(firebaseReducer({ errors: [{test: 'test'}] }, action).errors)
           .to.have.a.lengthOf(1)
       })
 
       it('throws for non function preserve values', () => {
         action = { type: actionTypes.CLEAR_ERRORS, preserve: { errors: true } }
-        expect(() => firebaseStateReducer({ errors: [{test: 'test'}] }, action))
+        expect(() => firebaseReducer({ errors: [{test: 'test'}] }, action))
           .to.Throw('Preserve for the errors state currently only supports functions')
       })
     })
@@ -507,7 +608,7 @@ describe('reducer', () => {
         listeners: { allIds: [id] }
       }
       action = { type: actionTypes.UNSET_LISTENER, path, payload: { id: 'asdf' } }
-      expect(firebaseStateReducer(initialData, action).listeners)
+      expect(firebaseReducer(initialData, action).listeners)
         .to.deep.equal({ allIds: [], byId: {} })
     })
 
@@ -518,7 +619,7 @@ describe('reducer', () => {
       initialData = {
         listeners: { byId: { [id]: { id, path } } }
       }
-      expect(firebaseStateReducer(initialData, action).listeners)
+      expect(firebaseReducer(initialData, action).listeners)
         .to.deep.equal({ allIds: [], byId: {} })
     })
   })

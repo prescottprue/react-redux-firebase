@@ -1,4 +1,3 @@
-import { v4 } from 'uuid'
 import {
   NOTIFICATION_SHOW,
   NOTIFICATION_DISMISS,
@@ -19,7 +18,7 @@ export const showNotification = notif => {
   const payload = Object.assign({}, notif)
   // Set default id to now if none provided
   if (!payload.id) {
-    payload.id = v4()
+    payload.id = Date.now()
   }
   return dispatch => {
     dispatch({ type: NOTIFICATION_SHOW, payload })
