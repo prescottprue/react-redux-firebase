@@ -25,6 +25,7 @@ connect(
     profile: state.firebase.profile // profile passed as props.profile
   })
 )(SomeComponent) // pass component to be wrapped
+
 // or with some shorthand:
 connect(({ firebase: { profile } }) => ({
   profile  // profile passed as props.profile
@@ -36,49 +37,45 @@ connect(({ firebase: { profile } }) => ({
 The current users profile can be updated by using the `updateProfile` method:
 
 ```js
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded } from 'react-redux-firebase'
+import { withFirebase, isLoaded } from 'react-redux-firebase'
 
-@firebaseConnect()
-@connect(
-  ({ firebase: { profile } }) => ({
-    profile,
-  })
+const UpdateProfilePage = ({ profile, firebase }) => (
+  <div>
+    <h2>Update User Profile</h2>
+    <span>
+      Click the button to update profile to include role parameter
+    </span>
+    <button onClick={() => firebase.updateProfile({ role: 'admin' })}>
+      Add Role To User
+    </button>
+    <div>
+      {
+        isLoaded(profile)
+          ? JSON.stringify(profile, null, 2)
+          : 'Loading...'
+      }
+    </div>
+  </div>
 )
-export default class UpdateProfilePage extends Component {
-  static propTypes = {
-    profile: PropTypes.object,
-  }
 
-  addRole = () => {
-    return this.props.updateProfile({ role: ''})
-  }
-
-  render() {
-    const { profile } = this.props
-    return (
-      <div>
-        <h2>Update User Profile</h2>
-        <span>
-          Click the button to update profile to include role parameter
-        </span>
-        <button onClick={this.addRole}>
-          Add Role To User
-        </button>
-        <div>
-          {
-            isLoaded(profile)
-              ? JSON.stringify(profile, null, 2)
-              : 'Loading...'
-          }
-        </div>
-      </div>
-    )
-  }
+UpdateProfilePage.propTypes = {
+ profile: PropTypes.object,
 }
+
+export default compose(
+  withFirebase, // firebaseConnect() can also be used
+  connect(
+    ({ firebase: { profile } }) => ({
+      profile,
+    })
+  )
+)(UpdateProfilePage)
 ```
+
 ## Change How Profiles Are Stored
 The way user profiles are written to the database can be modified by passing the `profileFactory` parameter .
 

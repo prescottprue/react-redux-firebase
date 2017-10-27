@@ -104,7 +104,7 @@ const Posts = ({ done, text, author }) => (
 export default enhance(Posts)
 ```
 
-_Data that depends on auth state_
+_Data that depends on state_
 
 ```javascript
 import { compose } from 'redux'
@@ -112,8 +112,8 @@ import { connect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 
 export default compose(
-  firebaseConnect((props, firebase) => ([
-    `todos/${firebase._.authUid}` // sync /todos from firebase into redux
+  firebaseConnect((props, state) => ([
+    `todos/${state.firebase.auth.uid}` // sync /todos from firebase into redux
   ]),
   connect(({ firebase: { data, auth } }) => ({
     todosList: data.todos && data.todos[auth.uid],
