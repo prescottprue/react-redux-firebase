@@ -26,29 +26,32 @@ export const createFirestoreConnect = (storeKey = 'store') =>
   (dataOrFn = []) =>
     WrappedComponent => {
       class FirestoreConnect extends Component {
-        prevData = null
-
+        static wrappedComponent = WrappedComponent
+        static displayName = wrapDisplayName(WrappedComponent, 'FirestoreConnect')
         static contextTypes = {
           [storeKey]: PropTypes.object.isRequired
         }
 
-        static wrappedComponent = WrappedComponent
-
-        static displayName = wrapDisplayName(WrappedComponent, 'FirestoreConnect')
+        prevData = null
+        store = this.context[storeKey]
 
         componentWillMount () {
-          const { firebase, firestore } = this.context[storeKey]
+          const { firebase, firestore } = this.store
           if (firebase.firestore && firestore) {
             // Allow function to be passed
             const inputAsFunc = createCallable(dataOrFn)
-            this.prevData = inputAsFunc(this.props, this.context[storeKey])
+            this.prevData = inputAsFunc(
+              this.props,
+              this.store.getState(),
+              firebase
+            )
 
             firestore.setListeners(this.prevData)
           }
         }
 
         componentWillUnmount () {
-          const { firebase, firestore } = this.context[storeKey]
+          const { firebase, firestore } = this.store
           if (firebase.firestore && this.prevData) {
             firestore.unsetListeners(this.prevData)
           }
@@ -73,7 +76,7 @@ export const createFirestoreConnect = (storeKey = 'store') =>
         // }
 
         render () {
-          const { firebase, firestore } = this.context[storeKey]
+          const { firebase, firestore } = this.store
           return (
             <WrappedComponent
               {...this.props}
