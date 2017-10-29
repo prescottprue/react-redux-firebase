@@ -26,29 +26,28 @@ export const createFirestoreConnect = (storeKey = 'store') =>
   (dataOrFn = []) =>
     WrappedComponent => {
       class FirestoreConnect extends Component {
-        prevData = null
-
+        static wrappedComponent = WrappedComponent
+        static displayName = wrapDisplayName(WrappedComponent, 'FirestoreConnect')
         static contextTypes = {
           [storeKey]: PropTypes.object.isRequired
         }
 
-        static wrappedComponent = WrappedComponent
-
-        static displayName = wrapDisplayName(WrappedComponent, 'FirestoreConnect')
+        prevData = null
+        store = this.context[storeKey]
 
         componentWillMount () {
-          const { firebase, firestore } = this.context[storeKey]
+          const { firebase, firestore } = this.store
           if (firebase.firestore && firestore) {
             // Allow function to be passed
             const inputAsFunc = createCallable(dataOrFn)
-            this.prevData = inputAsFunc(this.props, this.context[storeKey])
+            this.prevData = inputAsFunc(this.props, this.store)
 
             firestore.setListeners(this.prevData)
           }
         }
 
         componentWillUnmount () {
-          const { firebase, firestore } = this.context[storeKey]
+          const { firebase, firestore } = this.store
           if (firebase.firestore && this.prevData) {
             firestore.unsetListeners(this.prevData)
           }
@@ -73,7 +72,7 @@ export const createFirestoreConnect = (storeKey = 'store') =>
         // }
 
         render () {
-          const { firebase, firestore } = this.context[storeKey]
+          const { firebase, firestore } = this.store
           return (
             <WrappedComponent
               {...this.props}
@@ -93,16 +92,16 @@ export const createFirestoreConnect = (storeKey = 'store') =>
  * @extends React.Component
  * @description Higher Order Component that automatically listens/unListens
  * to provided Cloud Firestore paths using React's Lifecycle hooks. Make sure you
- * have required/imported Cloud Firestore before attempting to use. **Note** Populate
- * is not yet supported.
- * @param {Array} watchArray - Array of objects or strings for paths to sync from
- * Firebase. Can also be a function that returns the array. The function is passed
- * the current props and the firebase object.
+ * have required/imported Cloud Firestore, including it's reducer, before
+ * attempting to use. **Note** Populate is not yet supported.
+ * @param {Array} queriesConfig - Array of objects or strings for paths to sync
+ * from Firebase. Can also be a function that returns the array. The function
+ * is passed the current props and the firebase object.
  * @return {Function} - that accepts a component to wrap and returns the wrapped component
  * @example <caption>Basic</caption>
  * // this.props.firebase set on App component as firebase object with helpers
  * import { firestoreConnect } from 'react-redux-firebase'
- * export default firestoreConnect()(App)
+ * export default firestoreConnect()(SomeComponent)
  * @example <caption>Basic</caption>
  * import { connect } from 'react-redux'
  * import { firestoreConnect } from 'react-redux-firebase'
@@ -111,10 +110,10 @@ export const createFirestoreConnect = (storeKey = 'store') =>
  * export default compose(
  *   firestoreConnect(['todos']), // sync todos collection from Firestore into redux
  *   connect((state) => ({
- *     todosList: state.firebase.data.todos,
- *     profile: state.firebase.profile, // pass profile data as this.props.profile
- *     auth: state.firebase.auth // pass auth data as this.props.auth
+ *     todosList: state.firestore.data.todos,
+ *     profile: state.firestore.profile, // pass profile data as this.props.profile
+ *     auth: state.firestore.auth // pass auth data as this.props.auth
  *   })
- * )(fbWrapped)
+ * )(SomeComponent)
  */
 export default createFirestoreConnect()
