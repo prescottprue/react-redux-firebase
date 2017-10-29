@@ -16,6 +16,18 @@ const initialState = {
   requested: {}
 }
 
+const testData = {
+  level0: {
+    level1_item0: {
+      level2_item0: {
+        level3_item0: {
+          level4_item0: 'test'
+        }
+      }
+    },
+    level1_item1: 'test'
+  }
+}
 const noError = { ...initialState, errors: [], authError: null }
 const exampleData = { some: 'data' }
 const externalState = { data: { asdfasdf: {} } }
@@ -397,25 +409,29 @@ describe('reducer', () => {
   })
 
   describe('REMOVE action -', () => {
-    it('sets data state to undefined', () => {
-      const path = 'test'
+    it('removes property from state', () => {
+      const path = 'level0'
       action = { type: actionTypes.REMOVE, path }
-      expect(firebaseReducer({}, action))
-        .to.deep.equal({
-          ...initialState,
-          data: { [path]: undefined },
-          ordered: { [path]: undefined }
-        })
+      const afterState = firebaseReducer({...initialState, data: testData}, action)
+      expect(afterState).to.not.have.deep.property('data.level0')
     })
-    it('sets ordered state to undefined', () => {
-      const path = 'test'
+    it('removes parent properties from state if parent property is empty', () => {
+      const path = 'level0/level1_item0/level2_item0/level3_item0'
       action = { type: actionTypes.REMOVE, path }
-      expect(firebaseReducer({}, action))
-        .to.deep.equal({
-          ...initialState,
-          data: { [path]: undefined },
-          ordered: { [path]: undefined }
-        })
+      const afterState = firebaseReducer({...initialState, data: testData}, action)
+      expect(afterState).to.not.have.deep.property('data.level0.level1_item0.level2_item0')
+    })
+    it('does not remove parent property from state if parent has other children', () => {
+      const path = 'level0/level1_item0'
+      action = { type: actionTypes.REMOVE, path }
+      const afterState = firebaseReducer({...initialState, data: testData}, action)
+      expect(afterState).to.have.deep.property('data.level0.level1_item1')
+    })
+    it('ordered state is untouched', () => {
+      const path = 'level0/level1_item0/level2_item0/level3_item0'
+      action = { type: actionTypes.REMOVE, path }
+      const afterState = firebaseReducer({...initialState, data: testData, ordered: testData}, action)
+      expect(afterState.ordered).to.deep.equal(testData)
     })
   })
 
