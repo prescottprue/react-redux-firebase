@@ -30,7 +30,7 @@ export default compose(
   firebaseConnect(({ auth }) => ([ // auth comes from props
     {
       path: 'todos',
-      queryParams: ['orderByChild=uid', `equalTo=${auth}`]
+      queryParams: ['orderByChild=uid', `equalTo=${auth.uid}`]
     }
   ])),
   connect(({ firebase: { ordered } }) => ({

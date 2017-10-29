@@ -1,6 +1,6 @@
 import { actionTypes } from './constants'
-import { pick, omit, get, isArray, isObject } from 'lodash'
-import { setWith, assign } from 'lodash/fp'
+import { pick, omit, get, isArray, isObject, replace, size } from 'lodash'
+import { setWith, assign, unset } from 'lodash/fp'
 
 const {
   START,
@@ -46,6 +46,30 @@ const getSlashStrPath = path => pathToArr(path).join('/')
  * @private
  */
 export const getDotStrPath = path => pathToArr(path).join('.')
+
+/**
+ * Recursively unset a property starting at the deep path, and unsetting the parent
+ * property if there are no other enumerable properties at that level.
+ * @param  {String} path - Deep dot path of the property to unset
+ * @param {Boolean} [isRecursiveCall=false] - Used internally to ensure that
+ * the object size check is only performed after one iteration.
+ * @return {Object} The object with the property deeply unset
+ * @private
+ */
+export const recursiveUnset = (path, obj, isRecursiveCall = false) => {
+  if (!path) {
+    return obj
+  }
+
+  if (size(get(obj, path)) > 0 && isRecursiveCall) {
+    return obj
+  }
+  // The object does not have any other properties at this level.  Remove the
+  // property.
+  const objectWithRemovedKey = unset(path, obj)
+  const newPath = path.match(/\./) ? replace(path, /\.[^.]*$/, '') : ''
+  return recursiveUnset(newPath, objectWithRemovedKey, true)
+}
 
 /**
  * Combine reducers utility (abreveated version of redux's combineReducer).
@@ -185,7 +209,10 @@ const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
     case NO_VALUE:
       return setWith(Object, getDotStrPath(action.path), null, state)
     case REMOVE:
-      return setWith(Object, getDotStrPath(action.path), undefined, state)
+      if (actionKey === 'data') {
+        return recursiveUnset(getDotStrPath(action.path), state)
+      }
+      return state
     case LOGOUT:
       // support keeping data when logging out - #125
       if (action.preserve) {

@@ -152,8 +152,9 @@ export const actionTypes = {
  * dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
  * Setting this to true allows an action to be called that removes data
  * from redux (which might not always be expected).
- * @property {Boolean} dispatchRemoveAction - `true` Whether or not to
- * dispatch REMOVE action when calling `remove`.
+ * @property {Boolean} dispatchRemoveAction - `false` Whether or not to
+ * dispatch REMOVE action when calling `remove`. **NOTE** Causes two state
+ * updates if a listener is affected by your remove call.
  * @property {String} firebaseStateName - 'firebase' Assumed name of Firebase
  * state (name given when passing reducer to combineReducers). Used in
  * firebaseAuthIsReady promise (see
@@ -179,7 +180,7 @@ export const defaultConfig = {
   autoPopulateProfile: false,
   setProfilePopulateResults: false,
   dispatchOnUnsetListener: true,
-  dispatchRemoveAction: true,
+  dispatchRemoveAction: false,
   enableEmptyAuthChanges: true,
   firebaseStateName: 'firebase',
   attachAuthIsReady: false

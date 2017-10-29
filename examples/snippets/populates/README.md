@@ -21,8 +21,8 @@ This example shows using data from redux state to be used in queries. A good exa
 
   ```js
   connect(
-    ({firebase}) => ({
-      projects: populatedDataToJS(firebase, 'projects', populates),
+    ({ firebase }) => ({
+      projects: populate(firebase, 'projects', populates),
     })
   )
   ```

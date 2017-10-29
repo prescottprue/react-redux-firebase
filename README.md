@@ -199,6 +199,30 @@ export default compose(
 )(Todos)
 ```
 
+**Queries Based On State**
+`Todos` component from above examples
+
+```jsx
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { firebaseConnect } from 'react-redux-firebase'
+
+export default compose(
+  firebaseConnect((props, store) => {
+    const state = store.getState();
+    // Get Todos stored by user UID
+    return state.auth ? [`todos/${state.auth.uid}`] : []
+  }),
+  connect(
+    (state) => ({
+      todos: state.firebase.data.todos,
+      // profile: state.firebase.profile // load profile
+    })
+  )
+)(Todos)
+```
 
 ## [Docs](http://react-redux-firebase.com)
 See full documentation at [react-redux-firebase.com](http://react-redux-firebase.com)

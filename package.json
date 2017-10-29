@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "2.0.0-beta.13",
+  "version": "2.0.0-beta.14",
   "description": "Redux integration for Firebase. Comes with a Higher Order Components for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -56,6 +56,12 @@
     "redux-react-firebase"
   ],
   "dependencies": {
+    "gitbook-plugin-anchorjs": "^1.1.1",
+    "gitbook-plugin-edit-link": "^2.0.2",
+    "gitbook-plugin-ga": "^1.0.1",
+    "gitbook-plugin-github": "^2.0.0",
+    "gitbook-plugin-prism": "^2.3.0",
+    "gitbook-plugin-versions-select": "^0.1.1",
     "hoist-non-react-statics": "^2.3.1",
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10",

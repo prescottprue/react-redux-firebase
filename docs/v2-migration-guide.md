@@ -12,6 +12,7 @@
   * allows [`react-native-firebase`](https://github.com/invertase/react-native-firebase) to be passed (for using native modules instead of JS within `react-native`)
   * firebase is no longer a dependency (shrinks umd bundle size)
 * Auth state works differently - `{ isLoaded: false, isEmpty: false }` is the initialState instead of `undefined` - means updates to routing HOCs and other code using auth state (see [Routing Section below](#routing))
+* `firebaseConnect` now passes `state` as second argument if function is passed. `store.firebase` is now third argument instead of second (see [state based query secont](#stateBasedQueries) below)
 * `profileParamsToPopulate` does not automatically populate profile, populated version can be loaded with `populate` (there will most likely be an option to enable auto populating before `v2.0.0` is out of pre-release)
 * Firestore is supported (setup shown below)
 * `LOGOUT` is no longer dispatched on empty auth state changes (`enableEmptyAuthChanges: true` can be passed to dispatch `AUTH_EMPTY_CHANGE` action in its place)
@@ -290,9 +291,67 @@ const enhance = compose(
 export default enhance(SomeComponent)
 ```
 
+### State Based Queries {#stateBasedQueries}
+
+`store` is now the second argument instead of `firebaseInstance` (`store.firebase`). That means that anything in state can be accessed using `store.getState`. This can help simplify state based queries:
+
+**`v1.*.*`**
+
+```js
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import {
+  firebaseConnect,
+  populatedDataToJS,
+  pathToJS
+} from 'react-redux-firebase';
+
+const populates = [{ child: 'owner', root: 'users' }]
+
+const enhance = compose(
+  connect(
+    (state) => ({
+      auth: pathToJS(state.firebase, 'auth')
+    })
+  )
+  firebaseConnect(
+    (props, firebaseInstance) => [
+      { path: `todos/${props.auth.uid}` }
+    ]
+  ),
+  connect(
+    (state, props) => ({
+      todos: dataToJS(state.firebase, `todos/${props.auth.uid}`)
+    })
+  )
+)
+```
+
+**`v2.*.*`**
+
+
+```js
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseConnect } from 'react-redux-firebase';
+
+const enhance = compose(
+  firebaseConnect(
+    (props, store) => [
+      { path: `todos/${store.getState().firebase.auth.uid}` }
+    ]
+  ),
+  connect(
+    ({ firebase: { data, auth } }) => ({
+      todos: data.todos && data.todos[auth.uid]
+    })
+  )
+)
+```
+
 ### Empty Auth {#emptyAuth}
 
-`enableEmptyAuthChanges`, which was created for [https://github.com/prescottprue/react-redux-firebase/issues/137]() no longer exists. It has been replaced by `preserveOnEmptyAuthChange` so that an action is still dispatched, and configuration can control what is preserved:
+`enableEmptyAuthChanges`, which was created for [#137](https://github.com/prescottprue/react-redux-firebase/issues/137) no longer exists. It has been replaced by `preserveOnEmptyAuthChange` so that an action is still dispatched, and configuration can control what is preserved:
 
 **`v1.*.*`**
 

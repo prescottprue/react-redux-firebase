@@ -105,15 +105,17 @@ describe('Actions: Query', () => {
       expect(removeSpy).to.have.been.calledOnce
     })
 
-    it('dispatches REMOVE action by default', async () => {
+    it('dispatches REMOVE action if dispatchRemoveAction: true', async () => {
       const path = 'test'
       const dispatchSpy = sinon.spy()
+      firebase._.config.dispatchRemoveAction = true
       await remove(firebase, dispatchSpy, path)
       expect(dispatchSpy).to.have.been.calledOnce
       expect(dispatchSpy).to.have.been.calledWith({
         type: actionTypes.REMOVE,
         path
       })
+      firebase._.config.dispatchRemoveAction = false
     })
 
     it.skip('calls onComplete if provided', async () => {
