@@ -352,7 +352,7 @@ const enhance = compose(
 
 ### Empty Auth {#emptyAuth}
 
-`enableEmptyAuthChanges`, which was created for [https://github.com/prescottprue/react-redux-firebase/issues/137]() no longer exists. It has been replaced by `preserveOnEmptyAuthChange` so that an action is still dispatched, and configuration can control what is preserved:
+`enableEmptyAuthChanges`, which was created for [#137](https://github.com/prescottprue/react-redux-firebase/issues/137) no longer exists. It has been replaced by `preserveOnEmptyAuthChange` so that an action is still dispatched, and configuration can control what is preserved:
 
 **`v1.*.*`**
 
