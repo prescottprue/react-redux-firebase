@@ -1,6 +1,6 @@
 import { actionTypes } from './constants'
 import { pick, omit, get, isArray, isObject } from 'lodash'
-import { setWith, assign } from 'lodash/fp'
+import { setWith, assign, unset } from 'lodash/fp'
 
 const {
   START,
@@ -185,7 +185,7 @@ const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
     case NO_VALUE:
       return setWith(Object, getDotStrPath(action.path), null, state)
     case REMOVE:
-      return setWith(Object, getDotStrPath(action.path), undefined, state)
+      return unset(getDotStrPath(action.path), state)
     case LOGOUT:
       // support keeping data when logging out - #125
       if (action.preserve) {
