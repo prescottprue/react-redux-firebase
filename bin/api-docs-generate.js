@@ -9,6 +9,14 @@ const files = [
     dest: 'firestoreConnect.md'
   },
   {
+    src: 'withFirebase.js',
+    dest: 'withFirebase.md'
+  },
+  {
+    src: 'withFirestore.js',
+    dest: 'withFirestore.md'
+  },
+  {
     src: 'createFirebaseInstance.js',
     dest: 'firebaseInstance.md'
   },

@@ -114,6 +114,12 @@ export const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) 
         })
       }
     })
+    .catch((err) => {
+      // Error retrieving data for population onto profile.
+      dispatch({ type: actionTypes.UNAUTHORIZED_ERROR, authError: `Error during profile population: ${err.message}` })
+      // Update profile with un-populated version
+      dispatch({ type: actionTypes.SET_PROFILE, profile })
+    })
   }
 }
 

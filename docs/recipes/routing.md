@@ -71,7 +71,7 @@ export const UserIsAuthenticated = UserAuthWrapper({
       type: 'UNAUTHED_REDIRECT',
       payload: { message: 'You must be authenticated.' },
     })
-  },
+  }
 })
 ```
 
@@ -85,29 +85,36 @@ import LoadingScreen from '../components/LoadingScreen'; // change it to your cu
 const locationHelper = locationHelperBuilder({});
 
 export const UserIsAuthenticated = connectedRouterRedirect({
+  wrapperDisplayName: 'UserIsAuthenticated',
+  AuthenticatingComponent: LoadingScreen,
+  allowRedirectBack: true,
   redirectPath: (state, ownProps) =>
     locationHelper.getRedirectQueryParam(ownProps) || '/login',
-  allowRedirectBack: true,
+  authenticatingSelector: ({ firebase: { auth, profile, isInitializing } }) =>
+    !auth.isLoaded || isInitializing === true,
   authenticatedSelector: ({ firebase: { auth } }) =>
-    auth && auth.isLoaded && !auth.isEmpty,
-  authenticatingSelector: ({ firebase: { auth } }) =>
-    auth === undefined || !auth.isLoaded,
-  AuthenticatingComponent: Loading,
-  wrapperDisplayName: 'UserIsAuthenticated',
-  redirectAction: routerActions.replace, // can be same as v1
-})
+    auth.isLoaded && !auth.isEmpty,
+  redirectAction: newLoc => (dispatch) => {
+    browserHistory.replace(newLoc); // or routerActions.replace
+    dispatch({ type: 'UNAUTHED_REDIRECT' });
+  },
+});
 
 export const UserIsNotAuthenticated = connectedRouterRedirect({
+  wrapperDisplayName: 'UserIsNotAuthenticated',
+  AuthenticatingComponent: LoadingScreen,
+  allowRedirectBack: false,
   redirectPath: (state, ownProps) =>
     locationHelper.getRedirectQueryParam(ownProps) || '/',
-  allowRedirectBack: false,
+  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+    !auth.isLoaded || isInitializing === true,
   authenticatedSelector: ({ firebase: { auth } }) =>
-    auth && auth.isLoaded && auth.isEmpty,
-  authenticatingSelector: ({ firebase: { auth } }) =>
-    auth === undefined || !auth.isLoaded,
-  wrapperDisplayName: 'UserIsNotAuthenticated',
-  redirectAction: routerActions.replace, // can be same as v1
-})
+    auth.isLoaded && auth.isEmpty,
+  redirectAction: newLoc => (dispatch) => {
+    browserHistory.replace(newLoc); // or routerActions.replace
+    dispatch({ type: 'UNAUTHED_REDIRECT' });
+  },
+});
 ```
 
 

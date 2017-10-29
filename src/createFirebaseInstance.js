@@ -151,7 +151,10 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     withMeta('update', path, value, onComplete)
 
   /**
-   * @description Removes data from Firebase at a given path.
+   * @description Removes data from Firebase at a given path. **NOTE** A
+   * seperate action is not dispatched unless `dispatchRemoveAction: true` is
+   * provided to config on store creation. That means that a listener must
+   * be attached in order for state to be updated when calling remove.
    * @param {String} path - Path to location on Firebase which to remove
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @return {Promise} Containing reference snapshot

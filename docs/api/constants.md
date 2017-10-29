@@ -126,8 +126,9 @@ Default configuration options
     dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
     Setting this to true allows an action to be called that removes data
     from redux (which might not always be expected).
--   `dispatchRemoveAction` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to
-    dispatch REMOVE action when calling `remove`.
+-   `dispatchRemoveAction` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not to
+    dispatch REMOVE action when calling `remove`. **NOTE** Causes two state
+    updates if a listener is affected by your remove call.
 -   `firebaseStateName` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 'firebase' Assumed name of Firebase
     state (name given when passing reducer to combineReducers). Used in
     firebaseAuthIsReady promise (see
