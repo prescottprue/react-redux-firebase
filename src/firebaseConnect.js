@@ -44,11 +44,7 @@ export const createFirebaseConnect = (storeKey = 'store') =>
 
           // Allow function to be passed
           const inputAsFunc = createCallable(dataOrFn)
-          this.prevData = inputAsFunc(
-            this.props,
-            this.store.getState(),
-            firebase
-          )
+          this.prevData = inputAsFunc(this.props, this.store)
 
           const { ref, helpers, storage, database, auth } = firebase
           this.firebase = { ref, storage, database, auth, ...helpers }
@@ -59,12 +55,12 @@ export const createFirebaseConnect = (storeKey = 'store') =>
         }
 
         componentWillUnmount () {
-          const { firebase, dispatch } = this.context.store
+          const { firebase, dispatch } = this.store
           unWatchEvents(firebase, dispatch, this._firebaseEvents)
         }
 
         componentWillReceiveProps (np) {
-          const { firebase, dispatch } = this.context.store
+          const { firebase, dispatch } = this.store
           const inputAsFunc = createCallable(dataOrFn)
           const data = inputAsFunc(np, firebase)
 
@@ -150,11 +146,11 @@ export const createFirebaseConnect = (storeKey = 'store') =>
  * @example <caption>Data that depends on state</caption>
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import { firebaseConnect } from 'react-redux-firebase'
+ * import { firebaseConnect, get } from 'react-redux-firebase'
  *
  * export default compose(
- *   firebaseConnect((props, state) => ([
- *     `todos/${state.firebase.auth.uid}` // sync /todos from firebase into redux
+ *   firebaseConnect((props, store) => ([
+ *     `todos/${store.getState().firebase.auth.uid}`
  *   ]),
  *   connect(({ firebase: { data, auth } }) => ({
  *     todosList: data.todos && data.todos[auth.uid],

@@ -338,8 +338,8 @@ import { firebaseConnect } from 'react-redux-firebase';
 
 const enhance = compose(
   firebaseConnect(
-    (props, state, firebaseInstance) => [
-      { path: `todos/${state.firebase.auth.uid}` }
+    (props, store) => [
+      { path: `todos/${store.getState().firebase.auth.uid}` }
     ]
   ),
   connect(
