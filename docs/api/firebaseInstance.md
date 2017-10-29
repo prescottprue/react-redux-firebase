@@ -160,7 +160,10 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 ## remove
 
-Removes data from Firebase at a given path.
+Removes data from Firebase at a given path. **NOTE** A
+seperate action is not dispatched unless `dispatchRemoveAction: true` is
+provided to config on store creation. That means that a listener must
+be attached in order for state to be updated when calling remove.
 
 **Parameters**
 

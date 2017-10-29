@@ -112,8 +112,8 @@ import { connect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 
 export default compose(
-  firebaseConnect((props, state) => ([
-    `todos/${state.firebase.auth.uid}` // sync /todos from firebase into redux
+  firebaseConnect((props, store) => ([
+    `todos/${store.getState().firebase.auth.uid}`
   ]),
   connect(({ firebase: { data, auth } }) => ({
     todosList: data.todos && data.todos[auth.uid],

@@ -146,7 +146,7 @@ export const createFirebaseConnect = (storeKey = 'store') =>
  * @example <caption>Data that depends on state</caption>
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, get } from 'react-redux-firebase'
+ * import { firebaseConnect } from 'react-redux-firebase'
  *
  * export default compose(
  *   firebaseConnect((props, store) => ([

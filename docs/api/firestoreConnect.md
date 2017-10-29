@@ -39,14 +39,14 @@ Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Ref
 
 Higher Order Component that automatically listens/unListens
 to provided Cloud Firestore paths using React's Lifecycle hooks. Make sure you
-have required/imported Cloud Firestore before attempting to use. **Note** Populate
-is not yet supported.
+have required/imported Cloud Firestore, including it's reducer, before
+attempting to use. **Note** Populate is not yet supported.
 
 **Parameters**
 
--   `watchArray` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync from
-    Firebase. Can also be a function that returns the array. The function is passed
-    the current props and the firebase object.
+-   `queriesConfig` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
+    from Firebase. Can also be a function that returns the array. The function
+    is passed the current props and the firebase object.
 
 **Examples**
 
@@ -55,7 +55,7 @@ _Basic_
 ```javascript
 // this.props.firebase set on App component as firebase object with helpers
 import { firestoreConnect } from 'react-redux-firebase'
-export default firestoreConnect()(App)
+export default firestoreConnect()(SomeComponent)
 ```
 
 _Basic_
@@ -68,11 +68,11 @@ import { firestoreConnect } from 'react-redux-firebase'
 export default compose(
   firestoreConnect(['todos']), // sync todos collection from Firestore into redux
   connect((state) => ({
-    todosList: state.firebase.data.todos,
-    profile: state.firebase.profile, // pass profile data as this.props.profile
-    auth: state.firebase.auth // pass auth data as this.props.auth
+    todosList: state.firestore.data.todos,
+    profile: state.firestore.profile, // pass profile data as this.props.profile
+    auth: state.firestore.auth // pass auth data as this.props.auth
   })
-)(fbWrapped)
+)(SomeComponent)
 ```
 
 Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the wrapped component
