@@ -112,9 +112,8 @@ export default (instance, otherConfig) => next =>
  * @example <caption>redux-thunk integration</caption>
  * import { applyMiddleware, compose, createStore } from 'redux';
  * import thunk from 'redux-thunk';
- * import { reactReduxFirebase } from 'react-redux-firebase';
  * import makeRootReducer from './reducers';
- * import { getFirebase } from 'react-redux-firebase';
+ * import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
  *
  * const fbConfig = {} // your firebase config
  *

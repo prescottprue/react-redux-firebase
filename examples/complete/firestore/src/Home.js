@@ -55,7 +55,7 @@ Home.propTypes = {
 }
 
 export default compose(
-  firestoreConnect(['todos']),
+  firestoreConnect([{ collection: 'todos', where: ['done', '==', false] }]),
   connect(
     ({ firestore }) => ({
       todos: firestore.ordered.todos,
