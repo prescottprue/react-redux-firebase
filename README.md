@@ -71,7 +71,7 @@ const createStoreWithFirebase = compose(
 
 // Add Firebase to reducers
 const rootReducer = combineReducers({
-  firebase: firebaseStateReducer,
+  firebase: firebaseReducer,
   // firestore: firestoreReducer // <- needed if using firestore
 })
 
