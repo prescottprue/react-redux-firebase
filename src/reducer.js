@@ -323,6 +323,11 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
         isEmpty: false,
         isLoaded: true
       }
+    case UNLOAD_PROFILE:
+      return {
+        isEmpty: true,
+        isLoaded: false
+      }
     case LOGOUT:
     case AUTH_EMPTY_CHANGE:
       // Support keeping data when logging out
