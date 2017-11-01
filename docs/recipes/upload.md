@@ -20,8 +20,8 @@ const filesPath = 'uploadedFiles'
   filesPath
 ])
 @connect(
-  ({ firebase }) => ({
-    uploadedFiles: firebase[filesPath]
+  ({ firebase: { data}) => ({
+    uploadedFiles: data[filesPath]
   })
 )
 export default class Uploader extends Component {
