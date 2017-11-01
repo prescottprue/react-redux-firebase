@@ -36,6 +36,7 @@ export default (initialState = {}) => {
 
   // Initialize Firebase instance and Firestore (optional)
   firebase.initializeApp(fbConfig)
+  firebase.database.enableLogging(true)
   // firebase.firestore()
 
   // ======================================================

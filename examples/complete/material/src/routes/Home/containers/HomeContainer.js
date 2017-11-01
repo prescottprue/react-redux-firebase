@@ -15,7 +15,15 @@ const withTodos = compose(
   withNotifications, // adds props.showError from notfication module
   firebaseConnect([
     // Create Firebase query for for last 20 todos
-    { path: 'todos', queryParams: ['orderByKey', 'limitToLast=20'] }
+    {
+      path: 'todos',
+      queryParams: ['orderByKey', 'limitToLast=20']
+    },
+    {
+      path: 'todos',
+      queryParams: ['orderByKey', 'limitToLast=20'],
+      storeAs: 'myTodos'
+    }
   ]),
   // firestoreConnect([{ collection: 'todos' }]) // get data from firestore
   connect(({ firebase, firebase: { auth } }) => ({

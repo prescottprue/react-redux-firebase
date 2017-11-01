@@ -51,6 +51,23 @@ export const getQueryIdFromPath = (path, event = undefined) => {
 
 /**
  * @private
+ * @description Get query id from query path
+ * @param {Object} queryObj - Path from which to get query id
+ */
+export const addQueryIdToObject = (queryObj) => {
+  const { type = 'value' } = queryObj
+  if (queryObj.queryId) {
+    return { type, ...queryObj }
+  }
+  const { path, queryParams, storeAs } = queryObj
+  const queryId = queryParams && queryParams.length > 0
+    ? `${type}${storeAs ? `@${storeAs}` : ''}:/${queryParams.join('&')}`
+    : `${path}${storeAs ? `@${storeAs}` : ''}`
+  return { queryId, type, ...queryObj }
+}
+
+/**
+ * @private
  * @description Update the number of watchers for a query
  * @param {Object} firebase - Internal firebase object
  * @param {String} event - Type of event to watch for
