@@ -268,10 +268,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @param {String} options.queryId - id of the query
    * @return {Promise}
    */
-  const watchEvent = (type, path, storeAs, options = {}) => {
-    console.log('type:', { type, path, storeAs, options });
-    return queryActions.watchEvent(firebase, dispatch, { type, path, storeAs, ...options })
-  }
+  const watchEvent = (type, path, storeAs, options = {}) =>
+    queryActions.watchEvent(firebase, dispatch, { type, path, storeAs, ...options })
 
   /**
    * @description Unset a listener watch event. **Note:** this method is used

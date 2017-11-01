@@ -6,6 +6,7 @@ const {
   START,
   SET,
   SET_PROFILE,
+  UNLOAD_PROFILE,
   MERGE,
   LOGIN,
   LOGOUT,
