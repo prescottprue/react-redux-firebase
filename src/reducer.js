@@ -319,7 +319,6 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
         }
       }
       return {
-        ...state,
         ...action.profile,
         isEmpty: false,
         isLoaded: true
