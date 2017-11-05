@@ -27,6 +27,7 @@
 -   [updateEmail](#updateemail)
 -   [reloadAuth](#reloadauth)
 -   [linkWithCredential](#linkwithcredential)
+-   [signInWithPhoneNumber](#signinwithphonenumber)
 -   [ref](#ref)
 -   [database](#database)
 -   [storage](#storage)
@@ -430,6 +431,19 @@ Links the user account with the given credentials.
 **Parameters**
 
 -   `credential` **firebase.auth.AuthCredential** The auth credential
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+## signInWithPhoneNumber
+
+Asynchronously signs in using a phone number. This method
+sends a code via SMS to the given phone number, and returns a modified
+firebase.auth.ConfirmationResult. The `confirm` method
+authenticates and does profile handling.
+
+**Parameters**
+
+-   `credential` **firebase.auth.ConfirmationResult** The auth credential
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 

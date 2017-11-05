@@ -1,10 +1,10 @@
 import { isObject } from 'lodash'
 import { getEventsFromInput, createCallable } from './utils'
+import { mapWithFirebaseAndDispatch } from './utils/actions'
 import {
   authActions,
   queryActions,
-  storageActions,
-  mapWithFirebaseAndDispatch
+  storageActions
 } from './actions'
 
 /**

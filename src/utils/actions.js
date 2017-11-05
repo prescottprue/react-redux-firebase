@@ -1,4 +1,4 @@
-import { isObject, isFunction, mapValues } from 'lodash'
+import { isObject, mapValues } from 'lodash'
 
 /**
  * @description Wrap method call in dispatched actions
@@ -9,23 +9,21 @@ import { isObject, isFunction, mapValues } from 'lodash'
  * @param {Array} opts.types - Action types array ([BEFORE, SUCCESS, FAILURE])
  * @private
  */
-export const wrapInDispatch = (dispatch, { ref, meta, method, args, types }) => {
+export const wrapInDispatch = (dispatch, { ref, meta, method, args = [], types }) => {
   const [requestingType, successType, errorType] = types
   dispatch({
     type: isObject(requestingType) ? requestingType.type : requestingType,
     meta,
     payload: isObject(requestingType) ? requestingType.payload : { args }
   })
-  const methodPromise = args && args.length ? ref[method](...args) : ref[method]()
-  return methodPromise
-    .then((val) => {
-      const makePayload = ({ payload }) => isFunction(payload) ? payload(val) : payload
+  return method(...args)
+    .then((payload) => {
       dispatch({
         type: isObject(successType) ? successType.type : successType,
         meta,
-        payload: isObject(successType) ? makePayload(successType) : { args }
+        payload: isObject(successType) ? successType.payload : payload
       })
-      return val
+      return payload
     })
     .catch((err) => {
       dispatch({
@@ -55,7 +53,7 @@ const createWithFirebaseAndDispatch = (firebase, dispatch) => func => (...args) 
  * @param  {Object} actions - Action functions to map with firebase and dispatch
  * @return {Object} Actions mapped with firebase and dispatch
  */
-export const mapWithFirebaseAndDispatch = (firebase, dispatch, actions, aliases) => {
+export const mapWithFirebaseAndDispatch = (firebase, dispatch, actions, aliases = []) => {
   const withFirebaseAndDispatch = createWithFirebaseAndDispatch(firebase, dispatch)
   return {
     ...mapValues(actions, withFirebaseAndDispatch),
