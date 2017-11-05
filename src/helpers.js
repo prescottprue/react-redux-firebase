@@ -288,7 +288,7 @@ export const populate = (state, path, populates, notSetValue) => {
       // Data is a single object, resolve populates directly
       const populatedValue = populatesForData
         .map(p => populateChild(state, data, p))
-        .reduce((acc, v) => defaultsDeep(acc, v), data)
+        .reduce((acc, v) => defaultsDeep(v, acc), data)
 
       return populatedValue
     }
@@ -308,7 +308,7 @@ export const populate = (state, path, populates, notSetValue) => {
       return data.map(({key, value: dataValue}) => {
         const populatedValue = populatesForData
           .map(p => populateChild(state, dataValue, p))
-          .reduce((acc, v) => defaultsDeep(acc, v), dataValue)
+          .reduce((acc, v) => defaultsDeep(v, acc), dataValue)
 
         return {
           key,
