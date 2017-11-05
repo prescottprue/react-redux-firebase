@@ -5,9 +5,10 @@ Redux persist is supported out of the box as of `v2.0.0`. That means you no long
 ```js
 import { applyMiddleware, compose, createStore } from 'redux'
 import { browserHistory } from 'react-router'
+import firebase from 'firebase'
 import { reactReduxFirebase } from 'react-redux-firebase'
 import { persistStore, autoRehydrate } from 'redux-persist'
-import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
+import { reduxFirebase as reduxConfig } from '../config'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
 
@@ -28,6 +29,8 @@ export default (initialState = {}, history) => {
     }
   }
 
+  firebase.initializeApp(firebaseConfig)
+
   // ======================================================
   // Store Instantiation
   // ======================================================
@@ -35,7 +38,7 @@ export default (initialState = {}, history) => {
     makeRootReducer(),
     initialState,
     compose(
-      reactReduxFirebase(fbConfig, reduxConfig),
+      reactReduxFirebase(firebase, reduxConfig),
       applyMiddleware(...middleware),
       autoRehydrate(),
       ...enhancers
