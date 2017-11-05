@@ -12,6 +12,7 @@ import {
   isString,
   compact,
   some,
+  isArray,
   isFunction
 } from 'lodash'
 import { topLevelPaths } from './constants'
@@ -276,17 +277,51 @@ export const populate = (state, path, populates, notSetValue) => {
       ? populates(last(pathArr), data)
       : populates
   )
-  // check each populate child parameter for existence
-  const dataHasPopluateChilds = every(populatesForData, p => has(data, p.child))
-  if (dataHasPopluateChilds) {
-    // Data is a single object, resolve populates directly
-    return reduce(
-      map(populatesForData, (p, obj) => populateChild(state, data, p)),
-      // combine data from all populates to one object starting with original data
-      (obj, v) => defaultsDeep(v, obj),
-      // accumulator starts as original data
-      data
+
+  if (!isArray(data)) {
+    // check each populate child parameter for existence
+    const dataHasPopulateChilds = every(populatesForData, p =>
+      has(data, p.child)
     )
+
+    if (dataHasPopulateChilds) {
+      // Data is a single object, resolve populates directly
+      return reduce(
+        map(populatesForData, (p, obj) => populateChild(state, data, p)),
+        // combine data from all populates to one object starting with original data
+        (obj, v) => defaultsDeep(v, obj),
+        // accumulator starts as original data
+        data
+      )
+    }
+  } else {
+    // when using a path in ordered, data will be an array instead of an object
+    // and data is located at the `value` prop
+
+    const someArrayItemHasKey = array => key => some(array, item => {
+      return has(item, key)
+    })
+
+    const dataHasPopulateChilds = every(populatesForData, p =>
+      someArrayItemHasKey(data)(['value', p.child])
+    )
+
+    if (dataHasPopulateChilds) {
+      return data.map(item => {
+        const itemValue = item.value
+
+        const populatedPartials = map(populatesForData, p => {
+          return populateChild(state, itemValue, p)
+        })
+
+        const newValue = populatedPartials.reduce((v, acc) => defaultsDeep(acc, v), itemValue)
+
+        return {
+          key: item.key,
+          value: newValue
+        }
+      })
+    }
   }
 
   // TODO: Improve this logic
