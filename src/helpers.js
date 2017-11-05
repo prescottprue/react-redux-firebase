@@ -286,16 +286,14 @@ export const populate = (state, path, populates, notSetValue) => {
 
     if (dataHasPopulateChilds) {
       // Data is a single object, resolve populates directly
-      return reduce(
-        map(populatesForData, (p, obj) => populateChild(state, data, p)),
-        // combine data from all populates to one object starting with original data
-        (obj, v) => defaultsDeep(v, obj),
-        // accumulator starts as original data
-        data
-      )
+      const populatedValue = populatesForData
+        .map(p => populateChild(state, data, p))
+        .reduce((acc, v) => defaultsDeep(acc, v), data)
+
+      return populatedValue
     }
   } else {
-    // when using a path in ordered, data will be an array instead of an object
+    // When using a path in ordered, data will be an array instead of an object
     // and data is located at the `value` prop
 
     const someArrayItemHasKey = array => key => some(array, item => {
@@ -307,18 +305,14 @@ export const populate = (state, path, populates, notSetValue) => {
     )
 
     if (dataHasPopulateChilds) {
-      return data.map(item => {
-        const itemValue = item.value
-
-        const populatedPartials = map(populatesForData, p => {
-          return populateChild(state, itemValue, p)
-        })
-
-        const newValue = populatedPartials.reduce((v, acc) => defaultsDeep(acc, v), itemValue)
+      return data.map(({key, value: dataValue}) => {
+        const populatedValue = populatesForData
+          .map(p => populateChild(state, dataValue, p))
+          .reduce((acc, v) => defaultsDeep(acc, v), dataValue)
 
         return {
-          key: item.key,
-          value: newValue
+          key,
+          value: populatedValue
         }
       })
     }
