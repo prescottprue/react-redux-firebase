@@ -2,6 +2,13 @@ import { actionTypes } from '../constants'
 import { promisesForPopulate } from './populate'
 import { isNaN, forEach, size } from 'lodash'
 
+/**
+ * @private
+ * Try to parse passed input to a number. If it is not a number return itself.
+ * @param  {String|Number} value - Item to attempt to parse to a number
+ * @return {Number|Any} Number if parse to number was successful, otherwise,
+ * original value
+ */
 const tryParseToNumber = (value) => {
   const result = Number(value)
   if (isNaN(result)) {
@@ -12,7 +19,7 @@ const tryParseToNumber = (value) => {
 
 /**
  * @private
- * @description Get path to watch
+ * @description Get path to watch provided event type and path.
  * @param {String} event - Type of event to watch for
  * @param {String} path - Path to watch with watcher
  * @return {String} watchPath
@@ -26,11 +33,12 @@ export const getWatchPath = (event, path) => {
 
 /**
  * @private
- * @description Get query id from query path
+ * @description Get query id from query path. queryId paramter is
+ * later used to add/remove listeners from internal firebase instance.
  * @param {String} path - Path from which to get query id
  * @param {String} event - Type of query event
  */
-export const getQueryIdFromPath = (path, event = undefined) => {
+export const getQueryIdFromPath = (path, event) => {
   const origPath = path
   let pathSplitted = path.split('#')
   path = pathSplitted[0]
@@ -51,8 +59,18 @@ export const getQueryIdFromPath = (path, event = undefined) => {
 
 /**
  * @private
- * @description Get query id from query path
+ * @description Adds queryId parameter to queryObject. queryId paramter is
+ * later used to add/remove listeners from internal firebase instance. Id is
+ * based on storeAs so that multiple callbacks that write results to different
+ * locations in redux can be store. Used when an Object
+ * is included in query config Array passed to firebaseConnect.
  * @param {Object} queryObj - Path from which to get query id
+ * @param {String} queryObj.path - Path within Database for query
+ * @param {String} queryObj.storeAs - Location within redux store to store
+ * result of query listener callback.
+ * @param {String} [queryObj.type='value'] - Type of query event
+ * @param {Array} queryObj.queryParams - Parameters of the query including
+ * orderByKey, orderByChild, and others
  */
 export const addQueryIdToObject = (queryObj) => {
   const { type = 'value' } = queryObj

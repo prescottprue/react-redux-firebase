@@ -9,20 +9,26 @@ Populate the owner of each item in a todos list from the 'users' root.
 ##### Populate List of Items
 
 ```javascript
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { firebaseConnect, populate } from 'react-redux-firebase'
 
 const populates = [
   { child: 'owner', root: 'users' }
 ]
-@firebaseConnect([
-  { path: 'todos', populates }
-])
-@connect(
-  ({ firebase }) => ({
-    todos: populate(firebase, 'todos', populates),
-  })
+
+const enhance = compose(
+  firebaseConnect([
+    { path: 'todos', populates }
+  ]),
+  connect(
+    ({ firebase }) => ({
+      todos: populate(firebase, 'todos', populates),
+    })
+  )  
 )
+
+export default enhance(SomeComponent)
 ```
 
 ### Populate Profile Parameters
@@ -44,11 +50,11 @@ const config = {
   profileParamsToPopulate: profilePopulates // populate list of todos from todos ref
 }
 
-// In component
-@connect(
+// Wrapping some component
+connect(
   ({ firebase }) => ({
     profile: firebase.profile,
     populatedProfile: populate(firebase, 'profile', profilePopulates),
   })
-)
+)(SomeComponent)
 ```
