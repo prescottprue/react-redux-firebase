@@ -295,17 +295,17 @@ export const populate = (state, path, populates, notSetValue) => {
   } else {
     // When using a path in ordered, data will be an array instead of an object
     // and data is located at the `value` prop
+    const someArrayItemHasKey = array => key =>
+      some(array, item => has(item, key))
 
-    const someArrayItemHasKey = array => key => some(array, item => {
-      return has(item, key)
-    })
-
-    const dataHasPopulateChilds = every(populatesForData, p =>
-      someArrayItemHasKey(data)(['value', p.child])
+    // Check to see if child exists for every populate
+    const dataHasPopulateChilds = every(populatesForData, populate =>
+      someArrayItemHasKey(data)(['value', populate.child])
     )
 
+    // Populate if populate children exist
     if (dataHasPopulateChilds) {
-      return data.map(({key, value: dataValue}) => {
+      return data.map(({ key, value: dataValue }) => {
         const populatedValue = populatesForData
           .map(p => populateChild(state, dataValue, p))
           .reduce((acc, v) => defaultsDeep(v, acc), dataValue)
@@ -316,6 +316,7 @@ export const populate = (state, path, populates, notSetValue) => {
         }
       })
     }
+    return data
   }
 
   // TODO: Improve this logic

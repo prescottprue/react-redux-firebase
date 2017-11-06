@@ -23,7 +23,7 @@ const withTodos = compose(
   // firestoreConnect([{ collection: 'todos' }]) // get data from firestore
   connect(({ firebase, firebase: { auth } }) => ({
     uid: auth.uid,
-    todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
+    todos: populate(firebase, 'ordered/todos', populates) // populate todos with users data from redux
     // todos: firebase.ordered.todos // if using ordering such as orderByChild or orderByKey
     // todos: firestore.ordered.todos, // firestore data from firestoreConnect
   })),
