@@ -54,7 +54,16 @@ const createAuthProvider = (firebase, providerName, scopes) => {
  * @param {Array|String} credentials.scopes - Scopes to add to provider (i.e. email)
  * @private
  */
-export const getLoginMethodAndParams = (firebase, {email, password, provider, type, token, scopes, credential}) => {
+export const getLoginMethodAndParams = (firebase, creds) => {
+  const {
+    email,
+    password,
+    provider,
+    type,
+    token,
+    scopes,
+    credential
+  } = creds
   if (credential) {
     return { method: 'signInWithCredential', params: [ credential ] }
   }

@@ -62,7 +62,7 @@ export const createFirebaseConnect = (storeKey = 'store') =>
         componentWillReceiveProps (np) {
           const { firebase, dispatch } = this.store
           const inputAsFunc = createCallable(dataOrFn)
-          const data = inputAsFunc(np, firebase)
+          const data = inputAsFunc(np, this.store)
 
           // Handle a data parameter having changed
           if (!isEqual(data, this.prevData)) {

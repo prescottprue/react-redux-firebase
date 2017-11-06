@@ -6,6 +6,7 @@ const {
   START,
   SET,
   SET_PROFILE,
+  UNLOAD_PROFILE,
   MERGE,
   LOGIN,
   LOGOUT,
@@ -318,10 +319,14 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
         }
       }
       return {
-        ...state,
         ...action.profile,
         isEmpty: false,
         isLoaded: true
+      }
+    case UNLOAD_PROFILE:
+      return {
+        isEmpty: true,
+        isLoaded: false
       }
     case LOGOUT:
     case AUTH_EMPTY_CHANGE:

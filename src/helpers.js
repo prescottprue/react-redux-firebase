@@ -12,6 +12,7 @@ import {
   isString,
   compact,
   some,
+  isArray,
   isFunction
 } from 'lodash'
 import { topLevelPaths } from './constants'
@@ -276,17 +277,46 @@ export const populate = (state, path, populates, notSetValue) => {
       ? populates(last(pathArr), data)
       : populates
   )
-  // check each populate child parameter for existence
-  const dataHasPopluateChilds = every(populatesForData, p => has(data, p.child))
-  if (dataHasPopluateChilds) {
-    // Data is a single object, resolve populates directly
-    return reduce(
-      map(populatesForData, (p, obj) => populateChild(state, data, p)),
-      // combine data from all populates to one object starting with original data
-      (obj, v) => defaultsDeep(v, obj),
-      // accumulator starts as original data
-      data
+
+  if (!isArray(data)) {
+    // check each populate child parameter for existence
+    const dataHasPopulateChilds = every(populatesForData, p =>
+      has(data, p.child)
     )
+
+    if (dataHasPopulateChilds) {
+      // Data is a single object, resolve populates directly
+      const populatedValue = populatesForData
+        .map(p => populateChild(state, data, p))
+        .reduce((acc, v) => defaultsDeep(v, acc), data)
+
+      return populatedValue
+    }
+  } else {
+    // When using a path in ordered, data will be an array instead of an object
+    // and data is located at the `value` prop
+    const someArrayItemHasKey = array => key =>
+      some(array, item => has(item, key))
+
+    // Check to see if child exists for every populate
+    const dataHasPopulateChilds = every(populatesForData, populate =>
+      someArrayItemHasKey(data)(['value', populate.child])
+    )
+
+    // Populate if populate children exist
+    if (dataHasPopulateChilds) {
+      return data.map(({ key, value: dataValue }) => {
+        const populatedValue = populatesForData
+          .map(p => populateChild(state, dataValue, p))
+          .reduce((acc, v) => defaultsDeep(v, acc), dataValue)
+
+        return {
+          key,
+          value: populatedValue
+        }
+      })
+    }
+    return data
   }
 
   // TODO: Improve this logic

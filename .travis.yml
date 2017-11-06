@@ -3,8 +3,9 @@ sudo: false
 language: node_js
 
 node_js:
-  - 6.11.3 # L.T.S
-  - 8 # Current
+  - 6.11.3 # Still Used
+  - 8 # L.T.S
+  - 9 # Current
 
 notifications:
   # Only send notifications when travis status changes

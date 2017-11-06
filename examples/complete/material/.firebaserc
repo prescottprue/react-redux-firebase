@@ -3,7 +3,8 @@
     "dev": "redux-firebasev3",
     "stage": "redux-firebasev3",
     "master": "redux-firebasev3",
-    "prod": "redux-firebasev3"
+    "prod": "redux-firebasev3",
+    "default": "redux-firebasev3"
   },
   "ci": {
     "createConfig": {

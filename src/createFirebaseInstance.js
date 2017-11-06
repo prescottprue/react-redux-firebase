@@ -1,6 +1,11 @@
 import { isObject } from 'lodash'
-import { authActions, queryActions, storageActions } from './actions'
 import { getEventsFromInput, createCallable } from './utils'
+import { mapWithFirebaseAndDispatch } from './utils/actions'
+import {
+  authActions,
+  queryActions,
+  storageActions
+} from './actions'
 
 /**
  * Create a firebase instance that has helpers attached for dispatching actions
@@ -22,7 +27,15 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
   }
 
   // Add internal variables to firebase instance
-  const defaultInternals = { watchers: {}, listeners: {}, config: configs, authUid: null }
+  const defaultInternals = {
+    watchers: {},
+    listeners: {},
+    callbacks: {},
+    queries: {},
+    config: configs,
+    authUid: null
+  }
+
   Object.defineProperty(firebase, '_', {
     value: defaultInternals,
     writable: true,
@@ -405,6 +418,19 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     authActions.linkWithCredential(dispatch, firebase, credential)
 
   /**
+   * @name signInWithPhoneNumber
+   * @description Asynchronously signs in using a phone number. This method
+   * sends a code via SMS to the given phone number, and returns a modified
+   * firebase.auth.ConfirmationResult. The `confirm` method
+   * authenticates and does profile handling.
+   * @param {firebase.auth.ConfirmationResult} credential - The auth credential
+   * @return {Promise}
+   */
+  const actionCreators = mapWithFirebaseAndDispatch(firebase, dispatch, {
+    signInWithPhoneNumber: authActions.signInWithPhoneNumber
+  })
+
+  /**
    * @name ref
    * @description Firebase ref function
    * @return {firebase.database.Reference}
@@ -450,7 +476,8 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     unWatchEvent,
     reloadAuth,
     linkWithCredential,
-    promiseEvents
+    promiseEvents,
+    ...actionCreators
   }
 
   return Object.assign(firebase, helpers, { helpers })

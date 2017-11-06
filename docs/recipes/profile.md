@@ -128,15 +128,15 @@ Results in profile with populated contacts parameter:
 ```js
 {
   displayName: 'Rick Sanchez',
-  email: 'rick@rickandmorty.com',
+  email: 'rick@sanchez.com',
   contacts: [
     {
-      email: 'some@email.com',
-      displayName: 'some one'
+      email: 'morty@ohboyrick.com',
+      displayName: 'Morty Smith'
     },
      {
-      email: 'adude@awebsite.com',
-      displayName: 'A Dude'
+      email: 'bird@person.com',
+      displayName: 'Bird Person'
     }
   ]
 }

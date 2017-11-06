@@ -14,13 +14,16 @@ const populates = [{ child: 'owner', root: 'users' }]
 const withTodos = compose(
   withNotifications, // adds props.showError from notfication module
   firebaseConnect([
-    // Create Firebase query for for last 20 todos
-    { path: 'todos', queryParams: ['orderByKey', 'limitToLast=20'] }
+    // Create Firebase query for for 20 most recent todos
+    {
+      path: 'todos',
+      queryParams: ['orderByKey', 'limitToLast=20']
+    }
   ]),
   // firestoreConnect([{ collection: 'todos' }]) // get data from firestore
   connect(({ firebase, firebase: { auth } }) => ({
     uid: auth.uid,
-    todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
+    todos: populate(firebase, 'ordered/todos', populates) // populate todos with users data from redux
     // todos: firebase.ordered.todos // if using ordering such as orderByChild or orderByKey
     // todos: firestore.ordered.todos, // firestore data from firestoreConnect
   })),
@@ -42,7 +45,7 @@ const Home = ({ todos, uid, addNew, onSubmitFail }) => (
           redux-firebasev3.firebaseio.com
         </a>
       </span>
-      <span style={{ marginTop: '2rem' }}>
+      <span className={classes.note}>
         <strong>Note: </strong>
         old data is removed
       </span>

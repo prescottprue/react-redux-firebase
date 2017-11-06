@@ -422,6 +422,7 @@ export const init = (dispatch, firebase) => {
 export const login = (dispatch, firebase, credentials) => {
   if (firebase._.config.resetBeforeLogin) {
     dispatchLoginError(dispatch, null)
+    dispatch({ type: actionTypes.UNLOAD_PROFILE })
   }
 
   const { method, params } = getLoginMethodAndParams(firebase, credentials)
@@ -778,6 +779,48 @@ export const linkWithCredential = (dispatch, firebase, credential) => {
     })
 }
 
+/**
+ * @description Reload Auth state
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @return {Promise} Resolves with auth
+ */
+export const signInWithPhoneNumber = (firebase, dispatch, ...args) => {
+  dispatch({ type: actionTypes.UNLOAD_PROFILE })
+
+  // Create profile when logging in with external provider
+  // const user = userData.user || userData
+  return firebase.auth().signInWithPhoneNumber(...args)
+    .then((confirmationResult) => {
+      return {
+        ...confirmationResult,
+        confirm: (code) =>
+          confirmationResult.confirm(code)
+            .then((userData) => {
+              // Create profile when logging in with external provider
+              const user = userData.user || userData
+
+              return createUserProfile(
+                dispatch,
+                firebase,
+                user,
+                {
+                  email: user.email,
+                  displayName: user.providerData[0].displayName || user.email,
+                  avatarUrl: user.providerData[0].photoURL,
+                  providerData: user.providerData
+                }
+              )
+                .then((profile) => ({ profile, ...userData }))
+            })
+      }
+    })
+    .catch(err => {
+      dispatchLoginError(dispatch, err)
+      return Promise.reject(err)
+    })
+}
+
 export default {
   dispatchLoginError,
   unWatchUserProfile,
@@ -793,5 +836,6 @@ export default {
   updateAuth,
   updateProfile,
   updateEmail,
-  reloadAuth
+  reloadAuth,
+  signInWithPhoneNumber
 }

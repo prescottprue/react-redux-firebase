@@ -62,6 +62,7 @@ export const actionTypes = {
   REMOVE: `${actionsPrefix}/REMOVE`,
   MERGE: `${actionsPrefix}/MERGE`,
   SET_PROFILE: `${actionsPrefix}/SET_PROFILE`,
+  UNLOAD_PROFILE: `${actionsPrefix}/UNLOAD_PROFILE`,
   LOGIN: `${actionsPrefix}/LOGIN`,
   LOGOUT: `${actionsPrefix}/LOGOUT`,
   LOGIN_ERROR: `${actionsPrefix}/LOGIN_ERROR`,
