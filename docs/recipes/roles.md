@@ -146,7 +146,7 @@ export const UserIsAdmin = UserAuthWrapper({
 Here is an example of a UserHasPermission HOC that allows us to pass in a string permission (such as todos):
 
 _Tip: you can place the below HOC in `router.js` together with `UserIsNotAuthenticated` and `UserIsAuthenticated`._
-
+//this is different below for version 2.0. please see extended comment, there are a couple of syntax errors nothing major//
 ```js
 import { get } from 'lodash';
 import { UserAuthWrapper } from 'redux-auth-wrapper';
