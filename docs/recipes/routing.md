@@ -10,10 +10,9 @@ Routing can be changed based on data by using react lifecycle hooks such as `com
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { isLoaded, isEmpty } from 'react-redux-firebase'
 
 const enhance = compose(
-  firebaseConnect(),
   connect(
     ({ firebase: { auth } }) => ({
       auth, // state.firebase.auth -> props.auth
