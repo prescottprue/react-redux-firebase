@@ -1,6 +1,6 @@
 import { flatMap, isArray, isObject, isString, remove } from 'lodash'
 import { getPopulates } from './populate'
-import { getQueryIdFromPath, addQueryIdToObject } from './query'
+import { getQueryIdFromPath } from './query'
 
 /**
  * @description Convert path string to object with queryParams, path, and populates
@@ -59,8 +59,21 @@ export const getEventsFromInput = paths =>
       if (!path.path) {
         throw new Error('Path is a required parameter within definition object')
       }
+      let strPath = path.path
 
-      return [ addQueryIdToObject(path) ]
+      if (path.storeAs) {
+        // append storeAs to query path
+        strPath += `@${path.storeAs}`
+      }
+
+      if (path.queryParams) {
+        // append query params to path for queryId added in pathStrToObj
+        strPath += `#${path.queryParams.join('&')}`
+      }
+
+      // Add all parameters that are missing (ones that exist will remain)
+      path = Object.assign({}, pathStrToObj(strPath), path)
+      return [ path ]
     }
 
     throw new Error(`Invalid Path Definition: ${path}. Only strings, objects, and arrays accepted.`)

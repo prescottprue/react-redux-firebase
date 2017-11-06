@@ -59,33 +59,6 @@ export const getQueryIdFromPath = (path, event) => {
 
 /**
  * @private
- * @description Adds queryId parameter to queryObject. queryId paramter is
- * later used to add/remove listeners from internal firebase instance. Id is
- * based on storeAs so that multiple callbacks that write results to different
- * locations in redux can be store. Used when an Object
- * is included in query config Array passed to firebaseConnect.
- * @param {Object} queryObj - Path from which to get query id
- * @param {String} queryObj.path - Path within Database for query
- * @param {String} queryObj.storeAs - Location within redux store to store
- * result of query listener callback.
- * @param {String} [queryObj.type='value'] - Type of query event
- * @param {Array} queryObj.queryParams - Parameters of the query including
- * orderByKey, orderByChild, and others
- */
-export const addQueryIdToObject = (queryObj) => {
-  const { type = 'value' } = queryObj
-  if (queryObj.queryId) {
-    return { type, ...queryObj }
-  }
-  const { path, queryParams, storeAs } = queryObj
-  const queryId = queryParams && queryParams.length > 0
-    ? `${type}${storeAs ? `@${storeAs}` : ''}:/${queryParams.join('&')}`
-    : `${path}${storeAs ? `@${storeAs}` : ''}`
-  return { queryId, type, ...queryObj }
-}
-
-/**
- * @private
  * @description Update the number of watchers for a query
  * @param {Object} firebase - Internal firebase object
  * @param {String} event - Type of event to watch for
