@@ -50,7 +50,7 @@ let firebaseInstance
  * @param {Array|String} config.profileParamsToPopulate - Parameters within
  * profile object to populate. As of `v2.0.0` data is only loaded for population, not actually automatically populated
  * (allows access to both unpopulated and populated profile data).
- * @param {Boolean} config.autoPopulateProfile - **NOTE**: Not yet enabled for v2.0.0. Whether or not to
+ * @param {Boolean} config.autoPopulateProfile - **NOTE**: Now enabled for v2.0.0. Whether or not to
  * automatically populate profile with data loaded through profileParamsToPopulate config. (default: `true`)
  * @param {Boolean} config.setProfilePopulateResults - Whether or not to
  * call SET actions for data that results from populating profile to redux under

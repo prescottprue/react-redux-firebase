@@ -80,6 +80,12 @@ describe('Utils: Populate', () => {
       expect(res).to.have.deep.property(`users.${uid}`)
     })
 
+    it('populates all existing children even if one populates child does not exist', async () => {
+      populates = [{child: 'collaborators', root: 'users'}, {child: 'nonExistantKey', root: 'users'}]
+      res = await promisesForPopulate(Firebase, '', { collaborators: { [uid]: true, 'ABC123': true } }, populates)
+      expect(res).to.have.deep.property(`users.${uid}`)
+    })
+
     describe('populates list', () => {
       it('with single property populate', async () => {
         populates = [{child: 'owner', root: 'users'}]
