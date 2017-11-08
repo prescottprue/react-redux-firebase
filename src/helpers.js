@@ -280,7 +280,7 @@ export const populate = (state, path, populates, notSetValue) => {
 
   if (!isArray(data)) {
     // check each populate child parameter for existence
-    const dataHasPopulateChilds = every(populatesForData, p =>
+    const dataHasPopulateChilds = some(populatesForData, p =>
       has(data, p.child)
     )
 

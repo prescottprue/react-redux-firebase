@@ -9,7 +9,7 @@ import {
   forEach,
   set,
   has,
-  every
+  some
 } from 'lodash'
 
 /**
@@ -137,7 +137,7 @@ export const promisesForPopulate = (firebase, dataKey, originalData, populatesIn
       : populatesIn
   )
 
-  const dataHasPopulateChilds = every(populatesForData, (populate) => (
+  const dataHasPopulateChilds = some(populatesForData, (populate) => (
     has(originalData, populate.child)
   ))
 
@@ -162,7 +162,8 @@ export const promisesForPopulate = (firebase, dataKey, originalData, populatesIn
       )
     })
   } else {
-    // Data is a map of objects, each value has parameters to be populated
+    // Data is a list of objects, each value has parameters to be populated
+    // { '1': {someobject}, '2': {someobject} }
     forEach(originalData, (d, key) => {
       // generate populates for this data item if a fn was passed
       const populatesForDataItem = getPopulateObj(isFunction(populatesIn)
