@@ -3,6 +3,31 @@ import { exampleData } from '../mockData'
 import * as helpers from '../../src/helpers'
 
 describe('Helpers:', () => {
+  describe('getVal', () => {
+    it('exists', () => {
+      expect(helpers).to.respondTo('getVal')
+    })
+    it('passes notSetValue', () => {
+      expect(helpers.getVal(null, 'some', []))
+        .to
+        .be
+        .empty
+    })
+
+    it('gets top level data', () => {
+      expect(helpers.getVal(exampleData, 'data/some'))
+        .to
+        .equal('data')
+    })
+
+    it('gets nested data', () => {
+      expect(helpers.getVal(exampleData, 'data/projects/CDF'))
+        .to
+        .have
+        .property('owner', 'ABC')
+    })
+  })
+
   describe('populate', () => {
     it('exists', () => {
       expect(helpers).to.respondTo('populate')
@@ -341,7 +366,6 @@ describe('Helpers:', () => {
           .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
       })
     })
-
   })
 
   describe('isLoaded', () => {

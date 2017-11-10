@@ -322,7 +322,11 @@ const handleAuthStateChange = (dispatch, firebase, authData) => {
 
     watchUserProfile(dispatch, firebase)
 
-    dispatch({ type: actionTypes.LOGIN, auth: authData })
+    dispatch({
+      type: actionTypes.LOGIN,
+      auth: authData,
+      preserve: config.preserveOnLogin
+    })
 
     // Run onAuthStateChanged if it exists in config
     if (isFunction(config.onAuthStateChanged)) {
@@ -349,7 +353,11 @@ export const handleRedirectResult = (dispatch, firebase, authData) => {
     firebase._.authUid = user.uid // eslint-disable-line no-param-reassign
     watchUserProfile(dispatch, firebase)
 
-    dispatch({ type: actionTypes.LOGIN, auth: user })
+    dispatch({
+      type: actionTypes.LOGIN,
+      auth: user,
+      preserve: firebase._.config.preserveOnLogin
+    })
 
     createUserProfile(dispatch, firebase, user, {
       email: user.email,
