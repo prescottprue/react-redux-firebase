@@ -53,7 +53,7 @@ along side applyMiddleware.
     -   `config.profileParamsToPopulate` **([Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String))** Parameters within
         profile object to populate. As of `v2.0.0` data is only loaded for population, not actually automatically populated
         (allows access to both unpopulated and populated profile data).
-    -   `config.autoPopulateProfile` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** **NOTE**: Not yet enabled for v2.0.0. Whether or not to
+    -   `config.autoPopulateProfile` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** **NOTE**: Now enabled for v2.0.0. Whether or not to
         automatically populate profile with data loaded through profileParamsToPopulate config. (default: `true`)
     -   `config.setProfilePopulateResults` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to
         call SET actions for data that results from populating profile to redux under
