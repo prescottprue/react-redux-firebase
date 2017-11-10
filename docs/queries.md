@@ -161,11 +161,13 @@ queryParams: [`limitToFirst=${limitToFirst}`, `startAt=${startAt}`, 'orderByValu
 queryParams: ['orderByValue', `limitToFirst=${limitToFirst}`, `startAt=${startAt}`],
 ```
 
-If you would like to prevent parsing yourself (i.e. keep limit values as strings), you can pass [`notParsed`](#notParsed) as a queryParam:
+If you would like to prevent or cause parsing of query params yourself, you can pass [`notParsed`](#notParsed) or [`parsed`](#parsed) as a queryParam:
 
 ```js
 // limitToFirst and startAt remain as strings and are NOT automatically parsed
 queryParams: ['notParsed', `limitToFirst=${limitToFirst}`, `startAt=${startAt}`, 'orderByValue'],
+// limitToFirst and startAt are parsed into numbers if possible
+queryParams: ['parsed', `limitToFirst=${limitToFirst}`, `startAt=${startAt}`, 'orderByValue'],
 ```
 
 More on [`notParsed` below](#notParsed)
@@ -344,6 +346,7 @@ firebaseConnect([
 ])
 ```
 
+
 ## notParsed {#notParsed}
 
 Can be used to keep internal parsing from happening. Useful when attempting to search a number string using `equalTo`
@@ -358,6 +361,27 @@ firebaseConnect([
       'orderByChild=createdBy',
       'notParsed', // keeps equalTo from automatically parsing
       'equalTo=123'
+    ]
+  }
+])
+```
+
+## parsed {#parsed}
+
+Internally parse following query params. Useful when attempting to parse
+
+**NOTE**: `orderByChild`, `orderByPriority`, and `orderByValue` will cause this to be enabled by default. Parsing will remain enabled for the rest of the query params until `notParsed` is called.
+
+#### Examples
+1. Order by child parameter equal to a number string. Equivalent of searching for `'123'` (where as not using `notParsed` would search for children equal to `123`)
+```js
+firebaseConnect([
+  {
+    path: '/todos',
+    queryParams: [
+      'parsed', // causes automatic parsing
+      'equalTo=123' // 123 is treated as a number instead of a string
+      'orderByChild=createdBy',
     ]
   }
 ])
