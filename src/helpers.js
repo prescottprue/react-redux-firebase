@@ -283,14 +283,11 @@ export const populate = (state, path, populates, notSetValue) => {
     const dataHasPopulateChilds = some(populatesForData, p =>
       has(data, p.child)
     )
-
+    // Single object that contains at least one child parameter
     if (dataHasPopulateChilds) {
-      // Data is a single object, resolve populates directly
-      const populatedValue = populatesForData
+      return populatesForData
         .map(p => populateChild(state, data, p))
         .reduce((acc, v) => defaultsDeep(v, acc), data)
-
-      return populatedValue
     }
   } else {
     // When using a path in ordered, data will be an array instead of an object
@@ -299,7 +296,7 @@ export const populate = (state, path, populates, notSetValue) => {
       some(array, item => has(item, key))
 
     // Check to see if child exists for every populate
-    const dataHasPopulateChilds = every(populatesForData, populate =>
+    const dataHasPopulateChilds = some(populatesForData, populate =>
       someArrayItemHasKey(data)(['value', populate.child])
     )
 
@@ -335,6 +332,14 @@ export const populate = (state, path, populates, notSetValue) => {
         ? populates(key, child)
         : populates
     )
+    // check each data child for each populate parameter
+    const dataHasPopulateChilds = some(populatesForDataItem, p =>
+      has(child, p.child)
+    )
+    // Return unmodified child if populate param does not exist
+    if (!dataHasPopulateChilds) {
+      return child
+    }
     // combine data from all populates to one object starting with original data
     return reduce(
       map(populatesForDataItem, p => populateChild(state, child, p)),

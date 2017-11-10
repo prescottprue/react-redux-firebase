@@ -422,7 +422,6 @@ export const init = (dispatch, firebase) => {
 export const login = (dispatch, firebase, credentials) => {
   if (firebase._.config.resetBeforeLogin) {
     dispatchLoginError(dispatch, null)
-    dispatch({ type: actionTypes.UNLOAD_PROFILE })
   }
 
   const { method, params } = getLoginMethodAndParams(firebase, credentials)
