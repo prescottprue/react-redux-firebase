@@ -159,6 +159,10 @@ export const applyParamsToQuery = (queryParams, query) => {
           // support disabling internal number parsing (number strings)
           doNotParse = true
           break
+        case 'parsed':
+          // support disabling internal number parsing (number strings)
+          doNotParse = false
+          break
         case 'equalTo':
           let equalToParam = !doNotParse ? tryParseToNumber(param[1]) : param[1]
           equalToParam = equalToParam === 'null' ? null : equalToParam
