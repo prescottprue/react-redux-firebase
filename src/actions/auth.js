@@ -73,14 +73,19 @@ const getProfileFromSnap = (snap) => {
 export const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
   const {
     profileParamsToPopulate,
-    autoPopulateProfile
+    autoPopulateProfile,
+    useFirestoreForProfile
   } = firebase._.config
   const profile = getProfileFromSnap(userProfileSnap)
   if (
     !profileParamsToPopulate ||
+    useFirestoreForProfile || // populating profile through firestore not yet supported
     (!isArray(profileParamsToPopulate) &&
       !isString(profileParamsToPopulate))
   ) {
+    if (useFirestoreForProfile && profileParamsToPopulate) {
+      console.warn('Profile population is not yet supported for Firestore') // eslint-disable-line no-console
+    }
     dispatch({ type: actionTypes.SET_PROFILE, profile })
   } else {
     // Convert array of populate config into an array of once query promises
@@ -322,7 +327,11 @@ const handleAuthStateChange = (dispatch, firebase, authData) => {
 
     watchUserProfile(dispatch, firebase)
 
-    dispatch({ type: actionTypes.LOGIN, auth: authData })
+    dispatch({
+      type: actionTypes.LOGIN,
+      auth: authData,
+      preserve: config.preserveOnLogin
+    })
 
     // Run onAuthStateChanged if it exists in config
     if (isFunction(config.onAuthStateChanged)) {
@@ -349,7 +358,11 @@ export const handleRedirectResult = (dispatch, firebase, authData) => {
     firebase._.authUid = user.uid // eslint-disable-line no-param-reassign
     watchUserProfile(dispatch, firebase)
 
-    dispatch({ type: actionTypes.LOGIN, auth: user })
+    dispatch({
+      type: actionTypes.LOGIN,
+      auth: user,
+      preserve: firebase._.config.preserveOnLogin
+    })
 
     createUserProfile(dispatch, firebase, user, {
       email: user.email,
@@ -422,7 +435,6 @@ export const init = (dispatch, firebase) => {
 export const login = (dispatch, firebase, credentials) => {
   if (firebase._.config.resetBeforeLogin) {
     dispatchLoginError(dispatch, null)
-    dispatch({ type: actionTypes.UNLOAD_PROFILE })
   }
 
   const { method, params } = getLoginMethodAndParams(firebase, credentials)

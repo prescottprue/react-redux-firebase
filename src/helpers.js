@@ -35,7 +35,7 @@ import { getDotStrPath } from './reducer'
  * import { firebaseConnect, getVal } from 'react-redux-firebase'
  *
  * const enhance = compose(
- *   firebaseConnect(['/todos/user1']),
+ *   firebaseConnect(['todos/user1']),
  *   connect(({ firebase }) => ({
  *     // this.props.todos loaded from state.firebase.data.todos
  *     todos: getVal(firebase, 'data/todos/user1')
@@ -56,18 +56,21 @@ import { getDotStrPath } from './reducer'
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
  * import { firebaseConnect, getVal } from 'react-redux-firebase'
+ *
  * const defaultValue = {
  *  1: {
  *    text: 'Example Todo'
  *  }
  * }
+ *
  * const enhance = compose(
- *   firebaseConnect(['/todos/user1']),
+ *   firebaseConnect(['todos/user1']),
  *   connect(({ firebase }) => ({
  *     // this.props.todos loaded from state.firebase.data.todos
  *     todos: getVal(firebase, 'data/todos/user1', defaultValue)
  *   })
  * )
+ *
  * export default enhance(SomeComponent)
  */
 export const getVal = (firebase, path, notSetValue) => {
@@ -87,33 +90,38 @@ export const getVal = (firebase, path, notSetValue) => {
  * list is also acceptable.
  * @return {Boolean} Whether or not item is loaded
  * @example
- * import React, { Component } from 'react'
+ * import React from 'react'
  * import PropTypes from 'prop-types'
+ * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, isLoaded } from 'react-redux-firebase'
+ * import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
  *
- * @firebaseConnect(['/todos'])
- * @connect(
- *   ({ firebase: { data: { todos } } }) => ({
- *     todos,
- *   })
+ * const enhance = compose(
+ *   firebaseConnect(['todos']),
+ *   connect(({ firebase: { data: { todos } } }) => ({
+ *     todos // state.firebase.data.todos from redux passed as todos prop
+ *   }))
  * )
- * class Todos extends Component {
- *   static propTypes = {
- *     todos: PropTypes.object
+ *
+ * const Todos = ({ todos }) => {
+ *   // Message for if todos are loading
+ *   if(!isLoaded(todos)) {
+ *     return <span>Loading...</span>
  *   }
  *
- *   render() {
- *     const { todos } = this.props;
- *
- *     // Show loading while todos are loading
- *     if(!isLoaded(todos)) {
- *        return <span>Loading...</span>
- *     }
- *
- *     return <ul>{todosList}</ul>
+ *   // Message if todos are empty
+ *   if(isEmpty(todos)) {
+ *     return <span>No Todos Found</span>
  *   }
+ *
+ *   return <div><pre>{JSON.stringify(todos, null, 2)}</pre></div>
  * }
+ *
+ * Todos.propTypes = {
+ *   todos: PropTypes.object
+ * }
+ *
+ * export default enhance(Todos)
  */
 export const isLoaded = (...args) =>
   !args || !args.length
@@ -126,33 +134,38 @@ export const isLoaded = (...args) =>
  * is also acceptable.
  * @return {Boolean} Whether or not item is empty
  * @example
- * import React, { Component } from 'react'
+ * import React from 'react'
  * import PropTypes from 'prop-types'
+ * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, isEmpty } from 'react-redux-firebase'
+ * import { firebaseConnect, isEmpty, isLoaded } from 'react-redux-firebase'
  *
- * @firebaseConnect(['/todos'])
- * @connect(
- *   ({ firebase: { data: { todos } } }) => ({
+ * const enhance = compose(
+ *   firebaseConnect(['todos']),
+ *   connect(({ firebase: { data: { todos } } }) => ({
  *     todos // state.firebase.data.todos from redux passed as todos prop
- *   })
+ *   }))
  * )
- * class Todos extends Component {
- *   static propTypes = {
- *     todos: PropTypes.object
+ *
+ * const Todos = ({ todos }) => {
+ *   // Message for if todos are loading
+ *   if(!isLoaded(todos)) {
+ *     return <span>Loading...</span>
  *   }
  *
- *   render() {
- *     const { todos } = this.props;
- *
- *     // Message for if todos are empty
- *     if(isEmpty(todos)) {
- *        return <span>No Todos Found</span>
- *     }
- *
- *     return <ul>{todosList}</ul>
+ *   // Message if todos are empty
+ *   if(isEmpty(todos)) {
+ *     return <span>No Todos Found</span>
  *   }
+ *
+ *   return <todos>{JSON.stringify(todos)}</todos>
  * }
+ *
+ * Todos.propTypes = {
+ *   todos: PropTypes.object
+ * }
+ *
+ * export default enhance(Todos)
  */
 export const isEmpty = (...args) =>
   some(args, arg => !(arg && size(arg)) || arg.isEmpty === true)
@@ -171,7 +184,7 @@ export const fixPath = path =>
  * @description Build child list based on populate config
  * @param {Object} data - Firebase state object
  * @param {Object} list - Path of parameter to load
- * @param {Object} populate - Object with population settings
+ * @param {Object} populateSettings - Object with population settings
  */
 const buildChildList = (state, list, p) =>
   mapValues(list, (val, key) => {
@@ -200,7 +213,7 @@ const buildChildList = (state, list, p) =>
  * by making use of buildChildList.
  * @param {Object} state - Firebase state object
  * @param {Object} child - Path of parameter to load
- * @param {Object} populate - Object with population settings
+ * @param {Object} populateSettings - Object with population settings
  */
 const populateChild = (state, child, p) => {
   // no matching child parameter
@@ -237,20 +250,24 @@ const populateChild = (state, child, p) => {
  * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
  * @return {Object} Data located at path within Immutable Object
  * @example <caption>Basic</caption>
+ * import { compose } from 'redux'
  * import { connect } from 'react-redux'
  * import { firebaseConnect } from 'react-redux-firebase'
  * const populates = [{ child: 'owner', root: 'users' }]
  *
- * const fbWrapped = firebaseConnect([
- *   { path: '/todos', populates } // load "todos" and matching "users" to redux
- * ])(App)
+ * const enhance = compose(
+ *   firebaseConnect([
+ *     { path: 'todos', populates } // load "todos" and matching "users" to redux
+ *   ]),
+ *   connect((state) => ({
+ *     // this.props.todos loaded from state.firebase.data.todos
+ *     // each todo has child 'owner' populated from matching uid in 'users' root
+ *     // for loading un-populated todos use state.firebase.data.todos
+ *     todos: populate(state.firebase, 'todos', populates),
+ *   })
+ * )
  *
- * export default connect((state) => ({
- *   // this.props.todos loaded from state.firebase.data.todos
- *   // each todo has child 'owner' populated from matching uid in 'users' root
- *   // for loading un-populated todos use state.firebase.data.todos
- *   todos: populate(state.firebase, 'todos', populates),
- * }))(fbWrapped)
+ * export default enhance(SomeComponent)
  */
 export const populate = (state, path, populates, notSetValue) => {
   const splitPath = compact(path.split('/'))
@@ -278,28 +295,14 @@ export const populate = (state, path, populates, notSetValue) => {
       : populates
   )
 
-  if (!isArray(data)) {
-    // check each populate child parameter for existence
-    const dataHasPopulateChilds = some(populatesForData, p =>
-      has(data, p.child)
-    )
-
-    if (dataHasPopulateChilds) {
-      // Data is a single object, resolve populates directly
-      const populatedValue = populatesForData
-        .map(p => populateChild(state, data, p))
-        .reduce((acc, v) => defaultsDeep(v, acc), data)
-
-      return populatedValue
-    }
-  } else {
+  if (isArray(data)) {
     // When using a path in ordered, data will be an array instead of an object
     // and data is located at the `value` prop
     const someArrayItemHasKey = array => key =>
       some(array, item => has(item, key))
 
-    // Check to see if child exists for every populate
-    const dataHasPopulateChilds = every(populatesForData, populate =>
+    // Check items within the list to see if value exists for some populate parameters
+    const dataHasPopulateChilds = some(populatesForData, populate =>
       someArrayItemHasKey(data)(['value', populate.child])
     )
 
@@ -316,11 +319,25 @@ export const populate = (state, path, populates, notSetValue) => {
         }
       })
     }
+
+    // return unpopulated data if no populates have values
     return data
   }
 
-  // TODO: Improve this logic
-  // Handle non-existant profile populate child
+  // check each populate child parameter for existence
+  const dataHasPopulateChilds = some(populatesForData, p =>
+    has(data, p.child)
+  )
+
+  // Single object that contains at least one child parameter
+  if (dataHasPopulateChilds) {
+    return populatesForData
+      .map(p => populateChild(state, data, p))
+      .reduce((acc, v) => defaultsDeep(v, acc), data)
+  }
+
+  // Return for profile since it is a single object (following is for a list of objects)
+  // TODO: Improve this logic to allow for other paths containing profile
   if (pathArr.indexOf('profile') !== -1) {
     return data
   }
@@ -335,6 +352,14 @@ export const populate = (state, path, populates, notSetValue) => {
         ? populates(key, child)
         : populates
     )
+    // confirm at least one populate value exists on child
+    const dataHasPopulateChilds = some(populatesForDataItem, p =>
+      has(child, p.child)
+    )
+    // return unmodified child if no populate params exist on child
+    if (!dataHasPopulateChilds) {
+      return child
+    }
     // combine data from all populates to one object starting with original data
     return reduce(
       map(populatesForDataItem, p => populateChild(state, child, p)),

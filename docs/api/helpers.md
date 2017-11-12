@@ -31,7 +31,7 @@ import { connect } from 'react-redux'
 import { firebaseConnect, getVal } from 'react-redux-firebase'
 
 const enhance = compose(
-  firebaseConnect(['/todos/user1']),
+  firebaseConnect(['todos/user1']),
   connect(({ firebase }) => ({
     // this.props.todos loaded from state.firebase.data.todos
     todos: getVal(firebase, 'data/todos/user1')
@@ -60,18 +60,21 @@ _Default Value_
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { firebaseConnect, getVal } from 'react-redux-firebase'
+
 const defaultValue = {
  1: {
    text: 'Example Todo'
  }
 }
+
 const enhance = compose(
-  firebaseConnect(['/todos/user1']),
+  firebaseConnect(['todos/user1']),
   connect(({ firebase }) => ({
     // this.props.todos loaded from state.firebase.data.todos
     todos: getVal(firebase, 'data/todos/user1', defaultValue)
   })
 )
+
 export default enhance(SomeComponent)
 ```
 
@@ -90,10 +93,38 @@ Detect whether items are loaded yet or not
 **Examples**
 
 ```javascript
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded } from 'react-redux-firebase'
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+
+const enhance = compose(
+  firebaseConnect(['todos']),
+  connect(({ firebase: { data: { todos } } }) => ({
+    todos // state.firebase.data.todos from redux passed as todos prop
+  }))
+)
+
+const Todos = ({ todos }) => {
+  // Message for if todos are loading
+  if(!isLoaded(todos)) {
+    return <span>Loading...</span>
+  }
+
+  // Message if todos are empty
+  if(isEmpty(todos)) {
+    return <span>No Todos Found</span>
+  }
+
+  return <div><pre>{JSON.stringify(todos, null, 2)}</pre></div>
+}
+
+Todos.propTypes = {
+  todos: PropTypes.object
+}
+
+export default enhance(Todos)
 ```
 
 Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not item is loaded
@@ -111,10 +142,38 @@ Detect whether items are empty or not
 **Examples**
 
 ```javascript
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect, isEmpty } from 'react-redux-firebase'
+import { firebaseConnect, isEmpty, isLoaded } from 'react-redux-firebase'
+
+const enhance = compose(
+  firebaseConnect(['todos']),
+  connect(({ firebase: { data: { todos } } }) => ({
+    todos // state.firebase.data.todos from redux passed as todos prop
+  }))
+)
+
+const Todos = ({ todos }) => {
+  // Message for if todos are loading
+  if(!isLoaded(todos)) {
+    return <span>Loading...</span>
+  }
+
+  // Message if todos are empty
+  if(isEmpty(todos)) {
+    return <span>No Todos Found</span>
+  }
+
+  return <todos>{JSON.stringify(todos)}</todos>
+}
+
+Todos.propTypes = {
+  todos: PropTypes.object
+}
+
+export default enhance(Todos)
 ```
 
 Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not item is empty
@@ -135,20 +194,24 @@ Populate with data from redux.
 _Basic_
 
 ```javascript
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 const populates = [{ child: 'owner', root: 'users' }]
 
-const fbWrapped = firebaseConnect([
-  { path: '/todos', populates } // load "todos" and matching "users" to redux
-])(App)
+const enhance = compose(
+  firebaseConnect([
+    { path: 'todos', populates } // load "todos" and matching "users" to redux
+  ]),
+  connect((state) => ({
+    // this.props.todos loaded from state.firebase.data.todos
+    // each todo has child 'owner' populated from matching uid in 'users' root
+    // for loading un-populated todos use state.firebase.data.todos
+    todos: populate(state.firebase, 'todos', populates),
+  })
+)
 
-export default connect((state) => ({
-  // this.props.todos loaded from state.firebase.data.todos
-  // each todo has child 'owner' populated from matching uid in 'users' root
-  // for loading un-populated todos use state.firebase.data.todos
-  todos: populate(state.firebase, 'todos', populates),
-}))(fbWrapped)
+export default enhance(SomeComponent)
 ```
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Object

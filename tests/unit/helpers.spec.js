@@ -1,123 +1,30 @@
+import { get } from 'lodash'
+import { exampleData } from '../mockData'
 import * as helpers from '../../src/helpers'
 
-const exampleData = {
-  data: {
-    some: 'data',
-    projects: {
-      CDF: {
-        owner: 'ABC',
-        category: 'cat1',
-        notes: {
-          123: true
-        },
-        collaborators: {
-          ABC: true,
-          abc: true
-        }
-      },
-      GHI: {
-        owner: 'ABC',
-        category: 'cat2'
-      },
-      OKF: {
-        owner: 'asdfasdf',
-        notes: {
-          123: true
-        },
-        collaborators: {
-          ABC: true,
-          abc: true
-        }
-      },
-      QRS: {
-        owner: 'ABC',
-        category: 'cat1',
-        nested: {
-          owner: 'ABC'
-        },
-        notes: {
-          123: true
-        },
-        collaborators: {
-          ABC: true,
-          abc: true
-        }
-      },
-      TUV: {
-        owner: 'ABC',
-        notes: {
-          123: true
-        },
-        collaborators: {
-          ABC: true,
-          abc: true
-        }
-      }
-    },
-    users: {
-      ABC: {
-        displayName: 'scott'
-      }
-    },
-    categories: {
-      cat1: {
-        displayName: 'magic'
-      },
-      cat2: {
-        displayName: 'animals'
-      }
-    },
-    notes: {
-      123: {
-        text: 'Some Text'
-      }
-    },
-    missing: {
-      data: null
-    }
-  },
-  ordered: {
-    projects: [
-      {
-        owner: 'ABC',
-        notes: {
-          123: true
-        },
-        collaborators: {
-          ABC: true,
-          abc: true
-        }
-      }
-    ]
-  },
-  timestamp: { 'some/path': { test: 'key' } },
-  snapshot: { some: 'snapshot' }
-}
-
 describe('Helpers:', () => {
-  describe.skip('ordered', () => {
+  describe('getVal', () => {
     it('exists', () => {
-      expect(helpers).to.respondTo('ordered')
+      expect(helpers).to.respondTo('getVal')
     })
-
     it('passes notSetValue', () => {
-      expect(helpers.ordered(null, '/some', exampleData))
+      expect(helpers.getVal(null, 'some', []))
         .to
-        .equal(exampleData)
+        .be
+        .empty
     })
 
-    it('gets data from state', () => {
-      const path = 'projects'
-      expect(JSON.stringify(helpers.ordered(exampleData, path, exampleData)))
+    it('gets top level data', () => {
+      expect(helpers.getVal(exampleData, 'data/some'))
         .to
-        .equal(JSON.stringify(exampleData.ordered[path]))
+        .equal('data')
     })
 
-    it('returns state if its not an immutable Map', () => {
-      const fakeState = { }
-      expect(helpers.ordered(fakeState, 'asdf'))
+    it('gets nested data', () => {
+      expect(helpers.getVal(exampleData, 'data/projects/CDF'))
         .to
-        .equal(fakeState)
+        .have
+        .property('owner', 'ABC')
     })
   })
 
@@ -149,6 +56,43 @@ describe('Helpers:', () => {
       expect(helpers.populate(exampleData, path, []).CDF.owner)
         .to
         .equal(exampleData.data[path].CDF.owner)
+    })
+
+    describe('profile', () => {
+      it('returns unpopulated data for no populates', () => {
+        const path = 'profile'
+        expect(helpers.populate(exampleData, path, []))
+          .to
+          .have
+          .property('role', 'tester')
+      })
+
+      it('returns unpopulated data for invalid populate', () => {
+        const path = 'profile'
+        const populates = [{ child: 'role', root: 'users' }]
+        expect(helpers.populate(exampleData, path, populates))
+          .to
+          .deep
+          .property('role', 'tester')
+      })
+
+      it('populates a single parameter', () => {
+        const path = 'profile'
+        const populates = [{ child: 'role', root: 'roles' }]
+        expect(helpers.populate(exampleData, path, populates))
+          .to
+          .deep
+          .property('role.somePermission', true)
+      })
+
+      it('populates a list parameter', () => {
+        const path = 'profile'
+        const populates = [{ child: 'notes', root: 'notes' }]
+        expect(helpers.populate(exampleData, path, populates))
+          .to
+          .deep
+          .property('notes.123.text', get(exampleData, 'data.notes.123.text'))
+      })
     })
 
     describe('single', () => {
@@ -221,6 +165,20 @@ describe('Helpers:', () => {
             .property('displayName', 'scott')
         })
       })
+
+      it('works with ordered', () => {
+        const path = 'ordered/projects/0'
+        const rootName = 'users'
+        const populates = [
+          { child: 'owner', root: rootName }
+        ]
+        const populated = helpers.populate(exampleData, path, populates)
+        expect(populated)
+          .to
+          .have
+          .deep
+          .property(`value.owner.displayName`, get(exampleData, `data.${rootName}.ABC.displayName`))
+      })
     })
 
     describe('list', () => {
@@ -244,10 +202,11 @@ describe('Helpers:', () => {
             { child: 'owner', root: rootName },
             { child: 'category', root: catRootName }
           ]
-          expect(helpers.populate(exampleData, path, populates)[valName].owner)
+          expect(helpers.populate(exampleData, path, populates))
             .to
             .have
-            .property('displayName', 'scott')
+            .deep
+            .property(`${valName}.owner.displayName`, 'scott')
         })
 
         it('populates childParam', () => {
@@ -284,16 +243,80 @@ describe('Helpers:', () => {
           const populates = [
             { child: 'collaborators', root: rootName }
           ]
+          // Non matching collaborator
           expect(helpers.populate(exampleData, path, populates))
             .to
             .have
             .deep
             .property(`${valName}.collaborators.abc`, true)
+          // Matching collaborator
           expect(helpers.populate(exampleData, path, populates))
             .to
             .have
             .deep
             .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+        })
+      })
+
+      describe('config as function', () => {
+        it('populates values', () => {
+          const path = 'projects'
+          const rootName = 'users'
+          const valName = 'OKF'
+          const populates = (projectKey, projectData) => ([
+            // configure populates with key / data tuple...
+            { child: 'collaborators', root: rootName }
+          ])
+          const populatedData = helpers.populate(exampleData, path, populates)
+          expect(populatedData)
+            .to
+            .have
+            .deep
+            .property(`${valName}.collaborators.ABC.displayName`, get(exampleData, `data.${rootName}.ABC.displayName`))
+        })
+      })
+
+      describe('works with ordered data', () => {
+        it('with list child', () => {
+          const path = 'ordered/projects'
+          const rootName = 'users'
+          const populates = [
+            { child: 'collaborators', root: rootName }
+          ]
+          const populatedArr = helpers.populate(exampleData, path, populates)
+          expect(populatedArr[0])
+            .to
+            .have
+            .deep
+            .property(`value.collaborators.ABC.displayName`, get(exampleData, `data.${rootName}.ABC.displayName`))
+        })
+
+        it('with multiple populates', () => {
+          const path = 'ordered/projects'
+          const rootName = 'users'
+          const populates = [
+            { child: 'random' },
+            { child: 'collaborators', root: rootName }
+          ]
+          const populatedArr = helpers.populate(exampleData, path, populates)
+          expect(populatedArr[0])
+            .to
+            .have
+            .deep
+            .property(`value.collaborators.ABC.displayName`, get(exampleData, `data.${rootName}.ABC.displayName`))
+        })
+
+        it('with none existing child', () => {
+          const path = 'ordered/projects'
+          const populates = [
+            { child: 'random' }
+          ]
+          const populatedArr = helpers.populate(exampleData, path, populates)
+          expect(populatedArr[0])
+            .to
+            .have
+            .deep
+            .property(`value.collaborators.ABC`, true)
         })
       })
     })

@@ -6,7 +6,6 @@ const {
   START,
   SET,
   SET_PROFILE,
-  UNLOAD_PROFILE,
   MERGE,
   LOGIN,
   LOGOUT,
@@ -250,6 +249,10 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
         }
       }
       const auth = action.auth.toJSON ? action.auth.toJSON() : action.auth
+      // Support keeping data
+      if (action.preserve && action.preserve.auth) {
+        return pick({ ...state, ...auth }, action.preserve.auth) // pick returns a new object
+      }
       return { ...auth, isEmpty: false, isLoaded: true }
     case AUTH_LINK_SUCCESS:
       if (!action.payload) {
@@ -268,10 +271,7 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
     case LOGOUT:
       // Support keeping data when logging out
       if (action.preserve && action.preserve.auth) {
-        return pick(
-          { ...state, isLoaded: true, isEmpty: true },
-          action.preserve.auth
-        ) // pick returns a new object
+        return pick(state, action.preserve.auth) // pick returns a new object
       }
       return { isLoaded: true, isEmpty: true }
     default:
@@ -323,7 +323,11 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
         isEmpty: false,
         isLoaded: true
       }
-    case UNLOAD_PROFILE:
+    case LOGIN:
+    // Support keeping data when logging out
+      if (action.preserve && action.preserve.profile) {
+        return pick(state, action.preserve.profile) // pick returns a new object
+      }
       return {
         isEmpty: true,
         isLoaded: false
@@ -332,10 +336,7 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
     case AUTH_EMPTY_CHANGE:
       // Support keeping data when logging out
       if (action.preserve && action.preserve.profile) {
-        return pick(
-          { ...state, isLoaded: true, isEmpty: true },
-          action.preserve.profile
-        ) // pick returns a new object
+        return pick(state, action.preserve.profile) // pick returns a new object
       }
       return { isLoaded: true, isEmpty: true }
     default:

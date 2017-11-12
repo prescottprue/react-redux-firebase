@@ -391,20 +391,46 @@ describe('reducer', () => {
   })
 
   describe('LOGIN action -', () => {
-    it('sets state', () => {
+    it('sets auth state to isLoaded: true, isEmpty: false', () => {
       const auth = { some: 'value' }
       action = { type: actionTypes.LOGIN, auth }
-      expect(firebaseReducer({}, action))
-        .to.deep.equal({
-          ...noError,
-          auth: { ...noError.auth, ...auth, isLoaded: true, isEmpty: false }
-        })
+      const currentState = firebaseReducer({}, action)
+      expect(currentState)
+        .to
+        .have
+        .deep
+        .property('auth.isLoaded', true)
+      expect(currentState)
+        .to
+        .have
+        .deep
+        .property('auth.isEmpty', false)
     })
 
-    it.skip('sets empty if auth not provided', () => {
+    // For details view https://github.com/prescottprue/react-redux-firebase/issues/301
+    it('sets profile state to isLoaded: false, isEmpty: true', () => {
+      const auth = { some: 'value' }
+      action = { type: actionTypes.LOGIN, auth }
+      const currentState = firebaseReducer({}, action)
+      expect(currentState)
+        .to
+        .have
+        .deep
+        .property('profile.isLoaded', false)
+      expect(currentState)
+        .to
+        .have
+        .deep
+        .property('profile.isEmpty', true)
+    })
+
+    it('sets empty if auth not provided', () => {
       action = { type: actionTypes.LOGIN }
       expect(firebaseReducer({}, action))
-        .to.deep.equal(noError)
+        .to
+        .have
+        .deep
+        .property('auth.isEmpty', true)
     })
   })
 
