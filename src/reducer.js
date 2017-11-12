@@ -253,7 +253,7 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
       if (action.preserve && action.preserve.auth) {
         return pick({ ...state, ...auth }, action.preserve.auth) // pick returns a new object
       }
-      return { ...state, ...auth, isEmpty: false, isLoaded: true }
+      return { ...auth, isEmpty: false, isLoaded: true }
     case AUTH_LINK_SUCCESS:
       if (!action.payload) {
         return {

@@ -73,14 +73,19 @@ const getProfileFromSnap = (snap) => {
 export const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) => {
   const {
     profileParamsToPopulate,
-    autoPopulateProfile
+    autoPopulateProfile,
+    useFirestoreForProfile
   } = firebase._.config
   const profile = getProfileFromSnap(userProfileSnap)
   if (
     !profileParamsToPopulate ||
+    useFirestoreForProfile || // populating profile through firestore not yet supported
     (!isArray(profileParamsToPopulate) &&
       !isString(profileParamsToPopulate))
   ) {
+    if (useFirestoreForProfile && profileParamsToPopulate) {
+      console.warn('Profile population is not yet supported for Firestore') // eslint-disable-line no-console
+    }
     dispatch({ type: actionTypes.SET_PROFILE, profile })
   } else {
     // Convert array of populate config into an array of once query promises
