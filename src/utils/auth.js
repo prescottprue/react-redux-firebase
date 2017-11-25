@@ -150,3 +150,19 @@ export const createAuthIsReady = (store, config) => {
     ? config.authIsReady(store, config)
     : authIsReady(store, config.firebaseStateName)
 }
+
+export const updateProfileOnRTDB = (firebase, profileUpdate) => {
+  const { database, _: { config, authUid } } = firebase
+  const profileRef = database().ref(`${config.userProfile}/${authUid}`)
+  return profileRef
+    .update(profileUpdate)
+    .then(() => profileRef.once('value'))
+}
+
+export const updateProfileOnFirestore = (firebase, profileUpdate) => {
+  const { firestore, _: { config, authUid } } = firebase
+  const profileRef = firestore().doc(`${config.userProfile}/${authUid}`)
+  return profileRef
+    .update(profileUpdate)
+    .then(profileRef.get)
+}

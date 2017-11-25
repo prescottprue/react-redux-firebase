@@ -10,6 +10,7 @@ const reactNativeFirebaseConfig = {
 // for more config options, visit http://docs.react-redux-firebase.com/history/v2.0.0/docs/api/compose.html
 const reduxFirebaseConfig = {
   userProfile: 'users', // save users profiles to 'users' collection
+  presence: 'testingPresence'
 };
 
 export default (initialState = { firebase: {} }) => {
