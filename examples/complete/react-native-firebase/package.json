@@ -22,6 +22,7 @@
     "react-native-firebase": "^2.2.3",
     "react-redux": "^5.0.6",
     "react-redux-firebase": "next",
+    "recompose": "^0.26.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0"
   }
