@@ -1,44 +1,20 @@
+/* eslint-disable no-console */
 import PropTypes from 'prop-types'
-import { some, pick } from 'lodash'
+import { pick, some } from 'lodash'
+import { isLoaded } from 'react-redux-firebase'
 import {
   compose,
   withContext,
   getContext,
-  renderComponent,
+  mapProps,
   branch,
-  mapProps
+  renderComponent
 } from 'recompose'
-import { isLoaded } from 'react-redux-firebase'
 import LoadingSpinner from 'components/LoadingSpinner'
-
-export const withStore = compose(
-  withContext({ store: PropTypes.object }, () => {}),
-  getContext({ store: PropTypes.object })
-)
-
-export const withRouter = compose(
-  withContext({ router: PropTypes.object }, () => {}),
-  getContext({ router: PropTypes.object })
-)
-
-export const withStoreAndRouter = compose(
-  withContext(
-    {
-      router: PropTypes.object,
-      store: PropTypes.object
-    },
-    () => {}
-  ),
-  getContext({ router: PropTypes.object, store: PropTypes.object })
-)
 
 /**
  * Show a loading spinner when a condition is truthy. Used within
  * spinnerWhileLoading. Accepts a test function and a higher-order component.
- * branch(
- *   test: (props: Object) => boolean,
- *   right: ?HigherOrderComponent
- * ): HigherOrderComponent
  * @param  {Function} condition - Condition function for when to show spinner
  * @return {HigherOrderComponent}
  */
@@ -51,6 +27,18 @@ export const spinnerWhile = condition =>
  * `profile.isLoaded`). **NOTE:** Meant to be used with props which are passed
  * as props from state.firebase using connect (from react-redux), which means
  * it could have unexpected results for other props
+ * @example Spinner While Data Loading
+ * import { compose } from 'redux'
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect } from 'react-redux-firebase'
+ *
+ * const enhance = compose(
+ *   firebaseConnect(['projects']),
+ *   connect(({ firebase: { data: { projects } } })),
+ *   spinnerWhileLoading(['projects'])
+ * )
+ *
+ * export default enhance(SomeComponent)
  * @param  {Array} propNames - List of prop names to check loading for
  * @return {HigherOrderComponent}
  */
@@ -61,8 +49,20 @@ export const spinnerWhileLoading = propNames =>
  * HOC that logs props using console.log. Accepts an array list of prop names
  * to log, if none provided all props are logged. **NOTE:** Only props at
  * available to the HOC will be logged.
- * @param  {Array} propNames [description]
- * @return {React.Component}           [description]
+ * @example Log Single Prop
+ * import { compose } from 'redux'
+ * import { connect } from 'react-redux'
+ * import { firebaseConnect } from 'react-redux-firebase'
+ *
+ * const enhance = compose(
+ *   withProps(() => ({ projectName: 'test' })),
+ *   logProps(['projectName']) // 'test' would be logged to console when SomeComponent is rendered
+ * )
+ *
+ * export default enhance(SomeComponent)
+ * @param  {Array} propNames - List of prop names to log. If none provided, all
+ * are logged
+ * @return {HigherOrderComponent}
  */
 export const logProps = (propNames, logName = '') =>
   mapProps(ownerProps => {
@@ -72,3 +72,21 @@ export const logProps = (propNames, logName = '') =>
     )
     return ownerProps
   })
+
+/**
+ * HOC that adds store to props
+ * @return {HigherOrderComponent}
+ */
+export const withStore = compose(
+  withContext({ store: PropTypes.object }, () => {}),
+  getContext({ store: PropTypes.object })
+)
+
+/**
+ * HOC that adds router to props
+ * @return {HigherOrderComponent}
+ */
+export const withRouter = compose(
+  withContext({ router: PropTypes.object }, () => {}),
+  getContext({ router: PropTypes.object })
+)

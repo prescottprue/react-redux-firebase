@@ -1,3 +1,9 @@
+# Firestore Complete Example
+
+A complete app example showing adding/updating/removing data from Firestore
+
+## How was it Started?
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.  
@@ -49,11 +55,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.  
-See the section about [running tests](#running-tests) for more information.
-
 ### `npm run build`
 
 Builds the app for production to the `build` folder.<br>
@@ -68,3 +69,9 @@ Your app is ready to be deployed!
 Checkout [the auth recipes](/docs/recipes/auth) for some simple examples of how to integrate auth.
 
 **Warning**: You need to handle the loading state of auth! The recipes go over this, [but as mentioned in this issue here](https://github.com/prescottprue/react-redux-firebase/issues/93), it can seem unclear initially.
+
+### Why Is Recompose Used
+
+There are plenty of reasons to use [recompose](https://github.com/acdlite/recompose) (a utility belt for react components) which are not worth getting into here. The main reason it is used in this example it to keep the focus on the Firestore specific logic.
+
+Another main reason Recompose is popular is that is can easily lead to patterns which greatly improve performance
