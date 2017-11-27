@@ -10,7 +10,14 @@ import NewTodoPanel from '../components/NewTodoPanel'
 import TodosList from '../components/TodosList'
 import classes from './HomeContainer.scss'
 
-const populates = [{ child: 'owner', root: 'users', childAlias: 'otherOwner' }]
+// Populate owner from users collection
+const populates = [
+  {
+    child: 'owner', // parameter to populate
+    root: 'users' // collection from which to gather children
+    // childAlias: 'ownerObj' // place result somewhere else on object
+  }
+]
 
 const withTodos = compose(
   withNotifications, // adds props.showError from notfication module
@@ -18,7 +25,8 @@ const withTodos = compose(
     // Create Firebase query for for 20 most recent todos
     {
       path: 'todos',
-      queryParams: ['orderByKey', 'limitToLast=1']
+      queryParams: ['orderByKey', 'limitToLast=10'],
+      populates
     }
   ]),
   // firestoreConnect([{ collection: 'todos' }]) // get data from firestore
@@ -29,7 +37,11 @@ const withTodos = compose(
     // todos: firestore.ordered.todos, // firestore data from firestoreConnect
   })),
   withHandlers({
-    addNew: props => newTodo => props.firebase.push('todos', newTodo),
+    addNew: props => newTodo =>
+      props.firebase.push('todos', {
+        ...newTodo,
+        owner: props.uid || 'Anonymous'
+      }),
     onSubmitFail: props => (formErrs, dispatch, err) =>
       props.showError(formErrs ? 'Form Invalid' : err.message || 'Error')
   }),
