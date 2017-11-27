@@ -193,10 +193,17 @@ const buildChildList = (state, list, p) =>
     if (val === true) {
       getKey = key
     }
+    // Allow for aliasing populated data see #126 for more details
     const dotRoot = compact(p.root.split('/')).join('.')
-    const pathString = p.childParam
-      ? `${dotRoot}.${getKey}.${p.childParam}`
-      : `${dotRoot}.${getKey}`
+    const pathArr = [dotRoot, getKey]
+
+    // Handle child param
+    if (p.childParam) {
+      pathArr.push(p.childParam)
+    }
+
+    const pathString = pathArr.join('.')
+
     // Set to child under key if populate child exists
     if (get(state.data, pathString)) {
       return p.keyProp
@@ -225,12 +232,18 @@ const populateChild = (state, child, p) => {
   if (isString(childVal)) {
     // attach child paramter if it exists
     const dotRoot = compact(p.root.split('/')).join('.')
-    const pathString = p.childParam
-      ? `${dotRoot}.${childVal}.${p.childParam}`
-      : `${dotRoot}.${childVal}`
+    const pathArr = [dotRoot, childVal]
+
+    // Handle child param
+    if (p.childParam) {
+      pathArr.push(p.childParam)
+    }
+
+    const pathString = pathArr.join('.')
+
     const populateVal = get(state.data, pathString)
     if (populateVal) {
-      return set({}, p.child, (p.keyProp
+      return set({}, p.childAlias || p.child, (p.keyProp
         ? { [p.keyProp]: childVal, ...populateVal }
         : populateVal
       ))
@@ -239,7 +252,7 @@ const populateChild = (state, child, p) => {
     return child
   }
   // populate child list
-  return set({}, p.child, buildChildList(state, childVal, p))
+  return set({}, p.childAlias || p.child, buildChildList(state, childVal, p))
 }
 
 /**

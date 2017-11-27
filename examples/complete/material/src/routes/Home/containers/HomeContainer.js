@@ -5,11 +5,12 @@ import { compose, withHandlers } from 'recompose'
 import { firebaseConnect, populate } from 'react-redux-firebase'
 import Theme from 'theme'
 import { withNotifications } from 'modules/notification'
+import { logProps } from 'utils/components'
 import NewTodoPanel from '../components/NewTodoPanel'
 import TodosList from '../components/TodosList'
 import classes from './HomeContainer.scss'
 
-const populates = [{ child: 'owner', root: 'users' }]
+const populates = [{ child: 'owner', root: 'users', childAlias: 'otherOwner' }]
 
 const withTodos = compose(
   withNotifications, // adds props.showError from notfication module
@@ -17,13 +18,13 @@ const withTodos = compose(
     // Create Firebase query for for 20 most recent todos
     {
       path: 'todos',
-      queryParams: ['orderByKey', 'limitToLast=20']
+      queryParams: ['orderByKey', 'limitToLast=1']
     }
   ]),
   // firestoreConnect([{ collection: 'todos' }]) // get data from firestore
   connect(({ firebase, firebase: { auth } }) => ({
     uid: auth.uid,
-    todos: populate(firebase, 'ordered/todos', populates) // populate todos with users data from redux
+    todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
     // todos: firebase.ordered.todos // if using ordering such as orderByChild or orderByKey
     // todos: firestore.ordered.todos, // firestore data from firestoreConnect
   })),
@@ -31,7 +32,8 @@ const withTodos = compose(
     addNew: props => newTodo => props.firebase.push('todos', newTodo),
     onSubmitFail: props => (formErrs, dispatch, err) =>
       props.showError(formErrs ? 'Form Invalid' : err.message || 'Error')
-  })
+  }),
+  logProps(['todos'])
 )
 
 const Home = ({ todos, uid, addNew, onSubmitFail }) => (
