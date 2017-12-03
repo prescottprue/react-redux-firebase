@@ -68,7 +68,10 @@ export const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
  * @private
  */
 export const uploadFile = (dispatch, firebase, config) => {
-  const { path, file, dbPath, options = {} } = config
+  if (!firebase.storage) {
+    throw new Error('Firebase storage is required to upload files')
+  }
+  const { path, file, dbPath, options = { progress: false } } = config
   const nameFromOptions = options.name && isFunction(options.name)
     ? options.name(file, firebase, config)
     : options.name
@@ -76,7 +79,11 @@ export const uploadFile = (dispatch, firebase, config) => {
 
   dispatch({ type: FILE_UPLOAD_START, payload: { ...config, filename } })
 
-  return firebase.storage().ref(`${path}/${filename}`).put(file)
+  const uploadPromise = () => options.progress
+    ? uploadFileWithProgress(dispatch, firebase, { path, file })
+    : firebase.storage().ref(`${path}/${filename}`).put(file)
+
+  return uploadPromise()
     .then((uploadTaskSnaphot) => {
       if (!dbPath || !firebase.database) {
         dispatch({
@@ -92,8 +99,14 @@ export const uploadFile = (dispatch, firebase, config) => {
       // Apply fileMetadataFactory if it exists in config
       const fileData = isFunction(fileMetadataFactory)
         ? fileMetadataFactory(uploadTaskSnaphot, firebase)
-        : { name, fullPath, downloadURL: downloadURLs[0] }
+        : {
+          name,
+          fullPath,
+          downloadURL: downloadURLs[0],
+          createdAt: firebase.database.ServerValue.TIMESTAMP
+        }
 
+      // TODO: Support uploading metadata to Firestore
       return firebase.database()
         .ref(dbPath)
         .push(fileData)

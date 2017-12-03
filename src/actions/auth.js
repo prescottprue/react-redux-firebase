@@ -655,7 +655,7 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
   const updatePromise = config.useFirestoreForProfile
     ? updateProfileOnFirestore
     : updateProfileOnRTDB
-  return updatePromise
+  return updatePromise(firebase, profileUpdate)
     .then((snap) => {
       dispatch({
         type: actionTypes.PROFILE_UPDATE_SUCCESS,

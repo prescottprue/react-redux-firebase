@@ -1,6 +1,10 @@
 import { get } from 'lodash'
 import { exampleData } from '../mockData'
 import * as helpers from '../../src/helpers'
+let path
+let valName
+let rootName
+let populates
 
 describe('Helpers:', () => {
   describe('getVal', () => {
@@ -52,7 +56,7 @@ describe('Helpers:', () => {
     })
 
     it('returns unpopulated data for no populates', () => {
-      const path = 'projects'
+      path = 'projects'
       expect(helpers.populate(exampleData, path, []).CDF.owner)
         .to
         .equal(exampleData.data[path].CDF.owner)
@@ -60,7 +64,7 @@ describe('Helpers:', () => {
 
     describe('profile', () => {
       it('returns unpopulated data for no populates', () => {
-        const path = 'profile'
+        path = 'profile'
         expect(helpers.populate(exampleData, path, []))
           .to
           .have
@@ -68,8 +72,8 @@ describe('Helpers:', () => {
       })
 
       it('returns unpopulated data for invalid populate', () => {
-        const path = 'profile'
-        const populates = [{ child: 'role', root: 'users' }]
+        path = 'profile'
+        populates = [{ child: 'role', root: 'users' }]
         expect(helpers.populate(exampleData, path, populates))
           .to
           .deep
@@ -77,8 +81,8 @@ describe('Helpers:', () => {
       })
 
       it('populates a single parameter', () => {
-        const path = 'profile'
-        const populates = [{ child: 'role', root: 'roles' }]
+        path = 'profile'
+        populates = [{ child: 'role', root: 'roles' }]
         expect(helpers.populate(exampleData, path, populates))
           .to
           .deep
@@ -86,8 +90,8 @@ describe('Helpers:', () => {
       })
 
       it('populates a list parameter', () => {
-        const path = 'profile'
-        const populates = [{ child: 'notes', root: 'notes' }]
+        path = 'profile'
+        populates = [{ child: 'notes', root: 'notes' }]
         expect(helpers.populate(exampleData, path, populates))
           .to
           .deep
@@ -96,11 +100,14 @@ describe('Helpers:', () => {
     })
 
     describe('single', () => {
+      beforeEach(() => {
+        rootName = 'users'
+      })
+
       describe('param', () => {
         it('populates value', () => {
-          const path = 'projects/CDF'
-          const rootName = 'users'
-          const populates = [{ child: 'owner', root: rootName }]
+          path = 'projects/CDF'
+          populates = [{ child: 'owner', root: rootName }]
           expect(helpers.populate(exampleData, path, populates).owner)
             .to
             .have
@@ -108,37 +115,51 @@ describe('Helpers:', () => {
         })
 
         it('handles child path', () => {
-          const path = 'projects/QRS'
-          const rootName = 'users'
-          const populates = [{ child: 'nested.owner', root: rootName }]
+          path = 'projects/QRS'
+          populates = [{ child: 'nested.owner', root: rootName }]
           const populatedData = helpers.populate(exampleData, path, populates)
           expect(populatedData.nested.owner)
             .to
             .have
             .property('displayName', 'scott')
         })
+
         it('populates childParam', () => {
-          const path = 'projects/CDF'
-          const rootName = 'users'
-          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }]).owner)
+          path = 'projects/CDF'
+          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }]))
             .to
             .have
-            .equal('scott')
+            .property('owner', 'scott')
         })
-        it('keeps non-existant children', () => {
-          const path = 'projects/OKF'
-          const rootName = 'users'
-          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName }]).owner)
+
+        it('populates childAlias', () => {
+          path = 'projects/CDF'
+          const child = 'owner'
+          const childAlias = 'ownerObj'
+          expect(helpers.populate(exampleData, path, [{ child, root: rootName, childAlias }]))
             .to
             .have
-            .equal('asdfasdf')
+            .deep
+            .property(`${childAlias}.displayName`, 'scott')
+        })
+
+        it('keeps non-existant children', () => {
+          path = 'projects/OKF'
+          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName }]))
+            .to
+            .have
+            .property('owner', 'asdfasdf')
         })
       })
+
       describe('list param', () => {
+        beforeEach(() => {
+          rootName = 'users'
+        })
+
         it('populates values', () => {
-          const path = 'projects/OKF'
-          const rootName = 'users'
-          const populates = [
+          path = 'projects/OKF'
+          populates = [
             { child: 'collaborators', root: rootName }
           ]
           const populatedData = helpers.populate(exampleData, path, populates)
@@ -150,11 +171,10 @@ describe('Helpers:', () => {
         })
       })
 
-      describe('config as function', () => {
+      describe('config as function -', () => {
         it('populates values', () => {
-          const path = 'projects/CDF'
-          const rootName = 'users'
-          const populates = (projectKey, projectData) => ([
+          path = 'projects/CDF'
+          populates = (projectKey, projectData) => ([
             // configure populates with key / data tuple...
             { child: 'owner', root: rootName }
           ])
@@ -167,9 +187,8 @@ describe('Helpers:', () => {
       })
 
       it('works with ordered', () => {
-        const path = 'ordered/projects/0'
-        const rootName = 'users'
-        const populates = [
+        path = 'ordered/projects/0'
+        populates = [
           { child: 'owner', root: rootName }
         ]
         const populated = helpers.populate(exampleData, path, populates)
@@ -183,10 +202,13 @@ describe('Helpers:', () => {
 
     describe('list', () => {
       describe('single param', () => {
+        beforeEach(() => {
+          path = 'projects'
+          rootName = 'users'
+        })
+
         it('populates value', () => {
-          const path = 'projects'
-          const rootName = 'users'
-          const valName = 'CDF'
+          valName = 'CDF'
           expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName }])[valName].owner)
             .to
             .have
@@ -194,11 +216,9 @@ describe('Helpers:', () => {
         })
 
         it('populates value even when others are missing', () => {
-          const path = 'projects'
-          const rootName = 'users'
           const catRootName = 'categories'
-          const valName = 'TUV'
-          const populates = [
+          valName = 'TUV'
+          populates = [
             { child: 'owner', root: rootName },
             { child: 'category', root: catRootName }
           ]
@@ -210,22 +230,37 @@ describe('Helpers:', () => {
         })
 
         it('populates childParam', () => {
-          const path = 'projects'
-          const rootName = 'users'
-          const valName = 'CDF'
-          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }])[valName].owner)
+          valName = 'CDF'
+          const child = 'owner'
+          const childParam = 'displayName'
+          expect(helpers.populate(exampleData, path, [{ child, root: rootName, childParam }]))
             .to
             .have
-            .equal('scott')
+            .deep
+            .property(`${valName}.${child}`, 'scott')
+        })
+
+        it('populates childAlias', () => {
+          const child = 'owner'
+          const childAlias = 'ownerObj'
+          valName = 'CDF'
+          expect(helpers.populate(exampleData, path, [{ child, root: rootName, childAlias }]))
+            .to
+            .have
+            .deep
+            .property(`${valName}.${childAlias}.displayName`, 'scott')
         })
       })
 
       describe('list param', () => {
+        beforeEach(() => {
+          path = 'projects'
+          rootName = 'users'
+          valName = 'OKF'
+        })
+
         it('populates values', () => {
-          const path = 'projects'
-          const rootName = 'users'
-          const valName = 'OKF'
-          const populates = [
+          populates = [
             { child: 'collaborators', root: rootName }
           ]
           const populatedData = helpers.populate(exampleData, path, populates)
@@ -237,10 +272,7 @@ describe('Helpers:', () => {
         })
 
         it('keeps non-existant children', () => {
-          const path = 'projects'
-          const rootName = 'users'
-          const valName = 'OKF'
-          const populates = [
+          populates = [
             { child: 'collaborators', root: rootName }
           ]
           // Non matching collaborator
@@ -260,10 +292,10 @@ describe('Helpers:', () => {
 
       describe('config as function', () => {
         it('populates values', () => {
-          const path = 'projects'
-          const rootName = 'users'
-          const valName = 'OKF'
-          const populates = (projectKey, projectData) => ([
+          path = 'projects'
+          rootName = 'users'
+          valName = 'OKF'
+          populates = (projectKey, projectData) => ([
             // configure populates with key / data tuple...
             { child: 'collaborators', root: rootName }
           ])
@@ -277,10 +309,13 @@ describe('Helpers:', () => {
       })
 
       describe('works with ordered data', () => {
+        beforeEach(() => {
+          path = 'ordered/projects'
+          rootName = 'users'
+        })
+
         it('with list child', () => {
-          const path = 'ordered/projects'
-          const rootName = 'users'
-          const populates = [
+          populates = [
             { child: 'collaborators', root: rootName }
           ]
           const populatedArr = helpers.populate(exampleData, path, populates)
@@ -292,9 +327,7 @@ describe('Helpers:', () => {
         })
 
         it('with multiple populates', () => {
-          const path = 'ordered/projects'
-          const rootName = 'users'
-          const populates = [
+          populates = [
             { child: 'random' },
             { child: 'collaborators', root: rootName }
           ]
@@ -307,8 +340,7 @@ describe('Helpers:', () => {
         })
 
         it('with none existing child', () => {
-          const path = 'ordered/projects'
-          const populates = [
+          populates = [
             { child: 'random' }
           ]
           const populatedArr = helpers.populate(exampleData, path, populates)
@@ -322,11 +354,14 @@ describe('Helpers:', () => {
     })
 
     describe('multiple populates', () => {
+      beforeEach(() => {
+        rootName = 'users'
+        path = 'projects'
+        valName = 'CDF'
+      })
+
       it('from different roots', () => {
-        const path = 'projects'
-        const rootName = 'users'
-        const valName = 'CDF'
-        const populates = [
+        populates = [
           { child: 'owner', root: rootName },
           { child: 'notes', root: 'notes' }
         ]
@@ -346,10 +381,7 @@ describe('Helpers:', () => {
 
       // Skipped since this is not currently supported
       it('from same root', () => {
-        const path = 'projects'
-        const rootName = 'users'
-        const valName = 'CDF'
-        const populates = [
+        populates = [
           { child: 'owner', root: rootName },
           { child: 'collaborators', root: rootName }
         ]
