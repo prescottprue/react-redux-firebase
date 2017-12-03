@@ -372,6 +372,8 @@ Internally parse following query params. Useful when attempting to parse
 
 **NOTE**: `orderByChild`, `orderByPriority`, and `orderByValue` will cause this to be enabled by default. Parsing will remain enabled for the rest of the query params until `notParsed` is called.
 
+Added as part of `v2.0.0-beta.17`
+
 #### Examples
 1. Order by child parameter equal to a number string. Equivalent of searching for `'123'` (where as not using `notParsed` would search for children equal to `123`)
 ```js
@@ -387,7 +389,7 @@ firebaseConnect([
 ])
 ```
 
-## storeAs {#populate}
+## storeAs {#storeAs}
 
 By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use `storeAs`:
 
@@ -395,14 +397,16 @@ By default the results of queries are stored in redux under the path of the quer
 1. Querying the same path with different query parameters
 
 ```js
+const myProjectsReduxName = 'myProjects'
+
 compose(
   firebaseConnect(props => [
     { path: 'projects' }
-    { path: 'projects', storeAs: 'myProjects', queryParams: ['orderByChild=uid', '123'] }
+    { path: 'projects', storeAs: myProjectsReduxName, queryParams: ['orderByChild=uid', '123'] }
   ]),
-  connect(({ firebase }, props) => ({
-    projects: populatedDataToJS(firebase, 'projects'),
-    myProjects: populatedDataToJS(firebase, 'myProjects'), // use storeAs path to gather from redux
+  connect((state, props) => ({
+    projects: state.firebase.data.projects,
+    myProjects: state.firebase.data[myProjectsReduxName], // use storeAs path to gather from redux
   }))
 )
 ```

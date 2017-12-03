@@ -8,7 +8,7 @@ A basic implementation can look like so:
 ```javascript
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
+import { firebaseConnect, populate } from 'react-redux-firebase'
 
 const populates = [
   { child: 'owner', root: 'users' } // replace owner with user object
