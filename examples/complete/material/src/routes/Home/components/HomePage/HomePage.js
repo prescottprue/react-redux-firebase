@@ -5,9 +5,9 @@ import { compose, withHandlers } from 'recompose'
 import { firebaseConnect, populate } from 'react-redux-firebase'
 import Theme from 'theme'
 import { withNotifications } from 'modules/notification'
-import NewTodoPanel from '../components/NewTodoPanel'
-import TodosList from '../components/TodosList'
-import classes from './HomeContainer.scss'
+import NewTodoPanel from '../NewTodoPanel'
+import TodosList from '../TodosList'
+import classes from './HomePage.scss'
 
 // Populate owner from users collection
 const populates = [
@@ -18,7 +18,8 @@ const populates = [
   }
 ]
 
-const withTodos = compose(
+// Component enhancer
+const enhance = compose(
   withNotifications, // adds props.showError from notfication module
   firebaseConnect([
     // Create Firebase query for for 20 most recent todos
@@ -31,7 +32,7 @@ const withTodos = compose(
   // firestoreConnect([{ collection: 'todos' }]) // get data from firestore
   connect(({ firebase, firebase: { auth } }) => ({
     uid: auth.uid,
-    todos: populate(firebase, 'ordered/todos', populates) // populate todos with users data from redux
+    todos: populate(firebase, 'todos', populates) // populate todos with users data from redux
     // todos: firebase.ordered.todos // if using ordering such as orderByChild or orderByKey
     // todos: firestore.ordered.todos, // firestore data from firestoreConnect
   })),
@@ -83,4 +84,4 @@ Home.propTypes = {
   uid: PropTypes.string
 }
 
-export default withTodos(Home)
+export default enhance(Home)
