@@ -157,6 +157,49 @@ export default compose(
 )(Todos)
 ```
 
+**Queries Based On Props**
+
+It is common to make a detail page that loads a single item instead of a whole list of items. A query for a specific `Todos` can be created using
+
+```jsx
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { firebaseConnect, getVal } from 'react-redux-firebase'
+
+// Component enhancer that loads todo into redux then into the todo prop
+const enhance = compose(
+  firebaseConnect((props) => [
+    // Set listeners based on props (prop is route parameter from react-router in this case)
+    return [
+      { path: `todos/${props.params.todoId}` }, // create todo listener
+      // `todos/${props.params.todoId}` // equivalent string notation
+    ]
+  }),
+  connect(({ firebase }, props) => ({
+    todo: getVal(firebase, `todos/${props.params.todoId}`), // lodash's get can also be used
+  }))
+)
+
+const Todo = ({ todo, firebase, params }) =>
+  <div>
+    <input
+      name="isDone"
+      type="checkbox"
+      checked={todo.isDone}
+      onChange={() =>
+        firebase.update(`todos/${params.todoId}`, { done: !todo.isDone })
+      }
+    />
+    <span>{todo.label}</span>
+  </div>
+
+// Export enhanced component
+export default enhance(Todo)
+```
+
+
 **Load Data On Click**
 
 ```jsx
@@ -188,41 +231,16 @@ const Todos = ({ firebase }) => {
   )
 }
 
+// Export enhanced component
 export default compose(
   withFirebase, // or firebaseConnect()
-  connect(
-    (state) => ({
-      todos: state.firebase.data.todos,
-      // profile: state.firebase.profile // load profile
-    })
-  )
+  connect((state) => ({
+    todos: state.firebase.data.todos,
+    // profile: state.firebase.profile // load profile
+  }))
 )(Todos)
 ```
 
-**Queries Based On State**
-`Todos` component from above examples
-
-```jsx
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
-import { firebaseConnect } from 'react-redux-firebase'
-
-export default compose(
-  firebaseConnect((props, store) => {
-    const state = store.getState();
-    // Get Todos stored by user UID
-    return state.auth ? [`todos/${state.auth.uid}`] : []
-  }),
-  connect(
-    (state) => ({
-      todos: state.firebase.data.todos,
-      // profile: state.firebase.profile // load profile
-    })
-  )
-)(Todos)
-```
 
 ## [Docs](http://react-redux-firebase.com)
 See full documentation at [react-redux-firebase.com](http://react-redux-firebase.com)
