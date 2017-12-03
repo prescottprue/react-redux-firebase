@@ -19,8 +19,10 @@ const enhnace = compose(
     }
   ),
   withHandlers({
-    addTodo: props => () =>
-      props.firebase.push('todos', { text: newTodoText || 'Sample Text', owner: props.uid })
+    addTodo: props => () => {
+      const newTodo = { text: newTodoText || 'Sample Text', owner: props.uid }
+      return props.firebase.push('todos', newTodo)
+    }
   })
 )
 

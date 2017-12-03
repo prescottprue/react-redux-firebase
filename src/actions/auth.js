@@ -7,7 +7,11 @@ import {
 } from 'lodash'
 import { actionTypes } from '../constants'
 import { populate } from '../helpers'
-import { getLoginMethodAndParams } from '../utils/auth'
+import {
+  getLoginMethodAndParams,
+  updateProfileOnRTDB,
+  updateProfileOnFirestore
+} from '../utils/auth'
 import {
   promisesForPopulate,
   getPopulateObjs
@@ -642,25 +646,23 @@ export const verifyPasswordResetCode = (dispatch, firebase, code) => {
  * @private
  */
 export const updateProfile = (dispatch, firebase, profileUpdate) => {
-  const { database, _: { config, authUid } } = firebase
+  const { _: { config } } = firebase
   dispatch({
     type: actionTypes.PROFILE_UPDATE_START,
     payload: profileUpdate
   })
-  const profileRef = database().ref(`${config.userProfile}/${authUid}`)
-  return profileRef
-    .update(profileUpdate)
-    .then(() =>
-      profileRef
-        .once('value')
-        .then((snap) => {
-          dispatch({
-            type: actionTypes.PROFILE_UPDATE_SUCCESS,
-            payload: snap.val()
-          })
-          return snap
-        })
-    )
+  // Select update promise type (firebase/firestore) based on config
+  const updatePromise = config.useFirestoreForProfile
+    ? updateProfileOnFirestore
+    : updateProfileOnRTDB
+  return updatePromise(firebase, profileUpdate)
+    .then((snap) => {
+      dispatch({
+        type: actionTypes.PROFILE_UPDATE_SUCCESS,
+        payload: config.useFirestoreForProfile ? snap.data() : snap.val()
+      })
+      return snap
+    })
     .catch((payload) => {
       dispatch({ type: actionTypes.PROFILE_UPDATE_ERROR, payload })
       return Promise.reject(payload)

@@ -3,7 +3,7 @@ sudo: false
 language: node_js
 
 node_js:
-  - 6.11.3 # Still Used
+  - 6.11.5 # Cloud Functions Runtime (Used for firebase-functions)
   - 8 # L.T.S
   - 9 # Current
 

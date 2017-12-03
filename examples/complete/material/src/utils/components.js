@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import PropTypes from 'prop-types'
 import { pick, some } from 'lodash'
-import LoadingSpinner from 'components/LoadingSpinner'
 import { isLoaded } from 'react-redux-firebase'
 import {
   compose,
@@ -11,6 +10,7 @@ import {
   branch,
   renderComponent
 } from 'recompose'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 /**
  * Show a loading spinner when a condition is truthy. Used within

@@ -42,16 +42,23 @@ const createAuthProvider = (firebase, providerName, scopes) => {
 }
 
 /**
- * @description Get correct login method and params order based on provided credentials
+ * @description Get correct login method and params order based on provided
+ * credentials
  * @param {Object} firebase - Internal firebase object
  * @param {Object} credentials - Login credentials
- * @param {String} credentials.email - Email to login with (only needed for email login)
- * @param {String} credentials.password - Password to login with (only needed for email login)
- * @param {String} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
- * @param {String} credentials.type - Popup or redirect (only needed for 3rd party provider login)
+ * @param {String} credentials.email - Email to login with (only needed for
+ * email login)
+ * @param {String} credentials.password - Password to login with (only needed
+ * for email login)
+ * @param {String} credentials.provider - Provider name such as google, twitter
+ * (only needed for 3rd party provider login)
+ * @param {String} credentials.type - Popup or redirect (only needed for 3rd
+ * party provider login)
  * @param {String} credentials.token - Custom or provider token
- * @param {firebase.auth.AuthCredential} credentials.credential - Custom or provider token
- * @param {Array|String} credentials.scopes - Scopes to add to provider (i.e. email)
+ * @param {firebase.auth.AuthCredential} credentials.credential - Custom or
+ * provider token
+ * @param {Array|String} credentials.scopes - Scopes to add to provider
+ * (i.e. email)
  * @private
  */
 export const getLoginMethodAndParams = (firebase, creds) => {
@@ -92,12 +99,11 @@ export const getLoginMethodAndParams = (firebase, creds) => {
  * store using react-redux-firebase.
  * @param {Object} store - The Redux store on which we want to detect if
  * Firebase auth is ready.
- * @param {string} [stateName='firebase'] - The attribute name of the react-redux-firebase
- * reducer when using multiple combined reducers. 'firebase' by default. Set
- * this to `null` to indicate that the react-redux-firebase reducer is not in a
- * combined reducer.
- * @return {Promise} - A promise that completes when Firebase auth is ready
- * in the store.
+ * @param {string} [stateName='firebase'] - The attribute name of the
+ * react-redux-firebase reducer when using multiple combined reducers.
+ * 'firebase' by default. Set this to `null` to indicate that the
+ * react-redux-firebase reducer is not in a combined reducer.
+ * @return {Promise} Resolves when Firebase auth is ready in the store.
  */
 const isAuthReady = (store, stateName) => {
   const state = store.getState()
@@ -118,8 +124,7 @@ const isAuthReady = (store, stateName) => {
  * reducer when using multiple combined reducers. 'firebase' by default. Set
  * this to `null` to indicate that the react-redux-firebase reducer is not in a
  * combined reducer.
- * @return {Promise} - A promise that completes when Firebase auth is ready
- * in the store.
+ * @return {Promise} Resolve when Firebase auth is ready in the store.
  */
 export const authIsReady = (store, stateName = 'firebase') =>
   new Promise((resolve) => {
@@ -142,11 +147,38 @@ export const authIsReady = (store, stateName = 'firebase') =>
  * @param {Object} config - Config options for authIsReady
  * @param {string} config.authIsReady - Config options for authIsReady
  * @param {string} config.firebaseStateName - Config options for authIsReady
- * @return {Promise} - A promise that completes when Firebase auth is ready
- * in the store.
+ * @return {Promise} Resolves when Firebase auth is ready in the store.
  */
 export const createAuthIsReady = (store, config) => {
   return isFunction(config.authIsReady)
     ? config.authIsReady(store, config)
     : authIsReady(store, config.firebaseStateName)
+}
+
+/**
+ * Update profile data on Firebase Real Time Database
+ * @param  {Object} firebase - internal firebase object
+ * @param  {Object} profileUpdate - Updates to profile object
+ * @return {Promise} Resolves with results of profile get
+ */
+export const updateProfileOnRTDB = (firebase, profileUpdate) => {
+  const { database, _: { config, authUid } } = firebase
+  const profileRef = database().ref(`${config.userProfile}/${authUid}`)
+  return profileRef
+    .update(profileUpdate)
+    .then(() => profileRef.once('value'))
+}
+
+/**
+ * Update profile data on Firestore
+ * @param  {Object} firebase - internal firebase object
+ * @param  {Object} profileUpdate - Updates to profile object
+ * @return {Promise} Resolves with results of profile get
+ */
+export const updateProfileOnFirestore = (firebase, profileUpdate) => {
+  const { firestore, _: { config, authUid } } = firebase
+  const profileRef = firestore().doc(`${config.userProfile}/${authUid}`)
+  return profileRef
+    .update(profileUpdate)
+    .then(profileRef.get)
 }

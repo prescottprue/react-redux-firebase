@@ -11,9 +11,86 @@ npm install --save react-redux-firebase
 
 Install peer dependencies: `npm i --save redux react-redux`
 
+## Install
+```bash
+npm install --save react-redux-firebase
+```
+
+## Add Reducer
+
+Include `firebase` in your combine reducers function:
+
+
+```js
+import { combineReducers } from 'redux'
+import { firebaseReducer } from 'react-redux-firebase'
+
+// Add firebase to reducers
+const rootReducer = combineReducers({
+  firebase: firebaseReducer
+})
+```
+
+## Setting Up Store With Store Enhancer
+
+```js
+import { compose } from 'redux'
+import { reactReduxFirebase } from 'react-redux-firebase'
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: '<your-api-key>',
+  authDomain: '<your-auth-domain>',
+  databaseURL: '<your-database-url>',
+  storageBucket: '<your-storage-bucket>'
+}
+// react-redux-firebase options
+const config = {
+  userProfile: 'users', // firebase root where user profiles are stored
+  enableLogging: false, // enable/disable Firebase's database logging
+}
+
+// Add redux Firebase to compose
+const createStoreWithFirebase = compose(
+  reactReduxFirebase(firebase, config)
+)(createStore)
+
+// Create store with reducers and initial state
+const store = createStoreWithFirebase(rootReducer, initialState)
+```
+
+View the [config section](/config.html) for full list of configuration options.
+
+## Use in Components
+
+**Queries Based On State**
+`Todos` component from above examples
+
+```jsx
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { firebaseConnect } from 'react-redux-firebase'
+
+export default compose(
+  firebaseConnect((props) => {
+    return [
+      'todos'
+    ]
+  }),
+  connect(
+    (state) => ({
+      todos: state.firebase.data.todos,
+      // profile: state.firebase.profile // load profile
+    })
+  )
+)(Todos)
+```
+
 ### Decorators
 
-Though they are optional, it is highly recommended that you used decorators with this library. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
+They are completely optional, but ES7 Decorators can be used. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
 
 A side by side comparison using [react-redux](https://github.com/reactjs/react-redux)'s `connect` function/HOC is the best way to illustrate the difference:
 
@@ -40,131 +117,4 @@ In order to enable this functionality, you will most likely need to install a pl
 {
   "plugins": ["transform-decorators-legacy"]
 }
-```
-
-
-## Install
-```bash
-npm install --save react-redux-firebase
-```
-
-## Add Reducer
-
-Include `firebase` in your combine reducers function:
-
-
-```js
-import { combineReducers } from 'redux'
-import { firebaseStateReducer } from 'react-redux-firebase'
-
-// Add firebase to reducers
-const rootReducer = combineReducers({
-  firebase: firebaseStateReducer
-})
-```
-
-## Compose Function
-
-```js
-import { compose } from 'redux'
-import { reactReduxFirebase } from 'react-redux-firebase'
-
-// Firebase config
-const firebaseConfig = {
-  apiKey: '<your-api-key>',
-  authDomain: '<your-auth-domain>',
-  databaseURL: '<your-database-url>',
-  storageBucket: '<your-storage-bucket>'
-}
-// react-redux-firebase options
-const config = {
-  userProfile: 'users', // firebase root where user profiles are stored
-  enableLogging: false, // enable/disable Firebase's database logging
-}
-
-// Add redux Firebase to compose
-const createStoreWithFirebase = compose(
-  reactReduxFirebase(firebaseConfig, config)
-)(createStore)
-
-// Create store with reducers and initial state
-const store = createStoreWithFirebase(rootReducer, initialState)
-```
-
-View the [config section](/config.html) for full list of configuration options.
-
-## Use in Components
-
-```jsx
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
-
-@firebaseConnect([
-  'todos' // corresponds to 'todos' root on firebase
-])
-@connect(
-  ({ firebase: { data: { todos } } }) => ({ // state.firebase.data.todos
-    // todos prop set to firebase data in redux under '/todos'
-    todos,
-  })
-)
-export default class Todos extends Component {
-  static propTypes = {
-    todos: PropTypes.object,
-    firebase: PropTypes.object
-  }
-
-  handleAdd = () => {
-    const {newTodo} = this.refs
-    const { firebase } = this.props
-    // Add a new todo to firebase
-    firebase.push('/todos', { text: newTodo.value, done: false })
-    newTodo.value = ''
-  }
-
-  render() {
-    const { todos } = this.props;
-
-    // Build Todos list if todos exist and are loaded
-    const todosList = !isLoaded(todos)
-      ? 'Loading'
-      : isEmpty(todos)
-        ? 'Todo list is empty'
-        : Object.keys(todos).map(
-            (key, id) => (
-              <TodoItem key={key} id={id} todo={todos[key]}/>
-            )
-          )
-
-    return (
-      <div>
-        <h1>Todos</h1>
-        <ul>
-          {todosList}
-        </ul>
-        <input type="text" ref="newTodo" />
-        <button onClick={this.handleAdd}>
-          Add
-        </button>
-      </div>
-    )
-  }
-}
-```
-
-Alternatively, if you choose not to use decorators, your connect function will look like so:
-
-```javascript
-const wrappedTodos = firebaseConnect([
-  'todos'
-])(Todos)
-
-export default connect(
-  ({ firebase: { data: { todos } } }) => ({
-    todos,
-  })
-)(wrappedTodos)
-
 ```

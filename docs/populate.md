@@ -34,7 +34,7 @@ export default enhance(SomeComponent)
 * Population happens in two parts:
   1. `firebaseConnect` - based on populate settings, queries are created for associated keys to be replaced. Query results are stored in redux under the value of `root` in the populate settings.
   2. `connect` - Combine original data at path with all populate data (in redux from queries created by passing populate settings to `firebaseConnect`)
-* Populate creates a query for each key that is being replaced
+* Populate creates a query for each key that is being "populated", but does not create multiple queries for the same key
 * Results of populate queries are placed under their root
 
 ## Examples
@@ -135,9 +135,12 @@ ASDF123: {
 }
 ```
 
-##### Keep Object's Key
+##### Keep Object's Key {#keyProp}
 
 Often when populating, you will want to keep the key that was originally there (before being replaced by populated value). This is supported through the use of `keyProp`:
+
+
+*NOTE:* Similar results also be accomplished using [`childAlias`](#childAlias) since child (key in this case) will be preserved if populate result is "aliased"
 
 ##### Example Query
 ```javascript
@@ -170,7 +173,44 @@ ASDF123: {
 }
 ```
 
-### Object's Parameter
+### Place Result On Another Parameter {#childAlias}
+
+There is also the option to place the results of a populate on another parameter instead of replacing the original child (i.e. "alias" the child result). An example of this could be populating the `owner` parameter onto the `ownerObj` parameter, which would leave the `owner` parameter intact (since the child from the populate was "aliased" to `ownerObj`).
+
+For more details including the initial feature request, checkout [issue #126](https://github.com/prescottprue/react-redux-firebase/issues/126).
+
+##### Example
+```javascript
+const populates = [
+  { child: 'owner', root: 'users', childAlias: 'ownerObj' }
+]
+
+const enhance = compose(
+  firebaseConnect([
+   { path: '/todos', populates }
+   // '/todos#populate=owner:users:email' // equivalent string notation
+  ]),
+  connect(
+    ({ firebase }) => ({
+      todos: populate(firebase, 'todos', populates),
+    })
+  )
+)
+```
+
+##### Example Result
+
+```javascript
+ASDF123: {
+  text: 'Some Todo Item',
+  owner: "Iq5b0qK2NtgggT6U3bU6iZRGyma2",
+  ownerObj: {
+    email: 'mortysmith@gmail.com',
+  }
+}
+```
+
+### Object's Parameter {#childParam}
 
 There is also the option to load a parameter from within a population object. An example of this could be populating the `owner` parameter with the `email` property of the `user` with a matching ID:
 
