@@ -77,7 +77,7 @@ compose(
       path: 'todos',
       storeAs: 'myTodos', // place in redux under "myTodos"
       queryParams: ['orderByChild=createdBy', 'equalTo=123someuid'],
-    }
+    },
     {
       path: 'todos',
       queryParams: ['limitToFirst=20'],
