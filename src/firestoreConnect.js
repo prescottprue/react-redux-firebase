@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import hoistStatics from "hoist-non-react-statics";
-import { wrapDisplayName } from "recompose";
-import { createCallable } from "./utils";
-import { isEqual } from "lodash";
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import hoistStatics from "hoist-non-react-statics"
+import { wrapDisplayName } from "recompose"
+import { createCallable } from "./utils"
+import { isEqual } from "lodash"
 
 /**
  * @name createFirestoreConnect
@@ -27,51 +27,51 @@ export const createFirestoreConnect = (storeKey = "store") => (
   dataOrFn = []
 ) => WrappedComponent => {
   class FirestoreConnect extends Component {
-    static wrappedComponent = WrappedComponent;
-    static displayName = wrapDisplayName(WrappedComponent, "FirestoreConnect");
+    static wrappedComponent = WrappedComponent
+    static displayName = wrapDisplayName(WrappedComponent, "FirestoreConnect")
     static contextTypes = {
       [storeKey]: PropTypes.object.isRequired
-    };
+    }
 
-    prevData = null;
-    store = this.context[storeKey];
+    prevData = null
+    store = this.context[storeKey]
 
     componentWillMount() {
-      const { firebase, firestore } = this.store;
+      const { firebase, firestore } = this.store
       if (firebase.firestore && firestore) {
         // Allow function to be passed
-        const inputAsFunc = createCallable(dataOrFn);
-        this.prevData = inputAsFunc(this.props, this.store);
+        const inputAsFunc = createCallable(dataOrFn)
+        this.prevData = inputAsFunc(this.props, this.store)
 
-        firestore.setListeners(this.prevData);
+        firestore.setListeners(this.prevData)
       }
     }
 
     componentWillUnmount() {
-      const { firebase, firestore } = this.store;
+      const { firebase, firestore } = this.store
       if (firebase.firestore && this.prevData) {
-        firestore.unsetListeners(this.prevData);
+        firestore.unsetListeners(this.prevData)
       }
     }
 
     // TODO: Re-attach listeners on query path change
     componentWillReceiveProps(np) {
-      const { firebase, firestore, dispatch } = this.store;
-      const inputAsFunc = createCallable(dataOrFn);
-      const data = inputAsFunc(np, this.store);
+      const { firebase, firestore, dispatch } = this.store
+      const inputAsFunc = createCallable(dataOrFn)
+      const data = inputAsFunc(np, this.store)
 
       // Handle a data parameter having changed
       if (firebase.firestore && !isEqual(data, this.prevData)) {
-        this.prevData = data;
+        this.prevData = data
         // UnWatch all current events
-        firestore.unsetListeners(this.prevData);
+        firestore.unsetListeners(this.prevData)
         // Watch new events
-        firestore.setListeners(this.prevData);
+        firestore.setListeners(this.prevData)
       }
     }
 
     render() {
-      const { firebase, firestore } = this.store;
+      const { firebase, firestore } = this.store
       return (
         <WrappedComponent
           {...this.props}
@@ -79,12 +79,12 @@ export const createFirestoreConnect = (storeKey = "store") => (
           firebase={{ ...firebase, ...firebase.helpers }}
           firestore={firestore}
         />
-      );
+      )
     }
   }
 
-  return hoistStatics(FirestoreConnect, WrappedComponent);
-};
+  return hoistStatics(FirestoreConnect, WrappedComponent)
+}
 
 /**
  * @name firestoreConnect
@@ -115,4 +115,4 @@ export const createFirestoreConnect = (storeKey = "store") => (
  *   })
  * )(SomeComponent)
  */
-export default createFirestoreConnect();
+export default createFirestoreConnect()
