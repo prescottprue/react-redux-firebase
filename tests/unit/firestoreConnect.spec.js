@@ -4,7 +4,9 @@ import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
 import reactReduxFirebase from '../../src/enhancer'
 import { createStore, compose, combineReducers } from 'redux'
-import firestoreConnect, { createFirestoreConnect } from '../../src/firestoreConnect'
+import firestoreConnect, {
+  createFirestoreConnect
+} from '../../src/firestoreConnect'
 
 describe('firestoreConnect', () => {
   class Passthrough extends Component {
@@ -25,7 +27,8 @@ describe('firestoreConnect', () => {
         cloneElement(this.props.children, {
           testProp: this.state.test,
           dynamicProp: this.state.dynamic
-        }))
+        })
+      )
     }
   }
 
@@ -37,23 +40,26 @@ describe('firestoreConnect', () => {
     store: PropTypes.object,
     children: PropTypes.node
   }
-  const fakeReduxFirestore = (instance, otherConfig) => next =>
-      (reducer, initialState, middleware) => {
-        const store = next(reducer, initialState, middleware)
-        store.firestore = { listeners: {} }
-        return store
-      }
+  const fakeReduxFirestore = (instance, otherConfig) => next => (
+    reducer,
+    initialState,
+    middleware
+  ) => {
+    const store = next(reducer, initialState, middleware)
+    store.firestore = { listeners: {} }
+    return store
+  }
 
   const createContainer = () => {
     const createStoreWithMiddleware = compose(
       reactReduxFirebase(Firebase, { userProfile: 'users' }),
       fakeReduxFirestore(Firebase)
     )(createStore)
-    const store = createStoreWithMiddleware(combineReducers({ firestore: (state = {}) => state }))
+    const store = createStoreWithMiddleware(
+      combineReducers({ firestore: (state = {}) => state })
+    )
 
-    @firestoreConnect((props) => [
-      `test/${props.dynamicProp}`
-    ])
+    @firestoreConnect(props => [`test/${props.dynamicProp}`])
     class Container extends Component {
       render () {
         return <Passthrough {...this.props} />
@@ -85,21 +91,22 @@ describe('firestoreConnect', () => {
   })
 
   it('does not change watchers props changes that do not change listener paths', () => {
-    const { parent } = createContainer()
-    parent.setState({ test: 'somethingElse' })
-    // expect(parent.context.store).to.equal(store)
+    const { container, store } = createContainer()
+    container.setState({ test: 'somethingElse' })
+    expect(container.context.store).to.equal(store)
   })
 
   it('reapplies watchers when props change', () => {
-    const { parent } = createContainer()
-    parent.setState({
+    const { container, store } = createContainer()
+    container.setState({
       dynamic: 'somethingElse'
     })
-    // expect(parent.context.store).to.equal(store)
+    expect(container.context.store).to.equal(store)
   })
 
   describe('sets displayName static as ', () => {
-    describe('FirestoreConnect(${WrappedComponentName}) for', () => { // eslint-disable-line no-template-curly-in-string
+    describe('FirestoreConnect(${WrappedComponentName}) for', () => {
+      // eslint-disable-line no-template-curly-in-string
       it('standard components', () => {
         class TestContainer extends Component {
           render () {
@@ -108,7 +115,9 @@ describe('firestoreConnect', () => {
         }
 
         const containerPrime = firestoreConnect()(TestContainer)
-        expect(containerPrime.displayName).to.equal(`FirestoreConnect(TestContainer)`)
+        expect(containerPrime.displayName).to.equal(
+          `FirestoreConnect(TestContainer)`
+        )
       })
 
       it('string components', () => {
