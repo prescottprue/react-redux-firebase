@@ -45,6 +45,9 @@ The above install command will install the `@latest` tag. You may also use the f
 
 Be aware of changes when using a version that is not tagged `@latest`. Please report any issues you encounter, and try to keep an eye on the [releases page](https://github.com/prescottprue/react-redux-firebase/releases) for updates.
 
+**Current Progress**
+Pending a few more small things v2.0.0 is now ready for the release Candidate stage (PRs in the coming days)! That means that in intended target for v2.0.0 to reach `@latest` before the end of the year!
+
 ## Use
 
 **Note:** If you are just starting a new project, you may want to use [`v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/#use) since it has an even easier syntax. For clarity on the transition, view the [`v1` -> `v2` migration guide](http://docs.react-redux-firebase.com/history/v2.0.0/docs/v2-migration-guide.html)
@@ -196,6 +199,14 @@ View docs for recipes on integrations with:
 * [react-native](/docs/recipes/react-native.md)
 * [react-native-firebase](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules) - requires `v2.0.0`
 
+## Firestore
+
+If you plan to use Firestore, you should checkout [`redux-firestore`][redux-firestore]. It integrates nicely with `react-redux-firebase` (v2 only) and it allows you to run Real Time Database and Firestore along side each other.
+
+`react-redux-firebase` provides the `firestoreConnect` HOC (similar to `firebaseConnect`) for easy setting/unsetting of listeners.
+
+Currently `react-redux-firebase` still handles auth when using [`redux-firestore`][redux-firestore] - The future plan is to also have auth standalone auth library that will allow the developer to choose which pieces they do/do not want.
+
 ## Starting A Project
 
 ### Generator
@@ -283,3 +294,4 @@ Thank you to all our backers! 🙏
 [code-style-url]: http://standardjs.com/
 [gitter-image]: https://img.shields.io/gitter/room/redux-firebase/gitter.svg?style=flat-square
 [gitter-url]: https://gitter.im/redux-firebase/Lobby
+[redux-firestore]: https://github.com/prescottprue/redux-firestore
