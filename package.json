@@ -13,7 +13,7 @@
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha -R spec ./tests/setup.js ./tests/** --recursive --require babel-register",
     "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- ./tests/** --recursive --report lcov --require babel-register",
-    "codecov": "cat coverage/*/lcov.info | codecov",
+    "codecov": "cat coverage/lcov.info | codecov",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "build:umd": "cross-env BABEL_ENV=commonjs NODE_ENV=development webpack src/index.js dist/react-redux-firebase.js",
