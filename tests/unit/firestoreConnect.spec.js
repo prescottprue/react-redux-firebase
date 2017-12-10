@@ -105,8 +105,7 @@ describe('firestoreConnect', () => {
   })
 
   describe('sets displayName static as ', () => {
-    describe('FirestoreConnect(${WrappedComponentName}) for', () => {
-      // eslint-disable-line no-template-curly-in-string
+    describe('FirestoreConnect(${WrappedComponentName}) for', () => { // eslint-disable-line no-template-curly-in-string
       it('standard components', () => {
         class TestContainer extends Component {
           render () {
