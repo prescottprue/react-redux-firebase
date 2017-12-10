@@ -5,31 +5,32 @@ Profile object is used to store data associated with a user. Using profile is in
 ## Basic
 It is common to store the list of user profiles under a collection called "users" or "profiles". For this example we will use "users".
 
-Include the `userProfile` parameter in config when setting up store middleware:
+Include the `userProfile` parameter in config when setting up store enhancer:
 
 ```js
 const config = {
   userProfile: 'users', // where profiles are stored in database
 }
+// During store creation
 reactReduxFirebase(fbConfig, config)
 ```
 
-Then later wrap a component with connect:
+Then later `connect` (from [react-redux](https://github.com/reactjs/react-redux/blob/master/docs/api.md)) to redux state with:
 
 ```js
 import { connect } from 'react-redux'
 
 // grab profile from redux with connect
 connect(
-  (state) => ({
-    profile: state.firebase.profile // profile passed as props.profile
-  })
+  (state) => {
+    return {
+      profile: state.firebase.profile // profile passed as props.profile
+    }
+  }
 )(SomeComponent) // pass component to be wrapped
 
 // or with some shorthand:
-connect(({ firebase: { profile } }) => ({
-  profile  // profile passed as props.profile
-}))(SomeComponent) // pass component to be wrapped
+connect(({ firebase: { profile } }) => ({ profile }))(SomeComponent)
 ```
 
 ## Update Profile
@@ -67,10 +68,10 @@ UpdateProfilePage.propTypes = {
 }
 
 export default compose(
-  withFirebase, // firebaseConnect() can also be used
+  withFirebase, // add props.firebase (firebaseConnect() can also be used)
   connect(
     ({ firebase: { profile } }) => ({
-      profile,
+      profile
     })
   )
 )(UpdateProfilePage)
