@@ -2,7 +2,7 @@
 
 react-redux-firebase comes with built in async action creators for all parts of Firebase including storage, auth, Real Time Database, and Firestore (firestore requires extra setup). These action creators dispatch actions which are then handled by the reducers. The examples below show using action creators as promises, but it is also possible to use redux state.
 
-For more on what [an async action creator is](http://redux.js.org/docs/advanced/AsyncActions.html#async-action-creators), please visit the [section on it in the redux-docs](http://redux.js.org/docs/advanced/AsyncActions.html#async-action-creators)
+For more on what [an async action creator is](http://redux.js.org/docs/advanced/AsyncActions.html#async-action-creators), please visit the [section on it in the redux-docs](http://redux.js.org/docs/advanced/AsyncActions.html#async-action-creators).
 
 ## Components
 Firebase actions can be accessed within a component by using either the [`withFirebase`](/docs/api/withFirebase) wrapper or the [`firebaseConnect` wrapper](/docs/api/firebaseConnect) like so:
@@ -13,8 +13,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { firebaseConnect, withFirebase } from 'react-redux-firebase'
 
-const SimpleComponent = () => (
-  <button onClick={() => this.props.firebase.push('todos', { some: 'data' })}>
+const SimpleComponent = (props) => (
+  <button onClick={() => props.firebase.push('todos', { some: 'data' })}>
     Test Push
   </button>
 )
