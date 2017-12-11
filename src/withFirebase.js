@@ -1,11 +1,12 @@
-import { compose, withProps } from 'recompose'
-import { createWithStore } from './withStore'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import hoistStatics from 'hoist-non-react-statics'
+import { wrapDisplayName } from 'recompose'
 
 /**
  * @name createWithFirebase
  * @description Function that creates a Higher Order Component that
- * automatically listens/unListens to provided firebase paths using
- * React's Lifecycle hooks.
+ * which providers props.firebase to React Components.
  * **WARNING!!** This is an advanced feature, and should only be used when
  * needing to access a firebase instance created under a different store key.
  * @param {String} [storeKey='store'] - Name of redux store which contains
@@ -21,13 +22,29 @@ import { createWithStore } from './withStore'
  * // use the withFirebase to wrap a component
  * export default withFirebase(SomeComponent)
  */
-export const createWithFirebase = (storeKey) => compose(
-  createWithStore(storeKey),
-  withProps(({ store: { firebase, dispatch } }) => ({
-    firebase,
-    dispatch
-  }))
-)
+export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
+  class withFirebase extends Component {
+    static wrappedComponent = WrappedComponent
+    static displayName = wrapDisplayName(WrappedComponent, 'withFirebase')
+    static contextTypes = {
+      [storeKey]: PropTypes.object.isRequired
+    }
+
+    store = this.context[storeKey]
+
+    render () {
+      return (
+        <WrappedComponent
+          {...this.props}
+          {...this.state}
+          firebase={this.store.firebase}
+        />
+      )
+    }
+  }
+
+  return hoistStatics(withFirebase, WrappedComponent)
+}
 
 /**
  * @name withFirebase
