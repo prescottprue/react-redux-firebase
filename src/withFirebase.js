@@ -37,6 +37,7 @@ export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
         <WrappedComponent
           {...this.props}
           {...this.state}
+          dispatch={this.store.dispatch}
           firebase={this.store.firebase}
         />
       )

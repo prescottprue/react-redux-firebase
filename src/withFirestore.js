@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import hoistStatics from 'hoist-non-react-statics'
 import { wrapDisplayName } from 'recompose'
+
 /**
  * @name createWithFirestore
  * @description Function that creates a Higher Order Component that
@@ -12,11 +13,10 @@ import { wrapDisplayName } from 'recompose'
  * Firebase state (state.firebase)
  * @return {Function} - HOC that accepts a watchArray and wraps a component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
- * import { createWithFirebase } from 'react-redux-firebase'
+ * import { createWithFirestore } from 'react-redux-firebase'
  *
  * // create withFirestore that uses another redux store
- * const withFirestore = createWithFirebase('anotherStore')
+ * const withFirestore = createWithFirestore('anotherStore')
  *
  * // use the withFirestore to wrap a component
  * export default withFirestore(SomeComponent)
@@ -35,10 +35,9 @@ export const createWithFirestore = (storeKey = 'store') => WrappedComponent => {
       return (
         <WrappedComponent
           {...this.props}
-          {...this.state}
+          dispatch={this.store.dispatch}
           firestore={this.store.firestore}
           firebase={this.store.firebase}
-          dispatch={this.store.dispatch}
         />
       )
     }
@@ -52,15 +51,15 @@ export const createWithFirestore = (storeKey = 'store') => WrappedComponent => {
  * @extends React.Component
  * @description Higher Order Component that attaches props.firestore and
  * props.firebase to React Components.
- * Firebase is gathered from store.firebase, which is attached to store by
- * the store enhancer (reactReduxFirebase) in ./enhancer.
+ * Firebase is gathered from store.firestore, which is attached to store by
+ * the store enhancer (reduxFirestore) in ./enhancer.
  * @return {Function} - That accepts a component to wrap and returns the wrapped component
  * @example <caption>Basic</caption>
  * import { withFirestore } from 'react-redux-firebase'
  *
- * const AddData = ({ firebase: { push } }) =>
+ * const AddData = ({ firestore: { add } }) =>
  *   <div>
- *     <button onClick={() => push('todos', { done: false, text: 'Sample' })}>
+ *     <button onClick={() => add('todos', { done: false, text: 'Sample' })}>
  *       Add Sample Todo
  *     </button>
  *   </div>

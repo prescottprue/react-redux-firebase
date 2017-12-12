@@ -8,6 +8,8 @@ import {
 let spy
 let unListen = sinon.spy()
 const dispatch = () => {}
+const defaultFileMeta = { path: 'projects', file: { name: 'test.png' } }
+let dispatchSpy
 const fakeFirebase = {
   _: {
     authUid: '123',
@@ -74,19 +76,122 @@ describe('Actions: Storage', () => {
       expect(uploadFile).to.be.a.function
     })
 
-    it('runs given basic params', () =>
-      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } }))
-        .to
-        .eventually
-        .become({})
-    )
+    it('throws if storage does not exist', async () => {
+      expect(() => uploadFile(dispatch, {})).to.Throw('Firebase storage is required to upload files')
+    })
 
-    it('handles dbPath', () =>
-      expect(uploadFile(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' }, dbPath: 'projects' }))
-        .to
-        .eventually
-        .become({})
-    )
+    it('runs given basic params', async () => {
+      const putSpy = sinon.spy(() => Promise.resolve({}))
+      const fake = {
+        storage: () => ({ ref: () => ({ put: putSpy }) }),
+        _: firebase._
+      }
+      await uploadFile(spy, fake, { path: 'projects', file: { name: 'test.png' } })
+      // firebase.storage() put method is called
+      expect(putSpy).to.have.been.calledOnce
+      // dispatch is called twice (once for FILE_UPLOAD_START, the other for FILE_UPLOAD_COMPLETE)
+      expect(spy).to.have.been.calledTwice
+    })
+
+    it('skips straight to dispatch if firebase.database does not exist when dbPath is included', async () => {
+      const putSpy = sinon.spy(() => Promise.resolve({}))
+      const fake = {
+        storage: () => ({ ref: () => ({ put: putSpy }) }),
+        _: firebase._
+      }
+      await uploadFile(spy, fake, { ...defaultFileMeta, dbPath: 'test' })
+      // firebase.storage() put method is called
+      expect(putSpy).to.have.been.calledOnce
+      // dispatch is called twice (once for FILE_UPLOAD_START, the other for FILE_UPLOAD_COMPLETE)
+      expect(spy).to.have.been.calledTwice
+    })
+
+    it('handles dbPath', async () => {
+      const res = await uploadFile(dispatch, fakeFirebase, { ...defaultFileMeta, dbPath: 'projects' })
+      expect(res).to.be.an.object
+    })
+
+    it('calls database.push', async () => {
+      const putSpy = sinon.spy(() => Promise.resolve({
+        metadata: {
+          name: 'file.png',
+          fullPath: 'test',
+          downloadURLs: [{ path: 'asdf' }]
+        }
+      }))
+      const pushSpy = sinon.spy(() => Promise.resolve({}))
+      const fake = {
+        storage: () => ({ ref: () => ({ put: putSpy }) }),
+        database: Object.assign(
+          () => ({ ref: () => ({ push: pushSpy }) }),
+          { ServerValue: { TIMESTAMP: 123 } }
+        ),
+        _: firebase._
+      }
+      await uploadFile(spy, fake, { ...defaultFileMeta, dbPath: 'test' })
+      // firebase.storage() put method is called
+      expect(putSpy).to.have.been.calledOnce
+      // firebase.storage() put method is called
+      expect(pushSpy).to.have.been.calledOnce
+      // dispatch is called twice (once for FILE_UPLOAD_START, the other for FILE_UPLOAD_COMPLETE)
+      expect(spy).to.have.been.calledTwice
+    })
+
+    it('dispatches for errors and rejects', async () => {
+      const putSpy = sinon.spy(() => Promise.reject(new Error('Test')))
+      const fake = {
+        storage: () => ({ ref: () => ({ put: putSpy }) }),
+        _: firebase._
+      }
+      try {
+        await uploadFile(spy, fake, { ...defaultFileMeta, dbPath: 'test' })
+      } catch (err) {
+        expect(err.message).to.equal('Test')
+      }
+      // firebase.storage() put method is called
+      expect(putSpy).to.have.been.calledOnce
+      // dispatch is called twice (once for FILE_UPLOAD_START, the other for FILE_UPLOAD_COMPLETE)
+      expect(spy).to.have.been.calledTwice
+    })
+
+    describe('options', () => {
+      describe('name option', () => {
+        it('renames file given a string', async () => {
+          const options = { name: 'newname.png' }
+          await uploadFile(spy, fakeFirebase, { ...defaultFileMeta, options })
+          // dispatch is called
+          // TODO: Confirm dispatch is called with correct name
+          expect(spy).to.have.been.calledOnce
+        })
+
+        it('renames file given a function', async () => {
+          const nameFunc = sinon.spy()
+          const options = { name: nameFunc }
+          await uploadFile(spy, fakeFirebase, { ...defaultFileMeta, options })
+          // firebase.storage() put method is called
+          expect(nameFunc).to.have.been.calledOnce
+        })
+      })
+
+      describe('progress option', () => {
+        it('calls uploadFileWithProgress', async () => {
+          const putSpy = sinon.spy(() => Object.assign(Promise.resolve({}), { on: sinon.spy() }))
+          const fake = {
+            storage: Object.assign(() => ({
+              ref: () => ({ put: putSpy }) }),
+              { TaskEvent: { STATE_CHANGED: 'STATE_CHANGED' }
+              }),
+            _: firebase._
+          }
+          const options = { progress: true }
+          await uploadFile(spy, fake, { ...defaultFileMeta, options })
+          // firebase.storage() put method is called
+          expect(putSpy).to.have.been.calledOnce
+          // dispatch is called twice (once for FILE_UPLOAD_START, next for FILE_UPLOAD_COMPLETE,)
+          expect(spy).to.have.been.calledTwice
+        })
+      })
+    })
   })
 
   describe('uploadFiles', () => {

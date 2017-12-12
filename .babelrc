@@ -25,7 +25,6 @@
     "test": {
       "plugins": [
         "transform-runtime",
-        "transform-decorators-legacy",
         "transform-async-to-generator"
       ]
     }

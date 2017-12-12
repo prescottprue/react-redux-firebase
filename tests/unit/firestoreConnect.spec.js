@@ -1,84 +1,31 @@
-import React, { Children, Component, cloneElement } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-addons-test-utils'
-import reactReduxFirebase from '../../src/enhancer'
-import { createStore, compose, combineReducers } from 'redux'
+import { storeWithFirestore, Container, ProviderMock, TestContainer } from '../utils'
 import firestoreConnect, {
   createFirestoreConnect
 } from '../../src/firestoreConnect'
 
+const createContainer = () => {
+  const store = storeWithFirestore()
+  const WrappedContainer = firestoreConnect((props) => [
+    `test/${props.dynamicProp}`
+  ])(Container)
+
+  const tree = TestUtils.renderIntoDocument(
+    <ProviderMock store={store}>
+      <WrappedContainer pass='through' />
+    </ProviderMock>
+  )
+
+  return {
+    container: TestUtils.findRenderedComponentWithType(tree, WrappedContainer),
+    parent: TestUtils.findRenderedComponentWithType(tree, ProviderMock),
+    store
+  }
+}
+
 describe('firestoreConnect', () => {
-  class Passthrough extends Component {
-    render () {
-      return <div>{JSON.stringify('yes')}</div>
-    }
-  }
-
-  class ProviderMock extends Component {
-    getChildContext () {
-      return { store: this.props.store }
-    }
-
-    state = { test: null, dynamic: '' }
-
-    render () {
-      return Children.only(
-        cloneElement(this.props.children, {
-          testProp: this.state.test,
-          dynamicProp: this.state.dynamic
-        })
-      )
-    }
-  }
-
-  ProviderMock.childContextTypes = {
-    store: PropTypes.object.isRequired
-  }
-
-  ProviderMock.propTypes = {
-    store: PropTypes.object,
-    children: PropTypes.node
-  }
-  const fakeReduxFirestore = (instance, otherConfig) => next => (
-    reducer,
-    initialState,
-    middleware
-  ) => {
-    const store = next(reducer, initialState, middleware)
-    store.firestore = { listeners: {} }
-    return store
-  }
-
-  const createContainer = () => {
-    const createStoreWithMiddleware = compose(
-      reactReduxFirebase(Firebase, { userProfile: 'users' }),
-      fakeReduxFirestore(Firebase)
-    )(createStore)
-    const store = createStoreWithMiddleware(
-      combineReducers({ firestore: (state = {}) => state })
-    )
-
-    @firestoreConnect(props => [`test/${props.dynamicProp}`])
-    class Container extends Component {
-      render () {
-        return <Passthrough {...this.props} />
-      }
-    }
-
-    const tree = TestUtils.renderIntoDocument(
-      <ProviderMock store={store}>
-        <Container pass='through' />
-      </ProviderMock>
-    )
-
-    return {
-      container: TestUtils.findRenderedComponentWithType(tree, Container),
-      parent: TestUtils.findRenderedComponentWithType(tree, ProviderMock),
-      store
-    }
-  }
-
   it('should receive the store in the context', () => {
     const { container, store } = createContainer()
     expect(container.context.store).to.equal(store)
@@ -98,21 +45,13 @@ describe('firestoreConnect', () => {
 
   it('reapplies watchers when props change', () => {
     const { container, store } = createContainer()
-    container.setState({
-      dynamic: 'somethingElse'
-    })
+    container.setState({ dynamic: 'somethingElse' })
     expect(container.context.store).to.equal(store)
   })
 
   describe('sets displayName static as ', () => {
     describe('FirestoreConnect(${WrappedComponentName}) for', () => { // eslint-disable-line no-template-curly-in-string
       it('standard components', () => {
-        class TestContainer extends Component {
-          render () {
-            return <Passthrough {...this.props} />
-          }
-        }
-
         const containerPrime = firestoreConnect()(TestContainer)
         expect(containerPrime.displayName).to.equal(
           `FirestoreConnect(TestContainer)`
@@ -133,19 +72,13 @@ describe('firestoreConnect', () => {
   })
 
   it('sets WrappedComponent static as component which was wrapped', () => {
-    class Container extends Component {
-      render () {
-        return <Passthrough {...this.props} />
-      }
-    }
-
-    const containerPrime = firestoreConnect()(Container)
-    expect(containerPrime.wrappedComponent).to.equal(Container)
+    const containerPrime = firestoreConnect()(TestContainer)
+    expect(containerPrime.wrappedComponent).to.equal(TestContainer)
   })
 })
 
 describe('createFirestoreConnect', () => {
   it('creates a function', () => {
-    expect(createFirestoreConnect('store')).to.be.a.function
+    expect(createFirestoreConnect('store2')).to.be.a.function
   })
 })

@@ -1,23 +1,18 @@
 import React from 'react'
 import { createSink } from 'recompose'
 import { shallow } from 'enzyme'
-import { storeWithFirestore } from '../utils'
-import withFirestore, { createWithFirestore } from '../../src/withFirestore'
+import { storeWithFirebase } from '../utils'
+import withFirebase, { createWithFirebase } from '../../src/withFirebase'
 
 let store
 let TestComponent
 let wrapper
 
-describe('withFirestore', () => {
+describe('withFirebase', () => {
   beforeEach(() => {
-    store = storeWithFirestore()
-    TestComponent = withFirestore(createSink)
+    store = storeWithFirebase()
+    TestComponent = withFirebase(createSink)
     wrapper = shallow(<TestComponent />, { context: { store } })
-  })
-
-  it('adds firestore as prop', () => {
-    expect(wrapper.prop('firestore')).to.exist
-    expect(wrapper.prop('firestore')).to.respondTo('add')
   })
 
   it('adds firebase as prop', () => {
@@ -31,22 +26,22 @@ describe('withFirestore', () => {
   })
 
   describe('sets displayName static as', () => {
-    describe('withFirestore(${WrappedComponentName}) for', () => { // eslint-disable-line no-template-curly-in-string
+    describe('withFirebase(${WrappedComponentName}) for', () => { // eslint-disable-line no-template-curly-in-string
       it.skip('standard components', () => {
         wrapper = shallow(<TestComponent />, { context: { store } })
-        expect(wrapper.instance.displayName).to.equal(`withFirestore(TestContainer)`)
+        expect(wrapper.instance.displayName).to.equal(`withFirebase(TestContainer)`)
       })
 
       it('string components', () => {
         const str = 'Test'
-        const stringComp = withFirestore(str)
-        expect(stringComp.displayName).to.equal(`withFirestore(${str})`)
+        const stringComp = withFirebase(str)
+        expect(stringComp.displayName).to.equal(`withFirebase(${str})`)
       })
     })
 
     it.skip('"Component" for all other types', () => {
-      wrapper = shallow(withFirestore()(<div />))
-      expect(wrapper.displayName).to.equal('withFirestore(Component)')
+      wrapper = shallow(withFirebase()(<div />))
+      expect(wrapper.displayName).to.equal('withFirebase(Component)')
     })
   })
 
@@ -56,8 +51,8 @@ describe('withFirestore', () => {
   })
 })
 
-describe('createwithFirestore', () => {
-  it('accepts a store key', () => {
-    createWithFirestore('store2')
+describe('createwithFirebase', () => {
+  it('accepts a different store key', () => {
+    createWithFirebase('store2')
   })
 })
