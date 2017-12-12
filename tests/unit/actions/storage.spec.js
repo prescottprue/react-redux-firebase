@@ -9,7 +9,6 @@ let spy
 let unListen = sinon.spy()
 const dispatch = () => {}
 const defaultFileMeta = { path: 'projects', file: { name: 'test.png' } }
-let dispatchSpy
 const fakeFirebase = {
   _: {
     authUid: '123',

@@ -26,6 +26,11 @@ const createContainer = () => {
 }
 
 describe('firestoreConnect', () => {
+  it('should render if Firestore does not exist', () => {
+    const { container } = createContainer()
+    // TODO: Pass a fake store through context
+    expect(container).to.exist
+  })
   it('should receive the store in the context', () => {
     const { container, store } = createContainer()
     expect(container.context.store).to.equal(store)
@@ -37,16 +42,16 @@ describe('firestoreConnect', () => {
     expect(container.context.store).to.equal(store)
   })
 
-  it('does not change watchers props changes that do not change listener paths', () => {
-    const { container, store } = createContainer()
-    container.setState({ test: 'somethingElse' })
-    expect(container.context.store).to.equal(store)
+  it('does not change watchers with props changes that do not change listener paths', () => {
+    const { parent, container } = createContainer()
+    parent.setState({ test: 'somethingElse' })
+    expect(container.prevData).to.be.null
   })
 
   it('reapplies watchers when props change', () => {
-    const { container, store } = createContainer()
-    container.setState({ dynamic: 'somethingElse' })
-    expect(container.context.store).to.equal(store)
+    const { parent, container } = createContainer()
+    parent.setState({ dynamic: 'somethingElse' })
+    expect(container.prevData).to.be.null
   })
 
   describe('sets displayName static as ', () => {
