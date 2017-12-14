@@ -8,15 +8,15 @@
 ## createWithFirebase
 
 Function that creates a Higher Order Component that
-automatically listens/unListens to provided firebase paths using
-React's Lifecycle hooks.
+which provides `firebase` and `dispatch` as a props to React Components.
+
 **WARNING!!** This is an advanced feature, and should only be used when
 needing to access a firebase instance created under a different store key.
 
 **Parameters**
 
 -   `storeKey` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
-    Firebase state (state.firebase) (optional, default `'store'`)
+    Firebase state (`state.firebase`) (optional, default `'store'`)
 
 **Examples**
 
@@ -33,15 +33,20 @@ const withFirebase = createWithFirebase('anotherStore')
 export default withFirebase(SomeComponent)
 ```
 
-Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** HOC that accepts a watchArray and wraps a component
+Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Higher Order Component which accepts an array of
+watchers config and wraps a React Component
 
 ## withFirebase
 
 **Extends React.Component**
 
-Higher Order Component that attaches firebase to props.
-Firebase is gathered from store.firebase, which is attached to store by
-the store enhancer (reactReduxFirebase) in ./enhancer.
+Higher Order Component that provides `firebase` and
+`dispatch` as a props to React Components. Firebase is gathered from
+`store.firebase`, which is attached to store by the store enhancer
+(`reactReduxFirebase`) during setup.
+**NOTE**: This version of the Firebase library has extra methods, config,
+and functionality which give it it's capabilities such as dispatching
+actions.
 
 **Examples**
 
@@ -60,4 +65,31 @@ const AddData = ({ firebase: { push } }) =>
 export default withFirebase(AddData)
 ```
 
-Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** That accepts a component to wrap and returns the wrapped component
+_Within HOC Composition_
+
+```javascript
+import { compose } from 'redux' // can also come from recompose
+import { withHandlers } from 'recompose'
+import { withFirebase } from 'react-redux-firebase'
+
+const AddTodo = ({ addTodo }) =>
+  <div>
+    <button onClick={addTodo}>
+      Add Sample Todo
+    </button>
+  </div>
+
+export default compose(
+  withFirebase(AddTodo),
+  withHandlers({
+    addTodo: props => () =>
+       props.firestore.add(
+         { collection: 'todos' },
+         { done: false, text: 'Sample' }
+       )
+  })
+)
+```
+
+Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Which accepts a component to wrap and returns the
+wrapped component
