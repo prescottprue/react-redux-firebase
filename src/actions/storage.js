@@ -22,8 +22,7 @@ const {
  * @param {Blob} opts.file - File to upload
  * @private
  */
-export const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
-  dispatch({ type: FILE_UPLOAD_START, payload: { path, file } })
+const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
   const uploadEvent = firebase.storage().ref(`${path}/${file.name}`).put(file)
   // TODO: Allow config to control whether progress it set to state or not
   const unListen = uploadEvent.on(

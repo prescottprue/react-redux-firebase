@@ -1,6 +1,7 @@
 import { setWith } from 'lodash/fp'
 import { actionTypes } from '../../src/constants'
-import firebaseReducer, { getDotStrPath } from '../../src/reducer'
+import firebaseReducer from '../../src/reducer'
+import { getDotStrPath } from '../../src/utils/reducers'
 
 const initialState = {
   auth: { isLoaded: false, isEmpty: true },

@@ -20,6 +20,7 @@ export default {
   createWithFirebase,
   withFirestore,
   createWithFirestore,
+  reducer,
   firebaseReducer: reducer,
   firebaseStateReducer: reducer,
   reduxReactFirebase: enhancer,

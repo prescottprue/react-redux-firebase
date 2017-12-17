@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
-import { getDisplayName } from 'recompose'
 import { watchEvents, unWatchEvents } from './actions/query'
-import { getEventsFromInput, createCallable } from './utils'
+import { getEventsFromInput, createCallable, getDisplayName } from './utils'
 
 /**
  * @name createFirebaseConnect

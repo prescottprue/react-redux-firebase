@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-vars */
 process.env.NODE_ENV = 'test'
 
-var chai = require('chai')
-var sinon = require('sinon')
-var chaiAsPromised = require('chai-as-promised')
-var sinonChai = require('sinon-chai')
-var jsdom = require('jsdom').jsdom
-var FirebaseServer = require('firebase-server')
-var uid = global.uid = 'Iq5b0qK2NtgggT6U3bU6iZRGyma2'
+const chai = require('chai')
+const sinon = require('sinon')
+const chaiAsPromised = require('chai-as-promised')
+const sinonChai = require('sinon-chai')
+const jsdom = require('jsdom').jsdom
+const chaiEnzyme = require('chai-enzyme')
+const FirebaseServer = require('firebase-server')
+const uid = global.uid = 'Iq5b0qK2NtgggT6U3bU6iZRGyma2'
 
 new FirebaseServer(5000, 'localhost.firebaseio.test', { // eslint-disable-line no-new
   users: {
@@ -20,6 +21,7 @@ new FirebaseServer(5000, 'localhost.firebaseio.test', { // eslint-disable-line n
 // Chai Plugins
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
+chai.use(chaiEnzyme())
 
 // globals
 global.expect = chai.expect
