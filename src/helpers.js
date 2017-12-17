@@ -17,7 +17,7 @@ import {
 } from 'lodash'
 import { topLevelPaths } from './constants'
 import { getPopulateObjs } from './utils/populate'
-import { getDotStrPath } from './reducer'
+import { getDotStrPath } from './utils/reducers'
 
 /**
  * @description Get a value from firebase using slash notation.  This enables an easy

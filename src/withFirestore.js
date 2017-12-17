@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import hoistStatics from 'hoist-non-react-statics'
-import { wrapDisplayName } from 'recompose'
+import { wrapDisplayName } from './utils'
 
 /**
  * @name createWithFirestore
