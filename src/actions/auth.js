@@ -212,7 +212,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
           // update profile only if doesn't exist or if set by config
           !config.updateProfileOnLogin && profileSnap.exists
             ? profileSnap.data()
-            : profileSnap.ref.set(omit(profile, ['providerData'])) // fixes issue with bad write
+            : profileSnap.ref.set(omit(profile, ['providerData']), {merge: true}) // fixes issue with bad write
               .then(() => profile) // Update the profile
       )
       .catch((err) => {
