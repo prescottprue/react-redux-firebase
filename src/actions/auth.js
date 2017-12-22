@@ -708,7 +708,7 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
 
 /**
  * @description Update user's email. Internally calls
- * `firebase.auth().currentUser.updateEmail` as seen [in the firebase docs](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile).
+ * `firebase.auth().currentUser.updateEmail`.
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @param {String} newEmail - Update to be auth object
@@ -740,7 +740,8 @@ export const updateEmail = (dispatch, firebase, newEmail, updateInProfile) => {
 }
 
 /**
- * @description Reload Auth state
+ * @description Reload Auth state. Internally calls
+ * `firebase.auth().currentUser.reload`.
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @return {Promise} Resolves with auth
@@ -768,9 +769,11 @@ export const reloadAuth = (dispatch, firebase) => {
 }
 
 /**
- * @description Reload Auth state
+ * @description Links the user account with the given credentials. Internally
+ * calls `firebase.auth().currentUser.linkWithCredential`.
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
+ * @param {Object} credential - Credential with which to link user account
  * @return {Promise} Resolves with auth
  */
 export const linkWithCredential = (dispatch, firebase, credential) => {
@@ -795,16 +798,19 @@ export const linkWithCredential = (dispatch, firebase, credential) => {
 }
 
 /**
- * @description Reload Auth state
+ * @description Asynchronously signs in using a phone number and create's
+ * user profile. This method sends a code via SMS to the given phone number,
+ * and returns a firebase.auth.ConfirmationResult. Internally
+ * calls `firebase.auth().signInWithPhoneNumber`.
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
+ * @param {String} phoneNumber - Phone number
+ * @param {Object} applicationVerifier - Phone number
  * @return {Promise} Resolves with auth
  */
 export const signInWithPhoneNumber = (firebase, dispatch, ...args) => {
   dispatch({ type: actionTypes.UNLOAD_PROFILE })
 
-  // Create profile when logging in with external provider
-  // const user = userData.user || userData
   return firebase.auth().signInWithPhoneNumber(...args)
     .then((confirmationResult) => {
       return {
