@@ -461,7 +461,8 @@ export const login = (dispatch, firebase, credentials) => {
         return createUserProfile(
           dispatch,
           firebase,
-          userData
+          userData,
+          credentials.profile
         )
       }
 
