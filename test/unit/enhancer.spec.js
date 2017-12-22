@@ -1,12 +1,12 @@
 import { createStore, compose } from 'redux'
-import composeFunc, { getFirebase } from '../../src/enhancer'
+import enhancer, { getFirebase } from '../../src/enhancer'
 
 const reducer = sinon.spy()
 const valAtPath = (path) =>
   Firebase.ref(path).once('value').then((snap) => snap.val())
 
 const generateCreateStore = (params) =>
-  compose(composeFunc(
+  compose(enhancer(
     Firebase,
     {
       userProfile: 'users',
@@ -17,13 +17,35 @@ const generateCreateStore = (params) =>
 
 const store = generateCreateStore()(reducer)
 let path
-describe('Compose', () => {
+
+describe('enhancer', () => {
   it('is a function', () => {
-    expect(composeFunc).to.be.a.function
+    expect(enhancer).to.be.a.function
   })
 
-  it('returns an object', () => {
-    expect(composeFunc(Firebase)).to.be.a.function
+  it('returns an function', () => {
+    expect(enhancer(Firebase)).to.be.a.function
+  })
+
+  it('throws for first argument not being a valid Firebase library instance', () => {
+    expect(() => enhancer({})(() => ({}))())
+      .to.Throw('v2.0.0-beta and higher require passing a firebase app instance or a firebase library instance. View the migration guide for details.')
+  })
+
+  it('throws for first argument not being a Firebase app instance', () => {
+    expect(() => enhancer({ SDK_VERSION: '' })(() => ({}))())
+      .to.Throw('v2.0.0-beta and higher require passing a firebase app instance or a firebase library instance. View the migration guide for details.')
+  })
+
+  it('throws for first argument not being a Firebase app instance', () => {
+    expect(() => enhancer({ SDK_VERSION: '' })(() => ({}))())
+      .to.Throw('v2.0.0-beta and higher require passing a firebase app instance or a firebase library instance. View the migration guide for details.')
+  })
+
+  it('sets store.firebaseAuthIsReady when config.attachAuthIsReady it true', () => {
+    const store = enhancer({ SDK_VERSION: '', firebase_: {} }, { attachAuthIsReady: true })(() => ({}))()
+    expect(store).to.have.property('firebaseAuthIsReady')
+    expect(store.firebaseAuthIsReady).to.be.a.function
   })
 
   describe('helpers', () => {

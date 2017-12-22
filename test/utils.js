@@ -2,7 +2,7 @@ import React, { Children, Component, cloneElement } from 'react'
 import PropTypes from 'prop-types'
 import { createSink } from 'recompose'
 import { createStore, compose, combineReducers } from 'redux'
-import { reduxFirestore } from 'redux-firestore'
+import { reduxFirestore, reducer as firestoreReducer } from 'redux-firestore'
 import reactReduxFirebase from '../src/enhancer'
 
 export const storeWithFirebase = () => {
@@ -17,7 +17,12 @@ export const storeWithFirestore = () => {
     reactReduxFirebase(Firebase, { userProfile: 'users' }),
     reduxFirestore(Firebase) // mock for reduxFirestore from redux-firestore
   )(createStore)
-  return createStoreWithMiddleware(combineReducers({ test: (state = {}) => state }))
+  return {
+    ...createStoreWithMiddleware(
+      combineReducers({ test: (state = {}) => state, firestore: firestoreReducer })
+    ),
+    firestore: { add: () => ({}) }
+  }
 }
 
 export const TestContainer = () => createSink()

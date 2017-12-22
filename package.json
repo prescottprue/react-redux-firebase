@@ -9,7 +9,7 @@
   "unpkg": "dist/react-redux-firebase.min.js",
   "scripts": {
     "clean": "rimraf es lib dist coverage",
-    "lint": "eslint src/** test/**",
+    "lint": "eslint src/** test/unit/** test/setup.js",
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha -R spec ./test/unit/**",
     "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha ./test/unit/**",
