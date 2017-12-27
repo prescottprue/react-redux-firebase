@@ -9,16 +9,17 @@ Routing can be changed based on data by using react lifecycle hooks such as `com
 ```javascript
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { isLoaded, isEmpty } from 'react-redux-firebase'
 
 class ProtectedPage extends Component {
   static propTypes = {
-    auth: PropTypes.object,
+    authExists: PropTypes.bool,
   }
 
   componentWillReceiveProps({ auth }) {
-    if (auth && !auth.uid) {
+    if (auth && auth.uid) {
       this.context.router.push('/login') // redirect to /login if not authed
     }
   }

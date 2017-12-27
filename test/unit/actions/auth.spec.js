@@ -24,6 +24,13 @@ const onAuthStateChangedSpy = sinon.spy((f) => {
   f({uid: 'asdfasdf'})
 })
 const fakeLogin = { email: 'test@tst.com', password: 'asdfasdf', role: 'admin' }
+const firebaseWithConfig = (config = {}) => ({
+  ...Firebase,
+  _: {
+    ...Firebase._,
+    config: { ...Firebase._.config, ...config }
+  }
+})
 const fakeFirebase = {
   _: {
     authUid: '123',
@@ -201,15 +208,40 @@ describe('Actions: Auth -', () => {
   })
 
   describe('createUserProfile', () => {
-    it('creates profile if config is enabled', () => {
-      const auth = { uid: '123', email: 'test@test.com', providerData: [{}] }
-      profile = { some: 'asdf' }
-      expect(createUserProfile(dispatch, Firebase, auth, profile))
-        .to.eventually.be.an.object
+    it('creates profile if config is enabled', async () => {
+      const userData = { uid: '123', email: 'test@test.com', providerData: [{}] }
+      const profile = await createUserProfile(dispatch, Firebase, userData, { some: 'asdf' })
+      expect(profile).to.be.an.object
+    })
+
+    it('resolves with userData if userProfile config option is not enabled', async () => {
+      const userData = { uid: '123', email: 'test@test.com', providerData: [{}] }
+      const fb = firebaseWithConfig({ userProfile: null })
+      const profile = await createUserProfile(dispatch, fb, userData, { some: 'asdf' })
+      expect(profile).to.equal(userData)
+    })
+
+    it('creates profile using profileFactory if it exists', async () => {
+      const userData = { uid: '123', email: 'test@test.com', providerData: [{}] }
+      const profileObj = { some: 'asdf' }
+      const profileFactory = sinon.spy(() => profileObj)
+      const profile = await createUserProfile(dispatch, firebaseWithConfig({ profileFactory }), userData)
+      expect(profile).to.have.property('some', profileObj.some)
+      expect(profileFactory).to.have.been.calledOnce
+    })
+
+    it('rejects for error in profileFactory function', async () => {
+      const profileFactory = () => { throw new Error('test') }
+      try {
+        await createUserProfile(dispatch, firebaseWithConfig({ profileFactory }), {}, {})
+      } catch (err) {
+        expect(err).to.have.property('message', 'test')
+      }
     })
   })
 
-  describe('login', () => {
+  describe('login', function () {
+    this.timeout(8000)
     it('handles invalid email login', async () => {
       try {
         await login(dispatch, firebase, fakeLogin)

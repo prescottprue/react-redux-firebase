@@ -2,7 +2,7 @@
 
 ### redux-thunk integration
 
-In order to get the most out of writing your thunks, make sure to set up your thunk middleware using it's redux-thunk's `withExtraArgument` method like so:
+In order to get the most out of writing your thunks, make sure to set up your thunk middleware using its redux-thunk's `withExtraArgument` method like so:
 
 ```javascript
 import { applyMiddleware, compose, createStore } from 'redux';

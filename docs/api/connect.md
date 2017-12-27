@@ -121,4 +121,5 @@ export default compose(
 )(SomeComponent)
 ```
 
-Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the wrapped component
+Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the
+wrapped component

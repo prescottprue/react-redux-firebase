@@ -12,24 +12,22 @@ along side applyMiddleware.
 
 **Parameters**
 
--   `instance`  
--   `otherConfig`  
--   `firebaseInstance` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Initiated firebase instance (can also
-    be library following Firebase JS API such as `react-native-firebase`)
--   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Containing react-redux-firebase specific configuration
-    -   `config.userProfile` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Location on firebase to store user profiles
-    -   `config.enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable Firebase database logging.
-        **Note**: Only works if instance has enableLogging function.
-    -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user profile is saved.
-    -   `config.presence` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Location on Firebase to store currently
-        online users list. Often set to `'presence'` or `'onlineUsers'`.
-    -   `config.sessions` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Location on Firebase where user
-        sessions are stored (only if presense is set). Often set to `'sessions'` or `'onlineUsers'`.
+-   `fbConfig` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase config including databaseURL
+    -   `fbConfig.apiKey` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Firebase apiKey
+    -   `fbConfig.authDomain` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Firebase auth domain
+    -   `fbConfig.databaseURL` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Firebase database url
+    -   `fbConfig.storageBucket` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Firebase storage bucket
+-   `config` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Containing react-redux-firebase specific config
+    such as userProfile
+    -   `config.userProfile` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Location on firebase to store user
+        profiles
+    -   `config.enableLogging` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable Firebase
+        database logging
     -   `config.updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to update
         profile when logging in. (default: `false`)
     -   `config.resetBeforeLogin` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to empty profile
         and auth state on login
-    -   `config.perserveOnLogout` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** Data parameters to perserve
+    -   `config.perserveOnLogout` **([Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array))** Data parameters to preserve
         when logging out. If Array is passed, each item represents keys
         within state.firebase.data preserve. If an object is passed, Keys associate
         with parts of state to preserve, and the values are Arrays which
@@ -47,7 +45,8 @@ along side applyMiddleware.
         result is returned. Argument Pattern: `(authData, firebase, dispatch)`
     -   `config.customAuthParameters` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object for setting which
         customAuthParameters are passed to external auth providers.
-    -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user profile is saved.
+    -   `config.profileFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying how user
+        profile is saved.
     -   `config.fileMetadataFactory` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Factory for modifying
         how file meta data is written during file uploads
     -   `config.profileParamsToPopulate` **([Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String))** Parameters within

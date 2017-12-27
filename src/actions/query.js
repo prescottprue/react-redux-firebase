@@ -11,7 +11,7 @@ import {
 } from '../utils/query'
 
 /**
- * @description Watch a specific event type
+ * @description Watch a path in Firebase Real Time Database
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} options - Event options object
@@ -63,6 +63,7 @@ export const watchEvent = (firebase, dispatch, options) => {
           path: storeAs || path,
           payload: err
         })
+        return Promise.reject(err)
       })
   }
 
@@ -148,11 +149,14 @@ export const watchEvent = (firebase, dispatch, options) => {
  * @description Remove watcher from an event
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
- * @param {Object} options - Settings for watcher removal
- * @param {String} options.event - Event for which to remove the watcher
- * @param {String} options.path - Path of watcher to remove
- * @param {String} options.storeAs - storeAs path of watcher to remove
- * @param {String} options.queryId - id of query for which to unset watcher
+ * @param {Object} config - Config object
+ * @param {String} config.type - Type for which to remove the watcher (
+ * value, once, first_child etc.)
+ * @param {String} config.path - Path of watcher to remove
+ * @param {String} config.storeAs - Path which to store results within in
+ * redux store
+ * @param {String} config.queryId - Id of the query (used for idendifying)
+ * in internal watchers list
  */
 export const unWatchEvent = (firebase, dispatch, { type, path, storeAs, queryId }) => {
   const watchPath = !storeAs ? path : `${path}@${storeAs}`

@@ -59,17 +59,6 @@ Though doing things manually is great to understand what is going on, it comes w
 
 `firebaseConnect` accepts an array of paths for which to create queries. When listening to paths, it is possible to modify the query with any of [Firebase's included query methods](https://firebase.google.com/docs/reference/js/firebase.database.Query).
 
-**NOTE:**
-By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use [`storeAs` (more below)](#storeAs).
-
-Below are examples using Firebase query methods as well as other methods that are included (such as 'populate').
-
-`firebaseConnect` is a Higher Order Component (wraps a provided component) that attaches listeners to relevant paths on Firebase when mounting, and removes them when unmounting.
-
-**storeAs**
-
-Data is stored in redux under the path of the query for convince. This means that two different queries to the same path (i.e. `todos`) will both place data into `state.data.todos` even if their query parameters are different. If you would like to store your query somewhere else in redux, use `storeAs`:
-
 ```js
 compose(
   firebaseConnect([
@@ -373,6 +362,13 @@ Internally parse following query params. Useful when attempting to parse
 **NOTE**: `orderByChild`, `orderByPriority`, and `orderByValue` will cause this to be enabled by default. Parsing will remain enabled for the rest of the query params until `notParsed` is called.
 
 Added as part of `v2.0.0-beta.17`
+## ordered {#ordered}
+
+In order to get ordered data, use `orderedToJS`
+
+#### Examples
+1. Get list of projects ordered by key
+>>>>>>> master
 
 #### Examples
 1. Order by child parameter equal to a number string. Equivalent of searching for `'123'` (where as not using `notParsed` would search for children equal to `123`)
@@ -387,11 +383,50 @@ firebaseConnect([
     ]
   }
 ])
+const path = 'projects'
+
+const enhance = compose(
+  firebaseConnect(props => [
+    { path, queryParams: ['orderByKey'] }
+  ]),
+  connect(({ firebase }) => ({
+    projects: firebase.getIn(['ordered', path]), // ImmutableJS Map
+  }))
+)
+>>>>>>> master
 ```
 
 ## storeAs {#storeAs}
 
 By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use `storeAs`:
+
+```js
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseConnect } from 'react-redux-firebase'
+
+const enhance = compose(
+  firebaseConnect([
+    {
+      path: 'todos',
+      storeAs: 'myTodos', // place in redux under "myTodos"
+      queryParams: ['orderByChild=createdBy', 'equalTo=123someuid'],
+    }
+    {
+      path: 'todos',
+      queryParams: ['limitToFirst=20'],
+    }
+  ]),
+  connect(({ firebase }) => ({
+    myTodos: dataToJS(firebase, 'myTodos'), // state.firebase.data.myTodos due to storeAs
+    allTodos: dataToJS(firebase, 'todos') // state.firebase.data.todos since no storeAs
+  }))
+)
+
+// Wrap your component with the enhancer
+export default enhance(SomeComponent)
+```
+>>>>>>> master
 
 #### Examples
 1. Querying the same path with different query parameters
@@ -410,3 +445,48 @@ compose(
   }))
 )
 ```
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseConnect, toJS } from 'react-redux-firebase'
+
+const enhance = compose(
+  firebaseConnect(props => [
+    { path: 'projects' },
+    {
+      path: 'projects',
+      storeAs: 'myProjects',
+      queryParams: ['orderByChild=uid', '123']
+    }
+  ])
+  connect(({ firebase }) => ({
+    myProjects: firebase.getIn(['data', 'myProjects']), // state.firebase.data.myProjects due to storeAs
+    allProjects: firebase.getIn(['data', 'projects']) // state.firebase.data.todos since no storeAs
+  }))
+)
+
+const SomeComponent = ({ myProjects, allProjects }) =>
+  <div>
+    <div>
+      <h2>My Projects</h2>
+      {JSON.stringify(toJS(myProjects, null, 2))}
+    </div>
+    <div>
+      <h2>All Projects</h2>
+      {JSON.stringify(toJS(allProjects, null, 2))}
+    </div>
+  </div>
+
+// Wrap your component with the enhancer
+export default enhance(SomeComponent)
+```
+
+#### Why?
+
+Data is stored in redux under the path of the query for convince. This means that two different queries to the same path (i.e. `todos`) will both place data into `state.data.todos` even if their query parameters are different.
+
+## Populate {#populate}
+
+Populate allows you to replace IDs within your data with other data from Firebase. This is very useful when trying to keep your data flat. Some would call it a _join_, but it was modeled after [the mongo populate method](http://mongoosejs.com/docs/populate.html).
+
+Visit [Populate Section](/docs/populate.md) for full documentation.
+>>>>>>> master

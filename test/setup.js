@@ -8,6 +8,9 @@ const sinonChai = require('sinon-chai')
 const jsdom = require('jsdom').jsdom
 const chaiEnzyme = require('chai-enzyme')
 const FirebaseServer = require('firebase-server')
+const Firebase = require('firebase')
+const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
+const WebSocket = require('ws')
 const uid = global.uid = 'Iq5b0qK2NtgggT6U3bU6iZRGyma2'
 
 new FirebaseServer(5000, 'localhost.firebaseio.test', { // eslint-disable-line no-new
@@ -22,22 +25,19 @@ new FirebaseServer(5000, 'localhost.firebaseio.test', { // eslint-disable-line n
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 chai.use(chaiEnzyme())
-
 // globals
+global.Firebase = Firebase
 global.expect = chai.expect
 global.sinon = sinon
 global.chai = chai
 global.document = jsdom('<!doctype html><html><body></body></html>')
 global.window = document.defaultView
-global.navigator = global.window.navigator
-
 // needed to fix "Error: The XMLHttpRequest compatibility library was not found." from Firebase auth
-global.XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
+global.XMLHttpRequest = XMLHttpRequest
 // needed to fix: "FIREBASE WARNING: wss:// URL used, but browser isn't known to support websockets.  Trying anyway."
-global.WebSocket = require('ws')
+global.WebSocket = WebSocket
 
-var Firebase = global.Firebase = require('firebase')
-
+// Firebase Instance Setup (fake instance connected to firebase-server)
 var fbConfig = global.fbConfig = {
   apiKey: 'AIzaSyCTUERDM-Pchn_UDTsfhVPiwM4TtNIxots', // placeholder
   authDomain: 'asdf', // placeholder
