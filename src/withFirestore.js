@@ -43,7 +43,7 @@ export const createWithFirestore = (storeKey = 'store') => WrappedComponent => {
         />
       )
     }
-   }
+  }
 
   return hoistStatics(withFirestore, WrappedComponent)
 }
