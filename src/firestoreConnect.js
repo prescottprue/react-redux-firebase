@@ -58,14 +58,13 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       const { firebase, firestore } = this.store
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.store)
-
       // Handle a data parameter having changed
       if (firebase.firestore && !isEqual(data, this.prevData)) {
-        this.prevData = data
         // UnWatch all current events
         firestore.unsetListeners(this.prevData)
+        this.prevData = data
         // Watch new events
-        firestore.setListeners(this.prevData)
+        firestore.setListeners(data)
       }
     }
 
