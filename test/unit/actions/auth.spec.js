@@ -241,7 +241,9 @@ describe('Actions: Auth -', () => {
   })
 
   describe('login', function () {
+    // Extend default timeout to prevent test fail on slow connection
     this.timeout(8000)
+
     it('handles invalid email login', async () => {
       try {
         await login(dispatch, firebase, fakeLogin)
