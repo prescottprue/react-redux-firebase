@@ -18,8 +18,8 @@ class ProtectedPage extends Component {
     authExists: PropTypes.bool,
   }
 
-  componentWillReceiveProps({ auth }) {
-    if (auth && auth.uid) {
+  componentWillReceiveProps({ authExists }) {
+    if (authExists) {
       this.context.router.push('/login') // redirect to /login if not authed
     }
   }
@@ -34,7 +34,7 @@ class ProtectedPage extends Component {
 }
 
 export default connect(
-  ({ firebase: { auth } }) => ({ auth }) // state.firebase.auth -> props.auth
+  ({ firebase: { auth } }) => ({ authExists: !!auth && !!auth.uid })
 )(ProtectedPage)
 ```
 

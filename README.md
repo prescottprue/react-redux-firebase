@@ -25,7 +25,7 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 - Automatic binding/unbinding of listeners through React Higher Order Components (`firebaseConnect`  and `firestoreConnect`)
 - [Population capability](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
 - Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed` )
-- queries support ( `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo` right now )
+- Multiple queries types supported including `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo`
 - Tons of examples of integrations including [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/)
 - Server Side Rendering Support
 - [`react-native` support](/docs/recipes/react-native.md) using [native modules](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules) or [web sdk](/docs/recipes/react-native.md#jsweb)
@@ -151,36 +151,6 @@ const Todos = ({ todos, firebase }) => {
       </button>
     </div>
   )
-```javascript
-import React from 'react'
-import PropTypes from 'prop-types' // can also come from react if react <= 15.4.0
-import { connect } from 'react-redux'
-import { compose } from 'redux'
-import { firebaseConnect, isLoaded, isEmpty, toJS } from 'react-redux-firebase'
-
-const Todos = ({ todos }) => (
-  <div>
-    <h1>Todos</h1>
-    <ul>
-      {
-        !isLoaded(todos)
-          ? 'Loading'
-          : isEmpty(todos)
-            ? 'Todo list is empty'
-            : toJS(todos).map(
-                (key, id) => (
-                  <TodoItem key={key} id={id} todo={todos[key]}/>
-                )
-              )
-      }
-    </ul>
-  </div>
-)
-
-Todos.propTypes = {
-  todos: PropTypes.object,
-  firebase: PropTypes.object // comes from firebaseConnect
->>>>>>> master
 }
 
 export default compose(
@@ -279,7 +249,6 @@ export default compose(
   }))
 )(Todos)
 ```
-
 
 ## [Docs](http://react-redux-firebase.com)
 See full documentation at [react-redux-firebase.com](http://react-redux-firebase.com)
