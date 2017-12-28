@@ -24,7 +24,7 @@ along side applyMiddleware.
     -   `config.sessions` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Location on Firebase where user
         sessions are stored (only if presense is set). Often set to `'sessions'` or `'onlineUsers'`.
     -   `config.updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to update
-        profile when logging in. (default: `false`)
+        profile when logging in. (default: `true`)
     -   `config.resetBeforeLogin` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to empty profile
         and auth state on login
     -   `config.perserveOnLogout` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array))** Data parameters to perserve

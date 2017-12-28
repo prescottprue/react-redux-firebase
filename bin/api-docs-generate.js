@@ -33,6 +33,10 @@ const files = [
     dest: 'reducers.md'
   },
   {
+    src: 'reducer.js',
+    dest: 'reducer.md'
+  },
+  {
     src: 'constants.js',
     dest: 'constants.md'
   }

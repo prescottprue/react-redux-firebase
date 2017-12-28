@@ -5,7 +5,7 @@
 Firebase Real Time Database queries can be created in two ways:
 
 * [Manually](#manual) - Using `watchEvents` or `watchEvent` (requires managing of listeners)
-* [Automatically](#auto) - Using `firebaseConnect` HOC (manages mounting/unmounting)
+* [Automatically](#firebaseConnect) - Using `firebaseConnect` HOC (manages mounting/unmounting)
 
 ### Manually {#manual}
 
@@ -51,33 +51,19 @@ export default compose(
 )(Todos)
 ```
 
-**Fun Fact** - `firebaseConnect` actually calls `watchEvents` internally on component mount/unmount and when props change
-
 Though doing things manually is great to understand what is going on, it comes with the need to manage these listeners yourself.
 
-### Automatically {#auto}
+**Fun Fact** - `firebaseConnect` actually calls `watchEvents` internally on component mount/unmount and when props change.
+
+### Automatically {#firebaseConnect}
 
 `firebaseConnect` accepts an array of paths for which to create queries. When listening to paths, it is possible to modify the query with any of [Firebase's included query methods](https://firebase.google.com/docs/reference/js/firebase.database.Query).
 
-```js
-compose(
-  firebaseConnect([
-    {
-      path: 'todos',
-      storeAs: 'myTodos', // place in redux under "myTodos"
-      queryParams: ['orderByChild=createdBy', 'equalTo=123someuid'],
-    },
-    {
-      path: 'todos',
-      queryParams: ['limitToFirst=20'],
-    }
-  ]),
-  connect((state) => ({
-    myTodos: state.firebase.data.myTodos, // due to storeAs
-    allTodos: state.firebase.data.todos // state.firebase.data.todos since no storeAs
-  }))
-)
-```
+The results of the queries created by `firebaseConnect` are written into redux state under the path of the query for both `state.firebase.ordered` and `state.firebase.data`.
+
+**NOTE:**
+
+By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use [`storeAs` (more below)](#storeAs).
 
 ## Ordered vs Data (by key)
 
@@ -392,8 +378,12 @@ const myProjectsReduxName = 'myProjects'
 
 compose(
   firebaseConnect(props => [
-    { path: 'projects' }
-    { path: 'projects', storeAs: myProjectsReduxName, queryParams: ['orderByChild=uid', '123'] }
+    { path: 'projects' },
+    {
+      path: 'projects',
+      storeAs: myProjectsReduxName,
+      queryParams: ['orderByChild=uid', '123']
+    }
   ]),
   connect((state, props) => ({
     projects: state.firebase.data.projects,
