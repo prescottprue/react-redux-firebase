@@ -708,11 +708,13 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
 }
 
 /**
- * @description Update user's email. Internally calls
- * `firebase.auth().currentUser.updateEmail`.
+ * @description Update user's email within Firebase auth and optionally within
+ * users's profile. Internally calls `firebase.auth().currentUser.updateEmail`.
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @param {String} newEmail - Update to be auth object
+ * @param {Boolean} updateInProfile - Whether or not to update email within
+ * user's profile object (stored under path provided to userProfile config)
  * @return {Promise}
  * @private
  */
@@ -752,7 +754,7 @@ export const reloadAuth = (dispatch, firebase) => {
 
   // reject and dispatch error if not logged in
   if (!firebase.auth().currentUser) {
-    const error = new Error('Must be logged in to reload auth')
+    const error = new Error('User must be logged in to reload auth.')
     dispatch({ type: actionTypes.AUTH_RELOAD_ERROR, error })
     return Promise.reject(error)
   }
@@ -782,7 +784,7 @@ export const linkWithCredential = (dispatch, firebase, credential) => {
 
   // reject and dispatch error if not logged in
   if (!firebase.auth().currentUser) {
-    const error = new Error('Must be logged in to linkWithCredential')
+    const error = new Error('User must be logged in to link with credential.')
     dispatch({ type: actionTypes.AUTH_LINK_ERROR, error })
     return Promise.reject(error)
   }

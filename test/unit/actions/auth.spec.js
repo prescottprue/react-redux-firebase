@@ -8,6 +8,8 @@ import {
   logout,
   createUser,
   updateProfile,
+  reloadAuth,
+  linkWithCredential,
   signInWithPhoneNumber,
   updateAuth,
   updateEmail,
@@ -24,10 +26,27 @@ let dispatchSpy
 let res
 let profile
 let profileSnap
-const dispatch = sinon.spy()
+let dispatch
+const createSuccessSpy = (some) => sinon.spy(() => Promise.resolve(some))
+const createFailureSpy = () => sinon.spy(() => Promise.reject(new Error('test')))
+const addSpyToCurrentUser = (methodName, spyFunc) => ({ ...fakeFirebase,
+  auth: () => ({
+    get currentUser () {
+      return {
+        [methodName]: spyFunc
+      }
+    }
+  })})
+const addSpyWithArgsToAuthMethod = (methodName, spyFunc, args = []) => ({ ...fakeFirebase,
+  auth: () => ({
+    [methodName]: () => spyFunc(args)
+  })})
 const fakeLogin = { email: 'test@tst.com', password: 'asdfasdf', role: 'admin' }
 
 describe('Actions: Auth -', () => {
+  beforeEach(() => {
+    dispatch = sinon.spy()
+  })
   describe('init -', () => {
     it("calls firebase's onAuthStateChanged", () => {
       init(dispatch, fakeFirebase)
@@ -407,6 +426,41 @@ describe('Actions: Auth -', () => {
           .to.have.property('message', 'User must be logged in to update auth.')
       }
     })
+
+    it('calls firebase updateProfile method', async () => {
+      const updateAuthSpy = createSuccessSpy()
+      const newFakeFirebase = addSpyToCurrentUser('updateProfile', updateAuthSpy)
+      await updateAuth(dispatch, newFakeFirebase, 'test')
+      expect(updateAuthSpy).to.have.been.calledOnce
+    })
+
+    it('calls update profile if updateInProfile is true', async () => {
+      const updateAuthSpy = createSuccessSpy()
+      const newFakeFirebase = addSpyToCurrentUser('updateProfile', updateAuthSpy)
+      try {
+        await updateAuth(dispatch, newFakeFirebase, 'test', true)
+      } catch (err) {
+        // internal updateAuth function is called
+        expect(updateAuthSpy).to.have.been.calledOnce
+        // all dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.called.exactly(4)
+        // stubbed updateProfile function was called
+        expect(err.message).to.equal('profileRef.update is not a function')
+      }
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const updateAuthSpy = createFailureSpy()
+      const newFakeFirebase = addSpyToCurrentUser('updateProfile', updateAuthSpy)
+      try {
+        await updateAuth(dispatch, newFakeFirebase, 'test')
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(updateAuthSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
+    })
   })
 
   describe('updateEmail', () => {
@@ -422,6 +476,112 @@ describe('Actions: Auth -', () => {
           .to.have.property('message', 'User must be logged in to update email.')
       }
     })
+
+    it('calls firebase updateEmail method', async () => {
+      const updateEmailSpy = createSuccessSpy()
+      const newFakeFirebase = addSpyToCurrentUser('updateEmail', updateEmailSpy)
+      await updateEmail(dispatch, newFakeFirebase, 'test')
+      expect(updateEmailSpy).to.have.been.calledOnce
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const updateEmailSpy = createFailureSpy()
+      const newFakeFirebase = addSpyToCurrentUser('updateEmail', updateEmailSpy)
+      try {
+        await updateEmail(dispatch, newFakeFirebase, 'test')
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(updateEmailSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
+    })
+
+    it('calls update profile if updateInProfile is true', async () => {
+      const updateEmailSpy = createSuccessSpy()
+      const newFakeFirebase = addSpyToCurrentUser('updateEmail', updateEmailSpy)
+      try {
+        await updateEmail(dispatch, newFakeFirebase, 'test', true)
+      } catch (err) {
+        // all dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.called.exactly(4)
+        // internal updateEmail function is called
+        expect(updateEmailSpy).to.have.been.calledOnce
+        // stubbed updateProfile function was called
+        expect(err.message).to.equal('profileRef.update is not a function')
+      }
+    })
+  })
+
+  describe('reloadAuth', () => {
+    it('rejects if not logged in', async () => {
+      try {
+        res = await reloadAuth(dispatch, firebase)
+      } catch (err) {
+        expect(err)
+          .to.have.property('message', 'User must be logged in to reload auth.')
+      }
+    })
+
+    it('calls firebase reloadAuth method', async () => {
+      const reloadAuthSpy = createSuccessSpy()
+      const newFakeFirebase = addSpyToCurrentUser('reload', reloadAuthSpy)
+      await reloadAuth(dispatch, newFakeFirebase)
+      expect(reloadAuthSpy).to.have.been.calledOnce
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const reloadAuthSpy = createFailureSpy()
+      const newFakeFirebase = addSpyToCurrentUser('reload', reloadAuthSpy)
+      try {
+        await reloadAuth(dispatch, newFakeFirebase)
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(reloadAuthSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
+    })
+  })
+
+  describe('linkWithCredential', () => {
+    it('rejects if not logged in', async () => {
+      try {
+        res = await linkWithCredential(dispatch, firebase, '1234567891', {})
+      } catch (err) {
+        expect(err)
+          .to.have.property('message', 'User must be logged in to link with credential.')
+      }
+    })
+
+    it('calls firebase linkWithCredential method', async () => {
+      const linkWithCredentialSpy = createSuccessSpy(() => Promise.resolve())
+      const newFakeFirebase = addSpyToCurrentUser('linkWithCredential', linkWithCredentialSpy)
+      await linkWithCredential(dispatch, newFakeFirebase, '1234567891', {})
+      expect(linkWithCredentialSpy).to.have.been.calledOnce
+    })
+
+    it('attaches confirm method on successful resolve', async () => {
+      const linkWithCredentialSpy = createSuccessSpy({ confirm: () => Promise.resolve({}) })
+      const newFakeFirebase = addSpyToCurrentUser('linkWithCredential', linkWithCredentialSpy)
+      const res = await linkWithCredential(dispatch, newFakeFirebase, '1234567891', {})
+      expect(linkWithCredentialSpy).to.have.been.calledOnce
+      expect(res).to.respondTo('confirm')
+      res.confirm()
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const linkWithCredentialSpy = createFailureSpy()
+      const newFakeFirebase = addSpyToCurrentUser('linkWithCredential', linkWithCredentialSpy)
+      try {
+        await linkWithCredential(dispatch, newFakeFirebase, '1234567891', {})
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(linkWithCredentialSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
+    })
   })
 
   describe('signInWithPhoneNumber', () => {
@@ -431,6 +591,35 @@ describe('Actions: Auth -', () => {
       } catch (err) {
         expect(err)
           .to.have.property('message', 'signInWithPhoneNumber failed: Second argument "applicationVerifier" must be an implementation of firebase.auth.ApplicationVerifier.')
+      }
+    })
+
+    it('calls firebase signInWithPhoneNumber method', async () => {
+      const signInWithPhoneNumberSpy = createSuccessSpy(() => Promise.resolve())
+      const newFakeFirebase = addSpyWithArgsToAuthMethod('signInWithPhoneNumber', signInWithPhoneNumberSpy, ['1234567891', {}])
+      await signInWithPhoneNumber(newFakeFirebase, dispatch, '1234567891', {})
+      expect(signInWithPhoneNumberSpy).to.have.been.calledOnce
+    })
+
+    it('attaches confirm method on successful resolve', async () => {
+      const signInWithPhoneNumberSpy = createSuccessSpy({ confirm: () => Promise.resolve({}) })
+      const newFakeFirebase = addSpyWithArgsToAuthMethod('signInWithPhoneNumber', signInWithPhoneNumberSpy, ['1234567891', {}])
+      const res = await signInWithPhoneNumber(newFakeFirebase, dispatch, '1234567891', {})
+      expect(signInWithPhoneNumberSpy).to.have.been.calledOnce
+      expect(res).to.respondTo('confirm')
+      res.confirm()
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const signInWithPhoneNumberSpy = createFailureSpy()
+      const newFakeFirebase = addSpyWithArgsToAuthMethod('signInWithPhoneNumber', signInWithPhoneNumberSpy, ['1234567891', {}])
+      try {
+        await signInWithPhoneNumber(newFakeFirebase, dispatch, '1234567891', {})
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(signInWithPhoneNumberSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
       }
     })
   })

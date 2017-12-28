@@ -143,8 +143,8 @@ describe('Actions: Storage', () => {
           const fake = {
             storage: Object.assign(() => ({
               ref: () => ({ put: putSpy }) }),
-              { TaskEvent: { STATE_CHANGED: 'STATE_CHANGED' }
-              }),
+            { TaskEvent: { STATE_CHANGED: 'STATE_CHANGED' }
+            }),
             _: firebase._
           }
           const options = { progress: true }

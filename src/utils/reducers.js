@@ -55,42 +55,6 @@ export const combineReducers = reducers =>
     )
 
 /**
- * Get path from meta data. Path is used with lodash's setWith to set deep
- * data within reducers.
- * @param  {Object} meta - Action meta data object
- * @param  {String} meta.collection - Name of Collection for which the action
- * is to be handled.
- * @param  {String} meta.doc - Name of Document for which the action is to be
- * handled.
- * @param  {Array} meta.subcollections - Subcollections of data
- * @param  {String} meta.storeAs - Another key within redux store that the
- * action associates with (used for storing data under a path different
- * from its collection/document)
- * @return {String} String path to be used within reducer
- */
-export function pathFromMeta (meta) {
-  if (!meta) {
-    throw new Error('Action meta is required to build path for reducers.')
-  }
-  const { collection, doc, subcollections, storeAs } = meta
-  if (storeAs) {
-    return storeAs
-  }
-  if (!collection) {
-    throw new Error('Collection is required to construct reducer path.')
-  }
-  let basePath = collection
-  if (doc) {
-    basePath += `.${doc}`
-  }
-  if (!subcollections) {
-    return basePath
-  }
-  const mappedCollections = subcollections.map(pathFromMeta)
-  return basePath.concat(`.${mappedCollections.join('.')}`)
-}
-
-/**
  * Recursively unset a property starting at the deep path, and unsetting the parent
  * property if there are no other enumerable properties at that level.
  * @param  {String} path - Deep dot path of the property to unset
@@ -112,27 +76,4 @@ export const recursiveUnset = (path, obj, isRecursiveCall = false) => {
   const objectWithRemovedKey = unset(path, obj)
   const newPath = path.match(/\./) ? replace(path, /\.[^.]*$/, '') : ''
   return recursiveUnset(newPath, objectWithRemovedKey, true)
-}
-
-/**
- * Update a single item within an array
- * @param  {Array} array - Array within which to update item
- * @param  {String} itemId - Id of item to update
- * @param  {Function} updateItemCallback - Callback dictacting how the item
- * is updated
- * @return {Array} Array with item updated
- */
-export function updateItemInArray (array, itemId, updateItemCallback) {
-  const updatedItems = array.map((item) => {
-    if (item.id !== itemId) {
-      // Since we only want to update one item, preserve all others as they are now
-      return item
-    }
-
-    // Use the provided callback to create an updated item
-    const updatedItem = updateItemCallback(item)
-    return updatedItem
-  })
-
-  return updatedItems
 }
