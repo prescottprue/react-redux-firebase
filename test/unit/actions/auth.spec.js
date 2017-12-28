@@ -7,11 +7,16 @@ import {
   login,
   logout,
   createUser,
+  updateProfile,
+  signInWithPhoneNumber,
+  updateAuth,
+  updateEmail,
   resetPassword,
   confirmPasswordReset,
   verifyPasswordResetCode
 } from '../../../src/actions/auth'
 import { actionTypes } from '../../../src/constants'
+import { fakeFirebase, onAuthStateChangedSpy, firebaseWithConfig } from '../../utils'
 // import { promisesForPopulate } from '../../../src/utils/populate'
 
 let functionSpy
@@ -20,84 +25,7 @@ let res
 let profile
 let profileSnap
 const dispatch = sinon.spy()
-const onAuthStateChangedSpy = sinon.spy((f) => {
-  f({uid: 'asdfasdf'})
-})
 const fakeLogin = { email: 'test@tst.com', password: 'asdfasdf', role: 'admin' }
-const firebaseWithConfig = (config = {}) => ({
-  ...Firebase,
-  _: {
-    ...Firebase._,
-    config: { ...Firebase._.config, ...config }
-  }
-})
-const fakeFirebase = {
-  _: {
-    authUid: '123',
-    config: {
-      userProfile: 'users',
-      disableRedirectHandling: true
-    }
-  },
-  database: () => ({
-    ref: () => ({
-      val: () => ({ some: 'obj' }),
-      child: () => ({
-        on: () => ({ val: () => ({ some: 'obj' }) }),
-        off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
-        once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
-      })
-    }),
-    update: () => Promise.resolve({
-      val: () => ({ some: 'obj' })
-    })
-  }),
-  auth: () => ({
-    onAuthStateChanged: onAuthStateChangedSpy,
-    getRedirectResult: (f) => {
-      return Promise.resolve({uid: 'asdfasdf'})
-    },
-    signOut: () =>
-      Promise.resolve({}),
-    createUserWithEmailAndPassword: (email, password) =>
-      email.indexOf('error') !== -1
-        ? Promise.reject(new Error('auth/user-not-found'))
-        : email === 'error'
-          ? Promise.reject(new Error('asdfasdf'))
-          : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
-    signInWithCustomToken: () => {
-      return Promise.resolve({
-        toJSON: () => ({
-          stsTokenManager: {
-            accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJjbGFpbXMiOnsiZGlzcGxheU5hbWUiOiJFZHdhcmQgV3UiLCJlbWFpbCI6ImVkZGlld3U4MEBnbWFpbC5jb20iLCJvcmlnaW5hbElkIjoiSlFYQ2dRTkxEU1lSMFEzdjlwY3FjTDZJeGRUMiIsInByb3ZpZGVyRGF0YSI6W3siZGlzcGxheU5hbWUiOiJFZHdhcmQgV3UiLCJlbWFpbCI6ImVkZGlld3U4MEBnbWFpbC5jb20ifV19LCJ1aWQiOiJqaTh3c1BDVW5PYUhvUGZBalNCS2ZReU1pTmkxIiwiaWF0IjoxNDc1NDM3MDMyLCJleHAiOjE0NzU0NDA2MzIsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHl0b29sa2l0Lmdvb2dsZWFwaXMuY29tL2dvb2dsZS5pZGVudGl0eS5pZGVudGl0eXRvb2xraXQudjEuSWRlbnRpdHlUb29sa2l0IiwiaXNzIjoicmVzaWRlLXByb2RAcmVzaWRlLXByb2QuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJzdWIiOiJyZXNpZGUtcHJvZEByZXNpZGUtcHJvZC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSJ9.aOXOCCAL-lI5AVnd8MVlc86exvCGNySq8X7DM4Gr7PG0ek5mh_8qnFfLuzw2gfv6mHNVgY2UngUmG0qETaBdox7l3wBo1GdP9hB1bM8NltCYffXwxyw7sN36BFWD3l-cz4rlxfmfzosCLj3XtDK8ARDQ76pAXxsK-rRBvMG6N-wgE_ZLf17FVvwB95e1DAmL39fp6dRVxoPflG--m4QEKVk8xIeDx4ol9HJw512gMGtTkRDMEPWVJEdaEAp6L6Lo2-Bk-TxBCHs8gpb7b7eidWMUEXObk0UPQIz2DRh-3olbruimzL_SgPNg4Pz0uUYSn11-Mx_HxxiVtyQj1ufoLA'
-          },
-          uid: 'asdfasdfsdf'
-        })
-      })
-    },
-    signInWithEmailAndPassword: (email, password) =>
-      email.indexOf('error2') !== -1
-        ? Promise.reject(new Error('asdfasdf'))
-        : email === 'error3'
-          ? Promise.reject(new Error('auth/user-not-found'))
-          : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
-    sendPasswordResetEmail: (email) =>
-      email === 'error'
-        ? Promise.reject({ code: 'auth/user-not-found' }) // eslint-disable-line prefer-promise-reject-errors
-        : email === 'error2'
-          ? Promise.reject(new Error('asdfasdf'))
-          : Promise.resolve({ some: 'val' }),
-    confirmPasswordReset: (code, password) =>
-      password === 'error'
-        ? Promise.reject({ code: code }) // eslint-disable-line prefer-promise-reject-errors
-        : Promise.resolve(),
-    verifyPasswordResetCode: (code) => code === 'error'
-      ? Promise.reject(new Error('some'))
-        ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
-        : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] })
-      : Promise.resolve('success')
-  })
-}
 
 describe('Actions: Auth -', () => {
   describe('init -', () => {
@@ -438,17 +366,72 @@ describe('Actions: Auth -', () => {
   describe('verifyPasswordResetCode', () => {
     it('resolves for valid code', async () => {
       res = await verifyPasswordResetCode(dispatch, fakeFirebase, 'test')
+      // "success" indicates successful pas through of stub function
       expect(res).to.equal('success')
     })
 
-    describe('handles error code: ', () => {
-      it('other', async () => {
-        try {
-          res = await verifyPasswordResetCode(dispatch, fakeFirebase, 'error')
-        } catch (err) {
-          expect(err.code).to.be.a.string
-        }
-      })
+    it('throws for invalid reset code', async () => {
+      try {
+        res = await verifyPasswordResetCode(dispatch, fakeFirebase, 'error')
+      } catch (err) {
+        expect(err.code).to.be.a.string
+      }
+    })
+  })
+
+  describe('updateProfile', () => {
+    it('returns a promise', () => {
+      expect(updateProfile(dispatch, firebase, {})).to.respondTo('then')
+    })
+
+    it('rejects if profile is not an object', async () => {
+      try {
+        res = await updateProfile(dispatch, firebase, 'test')
+      } catch (err) {
+        expect(err)
+          .to.have.property('message', 'Reference.update failed: First argument  must be an object containing the children to replace.')
+      }
+    })
+  })
+
+  describe('updateAuth', () => {
+    it('returns a promise', () => {
+      expect(updateAuth(dispatch, fakeFirebase, 'test')).to.respondTo('then')
+    })
+
+    it('rejects if user is not logged in', async () => {
+      try {
+        res = await updateAuth(dispatch, fakeFirebase, 'test')
+      } catch (err) {
+        expect(err)
+          .to.have.property('message', 'User must be logged in to update auth.')
+      }
+    })
+  })
+
+  describe('updateEmail', () => {
+    it('returns a promise', () => {
+      expect(updateEmail(dispatch, fakeFirebase, 'test')).to.respondTo('then')
+    })
+
+    it('rejects if user is not logged in', async () => {
+      try {
+        res = await updateEmail(dispatch, fakeFirebase, 'test')
+      } catch (err) {
+        expect(err)
+          .to.have.property('message', 'User must be logged in to update email.')
+      }
+    })
+  })
+
+  describe('signInWithPhoneNumber', () => {
+    it('throws if second argument is not an applicationVerifier', async () => {
+      try {
+        res = await signInWithPhoneNumber(firebase, dispatch, '1234567891', {})
+      } catch (err) {
+        expect(err)
+          .to.have.property('message', 'signInWithPhoneNumber failed: Second argument "applicationVerifier" must be an implementation of firebase.auth.ApplicationVerifier.')
+      }
     })
   })
 })

@@ -6,42 +6,7 @@ import {
   getQueryIdFromPath,
   applyParamsToQuery
 } from '../../../src/utils/query'
-
-const fakeFirebase = {
-  _: {
-    authUid: '123',
-    config: {
-      userProfile: 'users',
-      disableRedirectHandling: true
-    }
-  },
-  database: () => ({
-    ref: () => ({
-      orderByValue: () => ({
-        on: () => ({ val: () => ({ some: 'obj' }) }),
-        off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
-        once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
-      }),
-      orderByPriority: () => ({
-        startAt: (startParam) => startParam,
-        toString: () => 'priority'
-      }),
-      orderByChild: (child) => ({
-        equalTo: (equalTo) => ({
-          child,
-          equalTo
-        }),
-        toString: () => child
-      }),
-      orderByKey: () => ({ }),
-      limitToFirst: () => ({ }),
-      limitToLast: () => ({ }),
-      equalTo: () => ({ }),
-      startAt: () => ({ }),
-      endAt: () => ({ })
-    })
-  })
-}
+import { fakeFirebase } from '../../utils'
 
 let createQueryFromParams = (queryParams) =>
   applyParamsToQuery(queryParams, fakeFirebase.database().ref())

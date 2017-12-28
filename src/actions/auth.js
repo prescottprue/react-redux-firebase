@@ -124,7 +124,7 @@ export const handleProfileWatchResponse = (dispatch, firebase, userProfileSnap) 
       }
     })
       .catch((err) => {
-      // Error retrieving data for population onto profile.
+        // Error retrieving data for population onto profile.
         dispatch({ type: actionTypes.UNAUTHORIZED_ERROR, authError: `Error during profile population: ${err.message}` })
         // Update profile with un-populated version
         dispatch({ type: actionTypes.SET_PROFILE, profile })
@@ -519,8 +519,9 @@ export const createUser = (dispatch, firebase, { email, password, signIn }, prof
   dispatchLoginError(dispatch, null)
 
   if (!email || !password) {
-    dispatchLoginError(dispatch, new Error('Email and Password are required to create user'))
-    return Promise.reject(new Error('Email and Password are Required'))
+    const error = new Error('Email and Password are required to create user')
+    dispatchLoginError(dispatch, error)
+    return Promise.reject(error)
   }
 
   return firebase.auth()
@@ -664,9 +665,9 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
       })
       return snap
     })
-    .catch((payload) => {
-      dispatch({ type: actionTypes.PROFILE_UPDATE_ERROR, payload })
-      return Promise.reject(payload)
+    .catch((error) => {
+      dispatch({ type: actionTypes.PROFILE_UPDATE_ERROR, error })
+      return Promise.reject(error)
     })
 }
 
@@ -683,9 +684,9 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
   dispatch({ type: actionTypes.AUTH_UPDATE_START, payload: authUpdate })
 
   if (!firebase.auth().currentUser) {
-    const msg = 'User must be logged in to update auth.'
-    dispatch({ type: actionTypes.AUTH_UPDATE_ERROR, payload: msg })
-    return Promise.reject(msg)
+    const error = new Error('User must be logged in to update auth.')
+    dispatch({ type: actionTypes.AUTH_UPDATE_ERROR, payload: error })
+    return Promise.reject(error)
   }
 
   return firebase.auth().currentUser
@@ -700,9 +701,9 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
       }
       return payload
     })
-    .catch((payload) => {
-      dispatch({ type: actionTypes.AUTH_UPDATE_ERROR, payload })
-      return Promise.reject(payload)
+    .catch((error) => {
+      dispatch({ type: actionTypes.AUTH_UPDATE_ERROR, error })
+      return Promise.reject(error)
     })
 }
 
@@ -719,9 +720,9 @@ export const updateEmail = (dispatch, firebase, newEmail, updateInProfile) => {
   dispatch({ type: actionTypes.EMAIL_UPDATE_START, payload: newEmail })
 
   if (!firebase.auth().currentUser) {
-    const msg = 'User must be logged in to update email.'
-    dispatch({ type: actionTypes.EMAIL_UPDATE_ERROR, payload: msg })
-    return Promise.reject(msg)
+    const error = new Error('User must be logged in to update email.')
+    dispatch({ type: actionTypes.EMAIL_UPDATE_ERROR, error })
+    return Promise.reject(error)
   }
 
   return firebase.auth().currentUser
@@ -733,9 +734,9 @@ export const updateEmail = (dispatch, firebase, newEmail, updateInProfile) => {
       }
       return payload
     })
-    .catch((payload) => {
-      dispatch({ type: actionTypes.EMAIL_UPDATE_ERROR, payload })
-      return Promise.reject(payload)
+    .catch((error) => {
+      dispatch({ type: actionTypes.EMAIL_UPDATE_ERROR, error })
+      return Promise.reject(error)
     })
 }
 
@@ -751,9 +752,9 @@ export const reloadAuth = (dispatch, firebase) => {
 
   // reject and dispatch error if not logged in
   if (!firebase.auth().currentUser) {
-    const err = new Error('Must be logged in to reload auth')
-    dispatch({ type: actionTypes.AUTH_RELOAD_ERROR, payload: err })
-    return Promise.reject(err)
+    const error = new Error('Must be logged in to reload auth')
+    dispatch({ type: actionTypes.AUTH_RELOAD_ERROR, error })
+    return Promise.reject(error)
   }
 
   return firebase.auth().currentUser.reload()
@@ -762,9 +763,9 @@ export const reloadAuth = (dispatch, firebase) => {
       dispatch({ type: actionTypes.AUTH_RELOAD_SUCCESS, payload: auth })
       return auth
     })
-    .catch((err) => {
-      dispatch({ type: actionTypes.AUTH_RELOAD_ERROR, payload: err })
-      return Promise.reject(err)
+    .catch((error) => {
+      dispatch({ type: actionTypes.AUTH_RELOAD_ERROR, error })
+      return Promise.reject(error)
     })
 }
 
@@ -781,9 +782,9 @@ export const linkWithCredential = (dispatch, firebase, credential) => {
 
   // reject and dispatch error if not logged in
   if (!firebase.auth().currentUser) {
-    const err = new Error('Must be logged in to linkWithCredential')
-    dispatch({ type: actionTypes.AUTH_LINK_ERROR, payload: err })
-    return Promise.reject(err)
+    const error = new Error('Must be logged in to linkWithCredential')
+    dispatch({ type: actionTypes.AUTH_LINK_ERROR, error })
+    return Promise.reject(error)
   }
 
   return firebase.auth().currentUser.linkWithCredential(credential)
@@ -791,9 +792,9 @@ export const linkWithCredential = (dispatch, firebase, credential) => {
       dispatch({ type: actionTypes.AUTH_LINK_SUCCESS, payload: auth })
       return auth
     })
-    .catch((err) => {
-      dispatch({ type: actionTypes.AUTH_LINK_ERROR, payload: err })
-      return Promise.reject(err)
+    .catch((error) => {
+      dispatch({ type: actionTypes.AUTH_LINK_ERROR, error })
+      return Promise.reject(error)
     })
 }
 
