@@ -19,6 +19,11 @@ import {
  * automatically by redux every time an action is fired. Based on which action
  * is called and its payload, the reducer will update redux state with relevant
  * changes.
+ * `firebaseReducer` is made up of multiple "slice reducers"
+ * ([outlined in reducers docs](/docs/recipes/reducers.md)) combined using
+ * [`combineReducers`](https://redux.js.org/docs/api/combineReducers.html)
+ * following the patterns outlined in
+ * [the redux docs](https://redux.js.org/docs/recipes/StructuringReducers.html).
  * @param {Object} state - Current Firebase Redux State (state.firebase)
  * @param {Object} action - Action which will modify state
  * @param {String} action.type - Type of Action being called

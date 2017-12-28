@@ -1,38 +1,6 @@
 # Roadmap
 
-## Next Minor Version (`v1.6.0`)
-
-#### Features
-* Renaming a file on upload (currently does not work due to HTML 5 File element being read only)
-
-#### Enhancements/Fixes
-* Fix `TypeError: Converting circular structure to JSON` (through update of firebase version) - [#230](https://github.com/prescottprue/react-redux-firebase/issues/230)
-
-## Future Minor Versions (`v1.7.0 - v1.*.*`)
-
-**Note:** Subject to change
-
-#### Breaking Changes
- *None Yet Planned*
-
-#### Features
-* `preserveOnLogout` config option to preserve certain data on logout (already supported in v2.0.0)
-* Population of ordered data (already supported in v2.0.0) - [#239](https://github.com/prescottprue/react-redux-firebase/issues/239)
-* `childAlias` to store populate result on another parameter - [#126](https://github.com/prescottprue/react-redux-firebase/issues/126)
-* `waitForPopulate` option to allow data to be returned before populated data as in becomes available. As of `v1.4.0-rc.2`, populate only sets `isLoaded` to true after all children are loaded, `waitForPopulate` would make this optional - [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
-* Config option for populated items updating when changed - [#69](https://github.com/prescottprue/react-redux-firebase/issues/69)
-* Improved support for batching of UI updates as the result of a database "array" loading - [#212](https://github.com/prescottprue/react-redux-firebase/issues/212)
-* Expose whole Firebase instance (warning: Using Firebase instance methods will not dispatch actions or update redux state)
-* Nested populates [#85](https://github.com/prescottprue/react-redux-firebase/issues/85))
-* Support for universal environments (i.e. no `next` function) - [#199](https://github.com/prescottprue/react-redux-firebase/issues/199)
-* Option to clear redux data on `firebaseConnect` unmount - [#55](https://github.com/prescottprue/react-redux-firebase/issues/85)
-
-#### Enhancements/Fixes
-* Fix `TypeError: Converting circular structure to JSON` (through update of firebase version) - [#230](https://github.com/prescottprue/react-redux-firebase/issues/230)
-
 ## Upcoming Major Version (`v2.0.0`)
-
-**NOTE:** The changes are unconfirmed and will most likely change
 
 #### Progress
 * All **pre-released** changes for v2.0.0 are located on [the `v2.0.0` branch](https://github.com/prescottprue/react-redux-firebase/tree/v2.0.0)
@@ -58,12 +26,50 @@
 - Support passing Firebase app passed instead of full firebase lib (pass around a smaller object) - [#249](https://github.com/prescottprue/react-redux-firebase/issues/249), [#250](https://github.com/prescottprue/react-redux-firebase/issues/250)
 - `store.firebaseAuthIsReady` promise for confirming auth is ready (useful on App boot) - [#264](https://github.com/prescottprue/react-redux-firebase/issues/264)
 
-#### Under Consideration
-* Possibility of delayed initialization - [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
-* `authRequired` or `dataLoaded` Higher Order Components (or HOC factory) that force data to exist before rendering component (made much easier using `recompose`)
 
-### Long Term Goals
+## Future Versions
+
+#### Under Consideration
+* Option to re-render HOCs (`firebaseConnect` and `firestoreConnect`) based on auth state change - [#367](https://github.com/prescottprue/react-redux-firebase/issues/367)
+* Higher Order Components (or HOC factory) that force data to exist before rendering component (maybe `AuthRequired` or `DataLoaded`)
+* Possibility of delayed initialization - [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
+
+### Longer Term Goals
 * Optional Built in Role Management
 * Multi-level population
 * Population rules suggestion/generation
-* Routing decorators (most likely to include `@authRequired`, `@dataLoaded` and `@redirectOnAuth`)
+* Routing decorators (most likely to include `AuthRequired`, `DataLoaded` and `RedirectOnAuth`)
+
+## Other Versions
+
+Note, updates of `v1.*.*` versions have been deprioritized due to the high adoption of `v2.0.0` syntax.
+
+## `v1.6.0`
+
+#### Features
+* Renaming a file on upload (currently does not work due to HTML 5 File element being read only)
+
+#### Enhancements/Fixes
+* Fix `TypeError: Converting circular structure to JSON` (through update of firebase version) - [#230](https://github.com/prescottprue/react-redux-firebase/issues/230)
+
+## `v1.7.0 - v1.*.*`
+
+**Note:** Subject to change
+
+#### Breaking Changes
+ *None Yet Planned*
+
+#### Features
+* `preserveOnLogout` config option to preserve certain data on logout (already supported in v2.0.0)
+* Population of ordered data (already supported in v2.0.0) - [#239](https://github.com/prescottprue/react-redux-firebase/issues/239)
+* `childAlias` to store populate result on another parameter - [#126](https://github.com/prescottprue/react-redux-firebase/issues/126)
+* `waitForPopulate` option to allow data to be returned before populated data as in becomes available. As of `v1.4.0-rc.2`, populate only sets `isLoaded` to true after all children are loaded, `waitForPopulate` would make this optional - [#121](https://github.com/prescottprue/react-redux-firebase/issues/121)
+* Config option for populated items updating when changed - [#69](https://github.com/prescottprue/react-redux-firebase/issues/69)
+* Improved support for batching of UI updates as the result of a database "array" loading - [#212](https://github.com/prescottprue/react-redux-firebase/issues/212)
+* Expose whole Firebase instance (warning: Using Firebase instance methods will not dispatch actions or update redux state)
+* Nested populates [#85](https://github.com/prescottprue/react-redux-firebase/issues/85))
+* Support for universal environments (i.e. no `next` function) - [#199](https://github.com/prescottprue/react-redux-firebase/issues/199)
+* Option to clear redux data on `firebaseConnect` unmount - [#55](https://github.com/prescottprue/react-redux-firebase/issues/85)
+
+#### Enhancements/Fixes
+* Fix `TypeError: Converting circular structure to JSON` (through update of firebase version) - [#230](https://github.com/prescottprue/react-redux-firebase/issues/230)
