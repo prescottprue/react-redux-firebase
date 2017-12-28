@@ -4,44 +4,11 @@ import {
   getWatcherCount,
   unsetWatcher,
   getQueryIdFromPath,
-  applyParamsToQuery
+  applyParamsToQuery,
+  orderedFromSnapshot,
+  populateAndDispatch
 } from '../../../src/utils/query'
-
-const fakeFirebase = {
-  _: {
-    authUid: '123',
-    config: {
-      userProfile: 'users',
-      disableRedirectHandling: true
-    }
-  },
-  database: () => ({
-    ref: () => ({
-      orderByValue: () => ({
-        on: () => ({ val: () => ({ some: 'obj' }) }),
-        off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
-        once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
-      }),
-      orderByPriority: () => ({
-        startAt: (startParam) => startParam,
-        toString: () => 'priority'
-      }),
-      orderByChild: (child) => ({
-        equalTo: (equalTo) => ({
-          child,
-          equalTo
-        }),
-        toString: () => child
-      }),
-      orderByKey: () => ({ }),
-      limitToFirst: () => ({ }),
-      limitToLast: () => ({ }),
-      equalTo: () => ({ }),
-      startAt: () => ({ }),
-      endAt: () => ({ })
-    })
-  })
-}
+import { fakeFirebase } from '../../utils'
 
 let createQueryFromParams = (queryParams) =>
   applyParamsToQuery(queryParams, fakeFirebase.database().ref())
@@ -241,5 +208,51 @@ describe('Utils: Query', () => {
     it('endAt', () => {
       expect(createQueryFromParams(['endAt=uid'])).to.be.an.object
     })
+  })
+
+  describe('orderedFromSnapshot -', () => {
+    it('returns null if hasChildren is a function and is false', () => {
+      const hasChildrenSpy = sinon.spy(() => false)
+      expect(orderedFromSnapshot({ hasChildren: hasChildrenSpy }))
+        .to.equal(null)
+      expect(hasChildrenSpy).to.have.been.calledOnce
+    })
+
+    it('calls forEach if it is defined', () => {
+      const forEachSpy = sinon.spy(() => false)
+      orderedFromSnapshot({ forEach: forEachSpy })
+      expect(forEachSpy).to.have.been.calledOnce
+    })
+
+    it('returns null if ordered is an empty array', () => {
+      expect(orderedFromSnapshot({ forEach: () => ({ }) })).to.equal(null)
+    })
+
+    it('adds children to ordered if they exist', () => {
+      const child = { key: 'some', val: () => ({ }) }
+      const forEachSpy = sinon.spy((childFunc) => childFunc(child))
+      const res = orderedFromSnapshot({ forEach: forEachSpy })
+      expect(res).to.be.an('array')
+      expect(forEachSpy).to.have.been.calledOnce
+      expect(res[0]).to.have.property('key', child.key)
+    })
+  })
+
+  describe('populateAndDispatch', () => {
+    it('is exported', () => {
+      expect(populateAndDispatch).to.be.a('function')
+    })
+
+    it('returns populated results on', () => {
+      expect(populateAndDispatch(firebase, () => ({}), { snapshot: { key: 'test123' } }))
+        .to.be.an.object
+    })
+
+    // // TODO: Get this working
+    // it('calls dispatch on successful populated', () => {
+    //   const dispatchSpy = sinon.spy()
+    //   populateAndDispatch(firebase, dispatchSpy, { snapshot: { key: 'test123' } })
+    //   expect(dispatchSpy).to.have.been.calledOnce
+    // })
   })
 })

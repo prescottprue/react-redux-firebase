@@ -4,46 +4,11 @@ import {
   uploadFiles,
   deleteFile
 } from '../../../src/actions/storage'
+import { fakeFirebase } from '../../utils'
 
 let spy
-let unListen = sinon.spy()
 const dispatch = () => {}
 const defaultFileMeta = { path: 'projects', file: { name: 'test.png' } }
-const fakeFirebase = {
-  _: {
-    authUid: '123',
-    config: {
-      userProfile: 'users',
-      disableRedirectHandling: true
-    }
-  },
-  database: () => ({
-    ref: () => ({
-      child: () => ({
-        on: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
-        off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
-        once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
-      }),
-      remove: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
-    })
-  }),
-  storage: () => ({
-    ref: () => ({
-      put: () => ({
-        on: (event, funcsObj) => {
-          funcsObj.next({bytesTransferred: 12, totalBytes: 12})
-          funcsObj.error()
-          funcsObj.complete()
-          return unListen
-        },
-        then: () => Promise.resolve({})
-      }),
-      delete: () => Promise.resolve(({
-
-      }))
-    })
-  })
-}
 
 fakeFirebase.storage.TaskEvent = { STATE_CHANGED: 'asdf' }
 
@@ -178,8 +143,8 @@ describe('Actions: Storage', () => {
           const fake = {
             storage: Object.assign(() => ({
               ref: () => ({ put: putSpy }) }),
-              { TaskEvent: { STATE_CHANGED: 'STATE_CHANGED' }
-              }),
+            { TaskEvent: { STATE_CHANGED: 'STATE_CHANGED' }
+            }),
             _: firebase._
           }
           const options = { progress: true }

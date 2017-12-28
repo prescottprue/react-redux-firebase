@@ -2,7 +2,7 @@
 
 Authentication data is attached to `auth`, profile is attached to `profile` if you provide a value to the `userProfile` config option. You can get them within components like so:
 
-```jsx
+```js
 import { connect } from 'react-redux'
 connect(
   // Map state to props
@@ -16,25 +16,34 @@ connect(
 If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()` or `getFirebase().auth()`.
 
 #### NOTE
-All examples below assume you have wrapped your component using `firebaseConnect`. This will make `props.firebase` available within your component:
+All examples below assume you have passed `firebase` from `context` to props. Wrapping your component with with the `withFirebase` or `firebaseConnect` Higher Order Components will make `props.firebase` available within your component:
 
 ```js
 import React from 'react'
 import PropTypes from 'prop-types'
-import { firebaseConnect } from 'react-redux-firebase'
+import { withFirebase } from 'react-redux-firebase'
 
 const SomeComponent = (props) => (
   // use props.firebase
 )
 
-// Works same with class components (make sure you import Component from react)
-// class SomeComponent extends Component {
-//   render() {
-//     // use this.props.firebase
-//   }
-// }
+export default withFirebase(SomeComponent) // or firebaseConnect()(SomeComponent)
+```
 
-export default firebaseConnect()(SomeComponent)
+Works same with class components (make sure you import `Component` from react):
+
+```js
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { firebaseConnect } from 'react-redux-firebase'
+
+class SomeComponent extends Component {
+  render() {
+    // use this.props.firebase
+  }
+}
+
+export default firebaseConnect()(SomeComponent) // or withFirebase(SomeComponent)
 ```
 
 ## login(credentials)
@@ -71,10 +80,11 @@ export default firebaseConnect()(SomeComponent)
           token : String
         }
         ```
-      * token (runs `ref.authWithCustomToken(credentials)`)
+      * custom token (runs `ref.authWithCustomToken(credentials)`). `profile` is required if automatic profile creation is enabled (which it is by default if you are using `userProfile`). `config.updateProfileOnLogin` config option can be set to `false` in order to prevent this behavior.
         ```js
         {
-          token : String
+          token : String,
+          profile: Object // required (optional if updateProfileOnLogin: false config set)
         }
         ```
 
@@ -87,7 +97,7 @@ export default firebaseConnect()(SomeComponent)
 
   *Email*
 ```js
-this.props.firebase.login({
+props.firebase.login({
   email: 'test@test.com',
   password: 'testest1'
 })
@@ -95,7 +105,7 @@ this.props.firebase.login({
 
   *OAuth Provider Redirect*
 ```js
-this.props.firebase.login({
+props.firebase.login({
   provider: 'google',
   type: 'redirect'
 })
@@ -103,7 +113,7 @@ this.props.firebase.login({
 
   *OAuth Provider Popup*
 ```js
-this.props.firebase.login({
+props.firebase.login({
   provider: 'google',
   type: 'popup'
 })
@@ -112,18 +122,21 @@ this.props.firebase.login({
   *Credential*
 ```js
 // `googleUser` from the onsuccess Google Sign In callback.
-this.props.firebase.login({
+props.firebase.login({
   credential: firebase.auth.GoogleAuthProvider.credential(googleUser.getAuthResponse().id_token)
 })
 // or using an accessToken
-this.props.firebase.login({
+props.firebase.login({
   credential: firebase.auth.GoogleAuthProvider.credential(null, 'some access token')
 })
 ```
 
   *Token*
 ```js
-this.props.firebase.login({ token: 'someJWTAuthToken' })
+props.firebase.login({
+  token: 'someJWTAuthToken',
+  profile: { email: 'rick@sanchez.com' }
+})
 ```
 
 After logging in, profile and auth are available in redux state:
@@ -158,7 +171,7 @@ Similar to Firebase's `ref.createUser(credentials)` but with support for automat
 ##### Examples
 ```js
 const createNewUser = ({ email, password, username }) => {
-  this.props.firebase.createUser(
+  firebase.createUser(
     { email, password },
     { username, email }
   )
@@ -185,7 +198,7 @@ Looking to preserve data on logout? [`v2.0.0` supports the `preserve` config opt
 
 ```js
 // logout and remove profile and auth from state
-firebase.logout()
+props.firebase.logout()
 ```
 
 ## resetPassword(credentials)
@@ -194,7 +207,7 @@ Calls Firebase's `firebase.auth().resetPassword()`. If there is an error, it is 
 ##### Examples
 
 ```js
-firebase.resetPassword({
+props.firebase.resetPassword({
   email: 'test@test.com',
   password: 'testest1',
   username: 'tester'
@@ -215,7 +228,7 @@ Calls Firebase's `firebase.auth().confirmPasswordReset()`. If there is an error,
 ##### Examples
 
 ```js
-firebase.confirmPasswordReset('some reset code', 'myNewPassword')
+props.firebase.confirmPasswordReset('some reset code', 'myNewPassword')
 ```
 
 ##### Parameters
@@ -233,7 +246,7 @@ Calls Firebase's `firebase.auth().verifyPasswordResetCode()`. If there is an err
 ##### Examples
 
 ```js
-firebase.verifyPasswordResetCode('some reset code')
+props.firebase.verifyPasswordResetCode('some reset code')
 ```
 
 ##### Parameters
@@ -241,6 +254,25 @@ firebase.verifyPasswordResetCode('some reset code')
 
 ##### Returns
   [**Promise**][promise-url] - Email associated with reset code
+
+
+## signInWithPhoneNumber(code)
+Verify a password reset code from password reset email.
+
+Calls Firebase's `firebase.auth().signInWithPhoneNumber()`. If there is an error, it is added into redux state under `state.firebase.authError`.
+
+##### Examples
+
+```js
+props.firebase.signInWithPhoneNumber('some reset code')
+```
+
+##### Parameters
+  * `code` [**String**][string-url] - Password reset code
+
+##### Returns
+  [**Promise**][promise-url] - Email associated with reset code
+
 
 [promise-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [string-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String

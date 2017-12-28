@@ -1,6 +1,6 @@
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from './populate'
-import { isNaN, forEach, size } from 'lodash'
+import { isNaN, forEach, size, isString } from 'lodash'
 
 /**
  * @private
@@ -39,6 +39,9 @@ export const getWatchPath = (event, path) => {
  * @param {String} event - Type of query event
  */
 export const getQueryIdFromPath = (path, event) => {
+  if (!isString(path)) {
+    throw new Error('Query path must be a string')
+  }
   const origPath = path
   let pathSplitted = path.split('#')
   path = pathSplitted[0]
@@ -111,7 +114,6 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId) => {
     delete watchers[id]
     if (event !== 'first_child' && event !== 'once') {
       firebase.database().ref().child(path).off(event)
-      // TODO: Remove config.distpatchOnUnsetListener
     }
   } else if (watchers[id]) {
     watchers[id]--
@@ -121,7 +123,8 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId) => {
 }
 
 /**
- * @description Modify query to include methods based on query parameters (such as orderByChild)
+ * @description Modify query to include methods based on query parameters (such
+ * as orderByChild).
  * @param {Array} queryParams - Array of query parameters to apply to query
  * @param {Object} query - Query object on which to apply query parameters
  * @return {FirebaseQuery}

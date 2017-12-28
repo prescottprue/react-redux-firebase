@@ -15,7 +15,7 @@ needing to access a firebase instance created under a different store key.
 
 **Parameters**
 
--   `storeKey` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
+-   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
     Firebase state (`state.firebase`) (optional, default `'store'`)
 
 **Examples**
@@ -33,7 +33,7 @@ const withFirebase = createWithFirebase('anotherStore')
 export default withFirebase(SomeComponent)
 ```
 
-Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Higher Order Component which accepts an array of
+Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Higher Order Component which accepts an array of
 watchers config and wraps a React Component
 
 ## withFirebase
@@ -91,5 +91,5 @@ export default compose(
 )
 ```
 
-Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Which accepts a component to wrap and returns the
+Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Which accepts a component to wrap and returns the
 wrapped component

@@ -180,5 +180,5 @@ export const updateProfileOnFirestore = (firebase, profileUpdate) => {
   const profileRef = firestore().doc(`${config.userProfile}/${authUid}`)
   return profileRef
     .update(profileUpdate)
-    .then(profileRef.get)
+    .then(() => profileRef.get())
 }

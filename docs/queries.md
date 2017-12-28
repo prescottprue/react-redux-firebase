@@ -5,7 +5,7 @@
 Firebase Real Time Database queries can be created in two ways:
 
 * [Manually](#manual) - Using `watchEvents` or `watchEvent` (requires managing of listeners)
-* [Automatically](#auto) - Using `firebaseConnect` HOC (manages mounting/unmounting)
+* [Automatically](#firebaseConnect) - Using `firebaseConnect` HOC (manages mounting/unmounting)
 
 ### Manually {#manual}
 
@@ -51,44 +51,19 @@ export default compose(
 )(Todos)
 ```
 
-**Fun Fact** - `firebaseConnect` actually calls `watchEvents` internally on component mount/unmount and when props change
-
 Though doing things manually is great to understand what is going on, it comes with the need to manage these listeners yourself.
 
-### Automatically {#auto}
+**Fun Fact** - `firebaseConnect` actually calls `watchEvents` internally on component mount/unmount and when props change.
+
+### Automatically {#firebaseConnect}
 
 `firebaseConnect` accepts an array of paths for which to create queries. When listening to paths, it is possible to modify the query with any of [Firebase's included query methods](https://firebase.google.com/docs/reference/js/firebase.database.Query).
 
+The results of the queries created by `firebaseConnect` are written into redux state under the path of the query for both `state.firebase.ordered` and `state.firebase.data`.
+
 **NOTE:**
+
 By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use [`storeAs` (more below)](#storeAs).
-
-Below are examples using Firebase query methods as well as other methods that are included (such as 'populate').
-
-`firebaseConnect` is a Higher Order Component (wraps a provided component) that attaches listeners to relevant paths on Firebase when mounting, and removes them when unmounting.
-
-**storeAs**
-
-Data is stored in redux under the path of the query for convince. This means that two different queries to the same path (i.e. `todos`) will both place data into `state.data.todos` even if their query parameters are different. If you would like to store your query somewhere else in redux, use `storeAs`:
-
-```js
-compose(
-  firebaseConnect([
-    {
-      path: 'todos',
-      storeAs: 'myTodos', // place in redux under "myTodos"
-      queryParams: ['orderByChild=createdBy', 'equalTo=123someuid'],
-    },
-    {
-      path: 'todos',
-      queryParams: ['limitToFirst=20'],
-    }
-  ]),
-  connect((state) => ({
-    myTodos: state.firebase.data.myTodos, // due to storeAs
-    allTodos: state.firebase.data.todos // state.firebase.data.todos since no storeAs
-  }))
-)
-```
 
 ## Ordered vs Data (by key)
 
@@ -375,23 +350,25 @@ Internally parse following query params. Useful when attempting to parse
 Added as part of `v2.0.0-beta.17`
 
 #### Examples
-1. Order by child parameter equal to a number string. Equivalent of searching for `'123'` (where as not using `notParsed` would search for children equal to `123`)
-```js
-firebaseConnect([
-  {
-    path: '/todos',
-    queryParams: [
-      'parsed', // causes automatic parsing
-      'equalTo=123' // 123 is treated as a number instead of a string
-      'orderByChild=createdBy',
-    ]
-  }
-])
-```
+
+1. Order by child parameter equal to a number string. Equivalent of searching for `'123'` (where as not using `notParsed` would search for children equal to `123`)		
+
+  ```js
+  firebaseConnect([
+    {
+      path: '/todos',
+      queryParams: [
+        'parsed', // causes automatic parsing
+        'equalTo=123' // 123 is treated as a number instead of a string
+        'orderByChild=createdBy',
+      ]
+    }
+  ])
+  ```
 
 ## storeAs {#storeAs}
 
-By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use `storeAs`:
+By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use `storeAs`.
 
 #### Examples
 1. Querying the same path with different query parameters
@@ -401,8 +378,12 @@ const myProjectsReduxName = 'myProjects'
 
 compose(
   firebaseConnect(props => [
-    { path: 'projects' }
-    { path: 'projects', storeAs: myProjectsReduxName, queryParams: ['orderByChild=uid', '123'] }
+    { path: 'projects' },
+    {
+      path: 'projects',
+      storeAs: myProjectsReduxName,
+      queryParams: ['orderByChild=uid', '123']
+    }
   ]),
   connect((state, props) => ({
     projects: state.firebase.data.projects,
@@ -410,3 +391,13 @@ compose(
   }))
 )
 ```
+
+#### Why?
+
+Data is stored in redux under the path of the query for convince. This means that two different queries to the same path (i.e. `todos`) will both place data into `state.data.todos` even if their query parameters are different.
+
+## Populate {#populate}
+
+Populate allows you to replace IDs within your data with other data from Firebase. This is very useful when trying to keep your data flat. Some would call it a _join_, but it was modeled after [the mongo populate method](http://mongoosejs.com/docs/populate.html).
+
+Visit [Populate Section](/docs/populate.md) for full documentation.

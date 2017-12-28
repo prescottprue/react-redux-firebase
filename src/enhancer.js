@@ -23,7 +23,7 @@ let firebaseInstance
  * @param {Boolean} config.sessions - Location on Firebase where user
  * sessions are stored (only if presense is set). Often set to `'sessions'` or `'onlineUsers'`.
  * @param {Boolean} config.updateProfileOnLogin - Whether or not to update
- * profile when logging in. (default: `false`)
+ * profile when logging in. (default: `true`)
  * @param {Boolean} config.resetBeforeLogin - Whether or not to empty profile
  * and auth state on login
  * @param {Object|Array} config.perserveOnLogout - Data parameters to perserve
