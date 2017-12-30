@@ -112,6 +112,73 @@ Visit [Populate Section](/docs/populate.md) for full documentation.
 ## Types of Queries
 
 There are multiple types of queries
+Queries can be attached in two different ways:
+1. Manually - Call `watchEvents` and `unWatchEvents` directly (such as within component lifecycle hooks)
+2. Automatically - Using `firebaseConnect` HOC Wrapper (manages attaching/detaching listeners on component mount/dismount/props change)
+
+## Manually
+**NOTE** You must track and unmount all of then listeners you create in this way. [`firebaseConnect`](#automatically) has been created to [do this for you automatically](#automatically).
+
+`watchEvent` and `watchEvents` can be called directly to create listeners. Be careful when doing this though! You will have to track and unmount all of your listeners using either `unWatchEvent` or `unWatchEvents`. `firebaseConnect` has been created to [do this for you automatically](#automatically), but there are still times where it is nice to do it manually.
+
+```js
+import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { isLoaded, isEmpty, toJS } from 'react-redux-firebase'
+
+class SomeThing extends PureComponent {
+  static contextTypes = {
+    store: PropTypes.object.isRequired
+  }
+
+  static propTypes = {
+    todosMap: PropTypes.object
+  }
+
+  componentWillMount () {
+    this.context.store.firebase.helpers.watchEvent('value', 'todos')
+  }
+
+  componentWillUnMount () {
+    this.context.store.firebase.helpers.unWatchEvent('value', 'todos')
+  }
+
+  render () {
+    const { todosMap } = this.props
+
+    if (!isLoaded(todosMap)) {
+      return <div>Loading...</div>
+    }
+
+    if (isEmpty(todosMap)) {
+      return <div>No Todos Found</div>
+    }
+    const todos = toJS(todosMap) // convert ImmutableJS Map to JS Object (not needed in v2)
+
+    return <div>{JSON.stringify(todos, null, 2)}</div>
+  }
+}
+
+export default connect(
+  ({ firebase }) => ({
+    todosMap: firebase.getIn(['data', 'todos']) // pass ImmutableJS Map
+  })
+)(SomeThing)
+```
+
+## Automatically {#automatically}
+
+Query listeners are attached by using the `firebaseConnect` higher order component. `firebaseConnect` accepts an array of paths for which to create queries. When listening to paths, it is possible to modify the query with any of [Firebase's included query methods](https://firebase.google.com/docs/reference/js/firebase.database.Query).
+
+**NOTE:**
+By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use [`storeAs` (more below)](#storeAs).
+
+Below are examples using Firebase query config options as well as other options that are included (such as 'populate').
+
+`firebaseConnect` is a Higher Order Component (wraps a provided component) that attaches listeners to relevant paths on Firebase when mounting, and removes them when unmounting.
+
+>>>>>>> master
 
 ## once
 To load a firebase location once instead of binding, the once option can be used:
