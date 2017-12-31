@@ -33,12 +33,12 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 ## Install
 
 ```bash
-npm install --save react-redux-firebase@next
+npm install --save react-redux-firebase
 ```
 
 ## Use
 
-Include `reactReduxFirebase` in your store compose function and  `firebaseReducer` in your reducers:
+Include `reactReduxFirebase` (store enhancer) and  `firebaseReducer` (reducer) while creating your redux store:
 
 ```javascript
 import React from 'react'
@@ -89,7 +89,7 @@ const App = () => (
 render(<App/>, document.getElementById('root'));
 ```
 
-Todos component (`./Todos`):
+The Firebase instance can then be grabbed from context within your components (`withFirebase` and `firebaseConnect` Higher Order Components provided to help):
 
 **Add Data**
 
@@ -119,7 +119,7 @@ export default withFirebase(Todos)
 // or firebaseConnect()(Todos) if attaching listeners
 ```
 
-**Load Data (listeners managed on mount/unmount)**
+**Load Data (listeners automatically managed on mount/unmount)**
 
 ```jsx
 import React from 'react'

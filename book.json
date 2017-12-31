@@ -22,17 +22,17 @@
       "gitbookConfigURL": "https://raw.githubusercontent.com/prescottprue/react-redux-firebase/master/book.json",
       "options": [
         {
-            "value": "http://docs.react-redux-firebase.com/history/v1.4.0/",
-            "text": "Version 1.4.0"
-        },
-        {
-            "value": "http://docs.react-redux-firebase.com/history/v1.5.0/",
-            "text": "Version 1.5.0",
+            "value": "http://docs.react-redux-firebase.com/history/v2.0.0/",
+            "text": "Version 2.0.0",
             "selected": true
         },
         {
-            "value": "http://docs.react-redux-firebase.com/history/v2.0.0/",
-            "text": "Version 2.0.0"
+            "value": "http://docs.react-redux-firebase.com/history/v1.5.0/",
+            "text": "Version 1.5.0"
+        },
+        {
+          "value": "http://docs.react-redux-firebase.com/history/v1.4.0/",
+          "text": "Version 1.4.0"
         }
       ]
     }
