@@ -1,19 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { isLoaded, isEmpty, toJS } from 'react-redux-firebase'
-import {
-  compose,
-  lifecycle,
-  pure,
-  withContext,
-  getContext,
-  withProps
-} from 'recompose'
+import { isLoaded, isEmpty, withFirebase } from 'react-redux-firebase'
+import { compose, lifecycle, pure } from 'recompose'
 
-const SomeThing = ({ todosMap }) => {
-  const todos = toJS(todosMap)
-
+const SomeThing = ({ todos }) => {
   if (!isLoaded(todos)) {
     return <div>Loading...</div>
   }
@@ -26,19 +17,12 @@ const SomeThing = ({ todosMap }) => {
 }
 
 SomeThing.propTypes = {
-  todosMap: PropTypes.object
+  todos: PropTypes.object
 }
-
-// Get Firebase from context.store and pass as props.firebase
-const withFirebase = compose(
-  withContext({ store: PropTypes.object }, () => {}),
-  getContext({ store: PropTypes.object }),
-  withProps(({ store }) => ({ firebase: store.firebase.helpers }))
-)
 
 // Create enhancer by composing HOCs
 const enhance = compose(
-  withFirebase,
+  withFirebase, // add props.firebase
   lifecycle({
     componentWillMount () {
       this.props.firebase.watchEvent('value', 'todos')
@@ -47,8 +31,8 @@ const enhance = compose(
       this.props.firebase.unWatchEvent('value', 'todos')
     }
   }),
-  connect(({ firebase }) => ({
-    todosMap: firebase.getIn(['data', 'todos']) // pass Immutable map
+  connect(({ firebase: { data: { todos } } }) => ({
+    todos  // map todos from redux state to props
   })),
   pure // shallowEqual comparison of props for rendering optimization
 )

@@ -1,16 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component, cloneElement } from 'react'
 import PropTypes from 'prop-types'
 import { map, get } from 'lodash'
 import { connect } from 'react-redux'
 import {
   firebaseConnect,
-  populatedDataToJS,
-  pathToJS,
-  dataToJS,
+  populate,
   isLoaded,
   isEmpty
 } from 'react-redux-firebase'
 import { LIST_PATH } from 'constants'
+// import { UserIsAuthenticated } from 'utils/router'
 import LoadingSpinner from 'components/LoadingSpinner'
 import ProjectTile from '../components/ProjectTile'
 import NewProjectTile from '../components/NewProjectTile'
@@ -19,17 +18,17 @@ import classes from './ProjectsContainer.scss'
 
 const populates = [{ child: 'createdBy', root: 'users' }]
 
-@firebaseConnect(({ params, auth }) => [
-  {
-    path: 'projects',
-    populates
-  }
+// @UserIsAuthenticated
+@firebaseConnect([
+  // { path: 'projects', populates }
+  // 'projects#populate=owner:users' // string equivalent
 ])
-@connect(({ firebase }, { params }) => ({
-  projects: populatedDataToJS(firebase, 'projects', populates),
-  unpopulatedProjects: dataToJS(firebase, 'projects'),
-  auth: pathToJS(firebase, 'auth')
-}))
+@connect(
+  ({ firebase, firebase: { auth, data: { projects } } }, { params }) => ({
+    auth,
+    projects: populate(firebase, 'projects', populates)
+  })
+)
 export default class Projects extends Component {
   static contextTypes = {
     router: PropTypes.object.isRequired
@@ -48,13 +47,12 @@ export default class Projects extends Component {
   }
 
   newSubmit = newProject => {
-    const { firebase: { pushWithMeta } } = this.props
-    // push new project with createdBy and createdAt
-    return pushWithMeta('projects', newProject)
+    return this.props.firebase
+      .push('projects', newProject)
       .then(() => this.setState({ newProjectModal: false }))
       .catch(err => {
         // TODO: Show Snackbar
-        console.error("error creating new project", err) // eslint-disable-line
+        console.error('error creating new project', err) // eslint-disable-line
       })
   }
 
@@ -85,7 +83,7 @@ export default class Projects extends Component {
     // Project Route is being loaded
     if (this.props.children) {
       // pass all props to children routes
-      return React.cloneElement(this.props.children, this.props)
+      return cloneElement(this.props.children, this.props)
     }
 
     return (

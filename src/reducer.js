@@ -1,168 +1,45 @@
-import { fromJS } from 'immutable'
-import { dropRight } from 'lodash'
-import { actionTypes, paramSplitChar } from './constants'
-
-const {
-  START,
-  SET,
-  SET_PROFILE,
-  LOGIN,
-  LOGOUT,
-  LOGIN_ERROR,
-  NO_VALUE,
-  UNSET_LISTENER,
-  AUTHENTICATION_INIT_STARTED,
-  AUTHENTICATION_INIT_FINISHED,
-  UNAUTHORIZED_ERROR,
-  AUTH_UPDATE_SUCCESS
-} = actionTypes
-
-const emptyState = {
-  auth: undefined,
-  authError: undefined,
-  profile: undefined,
-  isInitializing: undefined,
-  data: {},
-  timestamp: {},
-  requesting: {},
-  requested: {}
-}
-
-const initialState = fromJS(emptyState)
-
-const pathToArr = path => path ? path.split(/\//).filter(p => !!p) : []
+import { combineReducers } from './utils/reducers'
+import {
+  requestingReducer,
+  requestedReducer,
+  timestampsReducer,
+  dataReducer,
+  orderedReducer,
+  authReducer,
+  authErrorReducer,
+  profileReducer,
+  listenersReducer,
+  isInitializingReducer,
+  errorsReducer
+} from './reducers'
 
 /**
- * @name firebaseStateReducer
- * @description Reducer for react redux firebase. This function is called
+ * @name firebaseReducer
+ * @description Main reducer for react-redux-firebase. This function is called
  * automatically by redux every time an action is fired. Based on which action
  * is called and its payload, the reducer will update redux state with relevant
- * changes.
- * @param {Map} state - Current Redux State
+ * changes. `firebaseReducer` is made up of multiple "slice reducers"
+ * ([outlined in reducers docs](/docs/recipes/reducers.md)) combined using
+ * [`combineReducers`](https://redux.js.org/docs/api/combineReducers.html)
+ * following the patterns outlined in
+ * [the redux docs](https://redux.js.org/docs/recipes/StructuringReducers.html).
+ * @param {Object} state - Current Firebase Redux State (state.firebase)
  * @param {Object} action - Action which will modify state
  * @param {String} action.type - Type of Action being called
- * @param {String} action.data - Type of Action which will modify state
- * @return {Map} Redux State.
+ * @param  {String} action.path - Path of action that was dispatched
+ * @param {String} action.data - Data associated with action
+ * @return {Object} Firebase redux state
  */
-export default (state = initialState, action = {}) => {
-  const { path, timestamp, requesting, requested } = action
-  let pathArr
-  let retVal
-
-  switch (action.type) {
-    case START:
-      pathArr = pathToArr(path)
-      retVal = (requesting !== undefined)
-        ? state.setIn(['requesting', pathArr.join(paramSplitChar)], fromJS(requesting))
-        : state.deleteIn(['requesting', pathArr.join(paramSplitChar)])
-
-      retVal = (requested !== undefined)
-        ? retVal.setIn(['requested', pathArr.join(paramSplitChar)], fromJS(requested))
-        : retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
-
-      return retVal
-
-    case SET:
-
-      const { data, ordered } = action
-      pathArr = pathToArr(path)
-
-      // Handle invalid keyPath error caused by deep setting to a null value
-      if (data !== undefined && state.getIn(['data', ...pathArr]) === null) {
-        retVal = state.deleteIn(['data', ...pathArr])
-      } else if (state.getIn(dropRight(['data', ...pathArr])) === null) {
-        retVal = state.deleteIn(dropRight(['data', ...pathArr]))
-      } else {
-        retVal = state // start with state
-      }
-
-      retVal = (data !== undefined)
-        ? retVal.setIn(['data', ...pathArr], fromJS(data))
-        : retVal.deleteIn(['data', ...pathArr])
-
-      retVal = (ordered !== undefined)
-        ? retVal.setIn(['ordered', ...pathArr], fromJS(ordered))
-        : retVal.deleteIn(['ordered', ...pathArr])
-
-      retVal = (timestamp !== undefined)
-        ? retVal.setIn(['timestamp', pathArr.join(paramSplitChar)], fromJS(timestamp))
-        : retVal.deleteIn(['timestamp', pathArr.join(paramSplitChar)])
-
-      retVal = (requesting !== undefined)
-        ? retVal.setIn(['requesting', pathArr.join(paramSplitChar)], fromJS(requesting))
-        : retVal.deleteIn(['requesting', pathArr.join(paramSplitChar)])
-
-      retVal = (requested !== undefined)
-        ? retVal.setIn(['requested', pathArr.join(paramSplitChar)], fromJS(requested))
-        : retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
-
-      return retVal
-
-    case NO_VALUE:
-      pathArr = pathToArr(path)
-      retVal = state.setIn(['data', ...pathArr], fromJS({}))
-
-      retVal = (timestamp !== undefined)
-        ? retVal.setIn(['timestamp', pathArr.join(paramSplitChar)], fromJS(timestamp))
-        : retVal.deleteIn(['timestamp', pathArr.join(paramSplitChar)])
-
-      retVal = (requesting !== undefined)
-        ? retVal.setIn(['requesting', pathArr.join(paramSplitChar)], fromJS(requesting))
-        : retVal.deleteIn(['requesting', pathArr.join(paramSplitChar)])
-
-      retVal = (requested !== undefined)
-        ? retVal.setIn(['requested', pathArr.join(paramSplitChar)], fromJS(requested))
-        : retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
-
-      return retVal
-
-    case UNSET_LISTENER:
-      pathArr = pathToArr(path)
-      retVal = state.deleteIn(['data', ...pathArr])
-      retVal = retVal.deleteIn(['timestamp', pathArr.join(paramSplitChar)])
-      retVal = retVal.deleteIn(['requesting', pathArr.join(paramSplitChar)])
-      retVal = retVal.deleteIn(['requested', pathArr.join(paramSplitChar)])
-
-      return retVal
-
-    case SET_PROFILE:
-      return (action.profile !== undefined)
-        ? state.setIn(['profile'], fromJS(action.profile))
-        : state.deleteIn(['profile'])
-
-    case LOGOUT:
-      return fromJS({
-        auth: null,
-        authError: null,
-        profile: null,
-        isInitializing: false,
-        data: {}
-      })
-
-    case LOGIN:
-      return state.setIn(['auth'], fromJS(action.auth))
-        .setIn(['authError'], null)
-
-    case LOGIN_ERROR:
-      return state
-        .setIn(['authError'], action.authError)
-        .setIn(['auth'], null)
-        .setIn(['profile'], null)
-
-    case AUTHENTICATION_INIT_STARTED:
-      return initialState.setIn(['isInitializing'], true)
-    // return state.setIn(['isInitializing'], true) // throws state.setIn not a function error
-
-    case AUTHENTICATION_INIT_FINISHED:
-      return state.setIn(['isInitializing'], false)
-
-    case UNAUTHORIZED_ERROR:
-      return state.setIn(['authError'], action.authError)
-
-    case AUTH_UPDATE_SUCCESS:
-      return state.setIn(['auth'], fromJS(action.payload))
-
-    default:
-      return state
-  }
-}
+export default combineReducers({
+  requesting: requestingReducer,
+  requested: requestedReducer,
+  timestamps: timestampsReducer,
+  data: dataReducer,
+  ordered: orderedReducer,
+  auth: authReducer,
+  authError: authErrorReducer,
+  profile: profileReducer,
+  listeners: listenersReducer,
+  isInitializing: isInitializingReducer,
+  errors: errorsReducer
+})

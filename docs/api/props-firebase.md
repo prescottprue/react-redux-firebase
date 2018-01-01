@@ -14,6 +14,7 @@ export default class SomeComponent extends Component {
 }
 ```
 
+The methods which are available are documented in [firebaseInstance](/docs/api/firebaseInstance.md)
 ## set
 
 Sets data to Firebase.

@@ -1,6 +1,50 @@
 # Roadmap
 
-## Next Minor Version (`v1.6.0`)
+## Upcoming Major Version (`v2.0.0`)
+
+#### Progress
+* All **pre-released** changes for v2.0.0 are located on [the `v2.0.0` branch](https://github.com/prescottprue/react-redux-firebase/tree/v2.0.0)
+
+#### Breaking Changes
+* Remove usage of `Immutable.js` and Immutable Maps (no more need for `pathToJS()`, `dataToJS()` or any Immutable helpers to load data from redux)
+* Firebase is now initialized outside of `react-redux-firebase` - [#173](https://github.com/prescottprue/react-redux-firebase/issues), [#131](https://github.com/prescottprue/react-redux-firebase/issues), [#107](https://github.com/prescottprue/react-redux-firebase/issues)
+* `login` with custom token no longer internally decodes JWT (use `profileFactory` instead to include token data on profile)
+* reducer split into multiple nested reducers for a few reasons:
+  * Follows [standard for nesting of reducers using combine reducers](http://redux.js.org/docs/recipes/reducers/UpdatingNormalizedData.html)).
+  * Allows for separately importable reducers (for placing in other parts of redux other than `state.firebase`)
+  * Keeps reducers easier to read, understand, and debug
+  * Improved rendering/update performance for `react` - [#84](https://github.com/prescottprue/react-redux-firebase/issues/84)
+
+#### Features
+- Integration for [`react-native-firebase`](https://github.com/invertase/react-native-firebase) for using Firebase native modules instead of JS library (allowing for instance to be passed in)  - [#131](https://github.com/prescottprue/react-redux-firebase/issues/131)
+- Population of ordered data - [#239](https://github.com/prescottprue/react-redux-firebase/issues/239)
+- Support for keeping data on logout - [#125](https://github.com/prescottprue/react-redux-firebase/issues/125)
+- Online users/presence functionality based on [firebase's presence example](http://firebase.googleblog.com/2013/06/how-to-build-presence-system.html)
+- Built in `react-native` JS (not native modules) support making it no longer necessary to pass `ReactNative` in config
+- Detect Non-HTTP environments (such as with SSR) so that `enableRedirectHandling: false` is not required in config
+- Track online users and sessions by passing `presence` config option (string or function)
+- Support passing Firebase app passed instead of full firebase lib (pass around a smaller object) - [#249](https://github.com/prescottprue/react-redux-firebase/issues/249), [#250](https://github.com/prescottprue/react-redux-firebase/issues/250)
+- `store.firebaseAuthIsReady` promise for confirming auth is ready (useful on App boot) - [#264](https://github.com/prescottprue/react-redux-firebase/issues/264)
+
+
+## Future Versions
+
+#### Under Consideration
+* Option to re-render HOCs (`firebaseConnect` and `firestoreConnect`) based on auth state change - [#367](https://github.com/prescottprue/react-redux-firebase/issues/367)
+* Higher Order Components (or HOC factory) that force data to exist before rendering component (maybe `AuthRequired` or `DataLoaded`)
+* Possibility of delayed initialization - [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
+
+### Longer Term Goals
+* Optional Built in Role Management
+* Multi-level population
+* Population rules suggestion/generation
+* Routing decorators (most likely to include `AuthRequired`, `DataLoaded` and `RedirectOnAuth`)
+
+## Other Versions
+
+Note, updates of `v1.*.*` versions have been deprioritized due to the high adoption of `v2.0.0` syntax.
+
+## `v1.6.0`
 
 #### Features
 * Renaming a file on upload (currently does not work due to HTML 5 File element being read only)
@@ -8,7 +52,7 @@
 #### Enhancements/Fixes
 * Fix `TypeError: Converting circular structure to JSON` (through update of firebase version) - [#230](https://github.com/prescottprue/react-redux-firebase/issues/230)
 
-## Future Minor Versions (`v1.7.0 - v1.*.*`)
+## `v1.7.0 - v1.*.*`
 
 **Note:** Subject to change
 
@@ -29,40 +73,3 @@
 
 #### Enhancements/Fixes
 * Fix `TypeError: Converting circular structure to JSON` (through update of firebase version) - [#230](https://github.com/prescottprue/react-redux-firebase/issues/230)
-
-## Upcoming Major Version (`v2.0.0`)
-
-**NOTE:** The changes are unconfirmed and will most likely change
-
-#### Progress
-* All **pre-released** changes for v2.0.0 are located on [the `v2.0.0` branch](https://github.com/prescottprue/react-redux-firebase/tree/v2.0.0)
-
-#### Breaking Changes
-* Remove usage of `Immutable.js` and Immutable Maps (no more need for `pathToJS()`, `dataToJS()` or any Immutable helpers to load data from redux)
-* Firebase is now initialized outside of `react-redux-firebase` - [#173](https://github.com/prescottprue/react-redux-firebase/issues), [#131](https://github.com/prescottprue/react-redux-firebase/issues), [#107](https://github.com/prescottprue/react-redux-firebase/issues)
-* reducer split into multiple nested reducers for a few reasons:
-  * Follows [standard for nesting of reducers using combine reducers](http://redux.js.org/docs/recipes/reducers/UpdatingNormalizedData.html)).
-  * Allows for separately importable reducers (for placing in other parts of redux other than `state.firebase`)
-  * Keeps reducers easier to read, understand, and debug
-  * Improved rendering/update performance for `react` - [#84](https://github.com/prescottprue/react-redux-firebase/issues/84)
-
-#### Features
-- Integration for [`react-native-firebase`](https://github.com/invertase/react-native-firebase) for using Firebase native modules instead of JS library (allowing for instance to be passed in)  - [#131](https://github.com/prescottprue/react-redux-firebase/issues/131)
-- Population of ordered data - [#239](https://github.com/prescottprue/react-redux-firebase/issues/239)
-- Support for keeping data on logout - [#125](https://github.com/prescottprue/react-redux-firebase/issues/125)
-- Online users/presence functionality based on [firebase's presence example](http://firebase.googleblog.com/2013/06/how-to-build-presence-system.html)
-- Built in `react-native` JS (not native modules) support making it no longer necessary to pass `ReactNative` in config
-- Detect Non-HTTP environments (such as with SSR) so that `enableRedirectHandling: false` is not required in config
-- Track online users and sessions by passing `presence` config option (string or function)
-- Support passing Firebase app passed instead of full firebase lib (pass around a smaller object) - [#249](https://github.com/prescottprue/react-redux-firebase/issues/249), [#250](https://github.com/prescottprue/react-redux-firebase/issues/250)
-- `store.firebaseAuthIsReady` promise for confirming auth is ready (useful on App boot) - [#264](https://github.com/prescottprue/react-redux-firebase/issues/264)
-
-#### Under Consideration
-* Possibility of delayed initialization - [#70](https://github.com/prescottprue/react-redux-firebase/issues/70) (more research needed)
-* `authRequired` or `dataLoaded` Higher Order Components (or HOC factory) that force data to exist before rendering component (made much easier using `recompose`)
-
-### Long Term Goals
-* Optional Built in Role Management
-* Multi-level population
-* Population rules suggestion/generation
-* Routing decorators (most likely to include `@authRequired`, `@dataLoaded` and `@redirectOnAuth`)

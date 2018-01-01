@@ -5,12 +5,32 @@ const files = [
     dest: 'connect.md'
   },
   {
-    src: 'compose.js',
-    dest: 'compose.md'
+    src: 'firestoreConnect.js',
+    dest: 'firestoreConnect.md'
+  },
+  {
+    src: 'withFirebase.js',
+    dest: 'withFirebase.md'
+  },
+  {
+    src: 'withFirestore.js',
+    dest: 'withFirestore.md'
+  },
+  {
+    src: 'createFirebaseInstance.js',
+    dest: 'firebaseInstance.md'
+  },
+  {
+    src: 'enhancer.js',
+    dest: 'enhancer.md'
   },
   {
     src: 'helpers.js',
     dest: 'helpers.md'
+  },
+  {
+    src: 'reducers.js',
+    dest: 'reducers.md'
   },
   {
     src: 'reducer.js',

@@ -3,6 +3,8 @@
 Expose Firebase instance created internally, which is the same as [props.firebase](/docs/api/props-firebase.md). Useful for
 integrations into external libraries such as redux-thunk and redux-observable.
 
+The methods which are available are documented in [firebaseInstance](/docs/api/firebaseInstance.md)
+
 **Examples**
 
 _redux-thunk integration_

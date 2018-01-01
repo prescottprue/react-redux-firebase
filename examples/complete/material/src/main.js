@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import injectTapEventPlugin from 'react-tap-event-plugin'
 import createStore from './store/createStore'
 import { version } from '../package.json'
 import { env } from './config'
@@ -24,6 +25,12 @@ const MOUNT_NODE = document.getElementById('root')
 let render = () => {
   const App = require('./containers/App').default
   const routes = require('./routes/index').default(store)
+  // Tap Plugin for material-ui
+  try {
+    injectTapEventPlugin()
+  } catch (err) {
+    // Silence warning about placing before render seen on hot reload
+  }
 
   ReactDOM.render(<App store={store} routes={routes} />, MOUNT_NODE)
 }

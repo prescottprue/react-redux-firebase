@@ -1,3 +1,6 @@
 examples/**
 coverage/**
 node_modules/**
+_book/**
+_site/**
+test/mocha.opts

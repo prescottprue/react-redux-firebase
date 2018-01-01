@@ -25,7 +25,11 @@ const config = {
   },
   resolve: {
     modules: [inProject(project.srcDir), 'node_modules'],
-    extensions: ['*', '.js', '.jsx', '.json']
+    extensions: ['*', '.js', '.jsx', '.json'],
+    alias: {
+      // fix issue of loading multiple versions of react
+      react: path.resolve('./node_modules/react')
+    }
   },
   externals: project.externals,
   module: {
@@ -56,8 +60,8 @@ config.module.rules.push({
   test: /\.(js|jsx)$/,
   exclude: [
     /node_modules/,
-    /react-redux-firebase\/dist/
-    /* place other npm linked packages here */
+    /react-redux-firebase\/es/,
+    /redux-firestore\/es/,
   ],
   use: [
     {
@@ -251,7 +255,7 @@ if (__PROD__) {
     new FaviconsWebpackPlugin({
       logo: 'static/logo.svg',
       inject: true,
-      title: 'material',
+      title: 'material-example',
       persistentCache: true,
       icons: {
         favicons: true,

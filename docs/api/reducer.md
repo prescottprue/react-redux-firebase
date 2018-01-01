@@ -2,20 +2,25 @@
 
 ### Table of Contents
 
--   [firebaseStateReducer](#firebasestatereducer)
+-   [firebaseReducer](#firebasereducer)
 
-## firebaseStateReducer
+## firebaseReducer
 
-Reducer for react redux firebase. This function is called
+Main reducer for react-redux-firebase. This function is called
 automatically by redux every time an action is fired. Based on which action
 is called and its payload, the reducer will update redux state with relevant
-changes.
+changes. `firebaseReducer` is made up of multiple "slice reducers"
+([outlined in reducers docs](/docs/recipes/reducers.md)) combined using
+[`combineReducers`](https://redux.js.org/docs/api/combineReducers.html)
+following the patterns outlined in
+[the redux docs](https://redux.js.org/docs/recipes/StructuringReducers.html).
 
 **Parameters**
 
--   `state` **[Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)** Current Redux State (optional, default `initialState`)
--   `action` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Action which will modify state (optional, default `{}`)
-    -   `action.type` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of Action being called
-    -   `action.data` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of Action which will modify state
+-   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current Firebase Redux State (state.firebase)
+-   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Action which will modify state
+    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of Action being called
+    -   `action.path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
+    -   `action.data` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Data associated with action
 
-Returns **[Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)** Redux State.
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase redux state

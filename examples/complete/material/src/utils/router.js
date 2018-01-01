@@ -1,7 +1,6 @@
 import { UserAuthWrapper } from 'redux-auth-wrapper'
 import { browserHistory } from 'react-router'
 import { LIST_PATH } from 'constants'
-import { pathToJS } from 'react-redux-firebase'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 const AUTHED_REDIRECT = 'AUTHED_REDIRECT'
@@ -17,11 +16,10 @@ export const UserIsAuthenticated = UserAuthWrapper({
   // eslint-disable-line new-cap
   wrapperDisplayName: 'UserIsAuthenticated',
   LoadingComponent: LoadingSpinner,
-  authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) =>
-    pathToJS(firebase, 'auth') === undefined ||
-    pathToJS(firebase, 'isInitializing') === true,
-  predicate: auth => auth !== null,
+  authSelector: ({ firebase: { auth } }) => auth,
+  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+    !auth.isLoaded || isInitializing,
+  predicate: auth => !auth.isEmpty,
   redirectAction: newLoc => dispatch => {
     browserHistory.replace(newLoc)
     dispatch({
@@ -47,11 +45,10 @@ export const UserIsNotAuthenticated = UserAuthWrapper({
   failureRedirectPath: (state, props) =>
     // redirect to page user was on or to list path
     props.location.query.redirect || LIST_PATH,
-  authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) =>
-    pathToJS(firebase, 'auth') === undefined ||
-    pathToJS(firebase, 'isInitializing') === true,
-  predicate: auth => auth === null,
+  authSelector: ({ firebase: { auth } }) => auth,
+  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+    !auth.isLoaded || isInitializing,
+  predicate: auth => auth.isEmpty,
   redirectAction: newLoc => dispatch => {
     browserHistory.replace(newLoc)
     dispatch({ type: AUTHED_REDIRECT })

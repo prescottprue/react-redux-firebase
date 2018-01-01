@@ -2,41 +2,14 @@
 
 ## Before Use
 
+## Install
+```bash
+npm install --save react-redux-firebase
+```
+
 ### Peer Dependencies
 
 Install peer dependencies: `npm i --save redux react-redux`
-
-### Decorators
-
-Though they are optional, it is highly recommended that you used decorators with this library. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
-
-A side by side comparison using [react-redux](https://github.com/reactjs/react-redux)'s `connect` function/HOC is the best way to illustrate the difference:
-
-```javascript
-class SomeComponent extends Component {
-
-}
-export default connect()(SomeComponent)
-```
-vs.
-
-```javascript
-@connect()
-export default class SomeComponent extends Component {
-
-}
-```
-
-In order to enable this functionality, you will most likely need to install a plugin (depending on your build setup). For Webpack and Babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
-
-1. run `npm i --save-dev babel-plugin-transform-decorators-legacy`
-2. Add the following line to your `.babelrc`:
-```json
-{
-    "plugins": ["transform-decorators-legacy"]
-}
-```
-
 
 ## Install
 ```bash
@@ -50,15 +23,15 @@ Include `firebase` in your combine reducers function:
 
 ```js
 import { combineReducers } from 'redux'
-import { firebaseStateReducer } from 'react-redux-firebase'
+import { firebaseReducer } from 'react-redux-firebase'
 
 // Add firebase to reducers
 const rootReducer = combineReducers({
-  firebase: firebaseStateReducer
+  firebase: firebaseReducer
 })
 ```
 
-## Compose Function
+## Setting Up Store With Store Enhancer
 
 ```js
 import { compose } from 'redux'
@@ -79,7 +52,7 @@ const config = {
 
 // Add redux Firebase to compose
 const createStoreWithFirebase = compose(
-  reactReduxFirebase(firebaseConfig, config)
+  reactReduxFirebase(firebase, config)
 )(createStore)
 
 // Create store with reducers and initial state
@@ -90,76 +63,58 @@ View the [config section](/config.html) for full list of configuration options.
 
 ## Use in Components
 
-```javascript
-import React, { Component } from 'react'
+**Queries Based On State**
+`Todos` component from above examples
+
+```jsx
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded, isEmpty, dataToJS } from 'react-redux-firebase'
+import { compose } from 'redux'
+import { firebaseConnect } from 'react-redux-firebase'
 
-@firebaseConnect([
-  'todos' // corresponds to 'todos' root on firebase
-])
-@connect(
-  ({ firebase }) => ({
-    // todos prop set to firebase data in redux under '/todos'
-    todos: dataToJS(firebase, 'todos'),
-  })
-)
-export default class Todos extends Component {
-  static propTypes = {
-    todos: PropTypes.object,
-    firebase: PropTypes.object
-  }
+export default compose(
+  firebaseConnect((props) => {
+    return [
+      'todos'
+    ]
+  }),
+  connect(
+    (state) => ({
+      todos: state.firebase.data.todos,
+      // profile: state.firebase.profile // load profile
+    })
+  )
+)(Todos)
+```
 
-  handleAdd = () => {
-    const {newTodo} = this.refs
-    const { firebase } = this.props
-    // Add a new todo to firebase
-    firebase.push('/todos', { text: newTodo.value, done: false })
-    newTodo.value = ''
-  }
+### Decorators
 
-  render() {
-    const { todos } = this.props;
+They are completely optional, but ES7 Decorators can be used. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
 
-    // Build Todos list if todos exist and are loaded
-    const todosList = !isLoaded(todos)
-      ? 'Loading'
-      : isEmpty(todos)
-        ? 'Todo list is empty'
-        : Object.keys(todos).map(
-            (key, id) => (
-              <TodoItem key={key} id={id} todo={todos[key]}/>
-            )
-          )
+A side by side comparison using [react-redux](https://github.com/reactjs/react-redux)'s `connect` function/HOC is the best way to illustrate the difference:
 
-    return (
-      <div>
-        <h1>Todos</h1>
-        <ul>
-          {todosList}
-        </ul>
-        <input type="text" ref="newTodo" />
-        <button onClick={this.handleAdd}>
-          Add
-        </button>
-      </div>
-    )
-  }
+```jsx
+class SomeComponent extends Component {
+
+}
+export default connect()(SomeComponent)
+```
+vs.
+
+```jsx
+@connect()
+export default class SomeComponent extends Component {
+
 }
 ```
 
-Alternatively, if you choose not to use decorators, your connect function will look like so:
+In order to enable this functionality, you will most likely need to install a plugin (depending on your build setup). For Webpack and Babel, you will need to make sure you have installed and enabled  [babel-plugin-transform-decorators-legacy](https://github.com/loganfsmyth/babel-plugin-transform-decorators-legacy) by doing the following:
 
-```javascript
-const wrappedTodos = firebaseConnect([
-  '/todos'
-])(Todos)
-
-export default connect(
-  ({firebase}) => ({
-    todos: dataToJS(firebase, 'todos'),
-  })
-)(wrappedTodos)
-
+1. run `npm i --save-dev babel-plugin-transform-decorators-legacy`
+2. Add the following line to your `.babelrc`:
+```json
+{
+  "plugins": ["transform-decorators-legacy"]
+}
 ```

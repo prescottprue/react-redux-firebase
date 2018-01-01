@@ -3,8 +3,8 @@ export const deleteFile = (firebase, { path, dbPath }) =>
     .ref(path)
     .delete()
     .then(() =>
-      !dbPath
-        ? ({ path })
+      !dbPath || !firebase.database
+        ? ({ path }) // return path if dbPath does not exist
         : firebase // Handle option for removing file info from database
           .database()
           .ref(dbPath)

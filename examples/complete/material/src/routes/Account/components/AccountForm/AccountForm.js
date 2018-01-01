@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form'
 import RaisedButton from 'material-ui/RaisedButton'
 import { TextField } from 'redux-form-material-ui'
 import { ACCOUNT_FORM_NAME } from 'constants'
-import ProviderDataForm from '../ProviderDataForm'
+import ProviderDataForm from '../ProviderDataForm/ProviderDataForm'
 import classes from './AccountForm.scss'
 
 export const AccountForm = ({ account, handleSubmit, submitting }) => (
@@ -22,12 +22,12 @@ export const AccountForm = ({ account, handleSubmit, submitting }) => (
       floatingLabelText="Avatar Url"
     />
     {!!account &&
-    !!account.providerData && (
-      <div>
-        <h4>Linked Accounts</h4>
-        <ProviderDataForm providerData={account.providerData} />
-      </div>
-    )}
+      !!account.providerData && (
+        <div>
+          <h4>Linked Accounts</h4>
+          <ProviderDataForm providerData={account.providerData} />
+        </div>
+      )}
     <RaisedButton
       primary
       label="Save"

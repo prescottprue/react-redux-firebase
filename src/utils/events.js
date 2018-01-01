@@ -61,9 +61,14 @@ export const getEventsFromInput = paths =>
       }
       let strPath = path.path
 
+      if (path.storeAs) {
+        // append storeAs to query path
+        strPath += `@${path.storeAs}`
+      }
+
       if (path.queryParams) {
         // append query params to path for queryId added in pathStrToObj
-        strPath = `${strPath}#${path.queryParams.join('&')}`
+        strPath += `#${path.queryParams.join('&')}`
       }
 
       // Add all parameters that are missing (ones that exist will remain)

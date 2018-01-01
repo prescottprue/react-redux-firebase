@@ -34,9 +34,8 @@ module.exports = {
     'material-ui'
   ],
   /**
-   * Settings used to create config.js file when running npm run create-config
+   * Settings used to create src/config.js using firebase-ci
    * in ci environment. If you are running locally, go to src/config.js.
-   * NOTE: firebase-ci will soon be able to handle this for you :)
    */
   ci: {
     development: {

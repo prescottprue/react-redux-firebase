@@ -1,24 +1,24 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { isLoaded, isEmpty, toJS } from 'react-redux-firebase'
+import { isLoaded, isEmpty, withFirebase } from 'react-redux-firebase'
 
 class SomeThing extends PureComponent {
   static propTypes = {
-    todosMap: PropTypes.object
+    todos: PropTypes.object
   }
 
   componentWillMount () {
-    this.context.store.firebase.helpers.watchEvent('value', 'todos')
+    this.props.firebase.watchEvent('value', 'todos')
   }
 
   componentWillUnMount () {
-    this.context.store.firebase.helpers.unWatchEvent('value', 'todos')
+    this.props.firebase.unWatchEvent('value', 'todos')
   }
 
   render () {
-    const { todosMap } = this.props
-    const todos = toJS(todosMap)
+    const { todos } = this.props
 
     if (!isLoaded(todos)) {
       return <div>Loading...</div>
@@ -32,8 +32,9 @@ class SomeThing extends PureComponent {
   }
 }
 
-export default connect(
-  ({ firebase }) => ({
-    todosMap: firebase.getIn(['data', 'todos']) // pass Immutable map
-  })
+export default compose(
+  withFirebase, // add props.firebase
+  connect(({ firebase: { data: { todos } } }) => ({
+    todos // map todos from redux state to props
+  })),
 )(SomeThing)

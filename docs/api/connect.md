@@ -7,30 +7,31 @@
 
 ## createFirebaseConnect
 
-**Extends React.Component**
-
-Function for creating a firebaseConnect Higher Order Component
-connected to a specific store key. **NOTE** This is an advanced feature
-and is not neesesary except for in cases of running multiple redux stores
-in one application.
+Function that creates a Higher Order Component that
+automatically listens/unListens to provided firebase paths using
+React's Lifecycle hooks.
+**WARNING!!** This is an advanced feature, and should only be used when
+needing to access a firebase instance created under a different store key.
 
 **Parameters**
 
--   `storeKey` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** Key of store which `firebaseConnect`
-    will connect to for gathering store.firebase (optional, default `'store'`)
+-   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
+    Firebase state (state.firebase) (optional, default `'store'`)
 
 **Examples**
 
 _Basic_
 
 ```javascript
+// this.props.firebase set on App component as firebase object with helpers
 import { createFirebaseConnect } from 'react-redux-firebase'
-const firebaseConnect = createFirebaseConnect('someOtherStore')(App)
+// create firebase connect that uses another redux store
+const firebaseConnect = createFirebaseConnect('anotherStore')
+// use the firebaseConnect to wrap a component
 export default firebaseConnect()(SomeComponent)
 ```
 
-Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** that creates a Higher Order Component (component that
-accepts a component to wrap and returns the wrapped component)
+Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** HOC that accepts a watchArray and wraps a component
 
 ## firebaseConnect
 
@@ -41,16 +42,16 @@ to provided firebase paths using React's Lifecycle hooks.
 
 **Parameters**
 
--   `watchArray` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
-    from Firebase. Can also be a function that returns the array. The function is
-    passed the current props and the firebase object.
+-   `watchArray` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
+    from Firebase. Can also be a function that returns the array. The function
+    is passed the current props and the firebase object.
 
 **Examples**
 
 _Basic_
 
 ```javascript
-// this.props.firebase set on App component as firebase object with helpers
+// props.firebase set on App component as firebase object with helpers
 import { firebaseConnect } from 'react-redux-firebase'
 export default firebaseConnect()(App)
 ```
@@ -58,55 +59,68 @@ export default firebaseConnect()(App)
 _Data_
 
 ```javascript
+import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
-// sync /todos from firebase into redux
-const fbWrapped = firebaseConnect([
-  'todos'
-])(App)
-
-// pass todos list from redux as this.props.todosList
-export default connect(({ firebase }) => ({
-  todosList: dataToJS(firebase, 'todos'),
-  profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.profile
-  auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
-}))(fbWrapped)
+const enhance = compose(
+  firebaseConnect([
+    'todos' // sync /todos from firebase into redux
+  ]),
+  connect((state) => ({
+    todos: state.firebase.ordered.todos
+  })
+)
+// use enhnace to pass todos list as props.todos
+const Todos = enhance(({ todos })) =>
+  <div>
+    {JSON.stringify(todos, null, 2)}
+  </div>
+)
 ```
 
 _Data that depends on props_
 
 ```javascript
+import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
-// sync /todos from firebase into redux
-const fbWrapped = firebaseConnect((props) => ([
-  `todos/${props.type}`
-])(App)
+const enhance = compose(
+  firebaseConnect((props) => ([
+    `posts/${props.postId}` // sync /posts/postId from firebase into redux
+  ]),
+  connect(({ firebase: { data } }, props) => ({
+    todo: data.posts && data.todos[postId],
+  })
+)
 
-// pass todos list for the specified type of todos from redux as `this.props.todosList`
-export default connect(({ firebase, type }) => ({
-  todosList: dataToJS(firebase, `data/todos/${type}`),
-}))(fbWrapped)
+const Posts = ({ done, text, author }) => (
+  <article>
+    <h1>{title}</h1>
+    <h2>By {author.name}</h2>
+    <div>{content}</div>
+  </article>
+)
+
+export default enhance(Posts)
 ```
 
-_Data that depends on auth state_
+_Data that depends on state_
 
 ```javascript
+import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
-// sync /todos from firebase into redux
-const fbWrapped = firebaseConnect((props, firebase) => ([
-  `todos/${firebase._.authUid}`
-])(App)
-
-// pass todos list for the specified type of todos from redux as `this.props.todosList`
-export default connect(({ firebase }) => ({
-  todosList: dataToJS(firebase, `data/todos/${firebase.getIn(['auth', 'uid'])}`),
-}))(fbWrapped)
+export default compose(
+  firebaseConnect((props, store) => ([
+    `todos/${store.getState().firebase.auth.uid}`
+  ]),
+  connect(({ firebase: { data, auth } }) => ({
+    todosList: data.todos && data.todos[auth.uid],
+  }))
+)(SomeComponent)
 ```
 
-Returns **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the
-wrapped component
+Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the wrapped component

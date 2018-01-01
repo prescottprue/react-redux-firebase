@@ -10,6 +10,10 @@
 * Real CI and Deployment settings (including `prod` and `stage` environments)
 * Using different instances of Firebase based on environment
 
+## Requirements
+* node `^5.0.0` (`6.11.0` suggested)
+* npm `^3.0.0`
+
 ## Getting Started
 
 1. Install dependencies: `npm install`
@@ -25,6 +29,8 @@ While developing, you will probably rely mostly on `npm start`; however, there a
 |`build`            |Builds the application to ./dist|
 |`lint`             |[Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors|
 |`lint:fix`         |Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix)|
+
+[Husky](https://github.com/typicode/husky) is used to enable `prepush` hook capability. The `prepush` script currently runs `eslint`, which will keep you from pushing if there is any lint within your code. If you would like to disable this, remove the `prepush` script from the `package.json`.
 
 [Husky](https://github.com/typicode/husky) is used to enable `prepush` hook capability. The `prepush` script currently runs `eslint`, which will keep you from pushing if there is any lint within your code. If you would like to disable this, remove the `prepush` script from the `package.json`.
 

@@ -1,0 +1,12 @@
+@import 'base';
+.container {
+  @extend .flex-column-center;
+  padding-top: 4rem;
+}
+.info {
+  @extend .flex-column-center;
+}
+.note {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}

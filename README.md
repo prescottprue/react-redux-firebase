@@ -8,7 +8,6 @@
 [![License][license-image]][license-url]
 [![Build Status][travis-image]][travis-url]
 [![Dependency Status][daviddm-image]][daviddm-url]
-[![Backers on Open Collective][backers]](#backers)
 
 [![Gitter][gitter-image]][gitter-url]
 
@@ -23,10 +22,10 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 - Integrated into redux
 - Out of the box support for authentication (with auto load user profile)
 - Full Firebase Platform Support Including Real Time Database, Firestore, and Storage
-- Automatic binding/unbinding of listeners using `firebaseConnect` Higher Order Component
+- Automatic binding/unbinding of listeners through React Higher Order Components (`firebaseConnect`  and `firestoreConnect`)
 - [Population capability](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
 - Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed` )
-- queries support ( `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo` right now )
+- Multiple queries types supported including `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo`
 - Tons of examples of integrations including [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/)
 - Server Side Rendering Support
 - [`react-native` support](/docs/recipes/react-native.md) using [native modules](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules) or [web sdk](/docs/recipes/react-native.md#jsweb)
@@ -37,48 +36,43 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 npm install --save react-redux-firebase
 ```
 
-#### Other Versions
-
-The above install command will install the `@latest` tag. You may also use the following tags when installing to get different versions:
-
-* `@next` - Most possible up to date code. Currently, points to active progress with `v2.0.0-*` pre-releases. *Warning:* Syntax is different than current stable version.
-
-Be aware of changes when using a version that is not tagged `@latest`. Please report any issues you encounter, and try to keep an eye on the [releases page](https://github.com/prescottprue/react-redux-firebase/releases) for updates.
-
-**Current Progress**
-Pending a few more small things v2.0.0 is now ready for the release Candidate stage (PRs in the coming days)! That means that in intended target for v2.0.0 to reach `@latest` before the end of the year!
-
 ## Use
 
-**Note:** If you are just starting a new project, you may want to use [`v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/#use) since it has an even easier syntax. For clarity on the transition, view the [`v1` -> `v2` migration guide](http://docs.react-redux-firebase.com/history/v2.0.0/docs/v2-migration-guide.html)
-
-Include `reactReduxFirebase` in your store compose function and  `firebaseStateReducer` in your reducers:
+Include `reactReduxFirebase` (store enhancer) and  `firebaseReducer` (reducer) while creating your redux store:
 
 ```javascript
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, combineReducers, compose } from 'redux'
-import { reactReduxFirebase, firebaseStateReducer } from 'react-redux-firebase'
-import Todos from './Todos' // find code below
+import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
+import firebase from 'firebase'
+// import 'firebase/firestore' // <- needed if using firestore
 
-const firebaseConfig = {
-  apiKey: '<your-api-key>',
-  authDomain: '<your-auth-domain>',
-  databaseURL: '<your-database-url>',
-  storageBucket: '<your-storage-bucket>'
+const firebaseConfig = {}
+
+// react-redux-firebase config
+const rrfConfig = {
+  userProfile: 'users',
+  // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
 }
 
-const reduxFirebaseConfig = { userProfile: 'users' }
+// initialize firebase instance
+firebase.initializeApp(config) // <- new to v2.*.*
 
-// Add reactReduxFirebase store enhancer
+// initialize firestore
+// firebase.firestore() // <- needed if using firestore
+
+// Add reduxReduxFirebase enhancer when making store creator
 const createStoreWithFirebase = compose(
-  reactReduxFirebase(firebaseConfig, reduxFirebaseConfig),
+  reactReduxFirebase(firebase, rrfConfig), // firebase instance as first argument
+  // reduxFirestore(firebase) // <- needed if using firestore
 )(createStore)
 
 // Add firebase to reducers
 const rootReducer = combineReducers({
-  firebase: firebaseStateReducer
+  firebase: firebaseReducer,
+  // firestore: firestoreReducer // <- needed if using firestore
 })
 
 // Create store with reducers and initial state
@@ -95,62 +89,165 @@ const App = () => (
 render(<App/>, document.getElementById('root'));
 ```
 
-Todos component (`./Todos`):
+The Firebase instance can then be grabbed from context within your components (`withFirebase` and `firebaseConnect` Higher Order Components provided to help):
 
-```javascript
+**Add Data**
+
+```jsx
 import React from 'react'
-import PropTypes from 'prop-types' // can also come from react if react <= 15.4.0
+import PropTypes from 'prop-types'
+import { withFirebase } from 'react-redux-firebase'
+
+const Todos = ({ firebase }) => {
+  const sampleTodo = { text: 'Sample', done: false }
+  const pushSample = () => firebase.push('todos', sampleTodo)
+  return (
+    <div>
+      <h1>Todos</h1>
+      <ul>
+        {todosList}
+      </ul>
+      <input type="text" ref="newTodo" />
+      <button onClick={pushSample}>
+        Add
+      </button>
+    </div>
+  )
+}
+
+export default withFirebase(Todos)
+// or firebaseConnect()(Todos) if attaching listeners
+```
+
+**Load Data (listeners automatically managed on mount/unmount)**
+
+```jsx
+import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { firebaseConnect, isLoaded, isEmpty, toJS } from 'react-redux-firebase'
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 
-const Todos = ({ todos }) => (
-  <div>
-    <h1>Todos</h1>
-    <ul>
-      {
-        !isLoaded(todos)
-          ? 'Loading'
-          : isEmpty(todos)
-            ? 'Todo list is empty'
-            : toJS(todos).map(
-                (key, id) => (
-                  <TodoItem key={key} id={id} todo={todos[key]}/>
-                )
-              )
-      }
-    </ul>
-  </div>
-)
-
-Todos.propTypes = {
-  todos: PropTypes.object,
-  firebase: PropTypes.object // comes from firebaseConnect
+const Todos = ({ todos, firebase }) => {
+  // Build Todos list if todos exist and are loaded
+  const todosList = !isLoaded(todos)
+    ? 'Loading'
+    : isEmpty(todos)
+      ? 'Todo list is empty'
+      : Object.keys(todos).map(
+          (key, id) => (
+            <TodoItem key={key} id={id} todo={todos[key]}/>
+          )
+        )
+  return (
+    <div>
+      <h1>Todos</h1>
+      <ul>
+        {todosList}
+      </ul>
+      <input type="text" ref="newTodo" />
+      <button onClick={this.handleAdd}>
+        Add
+      </button>
+    </div>
+  )
 }
 
 export default compose(
   firebaseConnect([
-    'todos' // { path: 'todos' } // object notation
+    'todos' // { path: '/todos' } // object notation
   ]),
-  connect((state) => ({
-    todos: state.firebase.getIn(['todos']), // in v2 todos: state.firebase.data.todos
-  }))
+  connect(
+    (state) => ({
+      todos: state.firebase.data.todos,
+      // profile: state.firebase.profile // load profile
+    })
+  )
 )(Todos)
 ```
 
-Alternatively, if you choose to use decorators:
+**Queries Based On Props**
 
-```javascript
-@firebaseConnect([
-  'todos' // { path: 'todos' } // object notation
-])
-@connect(
-  ({ firebase }) => ({
-    todos: state.firebase.getIn(['todos']) // in v2 todos: firebase.data.todos
-  })
+It is common to make a detail page that loads a single item instead of a whole list of items. A query for a specific `Todos` can be created using
+
+```jsx
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { firebaseConnect, getVal } from 'react-redux-firebase'
+
+// Component enhancer that loads todo into redux then into the todo prop
+const enhance = compose(
+  firebaseConnect((props) => [
+    // Set listeners based on props (prop is route parameter from react-router in this case)
+    return [
+      { path: `todos/${props.params.todoId}` }, // create todo listener
+      // `todos/${props.params.todoId}` // equivalent string notation
+    ]
+  }),
+  connect(({ firebase }, props) => ({
+    todo: getVal(firebase, `todos/${props.params.todoId}`), // lodash's get can also be used
+  }))
 )
-export default class Todos extends Component {
+
+const Todo = ({ todo, firebase, params }) =>
+  <div>
+    <input
+      name="isDone"
+      type="checkbox"
+      checked={todo.isDone}
+      onChange={() =>
+        firebase.update(`todos/${params.todoId}`, { done: !todo.isDone })
+      }
+    />
+    <span>{todo.label}</span>
+  </div>
+
+// Export enhanced component
+export default enhance(Todo)
+```
+
+
+**Load Data On Click**
+
+```jsx
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
+
+const Todos = ({ firebase }) => {
+  // Build Todos list if todos exist and are loaded
+  const todosList = !isLoaded(todos)
+    ? 'Loading'
+    : isEmpty(todos)
+      ? 'Todo list is empty'
+      : Object.keys(todos).map(
+          (key, id) => <TodoItem key={key} id={id} todo={todos[key]}/>
+        )
+  return (
+    <div>
+      <h1>Todos</h1>
+      <ul>
+        {todosList}
+      </ul>
+      <button onClick={() => firebase.watchEvent('value', 'todos')}>
+        Load Todos
+      </button>
+    </div>
+  )
 }
+
+// Export enhanced component
+export default compose(
+  withFirebase, // or firebaseConnect()
+  connect((state) => ({
+    todos: state.firebase.data.todos,
+    // profile: state.firebase.profile // load profile
+  }))
+)(Todos)
 ```
 
 ## [Docs](http://react-redux-firebase.com)
@@ -159,6 +256,7 @@ See full documentation at [react-redux-firebase.com](http://react-redux-firebase
 * [Getting Started](http://react-redux-firebase.com/docs/getting_started)
 * [Auth](http://react-redux-firebase.com/docs/auth)
 * [Queries](http://react-redux-firebase.com/docs/queries)
+* [Firestore](http://react-redux-firebase.com/docs/firestore)
 * [Populate](http://react-redux-firebase.com/docs/populate)
 * [API Reference](http://react-redux-firebase.com/docs/api)
 
@@ -190,14 +288,23 @@ Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby).
 
 View docs for recipes on integrations with:
 
-* [redux-thunk](/docs/recipes/thunks.md)
-* [redux-observable](/docs/recipes/epics.md)
-* [redux-saga](/docs/recipes/redux-saga.md)
-* [redux-form](/docs/recipes/redux-form.md)
-* [redux-auth-wrapper](/docs/recipes/routing.md#advanced)
-* [redux-persist](/docs/recipes/redux-persist.md) - [improved integration with `v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/redux-persist.html)
-* [react-native](/docs/recipes/react-native.md)
-* [react-native-firebase](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules) - requires `v2.0.0`
+* [redux-firestore](/docs/firestore.md)
+* [redux-thunk](/docs/integrations/thunks.md)
+* [redux-observable](/docs/integrations/epics.md)
+* [redux-saga](/docs/integrations/redux-saga.md)
+* [redux-form](/docs/integrations/redux-form.md)
+* [redux-auth-wrapper](/docs/integrations/routing.md#advanced)
+* [redux-persist](/docs/integrations/redux-persist.md) - [improved integration with `v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/integrations/redux-persist.html)
+* [react-native](/docs/integrations/react-native.md)
+* [react-native-firebase](http://docs.react-redux-firebase.com/history/v2.0.0/docs/integrations/react-native.html#native-modules) - requires `v2.0.0`
+
+## Firestore
+
+If you plan to use Firestore, you should checkout [`redux-firestore`][redux-firestore]. It integrates nicely with `react-redux-firebase` (v2 only) and it allows you to run Real Time Database and Firestore along side each other.
+
+`react-redux-firebase` provides the `firestoreConnect` HOC (similar to `firebaseConnect`) for easy setting/unsetting of listeners.
+
+Currently `react-redux-firebase` still handles auth when using [`redux-firestore`][redux-firestore] - The future plan is to also have auth standalone auth library that will allow the developer to choose which pieces they do/do not want.
 
 ## Firestore
 
@@ -217,47 +324,9 @@ Currently `react-redux-firebase` still handles auth when using [`redux-firestore
 
 The [examples folder](/examples) contains full applications that can be copied/adapted and used as a new project.
 
-## FAQ
+### FAQ
 
-1. How is this different than [`redux-react-firebase`](https://github.com/tiberiuc/redux-react-firebase)?
-
-    This library was actually originally forked from redux-react-firebase, but adds extended functionality such as:
-    * [populate functionality](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
-    * `react-native` support ([web/js](http://react-redux-firebase.com/docs/recipes/react-native.html) or native modules through [`react-native-firebase`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules))
-    * tons of [integrations](#integrations)
-    * [`profileFactory`](http://react-redux-firebase.com/docs/config) - change format of profile stored on Firebase
-    * [`getFirebase`](http://react-redux-firebase.com/docs/thunks) - access to firebase instance that fires actions when methods are called
-    * [access to firebase's `storage`](http://react-redux-firebase.com/docs/storage) and `messaging` services
-    * `uniqueSet` method helper for only setting if location doesn't already exist
-    * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)
-    * Action Types and other Constants are exposed for external usage (such as with `redux-observable`)
-    * Server Side Rendering Support
-    * [Complete Firebase Auth Integration](http://react-redux-firebase.com/docs/auth.html#examples) including `signInWithRedirect` compatibility for OAuth Providers
-
-    #### Well why not combine?
-    I have been talking to the author of [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase) about combining, but we are not sure that the users of both want that at this point. Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby) if you haven't already since a ton of this type of discussion goes on there.
-
-    #### What about [redux-firebase](https://github.com/colbyr/redux-firebase)?
-    The author of [redux-firebase](https://github.com/colbyr/redux-firebase) has agreed to share the npm namespace! Currently the plan is to take the framework agnostic redux core logic of `react-redux-firebase` and [place it into `redux-firebase`](https://github.com/prescottprue/redux-firebase)). Eventually `react-redux-firebase` and potentially other framework libraries can depend on that core (the new `redux-firebase`).
-
-2. Why use redux if I have Firebase to store state?
-
-    This isn't a super quick answer, so I wrote up [a medium article to explain](https://medium.com/@prescottprue/firebase-with-redux-82d04f8675b9)
-
-3. Where can I find some examples?
-
-    * [Recipes Section](http://react-redux-firebase.com/docs/recipes/) of [the docs](http://react-redux-firebase.com/docs/recipes/)
-    * [examples folder](/examples) contains [complete example apps](/examples/complete) as well as [useful snippets](/examples/snippets)
-
-4. How does `connect` relate to `firebaseConnect`?
-
-    ![data flow](/docs/static/dataFlow.png)
-
-5. How do I help?
-
-  * Join the conversion on [gitter][gitter-url]
-  * Post Issues
-  * Create Pull Requests
+Please visit the [FAQ section of the docs](http://docs.react-redux-firebase.com/history/v2.0.0/docs/FAQ.html)
 
 ## Contributors
 
@@ -270,8 +339,6 @@ This project exists thanks to all the people who contribute.
 Thank you to all our backers! 🙏
 
 * [Reside Network Inc.](https://github.com/reside-eng)
-
-<a href="https://opencollective.com/react-redux-firebase#backers" target="_blank"><img src="https://opencollective.com/react-redux-firebase/backers.svg?width=890"></a>
 
 [npm-image]: https://img.shields.io/npm/v/react-redux-firebase.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/react-redux-firebase

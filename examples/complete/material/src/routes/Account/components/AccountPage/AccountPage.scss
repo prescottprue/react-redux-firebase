@@ -1,0 +1,33 @@
+@import 'base';
+
+.container {
+  @extend .flex-row-center;
+  align-items: center;
+  padding-top: 4rem;
+  margin-bottom: 2rem;
+}
+.pane {
+  @extend .flex-column-center;
+  justify-content: space-around;
+  flex-basis: 60%;
+}
+.settings {
+  @extend .flex-row-center;
+  align-items: center;
+  width: 100%;
+}
+.avatar {
+  &Current {
+    width: 100%;
+    max-width: 13rem;
+    height: auto;
+    cursor: pointer;
+  }
+}
+.meta {
+  @extend .flex-column-center;
+  justify-content: center;
+  flex-basis: 60%;
+  margin-bottom: 3rem;
+  margin-top: 2rem;
+}

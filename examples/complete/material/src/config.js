@@ -9,20 +9,30 @@
 
 export const env = 'development'
 
-// Config for firebase
+// Config from Firebase Console
 export const firebase = {
   apiKey: "AIzaSyCTUERDM-Pchn_UDTsfhVPiwM4TtNIxots",
   authDomain: "redux-firebasev3.firebaseapp.com",
   databaseURL: "https://redux-firebasev3.firebaseio.com",
-  storageBucket: "redux-firebasev3.appspot.com"
+  projectId: "redux-firebasev3",
+  storageBucket: "redux-firebasev3.appspot.com",
+  messagingSenderId: "823357791673"
 }
 
 // Config for react-redux-firebase
-// For more details, visit https://prescottprue.gitbooks.io/react-redux-firebase/content/config.html
+// For more details, visit http://docs.react-redux-firebase.com/history/v2.0.0/docs/api/enhancer.html
 export const reduxFirebase = {
-  userProfile: "users", // root that user profiles are written to
-  enableLogging: false, // enable/disable Firebase Database Logging
-  updateProfileOnLogin: false // enable/disable updating of profile on login
+  userProfile: 'users', // root that user profiles are written to
+  // updateProfileOnLogin: false, // enable/disable updating of profile on login
+  // enableLogging: false, // enable/disable Firebase Database Logging
+  // presence: 'presence',
+  // autoPopulateProfile: true, // keep auto population of profile from v1
+  // profileParamsToPopulate: [
+  //   // create queries for profile population (remember to use populate)
+  //   { child: 'cars', root: 'cars' }
+  // ],
+  // useFirestoreForProfile: true, // Use Firestore to store profile
+  // profileParamsToPopulate: [{ child: 'cars', root: 'cars' }] // gather data for populating profile params
   // profileDecorator: (userData) => ({ email: userData.email }) // customize format of user profile
 }
 

@@ -6,21 +6,17 @@ This example shows using data from redux state to be used in queries. A good exa
 
 ## What It Does
 
-1. Top level component uses `connect` function to bring `auth` from redux state into a prop name "auth":
+1. Top level component in `Home.js` uses `connect` function to bring `auth` from redux state into a prop name "auth":
   ```js
-  const authWrappedComponent = connect(
-    ({ firebase }) => ({
-      auth: pathToJS(firebase, 'auth')
-    })
-  )(App)
+  export default connect(
+    ({ firebase: { auth } }) => ({ auth })
+  )(Home)
   ```
 
 1. That component then uses `isLoaded` and `isEmpty` to show different views based on auth state (logged in or not):
 
   ```js
-  render () {
-    const { auth } = this.props
-
+  const Home = ({ auth }) => {
     // handle initial loading of auth
     if (!isLoaded(auth)) {
       return <div>Loading...</div>
@@ -36,13 +32,31 @@ This example shows using data from redux state to be used in queries. A good exa
   }
   ```
 
-1. Todos then uses `auth.uid` as part of a query for todos:
+1. The component in `Todos.js` then uses `auth.uid` as part of a query for todos:
 
   ```js
-  const fbWrappedComponent = firebaseConnect(({ auth }) => ([ // auth comes from props
+  firebaseConnect(({ auth }) => ([ // auth comes from props
     {
       path: 'todos',
       queryParams: ['orderByChild=uid', `equalTo=${auth}`]
     }
   ]))(authWrappedComponent)
   ```
+
+## Another Way
+
+State can also be accessed through `store` (the second argument of a function passed to `firebaseConnect`) by calling `store.getState()`. There [some possible unintended consequences](#consequences) with using this method that are mentioned below, but it would look like so:
+
+```js
+firebaseConnect(
+  (props, store) => {
+    const { firebase: { auth } } = store.getState()
+    // be careful, listeners are not re-attached when auth state changes unless props change
+    return [{ path: `todos/${auth.uid || ''}` }]
+  }
+)
+```
+
+#### Possible Unintended Consequences {#consequences}
+
+Listeners are not re-applied based on auth state changing! That means that if your intending to have a query containing `state.firebase.auth.uid`, your component could in theory load before this value is available. If that does happen, and `auth` is not passed as a prop, `firebaseConnect` will not know to re-attach listeners, and only `todos` would load (not `todos/${auth.uid}`). For that reason, this example snippet passes `auth` as a prop after it has been loaded.

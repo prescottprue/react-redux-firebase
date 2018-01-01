@@ -1,5 +1,5 @@
 import { SIGNUP_PATH as path } from 'constants'
-import component from './containers/SignupContainer'
+import component from './components/SignupPage'
 
 export default {
   path,

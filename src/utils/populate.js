@@ -9,7 +9,7 @@ import {
   forEach,
   set,
   has,
-  every
+  some
 } from 'lodash'
 
 /**
@@ -106,14 +106,10 @@ export const populateList = (firebase, list, p, results) => {
     map(list, (id, childKey) => {
       // handle list of keys
       const populateKey = id === true ? childKey : id
-      return getPopulateChild(
-        firebase,
-        p,
-        populateKey
-      )
+      return getPopulateChild(firebase, p, populateKey)
         .then(pc => {
           if (pc) {
-          // write child to result object under root name if it is found
+            // write child to result object under root name if it is found
             return set(results, `${p.root}.${populateKey}`, pc)
           }
           return results
@@ -134,13 +130,14 @@ export const promisesForPopulate = (firebase, dataKey, originalData, populatesIn
   let promisesArray = []
   let results = {}
 
+  // test if data is a single object, try generating populates and looking for the child
   const populatesForData = getPopulateObjs(
     isFunction(populatesIn)
       ? populatesIn(dataKey, originalData)
       : populatesIn
   )
 
-  const dataHasPopulateChilds = every(populatesForData, (populate) => (
+  const dataHasPopulateChilds = some(populatesForData, (populate) => (
     has(originalData, populate.child)
   ))
 
@@ -165,7 +162,8 @@ export const promisesForPopulate = (firebase, dataKey, originalData, populatesIn
       )
     })
   } else {
-    // Data is a map of objects, each value has parameters to be populated
+    // Data is a list of objects, each value has parameters to be populated
+    // { '1': {someobject}, '2': {someobject} }
     forEach(originalData, (d, key) => {
       // generate populates for this data item if a fn was passed
       const populatesForDataItem = getPopulateObj(isFunction(populatesIn)

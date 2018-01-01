@@ -9,12 +9,7 @@ import FlatButton from 'material-ui/FlatButton'
 import DownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down'
 import Avatar from 'material-ui/Avatar'
 import { connect } from 'react-redux'
-import {
-  firebaseConnect,
-  pathToJS,
-  isLoaded,
-  isEmpty
-} from 'react-redux-firebase'
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import { LIST_PATH, ACCOUNT_PATH, LOGIN_PATH, SIGNUP_PATH } from 'constants'
 import defaultUserImage from 'static/User.png'
 import classes from './Navbar.scss'
@@ -37,9 +32,9 @@ const avatarStyles = {
 }
 
 @firebaseConnect()
-@connect(({ firebase }) => ({
-  auth: pathToJS(firebase, 'auth'),
-  account: pathToJS(firebase, 'profile')
+@connect(({ firebase: { auth, profile } }) => ({
+  auth,
+  profile
 }))
 export default class Navbar extends Component {
   static contextTypes = {
@@ -47,7 +42,7 @@ export default class Navbar extends Component {
   }
 
   static propTypes = {
-    account: PropTypes.object,
+    profile: PropTypes.object,
     auth: PropTypes.object,
     firebase: PropTypes.object.isRequired
   }
@@ -58,7 +53,8 @@ export default class Navbar extends Component {
   }
 
   render() {
-    const { account, auth } = this.props
+    const { profile, auth } = this.props
+    const dataLoaded = isLoaded(auth, profile)
     const authExists = isLoaded(auth) && !isEmpty(auth)
 
     const iconButton = (
@@ -67,17 +63,15 @@ export default class Navbar extends Component {
           <div className="hidden-mobile">
             <Avatar
               src={
-                account && account.avatarUrl ? (
-                  account.avatarUrl
-                ) : (
-                  defaultUserImage
-                )
+                profile && profile.avatarUrl
+                  ? profile.avatarUrl
+                  : defaultUserImage
               }
             />
           </div>
           <div className={classes['avatar-text']}>
             <span className={`${classes['avatar-text-name']} hidden-mobile`}>
-              {account && account.displayName ? account.displayName : 'User'}
+              {profile && profile.displayName ? profile.displayName : 'User'}
             </span>
             <DownArrow color="white" />
           </div>
@@ -85,32 +79,29 @@ export default class Navbar extends Component {
       </IconButton>
     )
 
-    const mainMenu = (
-      <div className={classes.menu}>
-        <Link to={SIGNUP_PATH}>
-          <FlatButton label="Sign Up" style={buttonStyle} />
-        </Link>
-        <Link to={LOGIN_PATH}>
-          <FlatButton label="Login" style={buttonStyle} />
-        </Link>
-      </div>
-    )
-
-    const rightMenu = authExists ? (
-      <IconMenu
-        iconButtonElement={iconButton}
-        targetOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-        animated={false}>
-        <MenuItem
-          primaryText="Account"
-          onTouchTap={() => this.context.router.push(ACCOUNT_PATH)}
-        />
-        <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
-      </IconMenu>
-    ) : (
-      mainMenu
-    )
+    const rightMenu =
+      dataLoaded && authExists ? (
+        <IconMenu
+          iconButtonElement={iconButton}
+          targetOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+          animated={false}>
+          <MenuItem
+            primaryText="Account"
+            onTouchTap={() => this.context.router.push(ACCOUNT_PATH)}
+          />
+          <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
+        </IconMenu>
+      ) : (
+        <div className={classes.menu}>
+          <Link to={SIGNUP_PATH}>
+            <FlatButton label="Sign Up" style={buttonStyle} />
+          </Link>
+          <Link to={LOGIN_PATH}>
+            <FlatButton label="Login" style={buttonStyle} />
+          </Link>
+        </div>
+      )
 
     return (
       <AppBar
@@ -120,7 +111,7 @@ export default class Navbar extends Component {
           </Link>
         }
         showMenuIconButton={false}
-        iconElementRight={isLoaded(auth, account) ? rightMenu : null}
+        iconElementRight={rightMenu}
         iconStyleRight={authExists ? avatarStyles.wrapper : {}}
         className={classes.appBar}
       />

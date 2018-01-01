@@ -3,157 +3,160 @@ import PropTypes from 'prop-types'
 import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'
-import { getEventsFromInput, createCallable } from './utils'
-
-/**
- * Get the display name of a component.
- * @param  {Object|Element|String} Item from which to get display name
- * @return {String} Name of input component/element/string
- * @private
- */
-const getDisplayName = Component => (
-  Component.displayName ||
-  Component.name ||
-  (typeof Component === 'string' ? Component : 'Component')
-)
+import { getEventsFromInput, createCallable, getDisplayName } from './utils'
 
 /**
  * @name createFirebaseConnect
- * @extends React.Component
- * @description Function for creating a firebaseConnect Higher Order Component
- * connected to a specific store key. **NOTE** This is an advanced feature
- * and is not neesesary except for in cases of running multiple redux stores
- * in one application.
- * @param {String} [storeKey='store'] - Key of store which `firebaseConnect`
- * will connect to for gathering store.firebase
- * @return {Function} - that creates a Higher Order Component (component that
- * accepts a component to wrap and returns the wrapped component)
+ * @description Function that creates a Higher Order Component that
+ * automatically listens/unListens to provided firebase paths using
+ * React's Lifecycle hooks.
+ * **WARNING!!** This is an advanced feature, and should only be used when
+ * needing to access a firebase instance created under a different store key.
+ * @param {String} [storeKey='store'] - Name of redux store which contains
+ * Firebase state (state.firebase)
+ * @return {Function} - HOC that accepts a watchArray and wraps a component
  * @example <caption>Basic</caption>
+ * // this.props.firebase set on App component as firebase object with helpers
  * import { createFirebaseConnect } from 'react-redux-firebase'
- * const firebaseConnect = createFirebaseConnect('someOtherStore')(App)
+ * // create firebase connect that uses another redux store
+ * const firebaseConnect = createFirebaseConnect('anotherStore')
+ * // use the firebaseConnect to wrap a component
  * export default firebaseConnect()(SomeComponent)
  */
-export const createFirebaseConnect = (storeKey = 'store') => (dataOrFn = []) => WrappedComponent => {
-  class FirebaseConnect extends Component {
-    firebaseEvents = []
+export const createFirebaseConnect = (storeKey = 'store') =>
+  (dataOrFn = []) =>
+    WrappedComponent => {
+      class FirebaseConnect extends Component {
+        static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)})`
+        static wrappedComponent = WrappedComponent
+        static contextTypes = {
+          [storeKey]: PropTypes.object.isRequired
+        }
 
-    firebase = null
+        firebaseEvents = []
+        firebase = null
+        prevData = null
+        store = this.context[storeKey]
 
-    prevData = null
+        componentWillMount () {
+          const { firebase, dispatch } = this.store
 
-    static contextTypes = {
-      [storeKey]: PropTypes.object.isRequired
-    }
+          // Allow function to be passed
+          const inputAsFunc = createCallable(dataOrFn)
+          this.prevData = inputAsFunc(this.props, this.store)
 
-    static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)})`
+          const { ref, helpers, storage, database, auth } = firebase
+          this.firebase = { ref, storage, database, auth, ...helpers }
 
-    static wrappedComponent = WrappedComponent
+          this._firebaseEvents = getEventsFromInput(this.prevData)
 
-    componentWillMount () {
-      const { firebase, dispatch } = this.context[storeKey]
+          watchEvents(firebase, dispatch, this._firebaseEvents)
+        }
 
-      // Allow function to be passed
-      const inputAsFunc = createCallable(dataOrFn)
-      this.prevData = inputAsFunc(this.props, firebase)
+        componentWillUnmount () {
+          const { firebase, dispatch } = this.store
+          unWatchEvents(firebase, dispatch, this._firebaseEvents)
+        }
 
-      const { ref, helpers, storage, database, auth } = firebase
-      this.firebase = { ref, storage, database, auth, ...helpers }
+        componentWillReceiveProps (np) {
+          const { firebase, dispatch } = this.store
+          const inputAsFunc = createCallable(dataOrFn)
+          const data = inputAsFunc(np, this.store)
 
-      this._firebaseEvents = getEventsFromInput(this.prevData)
+          // Handle a data parameter having changed
+          if (!isEqual(data, this.prevData)) {
+            this.prevData = data
+            // UnWatch all current events
+            unWatchEvents(firebase, dispatch, this._firebaseEvents)
+            // Get watch events from new data
+            this._firebaseEvents = getEventsFromInput(data)
+            // Watch new events
+            watchEvents(firebase, dispatch, this._firebaseEvents)
+          }
+        }
 
-      watchEvents(firebase, dispatch, this._firebaseEvents)
-    }
-
-    componentWillUnmount () {
-      const { firebase, dispatch } = this.context.store
-      unWatchEvents(firebase, dispatch, this._firebaseEvents)
-    }
-
-    componentWillReceiveProps (np) {
-      const { firebase, dispatch } = this.context.store
-      const inputAsFunc = createCallable(dataOrFn)
-      const data = inputAsFunc(np, firebase)
-
-      // Handle a data parameter having changed
-      if (!isEqual(data, this.prevData)) {
-        this.prevData = data
-        // UnWatch all current events
-        unWatchEvents(firebase, dispatch, this._firebaseEvents)
-        // Get watch events from new data
-        this._firebaseEvents = getEventsFromInput(data)
-        // Watch new events
-        watchEvents(firebase, dispatch, this._firebaseEvents)
+        render () {
+          return (
+            <WrappedComponent
+              {...this.props}
+              {...this.state}
+              firebase={this.firebase}
+            />
+          )
+        }
       }
+
+      return hoistStatics(FirebaseConnect, WrappedComponent)
     }
 
-    render () {
-      return (
-        <WrappedComponent
-          {...this.props}
-          {...this.state}
-          firebase={this.firebase}
-        />
-      )
-    }
-  }
-
-  return hoistStatics(FirebaseConnect, WrappedComponent)
-}
-
+/**
 /**
  * @name firebaseConnect
  * @extends React.Component
  * @description Higher Order Component that automatically listens/unListens
  * to provided firebase paths using React's Lifecycle hooks.
  * @param {Array} watchArray - Array of objects or strings for paths to sync
- * from Firebase. Can also be a function that returns the array. The function is
- * passed the current props and the firebase object.
- * @return {Function} - that accepts a component to wrap and returns the
- * wrapped component
+ * from Firebase. Can also be a function that returns the array. The function
+ * is passed the current props and the firebase object.
+ * @return {Function} - that accepts a component to wrap and returns the wrapped component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { firebaseConnect } from 'react-redux-firebase'
  * export default firebaseConnect()(App)
  * @example <caption>Data</caption>
+ * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+ * import { firebaseConnect } from 'react-redux-firebase'
  *
- * // sync /todos from firebase into redux
- * const fbWrapped = firebaseConnect([
- *   'todos'
- * ])(App)
- *
- * // pass todos list from redux as this.props.todosList
- * export default connect(({ firebase }) => ({
- *   todosList: dataToJS(firebase, 'todos'),
- *   profile: pathToJS(firebase, 'profile'), // pass profile data as this.props.profile
- *   auth: pathToJS(firebase, 'auth') // pass auth data as this.props.auth
- * }))(fbWrapped)
+ * const enhance = compose(
+ *   firebaseConnect([
+ *     'todos' // sync /todos from firebase into redux
+ *   ]),
+ *   connect((state) => ({
+ *     todos: state.firebase.ordered.todos
+ *   })
+ * )
+ * // use enhnace to pass todos list as props.todos
+ * const Todos = enhance(({ todos })) =>
+ *   <div>
+ *     {JSON.stringify(todos, null, 2)}
+ *   </div>
+ * )
  * @example <caption>Data that depends on props</caption>
+ * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+ * import { firebaseConnect } from 'react-redux-firebase'
  *
- * // sync /todos from firebase into redux
- * const fbWrapped = firebaseConnect((props) => ([
- *   `todos/${props.type}`
- * ])(App)
+ * const enhance = compose(
+ *   firebaseConnect((props) => ([
+ *     `posts/${props.postId}` // sync /posts/postId from firebase into redux
+ *   ]),
+ *   connect(({ firebase: { data } }, props) => ({
+ *     todo: data.posts && data.todos[postId],
+ *   })
+ * )
  *
- * // pass todos list for the specified type of todos from redux as `this.props.todosList`
- * export default connect(({ firebase, type }) => ({
- *   todosList: dataToJS(firebase, `data/todos/${type}`),
- * }))(fbWrapped)
- * @example <caption>Data that depends on auth state</caption>
+ * const Posts = ({ done, text, author }) => (
+ *   <article>
+ *     <h1>{title}</h1>
+ *     <h2>By {author.name}</h2>
+ *     <div>{content}</div>
+ *   </article>
+ * )
+ *
+ * export default enhance(Posts)
+ * @example <caption>Data that depends on state</caption>
+ * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+ * import { firebaseConnect } from 'react-redux-firebase'
  *
- * // sync /todos from firebase into redux
- * const fbWrapped = firebaseConnect((props, firebase) => ([
- *   `todos/${firebase._.authUid}`
- * ])(App)
- *
- * // pass todos list for the specified type of todos from redux as `this.props.todosList`
- * export default connect(({ firebase }) => ({
- *   todosList: dataToJS(firebase, `data/todos/${firebase.getIn(['auth', 'uid'])}`),
- * }))(fbWrapped)
+ * export default compose(
+ *   firebaseConnect((props, store) => ([
+ *     `todos/${store.getState().firebase.auth.uid}`
+ *   ]),
+ *   connect(({ firebase: { data, auth } }) => ({
+ *     todosList: data.todos && data.todos[auth.uid],
+ *   }))
+ * )(SomeComponent)
  */
 export default createFirebaseConnect()

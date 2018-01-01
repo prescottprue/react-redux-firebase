@@ -8,34 +8,19 @@ export { getEventsFromInput } from './events'
  */
 export const createCallable = f => isFunction(f) ? f : () => f
 
-/**
- * @private
- * @description Validate config input
- * @param {Object} Config object containing all combined configs
- */
-export const validateConfig = (config) => {
-  // require needed Firebase config
-  const requiredProps = [
-    'databaseURL',
-    'authDomain',
-    'apiKey'
-  ]
-  requiredProps.forEach((p) => {
-    if (!config[p]) {
-      throw new Error(`${p} is a required config parameter for react-redux-firebase.`)
-    }
-  })
+export const getDisplayName = Component => {
+  if (typeof Component === 'string') {
+    return Component
+  }
 
-  // Check that some certain config are functions if they exist
-  const functionProps = [
-    'fileMetadataFactory',
-    'profileDecorator',
-    'onAuthStateChange'
-  ]
+  if (!Component) {
+    return undefined
+  }
 
-  functionProps.forEach((p) => {
-    if (!!config[p] && !isFunction(config[p])) {
-      throw new Error(`${p} parameter in react-redux-firebase config must be a function. check your compose function.`)
-    }
-  })
+  return Component.displayName || Component.name || 'Component'
 }
+
+export default getDisplayName
+
+export const wrapDisplayName = (BaseComponent, hocName) =>
+  `${hocName}(${getDisplayName(BaseComponent)})`

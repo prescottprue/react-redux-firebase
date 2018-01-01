@@ -11,13 +11,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
+import { isLoaded, isEmpty } from 'react-redux-firebase'
 
-export class ProtectedPage extends Component {
-  static contextTypes = {
-    router: PropTypes.object,
-  }
-
+class ProtectedPage extends Component {
   static propTypes = {
     authExists: PropTypes.bool,
   }
@@ -37,19 +33,9 @@ export class ProtectedPage extends Component {
   }
 }
 
-// Used to provide data to ProtectedPage component
-const enhance = compose(
-  firebaseConnect()
-  connect(
-    (state) => {
-      return {
-        authExists: !!state.firebase.get('auth'),
-      }
-    }
-  )
-)
-
-export enhance(ProtectedPage)
+export default connect(
+  ({ firebase: { auth } }) => ({ authExists: !!auth && !!auth.uid })
+)(ProtectedPage)
 ```
 
 ## Advanced
@@ -60,20 +46,18 @@ Using [`redux-auth-wrapper`](https://github.com/mjrussell/redux-auth-wrapper) yo
 
 In order to only allow authenticated users to view a page, a `UserIsAuthenticated` Higher Order Component can be created:
 
-**react-router v3 and earlier**
+**redux-auth-wrapper v1**
 
 ```javascript
 import { browserHistory } from 'react-router'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { pathToJS } from 'react-redux-firebase'
 
 export const UserIsAuthenticated = UserAuthWrapper({
   wrapperDisplayName: 'UserIsAuthenticated',
-  authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) =>
-    pathToJS(firebase, 'isInitializing') === true ||
-    pathToJS(firebase, 'auth') === undefined,
-  predicate: auth => auth !== null,
+  authSelector: ({ firebase: { auth } }) => auth,
+  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+    !auth.isLoaded || isInitializing === true,
+  predicate: auth => !auth.isEmpty,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
     // routerActions.replace // if using react-router-redux
@@ -81,7 +65,7 @@ export const UserIsAuthenticated = UserAuthWrapper({
       type: 'UNAUTHED_REDIRECT',
       payload: { message: 'You must be authenticated.' },
     })
-  },
+  }
 })
 ```
 
@@ -89,21 +73,41 @@ export const UserIsAuthenticated = UserAuthWrapper({
 
 ```javascript
 import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
-import { browserHistory } from 'react-router';
+import { connectedRouterRedirect } from 'redux-auth-wrapper'
 import LoadingScreen from '../components/LoadingScreen'; // change it to your custom component
 
 const locationHelper = locationHelperBuilder({});
 
 export const UserIsAuthenticated = connectedRouterRedirect({
+  wrapperDisplayName: 'UserIsAuthenticated',
+  AuthenticatingComponent: LoadingScreen,
+  allowRedirectBack: true,
   redirectPath: (state, ownProps) =>
     locationHelper.getRedirectQueryParam(ownProps) || '/login',
-  allowRedirectBack: true,
-  authenticatedSelector: ({ firebase }) => pathToJS(firebase, 'auth') !== null,
-  authenticatingSelector: ({ firebase: { auth } }) =>
-    pathToJS(firebase, 'isInitializing') === true ||
-    pathToJS(firebase, 'auth') === undefined,
+  authenticatingSelector: ({ firebase: { auth, profile, isInitializing } }) =>
+    !auth.isLoaded || isInitializing === true,
+  authenticatedSelector: ({ firebase: { auth } }) =>
+    auth.isLoaded && !auth.isEmpty,
+  redirectAction: newLoc => (dispatch) => {
+    browserHistory.replace(newLoc); // or routerActions.replace
+    dispatch({ type: 'UNAUTHED_REDIRECT' });
+  },
+});
+
+export const UserIsNotAuthenticated = connectedRouterRedirect({
+  wrapperDisplayName: 'UserIsNotAuthenticated',
   AuthenticatingComponent: LoadingScreen,
-  wrapperDisplayName: 'UserIsAuthenticated',
+  allowRedirectBack: false,
+  redirectPath: (state, ownProps) =>
+    locationHelper.getRedirectQueryParam(ownProps) || '/',
+  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+    !auth.isLoaded || isInitializing === true,
+  authenticatedSelector: ({ firebase: { auth } }) =>
+    auth.isLoaded && auth.isEmpty,
+  redirectAction: newLoc => (dispatch) => {
+    browserHistory.replace(newLoc); // or routerActions.replace
+    dispatch({ type: 'UNAUTHED_REDIRECT' });
+  },
 });
 ```
 
@@ -149,14 +153,14 @@ Just as easily as creating a wrapper for redirect if a user is not logged in, we
 ```javascript
 import { browserHistory } from 'react-router'
 import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { pathToJS } from 'react-redux-firebase'
 import LoadingScreen from '../components/LoadingScreen'; // change it to your custom component
 
 export const UserIsNotAuthenticated = UserAuthWrapper({
   failureRedirectPath: '/',
-  authSelector: ({ firebase }) => pathToJS(firebase, 'auth'),
-  authenticatingSelector: ({ firebase }) => pathToJS(firebase, 'isInitializing') === true,
-  predicate: auth => auth === null,
+  authSelector: ({ firebase: { auth } }) => auth,
+  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+    !auth.isLoaded || isInitializing === true,
+  predicate: auth => auth.isEmpty,
   redirectAction: (newLoc) => (dispatch) => {
     browserHistory.replace(newLoc)
     dispatch({
@@ -170,44 +174,45 @@ export const UserIsNotAuthenticated = UserAuthWrapper({
 **react-router v4 + redux-auth-wrapper v2**
 
 ```js
-import { browserHistory } from 'react-router'
-import { UserAuthWrapper } from 'redux-auth-wrapper'
-import { pathToJS } from 'react-redux-firebase'
+import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
+import { connectedRouterRedirect } from 'redux-auth-wrapper'
+
 import LoadingScreen from '../components/LoadingScreen'; // change it to your custom component
 
-export const UserIsNotAuthenticated = UserAuthWrapper({
+export const UserIsNotAuthenticated = connectedRouterRedirect({
   wrapperDisplayName: 'UserIsNotAuthenticated',
-  allowRedirectBack: false,
   AuthenticatingComponent: LoadingScreen,
+  allowRedirectBack: false,
   redirectPath: (state, ownProps) =>
     locationHelper.getRedirectQueryParam(ownProps) || '/',
-  authenticatedSelector: ({ firebase }) => pathToJS(firebase, 'auth') === null,
-  authenticatingSelector: ({ firebase }) =>
-    pathToJS(firebase, 'isInitializing') === true ||
-    pathToJS(firebase, 'auth') === undefined
-})
+  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+    !auth.isLoaded || isInitializing === true,
+  authenticatedSelector: ({ firebase: { auth } }) =>
+    auth.isLoaded && auth.isEmpty,
+  redirectAction: newLoc => (dispatch) => {
+    // routerActions.replace or other redirect
+    dispatch({ type: 'UNAUTHED_REDIRECT' });
+  },
+});
 ```
 
 Can then be used on a Login route component:
 
 ```javascript
-import React, { Component } from 'react'
-import { firebaseConnect } from 'react-redux-firebase'
+import React from 'react'
+import { compose } from 'redux'
+import { withFirebase } from 'react-redux-firebase'
 
-@UserIsNotAuthenticated // redirects to '/' if user is logged in
-@firebaseConnect() // adds this.props.firebase
-export default class Login extends Component {
-  googleLogin = () => {
-    this.props.firebase.login({ provider: 'google' })
-  }
-  render() {
-    return (
-      <div>
-        <button onClick={this.googleLogin}>
-          Google Login
-        </button>
-      </div>
-    )
-  }
-}
+const Login = ({ firebase }) => (
+  <div>
+    <button onClick={() => firebase.login({ provider: 'google' })}>
+      Google Login
+    </button>
+  </div>
+)
+
+export default compose(
+  UserIsNotAuthenticated, // redirects to '/' if user is logged in
+  withFirebase // adds this.props.firebase
+)
 ```
