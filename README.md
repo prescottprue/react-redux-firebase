@@ -63,7 +63,7 @@ firebase.initializeApp(config) // <- new to v2.*.*
 // initialize firestore
 // firebase.firestore() // <- needed if using firestore
 
-// Add reduxReduxFirebase enhancer when making store creator
+// Add reactReduxFirebase enhancer when making store creator
 const createStoreWithFirebase = compose(
   reactReduxFirebase(firebase, rrfConfig), // firebase instance as first argument
   // reduxFirestore(firebase) // <- needed if using firestore
