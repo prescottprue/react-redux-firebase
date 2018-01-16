@@ -617,7 +617,7 @@ describe('Actions: Auth -', () => {
         await signInWithPhoneNumber(newFakeFirebase, dispatch, '1234567891', {})
       } catch (err) {
         // both dispatch calls (one for start, one for error)
-        expect(dispatch).to.have.been.calledTwice
+        expect(dispatch).to.have.been.calledOnce
         expect(signInWithPhoneNumberSpy).to.have.been.calledOnce
         expect(err.message).to.equal('test')
       }
