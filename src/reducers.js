@@ -26,7 +26,8 @@ const {
   AUTH_EMPTY_CHANGE,
   AUTH_LINK_SUCCESS,
   UNAUTHORIZED_ERROR,
-  AUTH_UPDATE_SUCCESS
+  AUTH_UPDATE_SUCCESS,
+  AUTH_RELOAD_SUCCESS
 } = actionTypes
 
 /**
@@ -190,6 +191,7 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
       }
       return { ...auth, isEmpty: false, isLoaded: true }
     case AUTH_LINK_SUCCESS:
+    case AUTH_RELOAD_SUCCESS:
       if (!action.payload) {
         return {
           isEmpty: true,
