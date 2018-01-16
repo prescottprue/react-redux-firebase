@@ -179,7 +179,7 @@ import { firebaseConnect, getVal } from 'react-redux-firebase'
 
 // Component enhancer that loads todo into redux then into the todo prop
 const enhance = compose(
-  firebaseConnect((props) => [
+  firebaseConnect((props) => {
     // Set listeners based on props (prop is route parameter from react-router in this case)
     return [
       { path: `todos/${props.params.todoId}` }, // create todo listener
