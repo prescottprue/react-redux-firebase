@@ -288,15 +288,15 @@ Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby).
 
 View docs for recipes on integrations with:
 
-* [redux-firestore](/docs/firestore.md)
-* [redux-thunk](/docs/integrations/thunks.md)
-* [redux-observable](/docs/integrations/epics.md)
-* [redux-saga](/docs/integrations/redux-saga.md)
-* [redux-form](/docs/integrations/redux-form.md)
-* [redux-auth-wrapper](/docs/integrations/routing.md#advanced)
-* [redux-persist](/docs/integrations/redux-persist.md) - [improved integration with `v2.0.0`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/integrations/redux-persist.html)
+* [redux-firestore](http://react-redux-firebase.com/docs/firestore.md)
+* [redux-thunk](http://react-redux-firebase.com/docs/integrations/thunks.md)
+* [redux-observable](http://react-redux-firebase.com/docs/integrations/epics.md)
+* [redux-saga](http://react-redux-firebase.com/docs/integrations/redux-saga.md)
+* [redux-form](http://react-redux-firebase.com/docs/integrations/redux-form.md)
+* [redux-auth-wrapper](http://react-redux-firebase.com/docs/integrations/routing.md#advanced)
+* [redux-persist](http://react-redux-firebase.com/docs/integrations/redux-persist.md) - [improved integration with `v2.0.0`](http://react-redux-firebase.com/docs/integrations/redux-persist.html)
 * [react-native](/docs/integrations/react-native.md)
-* [react-native-firebase](http://docs.react-redux-firebase.com/history/v2.0.0/docs/integrations/react-native.html#native-modules) - requires `v2.0.0`
+* [react-native-firebase](http://react-redux-firebase.com/docs/integrations/react-native.html#native-modules) - requires `v2.0.0`
 
 ## Firestore
 

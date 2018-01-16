@@ -121,7 +121,7 @@ props.firebase.login({
 
   *Credential*
 ```js
-// `googleUser` from the onsuccess Google Sign In callback.
+// `googleUser` from the onsuccess Google Sign In callback
 props.firebase.login({
   credential: firebase.auth.GoogleAuthProvider.credential(googleUser.getAuthResponse().id_token)
 })
@@ -257,18 +257,48 @@ props.firebase.verifyPasswordResetCode('some reset code')
 
 
 ## signInWithPhoneNumber(code)
-Verify a password reset code from password reset email.
 
-Calls Firebase's `firebase.auth().signInWithPhoneNumber()`. If there is an error, it is added into redux state under `state.firebase.authError`.
+
+
+Signs in using a phone number in an async pattern (i.e. requires calling a second method). Calls Firebase's [`firebase.auth().signInWithPhoneNumber()`](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#signInWithPhoneNumber). If there is an error, it is added into redux state under `state.firebase.authError`.
+
+From Firebase's docs:
+
+> Asynchronously signs in using a phone number. This method sends a code via SMS to the given phone number, and returns a [firebase.auth.ConfirmationResult](https://firebase.google.com/docs/reference/js/firebase.auth.ConfirmationResult.html). After the user provides the code sent to their phone, call [firebase.auth.ConfirmationResult#confirm](https://firebase.google.com/docs/reference/js/firebase.auth.ConfirmationResult.html#confirm) with the code to sign the user in.
+
+For more info, check out the following:
+* [Firebase's phone-auth guide](https://firebase.google.com/docs/auth/web/phone-auth)
+* [Firebase's auth docs reference for signInWithPhoneNumber](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#signInWithPhoneNumber)
 
 ##### Examples
 
 ```js
-props.firebase.signInWithPhoneNumber('some reset code')
+const phoneNumber = getPhoneNumberFromUserInput();
+const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
+  'size': 'invisible',
+  'callback': function(response) {
+    // reCAPTCHA solved, allow signInWithPhoneNumber.
+    onSignInSubmit();
+  }
+});
+firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+    .then((confirmationResult) => {
+      // SMS sent. Prompt user to type the code from the message, then sign the
+      // user in with confirmationResult.confirm(code).
+      const verificationCode = window.prompt('Please enter the verification ' +
+          'code that was sent to your mobile device.');
+      return confirmationResult.confirm(verificationCode);
+    })
+    .catch((error) => {
+      // Error; SMS not sent
+      // Handle Errors Here
+      return Promise.reject(error)
+    });
 ```
 
 ##### Parameters
-  * `code` [**String**][string-url] - Password reset code
+  * `phoneNumber` [**String**][string-url] - The user's phone number in E.164 format (e.g. `+16505550101`).
+  * `applicationVerifier` [**firebase.auth.ApplicationVerifier**][firebase-app-verifier] `required` - App verifier made with Firebase's `RecaptchaVerifier`
 
 ##### Returns
   [**Promise**][promise-url] - Email associated with reset code
@@ -277,3 +307,4 @@ props.firebase.signInWithPhoneNumber('some reset code')
 [promise-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [string-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
 [object-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
+[firebase-app-verifier]: https://firebase.google.com/docs/reference/js/firebase.auth.ApplicationVerifier.html

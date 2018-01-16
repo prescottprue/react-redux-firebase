@@ -69,6 +69,8 @@ export const getLoginMethodAndParams = (firebase, creds) => {
     type,
     token,
     scopes,
+    phoneNumber,
+    applicationVerifier,
     credential
   } = creds
   if (credential) {
@@ -90,6 +92,23 @@ export const getLoginMethodAndParams = (firebase, creds) => {
   }
   if (token) {
     return { method: 'signInWithCustomToken', params: [ token ] }
+  }
+  if (phoneNumber) {
+    if (!applicationVerifier) {
+      throw new Error('Application verifier is required')
+    }
+    return {
+      method: 'signInWithPhoneNumber',
+      params: [phoneNumber, applicationVerifier],
+      profileBuilder: (user) => {
+        return {
+          email: user.email,
+          displayName: user.providerData[0].displayName || user.email,
+          avatarUrl: user.providerData[0].photoURL,
+          providerData: user.providerData
+        }
+      }
+    }
   }
   return { method: 'signInWithEmailAndPassword', params: [ email, password ] }
 }
