@@ -423,6 +423,7 @@ export const init = (dispatch, firebase) => {
 
   dispatch({ type: actionTypes.AUTHENTICATION_INIT_FINISHED })
 }
+
 /**
  * @description Login with errors dispatched
  * @param {Function} dispatch - Action dispatch function
@@ -443,7 +444,7 @@ export const login = (dispatch, firebase, credentials) => {
     dispatchLoginError(dispatch, null)
   }
 
-  const { method, params, profileBuilder } = getLoginMethodAndParams(firebase, credentials)
+  const { method, params } = getLoginMethodAndParams(firebase, credentials)
 
   return firebase.auth()[method](...params)
     .then((userData) => {
@@ -470,23 +471,23 @@ export const login = (dispatch, firebase, credentials) => {
       }
 
       if (method === 'signInWithPhoneNumber') {
-        if (!firebase._.config.updateProfileOnLogin) {
-          return userData
-        }
-        const confirmationResult = userData
-        // Modify confirm to include
+        // Modify confirm method to include profile creation
         return {
-          ...confirmationResult,
+          ...userData,
           confirm: (code) =>
-            confirmationResult.confirm(code)
-              .then((confirmResponse) =>
+            // Call original confirm
+            userData.confirm(code)
+              .then(({ user, additionalUserInfo }) =>
                 createUserProfile(
                   dispatch,
                   firebase,
-                  confirmResponse.user || confirmResponse,
-                  profileBuilder(confirmResponse.user || confirmResponse)
+                  user,
+                  {
+                    phoneNumber: user.providerData[0].phoneNumber,
+                    providerData: user.providerData
+                  }
                 )
-                  .then((profile) => ({ profile, ...confirmResponse }))
+                  .then((profile) => ({ profile, user, additionalUserInfo }))
               )
         }
       }

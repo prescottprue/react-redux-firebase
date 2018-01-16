@@ -95,19 +95,11 @@ export const getLoginMethodAndParams = (firebase, creds) => {
   }
   if (phoneNumber) {
     if (!applicationVerifier) {
-      throw new Error('Application verifier is required')
+      throw new Error('Application verifier is required for phone authentication')
     }
     return {
       method: 'signInWithPhoneNumber',
-      params: [phoneNumber, applicationVerifier],
-      profileBuilder: (user) => {
-        return {
-          email: user.email,
-          displayName: user.providerData[0].displayName || user.email,
-          avatarUrl: user.providerData[0].photoURL,
-          providerData: user.providerData
-        }
-      }
+      params: [phoneNumber, applicationVerifier]
     }
   }
   return { method: 'signInWithEmailAndPassword', params: [ email, password ] }
