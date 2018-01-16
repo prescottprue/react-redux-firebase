@@ -200,6 +200,8 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
       return Promise.reject(err)
     }
   }
+
+  // Check/Write profile using Firestore
   if (config.useFirestoreForProfile) {
     // Check for user's profile at userProfile path if provided
     return firebase
@@ -222,7 +224,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
       })
   }
 
-  // Check for user's profile at userProfile path if provided
+  // Check/Write profile using Firebase RTDB
   return firebase
     .database()
     .ref()
@@ -421,6 +423,7 @@ export const init = (dispatch, firebase) => {
 
   dispatch({ type: actionTypes.AUTHENTICATION_INIT_FINISHED })
 }
+
 /**
  * @description Login with errors dispatched
  * @param {Function} dispatch - Action dispatch function
@@ -452,6 +455,7 @@ export const login = (dispatch, firebase, credentials) => {
       if (method === 'signInWithEmailAndPassword') {
         return { user: userData }
       }
+      // TODO: Only call createUserProfile once, and just pass different settings
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
       if (method === 'signInWithCustomToken') {
@@ -464,6 +468,28 @@ export const login = (dispatch, firebase, credentials) => {
           userData,
           credentials.profile
         )
+      }
+
+      if (method === 'signInWithPhoneNumber') {
+        // Modify confirm method to include profile creation
+        return {
+          ...userData,
+          confirm: (code) =>
+            // Call original confirm
+            userData.confirm(code)
+              .then(({ user, additionalUserInfo }) =>
+                createUserProfile(
+                  dispatch,
+                  firebase,
+                  user,
+                  {
+                    phoneNumber: user.providerData[0].phoneNumber,
+                    providerData: user.providerData
+                  }
+                )
+                  .then((profile) => ({ profile, user, additionalUserInfo }))
+              )
+        }
       }
 
       // Create profile when logging in with external provider
@@ -811,38 +837,8 @@ export const linkWithCredential = (dispatch, firebase, credential) => {
  * @param {Object} applicationVerifier - Phone number
  * @return {Promise} Resolves with auth
  */
-export const signInWithPhoneNumber = (firebase, dispatch, ...args) => {
-  dispatch({ type: actionTypes.UNLOAD_PROFILE })
-
-  return firebase.auth().signInWithPhoneNumber(...args)
-    .then((confirmationResult) => {
-      return {
-        ...confirmationResult,
-        confirm: (code) =>
-          confirmationResult.confirm(code)
-            .then((userData) => {
-              // Create profile when logging in with external provider
-              const user = userData.user || userData
-
-              return createUserProfile(
-                dispatch,
-                firebase,
-                user,
-                {
-                  email: user.email,
-                  displayName: user.providerData[0].displayName || user.email,
-                  avatarUrl: user.providerData[0].photoURL,
-                  providerData: user.providerData
-                }
-              )
-                .then((profile) => ({ profile, ...userData }))
-            })
-      }
-    })
-    .catch(err => {
-      dispatchLoginError(dispatch, err)
-      return Promise.reject(err)
-    })
+export const signInWithPhoneNumber = (firebase, dispatch, phoneNumber, applicationVerifier, options = {}) => {
+  return login(dispatch, firebase, { phoneNumber, applicationVerifier, ...options })
 }
 
 export default {

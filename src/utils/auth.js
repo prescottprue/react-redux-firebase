@@ -69,6 +69,8 @@ export const getLoginMethodAndParams = (firebase, creds) => {
     type,
     token,
     scopes,
+    phoneNumber,
+    applicationVerifier,
     credential
   } = creds
   if (credential) {
@@ -90,6 +92,15 @@ export const getLoginMethodAndParams = (firebase, creds) => {
   }
   if (token) {
     return { method: 'signInWithCustomToken', params: [ token ] }
+  }
+  if (phoneNumber) {
+    if (!applicationVerifier) {
+      throw new Error('Application verifier is required for phone authentication')
+    }
+    return {
+      method: 'signInWithPhoneNumber',
+      params: [phoneNumber, applicationVerifier]
+    }
   }
   return { method: 'signInWithEmailAndPassword', params: [ email, password ] }
 }

@@ -6,30 +6,52 @@ import { TextField } from 'redux-form-material-ui'
 import RaisedButton from 'material-ui/RaisedButton'
 import Checkbox from 'material-ui/Checkbox'
 import { RECOVER_PATH, LOGIN_FORM_NAME } from 'constants'
-import { required, validateEmail } from 'utils/form'
+import { validateEmail } from 'utils/form'
 import classes from './LoginForm.scss'
 
-export const LoginForm = ({ pristine, submitting, handleSubmit }) => (
+export const LoginForm = ({
+  pristine,
+  reset,
+  submitting,
+  handleSubmit,
+  loginDisabled
+}) => (
   <form className={classes.container} onSubmit={handleSubmit}>
     <Field
       name="email"
       component={TextField}
       floatingLabelText="Email"
-      validate={[required, validateEmail]}
+      validate={[validateEmail]}
     />
     <Field
       name="password"
       component={TextField}
       floatingLabelText="Password"
       type="password"
-      validate={required}
+    />
+    <div>
+      <strong>OR</strong>
+    </div>
+    <Field
+      name="phoneNumber"
+      component={TextField}
+      disabled={loginDisabled}
+      floatingLabelText="Phone"
     />
     <div className={classes.submit}>
+      <RaisedButton
+        label={submitting ? 'Loading' : 'Clear'}
+        secondary
+        onTouchTap={reset}
+        type="reset"
+        disabled={pristine || submitting}
+        style={{ marginRight: '2rem' }}
+      />
       <RaisedButton
         label={submitting ? 'Loading' : 'Login'}
         primary
         type="submit"
-        disabled={pristine || submitting}
+        disabled={loginDisabled || pristine || submitting}
       />
     </div>
     <div className={classes.options}>
@@ -49,7 +71,9 @@ export const LoginForm = ({ pristine, submitting, handleSubmit }) => (
 )
 
 LoginForm.propTypes = {
+  loginDisabled: PropTypes.bool,
   pristine: PropTypes.bool.isRequired, // added by redux-form
+  reset: PropTypes.func.isRequired, // added by redux-form
   submitting: PropTypes.bool.isRequired, // added by redux-form
   handleSubmit: PropTypes.func.isRequired // added by redux-form
 }

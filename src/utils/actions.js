@@ -43,8 +43,8 @@ export const wrapInDispatch = (dispatch, { ref, meta, method, args = [], types }
  * @return {Function} A wrapper that accepts a function to wrap with firebase
  * and dispatch.
  */
-const createWithFirebaseAndDispatch = (firebase, dispatch) => func => (...args) =>
-  func.apply(firebase, [firebase, dispatch, ...args])
+const createWithFirebaseAndDispatch = (firebase, dispatch, dispatchFirst) => func => (...args) =>
+  func.apply(firebase, dispatchFirst ? [dispatch, firebase, ...args] : [firebase, dispatch, ...args])
 
 /**
  * Map each action with Firebase and Dispatch. Includes aliasing of actions.
