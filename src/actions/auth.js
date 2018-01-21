@@ -7,6 +7,7 @@ import {
 } from 'lodash'
 import { actionTypes } from '../constants'
 import { populate } from '../helpers'
+import { stringToDate } from '../utils'
 import {
   getLoginMethodAndParams,
   updateProfileOnRTDB,
@@ -209,14 +210,25 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
       .collection(config.userProfile)
       .doc(userData.uid)
       .get()
-      .then(
-        profileSnap =>
-          // update profile only if doesn't exist or if set by config
-          !config.updateProfileOnLogin && profileSnap.exists
-            ? profileSnap.data()
-            : profileSnap.ref.update(omit(profile, ['providerData'])) // fixes issue with bad write
-              .then(() => profile) // Update the profile
-      )
+      .then(profileSnap => {
+        // Convert to JSON format (to prevent issue of writing invalid type to Firestore)
+        const userDataObject = userData.toJSON ? userData.toJSON() : userData
+        // Remove unnessesary auth params (configurable) and preserve types of timestamps
+        const newProfile = {
+          ...omit(userDataObject, config.keysToRemoveFromAuth),
+          avatarUrl: userDataObject.photoURL, // match profile pattern used for RTDB
+          createdAt: stringToDate(userDataObject.createdAt),
+          lastLoginAt: stringToDate(userDataObject.lastLoginAt)
+        }
+        // Return if config for updating profile is not enabled and profile exists
+        if (!config.updateProfileOnLogin && profileSnap.exists) {
+          return profileSnap.data()
+        }
+        // Create/Update the profile
+        return profileSnap.ref
+          .set(newProfile, { merge: true })
+          .then(() => newProfile)
+      })
       .catch((err) => {
         // Error reading user profile
         dispatch({ type: actionTypes.UNAUTHORIZED_ERROR, authError: err })

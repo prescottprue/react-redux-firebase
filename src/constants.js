@@ -5,7 +5,7 @@
  * @example
  * import { constants } from 'react-redux-firebase'
  * constants.actionsPrefix === '@@reactReduxFirebase' // true
-*/
+ */
 export const actionsPrefix = '@@reactReduxFirebase'
 
 /**
@@ -55,7 +55,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @example
  * import { actionTypes } from 'react-redux-firebase'
  * actionTypes.SET === '@@reactReduxFirebase/SET' // true
-*/
+ */
 export const actionTypes = {
   START: `${actionsPrefix}/START`,
   SET: `${actionsPrefix}/SET`,
@@ -166,7 +166,7 @@ export const actionTypes = {
  * firestore helpers (**WARNING** Changing this will break firestoreConnect HOC.
  * Do **NOT** change to `'firestore'`)
  * @type {Object}
-*/
+ */
 export const defaultConfig = {
   userProfile: null,
   presence: null,
@@ -183,7 +183,15 @@ export const defaultConfig = {
   dispatchRemoveAction: false,
   enableEmptyAuthChanges: true,
   firebaseStateName: 'firebase',
-  attachAuthIsReady: false
+  attachAuthIsReady: false,
+  keysToRemoveFromAuth: [
+    'appName',
+    'apiKey',
+    'authDomain',
+    'redirectEventId',
+    'stsTokenManager',
+    'uid'
+  ]
 }
 
 /**
@@ -192,7 +200,7 @@ export const defaultConfig = {
  * @description List of all external auth providers that are supported
  * (firebase's email/anonymous included by default).
  * @private
-*/
+ */
 export const supportedAuthProviders = [
   'google',
   'github',
