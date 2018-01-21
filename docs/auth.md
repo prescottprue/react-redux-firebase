@@ -1,16 +1,19 @@
 # Authentication Methods
 
-Authentication data is attached to `auth`, profile is attached to `profile` if you provide a value to the `userProfile` config option. You can get them within components like so:
+Authentication data is attached to `state.firebase.auth`, profile is attached to `state.firebase.profile` if you provide a value to the `userProfile` config option. You can get them within components like so:
 
 ```js
 import { connect } from 'react-redux'
-connect(
-  // Map state to props
+
+const enhance = connect(
+  // Map redux state to component props
   ({ firebase: { auth, profile } }) => ({
     auth,
     profile
   })
 )
+
+enhance(SomeComponent)
 ```
 
 If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()` or `getFirebase().auth()`.
@@ -64,13 +67,13 @@ export default firebaseConnect()(SomeComponent) // or withFirebase(SomeComponent
         {
           provider: "facebook | google | twitter",
           type: "popup | redirect", // popup is default
-          scopes: ['email'] // email is default
+          scopes: Array // email is default
         }
         ```
       * credential (runs `ref.signInWithCredential(credential)`) :
         ```js
         {
-          credential : [firebase.auth.AuthCredential](https://firebase.google.com/docs/reference/js/firebase.auth.AuthCredential.html) // created using specific provider
+          credential: firebase.auth.AuthCredential // created using specific provider
         }
         ```
         The credential parameter is a firebase.auth.AuthCredential specific to the provider (i.e. `firebase.auth.GoogleAuthProvider.credential(null, 'some accessToken')`). For more details [please view the Firebase API reference](https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider#methods)
@@ -92,7 +95,7 @@ export default firebaseConnect()(SomeComponent) // or withFirebase(SomeComponent
         ```js
         {
           phoneNumber: String,
-          applicationVerifier: [`firebase.auth.ApplicationVerifier`](https://firebase.google.com/docs/reference/js/firebase.auth.ApplicationVerifier.html)
+          applicationVerifier: firebase.auth.ApplicationVerifier
         }
         ```
 
