@@ -7,7 +7,7 @@ import { unset } from 'lodash/fp'
  * @return {Array} Path as Array
  * @private
  */
-export function pathToArr (path) {
+export function pathToArr(path) {
   return path ? path.split(/\//).filter(p => !!p) : []
 }
 
@@ -17,7 +17,7 @@ export function pathToArr (path) {
  * @return {String} Path seperated with slashes
  * @private
  */
-export function getSlashStrPath (path) {
+export function getSlashStrPath(path) {
   return pathToArr(path).join('/')
 }
 
@@ -27,7 +27,7 @@ export function getSlashStrPath (path) {
  * @return {String} Path seperated with dots
  * @private
  */
-export function getDotStrPath (path) {
+export function getDotStrPath(path) {
   return pathToArr(path).join('.')
 }
 
@@ -41,18 +41,15 @@ export function getDotStrPath (path) {
  * passed object, and builds a state object with the same shape.
  * @private
  */
-export const combineReducers = reducers =>
-  (state = {}, action) =>
-    Object.keys(reducers).reduce(
-      (nextState, key) => {
-        nextState[key] = reducers[key]( // eslint-disable-line no-param-reassign
-          state[key],
-          action
-        )
-        return nextState
-      },
-      {}
+export const combineReducers = reducers => (state = {}, action) =>
+  Object.keys(reducers).reduce((nextState, key) => {
+    nextState[key] = reducers[key](
+      // eslint-disable-line no-param-reassign
+      state[key],
+      action
     )
+    return nextState
+  }, {})
 
 /**
  * Recursively unset a property starting at the deep path, and unsetting the parent

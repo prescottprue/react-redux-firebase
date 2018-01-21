@@ -7,25 +7,24 @@ import { getQueryIdFromPath } from './query'
  * @param {String} path - Path that can contain query parameters and populates
  * @return {Object} watchEvents - Array of watch events
  */
-export const pathStrToObj = (path) => {
+export const pathStrToObj = path => {
   let pathObj = { path, type: 'value', isQuery: false }
   const queryId = getQueryIdFromPath(path)
   // If Query id exists split params from path
   if (queryId) {
     const pathArray = path.split('#')
-    pathObj = Object.assign(
-      {},
-      pathObj,
-      {
-        queryId,
-        isQuery: true,
-        path: pathArray[0],
-        queryParams: pathArray[1].split('&')
-      }
-    )
+    pathObj = Object.assign({}, pathObj, {
+      queryId,
+      isQuery: true,
+      path: pathArray[0],
+      queryParams: pathArray[1].split('&')
+    })
     if (getPopulates(pathArray[1].split('&'))) {
       pathObj.populates = getPopulates(pathArray[1].split('&'))
-      pathObj.queryParams = remove(pathArray[1].split('&'), (p) => p.indexOf('populate') === -1)
+      pathObj.queryParams = remove(
+        pathArray[1].split('&'),
+        p => p.indexOf('populate') === -1
+      )
     }
   }
   // if queryId does not exist, return original pathObj
@@ -38,9 +37,9 @@ export const pathStrToObj = (path) => {
  * @return {Array} watchEvents - Array of watch events
  */
 export const getEventsFromInput = paths =>
-  flatMap(paths, (path) => {
+  flatMap(paths, path => {
     if (isString(path)) {
-      return [ pathStrToObj(path) ]
+      return [pathStrToObj(path)]
     }
 
     if (isArray(path)) {
@@ -73,10 +72,12 @@ export const getEventsFromInput = paths =>
 
       // Add all parameters that are missing (ones that exist will remain)
       path = Object.assign({}, pathStrToObj(strPath), path)
-      return [ path ]
+      return [path]
     }
 
-    throw new Error(`Invalid Path Definition: ${path}. Only strings, objects, and arrays accepted.`)
+    throw new Error(
+      `Invalid Path Definition: ${path}. Only strings, objects, and arrays accepted.`
+    )
   })
 
 export default { getEventsFromInput }

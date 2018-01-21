@@ -26,10 +26,14 @@ describe('withFirebase', () => {
   })
 
   describe('sets displayName static as', () => {
-    describe('withFirebase(${WrappedComponentName}) for', () => { // eslint-disable-line no-template-curly-in-string
+    /* eslint-disable no-template-curly-in-string */
+    describe('withFirebase(${WrappedComponentName}) for', () => {
+      /* eslint-enable no-template-curly-in-string */
       it.skip('standard components', () => {
         wrapper = shallow(<TestComponent />, { context: { store } })
-        expect(wrapper.instance.displayName).to.equal(`withFirebase(TestContainer)`)
+        expect(wrapper.instance.displayName).to.equal(
+          `withFirebase(TestContainer)`
+        )
       })
 
       it('string components', () => {

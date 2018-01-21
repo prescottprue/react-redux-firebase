@@ -31,10 +31,14 @@ describe('withFirestore', () => {
   })
 
   describe('sets displayName static as', () => {
-    describe('withFirestore(${WrappedComponentName}) for', () => { // eslint-disable-line no-template-curly-in-string
+    /* eslint-disable no-template-curly-in-string */
+    describe('withFirestore(${WrappedComponentName}) for', () => {
+      /* eslint-enable no-template-curly-in-string */
       it.skip('standard components', () => {
         wrapper = shallow(<TestComponent />, { context: { store } })
-        expect(wrapper.instance.displayName).to.equal(`withFirestore(TestContainer)`)
+        expect(wrapper.instance.displayName).to.equal(
+          `withFirestore(TestContainer)`
+        )
       })
 
       it('string components', () => {

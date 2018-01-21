@@ -23,31 +23,33 @@ const {
  * @private
  */
 const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
-  const uploadEvent = firebase.storage().ref(`${path}/${file.name}`).put(file)
+  const uploadEvent = firebase
+    .storage()
+    .ref(`${path}/${file.name}`)
+    .put(file)
   // TODO: Allow config to control whether progress it set to state or not
-  const unListen = uploadEvent.on(
-    firebase.storage.TaskEvent.STATE_CHANGED,
-    {
-      next: (snapshot) => {
-        dispatch({
-          type: FILE_UPLOAD_PROGRESS,
-          path,
-          payload: {
-            snapshot,
-            percent: Math.floor(snapshot.bytesTransferred / snapshot.totalBytes * 100)
-          }
-        })
-      },
-      error: (err) => {
-        dispatch({ type: FILE_UPLOAD_ERROR, path, payload: err })
-        unListen()
-      },
-      complete: () => {
-        dispatch({ type: FILE_UPLOAD_COMPLETE, path, payload: file })
-        unListen()
-      }
+  const unListen = uploadEvent.on(firebase.storage.TaskEvent.STATE_CHANGED, {
+    next: snapshot => {
+      dispatch({
+        type: FILE_UPLOAD_PROGRESS,
+        path,
+        payload: {
+          snapshot,
+          percent: Math.floor(
+            snapshot.bytesTransferred / snapshot.totalBytes * 100
+          )
+        }
+      })
+    },
+    error: err => {
+      dispatch({ type: FILE_UPLOAD_ERROR, path, payload: err })
+      unListen()
+    },
+    complete: () => {
+      dispatch({ type: FILE_UPLOAD_COMPLETE, path, payload: file })
+      unListen()
     }
-  )
+  })
   return uploadEvent
 }
 
@@ -71,19 +73,24 @@ export const uploadFile = (dispatch, firebase, config) => {
     throw new Error('Firebase storage is required to upload files')
   }
   const { path, file, dbPath, options = { progress: false } } = config
-  const nameFromOptions = options.name && isFunction(options.name)
-    ? options.name(file, firebase, config)
-    : options.name
+  const nameFromOptions =
+    options.name && isFunction(options.name)
+      ? options.name(file, firebase, config)
+      : options.name
   const filename = nameFromOptions || file.name
 
   dispatch({ type: FILE_UPLOAD_START, payload: { ...config, filename } })
 
-  const uploadPromise = () => options.progress
-    ? uploadFileWithProgress(dispatch, firebase, { path, file })
-    : firebase.storage().ref(`${path}/${filename}`).put(file)
+  const uploadPromise = () =>
+    options.progress
+      ? uploadFileWithProgress(dispatch, firebase, { path, file })
+      : firebase
+          .storage()
+          .ref(`${path}/${filename}`)
+          .put(file)
 
   return uploadPromise()
-    .then((uploadTaskSnaphot) => {
+    .then(uploadTaskSnaphot => {
       if (!dbPath || !firebase.database) {
         dispatch({
           type: FILE_UPLOAD_COMPLETE,
@@ -99,17 +106,18 @@ export const uploadFile = (dispatch, firebase, config) => {
       const fileData = isFunction(fileMetadataFactory)
         ? fileMetadataFactory(uploadTaskSnaphot, firebase)
         : {
-          name,
-          fullPath,
-          downloadURL: downloadURLs[0],
-          createdAt: firebase.database.ServerValue.TIMESTAMP
-        }
+            name,
+            fullPath,
+            downloadURL: downloadURLs[0],
+            createdAt: firebase.database.ServerValue.TIMESTAMP
+          }
 
       // TODO: Support uploading metadata to Firestore
-      return firebase.database()
+      return firebase
+        .database()
         .ref(dbPath)
         .push(fileData)
-        .then((metaDataSnapshot) => {
+        .then(metaDataSnapshot => {
           const payload = {
             snapshot: metaDataSnapshot,
             key: metaDataSnapshot.key,
@@ -125,7 +133,7 @@ export const uploadFile = (dispatch, firebase, config) => {
           return payload
         })
     })
-    .catch((err) => {
+    .catch(err => {
       dispatch({ type: FILE_UPLOAD_ERROR, path, payload: err })
       return Promise.reject(err)
     })
@@ -159,13 +167,6 @@ export const uploadFiles = (dispatch, firebase, { files, ...other }) =>
 export const deleteFile = (dispatch, firebase, { path, dbPath }) =>
   wrapInDispatch(dispatch, {
     method: deleteFileFromFb,
-    args: [
-      firebase,
-      { path, dbPath }
-    ],
-    types: [
-      FILE_DELETE_START,
-      FILE_DELETE_COMPLETE,
-      FILE_DELETE_ERROR
-    ]
+    args: [firebase, { path, dbPath }],
+    types: [FILE_DELETE_START, FILE_DELETE_COMPLETE, FILE_DELETE_ERROR]
   })

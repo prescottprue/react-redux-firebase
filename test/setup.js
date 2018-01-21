@@ -27,13 +27,15 @@ const uid = 'Iq5b0qK2NtgggT6U3bU6iZRGyma2'
 // Setup dom for window/document objects
 const dom = new JSDOM('<!doctype html><html><body></body></html>')
 
-new FirebaseServer(5000, 'localhost.firebaseio.test', { // eslint-disable-line no-new
+/* eslint-disable no-new */
+new FirebaseServer(5000, 'localhost.firebaseio.test', {
   users: {
     [uid]: {
       displayName: 'Tester'
     }
   }
 })
+/* eslint-enable no-new */
 
 // Chai Plugins
 chai.use(chaiAsPromised)
@@ -67,14 +69,10 @@ global.firebase = Object.defineProperty(Firebase, '_', {
   value: {
     watchers: {},
     authUid: null,
-    config: Object.assign(
-      {},
-      fbConfig,
-      {
-        userProfile: 'users',
-        enableRedirectHandling: false // disabled due to lack of http/https
-      }
-    )
+    config: Object.assign({}, fbConfig, {
+      userProfile: 'users',
+      enableRedirectHandling: false // disabled due to lack of http/https
+    })
   },
   writable: true,
   enumerable: true,

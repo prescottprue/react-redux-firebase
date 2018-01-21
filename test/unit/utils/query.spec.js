@@ -10,7 +10,7 @@ import {
 } from '../../../src/utils/query'
 import { fakeFirebase } from '../../utils'
 
-let createQueryFromParams = (queryParams) =>
+let createQueryFromParams = queryParams =>
   applyParamsToQuery(queryParams, fakeFirebase.database().ref())
 
 const dispatch = () => {}
@@ -22,12 +22,14 @@ describe('Utils: Query', () => {
       expect(getWatchPath('once', '/todos')).to.be.a.string
     })
     it('throws for no event', () => {
-      expect(() => getWatchPath(null, '/todos'))
-        .to.throw('Event and path are required')
+      expect(() => getWatchPath(null, '/todos')).to.throw(
+        'Event and path are required'
+      )
     })
     it('throws for no path', () => {
-      expect(() => getWatchPath(null, null))
-        .to.throw('Event and path are required')
+      expect(() => getWatchPath(null, null)).to.throw(
+        'Event and path are required'
+      )
     })
   })
 
@@ -100,15 +102,20 @@ describe('Utils: Query', () => {
 
     describe('orderByPriority', () => {
       it('handles single parameter', () => {
-        expect(createQueryFromParams(['orderByPriority']).toString())
-          .to.equal('priority')
+        expect(createQueryFromParams(['orderByPriority']).toString()).to.equal(
+          'priority'
+        )
       })
 
       describe('with startAt', () => {
         it('string containing number', () => {
           const startAt = '123abc'
-          expect(createQueryFromParams(['orderByPriority', `startAt=${startAt}`]).toString())
-            .to.equal(startAt)
+          expect(
+            createQueryFromParams([
+              'orderByPriority',
+              `startAt=${startAt}`
+            ]).toString()
+          ).to.equal(startAt)
         })
       })
     })
@@ -127,68 +134,63 @@ describe('Utils: Query', () => {
         it('number', () => {
           const child = 'emailAddress'
           const equalTo = 1
-          const queryParams = createQueryFromParams([`orderByChild=${child}`, `equalTo=${equalTo}`])
-          expect(queryParams.child)
-            .to
-            .equal(child)
-          expect(queryParams.equalTo)
-            .to
-            .equal(equalTo)
+          const queryParams = createQueryFromParams([
+            `orderByChild=${child}`,
+            `equalTo=${equalTo}`
+          ])
+          expect(queryParams.child).to.equal(child)
+          expect(queryParams.equalTo).to.equal(equalTo)
         })
         it('boolean', () => {
           const child = 'completed'
           const equalTo = false
-          const queryParams = createQueryFromParams([`orderByChild=${child}`, `equalTo=${equalTo}`])
-          expect(queryParams.child)
-            .to
-            .equal(child)
-          expect(queryParams.equalTo)
-            .to
-            .equal(equalTo)
+          const queryParams = createQueryFromParams([
+            `orderByChild=${child}`,
+            `equalTo=${equalTo}`
+          ])
+          expect(queryParams.child).to.equal(child)
+          expect(queryParams.equalTo).to.equal(equalTo)
         })
         it('string containing a boolean', () => {
           const child = 'emailAddress'
           const equalTo = 'true'
-          const queryParams = createQueryFromParams([`orderByChild=${child}`, `equalTo=${equalTo}`])
-          expect(queryParams.child)
-            .to
-            .equal(child)
-          expect(queryParams.equalTo)
-            .to
-            .equal(true)
+          const queryParams = createQueryFromParams([
+            `orderByChild=${child}`,
+            `equalTo=${equalTo}`
+          ])
+          expect(queryParams.child).to.equal(child)
+          expect(queryParams.equalTo).to.equal(true)
         })
         it('string containing null', () => {
           const child = 'emailAddress'
           const equalTo = 'null'
-          const queryParams = createQueryFromParams([`orderByChild=${child}`, `equalTo=${equalTo}`])
-          expect(queryParams.child)
-            .to
-            .equal(child)
-          expect(queryParams.equalTo)
-            .to
-            .equal(null)
+          const queryParams = createQueryFromParams([
+            `orderByChild=${child}`,
+            `equalTo=${equalTo}`
+          ])
+          expect(queryParams.child).to.equal(child)
+          expect(queryParams.equalTo).to.equal(null)
         })
         it('string containing a number', () => {
           const child = 'emailAddress'
           const equalTo = '123example@gmail.com'
-          const queryParams = createQueryFromParams([`orderByChild=${child}`, `equalTo=${equalTo}`])
-          expect(queryParams.child)
-            .to
-            .equal(child)
-          expect(queryParams.equalTo)
-            .to
-            .equal(equalTo)
+          const queryParams = createQueryFromParams([
+            `orderByChild=${child}`,
+            `equalTo=${equalTo}`
+          ])
+          expect(queryParams.child).to.equal(child)
+          expect(queryParams.equalTo).to.equal(equalTo)
         })
         it('does not parse if notParsed parameter passed', () => {
           const child = 'emailAddress'
           const equalTo = '123'
-          const queryParams = createQueryFromParams([`orderByChild=${child}`, 'notParsed', `equalTo=${equalTo}`])
-          expect(queryParams.child)
-            .to
-            .equal(child)
-          expect(queryParams.equalTo)
-            .to
-            .equal(equalTo)
+          const queryParams = createQueryFromParams([
+            `orderByChild=${child}`,
+            'notParsed',
+            `equalTo=${equalTo}`
+          ])
+          expect(queryParams.child).to.equal(child)
+          expect(queryParams.equalTo).to.equal(equalTo)
         })
       })
     })
@@ -213,8 +215,9 @@ describe('Utils: Query', () => {
   describe('orderedFromSnapshot -', () => {
     it('returns null if hasChildren is a function and is false', () => {
       const hasChildrenSpy = sinon.spy(() => false)
-      expect(orderedFromSnapshot({ hasChildren: hasChildrenSpy }))
-        .to.equal(null)
+      expect(orderedFromSnapshot({ hasChildren: hasChildrenSpy })).to.equal(
+        null
+      )
       expect(hasChildrenSpy).to.have.been.calledOnce
     })
 
@@ -225,12 +228,12 @@ describe('Utils: Query', () => {
     })
 
     it('returns null if ordered is an empty array', () => {
-      expect(orderedFromSnapshot({ forEach: () => ({ }) })).to.equal(null)
+      expect(orderedFromSnapshot({ forEach: () => ({}) })).to.equal(null)
     })
 
     it('adds children to ordered if they exist', () => {
-      const child = { key: 'some', val: () => ({ }) }
-      const forEachSpy = sinon.spy((childFunc) => childFunc(child))
+      const child = { key: 'some', val: () => ({}) }
+      const forEachSpy = sinon.spy(childFunc => childFunc(child))
       const res = orderedFromSnapshot({ forEach: forEachSpy })
       expect(res).to.be.an('array')
       expect(forEachSpy).to.have.been.calledOnce
@@ -244,8 +247,11 @@ describe('Utils: Query', () => {
     })
 
     it('returns populated results on', () => {
-      expect(populateAndDispatch(firebase, () => ({}), { snapshot: { key: 'test123' } }))
-        .to.be.an.object
+      expect(
+        populateAndDispatch(firebase, () => ({}), {
+          snapshot: { key: 'test123' }
+        })
+      ).to.be.an.object
     })
 
     // // TODO: Get this working
