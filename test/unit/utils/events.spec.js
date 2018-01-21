@@ -17,15 +17,23 @@ describe('Utils: Events', () => {
 
       describe('accepts object', () => {
         it('that is valid', () => {
-          expect(getEventsFromInput([{path: 'some'}])[0]).to.include.keys('path')
+          expect(getEventsFromInput([{ path: 'some' }])[0]).to.include.keys(
+            'path'
+          )
         })
 
         it('that has queryParams', () => {
-          expect(getEventsFromInput([{path: 'some', queryParams: ['orderByChild=uid']}])[0]).to.include.keys('path')
+          expect(
+            getEventsFromInput([
+              { path: 'some', queryParams: ['orderByChild=uid'] }
+            ])[0]
+          ).to.include.keys('path')
         })
 
         it('that is invalid', () => {
-          expect(() => getEventsFromInput([{type: 'value'}])).to.throw('Path is a required parameter within definition object')
+          expect(() => getEventsFromInput([{ type: 'value' }])).to.throw(
+            'Path is a required parameter within definition object'
+          )
         })
       })
 
@@ -36,7 +44,9 @@ describe('Utils: Events', () => {
 
     describe('populate', () => {
       it('populates parameter set populates exist', () => {
-        expect(getEventsFromInput(['some#populate=uid:users'])[0]).to.include.keys('populates')
+        expect(
+          getEventsFromInput(['some#populate=uid:users'])[0]
+        ).to.include.keys('populates')
       })
 
       it('populates parameter not set if none exists', () => {

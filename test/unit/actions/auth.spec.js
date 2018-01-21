@@ -18,7 +18,11 @@ import {
   verifyPasswordResetCode
 } from '../../../src/actions/auth'
 import { actionTypes } from '../../../src/constants'
-import { fakeFirebase, onAuthStateChangedSpy, firebaseWithConfig } from '../../utils'
+import {
+  fakeFirebase,
+  onAuthStateChangedSpy,
+  firebaseWithConfig
+} from '../../utils'
 // import { promisesForPopulate } from '../../../src/utils/populate'
 
 let functionSpy
@@ -27,20 +31,25 @@ let res
 let profile
 let profileSnap
 let dispatch
-const createSuccessSpy = (some) => sinon.spy(() => Promise.resolve(some))
-const createFailureSpy = () => sinon.spy(() => Promise.reject(new Error('test')))
-const addSpyToCurrentUser = (methodName, spyFunc) => ({ ...fakeFirebase,
+const createSuccessSpy = some => sinon.spy(() => Promise.resolve(some))
+const createFailureSpy = () =>
+  sinon.spy(() => Promise.reject(new Error('test')))
+const addSpyToCurrentUser = (methodName, spyFunc) => ({
+  ...fakeFirebase,
   auth: () => ({
-    get currentUser () {
+    get currentUser() {
       return {
         [methodName]: spyFunc
       }
     }
-  })})
-const addSpyWithArgsToAuthMethod = (methodName, spyFunc, args = []) => ({ ...fakeFirebase,
+  })
+})
+const addSpyWithArgsToAuthMethod = (methodName, spyFunc, args = []) => ({
+  ...fakeFirebase,
   auth: () => ({
     [methodName]: () => spyFunc(args)
-  })})
+  })
+})
 const fakeLogin = { email: 'test@tst.com', password: 'asdfasdf', role: 'admin' }
 
 describe('Actions: Auth -', () => {
@@ -77,21 +86,19 @@ describe('Actions: Auth -', () => {
       it('undefined - dispatches SET_PROFILE with profile', () => {
         firebase._.config.profileParamsToPopulate = undefined
         handleProfileWatchResponse(dispatchSpy, firebase, profileSnap)
-        expect(dispatchSpy)
-          .to.be.calledWith({
-            type: actionTypes.SET_PROFILE,
-            profile
-          })
+        expect(dispatchSpy).to.be.calledWith({
+          type: actionTypes.SET_PROFILE,
+          profile
+        })
       })
 
       it('{} - dispatches SET_PROFILE with profile (not supported)', () => {
         firebase._.config.profileParamsToPopulate = {}
         handleProfileWatchResponse(dispatchSpy, firebase, profileSnap)
-        expect(dispatchSpy)
-          .to.be.calledWith({
-            type: actionTypes.SET_PROFILE,
-            profile
-          })
+        expect(dispatchSpy).to.be.calledWith({
+          type: actionTypes.SET_PROFILE,
+          profile
+        })
       })
 
       it('Array - dispatches SET_PROFILE with populated profile', () => {
@@ -156,38 +163,65 @@ describe('Actions: Auth -', () => {
 
   describe('createUserProfile', () => {
     it('creates profile if config is enabled', async () => {
-      const userData = { uid: '123', email: 'test@test.com', providerData: [{}] }
-      const profile = await createUserProfile(dispatch, Firebase, userData, { some: 'asdf' })
+      const userData = {
+        uid: '123',
+        email: 'test@test.com',
+        providerData: [{}]
+      }
+      const profile = await createUserProfile(dispatch, Firebase, userData, {
+        some: 'asdf'
+      })
       expect(profile).to.be.an.object
     })
 
     it('resolves with userData if userProfile config option is not enabled', async () => {
-      const userData = { uid: '123', email: 'test@test.com', providerData: [{}] }
+      const userData = {
+        uid: '123',
+        email: 'test@test.com',
+        providerData: [{}]
+      }
       const fb = firebaseWithConfig({ userProfile: null })
-      const profile = await createUserProfile(dispatch, fb, userData, { some: 'asdf' })
+      const profile = await createUserProfile(dispatch, fb, userData, {
+        some: 'asdf'
+      })
       expect(profile).to.equal(userData)
     })
 
     it('creates profile using profileFactory if it exists', async () => {
-      const userData = { uid: '123', email: 'test@test.com', providerData: [{}] }
+      const userData = {
+        uid: '123',
+        email: 'test@test.com',
+        providerData: [{}]
+      }
       const profileObj = { some: 'asdf' }
       const profileFactory = sinon.spy(() => profileObj)
-      const profile = await createUserProfile(dispatch, firebaseWithConfig({ profileFactory }), userData)
+      const profile = await createUserProfile(
+        dispatch,
+        firebaseWithConfig({ profileFactory }),
+        userData
+      )
       expect(profile).to.have.property('some', profileObj.some)
       expect(profileFactory).to.have.been.calledOnce
     })
 
     it('rejects for error in profileFactory function', async () => {
-      const profileFactory = () => { throw new Error('test') }
+      const profileFactory = () => {
+        throw new Error('test')
+      }
       try {
-        await createUserProfile(dispatch, firebaseWithConfig({ profileFactory }), {}, {})
+        await createUserProfile(
+          dispatch,
+          firebaseWithConfig({ profileFactory }),
+          {},
+          {}
+        )
       } catch (err) {
         expect(err).to.have.property('message', 'test')
       }
     })
   })
 
-  describe('login', function () {
+  describe('login', function() {
     // Extend default timeout to prevent test fail on slow connection
     this.timeout(8000)
 
@@ -209,12 +243,19 @@ describe('Actions: Auth -', () => {
 
     it('handles token login', async () => {
       try {
-        await login(dispatch, firebase, { token: 'asdfasdf' }, { uid: 'asdfasdf' })
+        await login(
+          dispatch,
+          firebase,
+          { token: 'asdfasdf' },
+          { uid: 'asdfasdf' }
+        )
       } catch (err) {
         expect(err.message)
           // message indicates firebase's internal auth method called
           // invalid key is intentionally provided
-          .to.equal('The custom token format is incorrect. Please check the documentation.')
+          .to.equal(
+            'The custom token format is incorrect. Please check the documentation.'
+          )
       }
     })
   })
@@ -258,7 +299,9 @@ describe('Actions: Auth -', () => {
 
     it('handles no email', async () => {
       try {
-        await createUser(dispatch, fakeFirebase, { password: fakeLogin.password })
+        await createUser(dispatch, fakeFirebase, {
+          password: fakeLogin.password
+        })
       } catch (err) {
         expect(err).to.be.an.object
       }
@@ -274,7 +317,10 @@ describe('Actions: Auth -', () => {
 
     it('handles error with createUserWithEmailAndPassword', async () => {
       try {
-        await createUser(dispatch, fakeFirebase, { email: 'error', password: 'error' })
+        await createUser(dispatch, fakeFirebase, {
+          email: 'error',
+          password: 'error'
+        })
       } catch (err) {
         expect(err).to.be.an.object
       }
@@ -282,7 +328,10 @@ describe('Actions: Auth -', () => {
 
     it('handles error with login', async () => {
       try {
-        await createUser(dispatch, fakeFirebase, { email: 'error2', password: 'error2' })
+        await createUser(dispatch, fakeFirebase, {
+          email: 'error2',
+          password: 'error2'
+        })
       } catch (err) {
         expect(err).to.be.an.object
       }
@@ -290,7 +339,10 @@ describe('Actions: Auth -', () => {
 
     it('handles user-not-found error', async () => {
       try {
-        res = await createUser(dispatch, fakeFirebase, { email: 'error3', password: 'error2' })
+        res = await createUser(dispatch, fakeFirebase, {
+          email: 'error3',
+          password: 'error2'
+        })
       } catch (err) {
         expect(err.message).to.equal('auth/user-not-found')
       }
@@ -325,16 +377,22 @@ describe('Actions: Auth -', () => {
 
   describe('confirmPasswordReset', () => {
     it('resets password for real user', () => {
-      return confirmPasswordReset(dispatch, fakeFirebase, 'test', 'test')
-        .then((err) => {
+      return confirmPasswordReset(dispatch, fakeFirebase, 'test', 'test').then(
+        err => {
           expect(err).to.be.undefined
-        })
+        }
+      )
     })
 
     describe('handles error code: ', () => {
       it('auth/expired-action-code', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/expired-action-code', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'auth/expired-action-code',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -342,7 +400,12 @@ describe('Actions: Auth -', () => {
 
       it('auth/invalid-action-code', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/invalid-action-code', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'auth/invalid-action-code',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -350,7 +413,12 @@ describe('Actions: Auth -', () => {
 
       it('auth/user-disabled', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-disabled', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'auth/user-disabled',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -358,7 +426,12 @@ describe('Actions: Auth -', () => {
 
       it('auth/user-not-found', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-not-found', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'auth/user-not-found',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -366,7 +439,12 @@ describe('Actions: Auth -', () => {
 
       it('auth/weak-password', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/weak-password', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'auth/weak-password',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -374,7 +452,12 @@ describe('Actions: Auth -', () => {
 
       it('other', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'asdfasdf', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'asdfasdf',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -407,8 +490,10 @@ describe('Actions: Auth -', () => {
       try {
         res = await updateProfile(dispatch, firebase, 'test')
       } catch (err) {
-        expect(err)
-          .to.have.property('message', 'Reference.update failed: First argument  must be an object containing the children to replace.')
+        expect(err).to.have.property(
+          'message',
+          'Reference.update failed: First argument  must be an object containing the children to replace.'
+        )
       }
     })
   })
@@ -422,21 +507,29 @@ describe('Actions: Auth -', () => {
       try {
         res = await updateAuth(dispatch, fakeFirebase, 'test')
       } catch (err) {
-        expect(err)
-          .to.have.property('message', 'User must be logged in to update auth.')
+        expect(err).to.have.property(
+          'message',
+          'User must be logged in to update auth.'
+        )
       }
     })
 
     it('calls firebase updateProfile method', async () => {
       const updateAuthSpy = createSuccessSpy()
-      const newFakeFirebase = addSpyToCurrentUser('updateProfile', updateAuthSpy)
+      const newFakeFirebase = addSpyToCurrentUser(
+        'updateProfile',
+        updateAuthSpy
+      )
       await updateAuth(dispatch, newFakeFirebase, 'test')
       expect(updateAuthSpy).to.have.been.calledOnce
     })
 
     it('calls update profile if updateInProfile is true', async () => {
       const updateAuthSpy = createSuccessSpy()
-      const newFakeFirebase = addSpyToCurrentUser('updateProfile', updateAuthSpy)
+      const newFakeFirebase = addSpyToCurrentUser(
+        'updateProfile',
+        updateAuthSpy
+      )
       try {
         await updateAuth(dispatch, newFakeFirebase, 'test', true)
       } catch (err) {
@@ -451,7 +544,10 @@ describe('Actions: Auth -', () => {
 
     it('rejects and dispatches on failure', async () => {
       const updateAuthSpy = createFailureSpy()
-      const newFakeFirebase = addSpyToCurrentUser('updateProfile', updateAuthSpy)
+      const newFakeFirebase = addSpyToCurrentUser(
+        'updateProfile',
+        updateAuthSpy
+      )
       try {
         await updateAuth(dispatch, newFakeFirebase, 'test')
       } catch (err) {
@@ -472,8 +568,10 @@ describe('Actions: Auth -', () => {
       try {
         res = await updateEmail(dispatch, fakeFirebase, 'test')
       } catch (err) {
-        expect(err)
-          .to.have.property('message', 'User must be logged in to update email.')
+        expect(err).to.have.property(
+          'message',
+          'User must be logged in to update email.'
+        )
       }
     })
 
@@ -518,8 +616,10 @@ describe('Actions: Auth -', () => {
       try {
         res = await reloadAuth(dispatch, firebase)
       } catch (err) {
-        expect(err)
-          .to.have.property('message', 'User must be logged in to reload auth.')
+        expect(err).to.have.property(
+          'message',
+          'User must be logged in to reload auth.'
+        )
       }
     })
 
@@ -549,22 +649,37 @@ describe('Actions: Auth -', () => {
       try {
         res = await linkWithCredential(dispatch, firebase, '1234567891', {})
       } catch (err) {
-        expect(err)
-          .to.have.property('message', 'User must be logged in to link with credential.')
+        expect(err).to.have.property(
+          'message',
+          'User must be logged in to link with credential.'
+        )
       }
     })
 
     it('calls firebase linkWithCredential method', async () => {
       const linkWithCredentialSpy = createSuccessSpy(() => Promise.resolve())
-      const newFakeFirebase = addSpyToCurrentUser('linkWithCredential', linkWithCredentialSpy)
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithCredential',
+        linkWithCredentialSpy
+      )
       await linkWithCredential(dispatch, newFakeFirebase, '1234567891', {})
       expect(linkWithCredentialSpy).to.have.been.calledOnce
     })
 
     it('attaches confirm method on successful resolve', async () => {
-      const linkWithCredentialSpy = createSuccessSpy({ confirm: () => Promise.resolve({}) })
-      const newFakeFirebase = addSpyToCurrentUser('linkWithCredential', linkWithCredentialSpy)
-      const res = await linkWithCredential(dispatch, newFakeFirebase, '1234567891', {})
+      const linkWithCredentialSpy = createSuccessSpy({
+        confirm: () => Promise.resolve({})
+      })
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithCredential',
+        linkWithCredentialSpy
+      )
+      const res = await linkWithCredential(
+        dispatch,
+        newFakeFirebase,
+        '1234567891',
+        {}
+      )
       expect(linkWithCredentialSpy).to.have.been.calledOnce
       expect(res).to.respondTo('confirm')
       res.confirm()
@@ -572,7 +687,10 @@ describe('Actions: Auth -', () => {
 
     it('rejects and dispatches on failure', async () => {
       const linkWithCredentialSpy = createFailureSpy()
-      const newFakeFirebase = addSpyToCurrentUser('linkWithCredential', linkWithCredentialSpy)
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithCredential',
+        linkWithCredentialSpy
+      )
       try {
         await linkWithCredential(dispatch, newFakeFirebase, '1234567891', {})
       } catch (err) {
@@ -589,22 +707,39 @@ describe('Actions: Auth -', () => {
       try {
         res = await signInWithPhoneNumber(firebase, dispatch, '1234567891', {})
       } catch (err) {
-        expect(err)
-          .to.have.property('message', 'signInWithPhoneNumber failed: Second argument "applicationVerifier" must be an implementation of firebase.auth.ApplicationVerifier.')
+        expect(err).to.have.property(
+          'message',
+          'signInWithPhoneNumber failed: Second argument "applicationVerifier" must be an implementation of firebase.auth.ApplicationVerifier.'
+        )
       }
     })
 
     it('calls firebase signInWithPhoneNumber method', async () => {
       const signInWithPhoneNumberSpy = createSuccessSpy(() => Promise.resolve())
-      const newFakeFirebase = addSpyWithArgsToAuthMethod('signInWithPhoneNumber', signInWithPhoneNumberSpy, ['1234567891', {}])
+      const newFakeFirebase = addSpyWithArgsToAuthMethod(
+        'signInWithPhoneNumber',
+        signInWithPhoneNumberSpy,
+        ['1234567891', {}]
+      )
       await signInWithPhoneNumber(newFakeFirebase, dispatch, '1234567891', {})
       expect(signInWithPhoneNumberSpy).to.have.been.calledOnce
     })
 
     it('attaches confirm method on successful resolve', async () => {
-      const signInWithPhoneNumberSpy = createSuccessSpy({ confirm: () => Promise.resolve({}) })
-      const newFakeFirebase = addSpyWithArgsToAuthMethod('signInWithPhoneNumber', signInWithPhoneNumberSpy, ['1234567891', {}])
-      const res = await signInWithPhoneNumber(newFakeFirebase, dispatch, '1234567891', {})
+      const signInWithPhoneNumberSpy = createSuccessSpy({
+        confirm: () => Promise.resolve({})
+      })
+      const newFakeFirebase = addSpyWithArgsToAuthMethod(
+        'signInWithPhoneNumber',
+        signInWithPhoneNumberSpy,
+        ['1234567891', {}]
+      )
+      const res = await signInWithPhoneNumber(
+        newFakeFirebase,
+        dispatch,
+        '1234567891',
+        {}
+      )
       expect(signInWithPhoneNumberSpy).to.have.been.calledOnce
       expect(res).to.respondTo('confirm')
       res.confirm()
@@ -612,7 +747,11 @@ describe('Actions: Auth -', () => {
 
     it('rejects and dispatches on failure', async () => {
       const signInWithPhoneNumberSpy = createFailureSpy()
-      const newFakeFirebase = addSpyWithArgsToAuthMethod('signInWithPhoneNumber', signInWithPhoneNumberSpy, ['1234567891', {}])
+      const newFakeFirebase = addSpyWithArgsToAuthMethod(
+        'signInWithPhoneNumber',
+        signInWithPhoneNumberSpy,
+        ['1234567891', {}]
+      )
       try {
         await signInWithPhoneNumber(newFakeFirebase, dispatch, '1234567891', {})
       } catch (err) {

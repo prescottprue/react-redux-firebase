@@ -1,20 +1,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
-import { storeWithFirestore, Container, ProviderMock, TestContainer } from '../utils'
+import TestUtils from 'react-dom/test-utils'
+import {
+  storeWithFirestore,
+  Container,
+  ProviderMock,
+  TestContainer
+} from '../utils'
 import firestoreConnect, {
   createFirestoreConnect
 } from '../../src/firestoreConnect'
 
 const createContainer = () => {
   const store = storeWithFirestore()
-  const WrappedContainer = firestoreConnect((props) => [
+  const WrappedContainer = firestoreConnect(props => [
     `test/${props.dynamicProp}`
   ])(Container)
 
   const tree = TestUtils.renderIntoDocument(
     <ProviderMock store={store}>
-      <WrappedContainer pass='through' />
+      <WrappedContainer pass="through" />
     </ProviderMock>
   )
 
@@ -55,7 +60,9 @@ describe('firestoreConnect', () => {
   })
 
   describe('sets displayName static as ', () => {
-    describe('FirestoreConnect(${WrappedComponentName}) for', () => { // eslint-disable-line no-template-curly-in-string
+    /* eslint-disable no-template-curly-in-string */
+    describe('FirestoreConnect(${WrappedComponentName}) for', () => {
+      /* eslint-enable no-template-curly-in-string */
       it('standard components', () => {
         const containerPrime = firestoreConnect()(TestContainer)
         expect(containerPrime.displayName).to.equal(

@@ -63,7 +63,8 @@ export default firebaseConnect()(SomeComponent) // or withFirebase(SomeComponent
         ```js
         {
           provider: "facebook | google | twitter",
-          type: "popup | redirect" // popup is default
+          type: "popup | redirect", // popup is default
+          scopes: ['email'] // email is default
         }
         ```
       * credential (runs `ref.signInWithCredential(credential)`) :
@@ -122,7 +123,8 @@ props.firebase.login({
 ```js
 props.firebase.login({
   provider: 'google',
-  type: 'popup'
+  type: 'popup',
+  // scopes: ['email'] // not required
 })
 ```
 

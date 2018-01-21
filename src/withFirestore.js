@@ -33,7 +33,7 @@ export const createWithFirestore = (storeKey = 'store') => WrappedComponent => {
 
     store = this.context[storeKey]
 
-    render () {
+    render() {
       return (
         <WrappedComponent
           {...this.props}

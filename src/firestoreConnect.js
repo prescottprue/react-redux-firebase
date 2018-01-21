@@ -35,7 +35,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     prevData = null
     store = this.context[storeKey]
 
-    componentWillMount () {
+    componentWillMount() {
       const { firebase, firestore } = this.store
       if (firebase.firestore && firestore) {
         // Allow function to be passed
@@ -46,7 +46,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       }
     }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
       const { firebase, firestore } = this.store
       if (firebase.firestore && this.prevData) {
         firestore.unsetListeners(this.prevData)
@@ -54,7 +54,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     }
 
     // TODO: Re-attach listeners on query path change
-    componentWillReceiveProps (np) {
+    componentWillReceiveProps(np) {
       const { firebase, firestore } = this.store
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.store)
@@ -69,7 +69,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       }
     }
 
-    render () {
+    render() {
       const { firebase, firestore } = this.store
       return (
         <WrappedComponent

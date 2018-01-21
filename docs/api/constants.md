@@ -139,3 +139,7 @@ Default configuration options
 -   `firestoreNamespace` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `firestoreHelpers` Namespace for
     firestore helpers (**WARNING** Changing this will break firestoreConnect HOC.
     Do **NOT** change to `'firestore'`)
+-   `keysToRemoveFromAuth` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** (default at end)
+    list of keys to remove from authentication reponse before writing to profile
+    (currenlty only used for profiles stored on Firestore). `['appName', 'apiKey'
+    , 'authDomain', 'redirectEventId', 'stsTokenManager', 'uid']`
