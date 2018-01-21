@@ -165,6 +165,10 @@ export const actionTypes = {
  * @property {Boolean} firestoreNamespace - `firestoreHelpers` Namespace for
  * firestore helpers (**WARNING** Changing this will break firestoreConnect HOC.
  * Do **NOT** change to `'firestore'`)
+ * @property {Array} keysToRemoveFromAuth - (default at end)
+ * list of keys to remove from authentication reponse before writing to profile
+ * (currenlty only used for profiles stored on Firestore). `['appName', 'apiKey'
+ * , 'authDomain', 'redirectEventId', 'stsTokenManager', 'uid']`
  * @type {Object}
  */
 export const defaultConfig = {
