@@ -5,7 +5,8 @@ import {
   getSlashStrPath,
   getDotStrPath,
   recursiveUnset,
-  combineReducers
+  combineReducers,
+  preserveValuesFromState
 } from './utils/reducers'
 
 const {
@@ -197,7 +198,10 @@ export const authReducer = (
       const auth = action.auth.toJSON ? action.auth.toJSON() : action.auth
       // Support keeping data
       if (action.preserve && action.preserve.auth) {
-        return pick({ ...state, ...auth }, action.preserve.auth) // pick returns a new object
+        return preserveValuesFromState(action.preserve.auth, {
+          ...state,
+          ...auth
+        })
       }
       return { ...auth, isEmpty: false, isLoaded: true }
     case AUTH_LINK_SUCCESS:
@@ -218,7 +222,11 @@ export const authReducer = (
     case LOGOUT:
       // Support keeping data when logging out
       if (action.preserve && action.preserve.auth) {
-        return pick(state, action.preserve.auth) // pick returns a new object
+        return preserveValuesFromState(
+          action.preserve.auth,
+          { ...state, ...auth },
+          { isLoaded: true, isEmpty: true }
+        )
       }
       return { isLoaded: true, isEmpty: true }
     default:
@@ -276,7 +284,10 @@ export const profileReducer = (
     case LOGIN:
       // Support keeping data when logging out
       if (action.preserve && action.preserve.profile) {
-        return pick(state, action.preserve.profile) // pick returns a new object
+        return preserveValuesFromState(state, action.preserve.profile, {
+          isLoaded: true,
+          isEmpty: true
+        })
       }
       return {
         isEmpty: true,
@@ -286,7 +297,10 @@ export const profileReducer = (
     case AUTH_EMPTY_CHANGE:
       // Support keeping data when logging out
       if (action.preserve && action.preserve.profile) {
-        return pick(state, action.preserve.profile) // pick returns a new object
+        return preserveValuesFromState(state, action.preserve.profile, {
+          isLoaded: true,
+          isEmpty: true
+        })
       }
       return { isLoaded: true, isEmpty: true }
     default:

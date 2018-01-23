@@ -1,4 +1,4 @@
-import { get, replace, size } from 'lodash'
+import { get, replace, size, isFunction, isBoolean, pick } from 'lodash'
 import { unset } from 'lodash/fp'
 
 /**
@@ -50,6 +50,18 @@ export const combineReducers = reducers => (state = {}, action) =>
     )
     return nextState
   }, {})
+
+export const preserveValuesFromState = (preserveSetting, state, nextState) => {
+  // Return result of function if preserve is a function
+  if (isFunction(preserveSetting)) {
+    return preserveSetting(state)
+  }
+  // Return original state if preserve is true
+  if (isBoolean(preserveSetting) && preserveSetting) {
+    return nextState ? { ...state, ...nextState } : state
+  }
+  return pick(state, preserveSetting) // pick returns a new object
+}
 
 /**
  * Recursively unset a property starting at the deep path, and unsetting the parent
