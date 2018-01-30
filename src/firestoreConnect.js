@@ -1,8 +1,8 @@
-import React, { Component } from "react"
-import PropTypes from "prop-types"
-import { isEqual } from "lodash"
-import hoistStatics from "hoist-non-react-statics"
-import { createCallable, wrapDisplayName } from "./utils"
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { isEqual } from 'lodash'
+import hoistStatics from 'hoist-non-react-statics'
+import { createCallable, wrapDisplayName } from './utils'
 
 /**
  * @name createFirestoreConnect
@@ -22,12 +22,12 @@ import { createCallable, wrapDisplayName } from "./utils"
  * // use the firebaseConnect to wrap a component
  * export default firestoreConnect()(SomeComponent)
  */
-export const createFirestoreConnect = (storeKey = "store") => (
+export const createFirestoreConnect = (storeKey = 'store') => (
   dataOrFn = []
 ) => WrappedComponent => {
   class FirestoreConnect extends Component {
     static wrappedComponent = WrappedComponent
-    static displayName = wrapDisplayName(WrappedComponent, "FirestoreConnect")
+    static displayName = wrapDisplayName(WrappedComponent, 'FirestoreConnect')
     static contextTypes = {
       [storeKey]: PropTypes.object.isRequired
     }
