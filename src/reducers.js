@@ -26,7 +26,8 @@ const {
   AUTH_EMPTY_CHANGE,
   AUTH_LINK_SUCCESS,
   UNAUTHORIZED_ERROR,
-  AUTH_UPDATE_SUCCESS
+  AUTH_UPDATE_SUCCESS,
+  AUTH_RELOAD_SUCCESS
 } = actionTypes
 
 /**
@@ -136,7 +137,12 @@ export const timestampsReducer = (state = {}, { type, path }) => {
 const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
   switch (action.type) {
     case SET:
-      return setWith(Object, getDotStrPath(action.path), action[actionKey], state)
+      return setWith(
+        Object,
+        getDotStrPath(action.path),
+        action[actionKey],
+        state
+      )
     case MERGE:
       const previousData = get(state, getDotStrPath(action.path), {})
       const mergedData = assign(previousData, action[actionKey])
@@ -158,7 +164,9 @@ const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
             ? pick(state, action.preserve[actionKey])
             : {}
         }
-        throw new Error('Invalid preserve parameter. It must be an Object or an Array')
+        throw new Error(
+          'Invalid preserve parameter. It must be an Object or an Array'
+        )
       }
       return {}
     default:
@@ -173,7 +181,10 @@ const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) => {
+export const authReducer = (
+  state = { isLoaded: false, isEmpty: true },
+  action
+) => {
   switch (action.type) {
     case LOGIN:
     case AUTH_UPDATE_SUCCESS:
@@ -190,6 +201,7 @@ export const authReducer = (state = { isLoaded: false, isEmpty: true }, action) 
       }
       return { ...auth, isEmpty: false, isLoaded: true }
     case AUTH_LINK_SUCCESS:
+    case AUTH_RELOAD_SUCCESS:
       if (!action.payload) {
         return {
           isEmpty: true,
@@ -243,7 +255,10 @@ export const authErrorReducer = (state = null, action) => {
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-export const profileReducer = (state = { isLoaded: false, isEmpty: true }, action) => {
+export const profileReducer = (
+  state = { isLoaded: false, isEmpty: true },
+  action
+) => {
   switch (action.type) {
     case SET_PROFILE:
       if (!action.profile) {
@@ -259,7 +274,7 @@ export const profileReducer = (state = { isLoaded: false, isEmpty: true }, actio
         isLoaded: true
       }
     case LOGIN:
-    // Support keeping data when logging out
+      // Support keeping data when logging out
       if (action.preserve && action.preserve.profile) {
         return pick(state, action.preserve.profile) // pick returns a new object
       }
@@ -302,7 +317,9 @@ export const errorsReducer = (state = [], action) => {
       // Support keeping errors through a filter function
       if (action.preserve && action.preserve.errors) {
         if (typeof action.preserve.errors !== 'function') {
-          throw new Error('Preserve for the errors state currently only supports functions')
+          throw new Error(
+            'Preserve for the errors state currently only supports functions'
+          )
         }
         return state.filter(action.preserve.errors) // run filter function on state
       }
@@ -331,8 +348,10 @@ const listenersById = (state = {}, { type, path, payload }) => {
           path
         }
       }
-    case UNSET_LISTENER: return omit(state, [payload.id])
-    default: return state
+    case UNSET_LISTENER:
+      return omit(state, [payload.id])
+    default:
+      return state
   }
 }
 
@@ -347,9 +366,12 @@ const listenersById = (state = {}, { type, path, payload }) => {
  */
 const allListeners = (state = [], { type, path, payload }) => {
   switch (type) {
-    case SET_LISTENER: return [...state, payload.id]
-    case UNSET_LISTENER: return state.filter(lId => lId !== payload.id)
-    default: return state
+    case SET_LISTENER:
+      return [...state, payload.id]
+    case UNSET_LISTENER:
+      return state.filter(lId => lId !== payload.id)
+    default:
+      return state
   }
 }
 

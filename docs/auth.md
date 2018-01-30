@@ -2,7 +2,7 @@
 
 Authentication data is attached to `auth`, profile is attached to `profile` if you provide a value to the `userProfile` config option. You can get them within components like so:
 
-```jsx
+```js
 import { connect } from 'react-redux'
 connect(
   // Map state to props
@@ -16,25 +16,34 @@ connect(
 If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()` or `getFirebase().auth()`.
 
 #### NOTE
-All examples below assume you have wrapped your component using `firebaseConnect`. This will make `props.firebase` available within your component:
+All examples below assume you have passed `firebase` from `context` to props. Wrapping your component with with the `withFirebase` or `firebaseConnect` Higher Order Components will make `props.firebase` available within your component:
 
 ```js
 import React from 'react'
 import PropTypes from 'prop-types'
-import { firebaseConnect } from 'react-redux-firebase'
+import { withFirebase } from 'react-redux-firebase'
 
 const SomeComponent = (props) => (
   // use props.firebase
 )
 
-// Works same with class components (make sure you import Component from react)
-// class SomeComponent extends Component {
-//   render() {
-//     // use this.props.firebase
-//   }
-// }
+export default withFirebase(SomeComponent) // or firebaseConnect()(SomeComponent)
+```
 
-export default firebaseConnect()(SomeComponent)
+Works same with class components (make sure you import `Component` from react):
+
+```js
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { firebaseConnect } from 'react-redux-firebase'
+
+class SomeComponent extends Component {
+  render() {
+    // use this.props.firebase
+  }
+}
+
+export default firebaseConnect()(SomeComponent) // or withFirebase(SomeComponent)
 ```
 
 ## login(credentials)
@@ -54,13 +63,14 @@ export default firebaseConnect()(SomeComponent)
         ```js
         {
           provider: "facebook | google | twitter",
-          type: "popup | redirect" // popup is default
+          type: "popup | redirect", // popup is default
+          scopes: ['email'] // email is default
         }
         ```
       * credential (runs `ref.signInWithCredential(credential)`) :
         ```js
         {
-          credential : firebase.auth.AuthCredential // created using specific provider
+          credential : [firebase.auth.AuthCredential](https://firebase.google.com/docs/reference/js/firebase.auth.AuthCredential.html) // created using specific provider
         }
         ```
         The credential parameter is a firebase.auth.AuthCredential specific to the provider (i.e. `firebase.auth.GoogleAuthProvider.credential(null, 'some accessToken')`). For more details [please view the Firebase API reference](https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider#methods)
@@ -71,10 +81,18 @@ export default firebaseConnect()(SomeComponent)
           token : String
         }
         ```
-      * token (runs `ref.authWithCustomToken(credentials)`)
+      * custom token (runs `ref.authWithCustomToken(credentials)`). `profile` is required if automatic profile creation is enabled (which it is by default if you are using `userProfile`). `config.updateProfileOnLogin` config option can be set to `false` in order to prevent this behavior.
         ```js
         {
-          token : String
+          token : String,
+          profile: Object // required (optional if updateProfileOnLogin: false config set)
+        }
+        ```
+      * phone number (runs `ref.signInWithPhoneNumber(phoneNumber, applicationVerifier)`). Automatic profile creation is enabled by default if you are using the `userProfile` config option. `updateProfileOnLogin` config option can be set to `false` in order to prevent this behavior.
+        ```js
+        {
+          phoneNumber: String,
+          applicationVerifier: [`firebase.auth.ApplicationVerifier`](https://firebase.google.com/docs/reference/js/firebase.auth.ApplicationVerifier.html)
         }
         ```
 
@@ -87,7 +105,7 @@ export default firebaseConnect()(SomeComponent)
 
   *Email*
 ```js
-this.props.firebase.login({
+props.firebase.login({
   email: 'test@test.com',
   password: 'testest1'
 })
@@ -95,7 +113,7 @@ this.props.firebase.login({
 
   *OAuth Provider Redirect*
 ```js
-this.props.firebase.login({
+props.firebase.login({
   provider: 'google',
   type: 'redirect'
 })
@@ -103,27 +121,31 @@ this.props.firebase.login({
 
   *OAuth Provider Popup*
 ```js
-this.props.firebase.login({
+props.firebase.login({
   provider: 'google',
-  type: 'popup'
+  type: 'popup',
+  // scopes: ['email'] // not required
 })
 ```
 
   *Credential*
 ```js
-// `googleUser` from the onsuccess Google Sign In callback.
-this.props.firebase.login({
+// `googleUser` from the onsuccess Google Sign In callback
+props.firebase.login({
   credential: firebase.auth.GoogleAuthProvider.credential(googleUser.getAuthResponse().id_token)
 })
 // or using an accessToken
-this.props.firebase.login({
+props.firebase.login({
   credential: firebase.auth.GoogleAuthProvider.credential(null, 'some access token')
 })
 ```
 
   *Token*
 ```js
-this.props.firebase.login({ token: 'someJWTAuthToken' })
+props.firebase.login({
+  token: 'someJWTAuthToken',
+  profile: { email: 'rick@sanchez.com' }
+})
 ```
 
 After logging in, profile and auth are available in redux state:
@@ -158,7 +180,7 @@ Similar to Firebase's `ref.createUser(credentials)` but with support for automat
 ##### Examples
 ```js
 const createNewUser = ({ email, password, username }) => {
-  this.props.firebase.createUser(
+  firebase.createUser(
     { email, password },
     { username, email }
   )
@@ -185,7 +207,7 @@ Looking to preserve data on logout? [`v2.0.0` supports the `preserve` config opt
 
 ```js
 // logout and remove profile and auth from state
-firebase.logout()
+props.firebase.logout()
 ```
 
 ## resetPassword(credentials)
@@ -194,7 +216,7 @@ Calls Firebase's `firebase.auth().resetPassword()`. If there is an error, it is 
 ##### Examples
 
 ```js
-firebase.resetPassword({
+props.firebase.resetPassword({
   email: 'test@test.com',
   password: 'testest1',
   username: 'tester'
@@ -215,7 +237,7 @@ Calls Firebase's `firebase.auth().confirmPasswordReset()`. If there is an error,
 ##### Examples
 
 ```js
-firebase.confirmPasswordReset('some reset code', 'myNewPassword')
+props.firebase.confirmPasswordReset('some reset code', 'myNewPassword')
 ```
 
 ##### Parameters
@@ -233,7 +255,7 @@ Calls Firebase's `firebase.auth().verifyPasswordResetCode()`. If there is an err
 ##### Examples
 
 ```js
-firebase.verifyPasswordResetCode('some reset code')
+props.firebase.verifyPasswordResetCode('some reset code')
 ```
 
 ##### Parameters
@@ -242,6 +264,50 @@ firebase.verifyPasswordResetCode('some reset code')
 ##### Returns
   [**Promise**][promise-url] - Email associated with reset code
 
+
+## signInWithPhoneNumber(code)
+
+Signs in using a phone number in an async pattern (i.e. requires calling a second method). Calls Firebase's [`firebase.auth().signInWithPhoneNumber()`](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#signInWithPhoneNumber). If there is an error, it is added into redux state under `state.firebase.authError`.
+
+From Firebase's docs:
+
+> Asynchronously signs in using a phone number. This method sends a code via SMS to the given phone number, and returns a [firebase.auth.ConfirmationResult](https://firebase.google.com/docs/reference/js/firebase.auth.ConfirmationResult.html). After the user provides the code sent to their phone, call [firebase.auth.ConfirmationResult#confirm](https://firebase.google.com/docs/reference/js/firebase.auth.ConfirmationResult.html#confirm) with the code to sign the user in.
+
+For more info, check out the following:
+* [Firebase's phone-auth guide](https://firebase.google.com/docs/auth/web/phone-auth)
+* [Firebase's auth docs reference for signInWithPhoneNumber](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#signInWithPhoneNumber)
+
+##### Examples
+
+```js
+const phoneNumber = "+11234567899" // for US number (123) 456-7899
+const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
+  'size': 'invisible',
+});
+firebase.signInWithPhoneNumber(phoneNumber, appVerifier)
+    .then((confirmationResult) => {
+      // SMS sent. Prompt user to type the code from the message, then sign the
+      // user in with confirmationResult.confirm(code).
+      const verificationCode = window.prompt('Please enter the verification ' +
+          'code that was sent to your mobile device.');
+      return confirmationResult.confirm(verificationCode);
+    })
+    .catch((error) => {
+      // Error; SMS not sent
+      // Handle Errors Here
+      return Promise.reject(error)
+    });
+```
+
+##### Parameters
+  * `phoneNumber` [**String**][string-url] - The user's phone number in E.164 format (e.g. `+16505550101`).
+  * `applicationVerifier` [**firebase.auth.ApplicationVerifier**][firebase-app-verifier] `required` - App verifier made with Firebase's `RecaptchaVerifier`
+
+##### Returns
+  [**Promise**][promise-url] - Resolves with [firebase.auth.ConfirmationResult](https://firebase.google.com/docs/reference/js/firebase.auth.ConfirmationResult.html)
+
+
 [promise-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [string-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
 [object-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
+[firebase-app-verifier]: https://firebase.google.com/docs/reference/js/firebase.auth.ApplicationVerifier.html

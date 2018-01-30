@@ -12,7 +12,8 @@ import { supportedAuthProviders } from '../constants'
 const createAuthProvider = (firebase, providerName, scopes) => {
   // TODO: Verify scopes are valid before adding
   // TODO: Validate parameter inputs
-  const provider = new firebase.auth[`${capitalize(providerName)}AuthProvider`]()
+  const capitalProviderName = `${capitalize(providerName)}AuthProvider`
+  const provider = new firebase.auth[capitalProviderName]()
 
   // Custom Auth Parameters
   const { customAuthParameters } = firebase._.config
@@ -21,7 +22,10 @@ const createAuthProvider = (firebase, providerName, scopes) => {
   }
 
   // Handle providers without scopes
-  if (providerName.toLowerCase() === 'twitter' || !isFunction(provider.addScope)) {
+  if (
+    providerName.toLowerCase() === 'twitter' ||
+    !isFunction(provider.addScope)
+  ) {
     return provider
   }
 
@@ -69,10 +73,12 @@ export const getLoginMethodAndParams = (firebase, creds) => {
     type,
     token,
     scopes,
+    phoneNumber,
+    applicationVerifier,
     credential
   } = creds
   if (credential) {
-    return { method: 'signInWithCredential', params: [ credential ] }
+    return { method: 'signInWithCredential', params: [credential] }
   }
   if (provider) {
     // Verify providerName is valid
@@ -80,18 +86,31 @@ export const getLoginMethodAndParams = (firebase, creds) => {
       throw new Error(`${provider} is not a valid Auth Provider`)
     }
     if (token) {
-      throw new Error('provider with token no longer supported, use credential parameter instead')
+      throw new Error(
+        'provider with token no longer supported, use credential parameter instead'
+      )
     }
     const authProvider = createAuthProvider(firebase, provider, scopes)
     if (type === 'popup') {
-      return { method: 'signInWithPopup', params: [ authProvider ] }
+      return { method: 'signInWithPopup', params: [authProvider] }
     }
-    return { method: 'signInWithRedirect', params: [ authProvider ] }
+    return { method: 'signInWithRedirect', params: [authProvider] }
   }
   if (token) {
-    return { method: 'signInWithCustomToken', params: [ token ] }
+    return { method: 'signInWithCustomToken', params: [token] }
   }
-  return { method: 'signInWithEmailAndPassword', params: [ email, password ] }
+  if (phoneNumber) {
+    if (!applicationVerifier) {
+      throw new Error(
+        'Application verifier is required for phone authentication'
+      )
+    }
+    return {
+      method: 'signInWithPhoneNumber',
+      params: [phoneNumber, applicationVerifier]
+    }
+  }
+  return { method: 'signInWithEmailAndPassword', params: [email, password] }
 }
 
 /**
@@ -110,7 +129,11 @@ const isAuthReady = (store, stateName) => {
   const firebaseState = stateName ? state[stateName] : state
   const firebaseAuthState = firebaseState && firebaseState.auth
   if (!firebaseAuthState) {
-    throw new Error(`The Firebase auth state could not be found in the store under the attribute '${stateName ? `${stateName}.` : ''}auth'. Make sure your react-redux-firebase reducer is correctly set in the store`)
+    throw new Error(
+      `The Firebase auth state could not be found in the store under the attribute '${
+        stateName ? `${stateName}.` : ''
+      }auth'. Make sure your react-redux-firebase reducer is correctly set in the store`
+    )
   }
   return firebaseState.auth.isLoaded
 }
@@ -127,7 +150,7 @@ const isAuthReady = (store, stateName) => {
  * @return {Promise} Resolve when Firebase auth is ready in the store.
  */
 export const authIsReady = (store, stateName = 'firebase') =>
-  new Promise((resolve) => {
+  new Promise(resolve => {
     if (isAuthReady(store, stateName)) {
       resolve()
     } else {
@@ -164,9 +187,7 @@ export const createAuthIsReady = (store, config) => {
 export const updateProfileOnRTDB = (firebase, profileUpdate) => {
   const { database, _: { config, authUid } } = firebase
   const profileRef = database().ref(`${config.userProfile}/${authUid}`)
-  return profileRef
-    .update(profileUpdate)
-    .then(() => profileRef.once('value'))
+  return profileRef.update(profileUpdate).then(() => profileRef.once('value'))
 }
 
 /**
@@ -178,7 +199,5 @@ export const updateProfileOnRTDB = (firebase, profileUpdate) => {
 export const updateProfileOnFirestore = (firebase, profileUpdate) => {
   const { firestore, _: { config, authUid } } = firebase
   const profileRef = firestore().doc(`${config.userProfile}/${authUid}`)
-  return profileRef
-    .update(profileUpdate)
-    .then(profileRef.get)
+  return profileRef.update(profileUpdate).then(() => profileRef.get())
 }

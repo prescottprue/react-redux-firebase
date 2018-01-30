@@ -2,8 +2,8 @@ root: true
 
 parser: babel-eslint
 
-extends: [standard, standard-react]
-plugins: [babel, react]
+extends: [standard, standard-react, prettier, prettier/react]
+plugins: [babel, react, prettier]
 
 env:
   browser: true
@@ -14,3 +14,13 @@ env:
 rules:
   semi: [2, 'never']
   no-console: 'error'
+  prettier/prettier: ['error', {
+    singleQuote: true,
+    trailingComma: 'es6',
+    semi: false,
+    bracketSpacing: true,
+    jsxBracketSameLine: true,
+    printWidth: 80,
+    tabWidth: 2,
+    useTabs: false
+  }]

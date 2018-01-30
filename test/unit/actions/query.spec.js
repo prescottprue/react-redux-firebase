@@ -20,30 +20,63 @@ describe('Actions: Query', () => {
     })
 
     it('throws if Firebase database has not been included', () => {
-      expect(() => watchEvent({}))
-        .to.Throw('Firebase database is required to create watchers')
+      expect(() => watchEvent({})).to.Throw(
+        'Firebase database is required to create watchers'
+      )
     })
 
     it('runs given basic params', () => {
-      expect(watchEvent(firebase, dispatch, { type: 'once', path: 'projects' }, 'projects'))
-        .to.eventually.be.an.object
+      expect(
+        watchEvent(
+          firebase,
+          dispatch,
+          { type: 'once', path: 'projects' },
+          'projects'
+        )
+      ).to.eventually.be.an.object
     })
 
     it('runs given first_child', () => {
-      expect(watchEvent(firebase, dispatch, { type: 'first_child', path: 'projects' }, 'projects'))
-        .to.eventually.be.an.object
+      expect(
+        watchEvent(
+          firebase,
+          dispatch,
+          { type: 'first_child', path: 'projects' },
+          'projects'
+        )
+      ).to.eventually.be.an.object
     })
 
     it('runs value query', () => {
-      expect(watchEvent(firebase, dispatch, { type: 'value', path: 'projects' }, 'projects'))
+      expect(
+        watchEvent(
+          firebase,
+          dispatch,
+          { type: 'value', path: 'projects' },
+          'projects'
+        )
+      )
     })
 
     it('handles populates', () => {
-      expect(watchEvent(firebase, dispatch, { type: 'value', path: 'projects', populates: [{ child: 'uid', root: 'users' }] }, 'projects'))
+      expect(
+        watchEvent(
+          firebase,
+          dispatch,
+          {
+            type: 'value',
+            path: 'projects',
+            populates: [{ child: 'uid', root: 'users' }]
+          },
+          'projects'
+        )
+      )
     })
 
     it('throws for null type', () => {
-      expect(() => watchEvent(firebase, dispatch, { path: 'projects' }, 'projects')).to.Throw
+      expect(() =>
+        watchEvent(firebase, dispatch, { path: 'projects' }, 'projects')
+      ).to.Throw
     })
   })
 
@@ -53,7 +86,9 @@ describe('Actions: Query', () => {
     })
 
     it('runs given basic params', () => {
-      expect(unWatchEvent(firebase, dispatch, { type: 'once', path: 'projects' })).to.be.a.function
+      expect(
+        unWatchEvent(firebase, dispatch, { type: 'once', path: 'projects' })
+      ).to.be.a.function
     })
   })
 
@@ -63,14 +98,16 @@ describe('Actions: Query', () => {
     })
 
     it('runs given basic params', () => {
-      const events = [{type: 'once', path: 'test'}]
+      const events = [{ type: 'once', path: 'test' }]
       spy = sinon.spy(events, 'map')
       watchEvents(firebase, dispatch, events)
       expect(spy).to.be.calledOnce
     })
 
     it('throws if not passed array', () => {
-      expect(() => watchEvents(firebase, dispatch, {})).to.Throw('Events config must be an Array')
+      expect(() => watchEvents(firebase, dispatch, {})).to.Throw(
+        'Events config must be an Array'
+      )
     })
   })
 
@@ -80,14 +117,14 @@ describe('Actions: Query', () => {
     })
 
     it('runs given basic params', () => {
-      const events = [{type: 'value', path: 'test'}]
+      const events = [{ type: 'value', path: 'test' }]
       spy = sinon.spy(events, 'forEach')
       unWatchEvents(firebase, dispatch, events)
       expect(spy).to.be.calledOnce
     })
 
     it('throws for bad type', () => {
-      const events = [{path: 'test'}]
+      const events = [{ path: 'test' }]
       spy = sinon.spy(events, 'forEach')
       expect(() => unWatchEvents(firebase, dispatch, events)).to.Throw
     })

@@ -5,7 +5,7 @@ import GoogleButton from 'react-google-button'
 import Paper from 'material-ui/Paper'
 import { withFirebase } from 'react-redux-firebase'
 import { withHandlers, pure, compose } from 'recompose'
-// import { UserIsNotAuthenticated } from 'utils/router'
+import { UserIsNotAuthenticated } from 'utils/router'
 import { withNotifications } from 'modules/notification'
 import { LOGIN_PATH } from 'constants'
 import SignupForm from '../SignupForm'
@@ -37,7 +37,7 @@ SignupPage.propTypes = {
 }
 
 export default compose(
-  // UserIsNotAuthenticated, // redirect to list page if logged in
+  UserIsNotAuthenticated, // redirect to list page if logged in
   pure,
   withNotifications, // add props.showError
   withFirebase, // add props.firebase (firebaseConnect() can also be used)

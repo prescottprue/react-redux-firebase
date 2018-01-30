@@ -12,23 +12,18 @@ describe('Helpers:', () => {
       expect(helpers).to.respondTo('getVal')
     })
     it('passes notSetValue', () => {
-      expect(helpers.getVal(null, 'some', []))
-        .to
-        .be
-        .empty
+      expect(helpers.getVal(null, 'some', [])).to.be.empty
     })
 
     it('gets top level data', () => {
-      expect(helpers.getVal(exampleData, 'data/some'))
-        .to
-        .equal('data')
+      expect(helpers.getVal(exampleData, 'data/some')).to.equal('data')
     })
 
     it('gets nested data', () => {
-      expect(helpers.getVal(exampleData, 'data/projects/CDF'))
-        .to
-        .have
-        .property('owner', 'ABC')
+      expect(helpers.getVal(exampleData, 'data/projects/CDF')).to.have.property(
+        'owner',
+        'ABC'
+      )
     })
   })
 
@@ -38,64 +33,62 @@ describe('Helpers:', () => {
     })
 
     it('passes notSetValue', () => {
-      expect(helpers.populate(null, '/some', [], exampleData))
-        .to
-        .equal(exampleData)
+      expect(helpers.populate(null, '/some', [], exampleData)).to.equal(
+        exampleData
+      )
     })
 
     it('returns undefined for non existant path', () => {
-      expect(helpers.populate(exampleData, '/asdfasdfadsf', []))
-        .to
-        .equal(undefined)
+      expect(helpers.populate(exampleData, '/asdfasdfadsf', [])).to.equal(
+        undefined
+      )
     })
 
     it('returns null for null data', () => {
-      expect(helpers.populate(exampleData, '/missing/data', []))
-        .to
-        .equal(null)
+      expect(helpers.populate(exampleData, '/missing/data', [])).to.equal(null)
     })
 
     it('returns unpopulated data for no populates', () => {
       path = 'projects'
-      expect(helpers.populate(exampleData, path, []).CDF.owner)
-        .to
-        .equal(exampleData.data[path].CDF.owner)
+      expect(helpers.populate(exampleData, path, []).CDF.owner).to.equal(
+        exampleData.data[path].CDF.owner
+      )
     })
 
     describe('profile', () => {
       it('returns unpopulated data for no populates', () => {
         path = 'profile'
-        expect(helpers.populate(exampleData, path, []))
-          .to
-          .have
-          .property('role', 'tester')
+        expect(helpers.populate(exampleData, path, [])).to.have.property(
+          'role',
+          'tester'
+        )
       })
 
       it('returns unpopulated data for invalid populate', () => {
         path = 'profile'
         populates = [{ child: 'role', root: 'users' }]
-        expect(helpers.populate(exampleData, path, populates))
-          .to
-          .deep
-          .property('role', 'tester')
+        expect(helpers.populate(exampleData, path, populates)).to.deep.property(
+          'role',
+          'tester'
+        )
       })
 
       it('populates a single parameter', () => {
         path = 'profile'
         populates = [{ child: 'role', root: 'roles' }]
-        expect(helpers.populate(exampleData, path, populates))
-          .to
-          .deep
-          .property('role.somePermission', true)
+        expect(helpers.populate(exampleData, path, populates)).to.deep.property(
+          'role.somePermission',
+          true
+        )
       })
 
       it('populates a list parameter', () => {
         path = 'profile'
         populates = [{ child: 'notes', root: 'notes' }]
-        expect(helpers.populate(exampleData, path, populates))
-          .to
-          .deep
-          .property('notes.123.text', get(exampleData, 'data.notes.123.text'))
+        expect(helpers.populate(exampleData, path, populates)).to.deep.property(
+          'notes.123.text',
+          get(exampleData, 'data.notes.123.text')
+        )
       })
     })
 
@@ -108,47 +101,48 @@ describe('Helpers:', () => {
         it('populates value', () => {
           path = 'projects/CDF'
           populates = [{ child: 'owner', root: rootName }]
-          expect(helpers.populate(exampleData, path, populates).owner)
-            .to
-            .have
-            .property('displayName', 'scott')
+          expect(
+            helpers.populate(exampleData, path, populates).owner
+          ).to.have.property('displayName', 'scott')
         })
 
         it('handles child path', () => {
           path = 'projects/QRS'
           populates = [{ child: 'nested.owner', root: rootName }]
           const populatedData = helpers.populate(exampleData, path, populates)
-          expect(populatedData.nested.owner)
-            .to
-            .have
-            .property('displayName', 'scott')
+          expect(populatedData.nested.owner).to.have.property(
+            'displayName',
+            'scott'
+          )
         })
 
         it('populates childParam', () => {
           path = 'projects/CDF'
-          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName, childParam: 'displayName' }]))
-            .to
-            .have
-            .property('owner', 'scott')
+          expect(
+            helpers.populate(exampleData, path, [
+              { child: 'owner', root: rootName, childParam: 'displayName' }
+            ])
+          ).to.have.property('owner', 'scott')
         })
 
         it('populates childAlias', () => {
           path = 'projects/CDF'
           const child = 'owner'
           const childAlias = 'ownerObj'
-          expect(helpers.populate(exampleData, path, [{ child, root: rootName, childAlias }]))
-            .to
-            .have
-            .deep
-            .property(`${childAlias}.displayName`, 'scott')
+          expect(
+            helpers.populate(exampleData, path, [
+              { child, root: rootName, childAlias }
+            ])
+          ).to.have.deep.property(`${childAlias}.displayName`, 'scott')
         })
 
         it('keeps non-existant children', () => {
           path = 'projects/OKF'
-          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName }]))
-            .to
-            .have
-            .property('owner', 'asdfasdf')
+          expect(
+            helpers.populate(exampleData, path, [
+              { child: 'owner', root: rootName }
+            ])
+          ).to.have.property('owner', 'asdfasdf')
         })
       })
 
@@ -159,44 +153,35 @@ describe('Helpers:', () => {
 
         it('populates values', () => {
           path = 'projects/OKF'
-          populates = [
-            { child: 'collaborators', root: rootName }
-          ]
+          populates = [{ child: 'collaborators', root: rootName }]
           const populatedData = helpers.populate(exampleData, path, populates)
-          expect(populatedData)
-            .to
-            .have
-            .deep
-            .property(`collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+          expect(populatedData).to.have.deep.property(
+            `collaborators.ABC.displayName`,
+            exampleData.data[rootName].ABC.displayName
+          )
         })
       })
 
       describe('config as function -', () => {
         it('populates values', () => {
           path = 'projects/CDF'
-          populates = (projectKey, projectData) => ([
+          populates = (projectKey, projectData) => [
             // configure populates with key / data tuple...
             { child: 'owner', root: rootName }
-          ])
+          ]
           const populatedData = helpers.populate(exampleData, path, populates)
-          expect(populatedData.owner)
-            .to
-            .have
-            .property('displayName', 'scott')
+          expect(populatedData.owner).to.have.property('displayName', 'scott')
         })
       })
 
       it('works with ordered', () => {
         path = 'ordered/projects/0'
-        populates = [
-          { child: 'owner', root: rootName }
-        ]
+        populates = [{ child: 'owner', root: rootName }]
         const populated = helpers.populate(exampleData, path, populates)
-        expect(populated)
-          .to
-          .have
-          .deep
-          .property(`value.owner.displayName`, get(exampleData, `data.${rootName}.ABC.displayName`))
+        expect(populated).to.have.deep.property(
+          `value.owner.displayName`,
+          get(exampleData, `data.${rootName}.ABC.displayName`)
+        )
       })
     })
 
@@ -209,10 +194,11 @@ describe('Helpers:', () => {
 
         it('populates value', () => {
           valName = 'CDF'
-          expect(helpers.populate(exampleData, path, [{ child: 'owner', root: rootName }])[valName].owner)
-            .to
-            .have
-            .property('displayName', 'scott')
+          expect(
+            helpers.populate(exampleData, path, [
+              { child: 'owner', root: rootName }
+            ])[valName].owner
+          ).to.have.property('displayName', 'scott')
         })
 
         it('populates value even when others are missing', () => {
@@ -222,33 +208,34 @@ describe('Helpers:', () => {
             { child: 'owner', root: rootName },
             { child: 'category', root: catRootName }
           ]
-          expect(helpers.populate(exampleData, path, populates))
-            .to
-            .have
-            .deep
-            .property(`${valName}.owner.displayName`, 'scott')
+          expect(
+            helpers.populate(exampleData, path, populates)
+          ).to.have.deep.property(`${valName}.owner.displayName`, 'scott')
         })
 
         it('populates childParam', () => {
           valName = 'CDF'
           const child = 'owner'
           const childParam = 'displayName'
-          expect(helpers.populate(exampleData, path, [{ child, root: rootName, childParam }]))
-            .to
-            .have
-            .deep
-            .property(`${valName}.${child}`, 'scott')
+          expect(
+            helpers.populate(exampleData, path, [
+              { child, root: rootName, childParam }
+            ])
+          ).to.have.deep.property(`${valName}.${child}`, 'scott')
         })
 
         it('populates childAlias', () => {
           const child = 'owner'
           const childAlias = 'ownerObj'
           valName = 'CDF'
-          expect(helpers.populate(exampleData, path, [{ child, root: rootName, childAlias }]))
-            .to
-            .have
-            .deep
-            .property(`${valName}.${childAlias}.displayName`, 'scott')
+          expect(
+            helpers.populate(exampleData, path, [
+              { child, root: rootName, childAlias }
+            ])
+          ).to.have.deep.property(
+            `${valName}.${childAlias}.displayName`,
+            'scott'
+          )
         })
       })
 
@@ -260,33 +247,27 @@ describe('Helpers:', () => {
         })
 
         it('populates values', () => {
-          populates = [
-            { child: 'collaborators', root: rootName }
-          ]
+          populates = [{ child: 'collaborators', root: rootName }]
           const populatedData = helpers.populate(exampleData, path, populates)
-          expect(populatedData)
-            .to
-            .have
-            .deep
-            .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+          expect(populatedData).to.have.deep.property(
+            `${valName}.collaborators.ABC.displayName`,
+            exampleData.data[rootName].ABC.displayName
+          )
         })
 
         it('keeps non-existant children', () => {
-          populates = [
-            { child: 'collaborators', root: rootName }
-          ]
+          populates = [{ child: 'collaborators', root: rootName }]
           // Non matching collaborator
-          expect(helpers.populate(exampleData, path, populates))
-            .to
-            .have
-            .deep
-            .property(`${valName}.collaborators.abc`, true)
+          expect(
+            helpers.populate(exampleData, path, populates)
+          ).to.have.deep.property(`${valName}.collaborators.abc`, true)
           // Matching collaborator
-          expect(helpers.populate(exampleData, path, populates))
-            .to
-            .have
-            .deep
-            .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+          expect(
+            helpers.populate(exampleData, path, populates)
+          ).to.have.deep.property(
+            `${valName}.collaborators.ABC.displayName`,
+            exampleData.data[rootName].ABC.displayName
+          )
         })
       })
 
@@ -295,16 +276,15 @@ describe('Helpers:', () => {
           path = 'projects'
           rootName = 'users'
           valName = 'OKF'
-          populates = (projectKey, projectData) => ([
+          populates = (projectKey, projectData) => [
             // configure populates with key / data tuple...
             { child: 'collaborators', root: rootName }
-          ])
+          ]
           const populatedData = helpers.populate(exampleData, path, populates)
-          expect(populatedData)
-            .to
-            .have
-            .deep
-            .property(`${valName}.collaborators.ABC.displayName`, get(exampleData, `data.${rootName}.ABC.displayName`))
+          expect(populatedData).to.have.deep.property(
+            `${valName}.collaborators.ABC.displayName`,
+            get(exampleData, `data.${rootName}.ABC.displayName`)
+          )
         })
       })
 
@@ -315,15 +295,12 @@ describe('Helpers:', () => {
         })
 
         it('with list child', () => {
-          populates = [
-            { child: 'collaborators', root: rootName }
-          ]
+          populates = [{ child: 'collaborators', root: rootName }]
           const populatedArr = helpers.populate(exampleData, path, populates)
-          expect(populatedArr[0])
-            .to
-            .have
-            .deep
-            .property(`value.collaborators.ABC.displayName`, get(exampleData, `data.${rootName}.ABC.displayName`))
+          expect(populatedArr[0]).to.have.deep.property(
+            `value.collaborators.ABC.displayName`,
+            get(exampleData, `data.${rootName}.ABC.displayName`)
+          )
         })
 
         it('with multiple populates', () => {
@@ -332,23 +309,19 @@ describe('Helpers:', () => {
             { child: 'collaborators', root: rootName }
           ]
           const populatedArr = helpers.populate(exampleData, path, populates)
-          expect(populatedArr[0])
-            .to
-            .have
-            .deep
-            .property(`value.collaborators.ABC.displayName`, get(exampleData, `data.${rootName}.ABC.displayName`))
+          expect(populatedArr[0]).to.have.deep.property(
+            `value.collaborators.ABC.displayName`,
+            get(exampleData, `data.${rootName}.ABC.displayName`)
+          )
         })
 
         it('with none existing child', () => {
-          populates = [
-            { child: 'random' }
-          ]
+          populates = [{ child: 'random' }]
           const populatedArr = helpers.populate(exampleData, path, populates)
-          expect(populatedArr[0])
-            .to
-            .have
-            .deep
-            .property(`value.collaborators.ABC`, true)
+          expect(populatedArr[0]).to.have.deep.property(
+            `value.collaborators.ABC`,
+            true
+          )
         })
       })
     })
@@ -366,17 +339,19 @@ describe('Helpers:', () => {
           { child: 'notes', root: 'notes' }
         ]
         // check that notes are populated
-        expect(helpers.populate(exampleData, `/${path}`, populates))
-          .to
-          .have
-          .deep
-          .property(`${valName}.notes.123.text`, exampleData.data.notes['123'].text)
+        expect(
+          helpers.populate(exampleData, `/${path}`, populates)
+        ).to.have.deep.property(
+          `${valName}.notes.123.text`,
+          exampleData.data.notes['123'].text
+        )
         // check that owner is populated
-        expect(helpers.populate(exampleData, `/${path}`, populates))
-          .to
-          .have
-          .deep
-          .property(`${valName}.owner.displayName`, exampleData.data.users['ABC'].displayName)
+        expect(
+          helpers.populate(exampleData, `/${path}`, populates)
+        ).to.have.deep.property(
+          `${valName}.owner.displayName`,
+          exampleData.data.users['ABC'].displayName
+        )
       })
 
       // Skipped since this is not currently supported
@@ -386,16 +361,18 @@ describe('Helpers:', () => {
           { child: 'collaborators', root: rootName }
         ]
         // TODO: Test both children are populated
-        expect(helpers.populate(exampleData, `/${path}`, populates))
-          .to
-          .have
-          .deep
-          .property(`${valName}.owner.displayName`, exampleData.data[rootName].ABC.displayName)
-        expect(helpers.populate(exampleData, `/${path}`, populates))
-          .to
-          .have
-          .deep
-          .property(`${valName}.collaborators.ABC.displayName`, exampleData.data[rootName].ABC.displayName)
+        expect(
+          helpers.populate(exampleData, `/${path}`, populates)
+        ).to.have.deep.property(
+          `${valName}.owner.displayName`,
+          exampleData.data[rootName].ABC.displayName
+        )
+        expect(
+          helpers.populate(exampleData, `/${path}`, populates)
+        ).to.have.deep.property(
+          `${valName}.collaborators.ABC.displayName`,
+          exampleData.data[rootName].ABC.displayName
+        )
       })
     })
   })

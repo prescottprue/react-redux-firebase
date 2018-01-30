@@ -1,19 +1,26 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
+import TestUtils from 'react-dom/test-utils'
 import { createSink } from 'recompose'
-import { storeWithFirebase, Container, ProviderMock, TestContainer } from '../utils'
-import firebaseConnect, { createFirebaseConnect } from '../../src/firebaseConnect'
+import {
+  storeWithFirebase,
+  Container,
+  ProviderMock,
+  TestContainer
+} from '../utils'
+import firebaseConnect, {
+  createFirebaseConnect
+} from '../../src/firebaseConnect'
 
 const createContainer = () => {
   const store = storeWithFirebase()
-  const WrappedContainer = firebaseConnect((props) => [
+  const WrappedContainer = firebaseConnect(props => [
     `test/${props.dynamicProp}`
   ])(Container)
 
   const tree = TestUtils.renderIntoDocument(
     <ProviderMock store={store}>
-      <WrappedContainer pass='through' />
+      <WrappedContainer pass="through" />
     </ProviderMock>
   )
 
@@ -51,10 +58,14 @@ describe('firebaseConnect', () => {
   })
 
   describe('sets displayName static as ', () => {
-    describe('FirebaseConnect(${WrappedComponentName}) for', () => { // eslint-disable-line no-template-curly-in-string
+    /* eslint-disable no-template-curly-in-string */
+    describe('FirebaseConnect(${WrappedComponentName}) for', () => {
+      /* eslint-enable no-template-curly-in-string */
       it('class components', () => {
         const containerPrime = firebaseConnect()(TestContainer)
-        expect(containerPrime.displayName).to.equal(`FirebaseConnect(TestContainer)`)
+        expect(containerPrime.displayName).to.equal(
+          `FirebaseConnect(TestContainer)`
+        )
       })
 
       it('string components', () => {

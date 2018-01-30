@@ -2,11 +2,6 @@
 
 ## Before Use
 
-## Install
-```bash
-npm install --save react-redux-firebase
-```
-
 ### Peer Dependencies
 
 Install peer dependencies: `npm i --save redux react-redux`

@@ -176,8 +176,7 @@ export const isEmpty = (...args) =>
  * @return {String} - Fixed path
  * @private
  */
-export const fixPath = path =>
-  ((path.substring(0, 1) === '/') ? '' : '/') + path
+export const fixPath = path => (path.substring(0, 1) === '/' ? '' : '/') + path
 
 /**
  * @private
@@ -243,10 +242,11 @@ const populateChild = (state, child, p) => {
 
     const populateVal = get(state.data, pathString)
     if (populateVal) {
-      return set({}, p.childAlias || p.child, (p.keyProp
-        ? { [p.keyProp]: childVal, ...populateVal }
-        : populateVal
-      ))
+      return set(
+        {},
+        p.childAlias || p.child,
+        p.keyProp ? { [p.keyProp]: childVal, ...populateVal } : populateVal
+      )
     }
     // matching child does not exist
     return child
@@ -285,9 +285,10 @@ const populateChild = (state, child, p) => {
 export const populate = (state, path, populates, notSetValue) => {
   const splitPath = compact(path.split('/'))
   // append 'data' prefix to path if it is not a top level path
-  const pathArr = topLevelPaths.indexOf(splitPath[0]) === -1
-    ? ['data', ...splitPath]
-    : splitPath
+  const pathArr =
+    topLevelPaths.indexOf(splitPath[0]) === -1
+      ? ['data', ...splitPath]
+      : splitPath
   const dotPath = pathArr.join('.')
   // Gather data from top level if path is profile (handles populating profile)
   const data = get(state, dotPath, notSetValue)
@@ -303,9 +304,7 @@ export const populate = (state, path, populates, notSetValue) => {
 
   // check for if data is single object or a list of objects
   const populatesForData = getPopulateObjs(
-    isFunction(populates)
-      ? populates(last(pathArr), data)
-      : populates
+    isFunction(populates) ? populates(last(pathArr), data) : populates
   )
 
   if (isArray(data)) {
@@ -338,9 +337,7 @@ export const populate = (state, path, populates, notSetValue) => {
   }
 
   // check each populate child parameter for existence
-  const dataHasPopulateChilds = some(populatesForData, p =>
-    has(data, p.child)
-  )
+  const dataHasPopulateChilds = some(populatesForData, p => has(data, p.child))
 
   // Single object that contains at least one child parameter
   if (dataHasPopulateChilds) {
@@ -361,9 +358,7 @@ export const populate = (state, path, populates, notSetValue) => {
     const key = pathArr[0] === 'ordered' ? child.key : childKey
     // get populate settings on item level (passes child if populates is a function)
     const populatesForDataItem = getPopulateObjs(
-      isFunction(populates)
-        ? populates(key, child)
-        : populates
+      isFunction(populates) ? populates(key, child) : populates
     )
     // confirm at least one populate value exists on child
     const dataHasPopulateChilds = some(populatesForDataItem, p =>

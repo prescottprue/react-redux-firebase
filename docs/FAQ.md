@@ -16,7 +16,7 @@
     * [Complete Firebase Auth Integration](http://react-redux-firebase.com/docs/auth.html#examples) including `signInWithRedirect` compatibility for OAuth Providers
 
     #### Well why not combine?
-    I have been talking to the author of [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase) about combining, but we are not sure that the users of both want that at this point. Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby) if you haven't already since a ton of this type of discussion goes on there.
+    I have been talking to the author of [redux-react-firebase](https://github.com/tiberiuc/redux-react-firebase) about combining, but we are not sure that the users of both want that at this point. Join us on the [redux-firebase gitter][gitter-url] if you haven't already since a ton of this type of discussion goes on there.
 
     #### What about [redux-firebase](https://github.com/colbyr/redux-firebase)?
     The author of [redux-firebase](https://github.com/colbyr/redux-firebase) has agreed to share the npm namespace! Currently the plan is to take the framework agnostic redux core logic of `react-redux-firebase` and [place it into `redux-firebase`](https://github.com/prescottprue/redux-firebase)). Eventually `react-redux-firebase` and potentially other framework libraries can depend on that core (the new `redux-firebase`).
@@ -34,8 +34,14 @@
 
     ![data flow](/docs/static/dataFlow.png)
 
-5. How do I help?
+5. Where is the `yarn.lock` file?
+
+  There isn't one, there is just a `package-lock.json`. `npm v5.x.x` adds support for a `package-lock.json` file which serves a similar purpose to a `yarn.lock` file. Instead of managing multiple lock files, the single `package-lock.json` contains exact version information for dependencies.
+
+6. How do I help?
 
   * Join the conversion on [gitter][gitter-url]
   * Post Issues
   * Create Pull Requests
+
+[gitter-url]: gitter.im/redux-firebase/Lobby

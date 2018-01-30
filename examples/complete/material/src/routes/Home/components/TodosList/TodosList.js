@@ -2,20 +2,18 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { map } from 'lodash'
 import { compose, withHandlers } from 'recompose'
-import { isLoaded, isEmpty, withFirebase } from 'react-redux-firebase'
+import { isEmpty, withFirebase } from 'react-redux-firebase'
 import { List } from 'material-ui/List'
-import CircularProgress from 'material-ui/CircularProgress'
 import Paper from 'material-ui/Paper'
 import Subheader from 'material-ui/Subheader'
 import { withNotifications } from 'modules/notification'
+import { spinnerWhileLoading } from 'utils/components'
 import TodoItem from '../TodoItem'
 import classes from './TodosList.scss'
 
 const TodosList = ({ todos, toggleDone, deleteTodo }) => (
   <Paper className={classes.container}>
-    {!isLoaded(todos) ? (
-      <CircularProgress />
-    ) : !isEmpty(todos) ? (
+    {!isEmpty(todos) ? (
       <div>
         <Subheader>Todos</Subheader>
         <List className={classes.list}>
@@ -31,7 +29,7 @@ const TodosList = ({ todos, toggleDone, deleteTodo }) => (
         </List>
       </div>
     ) : (
-      <div className={classes.list}>No Todos</div>
+      <div className={classes.empty}>No Todos</div>
     )}
   </Paper>
 )
@@ -46,6 +44,7 @@ TodosList.propTypes = {
 export default compose(
   withFirebase, // firebaseConnect() can also be used
   withNotifications, // adds props.showError from notfication module
+  spinnerWhileLoading(['todos']),
   withHandlers({
     toggleDone: props => (todo, id) => {
       const { firebase, auth } = props

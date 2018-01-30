@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { isEqual } from 'lodash'
-import hoistStatics from 'hoist-non-react-statics'
-import { createCallable, wrapDisplayName } from './utils'
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import { isEqual } from "lodash"
+import hoistStatics from "hoist-non-react-statics"
+import { createCallable, wrapDisplayName } from "./utils"
 
 /**
  * @name createFirestoreConnect
@@ -22,12 +22,12 @@ import { createCallable, wrapDisplayName } from './utils'
  * // use the firebaseConnect to wrap a component
  * export default firestoreConnect()(SomeComponent)
  */
-export const createFirestoreConnect = (storeKey = 'store') => (
+export const createFirestoreConnect = (storeKey = "store") => (
   dataOrFn = []
 ) => WrappedComponent => {
   class FirestoreConnect extends Component {
     static wrappedComponent = WrappedComponent
-    static displayName = wrapDisplayName(WrappedComponent, 'FirestoreConnect')
+    static displayName = wrapDisplayName(WrappedComponent, "FirestoreConnect")
     static contextTypes = {
       [storeKey]: PropTypes.object.isRequired
     }
@@ -35,7 +35,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     prevData = null
     store = this.context[storeKey]
 
-    componentWillMount () {
+    componentWillMount() {
       const { firebase, firestore } = this.store
       if (firebase.firestore && firestore) {
         // Allow function to be passed
@@ -46,7 +46,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       }
     }
 
-    componentWillUnmount () {
+    componentWillUnmount() {
       const { firebase, firestore } = this.store
       if (firebase.firestore && this.prevData) {
         firestore.unsetListeners(this.prevData)
@@ -54,7 +54,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     }
 
     // TODO: Re-attach listeners on query path change
-    componentWillReceiveProps (np) {
+    componentWillReceiveProps(np) {
       const { firebase, firestore } = this.store
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.store)
@@ -68,7 +68,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       }
     }
 
-    render () {
+    render() {
       const { firebase, firestore } = this.store
       return (
         <WrappedComponent

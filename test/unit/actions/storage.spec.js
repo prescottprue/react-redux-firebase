@@ -4,46 +4,11 @@ import {
   uploadFiles,
   deleteFile
 } from '../../../src/actions/storage'
+import { fakeFirebase } from '../../utils'
 
 let spy
-let unListen = sinon.spy()
 const dispatch = () => {}
 const defaultFileMeta = { path: 'projects', file: { name: 'test.png' } }
-const fakeFirebase = {
-  _: {
-    authUid: '123',
-    config: {
-      userProfile: 'users',
-      disableRedirectHandling: true
-    }
-  },
-  database: () => ({
-    ref: () => ({
-      child: () => ({
-        on: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
-        off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
-        once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
-      }),
-      remove: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
-    })
-  }),
-  storage: () => ({
-    ref: () => ({
-      put: () => ({
-        on: (event, funcsObj) => {
-          funcsObj.next({bytesTransferred: 12, totalBytes: 12})
-          funcsObj.error()
-          funcsObj.complete()
-          return unListen
-        },
-        then: () => Promise.resolve({})
-      }),
-      delete: () => Promise.resolve(({
-
-      }))
-    })
-  })
-}
 
 fakeFirebase.storage.TaskEvent = { STATE_CHANGED: 'asdf' }
 
@@ -58,12 +23,13 @@ describe('Actions: Storage', () => {
     })
 
     it.skip('runs given basic params', () =>
-      uploadFileWithProgress(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
-        .then((snap) => {
-          expect(spy).to.have.been.calledOnce
-          expect(snap).to.be.an.object
-        })
-    )
+      uploadFileWithProgress(dispatch, fakeFirebase, {
+        path: 'projects',
+        file: { name: 'test.png' }
+      }).then(snap => {
+        expect(spy).to.have.been.calledOnce
+        expect(snap).to.be.an.object
+      }))
   })
 
   describe('uploadFile', () => {
@@ -76,7 +42,9 @@ describe('Actions: Storage', () => {
     })
 
     it('throws if storage does not exist', async () => {
-      expect(() => uploadFile(dispatch, {})).to.Throw('Firebase storage is required to upload files')
+      expect(() => uploadFile(dispatch, {})).to.Throw(
+        'Firebase storage is required to upload files'
+      )
     })
 
     it('runs given basic params', async () => {
@@ -85,7 +53,10 @@ describe('Actions: Storage', () => {
         storage: () => ({ ref: () => ({ put: putSpy }) }),
         _: firebase._
       }
-      await uploadFile(spy, fake, { path: 'projects', file: { name: 'test.png' } })
+      await uploadFile(spy, fake, {
+        path: 'projects',
+        file: { name: 'test.png' }
+      })
       // firebase.storage() put method is called
       expect(putSpy).to.have.been.calledOnce
       // dispatch is called twice (once for FILE_UPLOAD_START, the other for FILE_UPLOAD_COMPLETE)
@@ -106,25 +77,29 @@ describe('Actions: Storage', () => {
     })
 
     it('handles dbPath', async () => {
-      const res = await uploadFile(dispatch, fakeFirebase, { ...defaultFileMeta, dbPath: 'projects' })
+      const res = await uploadFile(dispatch, fakeFirebase, {
+        ...defaultFileMeta,
+        dbPath: 'projects'
+      })
       expect(res).to.be.an.object
     })
 
     it('calls database.push', async () => {
-      const putSpy = sinon.spy(() => Promise.resolve({
-        metadata: {
-          name: 'file.png',
-          fullPath: 'test',
-          downloadURLs: [{ path: 'asdf' }]
-        }
-      }))
+      const putSpy = sinon.spy(() =>
+        Promise.resolve({
+          metadata: {
+            name: 'file.png',
+            fullPath: 'test',
+            downloadURLs: [{ path: 'asdf' }]
+          }
+        })
+      )
       const pushSpy = sinon.spy(() => Promise.resolve({}))
       const fake = {
         storage: () => ({ ref: () => ({ put: putSpy }) }),
-        database: Object.assign(
-          () => ({ ref: () => ({ push: pushSpy }) }),
-          { ServerValue: { TIMESTAMP: 123 } }
-        ),
+        database: Object.assign(() => ({ ref: () => ({ push: pushSpy }) }), {
+          ServerValue: { TIMESTAMP: 123 }
+        }),
         _: firebase._
       }
       await uploadFile(spy, fake, { ...defaultFileMeta, dbPath: 'test' })
@@ -174,12 +149,18 @@ describe('Actions: Storage', () => {
 
       describe('progress option', () => {
         it('calls uploadFileWithProgress', async () => {
-          const putSpy = sinon.spy(() => Object.assign(Promise.resolve({}), { on: sinon.spy() }))
+          const putSpy = sinon.spy(() =>
+            Object.assign(Promise.resolve({}), { on: sinon.spy() })
+          )
           const fake = {
-            storage: Object.assign(() => ({
-              ref: () => ({ put: putSpy }) }),
-              { TaskEvent: { STATE_CHANGED: 'STATE_CHANGED' }
+            storage: Object.assign(
+              () => ({
+                ref: () => ({ put: putSpy })
               }),
+              {
+                TaskEvent: { STATE_CHANGED: 'STATE_CHANGED' }
+              }
+            ),
             _: firebase._
           }
           const options = { progress: true }
@@ -199,11 +180,12 @@ describe('Actions: Storage', () => {
     })
 
     it('runs given basic params', () =>
-      uploadFiles(dispatch, fakeFirebase, { path: 'projects', file: { name: 'test.png' } })
-        .then((snap) => {
-          expect(snap).to.be.an.object
-        })
-    )
+      uploadFiles(dispatch, fakeFirebase, {
+        path: 'projects',
+        file: { name: 'test.png' }
+      }).then(snap => {
+        expect(snap).to.be.an.object
+      }))
   })
 
   describe('deleteFile', () => {
@@ -212,18 +194,15 @@ describe('Actions: Storage', () => {
     })
 
     it('runs given path', () =>
-      expect(deleteFile(dispatch, fakeFirebase, { path: 'projects' }))
-        .to
-        .eventually
-        .become({path: 'projects'})
-    )
+      expect(
+        deleteFile(dispatch, fakeFirebase, { path: 'projects' })
+      ).to.eventually.become({ path: 'projects' }))
 
     it('runs given basic params', () => {
       const metaObj = { path: 'projects/test.png', dbPath: 'test.png' }
-      return expect(deleteFile(dispatch, fakeFirebase, metaObj))
-        .to
-        .eventually
-        .become(metaObj)
+      return expect(
+        deleteFile(dispatch, fakeFirebase, metaObj)
+      ).to.eventually.become(metaObj)
     })
   })
 })

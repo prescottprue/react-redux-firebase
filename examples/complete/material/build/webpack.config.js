@@ -68,9 +68,12 @@ config.module.rules.push({
       loader: 'babel-loader',
       query: {
         cacheDirectory: true,
+        // Ignore .babelrc file (prevents issue with global babelrc)
+        babelrc: false,
         plugins: [
           'lodash',
           'transform-decorators-legacy',
+          'transform-export-extensions',
           'babel-plugin-transform-class-properties',
           'babel-plugin-syntax-dynamic-import',
           [

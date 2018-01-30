@@ -1,8 +1,0 @@
-/**
- * WARNING: This file is just to prevent from global .babelrc files!
- * This babel funcitonality is actually controlled within config/index.js
- **/
-{
-  "plugins": ["transform-runtime", "lodash", "transform-decorators-legacy"],
-  "presets": ["es2015", "react", "stage-0"]
-}

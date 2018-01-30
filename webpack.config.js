@@ -27,6 +27,12 @@ const config = {
       commonjs2: 'firebase',
       amd: 'firebase',
       root: 'Firebase'
+    },
+    'prop-types': {
+      commonjs: 'prop-types',
+      commonjs2: 'prop-types',
+      amd: 'prop-types',
+      root: 'PropTypes'
     }
   },
   plugins: [

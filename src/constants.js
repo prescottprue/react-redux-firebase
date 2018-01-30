@@ -5,7 +5,7 @@
  * @example
  * import { constants } from 'react-redux-firebase'
  * constants.actionsPrefix === '@@reactReduxFirebase' // true
-*/
+ */
 export const actionsPrefix = '@@reactReduxFirebase'
 
 /**
@@ -55,7 +55,7 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @example
  * import { actionTypes } from 'react-redux-firebase'
  * actionTypes.SET === '@@reactReduxFirebase/SET' // true
-*/
+ */
 export const actionTypes = {
   START: `${actionsPrefix}/START`,
   SET: `${actionsPrefix}/SET`,
@@ -140,8 +140,8 @@ export const actionTypes = {
  * empty auth changes such as `undefined` on initialization
  * (see [#137](https://github.com/prescottprue/react-redux-firebase/issues/137)).
  * Requires `v1.5.0-alpha` or higher.
- * @property {Boolean} autoPopulateProfile - `false` REMOVED FROM v2.0.0. Whether or not to
- * automatically populate profile with data loaded through
+ * @property {Boolean} autoPopulateProfile - `false` REMOVED FROM v2.0.0.
+ * Whether or not to automatically populate profile with data loaded through
  * profileParamsToPopulate config.
  * @property {Boolean} setProfilePopulateResults - `true` Whether or not to
  * call SET actions for data that results from populating profile to redux under
@@ -165,8 +165,12 @@ export const actionTypes = {
  * @property {Boolean} firestoreNamespace - `firestoreHelpers` Namespace for
  * firestore helpers (**WARNING** Changing this will break firestoreConnect HOC.
  * Do **NOT** change to `'firestore'`)
+ * @property {Array} keysToRemoveFromAuth - (default at end)
+ * list of keys to remove from authentication reponse before writing to profile
+ * (currenlty only used for profiles stored on Firestore). `['appName', 'apiKey'
+ * , 'authDomain', 'redirectEventId', 'stsTokenManager', 'uid']`
  * @type {Object}
-*/
+ */
 export const defaultConfig = {
   userProfile: null,
   presence: null,
@@ -183,7 +187,15 @@ export const defaultConfig = {
   dispatchRemoveAction: false,
   enableEmptyAuthChanges: true,
   firebaseStateName: 'firebase',
-  attachAuthIsReady: false
+  attachAuthIsReady: false,
+  keysToRemoveFromAuth: [
+    'appName',
+    'apiKey',
+    'authDomain',
+    'redirectEventId',
+    'stsTokenManager',
+    'uid'
+  ]
 }
 
 /**
@@ -192,7 +204,7 @@ export const defaultConfig = {
  * @description List of all external auth providers that are supported
  * (firebase's email/anonymous included by default).
  * @private
-*/
+ */
 export const supportedAuthProviders = [
   'google',
   'github',

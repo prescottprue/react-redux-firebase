@@ -1,6 +1,6 @@
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from './populate'
-import { isNaN, forEach, size } from 'lodash'
+import { isNaN, forEach, size, isString } from 'lodash'
 
 /**
  * @private
@@ -9,7 +9,7 @@ import { isNaN, forEach, size } from 'lodash'
  * @return {Number|Any} Number if parse to number was successful, otherwise,
  * original value
  */
-const tryParseToNumber = (value) => {
+const tryParseToNumber = value => {
   const result = Number(value)
   if (isNaN(result)) {
     return value
@@ -28,7 +28,7 @@ export const getWatchPath = (event, path) => {
   if (!event || event === '' || !path) {
     throw new Error('Event and path are required')
   }
-  return `${event}:${((path.substring(0, 1) === '/') ? '' : '/')}${path}`
+  return `${event}:${path.substring(0, 1) === '/' ? '' : '/'}${path}`
 }
 
 /**
@@ -39,22 +39,29 @@ export const getWatchPath = (event, path) => {
  * @param {String} event - Type of query event
  */
 export const getQueryIdFromPath = (path, event) => {
+  if (!isString(path)) {
+    throw new Error('Query path must be a string')
+  }
   const origPath = path
   let pathSplitted = path.split('#')
   path = pathSplitted[0]
 
   const isQuery = pathSplitted.length > 1
   const queryParams = isQuery ? pathSplitted[1].split('&') : []
-  const queryId = isQuery ? queryParams.map((param) => {
-    let splittedParam = param.split('=')
-    // Handle query id in path
-    if (splittedParam[0] === 'queryId') {
-      return splittedParam[1]
-    }
-  }).filter(q => q) : undefined
+  const queryId = isQuery
+    ? queryParams
+        .map(param => {
+          let splittedParam = param.split('=')
+          // Handle query id in path
+          if (splittedParam[0] === 'queryId') {
+            return splittedParam[1]
+          }
+        })
+        .filter(q => q)
+    : undefined
   return queryId && queryId.length > 0
-    ? (event ? `${event}:/${queryId}` : queryId[0])
-    : (isQuery ? origPath : undefined)
+    ? event ? `${event}:/${queryId}` : queryId[0]
+    : isQuery ? origPath : undefined
 }
 
 /**
@@ -67,7 +74,8 @@ export const getQueryIdFromPath = (path, event) => {
  * @return {Integer} watcherCount - count
  */
 export const setWatcher = (firebase, dispatch, event, path, queryId) => {
-  const id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
+  const id =
+    queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
 
   if (firebase._.watchers[id]) {
     firebase._.watchers[id]++
@@ -90,7 +98,8 @@ export const setWatcher = (firebase, dispatch, event, path, queryId) => {
  * @return {Number} watcherCount
  */
 export const getWatcherCount = (firebase, event, path, queryId) => {
-  const id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
+  const id =
+    queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   return firebase._.watchers[id]
 }
 
@@ -104,14 +113,18 @@ export const getWatcherCount = (firebase, event, path, queryId) => {
  * @param {String} queryId - Id of query
  */
 export const unsetWatcher = (firebase, dispatch, event, path, queryId) => {
-  let id = queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
+  let id =
+    queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   path = path.split('#')[0]
   const { watchers } = firebase._
   if (watchers[id] <= 1) {
     delete watchers[id]
     if (event !== 'first_child' && event !== 'once') {
-      firebase.database().ref().child(path).off(event)
-      // TODO: Remove config.distpatchOnUnsetListener
+      firebase
+        .database()
+        .ref()
+        .child(path)
+        .off(event)
     }
   } else if (watchers[id]) {
     watchers[id]--
@@ -121,7 +134,8 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId) => {
 }
 
 /**
- * @description Modify query to include methods based on query parameters (such as orderByChild)
+ * @description Modify query to include methods based on query parameters (such
+ * as orderByChild).
  * @param {Array} queryParams - Array of query parameters to apply to query
  * @param {Object} query - Query object on which to apply query parameters
  * @return {FirebaseQuery}
@@ -168,23 +182,26 @@ export const applyParamsToQuery = (queryParams, query) => {
           equalToParam = equalToParam === 'null' ? null : equalToParam
           equalToParam = equalToParam === 'false' ? false : equalToParam
           equalToParam = equalToParam === 'true' ? true : equalToParam
-          query = param.length === 3
-            ? query.equalTo(equalToParam, param[2])
-            : query.equalTo(equalToParam)
+          query =
+            param.length === 3
+              ? query.equalTo(equalToParam, param[2])
+              : query.equalTo(equalToParam)
           break
         case 'startAt':
           let startAtParam = !doNotParse ? tryParseToNumber(param[1]) : param[1]
           startAtParam = startAtParam === 'null' ? null : startAtParam
-          query = param.length === 3
-            ? query.startAt(startAtParam, param[2])
-            : query.startAt(startAtParam)
+          query =
+            param.length === 3
+              ? query.startAt(startAtParam, param[2])
+              : query.startAt(startAtParam)
           break
         case 'endAt':
           let endAtParam = !doNotParse ? tryParseToNumber(param[1]) : param[1]
           endAtParam = endAtParam === 'null' ? null : endAtParam
-          query = param.length === 3
-            ? query.endAt(endAtParam, param[2])
-            : query.endAt(endAtParam)
+          query =
+            param.length === 3
+              ? query.endAt(endAtParam, param[2])
+              : query.endAt(endAtParam)
           break
       }
     })
@@ -199,13 +216,13 @@ export const applyParamsToQuery = (queryParams, query) => {
  * an ordered array.
  * @return {Array|Null} Ordered list of children from snapshot or null
  */
-export const orderedFromSnapshot = (snap) => {
+export const orderedFromSnapshot = snap => {
   if (snap.hasChildren && !snap.hasChildren()) {
     return null
   }
   const ordered = []
   if (snap.forEach) {
-    snap.forEach((child) => {
+    snap.forEach(child => {
       ordered.push({ key: child.key, value: child.val() })
     })
   }
@@ -229,7 +246,7 @@ export const populateAndDispatch = (firebase, dispatch, config) => {
   const { data, populates, snapshot, path, storeAs } = config
   // TODO: Allow setting of unpopulated data before starting population through config
   return promisesForPopulate(firebase, snapshot.key, data, populates)
-    .then((results) => {
+    .then(results => {
       // dispatch child sets first so isLoaded is only set to true for
       // populatedDataToJS after all data is in redux (Issue #121)
       // TODO: Allow config to toggle Combining into one SET action
@@ -249,7 +266,7 @@ export const populateAndDispatch = (firebase, dispatch, config) => {
       })
       return results
     })
-    .catch((err) => {
+    .catch(err => {
       dispatch({
         type: actionTypes.ERROR,
         payload: err

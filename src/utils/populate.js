@@ -17,7 +17,7 @@ import {
  * @description Create standardized populate object from strings or objects
  * @param {String|Object} str - String or Object to standardize into populate object
  */
-export const getPopulateObj = (str) => {
+export const getPopulateObj = str => {
   if (!isString(str)) {
     return str
   }
@@ -30,7 +30,7 @@ export const getPopulateObj = (str) => {
  * @description Determine the structure of the child parameter to populate onto
  * @param {String|Object} child - Value at child parameter
  */
-export const getChildType = (child) => {
+export const getChildType = child => {
   if (isString(child)) {
     return 'string'
   }
@@ -48,11 +48,11 @@ export const getChildType = (child) => {
  * @description Create standardized populate object from strings or objects
  * @param {String|Object} str - String or Object to standardize into populate object
  */
-export const getPopulateObjs = (arr) => {
+export const getPopulateObjs = arr => {
   if (!isArray(arr)) {
     return arr
   }
-  return arr.map((o) => isObject(o) ? o : getPopulateObj(o))
+  return arr.map(o => (isObject(o) ? o : getPopulateObj(o)))
 }
 
 /**
@@ -60,9 +60,11 @@ export const getPopulateObjs = (arr) => {
  * @description Get array of populates from list of query params
  * @param {Array} queryParams - Query parameters from which to get populates
  */
-export const getPopulates = (params) => {
-  const populates = filter(params, param =>
-    param.indexOf('populate') !== -1 || (isObject(param) && param.populates)
+export const getPopulates = params => {
+  const populates = filter(
+    params,
+    param =>
+      param.indexOf('populate') !== -1 || (isObject(param) && param.populates)
   ).map(p => p.split('=')[1])
   // No populates
   if (!populates.length) {
@@ -80,7 +82,8 @@ export const getPopulates = (params) => {
  * @param {String} id - String id
  */
 export const getPopulateChild = (firebase, populate, id) =>
-  firebase.database()
+  firebase
+    .database()
     .ref()
     .child(`${populate.root}/${id}`)
     .once('value')
@@ -106,14 +109,13 @@ export const populateList = (firebase, list, p, results) => {
     map(list, (id, childKey) => {
       // handle list of keys
       const populateKey = id === true ? childKey : id
-      return getPopulateChild(firebase, p, populateKey)
-        .then(pc => {
-          if (pc) {
-            // write child to result object under root name if it is found
-            return set(results, `${p.root}.${populateKey}`, pc)
-          }
-          return results
-        })
+      return getPopulateChild(firebase, p, populateKey).then(pc => {
+        if (pc) {
+          // write child to result object under root name if it is found
+          return set(results, `${p.root}.${populateKey}`, pc)
+        }
+        return results
+      })
     })
   )
 }
@@ -125,34 +127,36 @@ export const populateList = (firebase, list, p, results) => {
  * @param {Object} originalObj - Object to have parameter populated
  * @param {Object} populateString - String containg population data
  */
-export const promisesForPopulate = (firebase, dataKey, originalData, populatesIn) => {
+export const promisesForPopulate = (
+  firebase,
+  dataKey,
+  originalData,
+  populatesIn
+) => {
   // TODO: Handle selecting of parameter to populate with (i.e. displayName of users/user)
   let promisesArray = []
   let results = {}
 
   // test if data is a single object, try generating populates and looking for the child
   const populatesForData = getPopulateObjs(
-    isFunction(populatesIn)
-      ? populatesIn(dataKey, originalData)
-      : populatesIn
+    isFunction(populatesIn) ? populatesIn(dataKey, originalData) : populatesIn
   )
 
-  const dataHasPopulateChilds = some(populatesForData, (populate) => (
+  const dataHasPopulateChilds = some(populatesForData, populate =>
     has(originalData, populate.child)
-  ))
+  )
 
   if (dataHasPopulateChilds) {
     // Data is a single object, resolve populates directly
-    forEach(populatesForData, (p) => {
+    forEach(populatesForData, p => {
       if (isString(get(originalData, p.child))) {
         return promisesArray.push(
-          getPopulateChild(firebase, p, get(originalData, p.child))
-            .then((v) => {
-              // write child to result object under root name if it is found
-              if (v) {
-                set(results, `${p.root}.${get(originalData, p.child)}`, v)
-              }
-            })
+          getPopulateChild(firebase, p, get(originalData, p.child)).then(v => {
+            // write child to result object under root name if it is found
+            if (v) {
+              set(results, `${p.root}.${get(originalData, p.child)}`, v)
+            }
+          })
         )
       }
 
@@ -166,12 +170,12 @@ export const promisesForPopulate = (firebase, dataKey, originalData, populatesIn
     // { '1': {someobject}, '2': {someobject} }
     forEach(originalData, (d, key) => {
       // generate populates for this data item if a fn was passed
-      const populatesForDataItem = getPopulateObj(isFunction(populatesIn)
-        ? populatesIn(key, d)
-        : populatesIn)
+      const populatesForDataItem = getPopulateObj(
+        isFunction(populatesIn) ? populatesIn(key, d) : populatesIn
+      )
 
       // resolve each populate for this data item
-      forEach(populatesForDataItem, (p) => {
+      forEach(populatesForDataItem, p => {
         // get value of parameter to be populated (key or list of keys)
         const idOrList = get(d, p.child)
 
@@ -183,14 +187,13 @@ export const promisesForPopulate = (firebase, dataKey, originalData, populatesIn
         // Parameter of each list item is single ID
         if (isString(idOrList)) {
           return promisesArray.push(
-            getPopulateChild(firebase, p, idOrList)
-              .then((v) => {
-                // write child to result object under root name if it is found
-                if (v) {
-                  set(results, `${p.root}.${idOrList}`, v)
-                }
-                return results
-              })
+            getPopulateChild(firebase, p, idOrList).then(v => {
+              // write child to result object under root name if it is found
+              if (v) {
+                set(results, `${p.root}.${idOrList}`, v)
+              }
+              return results
+            })
           )
         }
 

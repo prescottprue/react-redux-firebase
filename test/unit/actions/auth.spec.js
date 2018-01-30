@@ -7,11 +7,22 @@ import {
   login,
   logout,
   createUser,
+  updateProfile,
+  reloadAuth,
+  linkWithCredential,
+  signInWithPhoneNumber,
+  updateAuth,
+  updateEmail,
   resetPassword,
   confirmPasswordReset,
   verifyPasswordResetCode
 } from '../../../src/actions/auth'
 import { actionTypes } from '../../../src/constants'
+import {
+  fakeFirebase,
+  onAuthStateChangedSpy,
+  firebaseWithConfig
+} from '../../utils'
 // import { promisesForPopulate } from '../../../src/utils/populate'
 
 let functionSpy
@@ -19,80 +30,32 @@ let dispatchSpy
 let res
 let profile
 let profileSnap
-const dispatch = sinon.spy()
-const onAuthStateChangedSpy = sinon.spy((f) => {
-  f({uid: 'asdfasdf'})
+let dispatch
+const createSuccessSpy = some => sinon.spy(() => Promise.resolve(some))
+const createFailureSpy = () =>
+  sinon.spy(() => Promise.reject(new Error('test')))
+const addSpyToCurrentUser = (methodName, spyFunc) => ({
+  ...fakeFirebase,
+  auth: () => ({
+    get currentUser() {
+      return {
+        [methodName]: spyFunc
+      }
+    }
+  })
+})
+const addSpyWithArgsToAuthMethod = (methodName, spyFunc, args = []) => ({
+  ...fakeFirebase,
+  auth: () => ({
+    [methodName]: () => spyFunc(args)
+  })
 })
 const fakeLogin = { email: 'test@tst.com', password: 'asdfasdf', role: 'admin' }
-const fakeFirebase = {
-  _: {
-    authUid: '123',
-    config: {
-      userProfile: 'users',
-      disableRedirectHandling: true
-    }
-  },
-  database: () => ({
-    ref: () => ({
-      val: () => ({ some: 'obj' }),
-      child: () => ({
-        on: () => ({ val: () => ({ some: 'obj' }) }),
-        off: () => Promise.resolve({ val: () => ({ some: 'obj' }) }),
-        once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
-      })
-    }),
-    update: () => Promise.resolve({
-      val: () => ({ some: 'obj' })
-    })
-  }),
-  auth: () => ({
-    onAuthStateChanged: onAuthStateChangedSpy,
-    getRedirectResult: (f) => {
-      return Promise.resolve({uid: 'asdfasdf'})
-    },
-    signOut: () =>
-      Promise.resolve({}),
-    createUserWithEmailAndPassword: (email, password) =>
-      email.indexOf('error') !== -1
-        ? Promise.reject(new Error('auth/user-not-found'))
-        : email === 'error'
-          ? Promise.reject(new Error('asdfasdf'))
-          : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
-    signInWithCustomToken: () => {
-      return Promise.resolve({
-        toJSON: () => ({
-          stsTokenManager: {
-            accessToken: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJjbGFpbXMiOnsiZGlzcGxheU5hbWUiOiJFZHdhcmQgV3UiLCJlbWFpbCI6ImVkZGlld3U4MEBnbWFpbC5jb20iLCJvcmlnaW5hbElkIjoiSlFYQ2dRTkxEU1lSMFEzdjlwY3FjTDZJeGRUMiIsInByb3ZpZGVyRGF0YSI6W3siZGlzcGxheU5hbWUiOiJFZHdhcmQgV3UiLCJlbWFpbCI6ImVkZGlld3U4MEBnbWFpbC5jb20ifV19LCJ1aWQiOiJqaTh3c1BDVW5PYUhvUGZBalNCS2ZReU1pTmkxIiwiaWF0IjoxNDc1NDM3MDMyLCJleHAiOjE0NzU0NDA2MzIsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHl0b29sa2l0Lmdvb2dsZWFwaXMuY29tL2dvb2dsZS5pZGVudGl0eS5pZGVudGl0eXRvb2xraXQudjEuSWRlbnRpdHlUb29sa2l0IiwiaXNzIjoicmVzaWRlLXByb2RAcmVzaWRlLXByb2QuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJzdWIiOiJyZXNpZGUtcHJvZEByZXNpZGUtcHJvZC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSJ9.aOXOCCAL-lI5AVnd8MVlc86exvCGNySq8X7DM4Gr7PG0ek5mh_8qnFfLuzw2gfv6mHNVgY2UngUmG0qETaBdox7l3wBo1GdP9hB1bM8NltCYffXwxyw7sN36BFWD3l-cz4rlxfmfzosCLj3XtDK8ARDQ76pAXxsK-rRBvMG6N-wgE_ZLf17FVvwB95e1DAmL39fp6dRVxoPflG--m4QEKVk8xIeDx4ol9HJw512gMGtTkRDMEPWVJEdaEAp6L6Lo2-Bk-TxBCHs8gpb7b7eidWMUEXObk0UPQIz2DRh-3olbruimzL_SgPNg4Pz0uUYSn11-Mx_HxxiVtyQj1ufoLA'
-          },
-          uid: 'asdfasdfsdf'
-        })
-      })
-    },
-    signInWithEmailAndPassword: (email, password) =>
-      email.indexOf('error2') !== -1
-        ? Promise.reject(new Error('asdfasdf'))
-        : email === 'error3'
-          ? Promise.reject(new Error('auth/user-not-found'))
-          : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] }),
-    sendPasswordResetEmail: (email) =>
-      email === 'error'
-        ? Promise.reject({ code: 'auth/user-not-found' }) // eslint-disable-line prefer-promise-reject-errors
-        : email === 'error2'
-          ? Promise.reject(new Error('asdfasdf'))
-          : Promise.resolve({ some: 'val' }),
-    confirmPasswordReset: (code, password) =>
-      password === 'error'
-        ? Promise.reject({ code: code }) // eslint-disable-line prefer-promise-reject-errors
-        : Promise.resolve(),
-    verifyPasswordResetCode: (code) => code === 'error'
-      ? Promise.reject(new Error('some'))
-        ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
-        : Promise.resolve({ uid: '123', email: 'test@test.com', providerData: [{}] })
-      : Promise.resolve('success')
-  })
-}
 
 describe('Actions: Auth -', () => {
+  beforeEach(() => {
+    dispatch = sinon.spy()
+  })
   describe('init -', () => {
     it("calls firebase's onAuthStateChanged", () => {
       init(dispatch, fakeFirebase)
@@ -123,21 +86,19 @@ describe('Actions: Auth -', () => {
       it('undefined - dispatches SET_PROFILE with profile', () => {
         firebase._.config.profileParamsToPopulate = undefined
         handleProfileWatchResponse(dispatchSpy, firebase, profileSnap)
-        expect(dispatchSpy)
-          .to.be.calledWith({
-            type: actionTypes.SET_PROFILE,
-            profile
-          })
+        expect(dispatchSpy).to.be.calledWith({
+          type: actionTypes.SET_PROFILE,
+          profile
+        })
       })
 
       it('{} - dispatches SET_PROFILE with profile (not supported)', () => {
         firebase._.config.profileParamsToPopulate = {}
         handleProfileWatchResponse(dispatchSpy, firebase, profileSnap)
-        expect(dispatchSpy)
-          .to.be.calledWith({
-            type: actionTypes.SET_PROFILE,
-            profile
-          })
+        expect(dispatchSpy).to.be.calledWith({
+          type: actionTypes.SET_PROFILE,
+          profile
+        })
       })
 
       it('Array - dispatches SET_PROFILE with populated profile', () => {
@@ -201,15 +162,69 @@ describe('Actions: Auth -', () => {
   })
 
   describe('createUserProfile', () => {
-    it('creates profile if config is enabled', () => {
-      const auth = { uid: '123', email: 'test@test.com', providerData: [{}] }
-      profile = { some: 'asdf' }
-      expect(createUserProfile(dispatch, Firebase, auth, profile))
-        .to.eventually.be.an.object
+    it('creates profile if config is enabled', async () => {
+      const userData = {
+        uid: '123',
+        email: 'test@test.com',
+        providerData: [{}]
+      }
+      const profile = await createUserProfile(dispatch, Firebase, userData, {
+        some: 'asdf'
+      })
+      expect(profile).to.be.an.object
+    })
+
+    it('resolves with userData if userProfile config option is not enabled', async () => {
+      const userData = {
+        uid: '123',
+        email: 'test@test.com',
+        providerData: [{}]
+      }
+      const fb = firebaseWithConfig({ userProfile: null })
+      const profile = await createUserProfile(dispatch, fb, userData, {
+        some: 'asdf'
+      })
+      expect(profile).to.equal(userData)
+    })
+
+    it('creates profile using profileFactory if it exists', async () => {
+      const userData = {
+        uid: '123',
+        email: 'test@test.com',
+        providerData: [{}]
+      }
+      const profileObj = { some: 'asdf' }
+      const profileFactory = sinon.spy(() => profileObj)
+      const profile = await createUserProfile(
+        dispatch,
+        firebaseWithConfig({ profileFactory }),
+        userData
+      )
+      expect(profile).to.have.property('some', profileObj.some)
+      expect(profileFactory).to.have.been.calledOnce
+    })
+
+    it('rejects for error in profileFactory function', async () => {
+      const profileFactory = () => {
+        throw new Error('test')
+      }
+      try {
+        await createUserProfile(
+          dispatch,
+          firebaseWithConfig({ profileFactory }),
+          {},
+          {}
+        )
+      } catch (err) {
+        expect(err).to.have.property('message', 'test')
+      }
     })
   })
 
-  describe('login', () => {
+  describe('login', function() {
+    // Extend default timeout to prevent test fail on slow connection
+    this.timeout(8000)
+
     it('handles invalid email login', async () => {
       try {
         await login(dispatch, firebase, fakeLogin)
@@ -228,12 +243,19 @@ describe('Actions: Auth -', () => {
 
     it('handles token login', async () => {
       try {
-        await login(dispatch, firebase, { token: 'asdfasdf' }, { uid: 'asdfasdf' })
+        await login(
+          dispatch,
+          firebase,
+          { token: 'asdfasdf' },
+          { uid: 'asdfasdf' }
+        )
       } catch (err) {
         expect(err.message)
           // message indicates firebase's internal auth method called
           // invalid key is intentionally provided
-          .to.equal('The custom token format is incorrect. Please check the documentation.')
+          .to.equal(
+            'The custom token format is incorrect. Please check the documentation.'
+          )
       }
     })
   })
@@ -277,7 +299,9 @@ describe('Actions: Auth -', () => {
 
     it('handles no email', async () => {
       try {
-        await createUser(dispatch, fakeFirebase, { password: fakeLogin.password })
+        await createUser(dispatch, fakeFirebase, {
+          password: fakeLogin.password
+        })
       } catch (err) {
         expect(err).to.be.an.object
       }
@@ -293,7 +317,10 @@ describe('Actions: Auth -', () => {
 
     it('handles error with createUserWithEmailAndPassword', async () => {
       try {
-        await createUser(dispatch, fakeFirebase, { email: 'error', password: 'error' })
+        await createUser(dispatch, fakeFirebase, {
+          email: 'error',
+          password: 'error'
+        })
       } catch (err) {
         expect(err).to.be.an.object
       }
@@ -301,7 +328,10 @@ describe('Actions: Auth -', () => {
 
     it('handles error with login', async () => {
       try {
-        await createUser(dispatch, fakeFirebase, { email: 'error2', password: 'error2' })
+        await createUser(dispatch, fakeFirebase, {
+          email: 'error2',
+          password: 'error2'
+        })
       } catch (err) {
         expect(err).to.be.an.object
       }
@@ -309,7 +339,10 @@ describe('Actions: Auth -', () => {
 
     it('handles user-not-found error', async () => {
       try {
-        res = await createUser(dispatch, fakeFirebase, { email: 'error3', password: 'error2' })
+        res = await createUser(dispatch, fakeFirebase, {
+          email: 'error3',
+          password: 'error2'
+        })
       } catch (err) {
         expect(err.message).to.equal('auth/user-not-found')
       }
@@ -344,16 +377,22 @@ describe('Actions: Auth -', () => {
 
   describe('confirmPasswordReset', () => {
     it('resets password for real user', () => {
-      return confirmPasswordReset(dispatch, fakeFirebase, 'test', 'test')
-        .then((err) => {
+      return confirmPasswordReset(dispatch, fakeFirebase, 'test', 'test').then(
+        err => {
           expect(err).to.be.undefined
-        })
+        }
+      )
     })
 
     describe('handles error code: ', () => {
       it('auth/expired-action-code', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/expired-action-code', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'auth/expired-action-code',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -361,7 +400,12 @@ describe('Actions: Auth -', () => {
 
       it('auth/invalid-action-code', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/invalid-action-code', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'auth/invalid-action-code',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -369,7 +413,12 @@ describe('Actions: Auth -', () => {
 
       it('auth/user-disabled', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-disabled', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'auth/user-disabled',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -377,7 +426,12 @@ describe('Actions: Auth -', () => {
 
       it('auth/user-not-found', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/user-not-found', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'auth/user-not-found',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -385,7 +439,12 @@ describe('Actions: Auth -', () => {
 
       it('auth/weak-password', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'auth/weak-password', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'auth/weak-password',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -393,7 +452,12 @@ describe('Actions: Auth -', () => {
 
       it('other', async () => {
         try {
-          res = await confirmPasswordReset(dispatch, fakeFirebase, 'asdfasdf', 'error')
+          res = await confirmPasswordReset(
+            dispatch,
+            fakeFirebase,
+            'asdfasdf',
+            'error'
+          )
         } catch (err) {
           expect(err.code).to.be.a.string
         }
@@ -404,17 +468,298 @@ describe('Actions: Auth -', () => {
   describe('verifyPasswordResetCode', () => {
     it('resolves for valid code', async () => {
       res = await verifyPasswordResetCode(dispatch, fakeFirebase, 'test')
+      // "success" indicates successful pas through of stub function
       expect(res).to.equal('success')
     })
 
-    describe('handles error code: ', () => {
-      it('other', async () => {
-        try {
-          res = await verifyPasswordResetCode(dispatch, fakeFirebase, 'error')
-        } catch (err) {
-          expect(err.code).to.be.a.string
-        }
+    it('throws for invalid reset code', async () => {
+      try {
+        res = await verifyPasswordResetCode(dispatch, fakeFirebase, 'error')
+      } catch (err) {
+        expect(err.code).to.be.a.string
+      }
+    })
+  })
+
+  describe('updateProfile', () => {
+    it('returns a promise', () => {
+      expect(updateProfile(dispatch, firebase, {})).to.respondTo('then')
+    })
+
+    it('rejects if profile is not an object', async () => {
+      try {
+        res = await updateProfile(dispatch, firebase, 'test')
+      } catch (err) {
+        expect(err).to.have.property(
+          'message',
+          'Reference.update failed: First argument  must be an object containing the children to replace.'
+        )
+      }
+    })
+  })
+
+  describe('updateAuth', () => {
+    it('returns a promise', () => {
+      expect(updateAuth(dispatch, fakeFirebase, 'test')).to.respondTo('then')
+    })
+
+    it('rejects if user is not logged in', async () => {
+      try {
+        res = await updateAuth(dispatch, fakeFirebase, 'test')
+      } catch (err) {
+        expect(err).to.have.property(
+          'message',
+          'User must be logged in to update auth.'
+        )
+      }
+    })
+
+    it('calls firebase updateProfile method', async () => {
+      const updateAuthSpy = createSuccessSpy()
+      const newFakeFirebase = addSpyToCurrentUser(
+        'updateProfile',
+        updateAuthSpy
+      )
+      await updateAuth(dispatch, newFakeFirebase, 'test')
+      expect(updateAuthSpy).to.have.been.calledOnce
+    })
+
+    it('calls update profile if updateInProfile is true', async () => {
+      const updateAuthSpy = createSuccessSpy()
+      const newFakeFirebase = addSpyToCurrentUser(
+        'updateProfile',
+        updateAuthSpy
+      )
+      try {
+        await updateAuth(dispatch, newFakeFirebase, 'test', true)
+      } catch (err) {
+        // internal updateAuth function is called
+        expect(updateAuthSpy).to.have.been.calledOnce
+        // all dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.called.exactly(4)
+        // stubbed updateProfile function was called
+        expect(err.message).to.equal('profileRef.update is not a function')
+      }
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const updateAuthSpy = createFailureSpy()
+      const newFakeFirebase = addSpyToCurrentUser(
+        'updateProfile',
+        updateAuthSpy
+      )
+      try {
+        await updateAuth(dispatch, newFakeFirebase, 'test')
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(updateAuthSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
+    })
+  })
+
+  describe('updateEmail', () => {
+    it('returns a promise', () => {
+      expect(updateEmail(dispatch, fakeFirebase, 'test')).to.respondTo('then')
+    })
+
+    it('rejects if user is not logged in', async () => {
+      try {
+        res = await updateEmail(dispatch, fakeFirebase, 'test')
+      } catch (err) {
+        expect(err).to.have.property(
+          'message',
+          'User must be logged in to update email.'
+        )
+      }
+    })
+
+    it('calls firebase updateEmail method', async () => {
+      const updateEmailSpy = createSuccessSpy()
+      const newFakeFirebase = addSpyToCurrentUser('updateEmail', updateEmailSpy)
+      await updateEmail(dispatch, newFakeFirebase, 'test')
+      expect(updateEmailSpy).to.have.been.calledOnce
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const updateEmailSpy = createFailureSpy()
+      const newFakeFirebase = addSpyToCurrentUser('updateEmail', updateEmailSpy)
+      try {
+        await updateEmail(dispatch, newFakeFirebase, 'test')
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(updateEmailSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
+    })
+
+    it('calls update profile if updateInProfile is true', async () => {
+      const updateEmailSpy = createSuccessSpy()
+      const newFakeFirebase = addSpyToCurrentUser('updateEmail', updateEmailSpy)
+      try {
+        await updateEmail(dispatch, newFakeFirebase, 'test', true)
+      } catch (err) {
+        // all dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.called.exactly(4)
+        // internal updateEmail function is called
+        expect(updateEmailSpy).to.have.been.calledOnce
+        // stubbed updateProfile function was called
+        expect(err.message).to.equal('profileRef.update is not a function')
+      }
+    })
+  })
+
+  describe('reloadAuth', () => {
+    it('rejects if not logged in', async () => {
+      try {
+        res = await reloadAuth(dispatch, firebase)
+      } catch (err) {
+        expect(err).to.have.property(
+          'message',
+          'User must be logged in to reload auth.'
+        )
+      }
+    })
+
+    it('calls firebase reloadAuth method', async () => {
+      const reloadAuthSpy = createSuccessSpy()
+      const newFakeFirebase = addSpyToCurrentUser('reload', reloadAuthSpy)
+      await reloadAuth(dispatch, newFakeFirebase)
+      expect(reloadAuthSpy).to.have.been.calledOnce
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const reloadAuthSpy = createFailureSpy()
+      const newFakeFirebase = addSpyToCurrentUser('reload', reloadAuthSpy)
+      try {
+        await reloadAuth(dispatch, newFakeFirebase)
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(reloadAuthSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
+    })
+  })
+
+  describe('linkWithCredential', () => {
+    it('rejects if not logged in', async () => {
+      try {
+        res = await linkWithCredential(dispatch, firebase, '1234567891', {})
+      } catch (err) {
+        expect(err).to.have.property(
+          'message',
+          'User must be logged in to link with credential.'
+        )
+      }
+    })
+
+    it('calls firebase linkWithCredential method', async () => {
+      const linkWithCredentialSpy = createSuccessSpy(() => Promise.resolve())
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithCredential',
+        linkWithCredentialSpy
+      )
+      await linkWithCredential(dispatch, newFakeFirebase, '1234567891', {})
+      expect(linkWithCredentialSpy).to.have.been.calledOnce
+    })
+
+    it('attaches confirm method on successful resolve', async () => {
+      const linkWithCredentialSpy = createSuccessSpy({
+        confirm: () => Promise.resolve({})
       })
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithCredential',
+        linkWithCredentialSpy
+      )
+      const res = await linkWithCredential(
+        dispatch,
+        newFakeFirebase,
+        '1234567891',
+        {}
+      )
+      expect(linkWithCredentialSpy).to.have.been.calledOnce
+      expect(res).to.respondTo('confirm')
+      res.confirm()
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const linkWithCredentialSpy = createFailureSpy()
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithCredential',
+        linkWithCredentialSpy
+      )
+      try {
+        await linkWithCredential(dispatch, newFakeFirebase, '1234567891', {})
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(linkWithCredentialSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
+    })
+  })
+
+  describe('signInWithPhoneNumber', () => {
+    it('throws if second argument is not an applicationVerifier', async () => {
+      try {
+        res = await signInWithPhoneNumber(firebase, dispatch, '1234567891', {})
+      } catch (err) {
+        expect(err).to.have.property(
+          'message',
+          'signInWithPhoneNumber failed: Second argument "applicationVerifier" must be an implementation of firebase.auth.ApplicationVerifier.'
+        )
+      }
+    })
+
+    it('calls firebase signInWithPhoneNumber method', async () => {
+      const signInWithPhoneNumberSpy = createSuccessSpy(() => Promise.resolve())
+      const newFakeFirebase = addSpyWithArgsToAuthMethod(
+        'signInWithPhoneNumber',
+        signInWithPhoneNumberSpy,
+        ['1234567891', {}]
+      )
+      await signInWithPhoneNumber(newFakeFirebase, dispatch, '1234567891', {})
+      expect(signInWithPhoneNumberSpy).to.have.been.calledOnce
+    })
+
+    it('attaches confirm method on successful resolve', async () => {
+      const signInWithPhoneNumberSpy = createSuccessSpy({
+        confirm: () => Promise.resolve({})
+      })
+      const newFakeFirebase = addSpyWithArgsToAuthMethod(
+        'signInWithPhoneNumber',
+        signInWithPhoneNumberSpy,
+        ['1234567891', {}]
+      )
+      const res = await signInWithPhoneNumber(
+        newFakeFirebase,
+        dispatch,
+        '1234567891',
+        {}
+      )
+      expect(signInWithPhoneNumberSpy).to.have.been.calledOnce
+      expect(res).to.respondTo('confirm')
+      res.confirm()
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const signInWithPhoneNumberSpy = createFailureSpy()
+      const newFakeFirebase = addSpyWithArgsToAuthMethod(
+        'signInWithPhoneNumber',
+        signInWithPhoneNumberSpy,
+        ['1234567891', {}]
+      )
+      try {
+        await signInWithPhoneNumber(newFakeFirebase, dispatch, '1234567891', {})
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledOnce
+        expect(signInWithPhoneNumberSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
     })
   })
 })

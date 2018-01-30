@@ -9,7 +9,7 @@
     }]
   ],
   "plugins": [
-    ["lodash", { "id": ["lodash"]}],
+    "lodash",
     "add-module-exports",
     "transform-object-rest-spread",
     "transform-object-assign",

@@ -56,52 +56,86 @@ describe('Utils: Populate', () => {
 
   describe('getPopulateChild', () => {
     it('gets child', () => {
-      expect(getPopulateChild(Firebase, {child: 'uid', root: 'users'}, '123123'))
-        .to.be.fulfilled
+      expect(
+        getPopulateChild(Firebase, { child: 'uid', root: 'users' }, '123123')
+      ).to.be.fulfilled
     })
   })
 
   describe('promisesForPopulate', () => {
     it('handles non-existant single child', async () => {
-      populates = [{child: 'random', root: 'users'}]
-      res = await promisesForPopulate(Firebase, '', { uid: '123123' }, populates)
+      populates = [{ child: 'random', root: 'users' }]
+      res = await promisesForPopulate(
+        Firebase,
+        '',
+        { uid: '123123' },
+        populates
+      )
       expect(Object.keys(res)).to.have.length(0)
     })
 
     it('populates single property containing a single item', async () => {
-      populates = [{child: 'uid', root: 'users'}]
+      populates = [{ child: 'uid', root: 'users' }]
       res = await promisesForPopulate(Firebase, '', { uid }, populates)
       expect(res).to.have.deep.property(`users.${uid}`)
     })
 
     it('populates single property containing a list', async () => {
-      populates = [{child: 'collaborators', root: 'users'}]
-      res = await promisesForPopulate(Firebase, '', { collaborators: { [uid]: true, 'ABC123': true } }, populates)
+      populates = [{ child: 'collaborators', root: 'users' }]
+      res = await promisesForPopulate(
+        Firebase,
+        '',
+        { collaborators: { [uid]: true, ABC123: true } },
+        populates
+      )
       expect(res).to.have.deep.property(`users.${uid}`)
     })
 
     it('populates all existing children even if one populates child does not exist', async () => {
-      populates = [{child: 'collaborators', root: 'users'}, {child: 'nonExistantKey', root: 'users'}]
-      res = await promisesForPopulate(Firebase, '', { collaborators: { [uid]: true, 'ABC123': true } }, populates)
+      populates = [
+        { child: 'collaborators', root: 'users' },
+        { child: 'nonExistantKey', root: 'users' }
+      ]
+      res = await promisesForPopulate(
+        Firebase,
+        '',
+        { collaborators: { [uid]: true, ABC123: true } },
+        populates
+      )
       expect(res).to.have.deep.property(`users.${uid}`)
     })
 
     describe('populates list', () => {
       it('with single property populate', async () => {
-        populates = [{child: 'owner', root: 'users'}]
-        res = await promisesForPopulate(Firebase, '', { 1: { owner: uid } }, populates)
+        populates = [{ child: 'owner', root: 'users' }]
+        res = await promisesForPopulate(
+          Firebase,
+          '',
+          { 1: { owner: uid } },
+          populates
+        )
         expect(res).to.have.deep.property(`users.${uid}`)
       })
 
       it('with property containing array property', async () => {
-        populates = [{child: 'collaborators', root: 'users'}]
-        res = await promisesForPopulate(Firebase, '', { 1: { collaborators: [uid, 'ABC123'] } }, populates)
+        populates = [{ child: 'collaborators', root: 'users' }]
+        res = await promisesForPopulate(
+          Firebase,
+          '',
+          { 1: { collaborators: [uid, 'ABC123'] } },
+          populates
+        )
         expect(res).to.have.deep.property(`users.${uid}`)
       })
 
       it('with property containing key/true list', async () => {
-        populates = [{child: 'collaborators', root: 'users'}]
-        res = await promisesForPopulate(Firebase, '', { 1: { collaborators: { [uid]: true, 'ABC123': true } } }, populates)
+        populates = [{ child: 'collaborators', root: 'users' }]
+        res = await promisesForPopulate(
+          Firebase,
+          '',
+          { 1: { collaborators: { [uid]: true, ABC123: true } } },
+          populates
+        )
         expect(res).to.have.deep.property(`users.${uid}`)
       })
     })
