@@ -29,8 +29,14 @@ along side applyMiddleware.
         and auth state on login
     -   `config.perserveOnLogout` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array))** Data parameters to perserve
         when logging out. If Array is passed, each item represents keys
-        within state.firebase.data preserve. If an object is passed, Keys associate
-        with parts of state to preserve, and the values are Arrays which
+        within `state.firebase.data` to preserve. If an object is passed,
+        keys associate with slices of state to preserve, and the values can be either
+        an `Array` or a `Function` (argument pattern: `(currentState, nextState)`).
+        If passing an array of keys (i.e. `{ auth: ['key1', 'key2'] }`) - those keys
+        (`'key1'` and `'key2'`) are preserved from that slice of state (`auth`). If
+        passing a function (i.e.
+        `{ auth: (currentAuthState, nextAuthState) => ({}) }`),
+        whatever is returned from the function is set to that slice of state (`auth`).
         associate with which keys to preserve form that section of state.
         (default: `null`)
     -   `config.preserveOnEmptyAuthChange` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** `null` Data parameters to

@@ -28,8 +28,14 @@ let firebaseInstance
  * and auth state on login
  * @param {Object|Array} config.perserveOnLogout - Data parameters to perserve
  * when logging out. If Array is passed, each item represents keys
- * within state.firebase.data preserve. If an object is passed, Keys associate
- * with parts of state to preserve, and the values are Arrays which
+ * within `state.firebase.data` to preserve. If an object is passed,
+ * keys associate with slices of state to preserve, and the values can be either
+ * an `Array` or a `Function` (argument pattern: `(currentState, nextState)`).
+ * If passing an array of keys (i.e. `{ auth: ['key1', 'key2'] }`) - those keys
+ * (`'key1'` and `'key2'`) are preserved from that slice of state (`auth`). If
+ * passing a function (i.e.
+ * `{ auth: (currentAuthState, nextAuthState) => ({}) }`),
+ * whatever is returned from the function is set to that slice of state (`auth`).
  * associate with which keys to preserve form that section of state.
  * (default: `null`)
  * @param {Object} config.preserveOnEmptyAuthChange - `null` Data parameters to
