@@ -121,9 +121,12 @@ export const actionTypes = {
  * with parts of state to preserve, and the values are Arrays contain keys
  * for keys within that slice of state to preserve.
  * @property {Object} preserveOnEmptyAuthChange - `null` Data parameters to
- * preserve when logging out. Keys associate with parts of state to preserve,
- * and the values are Arrays contain keys for keys within that slice of state
- * to preserve.
+ * preserve when empty auth changes occur. Keys associate with parts of state
+ * to preserve, and the values are either Arrays or Functions. If passing an
+ * array of keys (i.e. `{ auth: ['key1', 'key2'] }`) - those keys (`'key1'` and
+ * `'key2'`) are preserved from that slice of state (`auth`). If passing a
+ * function (i.e. `{ auth: (currentAuthState, nextAuthState) => ({}) }`),
+ * whatever is returned from the function is set to that slice of state (`auth`).
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
  * user profile when logging in.
  * @property {Boolean} resetBeforeLogin - `true` Whether or not to reset auth

@@ -1,4 +1,12 @@
-import { get, replace, size } from 'lodash'
+import {
+  get,
+  replace,
+  size,
+  isFunction,
+  isBoolean,
+  pick,
+  isArray
+} from 'lodash'
 import { unset } from 'lodash/fp'
 
 /**
@@ -50,6 +58,25 @@ export const combineReducers = reducers => (state = {}, action) =>
     )
     return nextState
   }, {})
+
+export const preserveValuesFromState = (state, preserveSetting, nextState) => {
+  // Return result of function if preserve is a function
+  if (isFunction(preserveSetting)) {
+    return preserveSetting(state, nextState)
+  }
+  // Return original state if preserve is true
+  if (isBoolean(preserveSetting) && preserveSetting) {
+    return nextState ? { ...state, ...nextState } : state
+  }
+
+  if (isArray(preserveSetting)) {
+    return pick(state, preserveSetting) // pick returns a new object
+  }
+
+  throw new Error(
+    'Invalid preserve parameter. It must be an Object or an Array'
+  )
+}
 
 /**
  * Recursively unset a property starting at the deep path, and unsetting the parent

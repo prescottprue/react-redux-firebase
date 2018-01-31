@@ -3,7 +3,7 @@ languages:
 
 exclude_paths:
 - "lib/**"
-- "tests/**"
+- "test/**"
 - "examples/**"
 - "LICENSE"
 - "LICENSE.md"
