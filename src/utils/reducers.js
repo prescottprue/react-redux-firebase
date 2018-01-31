@@ -1,4 +1,12 @@
-import { get, replace, size, isFunction, isBoolean, pick } from 'lodash'
+import {
+  get,
+  replace,
+  size,
+  isFunction,
+  isBoolean,
+  pick,
+  isArray
+} from 'lodash'
 import { unset } from 'lodash/fp'
 
 /**
@@ -60,7 +68,14 @@ export const preserveValuesFromState = (state, preserveSetting, nextState) => {
   if (isBoolean(preserveSetting) && preserveSetting) {
     return nextState ? { ...state, ...nextState } : state
   }
-  return pick(state, preserveSetting) // pick returns a new object
+
+  if (isArray(preserveSetting)) {
+    return pick(state, preserveSetting) // pick returns a new object
+  }
+
+  throw new Error(
+    'Invalid preserve parameter. It must be an Object or an Array'
+  )
 }
 
 /**

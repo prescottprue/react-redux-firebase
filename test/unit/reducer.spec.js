@@ -368,6 +368,21 @@ describe('reducer', () => {
             todos
           )
         })
+
+        it('an object with a function', () => {
+          const preservePath = 'todos'
+          const todos = [{ a: 'todo' }]
+          initialData = { data: { [preservePath]: todos } }
+          action = {
+            type: actionTypes.LOGOUT,
+            preserve: { data: state => state }
+          }
+          // load todos into state and confirm they are kept on logout
+          expect(firebaseReducer(initialData, action)).to.have.deep.property(
+            `data.${preservePath}`,
+            todos
+          )
+        })
       })
 
       describe('state.ordered when provided a', () => {
@@ -378,6 +393,21 @@ describe('reducer', () => {
           action = {
             type: actionTypes.LOGOUT,
             preserve: { ordered: [preservePath] }
+          }
+          // load todos into state and confirm they are kept on logout
+          expect(firebaseReducer(initialData, action)).to.have.deep.property(
+            `ordered.${preservePath}`,
+            todos
+          )
+        })
+
+        it('array', () => {
+          const preservePath = 'todos'
+          const todos = [{ a: 'todo' }]
+          initialData = { ordered: { todos } }
+          action = {
+            type: actionTypes.LOGOUT,
+            preserve: { ordered: state => state }
           }
           // load todos into state and confirm they are kept on logout
           expect(firebaseReducer(initialData, action)).to.have.deep.property(
@@ -418,6 +448,21 @@ describe('reducer', () => {
               displayName
             )
           })
+
+          it('it is a boolean', () => {
+            const preservePath = 'displayName'
+            const displayName = 'tester'
+            initialData = { auth: { isEmpty: false, displayName } }
+            action = {
+              type: actionTypes.LOGOUT,
+              preserve: { auth: true }
+            }
+            // load todos into state and confirm they are kept on logout
+            expect(firebaseReducer(initialData, action)).to.have.deep.property(
+              `auth.${preservePath}`,
+              displayName
+            )
+          })
         })
       })
 
@@ -445,6 +490,21 @@ describe('reducer', () => {
             action = {
               type: actionTypes.LOGOUT,
               preserve: { profile: [preservePath] }
+            }
+            // load todos into state and confirm they are kept on logout
+            expect(firebaseReducer(initialData, action)).to.have.deep.property(
+              `profile.${preservePath}`,
+              displayName
+            )
+          })
+
+          it('it is a boolean', () => {
+            const preservePath = 'displayName'
+            const displayName = 'tester'
+            initialData = { profile: { isEmpty: false, displayName } }
+            action = {
+              type: actionTypes.LOGOUT,
+              preserve: { profile: true }
             }
             // load todos into state and confirm they are kept on logout
             expect(firebaseReducer(initialData, action)).to.have.deep.property(

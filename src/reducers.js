@@ -162,7 +162,7 @@ const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
           return pick(state, action.preserve) // pick returns a new object
         } else if (isObject(action.preserve)) {
           return action.preserve[actionKey]
-            ? pick(state, action.preserve[actionKey])
+            ? preserveValuesFromState(state, action.preserve[actionKey], {})
             : {}
         }
         throw new Error(
