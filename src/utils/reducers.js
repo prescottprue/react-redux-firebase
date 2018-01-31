@@ -51,10 +51,10 @@ export const combineReducers = reducers => (state = {}, action) =>
     return nextState
   }, {})
 
-export const preserveValuesFromState = (preserveSetting, state, nextState) => {
+export const preserveValuesFromState = (state, preserveSetting, nextState) => {
   // Return result of function if preserve is a function
   if (isFunction(preserveSetting)) {
-    return preserveSetting(state)
+    return preserveSetting(state, nextState)
   }
   // Return original state if preserve is true
   if (isBoolean(preserveSetting) && preserveSetting) {

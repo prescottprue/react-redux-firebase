@@ -198,9 +198,10 @@ export const authReducer = (
       const auth = action.auth.toJSON ? action.auth.toJSON() : action.auth
       // Support keeping data
       if (action.preserve && action.preserve.auth) {
-        return preserveValuesFromState(action.preserve.auth, {
-          ...state,
-          ...auth
+        return preserveValuesFromState(state, action.preserve.auth, {
+          ...auth,
+          isEmpty: false,
+          isLoaded: true
         })
       }
       return { ...auth, isEmpty: false, isLoaded: true }
@@ -222,11 +223,10 @@ export const authReducer = (
     case LOGOUT:
       // Support keeping data when logging out
       if (action.preserve && action.preserve.auth) {
-        return preserveValuesFromState(
-          action.preserve.auth,
-          { ...state, ...auth },
-          { isLoaded: true, isEmpty: true }
-        )
+        return preserveValuesFromState(state, action.preserve.auth, {
+          isLoaded: true,
+          isEmpty: true
+        })
       }
       return { isLoaded: true, isEmpty: true }
     default:

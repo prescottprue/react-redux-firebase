@@ -355,68 +355,115 @@ describe('reducer', () => {
       expect(res).to.have.deep.property('auth.isEmpty', true)
     })
 
-    it('supports preserving data in state.data', () => {
-      const preservePath = 'todos'
-      const todos = [{ a: 'todo' }]
-      initialData = { data: { [preservePath]: todos } }
-      action = { type: actionTypes.LOGOUT, preserve: [preservePath] }
-      // load todos into state and confirm they are kept on logout
-      expect(firebaseReducer(initialData, action)).to.have.deep.property(
-        `data.${preservePath}`,
-        todos
-      )
-    })
+    describe('preserve parameter preserves', () => {
+      describe('state.data when provided a', () => {
+        it('array', () => {
+          const preservePath = 'todos'
+          const todos = [{ a: 'todo' }]
+          initialData = { data: { [preservePath]: todos } }
+          action = { type: actionTypes.LOGOUT, preserve: [preservePath] }
+          // load todos into state and confirm they are kept on logout
+          expect(firebaseReducer(initialData, action)).to.have.deep.property(
+            `data.${preservePath}`,
+            todos
+          )
+        })
+      })
 
-    it('supports preserving data in state.ordered', () => {
-      const preservePath = 'todos'
-      const todos = [{ a: 'todo' }]
-      initialData = { ordered: { todos } }
-      action = {
-        type: actionTypes.LOGOUT,
-        preserve: { ordered: [preservePath] }
-      }
-      // load todos into state and confirm they are kept on logout
-      expect(firebaseReducer(initialData, action)).to.have.deep.property(
-        `ordered.${preservePath}`,
-        todos
-      )
-    })
+      describe('state.ordered when provided a', () => {
+        it('array', () => {
+          const preservePath = 'todos'
+          const todos = [{ a: 'todo' }]
+          initialData = { ordered: { todos } }
+          action = {
+            type: actionTypes.LOGOUT,
+            preserve: { ordered: [preservePath] }
+          }
+          // load todos into state and confirm they are kept on logout
+          expect(firebaseReducer(initialData, action)).to.have.deep.property(
+            `ordered.${preservePath}`,
+            todos
+          )
+        })
+      })
 
-    it('supports preserving data in state.auth', () => {
-      const preservePath = 'displayName'
-      const displayName = 'tester'
-      initialData = { auth: { isEmpty: false, displayName } }
-      action = { type: actionTypes.LOGOUT, preserve: { auth: [preservePath] } }
-      // load todos into state and confirm they are kept on logout
-      expect(firebaseReducer(initialData, action)).to.have.deep.property(
-        `auth.${preservePath}`,
-        displayName
-      )
-    })
+      describe('preserve parameter preserves', () => {
+        describe('state.auth when', () => {
+          it('it is an array', () => {
+            const preservePath = 'displayName'
+            const displayName = 'tester'
+            initialData = { auth: { isEmpty: false, displayName } }
+            action = {
+              type: actionTypes.LOGOUT,
+              preserve: { auth: [preservePath] }
+            }
+            // load todos into state and confirm they are kept on logout
+            expect(firebaseReducer(initialData, action)).to.have.deep.property(
+              `auth.${preservePath}`,
+              displayName
+            )
+          })
 
-    it('supports preserving data in state.profile', () => {
-      const preservePath = 'displayName'
-      const displayName = 'tester'
-      initialData = { profile: { isEmpty: false, displayName } }
-      action = {
-        type: actionTypes.LOGOUT,
-        preserve: { profile: [preservePath] }
-      }
-      // load todos into state and confirm they are kept on logout
-      expect(firebaseReducer(initialData, action)).to.have.deep.property(
-        `profile.${preservePath}`,
-        displayName
-      )
-    })
+          it('it is a function', () => {
+            const preservePath = 'displayName'
+            const displayName = 'tester'
+            initialData = { auth: { isEmpty: false, displayName } }
+            action = {
+              type: actionTypes.LOGOUT,
+              preserve: { auth: (state, nextState) => state }
+            }
+            // load todos into state and confirm they are kept on logout
+            expect(firebaseReducer(initialData, action)).to.have.deep.property(
+              `auth.${preservePath}`,
+              displayName
+            )
+          })
+        })
+      })
 
-    it('throws for invalid preserve parameter', () => {
-      const todos = [{ a: 'todo' }]
-      initialData = { ordered: { todos } }
-      action = { type: actionTypes.LOGOUT, preserve: 'ordered.todos' }
-      // load todos into state and confirm they are kept on logout
-      expect(() => firebaseReducer(initialData, action)).to.throw(
-        'Invalid preserve parameter. It must be an Object or an Array'
-      )
+      describe('preserve parameter preserves', () => {
+        describe('state.profile when', () => {
+          it('it is an array', () => {
+            const preservePath = 'displayName'
+            const displayName = 'tester'
+            initialData = { profile: { isEmpty: false, displayName } }
+            action = {
+              type: actionTypes.LOGOUT,
+              preserve: { profile: [preservePath] }
+            }
+            // load todos into state and confirm they are kept on logout
+            expect(firebaseReducer(initialData, action)).to.have.deep.property(
+              `profile.${preservePath}`,
+              displayName
+            )
+          })
+
+          it('it is a function', () => {
+            const preservePath = 'displayName'
+            const displayName = 'tester'
+            initialData = { profile: { isEmpty: false, displayName } }
+            action = {
+              type: actionTypes.LOGOUT,
+              preserve: { profile: [preservePath] }
+            }
+            // load todos into state and confirm they are kept on logout
+            expect(firebaseReducer(initialData, action)).to.have.deep.property(
+              `profile.${preservePath}`,
+              displayName
+            )
+          })
+        })
+      })
+
+      it('throws for invalid preserve parameter', () => {
+        const todos = [{ a: 'todo' }]
+        initialData = { ordered: { todos } }
+        action = { type: actionTypes.LOGOUT, preserve: 'ordered.todos' }
+        // load todos into state and confirm they are kept on logout
+        expect(() => firebaseReducer(initialData, action)).to.throw(
+          'Invalid preserve parameter. It must be an Object or an Array'
+        )
+      })
     })
   })
 
