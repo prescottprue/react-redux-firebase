@@ -16,9 +16,9 @@ const store = createStore(
   makeRootReducer(),
   initialState,
   compose(
-    applyMiddleware([
+    applyMiddleware(
       thunk.withExtraArgument(getFirebase) // Pass getFirebase function as extra argument
-    ]),
+    ),
     reactReduxFirebase(fbConfig, { userProfile: 'users', enableLogging: false })
   )
 );
