@@ -101,7 +101,7 @@ compose(
 
 ##### ordered {#ordered}
 
-In order to get ordered data, use `orderedToJS`
+In order to get ordered data, use `ordered`
 
 ###### Examples
 1. Get list of projects ordered by key
