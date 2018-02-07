@@ -17,13 +17,15 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { withFirebase } from 'react-redux-firebase'
 
+const todosPath = 'todos'
+
 const Todos = ({ firebase, todos }) => (
   <div>
     <h1>Todos</h1>
     <div>
       {JSON.stringify(todos, null, 2)}
     </div>
-    <button onClick={() => firebase.watchEvent('value', 'todos')}>
+    <button onClick={() => firebase.watchEvent('value', todosPath)}>
       Load Todos
     </button>
   </div>
@@ -32,7 +34,8 @@ const Todos = ({ firebase, todos }) => (
 export default compose(
   withFirebase,
   connect((state) => ({
-    todos: state.firebase.data.todos
+    todos: state.firebase.data[todosPath],
+    // todos: state.firebase.ordered[todosPath] // for ordered data (array)
   }))
 )(Todos)
 ```
@@ -79,7 +82,106 @@ export default compose(
 
 By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use [`storeAs` (more below)](#storeAs).
 
-#### Ordered vs Data (by key)
+#### Waiting For Data To Load {#loading}
+
+The `isLoaded` utility is helpful in checking to see if data has loaded. Check loaded state by passing it a list of props:
+
+```jsx
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+
+const Todos = ({ firebase, todos }) => {
+  // Build Todos list if todos exist and are loaded
+  if (!isLoaded(todos)) {
+    return <div>Loading...</div>
+  }
+  if (isEmpty(todos)) {
+    return <div>Todos List Is Empty</div>
+  }
+  return (
+    <div>
+      <h1>Todos</h1>
+      <div>
+        {JSON.stringify(todos, null, 2)}
+      </div>
+    </div>
+  )
+}
+
+export default compose(
+  firebaseConnect((props) => [
+    { path: 'todos' } // string equivalent 'todos'
+  ]),
+  connect((state) => ({
+    todos: state.firebase.data.todos,
+  }))
+)(Todos)
+```
+
+##### Functional Approach Using Recompose {#loadingHOCs}
+
+Using [`recompose`](https://github.com/acdlite/recompose) is a nice way to keep your react code clean and functional. Useful Higher Order Components are offered such as `branch` (similar to the `if` statements from the last example) making for much cleaner construction of your own HOCs:
+
+```js
+import { get, some } from 'lodash'
+import LoadingSpinner from 'components/LoadingSpinner' // or wherever your spinner component is
+import { isLoaded } from 'react-redux-firebase'
+import {
+  compose,
+  mapProps,
+  branch,
+  renderComponent
+} from 'recompose'
+
+// HOC that shows a component while condition is true
+export const renderWhile = (condition, component) =>
+  branch(condition, renderComponent(component))
+
+// HOC that shows loading spinner component while list of propNames are loading
+export const spinnerWhileLoading = propNames =>
+  renderWhile(
+    props => some(propNames, name => !isLoaded(get(props, name))),
+    LoadingSpinner
+  )
+
+// HOC that shows a component while any of a list of props isEmpty
+export const renderIfEmpty = (propsNames, component) =>
+  renderWhile(
+    // Any of the listed prop name correspond to empty props (supporting dot path names)
+    props => some(propNames, (name) => {
+      const propValue = get(props, name)
+      return isLoaded(propValue) && isEmpty(propValue)
+    }),
+    component
+  )
+```
+
+That can then be used in HOC compositions to wait for data to load like so:
+
+```js
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseConnect } from 'react-redux-firebase'
+
+const EmptyMessage = () => <div>No Projects Found</div>
+
+const enhance = compose(
+  // set/unset listener to "projects" path on component mount/unmount
+  firebaseConnect(['projects']),
+  // map projects from redux state to props
+  connect(({ firebase: { data: { projects } } }) => ({ projects })),
+  // show loading spinner while projects are loading
+  spinnerWhileLoading(['projects']),
+  // render empty message if projects are not found
+  renderIfEmpty(['projects'], EmptyMessage)
+)
+```
+
+#### Formats
+Two portions of redux state contain data resulting from queries. `state.firebase.ordered` contains array formatted data while `state.firebase.data` contains data store by key
 
 ##### data {#data}
 
@@ -114,89 +216,6 @@ compose(
   connect((state, props) => ({
     projects: state.firebase.ordered.projects,
   }))
-)
-```
-
-#### Waiting For Data To Load {#loading}
-
-The `isLoaded` utility is helpful in checking to see if data has loaded. Check loaded state by passing it a list of props:
-
-```jsx
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
-
-const Todos = ({ firebase, todos }) => {
-  // Build Todos list if todos exist and are loaded
-  if (!isLoaded(todos)) {
-    return <div>Loading...</div>
-  }
-  if (isEmpty(todos)) {
-    return <div>Todos List Is Empty</div>
-  }
-  return (
-    <div>
-      <h1>Todos</h1>
-      <ul>
-        {
-          Object.keys(todos).map((key, id) =>
-            <TodoItem key={key} id={id} todo={todos[key]}/>
-          )
-        }
-      </ul>
-    </div>
-  )
-}
-
-export default compose(
-  firebaseConnect((props) => [
-    { path: 'todos' } // string equivalent 'todos'
-  ]),
-  connect(
-    (state) => ({
-      todos: state.firebase.data.todos,
-    })
-  )
-)(Todos)
-```
-
-##### Functional Approach Using Recompose {#loadingHOCs}
-
-Using [`recompose`](https://github.com/acdlite/recompose) is a nice way to keep your react code clean and functional. Useful Higher Order Components are offered such as `branch` (similar to the `if` statements from the last example) making for much cleaner construction of your own HOCs:
-
-```js
-import { some } from 'lodash'
-import LoadingSpinner from 'components/LoadingSpinner' // or wherever your spinner component is
-import { isLoaded } from 'react-redux-firebase'
-import {
-  compose,
-  mapProps,
-  branch,
-  renderComponent
-} from 'recompose'
-
-// HOC that shows loading spinner component while condition is true
-export const spinnerWhile = condition =>
-  branch(condition, renderComponent(LoadingSpinner))
-
-// HOC that shows loading spinner component while list of propNames are loading
-export const spinnerWhileLoading = propNames =>
-  spinnerWhile(props => some(propNames, name => !isLoaded(props[name])))
-```
-
-That can then be used in HOC compositions to wait for data to load like so:
-
-```js
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
-
-const enhance = compose(
-  firebaseConnect(['projects']),
-  connect(({ firebase: { data: { projects } } }) => ({ projects })),
-  spinnerWhileLoading(['projects'])
 )
 ```
 
@@ -484,7 +503,7 @@ compose(
 
 #### Why?
 
-Data is stored in redux under the path of the query for convince. This means that two different queries to the same path (i.e. `todos`) will both place data into `state.data.todos` even if their query parameters are different.
+Data is stored in redux under the path of the query for convenience. This means that two different queries to the same path (i.e. `todos`) will both place data into `state.data.todos` even if their query parameters are different.
 
 
 ### Populate {#populate}

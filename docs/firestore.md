@@ -1,7 +1,7 @@
 # Firestore
 
-To correctly begin using firestore, make sure you have the following:
-* `v2.0.0-beta.11` or higher (most like to use `next` tag in package.json)
+To begin using Firestore with `react-redux-firebase`, make sure you have the following:
+* `v2.0.0` or higher of `react-redux-firebase`
 * Install `redux-firestore` in your project using `npm i --save redux-firestore@latest`
 * `firestore` imported with `import 'firebase/firestore'`
 * `firestore` initialize with `firebase.firestore()`
@@ -17,27 +17,26 @@ import 'firebase/firestore' // add this to use Firestore
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
 import { reduxFirestore, firestoreReducer } from 'redux-firestore'
 
-const firebaseConfig = {}
-
 // react-redux-firebase config
 const rrfConfig = {
   userProfile: 'users',
   // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
 }
 
-// initialize firebase instance
-firebase.initializeApp(firebaseConfig) // <- new to v2.*.*
+// initialize firebase instance with config from console
+const firebaseConfig = {}
+firebase.initializeApp(firebaseConfig)
 
 // initialize Firestore
 firebase.firestore()
 
-// Add reduxReduxFirebase enhancer when making store creator
+// Add BOTH store enhancers when making store creator
 const createStoreWithFirebase = compose(
   reactReduxFirebase(firebase, rrfConfig),
   reduxFirestore(firebase)
 )(createStore)
 
-// Add Firebase to reducers
+// Add firebase and firestore to reducers
 const rootReducer = combineReducers({
   firebase: firebaseStateReducer,
   firestore: firestoreReducer
@@ -216,13 +215,38 @@ export default enhance(SomeComponent)
 
 For more information [on using recompose visit the docs](https://github.com/acdlite/recompose/blob/master/docs/API.md)
 
-## storeAs {#populate}
+### storeAs {#storeAs}
 
-`storeAs` is not yet supported for the Firestore integration, but will be coming soon.
+By default the results of queries are stored in redux under the path of the query. If you would like to change where the query results are stored in redux, use `storeAs`.
+
+#### Examples
+1. Querying the same path with different query parameters
+
+```js
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firestoreConnect } from 'react-redux-firebase'
+const myProjectsReduxName = 'myProjects'
+
+compose(
+  firestoreConnect(props => [
+    { path: 'projects' },
+    {
+      path: 'projects',
+      storeAs: myProjectsReduxName,
+      queryParams: ['orderByChild=uid', '123']
+    }
+  ]),
+  connect((state, props) => ({
+    projects: state.firestore.data.projects,
+    myProjects: state.firestore.data[myProjectsReduxName], // use storeAs path to gather from redux
+  }))
+)
+```
 
 ## Populate {#populate}
 
-Populate is not yet supported for the Firestore integration, but will be coming soon.
+Populate is not yet supported for the Firestore integration, but will be coming soon. Progress can be tracked [within issue #48](https://github.com/prescottprue/redux-firestore/issues/48).
 
 ## More Info {#more}
 
