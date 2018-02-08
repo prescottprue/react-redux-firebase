@@ -29,7 +29,7 @@ const dispatchLoginError = (dispatch, authError) =>
 export const unWatchUserProfile = firebase => {
   const {
     authUid,
-    config: { userProfile, useFirestoreForProfile }
+    config: {userProfile, useFirestoreForProfile}
   } = firebase._
   if (firebase._.profileWatch) {
     if (useFirestoreForProfile && firebase.firestore) {
@@ -212,15 +212,23 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
       .doc(userData.uid)
       .get()
       .then(profileSnap => {
-        // Convert to JSON format (to prevent issue of writing invalid type to Firestore)
-        const userDataObject = userData.toJSON ? userData.toJSON() : userData
-        // Remove unnessesary auth params (configurable) and preserve types of timestamps
-        const newProfile = {
-          ...omit(userDataObject, config.keysToRemoveFromAuth),
-          avatarUrl: userDataObject.photoURL, // match profile pattern used for RTDB
-          createdAt: stringToDate(userDataObject.createdAt),
-          lastLoginAt: stringToDate(userDataObject.lastLoginAt)
+        let newProfile = {}
+
+        // If the user did supply a profileFactory, we should use the result of it for the new Profile
+        if (isFunction(config.profileFactory)) {
+          newProfile = profile
+        } else {
+          // Convert to JSON format (to prevent issue of writing invalid type to Firestore)
+          const userDataObject = userData.toJSON ? userData.toJSON() : userData
+          // Remove unnecessary auth params (configurable) and preserve types of timestamps
+          newProfile = {
+            ...omit(userDataObject, config.keysToRemoveFromAuth),
+            avatarUrl: userDataObject.photoURL, // match profile pattern used for RTDB
+            createdAt: stringToDate(userDataObject.metadata.creationTime),
+            lastLoginAt: stringToDate(userDataObject.metadata.lastSignInTime)
+          }
         }
+
         // Return if config for updating profile is not enabled and profile exists
         if (!config.updateProfileOnLogin && profileSnap.exists) {
           return profileSnap.data()
