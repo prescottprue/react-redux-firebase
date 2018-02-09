@@ -28,7 +28,8 @@ const {
   AUTH_LINK_SUCCESS,
   UNAUTHORIZED_ERROR,
   AUTH_UPDATE_SUCCESS,
-  AUTH_RELOAD_SUCCESS
+  AUTH_RELOAD_SUCCESS,
+  PROFILE_UPDATE_SUCCESS
 } = actionTypes
 
 /**
@@ -281,6 +282,8 @@ export const profileReducer = (
         isEmpty: false,
         isLoaded: true
       }
+    case PROFILE_UPDATE_SUCCESS:
+      return Object.assign({}, state, action.payload)
     case LOGIN:
       // Support keeping data when logging out
       if (action.preserve && action.preserve.profile) {
