@@ -29,7 +29,7 @@ const dispatchLoginError = (dispatch, authError) =>
 export const unWatchUserProfile = firebase => {
   const {
     authUid,
-    config: {userProfile, useFirestoreForProfile}
+    config: { userProfile, useFirestoreForProfile }
   } = firebase._
   if (firebase._.profileWatch) {
     if (useFirestoreForProfile && firebase.firestore) {
@@ -212,8 +212,12 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
       .doc(userData.uid)
       .get()
       .then(profileSnap => {
-        let newProfile = {}
+        // Return if config for updating profile is not enabled and profile exists
+        if (!config.updateProfileOnLogin && profileSnap.exists) {
+          return profileSnap.data()
+        }
 
+        let newProfile = {}
         // If the user did supply a profileFactory, we should use the result of it for the new Profile
         if (isFunction(config.profileFactory)) {
           newProfile = profile
@@ -229,10 +233,6 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
           }
         }
 
-        // Return if config for updating profile is not enabled and profile exists
-        if (!config.updateProfileOnLogin && profileSnap.exists) {
-          return profileSnap.data()
-        }
         // Create/Update the profile
         return profileSnap.ref
           .set(newProfile, { merge: true })
