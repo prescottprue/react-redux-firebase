@@ -345,13 +345,13 @@ const handleAuthStateChange = (dispatch, firebase, authData) => {
       setupPresence(dispatch, firebase)
     }
 
-    watchUserProfile(dispatch, firebase)
-
     dispatch({
       type: actionTypes.LOGIN,
       auth: authData,
       preserve: config.preserveOnLogin
     })
+
+    watchUserProfile(dispatch, firebase)
 
     // Run onAuthStateChanged if it exists in config
     if (isFunction(config.onAuthStateChanged)) {
