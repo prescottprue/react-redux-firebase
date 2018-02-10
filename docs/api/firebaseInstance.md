@@ -387,12 +387,20 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ## updateProfile
 
-Update user profile
+Update user profile on Firebase Real Time Database or
+Firestore (if `useFirestoreForProfile: true` config passed to
+reactReduxFirebase). Real Time Database update uses `update` method
+internally while updating profile on Firestore uses `set` with
 
 **Parameters**
 
--   `profileUpdate`  
--   `profile` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile data to place in new profile
+-   `profileUpdate` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile data to place in new profile
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options object (used to change how profile
+    update occurs)
+    -   `options.useUpdate` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Use update instead of set with merge
+        (only used when updating profile on Firestore)
+    -   `options.merge` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to use merge when setting
+        (only used when updating profile on Firestore)
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 
