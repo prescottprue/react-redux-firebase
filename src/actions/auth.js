@@ -1,7 +1,6 @@
 import { isArray, isString, isFunction, forEach, omit } from 'lodash'
 import { actionTypes } from '../constants'
 import { populate } from '../helpers'
-import { stringToDate } from '../utils'
 import {
   getLoginMethodAndParams,
   updateProfileOnRTDB,
@@ -227,9 +226,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
           // Remove unnecessary auth params (configurable) and preserve types of timestamps
           newProfile = {
             ...omit(userDataObject, config.keysToRemoveFromAuth),
-            avatarUrl: userDataObject.photoURL, // match profile pattern used for RTDB
-            createdAt: stringToDate(userDataObject.metadata.creationTime),
-            lastLoginAt: stringToDate(userDataObject.metadata.lastSignInTime)
+            avatarUrl: userDataObject.photoURL // match profile pattern used for RTDB
           }
         }
 
