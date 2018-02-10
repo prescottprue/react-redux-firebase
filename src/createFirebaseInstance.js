@@ -415,10 +415,11 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @param {Object} profileUpdate - Profile data to place in new profile
    * @param {Object} options - Options object (used to change how profile
    * update occurs)
-   * @param  {Boolean} options.useUpdate - Use update instead of set with merge
-   * (only used when updating profile on Firestore)
-   * @param  {Boolean} options.merge - Whether or not to use merge when setting
-   * (only used when updating profile on Firestore)
+   * @param  {Boolean} [options.useSet=true] - Use set with merge instead of
+   * update. Setting to `false` uses update (can cause issue of profile document
+   * does not exist). Note: Only used when updating profile on Firestore
+   * @param  {Boolean} [options.merge=true] - Whether or not to use merge when
+   * setting profile. Note: Only used when updating profile on Firestore
    * @return {Promise}
    */
   const updateProfile = (profileUpdate, options) =>

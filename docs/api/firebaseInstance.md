@@ -397,10 +397,11 @@ internally while updating profile on Firestore uses `set` with
 -   `profileUpdate` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile data to place in new profile
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options object (used to change how profile
     update occurs)
-    -   `options.useUpdate` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Use update instead of set with merge
-        (only used when updating profile on Firestore)
-    -   `options.merge` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to use merge when setting
-        (only used when updating profile on Firestore)
+    -   `options.useSet` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Use set with merge instead of
+        update. Setting to `false` uses update (can cause issue of profile document
+        does not exist). Note: Only used when updating profile on Firestore (optional, default `true`)
+    -   `options.merge` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to use merge when
+        setting profile. Note: Only used when updating profile on Firestore (optional, default `true`)
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
 
