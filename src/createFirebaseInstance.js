@@ -408,12 +408,22 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     authActions.verifyPasswordResetCode(dispatch, firebase, code)
 
   /**
-   * @description Update user profile
-   * @param {Object} profile - Profile data to place in new profile
+   * @description Update user profile on Firebase Real Time Database or
+   * Firestore (if `useFirestoreForProfile: true` config passed to
+   * reactReduxFirebase). Real Time Database update uses `update` method
+   * internally while updating profile on Firestore uses `set` with
+   * @param {Object} profileUpdate - Profile data to place in new profile
+   * @param {Object} options - Options object (used to change how profile
+   * update occurs)
+   * @param  {Boolean} [options.useSet=true] - Use set with merge instead of
+   * update. Setting to `false` uses update (can cause issue of profile document
+   * does not exist). Note: Only used when updating profile on Firestore
+   * @param  {Boolean} [options.merge=true] - Whether or not to use merge when
+   * setting profile. Note: Only used when updating profile on Firestore
    * @return {Promise}
    */
-  const updateProfile = profileUpdate =>
-    authActions.updateProfile(dispatch, firebase, profileUpdate)
+  const updateProfile = (profileUpdate, options) =>
+    authActions.updateProfile(dispatch, firebase, profileUpdate, options)
 
   /**
    * @description Update Auth Object

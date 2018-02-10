@@ -269,6 +269,27 @@ describe('Helpers:', () => {
             exampleData.data[rootName].ABC.displayName
           )
         })
+
+        it('supports childParam', () => {
+          populates = [
+            {
+              child: 'collaborators',
+              root: rootName,
+              childParam: 'displayName'
+            }
+          ]
+          // Non matching collaborator
+          expect(
+            helpers.populate(exampleData, path, populates)
+          ).to.have.deep.property(`${valName}.collaborators.abc`, true)
+          // Matching collaborator
+          expect(
+            helpers.populate(exampleData, path, populates)
+          ).to.have.deep.property(
+            `${valName}.collaborators.ABC`,
+            exampleData.data[rootName].ABC.displayName
+          )
+        })
       })
 
       describe('config as function', () => {
@@ -354,7 +375,6 @@ describe('Helpers:', () => {
         )
       })
 
-      // Skipped since this is not currently supported
       it('from same root', () => {
         populates = [
           { child: 'owner', root: rootName },
@@ -406,6 +426,21 @@ describe('Helpers:', () => {
 
     it('returns true when is loaded', () => {
       expect(helpers.isEmpty([{}])).to.be.false
+    })
+  })
+
+  describe('fixPath', () => {
+    it('exists', () => {
+      expect(helpers).to.respondTo('fixPath')
+    })
+
+    it('returns original path if no fix is required', () => {
+      const originalPath = '/asdf'
+      expect(helpers.fixPath(originalPath)).to.equal(originalPath)
+    })
+
+    it('adds / to beginning of path', () => {
+      expect(helpers.fixPath('asdf')).to.equal('/asdf')
     })
   })
 })

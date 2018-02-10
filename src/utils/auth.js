@@ -191,13 +191,31 @@ export const updateProfileOnRTDB = (firebase, profileUpdate) => {
 }
 
 /**
- * Update profile data on Firestore
+ * Update profile data on Firestore by calling set (with merge: true) on
+ * the profile.
  * @param  {Object} firebase - internal firebase object
  * @param  {Object} profileUpdate - Updates to profile object
+ * @param  {Object} options - Options object for configuring how profile
+ * update occurs
+ * @param  {Boolean} [options.useSet=true] - Use set with merge instead of
+ * update. Setting to `false` uses update (can cause issue of profile document
+ * does not exist).
+ * @param  {Boolean} [options.merge=true] - Whether or not to use merge when
+ * setting profile
  * @return {Promise} Resolves with results of profile get
  */
-export const updateProfileOnFirestore = (firebase, profileUpdate) => {
+export const updateProfileOnFirestore = (
+  firebase,
+  profileUpdate,
+  options = {}
+) => {
+  const { useSet = true, merge = true } = options
   const { firestore, _: { config, authUid } } = firebase
   const profileRef = firestore().doc(`${config.userProfile}/${authUid}`)
-  return profileRef.update(profileUpdate).then(() => profileRef.get())
+  // Use set with merge (to prevent "No document to update") unless otherwise
+  // specificed through options
+  const profileUpdatePromise = useSet
+    ? profileRef.set(profileUpdate, { merge })
+    : profileRef.update(profileUpdate)
+  return profileUpdatePromise.then(() => profileRef.get())
 }

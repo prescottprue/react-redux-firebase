@@ -527,6 +527,15 @@ describe('reducer', () => {
     })
   })
 
+  describe('PROFILE_UPDATE_SUCCESS action -', () => {
+    it('sets auth state to isLoaded: true, isEmpty: false', () => {
+      const payload = { some: 'value' }
+      action = { type: actionTypes.PROFILE_UPDATE_SUCCESS, payload }
+      const currentState = firebaseReducer({}, action)
+      expect(currentState).to.have.deep.property('profile.some', payload.some)
+    })
+  })
+
   describe('LOGIN action -', () => {
     it('sets auth state to isLoaded: true, isEmpty: false', () => {
       const auth = { some: 'value' }
@@ -551,6 +560,103 @@ describe('reducer', () => {
         'auth.isEmpty',
         true
       )
+    })
+
+    describe('preserve parameter', () => {
+      describe('profile state is preserved when provided', () => {
+        it('an array of keys', () => {
+          const payload = { some: 'other' }
+          const initialState = { profile: { some: 'value' } }
+          action = {
+            type: actionTypes.LOGIN,
+            preserve: { profile: ['some'] },
+            payload
+          }
+          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+            'profile.some',
+            'value'
+          )
+        })
+
+        it('a boolean (true)', () => {
+          const payload = { some: 'other' }
+          const initialState = { profile: { some: 'value' } }
+          action = {
+            type: actionTypes.LOGIN,
+            preserve: { profile: true },
+            payload
+          }
+          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+            'profile.some',
+            'value'
+          )
+        })
+      })
+
+      describe('profile state is updated when is already exists and is provided', () => {
+        it('a boolean (true)', () => {
+          const payload = { some: 'other' }
+          const initialState = { profile: { some: 'value' } }
+          action = {
+            type: actionTypes.LOGIN,
+            preserve: { profile: true },
+            payload
+          }
+          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+            'profile.some',
+            'value'
+          )
+        })
+      })
+
+      describe('auth state is preserved when provided', () => {
+        it('an array of keys', () => {
+          const payload = { some: 'other' }
+          const initialState = { auth: { some: 'value' } }
+          action = {
+            type: actionTypes.LOGIN,
+            preserve: { auth: ['some'] },
+            auth: payload
+          }
+          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+            'auth.some',
+            'value'
+          )
+        })
+
+        it('a boolean (true)', () => {
+          const initialState = { auth: { some: 'value' } }
+          action = {
+            type: actionTypes.LOGIN,
+            preserve: { auth: true },
+            auth: {}
+          }
+          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+            'auth.some',
+            'value'
+          )
+        })
+      })
+
+      describe('auth state is updated when is already exists and is provided', () => {
+        it('a boolean (true)', () => {
+          const payload = { some: 'other', another: 'thing' }
+          const initialState = { auth: { some: 'value' } }
+          action = {
+            type: actionTypes.LOGIN,
+            preserve: { auth: true },
+            auth: payload
+          }
+          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+            'auth.some',
+            payload.some
+          )
+          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+            'auth.another',
+            payload.another
+          )
+        })
+      })
     })
   })
 

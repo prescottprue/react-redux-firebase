@@ -1,7 +1,6 @@
 import { isArray, isString, isFunction, forEach, omit } from 'lodash'
 import { actionTypes } from '../constants'
 import { populate } from '../helpers'
-import { stringToDate } from '../utils'
 import {
   getLoginMethodAndParams,
   updateProfileOnRTDB,
@@ -212,19 +211,25 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
       .doc(userData.uid)
       .get()
       .then(profileSnap => {
-        // Convert to JSON format (to prevent issue of writing invalid type to Firestore)
-        const userDataObject = userData.toJSON ? userData.toJSON() : userData
-        // Remove unnessesary auth params (configurable) and preserve types of timestamps
-        const newProfile = {
-          ...omit(userDataObject, config.keysToRemoveFromAuth),
-          avatarUrl: userDataObject.photoURL, // match profile pattern used for RTDB
-          createdAt: stringToDate(userDataObject.createdAt),
-          lastLoginAt: stringToDate(userDataObject.lastLoginAt)
-        }
         // Return if config for updating profile is not enabled and profile exists
         if (!config.updateProfileOnLogin && profileSnap.exists) {
           return profileSnap.data()
         }
+
+        let newProfile = {}
+        // If the user did supply a profileFactory, we should use the result of it for the new Profile
+        if (isFunction(config.profileFactory)) {
+          newProfile = profile
+        } else {
+          // Convert to JSON format (to prevent issue of writing invalid type to Firestore)
+          const userDataObject = userData.toJSON ? userData.toJSON() : userData
+          // Remove unnecessary auth params (configurable) and preserve types of timestamps
+          newProfile = {
+            ...omit(userDataObject, config.keysToRemoveFromAuth),
+            avatarUrl: userDataObject.photoURL // match profile pattern used for RTDB
+          }
+        }
+
         // Create/Update the profile
         return profileSnap.ref
           .set(newProfile, { merge: true })
@@ -345,13 +350,13 @@ const handleAuthStateChange = (dispatch, firebase, authData) => {
       setupPresence(dispatch, firebase)
     }
 
-    watchUserProfile(dispatch, firebase)
-
     dispatch({
       type: actionTypes.LOGIN,
       auth: authData,
       preserve: config.preserveOnLogin
     })
+
+    watchUserProfile(dispatch, firebase)
 
     // Run onAuthStateChanged if it exists in config
     if (isFunction(config.onAuthStateChanged)) {
