@@ -40,7 +40,7 @@
     * [authErrorReducer](/docs/api/reducers.md#autherrorreducer)
     * [profileReducer](/docs/api/reducers.md#profilereducer)
     * [errorsReducer](/docs/api/reducers.md#errorsreducer)
-    * [listenersTeducer](/docs/api/reducers.md#listenersreducer)
+    * [listenersReducer](/docs/api/reducers.md#listenersreducer)
     * [dataReducer](/docs/api/reducers.md#datareducer)
     * [orderedReducer](/docs/api/reducers.md#orderedreducer)
   * [reactReduxFirebase](/docs/api/enhancer.md)
