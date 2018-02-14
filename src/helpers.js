@@ -210,7 +210,7 @@ const buildChildList = (state, list, p) =>
         : get(state.data, pathString)
     }
     // Populate child does not exist
-      return val === true || p.populateByKey ? val : getKey;
+    return val === true || p.populateByKey ? val : getKey
   })
 
 /**
