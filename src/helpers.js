@@ -189,7 +189,7 @@ const buildChildList = (state, list, p) =>
   mapValues(list, (val, key) => {
     let getKey = val
     // Handle key: true lists
-    if (val === true) {
+    if (val === true || p.populateByKey) {
       getKey = key
     }
     // Allow for aliasing populated data see #126 for more details
@@ -210,7 +210,7 @@ const buildChildList = (state, list, p) =>
         : get(state.data, pathString)
     }
     // Populate child does not exist
-    return val === true ? val : getKey
+      return val === true || p.populateByKey ? val : getKey;
   })
 
 /**

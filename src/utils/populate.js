@@ -108,7 +108,7 @@ export const populateList = (firebase, list, p, results) => {
   return Promise.all(
     map(list, (id, childKey) => {
       // handle list of keys
-      const populateKey = id === true ? childKey : id
+        const populateKey = id === true || p.populateByKey ? childKey : id;
       return getPopulateChild(firebase, p, populateKey).then(pc => {
         if (pc) {
           // write child to result object under root name if it is found
