@@ -11,7 +11,7 @@
     "clean": "rimraf es lib dist coverage",
     "lint": "eslint src/** test/unit/** test/setup.js",
     "lint:fix": "npm run lint -- --fix",
-    "format": "prettier --single-quote --no-semi --trailing-comma none --write \"src/**/*.js\" \"test/**/*.js\"",
+    "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
     "test": "mocha -R spec ./test/unit/**",
     "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha ./test/unit/**",
     "codecov": "cat coverage/lcov.info | codecov",
@@ -117,7 +117,7 @@
     "rimraf": "^2.6.2",
     "sinon": "^3.3.0",
     "sinon-chai": "^2.14.0",
-    "webpack": "^3.6.0",
+    "webpack": "^3.11.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "ws": "^3.2.0",
     "xmlhttprequest": "^1.8.0"
