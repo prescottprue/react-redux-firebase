@@ -2,7 +2,7 @@
 
 Populate allows you to replace IDs within your data with other data from Firebase. This is very useful when trying to keep your data flat. Some would call it a _join_, but it was modeled after [the mongo populate method](http://mongoosejs.com/docs/populate.html).
 
-Initial data from populate is placed into redux in a normalized pattern [following defined redux practice of normalizing](http://redux.js.org/docs/recipes/reducers/NormalizingStateShape.html). `populate` helper used within the `connect` function then builds populated data out of normalized data within redux (**NOTE:** This does not apply if you are using `v1.1.5` or earlier).
+Initial data from populate is placed into redux in a normalized pattern [following defined redux practice of normalizing](https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape). `populate` helper used within the `connect` function then builds populated data out of normalized data within redux (**NOTE:** This does not apply if you are using `v1.1.5` or earlier).
 
 A basic implementation can look like so:
 ```javascript
