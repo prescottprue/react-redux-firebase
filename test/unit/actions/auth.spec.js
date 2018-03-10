@@ -50,7 +50,11 @@ const addSpyWithArgsToAuthMethod = (methodName, spyFunc, args = []) => ({
     [methodName]: () => spyFunc(args)
   })
 })
-const fakeLogin = { email: 'test@tst.com', password: 'asdfasdf', role: 'admin' }
+const fakeLogin = {
+  email: 'test@tst.com',
+  password: 'asdfasdf',
+  role: 'admin'
+}
 
 describe('Actions: Auth -', () => {
   beforeEach(() => {
