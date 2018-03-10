@@ -72,6 +72,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       return (
         <WrappedComponent
           {...this.props}
+          {...this.state}
           firebase={{ ...firebase, ...firebase.helpers }}
           firestore={firestore}
         />

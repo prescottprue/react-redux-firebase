@@ -190,7 +190,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
   if (isFunction(config.profileFactory)) {
     // catch errors in user provided profileFactory function
     try {
-      profile = config.profileFactory(userData.user, profile, userData) // eslint-disable-line no-param-reassign
+      profile = config.profileFactory(userData, profile) // eslint-disable-line no-param-reassign
     } catch (err) {
       /* eslint-disable no-console */
       console.error(
@@ -468,35 +468,52 @@ export const login = (dispatch, firebase, credentials) => {
     .auth()
     [method](...params)
     .then(userData => {
-      // signInWithPhoneNumber is a two step process which requires modifying
-      // the confirm method already existing on the response
-      if (method === 'signInWithPhoneNumber') {
-        // Modify confirm method to include profile creation
-        return {
-          ...userData,
-          confirm: code =>
-            // Call original confirm with profile creation after
-            userData.confirm(code).then(confirmResponse =>
-              createUserProfile(dispatch, firebase, confirmResponse, {
-                phoneNumber: confirmResponse.user.providerData[0].phoneNumber,
-                providerData: confirmResponse.user.providerData
-              }).then(profile => ({ profile, ...confirmResponse }))
-            )
-        }
+      // Handle null response from getRedirectResult before redirect has happened
+      if (!userData) return Promise.resolve(null)
+
+      // For email auth return uid (createUser is used for creating a profile)
+      if (method === 'signInWithEmailAndPassword') {
+        return { user: userData }
       }
-      return userData
-    })
-    .then(userData => {
-      // Create user profile if returned data exists and not type signInWithPhoneNumber
-      if (userData && method !== 'signInWithPhoneNumber') {
+      // TODO: Only call createUserProfile once, and just pass different settings
+
+      // For token auth, the user key doesn't exist. Instead, return the JWT.
+      if (method === 'signInWithCustomToken') {
+        if (!firebase._.config.updateProfileOnLogin) {
+          return { user: userData }
+        }
         return createUserProfile(
           dispatch,
           firebase,
           userData,
           credentials.profile
-        ).then(profile => ({ profile, ...userData }))
+        )
       }
-      return userData
+
+      if (method === 'signInWithPhoneNumber') {
+        // Modify confirm method to include profile creation
+        return {
+          ...userData,
+          confirm: code =>
+            // Call original confirm
+            userData.confirm(code).then(({ user, additionalUserInfo }) =>
+              createUserProfile(dispatch, firebase, user, {
+                phoneNumber: user.providerData[0].phoneNumber,
+                providerData: user.providerData
+              }).then(profile => ({ profile, user, additionalUserInfo }))
+            )
+        }
+      }
+
+      // Create profile when logging in with external provider
+      const user = userData.user || userData
+
+      return createUserProfile(dispatch, firebase, user, {
+        email: user.email,
+        displayName: user.providerData[0].displayName || user.email,
+        avatarUrl: user.providerData[0].photoURL,
+        providerData: user.providerData
+      }).then(profile => ({ profile, ...userData }))
     })
     .catch(err => {
       dispatchLoginError(dispatch, err)
@@ -550,11 +567,7 @@ export const createUser = (
     .auth()
     .createUserWithEmailAndPassword(email, password)
     .then(
-      userData => {
-        if () {
-
-        }
-      }
+      userData =>
         // Login to newly created account if signIn flag is not set to false
         firebase.auth().currentUser || (!!signIn && signIn === false)
           ? createUserProfile(
