@@ -181,7 +181,11 @@ describe('reducer', () => {
 
     it('sets data to path with already existing data with numeric keys', () => {
       initialData = { data: { test: { [childKey]: { 123: 'bar1' } } } }
-      action = { type: actionTypes.SET, path: childPath, data: { 124: 'bar2' } }
+      action = {
+        type: actionTypes.SET,
+        path: childPath,
+        data: { 124: 'bar2' }
+      }
       expect(firebaseReducer(initialData, action).data).to.deep.equal({
         ...initialState.data,
         test: {

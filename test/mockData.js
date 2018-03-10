@@ -25,6 +25,10 @@ export const exampleData = {
         collaborators: {
           ABC: true,
           abc: true
+        },
+        nonKeyTrue: {
+          ABC: 10,
+          abc: 'testing'
         }
       },
       QRS: {
@@ -77,6 +81,10 @@ export const exampleData = {
       tester: {
         somePermission: true
       }
+    },
+    nonKeyTrue: {
+      ABC: 10,
+      abc: 'testing'
     }
   },
   ordered: {

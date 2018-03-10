@@ -53,7 +53,6 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       }
     }
 
-    // TODO: Re-attach listeners on query path change
     componentWillReceiveProps(np) {
       const { firebase, firestore } = this.store
       const inputAsFunc = createCallable(dataOrFn)

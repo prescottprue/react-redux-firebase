@@ -17,6 +17,7 @@ import {
   confirmPasswordReset,
   verifyPasswordResetCode
 } from '../../../src/actions/auth'
+import { cloneDeep } from 'lodash'
 import { actionTypes } from '../../../src/constants'
 import {
   fakeFirebase,
@@ -50,7 +51,11 @@ const addSpyWithArgsToAuthMethod = (methodName, spyFunc, args = []) => ({
     [methodName]: () => spyFunc(args)
   })
 })
-const fakeLogin = { email: 'test@tst.com', password: 'asdfasdf', role: 'admin' }
+const fakeLogin = {
+  email: 'test@tst.com',
+  password: 'asdfasdf',
+  role: 'admin'
+}
 
 describe('Actions: Auth -', () => {
   beforeEach(() => {
@@ -72,6 +77,19 @@ describe('Actions: Auth -', () => {
       unWatchUserProfile(fakeFirebase)
       expect(fakeFirebase._.profileWatch).to.equal(null)
     })
+
+    it('calls profile watch then sets to null when useFirestoreForProfile: true', () => {
+      let profileCalled
+      let currentFake = cloneDeep(fakeFirebase)
+      currentFake._.profileWatch = () => {
+        profileCalled = true
+      }
+      currentFake._.config.useFirestoreForProfile = true
+      currentFake.firestore = {}
+      unWatchUserProfile(currentFake)
+      expect(currentFake._.profileWatch).to.equal(null)
+      expect(profileCalled).to.equal(true)
+    })
   })
 
   describe('handleProfileWatchResponse -', () => {
@@ -82,7 +100,46 @@ describe('Actions: Auth -', () => {
       profile = { email: 'test@test.com' }
       profileSnap = { val: () => profile }
     })
+
+    describe('dispatches SET_PROFILE with profile', () => {
+      it('from RTDB data', () => {
+        firebase._.config.profileParamsToPopulate = undefined
+        handleProfileWatchResponse(dispatchSpy, firebase, profileSnap)
+        expect(dispatchSpy).to.be.calledWith({
+          type: actionTypes.SET_PROFILE,
+          profile
+        })
+      })
+
+      it('from Firestore data', () => {
+        firebase._.config.profileParamsToPopulate = undefined
+        const firestoreProfileSnap = { data: () => profile, exists: true }
+        handleProfileWatchResponse(dispatchSpy, firebase, firestoreProfileSnap)
+        expect(dispatchSpy).to.be.calledWith({
+          type: actionTypes.SET_PROFILE,
+          profile
+        })
+      })
+
+      it('that is an empty object (sets profile to null)', () => {
+        firebase._.config.profileParamsToPopulate = undefined
+        handleProfileWatchResponse(dispatchSpy, firebase, {})
+        expect(dispatchSpy).to.be.calledWith({
+          type: actionTypes.SET_PROFILE,
+          profile: null
+        })
+      })
+    })
+
     describe('profileParamsToPopulate setting -', () => {
+      let consoleWarnSpy
+
+      beforeEach(() => {
+        consoleWarnSpy = sinon.spy(console, 'warn')
+      })
+      afterEach(() => {
+        consoleWarnSpy.restore()
+      })
       it('undefined - dispatches SET_PROFILE with profile', () => {
         firebase._.config.profileParamsToPopulate = undefined
         handleProfileWatchResponse(dispatchSpy, firebase, profileSnap)
@@ -108,6 +165,18 @@ describe('Actions: Auth -', () => {
         expect(dispatchSpy).to.have.callCount(0)
         // expect(dispatchSpy)
         //   .to.be.calledWith({ type: actionTypes.SET_PROFILE })
+      })
+
+      it('Any when useFirestoreForProfile: true - calls console.warn', () => {
+        let currentFake = cloneDeep(fakeFirebase)
+        currentFake._.profileWatch = () => {}
+        currentFake._.config.useFirestoreForProfile = true
+        currentFake._.config.profileParamsToPopulate = ['some']
+        currentFake.firestore = {}
+        handleProfileWatchResponse(dispatchSpy, currentFake)
+        expect(consoleWarnSpy).to.be.calledWith(
+          'Profile population is not yet supported for Firestore'
+        )
       })
     })
   })

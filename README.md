@@ -30,11 +30,15 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 - Server Side Rendering Support
 - [`react-native` support](/docs/recipes/react-native.md) using [native modules](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules) or [web sdk](/docs/recipes/react-native.md#jsweb)
 
-## Install
+## Installation
 
 ```bash
 npm install --save react-redux-firebase
 ```
+
+This assumes you are using [npm](https://www.npmjs.com/) as your package manager.
+
+If you're not, you can access the library on [unpkg](https://unpkg.com/redux-firestore@latest/dist/redux-firestore.min.js), download it, or point your package manager to it. Theres more on this in the [Builds section below](#builds).
 
 ## Use
 
@@ -58,7 +62,7 @@ const rrfConfig = {
 }
 
 // initialize firebase instance
-firebase.initializeApp(config) // <- new to v2.*.*
+firebase.initializeApp(firebaseConfig)
 
 // initialize firestore
 // firebase.firestore() // <- needed if using firestore
@@ -116,7 +120,7 @@ const Todos = ({ firebase }) => {
 }
 
 export default withFirebase(Todos)
-// or firebaseConnect()(Todos) if attaching listeners
+// or firebaseConnect()(Todos)
 ```
 
 **Load Data (listeners automatically managed on mount/unmount)**
@@ -157,12 +161,10 @@ export default compose(
   firebaseConnect([
     'todos' // { path: '/todos' } // object notation
   ]),
-  connect(
-    (state) => ({
-      todos: state.firebase.data.todos,
-      // profile: state.firebase.profile // load profile
-    })
-  )
+  connect((state) => ({
+    todos: state.firebase.data.todos,
+    // profile: state.firebase.profile // load profile
+  }))
 )(Todos)
 ```
 
@@ -250,6 +252,14 @@ export default compose(
 )(Todos)
 ```
 
+## Firestore
+
+If you plan to use Firestore, you should checkout [`redux-firestore`][redux-firestore]. It integrates nicely with `react-redux-firebase` and it allows you to run Real Time Database and Firestore along side each other.
+
+`react-redux-firebase` provides the `firestoreConnect` HOC (similar to `firebaseConnect`) for easy setting/unsetting of listeners.
+
+Currently `react-redux-firebase` still handles auth when using [`redux-firestore`][redux-firestore] - The future plan is to also have auth standalone auth library that will allow the developer to choose which pieces they do/do not want.
+
 ## [Docs](http://react-redux-firebase.com)
 See full documentation at [react-redux-firebase.com](http://react-redux-firebase.com)
 
@@ -262,11 +272,18 @@ See full documentation at [react-redux-firebase.com](http://react-redux-firebase
 
 ## [Examples](examples)
 
-Examples folder is broken into two categories [complete](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete) and [snippets](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/snippets). `/complete` contains full applications that can be run as is, while `/snippets` contains small amounts of code to show functionality (dev tools and deps not included).
+### Real World Applications
+* [fireadmin.io](http://fireadmin.io) - Firebase Instance Management Tool (source [available here](https://github.com/prescottprue/fireadmin))
+
+If you would like a project added to this section please reach out [over gitter][gitter-url]
+
+### [Examples Folder](examples)
+
+Examples folder is broken into two categories [snippets](examples/snippets) and [complete](examples/complete). `/complete` contains full applications that can be run as is, where as `/snippets` contains small amounts of code to highlight specific functionality (dev tools and deps not included).
 
 #### [State Based Query Snippet](examples/snippets/stateBasedQuery)
 
-Snippet showing querying based on data in redux state. One of the most common examples of this is querying based on the current users auth UID.
+Snippet showing querying based on data in redux state. One of the more common examples is querying based on the current users auth UID.
 
 #### [Decorators Snippet](examples/snippets/decorators)
 
@@ -294,17 +311,9 @@ View docs for recipes on integrations with:
 * [redux-saga](http://react-redux-firebase.com/docs/integrations/redux-saga.md)
 * [redux-form](http://react-redux-firebase.com/docs/integrations/redux-form.md)
 * [redux-auth-wrapper](http://react-redux-firebase.com/docs/integrations/routing.md#advanced)
-* [redux-persist](http://react-redux-firebase.com/docs/integrations/redux-persist.md) - [improved integration with `v2.0.0`](http://react-redux-firebase.com/docs/integrations/redux-persist.html)
+* [redux-persist](http://react-redux-firebase.com/docs/integrations/redux-persist.md)
 * [react-native](/docs/integrations/react-native.md)
-* [react-native-firebase](http://react-redux-firebase.com/docs/integrations/react-native.html#native-modules) - requires `v2.0.0`
-
-## Firestore
-
-If you plan to use Firestore, you should checkout [`redux-firestore`][redux-firestore]. It integrates nicely with `react-redux-firebase` (v2 only) and it allows you to run Real Time Database and Firestore along side each other.
-
-`react-redux-firebase` provides the `firestoreConnect` HOC (similar to `firebaseConnect`) for easy setting/unsetting of listeners.
-
-Currently `react-redux-firebase` still handles auth when using [`redux-firestore`][redux-firestore] - The future plan is to also have auth standalone auth library that will allow the developer to choose which pieces they do/do not want.
+* [react-native-firebase](http://react-redux-firebase.com/docs/integrations/react-native.html#native-modules)
 
 ## Starting A Project
 
@@ -316,9 +325,25 @@ Currently `react-redux-firebase` still handles auth when using [`redux-firestore
 
 The [examples folder](/examples) contains full applications that can be copied/adapted and used as a new project.
 
-### FAQ
+## FAQ
 
 Please visit the [FAQ section of the docs](http://docs.react-redux-firebase.com/history/v2.0.0/docs/FAQ.html)
+
+## Builds
+
+Most commonly people consume Redux Firestore as a [CommonJS module](http://webpack.github.io/docs/commonjs.html). This module is what you get when you import redux in a Webpack, Browserify, or a Node environment.
+
+If you don't use a module bundler, it's also fine. The redux-firestore npm package includes precompiled production and development [UMD builds](https://github.com/umdjs/umd) in the [dist folder](https://unpkg.com/redux-firestore@latest/dist/). They can be used directly without a bundler and are thus compatible with many popular JavaScript module loaders and environments. For example, you can drop a UMD build as a `<script>` tag on the page. The UMD builds make Redux Firestore available as a `window.ReduxFirestore` global variable.
+
+It can be imported like so:
+
+```html
+<script src="../node_modules/react-redux-firebase/dist/react-redux-firebase.min.js"></script>
+<!-- or through cdn: <script src="https://unpkg.com/react-redux-firebase@latest/dist/react-redux-firebase.min.js"></script> -->
+<script>console.log('react redux firebase:', window.ReactReduxFirebase)</script>
+```
+
+Note: In an effort to keep things simple, the wording from this explanation was modeled after [the installation section of the Redux Docs](https://redux.js.org/#installation).
 
 ## Contributors
 

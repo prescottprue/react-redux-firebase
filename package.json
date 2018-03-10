@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Redux integration for Firebase. Comes with a Higher Order Components for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -11,7 +11,7 @@
     "clean": "rimraf es lib dist coverage",
     "lint": "eslint src/** test/unit/** test/setup.js",
     "lint:fix": "npm run lint -- --fix",
-    "format": "prettier --single-quote --no-semi --trailing-comma none --write \"src/**/*.js\" \"test/**/*.js\"",
+    "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
     "test": "mocha -R spec ./test/unit/**",
     "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha ./test/unit/**",
     "codecov": "cat coverage/lcov.info | codecov",
