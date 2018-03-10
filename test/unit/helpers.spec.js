@@ -1,10 +1,12 @@
 import { get } from 'lodash'
 import { exampleData } from '../mockData'
 import * as helpers from '../../src/helpers'
+
 let path
 let valName
 let rootName
 let populates
+let child
 
 describe('Helpers:', () => {
   describe('getVal', () => {
@@ -289,6 +291,64 @@ describe('Helpers:', () => {
             `${valName}.collaborators.ABC`,
             exampleData.data[rootName].ABC.displayName
           )
+        })
+
+        describe('populateByKey', () => {
+          it('populates non key true', () => {
+            path = 'projects'
+            rootName = 'users'
+            valName = 'OKF'
+            let child = 'nonKeyTrue'
+            populates = [
+              {
+                child,
+                root: rootName,
+                populateByKey: true
+              }
+            ]
+            // Non matching collaborator
+            expect(
+              helpers.populate(exampleData, path, populates)
+            ).to.have.deep.property(
+              `${valName}.${child}.abc`,
+              exampleData.data[path][valName][child].abc
+            )
+            // Matching collaborator
+            expect(
+              helpers.populate(exampleData, path, populates)
+            ).to.have.deep.property(
+              `${valName}.${child}.ABC.displayName`,
+              exampleData.data[rootName].ABC.displayName
+            )
+          })
+
+          it('does not populate if false', () => {
+            path = 'projects'
+            rootName = 'users'
+            valName = 'OKF'
+            child = 'nonKeyTrue'
+            populates = [
+              {
+                child,
+                root: rootName,
+                populateByKey: false
+              }
+            ]
+            // Non matching collaborator
+            expect(
+              helpers.populate(exampleData, path, populates)
+            ).to.have.deep.property(
+              `${valName}.${child}.abc`,
+              exampleData.data[path][valName][child].abc
+            )
+            // Matching collaborator
+            expect(
+              helpers.populate(exampleData, path, populates)
+            ).to.have.deep.property(
+              `${valName}.${child}.ABC`,
+              exampleData.data[path][valName][child].ABC
+            )
+          })
         })
       })
 
