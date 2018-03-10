@@ -16,7 +16,7 @@ rules:
   no-console: 'error'
   prettier/prettier: ['error', {
     singleQuote: true,
-    trailingComma: 'es6',
+    trailingComma: 'none',
     semi: false,
     bracketSpacing: true,
     jsxBracketSameLine: true,

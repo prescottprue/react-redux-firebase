@@ -30,10 +30,11 @@ const store = createStore(
 After following the setup above, `getFirebase` function becomes available within your thunks as the third argument:
 
 ```javascript
-const sendNotification = (payload) => {
+const sendNotification = (payload) => ({
   type: NOTIFICATION,
   payload
-}
+})
+
 export const addTodo = (newTodo) =>
   (dispatch, getState, getFirebase) => {
     const firebase = getFirebase()

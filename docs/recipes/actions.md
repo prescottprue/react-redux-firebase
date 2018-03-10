@@ -209,4 +209,4 @@ Fun Fact: This is actually what happens internally with both `withFirebase` and 
 
 ## Advanced Actions
 
-If you are looking to write advanced actions (i.e. multiple steps contained within one action), look at the [thunks section](/docs/recipes/thunks)
+If you are looking to write advanced actions (i.e. multiple steps contained within one action), look at the [thunks section](/docs/integrations/thunks.md)
