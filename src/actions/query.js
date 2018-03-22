@@ -159,7 +159,11 @@ export const watchEvent = (firebase, dispatch, options) => {
       })
     },
     err => {
-      dispatch({ type: actionTypes.ERROR, payload: err })
+      dispatch({
+        type: actionTypes.ERROR,
+        path: storeAs || path,
+        payload: err
+      })
     }
   )
 }
