@@ -99,7 +99,10 @@ export const uploadFile = (dispatch, firebase, config) => {
         })
         return { uploadTaskSnaphot }
       }
-      const { metadata: { name, fullPath, downloadURLs } } = uploadTaskSnaphot
+
+      const {
+        metadata: { name, fullPath, downloadURLs, size, contentType }
+      } = uploadTaskSnaphot
       const { fileMetadataFactory } = firebase._.config
 
       // Apply fileMetadataFactory if it exists in config
@@ -109,6 +112,8 @@ export const uploadFile = (dispatch, firebase, config) => {
             name,
             fullPath,
             downloadURL: downloadURLs[0],
+            size,
+            contentType,
             createdAt: firebase.database.ServerValue.TIMESTAMP
           }
 
