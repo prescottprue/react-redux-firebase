@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "lib": [ "es2015", "dom" ],
+    "outDir": "lib",
+    "sourceMap": true,
+    "declaration": true
+    "allowJs": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "rootDir": "./",
+    "importHelpers": true,                 
+    "downlevelIteration": true,
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

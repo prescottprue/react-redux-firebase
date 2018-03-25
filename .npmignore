@@ -19,3 +19,5 @@ CODE_OF_CONDUCT.md
 CHANGELOG.md
 .codeclimate.yml
 PATRONS.md
+tsconfig.json
+src
