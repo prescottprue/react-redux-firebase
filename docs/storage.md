@@ -34,7 +34,7 @@ Available on `props.firebase` if using `firebaseConnect` HOC or using `getFireba
 -   `options.name` [**String**][string-url] | [**Function**][function-url] - Name of file or function that returns the name of the file. If a function is passed the argument syntax is `(file, internalFirebase, uploadConfig)` where `file` is the file object (`file.name` is used as default if no name option is passed).
 
 ##### Returns
-[**Promise**][promise-url] Resolves with an object containing `uploadTaskSnaphot` which is the [**firebase.storage.UploadTaskSnaphot**][upload-task-snapshot-url] returned from the `storageRef.put` call which happens internally. If `databasePath` is provided `snapshot`, `key`, `File`, and `metaDataSnapshot` parameters are also included.
+[**Promise**][promise-url] Resolves with an object containing `uploadTaskSnapshot` which is the [**firebase.storage.UploadTaskSnapshot**][upload-task-snapshot-url] returned from the `storageRef.put` call which happens internally. If `databasePath` is provided `snapshot`, `key`, `File`, and `metaDataSnapshot` parameters are also included.
 
 #### Examples
 

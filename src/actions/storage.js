@@ -90,22 +90,27 @@ export const uploadFile = (dispatch, firebase, config) => {
           .put(file)
 
   return uploadPromise()
-    .then(uploadTaskSnaphot => {
+    .then(uploadTaskSnapshot => {
       if (!dbPath || !firebase.database) {
         dispatch({
           type: FILE_UPLOAD_COMPLETE,
           meta: { ...config, filename },
-          payload: { uploadTaskSnaphot }
+          payload: {
+            uploadTaskSnapshot,
+            uploadTaskSnaphot: uploadTaskSnapshot // Preserving legacy typo
+          }
         })
-        return { uploadTaskSnaphot }
+        return {
+          uploadTaskSnapshot,
+          uploadTaskSnaphot: uploadTaskSnapshot // Preserving legacy typo
+        }
       }
-
-      const { metadata: { name, fullPath, downloadURLs } } = uploadTaskSnaphot
+      const { metadata: { name, fullPath, downloadURLs } } = uploadTaskSnapshot
       const { fileMetadataFactory } = firebase._.config
 
       // Apply fileMetadataFactory if it exists in config
       const fileData = isFunction(fileMetadataFactory)
-        ? fileMetadataFactory(uploadTaskSnaphot, firebase)
+        ? fileMetadataFactory(uploadTaskSnapshot, firebase)
         : {
             name,
             fullPath,
@@ -123,7 +128,8 @@ export const uploadFile = (dispatch, firebase, config) => {
             snapshot: metaDataSnapshot,
             key: metaDataSnapshot.key,
             File: fileData,
-            uploadTaskSnaphot,
+            uploadTaskSnapshot,
+            uploadTaskSnaphot: uploadTaskSnapshot, // Preserving legacy typo
             metaDataSnapshot
           }
           dispatch({
