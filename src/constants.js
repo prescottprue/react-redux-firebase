@@ -114,7 +114,11 @@ export const actionTypes = {
  * sessions are stored (only if presense is set). Often set to `'sessions'` or
  * `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
  * @property {Boolean} enableLogging - `false` Whether or not firebase
- * database logging is enabled.
+ * database logging is enabled. Providing `true` turns on error logging
+ * (enabled by itself through `logErrors`).
+ * @property {Boolean} logErrors - `true` Whether or not to log internal
+ * Firebase errors (i.e. error querying or writing data) to the javascript
+ * console .
  * @property {Array|Object} preserveOnLogout - `null` Data parameters to
  * preserve when logging out. If Array is passed, each item represents keys
  * within state.firebase.data preserve. If an object is passed, Keys associate
@@ -179,6 +183,7 @@ export const defaultConfig = {
   presence: null,
   sessions: 'sessions',
   enableLogging: false,
+  logErrors: true,
   preserveOnLogout: null,
   preserveOnEmptyAuthChange: null,
   resetBeforeLogin: true,

@@ -78,6 +78,7 @@ export const uploadFile = (dispatch, firebase, config) => {
       ? options.name(file, firebase, config)
       : options.name
   const filename = nameFromOptions || file.name
+  const { enableLogging, logErrors } = firebase._.config
 
   dispatch({ type: FILE_UPLOAD_START, payload: { ...config, filename } })
 
@@ -139,6 +140,12 @@ export const uploadFile = (dispatch, firebase, config) => {
         })
     })
     .catch(err => {
+      if (enableLogging || logErrors) {
+        /* eslint-disable no-console */
+        console.error &&
+          console.error(`RRF: Error uploading file: ${err.message || err}`, err)
+        /* eslint-enable no-console */
+      }
       dispatch({ type: FILE_UPLOAD_ERROR, path, payload: err })
       return Promise.reject(err)
     })
