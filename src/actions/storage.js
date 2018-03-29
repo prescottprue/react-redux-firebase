@@ -73,10 +73,9 @@ export const uploadFile = (dispatch, firebase, config) => {
     throw new Error('Firebase storage is required to upload files')
   }
   const { path, file, dbPath, options = { progress: false } } = config
-  const nameFromOptions =
-    options.name && isFunction(options.name)
-      ? options.name(file, firebase, config)
-      : options.name
+  const nameFromOptions = isFunction(options.name)
+    ? options.name(file, firebase, config)
+    : options.name
   const filename = nameFromOptions || file.name
 
   dispatch({ type: FILE_UPLOAD_START, payload: { ...config, filename } })
