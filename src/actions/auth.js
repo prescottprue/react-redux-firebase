@@ -131,7 +131,7 @@ export const handleProfileWatchResponse = (
   }
 }
 
-function createProfileWatchErrorHandler(firebase) {
+function createProfileWatchErrorHandler(dispatch, firebase) {
   const { config: { onProfileListenerError } } = firebase._
   return err => {
     /* eslint-disable no-console */
@@ -169,7 +169,7 @@ export const watchUserProfile = (dispatch, firebase) => {
         .onSnapshot(
           userProfileSnap =>
             handleProfileWatchResponse(dispatch, firebase, userProfileSnap),
-          createProfileWatchErrorHandler(firebase)
+          createProfileWatchErrorHandler(dispatch, firebase)
         )
     } else if (firebase.database) {
       firebase._.profileWatch = firebase // eslint-disable-line no-param-reassign
@@ -180,7 +180,7 @@ export const watchUserProfile = (dispatch, firebase) => {
           'value',
           userProfileSnap =>
             handleProfileWatchResponse(dispatch, firebase, userProfileSnap),
-          createProfileWatchErrorHandler(firebase)
+          createProfileWatchErrorHandler(dispatch, firebase)
         )
     } else {
       throw new Error(
