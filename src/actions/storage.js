@@ -73,10 +73,9 @@ export const uploadFile = (dispatch, firebase, config) => {
     throw new Error('Firebase storage is required to upload files')
   }
   const { path, file, dbPath, options = { progress: false } } = config
-  const nameFromOptions =
-    options.name && isFunction(options.name)
-      ? options.name(file, firebase, config)
-      : options.name
+  const nameFromOptions = isFunction(options.name)
+    ? options.name(file, firebase, config)
+    : options.name
   const filename = nameFromOptions || file.name
   const { enableLogging, logErrors } = firebase._.config
 
@@ -91,30 +90,31 @@ export const uploadFile = (dispatch, firebase, config) => {
           .put(file)
 
   return uploadPromise()
-    .then(uploadTaskSnaphot => {
+    .then(uploadTaskSnapshot => {
       if (!dbPath || !firebase.database) {
         dispatch({
           type: FILE_UPLOAD_COMPLETE,
           meta: { ...config, filename },
-          payload: { uploadTaskSnaphot }
+          payload: {
+            uploadTaskSnapshot,
+            uploadTaskSnaphot: uploadTaskSnapshot // Preserving legacy typo
+          }
         })
-        return { uploadTaskSnaphot }
+        return {
+          uploadTaskSnapshot,
+          uploadTaskSnaphot: uploadTaskSnapshot // Preserving legacy typo
+        }
       }
-
-      const {
-        metadata: { name, fullPath, downloadURLs, size, contentType }
-      } = uploadTaskSnaphot
+      const { metadata: { name, fullPath, downloadURLs } } = uploadTaskSnapshot
       const { fileMetadataFactory } = firebase._.config
 
       // Apply fileMetadataFactory if it exists in config
       const fileData = isFunction(fileMetadataFactory)
-        ? fileMetadataFactory(uploadTaskSnaphot, firebase)
+        ? fileMetadataFactory(uploadTaskSnapshot, firebase)
         : {
             name,
             fullPath,
             downloadURL: downloadURLs[0],
-            size,
-            contentType,
             createdAt: firebase.database.ServerValue.TIMESTAMP
           }
 
@@ -128,7 +128,8 @@ export const uploadFile = (dispatch, firebase, config) => {
             snapshot: metaDataSnapshot,
             key: metaDataSnapshot.key,
             File: fileData,
-            uploadTaskSnaphot,
+            uploadTaskSnapshot,
+            uploadTaskSnaphot: uploadTaskSnapshot, // Preserving legacy typo
             metaDataSnapshot
           }
           dispatch({

@@ -51,6 +51,7 @@ import { Provider } from 'react-redux'
 import { createStore, combineReducers, compose } from 'redux'
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
 import firebase from 'firebase'
+// import { reduxFirestore, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
 // import 'firebase/firestore' // <- needed if using firestore
 
 const firebaseConfig = {}
