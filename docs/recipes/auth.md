@@ -28,7 +28,7 @@ export const LoginPage = ({ firebase, auth }) => (
     <div>
       <h2>Auth</h2>
       {
-        isLoaded(auth)
+        !isLoaded(auth)
         ? <span>Loading...</span>
         : isEmpty(auth)
           ? <span>Not Authed</span>
