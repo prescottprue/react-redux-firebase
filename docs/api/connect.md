@@ -72,7 +72,7 @@ const enhance = compose(
   })
 )
 // use enhnace to pass todos list as props.todos
-const Todos = enhance(({ todos })) =>
+const Todos = enhance(({ todos }) =>
   <div>
     {JSON.stringify(todos, null, 2)}
   </div>
