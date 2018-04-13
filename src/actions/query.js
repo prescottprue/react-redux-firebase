@@ -44,8 +44,6 @@ export const watchEvent = (firebase, dispatch, options) => {
   if (counter > 0) {
     if (id) {
       unsetWatcher(firebase, dispatch, type, path, id)
-    } else {
-      return
     }
   }
 
