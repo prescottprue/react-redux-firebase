@@ -42,6 +42,10 @@ let firebaseInstance
  * preserve when logging out. Keys associate with parts of state to preserve,
  * and the values are Arrays contain keys for keys within that slice of state
  * to preserve.
+ * @param {Boolean} config.useFirestoreForProfile - `false` Write profile
+ * data to Firestore instead of Real Time Database.
+ * @param {Boolean} config.useFirestoreForStorageMeta - `false` Write storage
+ * file metadata to Firestore instead of Real Time Database.
  * @param {Boolean} config.enableRedirectHandling - Whether or not to enable
  * auth redirect handling listener. (default: `true`)
  * @param {Function} config.onAuthStateChanged - Function run when auth state

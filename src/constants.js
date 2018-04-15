@@ -133,6 +133,10 @@ export const actionTypes = {
  * whatever is returned from the function is set to that slice of state (`auth`).
  * @property {Boolean} updateProfileOnLogin - `true` Whether or not to update
  * user profile when logging in.
+ * @property {Boolean} useFirestoreForProfile - `false` Write profile
+ * data to Firestore instead of Real Time Database.
+ * @property {Boolean} useFirestoreForStorageMeta - `false` Write storage
+ * file metadata to Firestore instead of Real Time Database.
  * @property {Boolean} resetBeforeLogin - `true` Whether or not to reset auth
  * and profile when logging in (see issue
  * [#254](https://github.com/prescottprue/react-redux-firebase/issues/254)

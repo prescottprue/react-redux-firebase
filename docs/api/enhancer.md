@@ -43,6 +43,10 @@ along side applyMiddleware.
         preserve when logging out. Keys associate with parts of state to preserve,
         and the values are Arrays contain keys for keys within that slice of state
         to preserve.
+    -   `config.useFirestoreForProfile` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Write profile
+        data to Firestore instead of Real Time Database.
+    -   `config.useFirestoreForStorageMeta` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Write storage
+        file metadata to Firestore instead of Real Time Database.
     -   `config.enableRedirectHandling` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to enable
         auth redirect handling listener. (default: `true`)
     -   `config.onAuthStateChanged` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Function run when auth state

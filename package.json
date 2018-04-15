@@ -13,7 +13,7 @@
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
     "test": "mocha -R spec ./test/unit/**",
-    "test:cov": "istanbul cover ./node_modules/mocha/bin/_mocha ./test/unit/**",
+    "test:cov": "istanbul cover $(npm bin)/_mocha ./test/unit/**",
     "codecov": "cat coverage/lcov.info | codecov",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
