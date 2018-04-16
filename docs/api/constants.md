@@ -2,15 +2,15 @@
 
 ### Table of Contents
 
--   [actionsPrefix](#actionsprefix)
--   [actionTypes](#actiontypes)
--   [defaultConfig](#defaultconfig)
+-   [actionsPrefix][1]
+-   [actionTypes][2]
+-   [defaultConfig][3]
 
 ## actionsPrefix
 
 Prefix for all actions within library
 
-Type: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)
+Type: [string][4]
 
 **Examples**
 
@@ -25,46 +25,46 @@ Object containing all action types
 
 **Properties**
 
--   `START` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/START`
--   `SET` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/SET`
--   `REMOVE` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/REMOVE`
--   `MERGE` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/MERGE`
--   `SET_PROFILE` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/SET_PROFILE`
--   `LOGIN` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/LOGIN`
--   `LOGOUT` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/LOGOUT`
--   `LOGIN_ERROR` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/LOGIN_ERROR`
--   `NO_VALUE` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/NO_VALUE`
--   `UNAUTHORIZED_ERROR` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
--   `ERROR` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/ERROR`
--   `SET_LISTENER` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/SET_LISTENER`
--   `UNSET_LISTENER` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/UNSET_LISTENER`
--   `AUTHENTICATION_INIT_STARTED` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`
--   `AUTHENTICATION_INIT_FINISHED` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTHENTICATION_INIT_FINISHED`
--   `SESSION_START` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/SESSION_START`
--   `SESSION_END` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/SESSION_END`
--   `FILE_UPLOAD_START` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/FILE_UPLOAD_START`
--   `FILE_UPLOAD_ERROR` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/FILE_UPLOAD_ERROR`
--   `FILE_UPLOAD_PROGRESS` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/FILE_UPLOAD_PROGRESS`
--   `FILE_UPLOAD_COMPLETE` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/FILE_UPLOAD_COMPLETE`
--   `FILE_DELETE_START` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/FILE_DELETE_START`
--   `FILE_DELETE_ERROR` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/FILE_DELETE_ERROR`
--   `FILE_DELETE_COMPLETE` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/FILE_DELETE_COMPLETE`
--   `AUTH_UPDATE_START` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_UPDATE_START`
--   `AUTH_UPDATE_ERROR` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_UPDATE_ERROR`
--   `AUTH_UPDATE_SUCCESS` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_UPDATE_SUCCESS`
--   `PROFILE_UPDATE_START` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/PROFILE_UPDATE_START`
--   `PROFILE_UPDATE_ERROR` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/PROFILE_UPDATE_ERROR`
--   `PROFILE_UPDATE_SUCCESS` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/PROFILE_UPDATE_SUCCESS`
--   `EMAIL_UPDATE_START` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/EMAIL_UPDATE_START`
--   `EMAIL_UPDATE_ERROR` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/EMAIL_UPDATE_ERROR`
--   `EMAIL_UPDATE_SUCCESS` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/EMAIL_UPDATE_SUCCESS`
--   `AUTH_RELOAD_START` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_RELOAD_START`
--   `AUTH_RELOAD_ERROR` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_RELOAD_ERROR`
--   `AUTH_RELOAD_SUCCESS` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_RELOAD_SUCCESS`
--   `AUTH_LINK_START` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_START`
--   `AUTH_LINK_ERROR` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_ERROR`
--   `AUTH_LINK_SUCCESS` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_SUCCESS`
--   `AUTH_EMPTY_CHANGE` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `@@reactReduxFirebase/AUTH_LINK_SUCCESS`
+-   `START` **[String][4]** `@@reactReduxFirebase/START`
+-   `SET` **[String][4]** `@@reactReduxFirebase/SET`
+-   `REMOVE` **[String][4]** `@@reactReduxFirebase/REMOVE`
+-   `MERGE` **[String][4]** `@@reactReduxFirebase/MERGE`
+-   `SET_PROFILE` **[String][4]** `@@reactReduxFirebase/SET_PROFILE`
+-   `LOGIN` **[String][4]** `@@reactReduxFirebase/LOGIN`
+-   `LOGOUT` **[String][4]** `@@reactReduxFirebase/LOGOUT`
+-   `LOGIN_ERROR` **[String][4]** `@@reactReduxFirebase/LOGIN_ERROR`
+-   `NO_VALUE` **[String][4]** `@@reactReduxFirebase/NO_VALUE`
+-   `UNAUTHORIZED_ERROR` **[String][4]** `@@reactReduxFirebase/UNAUTHORIZED_ERROR`
+-   `ERROR` **[String][4]** `@@reactReduxFirebase/ERROR`
+-   `SET_LISTENER` **[String][4]** `@@reactReduxFirebase/SET_LISTENER`
+-   `UNSET_LISTENER` **[String][4]** `@@reactReduxFirebase/UNSET_LISTENER`
+-   `AUTHENTICATION_INIT_STARTED` **[String][4]** `@@reactReduxFirebase/AUTHENTICATION_INIT_STARTED`
+-   `AUTHENTICATION_INIT_FINISHED` **[String][4]** `@@reactReduxFirebase/AUTHENTICATION_INIT_FINISHED`
+-   `SESSION_START` **[String][4]** `@@reactReduxFirebase/SESSION_START`
+-   `SESSION_END` **[String][4]** `@@reactReduxFirebase/SESSION_END`
+-   `FILE_UPLOAD_START` **[String][4]** `@@reactReduxFirebase/FILE_UPLOAD_START`
+-   `FILE_UPLOAD_ERROR` **[String][4]** `@@reactReduxFirebase/FILE_UPLOAD_ERROR`
+-   `FILE_UPLOAD_PROGRESS` **[String][4]** `@@reactReduxFirebase/FILE_UPLOAD_PROGRESS`
+-   `FILE_UPLOAD_COMPLETE` **[String][4]** `@@reactReduxFirebase/FILE_UPLOAD_COMPLETE`
+-   `FILE_DELETE_START` **[String][4]** `@@reactReduxFirebase/FILE_DELETE_START`
+-   `FILE_DELETE_ERROR` **[String][4]** `@@reactReduxFirebase/FILE_DELETE_ERROR`
+-   `FILE_DELETE_COMPLETE` **[String][4]** `@@reactReduxFirebase/FILE_DELETE_COMPLETE`
+-   `AUTH_UPDATE_START` **[String][4]** `@@reactReduxFirebase/AUTH_UPDATE_START`
+-   `AUTH_UPDATE_ERROR` **[String][4]** `@@reactReduxFirebase/AUTH_UPDATE_ERROR`
+-   `AUTH_UPDATE_SUCCESS` **[String][4]** `@@reactReduxFirebase/AUTH_UPDATE_SUCCESS`
+-   `PROFILE_UPDATE_START` **[String][4]** `@@reactReduxFirebase/PROFILE_UPDATE_START`
+-   `PROFILE_UPDATE_ERROR` **[String][4]** `@@reactReduxFirebase/PROFILE_UPDATE_ERROR`
+-   `PROFILE_UPDATE_SUCCESS` **[String][4]** `@@reactReduxFirebase/PROFILE_UPDATE_SUCCESS`
+-   `EMAIL_UPDATE_START` **[String][4]** `@@reactReduxFirebase/EMAIL_UPDATE_START`
+-   `EMAIL_UPDATE_ERROR` **[String][4]** `@@reactReduxFirebase/EMAIL_UPDATE_ERROR`
+-   `EMAIL_UPDATE_SUCCESS` **[String][4]** `@@reactReduxFirebase/EMAIL_UPDATE_SUCCESS`
+-   `AUTH_RELOAD_START` **[String][4]** `@@reactReduxFirebase/AUTH_RELOAD_START`
+-   `AUTH_RELOAD_ERROR` **[String][4]** `@@reactReduxFirebase/AUTH_RELOAD_ERROR`
+-   `AUTH_RELOAD_SUCCESS` **[String][4]** `@@reactReduxFirebase/AUTH_RELOAD_SUCCESS`
+-   `AUTH_LINK_START` **[String][4]** `@@reactReduxFirebase/AUTH_LINK_START`
+-   `AUTH_LINK_ERROR` **[String][4]** `@@reactReduxFirebase/AUTH_LINK_ERROR`
+-   `AUTH_LINK_SUCCESS` **[String][4]** `@@reactReduxFirebase/AUTH_LINK_SUCCESS`
+-   `AUTH_EMPTY_CHANGE` **[String][4]** `@@reactReduxFirebase/AUTH_LINK_SUCCESS`
 
 **Examples**
 
@@ -79,70 +79,92 @@ Default configuration options
 
 **Properties**
 
--   `userProfile` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `null` Location on Firebase where user
+-   `userProfile` **[String][4]** `null` Location on Firebase where user
     profiles are stored. Often set to `'users'`.
--   `presence` **([String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** `null` Location on Firebase where of currently
+-   `presence` **([String][4] \| [Function][5])** `null` Location on Firebase where of currently
     online users is stored. Often set to `'presence'` or `'onlineUsers'`. If a function
     is passed, the arguments are: `(currentUser, firebase)`.
--   `sessions` **([String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** `sessions` Location on Firebase where user
+-   `sessions` **([String][4] \| [Function][5])** `sessions` Location on Firebase where user
     sessions are stored (only if presense is set). Often set to `'sessions'` or
     `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
--   `enableLogging` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not firebase
+-   `enableLogging` **[Boolean][6]** `false` Whether or not firebase
     database logging is enabled.
--   `preserveOnLogout` **([Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** `null` Data parameters to
+-   `preserveOnLogout` **([Array][7] \| [Object][8])** `null` Data parameters to
     preserve when logging out. If Array is passed, each item represents keys
     within state.firebase.data preserve. If an object is passed, Keys associate
     with parts of state to preserve, and the values are Arrays contain keys
     for keys within that slice of state to preserve.
--   `preserveOnEmptyAuthChange` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** `null` Data parameters to
+-   `preserveOnEmptyAuthChange` **[Object][8]** `null` Data parameters to
     preserve when empty auth changes occur. Keys associate with parts of state
     to preserve, and the values are either Arrays or Functions. If passing an
     array of keys (i.e. `{ auth: ['key1', 'key2'] }`) - those keys (`'key1'` and
     `'key2'`) are preserved from that slice of state (`auth`). If passing a
     function (i.e. `{ auth: (currentAuthState, nextAuthState) => ({}) }`),
     whatever is returned from the function is set to that slice of state (`auth`).
--   `updateProfileOnLogin` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to update
+-   `updateProfileOnLogin` **[Boolean][6]** `true` Whether or not to update
     user profile when logging in.
--   `resetBeforeLogin` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to reset auth
+-   `resetBeforeLogin` **[Boolean][6]** `true` Whether or not to reset auth
     and profile when logging in (see issue
-    [#254](https://github.com/prescottprue/react-redux-firebase/issues/254)
+    [#254][9]
     for more details).
--   `enableRedirectHandling` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to enable
+-   `enableRedirectHandling` **[Boolean][6]** `true` Whether or not to enable
     redirect handling. This must be disabled if environment is not http/https
     such as with react-native.
--   `onAuthStateChanged` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** `null` Function that runs when
+-   `onAuthStateChanged` **[Function][5]** `null` Function that runs when
     auth state changes.
--   `enableEmptyAuthChanges` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not to enable
+-   `enableEmptyAuthChanges` **[Boolean][6]** `false` Whether or not to enable
     empty auth changes. When set to true, `onAuthStateChanged` will be fired with,
     empty auth changes such as `undefined` on initialization
-    (see [#137](https://github.com/prescottprue/react-redux-firebase/issues/137)).
+    (see [#137][10]).
     Requires `v1.5.0-alpha` or higher.
--   `autoPopulateProfile` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` REMOVED FROM v2.0.0.
+-   `autoPopulateProfile` **[Boolean][6]** `false` REMOVED FROM v2.0.0.
     Whether or not to automatically populate profile with data loaded through
     profileParamsToPopulate config.
--   `setProfilePopulateResults` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to
+-   `setProfilePopulateResults` **[Boolean][6]** `true` Whether or not to
     call SET actions for data that results from populating profile to redux under
     the data path. For example role parameter on profile populated from 'roles'
     root. True will call SET_PROFILE as well as a SET action with the role that
     is loaded (places it in data/roles).
--   `dispatchOnUnsetListener` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to
+-   `dispatchOnUnsetListener` **[Boolean][6]** `true` Whether or not to
     dispatch UNSET_LISTENER when disabling listeners for a specific path. USE WITH CAUTION
     Setting this to true allows an action to be called that removes data
     from redux (which might not always be expected).
--   `dispatchRemoveAction` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not to
+-   `dispatchRemoveAction` **[Boolean][6]** `false` Whether or not to
     dispatch REMOVE action when calling `remove`. **NOTE** Causes two state
     updates if a listener is affected by your remove call.
--   `firebaseStateName` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'firebase' Assumed name of Firebase
+-   `firebaseStateName` **[String][4]** 'firebase' Assumed name of Firebase
     state (name given when passing reducer to combineReducers). Used in
     firebaseAuthIsReady promise (see
-    [#264](https://github.com/prescottprue/react-redux-firebase/issues/264)).
--   `attachAuthIsReady` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to attach
+    [#264][11]).
+-   `attachAuthIsReady` **[Boolean][6]** `true` Whether or not to attach
     firebaseAuthIsReady to store. authIsLoaded can be imported and used
     directly instead based on preference.
--   `firestoreNamespace` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `firestoreHelpers` Namespace for
+-   `firestoreNamespace` **[Boolean][6]** `firestoreHelpers` Namespace for
     firestore helpers (**WARNING** Changing this will break firestoreConnect HOC.
     Do **NOT** change to `'firestore'`)
--   `keysToRemoveFromAuth` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** (default at end)
+-   `keysToRemoveFromAuth` **[Array][7]** (default at end)
     list of keys to remove from authentication reponse before writing to profile
     (currenlty only used for profiles stored on Firestore). `['appName', 'apiKey'
     , 'authDomain', 'redirectEventId', 'stsTokenManager', 'uid']`
+
+[1]: #actionsprefix
+
+[2]: #actiontypes
+
+[3]: #defaultconfig
+
+[4]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[9]: https://github.com/prescottprue/react-redux-firebase/issues/254
+
+[10]: https://github.com/prescottprue/react-redux-firebase/issues/137
+
+[11]: https://github.com/prescottprue/react-redux-firebase/issues/264

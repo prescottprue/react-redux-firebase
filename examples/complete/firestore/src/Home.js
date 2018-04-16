@@ -50,7 +50,7 @@ const Home = ({ firestore, todos, addTodo }) => (
           : isEmpty(todos)
             ? 'Todo list is empty'
             : todos.map((todo) =>
-                <TodoItem key={todo.id} todo={todo} />
+                <TodoItem key={todo && todo.id} todo={todo} />
               )
       }
       <NewTodo />

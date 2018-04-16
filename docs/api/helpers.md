@@ -2,10 +2,10 @@
 
 ### Table of Contents
 
--   [getVal](#getval)
--   [isLoaded](#isloaded)
--   [isEmpty](#isempty)
--   [populate](#populate)
+-   [getVal][1]
+-   [isLoaded][2]
+-   [isEmpty][3]
+-   [populate][4]
 
 ## getVal
 
@@ -15,8 +15,8 @@ migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
 
 **Parameters**
 
--   `firebase` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase instance (state.firebase)
--   `path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
+-   `firebase` **[Object][5]** Firebase instance (state.firebase)
+-   `path` **[String][6]** Path of parameter to load
 -   `notSetValue` **Any** Value to return if value is not
     found in redux. This will cause `isLoaded` to always return true (since
     value is set from the start).
@@ -87,7 +87,7 @@ Detect whether items are loaded yet or not
 **Parameters**
 
 -   `args` **...any** 
--   `item` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma separated
+-   `item` **[Object][5]** Item to check loaded status of. A comma separated
     list is also acceptable.
 
 **Examples**
@@ -127,7 +127,7 @@ Todos.propTypes = {
 export default enhance(Todos)
 ```
 
-Returns **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not item is loaded
+Returns **[Boolean][7]** Whether or not item is loaded
 
 ## isEmpty
 
@@ -136,7 +136,7 @@ Detect whether items are empty or not
 **Parameters**
 
 -   `args` **...any** 
--   `item` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma seperated list
+-   `item` **[Object][5]** Item to check loaded status of. A comma seperated list
     is also acceptable.
 
 **Examples**
@@ -176,7 +176,7 @@ Todos.propTypes = {
 export default enhance(Todos)
 ```
 
-Returns **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not item is empty
+Returns **[Boolean][7]** Whether or not item is empty
 
 ## populate
 
@@ -184,10 +184,10 @@ Populate with data from redux.
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase state object (state.firebase in redux store)
--   `path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
--   `populates` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of populate config objects
--   `notSetValue` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to return if value is not found
+-   `state` **[Object][5]** Firebase state object (state.firebase in redux store)
+-   `path` **[String][6]** Path of parameter to load
+-   `populates` **[Array][8]** Array of populate config objects
+-   `notSetValue` **([Object][5] \| [String][6] \| [Boolean][7])** Value to return if value is not found
 
 **Examples**
 
@@ -214,4 +214,20 @@ const enhance = compose(
 export default enhance(SomeComponent)
 ```
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Object
+Returns **[Object][5]** Data located at path within Immutable Object
+
+[1]: #getval
+
+[2]: #isloaded
+
+[3]: #isempty
+
+[4]: #populate
+
+[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
