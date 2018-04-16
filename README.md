@@ -308,14 +308,14 @@ Join us on the [redux-firebase gitter](https://gitter.im/redux-firebase/Lobby).
 
 View docs for recipes on integrations with:
 
-* [redux-firestore](http://react-redux-firebase.com/docs/firestore.md)
-* [redux-thunk](http://react-redux-firebase.com/docs/integrations/thunks.md)
-* [redux-observable](http://react-redux-firebase.com/docs/integrations/epics.md)
-* [redux-saga](http://react-redux-firebase.com/docs/integrations/redux-saga.md)
-* [redux-form](http://react-redux-firebase.com/docs/integrations/redux-form.md)
-* [redux-auth-wrapper](http://react-redux-firebase.com/docs/integrations/routing.md#advanced)
-* [redux-persist](http://react-redux-firebase.com/docs/integrations/redux-persist.md)
-* [react-native](/docs/integrations/react-native.md)
+* [redux-firestore](http://react-redux-firebase.com/docs/firestore.html)
+* [redux-thunk](http://react-redux-firebase.com/docs/integrations/thunks.html)
+* [redux-observable](http://react-redux-firebase.com/docs/integrations/redux-observable.html)
+* [redux-saga](http://react-redux-firebase.com/docs/integrations/redux-saga.html)
+* [redux-form](http://react-redux-firebase.com/docs/integrations/redux-form.html)
+* [redux-auth-wrapper](http://react-redux-firebase.com/docs/recipes/routing.html#advanced)
+* [redux-persist](http://react-redux-firebase.com/docs/integrations/redux-persist.html)
+* [react-native](http://react-redux-firebase.com/docs/integrations/react-native.html)
 * [react-native-firebase](http://react-redux-firebase.com/docs/integrations/react-native.html#native-modules)
 
 ## Starting A Project

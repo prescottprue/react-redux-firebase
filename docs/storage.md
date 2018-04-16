@@ -60,11 +60,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 
-const Uploader = ({ deleteFile }) =>
+const Uploader = ({ firebase }) =>
   <div>
     <h1>Example File Delete</h1>
     <span>Deletes `index.txt` from storage</span>
-    <button onClick={() => deleteFile('index.txt')}>
+    <button onClick={() => firebase.deleteFile('index.txt')}>
       Delete
     </button>
   </div>

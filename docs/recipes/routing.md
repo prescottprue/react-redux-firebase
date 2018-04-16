@@ -73,7 +73,7 @@ export const UserIsAuthenticated = UserAuthWrapper({
 
 ```javascript
 import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
-import { connectedRouterRedirect } from 'redux-auth-wrapper'
+import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect'
 import LoadingScreen from '../components/LoadingScreen'; // change it to your custom component
 
 const locationHelper = locationHelperBuilder({});
@@ -175,7 +175,7 @@ export const UserIsNotAuthenticated = UserAuthWrapper({
 
 ```js
 import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
-import { connectedRouterRedirect } from 'redux-auth-wrapper'
+import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect'
 
 import LoadingScreen from '../components/LoadingScreen'; // change it to your custom component
 
