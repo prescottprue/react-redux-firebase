@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-dom/test-utils'
 import { createSink } from 'recompose'
+import { keys, values } from 'lodash'
+
 import {
   storeWithFirebase,
   Container,
@@ -12,11 +14,22 @@ import firebaseConnect, {
   createFirebaseConnect
 } from '../../src/firebaseConnect'
 
+const DYNAMIC_PROPS_SEPARATOR = ','
+
+const getFirebaseWatchers = store => {
+  return { ...store.firebase._.watchers }
+}
+
 const createContainer = () => {
   const store = storeWithFirebase()
-  const WrappedContainer = firebaseConnect(props => [
-    `test/${props.dynamicProp}`
-  ])(Container)
+  const WrappedContainer = firebaseConnect(props => {
+    const itemsToSubscribe =
+      props.dynamicProp &&
+      props.dynamicProp
+        .split(DYNAMIC_PROPS_SEPARATOR)
+        .map(item => `test/${item}`)
+    return [...itemsToSubscribe]
+  })(Container)
 
   const tree = TestUtils.renderIntoDocument(
     <ProviderMock store={store}>
@@ -44,17 +57,58 @@ describe('firebaseConnect', () => {
   })
 
   it('does not change watchers props changes that do not change listener paths', () => {
-    const { parent } = createContainer()
+    const { parent, store } = createContainer()
+    const watchers = getFirebaseWatchers(store)
     parent.setState({ test: 'somethingElse' })
-    // expect(parent.context.store).to.equal(store)
+    expect(getFirebaseWatchers(store)).to.eql(watchers)
   })
 
   it('reapplies watchers when props change', () => {
-    const { parent } = createContainer()
+    const { parent, store } = createContainer()
+    const watchers = getFirebaseWatchers(store)
     parent.setState({
       dynamic: 'somethingElse'
     })
-    // expect(parent.context.store).to.equal(store)
+    expect(getFirebaseWatchers(store)).to.not.eql(watchers)
+  })
+
+  it('applies new watchers when props change', () => {
+    const { parent, store } = createContainer()
+    parent.setState({
+      dynamic: 'somethingElse'
+    })
+
+    parent.setState({
+      dynamic: 'somethingElse, anotherSomethingElse'
+    })
+
+    expect(keys(getFirebaseWatchers(store)).length).to.equal(2)
+  })
+
+  it('correctly maintains watcher count when props change with extra listener paths', () => {
+    const { parent, store } = createContainer()
+    parent.setState({
+      dynamic: 'somethingElse'
+    })
+
+    parent.setState({
+      dynamic: 'somethingElse, anotherSomethingElse'
+    })
+
+    expect(values(getFirebaseWatchers(store))).to.eql([1, 1])
+  })
+
+  it('correctly maintains watcher count when props change with removed listener paths', () => {
+    const { parent, store } = createContainer()
+    parent.setState({
+      dynamic: 'somethingElse, anotherSomethingElse'
+    })
+
+    parent.setState({
+      dynamic: 'somethingElse'
+    })
+
+    expect(values(getFirebaseWatchers(store))).to.eql([1])
   })
 
   describe('sets displayName static as ', () => {
