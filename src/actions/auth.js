@@ -131,6 +131,21 @@ export const handleProfileWatchResponse = (
   }
 }
 
+function createProfileWatchErrorHandler(dispatch, firebase) {
+  const { config: { onProfileListenerError } } = firebase._
+  return err => {
+    /* eslint-disable no-console */
+    console.error(`Error with profile listener: ${err.message || ''}`, err)
+    if (isFunction(onProfileListenerError)) {
+      const factoryResult = onProfileListenerError(err, firebase)
+      if (isFunction(factoryResult.then)) {
+        return factoryResult
+      }
+    }
+    return Promise.reject(err)
+  }
+}
+
 /**
  * @description Watch user profile. Internally dispatches sets firebase._.profileWatch
  * and calls SET_PROFILE actions. Supports both Realtime Database and Firestore
@@ -151,16 +166,21 @@ export const watchUserProfile = (dispatch, firebase) => {
         .firestore()
         .collection(userProfile)
         .doc(authUid)
-        .onSnapshot(userProfileSnap =>
-          handleProfileWatchResponse(dispatch, firebase, userProfileSnap)
+        .onSnapshot(
+          userProfileSnap =>
+            handleProfileWatchResponse(dispatch, firebase, userProfileSnap),
+          createProfileWatchErrorHandler(dispatch, firebase)
         )
     } else if (firebase.database) {
       firebase._.profileWatch = firebase // eslint-disable-line no-param-reassign
         .database()
         .ref()
         .child(`${userProfile}/${authUid}`)
-        .on('value', userProfileSnap =>
-          handleProfileWatchResponse(dispatch, firebase, userProfileSnap)
+        .on(
+          'value',
+          userProfileSnap =>
+            handleProfileWatchResponse(dispatch, firebase, userProfileSnap),
+          createProfileWatchErrorHandler(dispatch, firebase)
         )
     } else {
       throw new Error(
@@ -258,6 +278,9 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
     .catch(err => {
       // Error reading user profile
       dispatch({ type: actionTypes.UNAUTHORIZED_ERROR, authError: err })
+      if (isFunction(config.onProfileWriteError)) {
+        config.onProfileWriteError(err, firebase)
+      }
       return Promise.reject(err)
     })
 }

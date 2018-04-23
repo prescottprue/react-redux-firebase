@@ -1,57 +1,20 @@
 import { map, isFunction } from 'lodash'
 import { actionTypes } from '../constants'
 import { wrapInDispatch } from '../utils/actions'
-import { deleteFile as deleteFileFromFb } from '../utils/storage'
+import {
+  deleteFile as deleteFileFromFb,
+  writeMetadataToDb,
+  uploadFileWithProgress
+} from '../utils/storage'
 
 const {
   FILE_UPLOAD_START,
   FILE_UPLOAD_ERROR,
-  FILE_UPLOAD_PROGRESS,
   FILE_UPLOAD_COMPLETE,
   FILE_DELETE_START,
   FILE_DELETE_ERROR,
   FILE_DELETE_COMPLETE
 } = actionTypes
-
-/**
- * @description Upload a file with actions fired for progress, success, and errors
- * @param {Function} dispatch - Action dispatch function
- * @param {Object} firebase - Internal firebase object
- * @param {Object} opts - File data object
- * @param {Object} opts.path - Location within Firebase Stroage at which to upload file.
- * @param {Blob} opts.file - File to upload
- * @private
- */
-const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
-  const uploadEvent = firebase
-    .storage()
-    .ref(`${path}/${file.name}`)
-    .put(file)
-  // TODO: Allow config to control whether progress it set to state or not
-  const unListen = uploadEvent.on(firebase.storage.TaskEvent.STATE_CHANGED, {
-    next: snapshot => {
-      dispatch({
-        type: FILE_UPLOAD_PROGRESS,
-        path,
-        payload: {
-          snapshot,
-          percent: Math.floor(
-            snapshot.bytesTransferred / snapshot.totalBytes * 100
-          )
-        }
-      })
-    },
-    error: err => {
-      dispatch({ type: FILE_UPLOAD_ERROR, path, payload: err })
-      unListen()
-    },
-    complete: () => {
-      dispatch({ type: FILE_UPLOAD_COMPLETE, path, payload: file })
-      unListen()
-    }
-  })
-  return uploadEvent
-}
 
 /**
  * @description Upload file to Firebase Storage with option to store
@@ -73,12 +36,15 @@ export const uploadFile = (dispatch, firebase, config) => {
     throw new Error('Firebase storage is required to upload files')
   }
   const { path, file, dbPath, options = { progress: false } } = config
-  const nameFromOptions =
-    options.name && isFunction(options.name)
-      ? options.name(file, firebase, config)
-      : options.name
+  const { enableLogging, logErrors } = firebase._.config
+
+  // File renaming through options (supporting string and function)
+  const nameFromOptions = isFunction(options.name)
+    ? options.name(file, firebase, config)
+    : options.name
   const filename = nameFromOptions || file.name
 
+  // Dispatch start action
   dispatch({ type: FILE_UPLOAD_START, payload: { ...config, filename } })
 
   const uploadPromise = () =>
@@ -105,42 +71,29 @@ export const uploadFile = (dispatch, firebase, config) => {
           uploadTaskSnaphot: uploadTaskSnapshot // Preserving legacy typo
         }
       }
-      const { metadata: { name, fullPath, downloadURLs } } = uploadTaskSnapshot
-      const { fileMetadataFactory } = firebase._.config
 
-      // Apply fileMetadataFactory if it exists in config
-      const fileData = isFunction(fileMetadataFactory)
-        ? fileMetadataFactory(uploadTaskSnapshot, firebase)
-        : {
-            name,
-            fullPath,
-            downloadURL: downloadURLs[0],
-            createdAt: firebase.database.ServerValue.TIMESTAMP
-          }
-
-      // TODO: Support uploading metadata to Firestore
-      return firebase
-        .database()
-        .ref(dbPath)
-        .push(fileData)
-        .then(metaDataSnapshot => {
-          const payload = {
-            snapshot: metaDataSnapshot,
-            key: metaDataSnapshot.key,
-            File: fileData,
-            uploadTaskSnapshot,
-            uploadTaskSnaphot: uploadTaskSnapshot, // Preserving legacy typo
-            metaDataSnapshot
-          }
-          dispatch({
-            type: FILE_UPLOAD_COMPLETE,
-            meta: { ...config, filename },
-            payload
-          })
-          return payload
+      // Write File metadata to either Real Time Database or Firestore (depending on config)
+      return writeMetadataToDb({
+        firebase,
+        uploadTaskSnapshot,
+        dbPath,
+        options
+      }).then(payload => {
+        dispatch({
+          type: FILE_UPLOAD_COMPLETE,
+          meta: { ...config, filename },
+          payload
         })
+        return payload
+      })
     })
     .catch(err => {
+      if (enableLogging || logErrors) {
+        /* eslint-disable no-console */
+        console.error &&
+          console.error(`RRF: Error uploading file: ${err.message || err}`, err)
+        /* eslint-enable no-console */
+      }
       dispatch({ type: FILE_UPLOAD_ERROR, path, payload: err })
       return Promise.reject(err)
     })
