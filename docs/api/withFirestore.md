@@ -2,8 +2,8 @@
 
 ### Table of Contents
 
--   [createWithFirestore](#createwithfirestore)
--   [withFirestore](#withfirestore)
+-   [createWithFirestore][1]
+-   [withFirestore][2]
 
 ## createWithFirestore
 
@@ -15,7 +15,7 @@ needing to access a firebase instance created under a different store key.
 
 **Parameters**
 
--   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
+-   `storeKey` **[String][3]** Name of redux store which contains
     Firebase state (`state.firebase`) (optional, default `'store'`)
 
 **Examples**
@@ -32,7 +32,7 @@ const withFirestore = createWithFirestore('anotherStore')
 export default withFirestore(SomeComponent)
 ```
 
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Higher Order Component which accepts an array of
+Returns **[Function][4]** Higher Order Component which accepts an array of
 watchers config and wraps a React Component
 
 ## withFirestore
@@ -43,7 +43,7 @@ Higher Order Component that attaches `firestore`, `firebase`
 and `dispatch` as props to React Components. Firebase instance is gathered
 from `store.firestore`, which is attached to store by the store enhancer
 (`reduxFirestore`) during setup of
-[`redux-firestore`](https://github.com/prescottprue/redux-firestore)
+[`redux-firestore`][5]
 
 **Examples**
 
@@ -88,5 +88,15 @@ export default compose(
 )
 ```
 
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Which accepts a component to wrap and returns the
+Returns **[Function][4]** Which accepts a component to wrap and returns the
 wrapped component
+
+[1]: #createwithfirestore
+
+[2]: #withfirestore
+
+[3]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[4]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[5]: https://github.com/prescottprue/redux-firestore
