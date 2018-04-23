@@ -67,9 +67,10 @@ export const createFirebaseConnect = (storeKey = 'store') => (
       if (!isEqual(data, this.prevData)) {
         const itemsToSubscribe = differenceWith(data, this.prevData, isEqual)
         const itemsToUnsubscribe = differenceWith(this.prevData, data, isEqual)
+        console.log('items to itemsToSubscribe', { itemsToSubscribe, itemsToUnsubscribe })
 
         this.prevData = data
-        // UnWatch all current events
+        // Call unWatch for queries which have changed
         unWatchEvents(
           firebase,
           dispatch,
@@ -78,7 +79,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
         // Get watch events from new data
         this._firebaseEvents = getEventsFromInput(data)
 
-        // Watch new events
+        // Watch new events and ones that have changed
         watchEvents(firebase, dispatch, getEventsFromInput(itemsToSubscribe))
       }
     }

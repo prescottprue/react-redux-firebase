@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { isEqual } from 'lodash'
+import { isEqual, differenceWith } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { createCallable, wrapDisplayName } from './utils'
 
@@ -57,8 +57,12 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       const { firebase, firestore } = this.store
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.store)
+      console.log('items to itemsToSubscribe', { data })
       // Handle a data parameter having changed
       if (firebase.firestore && !isEqual(data, this.prevData)) {
+        const itemsToSubscribe = differenceWith(data, this.prevData, isEqual)
+        const itemsToUnsubscribe = differenceWith(this.prevData, data, isEqual)
+        console.log('items to itemsToSubscribe', { itemsToSubscribe, itemsToUnsubscribe })
         // UnWatch all current events
         firestore.unsetListeners(this.prevData)
         this.prevData = data

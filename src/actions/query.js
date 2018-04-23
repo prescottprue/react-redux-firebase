@@ -118,6 +118,13 @@ export const watchEvent = (firebase, dispatch, options) => {
         })
       })
       .catch(err => {
+        if (enableLogging || logErrors) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `RRF: Error retrieving data for path: ${path}, storeAs: ${storeAs}. Firebase:`,
+            err
+          )
+        }
         dispatch({
           type: actionTypes.UNAUTHORIZED_ERROR,
           payload: err
@@ -161,7 +168,7 @@ export const watchEvent = (firebase, dispatch, options) => {
     err => {
       if (enableLogging || logErrors) {
         // eslint-disable-next-line no-console
-        console.log(
+        console.error(
           `RRF: Error retrieving data for path: ${path}, storeAs: ${storeAs}. Firebase:`,
           err
         )
