@@ -129,16 +129,39 @@ describe('Actions: Storage', () => {
     })
 
     describe('options', () => {
+      let putSpy
+      let fake
+      let refSpy
+
+      beforeEach(() => {
+        putSpy = sinon.spy(() =>
+          Object.assign(Promise.resolve({}), { on: sinon.spy() })
+        )
+        refSpy = sinon.spy(() => ({ put: putSpy }))
+        fake = {
+          storage: Object.assign(
+            () => ({
+              ref: refSpy
+            }),
+            {
+              TaskEvent: { STATE_CHANGED: 'STATE_CHANGED' }
+            }
+          ),
+          _: firebase._
+        }
+      })
+
       describe('name option', () => {
         it('renames file given a string', async () => {
           const options = { name: 'newname.png' }
-          await uploadFile(spy, fakeFirebase, { ...defaultFileMeta, options })
+          await uploadFile(spy, fake, { ...defaultFileMeta, options })
           // dispatch is called
-          // TODO: Confirm dispatch is called with correct name
-          expect(spy).to.have.been.calledOnce
+          expect(putSpy).to.have.been.calledWith({
+            name: defaultFileMeta.file.name
+          })
         })
 
-        it('renames file given a function', async () => {
+        it('renames file name given a function', async () => {
           const nameFunc = sinon.spy()
           const options = { name: nameFunc }
           await uploadFile(spy, fakeFirebase, { ...defaultFileMeta, options })
@@ -148,27 +171,25 @@ describe('Actions: Storage', () => {
       })
 
       describe('progress option', () => {
-        it('calls uploadFileWithProgress', async () => {
-          const putSpy = sinon.spy(() =>
-            Object.assign(Promise.resolve({}), { on: sinon.spy() })
-          )
-          const fake = {
-            storage: Object.assign(
-              () => ({
-                ref: () => ({ put: putSpy })
-              }),
-              {
-                TaskEvent: { STATE_CHANGED: 'STATE_CHANGED' }
-              }
-            ),
-            _: firebase._
-          }
+        it('dispatches FILE_UPLOAD_START and FILE_UPLOAD_COMPLETE', async () => {
           const options = { progress: true }
           await uploadFile(spy, fake, { ...defaultFileMeta, options })
           // firebase.storage() put method is called
           expect(putSpy).to.have.been.calledOnce
-          // dispatch is called twice (once for FILE_UPLOAD_START, next for FILE_UPLOAD_COMPLETE,)
+          // dispatch is called twice (once for FILE_UPLOAD_START, next for FILE_UPLOAD_COMPLETE)
           expect(spy).to.have.been.calledTwice
+        })
+
+        it('works with name option', async () => {
+          const options = { progress: true, name: 'someName' }
+          await uploadFile(spy, fake, { ...defaultFileMeta, options })
+          // firebase.storage() put method is called
+          expect(refSpy).to.have.been.calledWith(
+            `${defaultFileMeta.path}/${options.name}`
+          )
+          expect(putSpy).to.have.been.calledWith({
+            name: defaultFileMeta.file.name
+          })
         })
       })
     })

@@ -35,7 +35,7 @@ export const uploadFile = (dispatch, firebase, config) => {
   if (!firebase.storage) {
     throw new Error('Firebase storage is required to upload files')
   }
-  const { path, file, dbPath, options } = config
+  const { path, file, dbPath, options = { progress: false } } = config
   const { enableLogging, logErrors } = firebase._.config
 
   // File renaming through options (supporting string and function)
