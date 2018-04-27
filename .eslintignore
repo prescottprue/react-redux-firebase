@@ -1,6 +1,10 @@
 examples/**
 coverage/**
 node_modules/**
+dist/**
+es/**
+lib/**
 _book/**
 _site/**
 test/mocha.opts
+docs/**

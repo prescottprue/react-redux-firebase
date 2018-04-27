@@ -185,7 +185,10 @@ export const createAuthIsReady = (store, config) => {
  * @return {Promise} Resolves with results of profile get
  */
 export const updateProfileOnRTDB = (firebase, profileUpdate) => {
-  const { database, _: { config, authUid } } = firebase
+  const {
+    database,
+    _: { config, authUid }
+  } = firebase
   const profileRef = database().ref(`${config.userProfile}/${authUid}`)
   return profileRef.update(profileUpdate).then(() => profileRef.once('value'))
 }
@@ -210,7 +213,10 @@ export const updateProfileOnFirestore = (
   options = {}
 ) => {
   const { useSet = true, merge = true } = options
-  const { firestore, _: { config, authUid } } = firebase
+  const {
+    firestore,
+    _: { config, authUid }
+  } = firebase
   const profileRef = firestore().doc(`${config.userProfile}/${authUid}`)
   // Use set with merge (to prevent "No document to update") unless otherwise
   // specificed through options

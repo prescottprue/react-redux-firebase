@@ -35,7 +35,9 @@ export const watchEvent = (firebase, dispatch, options) => {
     isQuery,
     storeAs
   } = options
-  const { config: { enableLogging, logErrors } } = firebase._
+  const {
+    config: { enableLogging, logErrors }
+  } = firebase._
 
   const watchPath = !storeAs ? path : `${path}@${storeAs}`
   const id = queryId || getQueryIdFromPath(path)

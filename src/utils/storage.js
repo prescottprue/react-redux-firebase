@@ -25,12 +25,44 @@ export function deleteFile(firebase, { path, dbPath }) {
       }
 
       // Choose delete function based on config (Handling Firestore and RTDB)
-      const metaDeletePromise = firebase._.config.useFirestoreForStorageMeta
-        ? firebase.firestore().doc(dbPath).delete // file meta in Firestore
-        : firebase.database().ref(dbPath).remove // file meta in RTDB
+      const metaDeletePromise = () =>
+        firebase._.config.useFirestoreForStorageMeta
+          ? firebase
+              .firestore()
+              .doc(dbPath)
+              .delete() // file meta in Firestore
+          : firebase
+              .database()
+              .ref(dbPath)
+              .remove() // file meta in RTDB
 
       return metaDeletePromise().then(() => ({ path, dbPath }))
     })
+}
+
+function createUploadMetaResponseHandler({ fileData, uploadTaskSnapshot }) {
+  return function uploadResultFromSnap(metaDataSnapshot) {
+    const result = {
+      snapshot: metaDataSnapshot,
+      key: metaDataSnapshot.key || metaDataSnapshot.id,
+      File: fileData,
+      metaDataSnapshot,
+      uploadTaskSnapshot,
+      // Deprecation of mispelled word
+      get uploadTaskSnaphot() {
+        /* eslint-disable no-console */
+        console.warn(
+          'Warning "uploadTaskSnaphot" method is deprecated (in favor of the correctly spelled version) and will be removed in the next major version'
+        )
+        /* eslint-enable no-console */
+        return uploadTaskSnapshot
+      }
+    }
+    if (metaDataSnapshot.id) {
+      result.id = metaDataSnapshot.id
+    }
+    return result
+  }
 }
 
 /**
@@ -52,9 +84,12 @@ export function writeMetadataToDb({
   const {
     metadata: { name, fullPath, downloadURLs, size, contentType }
   } = uploadTaskSnapshot
+  // Support metadata factories from both global config and options
   const { fileMetadataFactory, useFirestoreForStorageMeta } = firebase._.config
   const { metadataFactory } = options
   const metaFactoryFunction = metadataFactory || fileMetadataFactory
+
+  // File metadata object
   const originalFileMeta = {
     name,
     fullPath,
@@ -71,44 +106,24 @@ export function writeMetadataToDb({
     ? metaFactoryFunction(uploadTaskSnapshot, firebase, originalFileMeta)
     : originalFileMeta
 
-  // Write metadata to Firestore
-  if (useFirestoreForStorageMeta) {
-    return firebase
-      .firestore()
-      .collection(dbPath)
-      .add(fileData)
-      .then(metaDataSnapshot => ({
-        snapshot: metaDataSnapshot,
-        File: fileData,
-        uploadTaskSnapshot,
-        id: metaDataSnapshot.id,
-        key: metaDataSnapshot.id, // Preserve interface from RTDB
-        uploadTaskSnaphot: uploadTaskSnapshot, // Preserving legacy typo
-        metaDataSnapshot
-      }))
-  }
+  // Create the snapshot handler function
+  const resultFromSnap = createUploadMetaResponseHandler({
+    fileData,
+    uploadTaskSnapshot
+  })
 
-  // Write metadata to Real Time Database
-  return firebase
-    .database()
-    .ref(dbPath)
-    .push(fileData)
-    .then(metaDataSnapshot => ({
-      snapshot: metaDataSnapshot,
-      key: metaDataSnapshot.key,
-      File: fileData,
-      metaDataSnapshot,
-      uploadTaskSnapshot,
-      // Deprecation of mispelled word
-      get uploadTaskSnaphot() {
-        /* eslint-disable no-console */
-        console.warn(
-          'Warning "uploadTaskSnaphot" method is deprecated (in favor of the correctly spelled version) and will be removed in the next major version'
-        )
-        /* eslint-enable no-console */
-        return uploadTaskSnapshot
-      }
-    }))
+  const metaSetPromise = fileData =>
+    useFirestoreForStorageMeta
+      ? firebase // Write metadata to Firestore
+          .firestore()
+          .collection(dbPath)
+          .add(fileData)
+      : firebase // Write metadata to Real Time Database
+          .database()
+          .ref(dbPath)
+          .push(fileData)
+
+  return metaSetPromise(fileData).then(resultFromSnap)
 }
 
 /**

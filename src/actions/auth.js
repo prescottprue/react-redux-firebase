@@ -132,7 +132,9 @@ export const handleProfileWatchResponse = (
 }
 
 function createProfileWatchErrorHandler(dispatch, firebase) {
-  const { config: { onProfileListenerError } } = firebase._
+  const {
+    config: { onProfileListenerError }
+  } = firebase._
   return err => {
     /* eslint-disable no-console */
     console.error(`Error with profile listener: ${err.message || ''}`, err)
@@ -202,7 +204,9 @@ export const watchUserProfile = (dispatch, firebase) => {
  * @private
  */
 export const createUserProfile = (dispatch, firebase, userData, profile) => {
-  const { _: { config } } = firebase
+  const {
+    _: { config }
+  } = firebase
   if (!config.userProfile || (!firebase.database && !firebase.firestore)) {
     return Promise.resolve(userData)
   }
@@ -301,7 +305,10 @@ const setupPresence = (dispatch, firebase) => {
     return
   }
   const ref = firebase.database().ref()
-  const { config: { presence, sessions }, authUid } = firebase._
+  const {
+    config: { presence, sessions },
+    authUid
+  } = firebase._
   const amOnline = ref.child('.info/connected')
   const onlineRef = ref
     .child(
@@ -740,7 +747,9 @@ export const verifyPasswordResetCode = (dispatch, firebase, code) => {
  * @private
  */
 export const updateProfile = (dispatch, firebase, profileUpdate) => {
-  const { _: { config } } = firebase
+  const {
+    _: { config }
+  } = firebase
   dispatch({
     type: actionTypes.PROFILE_UPDATE_START,
     payload: profileUpdate
