@@ -137,10 +137,14 @@ export function writeMetadataToDb({
  * @param {Blob} opts.file - File to upload
  * @private
  */
-export const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
+export function uploadFileWithProgress(
+  dispatch,
+  firebase,
+  { path, file, filename, meta }
+) {
   const uploadEvent = firebase
     .storage()
-    .ref(`${path}/${file.name}`)
+    .ref(`${path}/${filename}`)
     .put(file)
 
   // TODO: Allow config to control whether progress it set to state or not
@@ -148,7 +152,7 @@ export const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
     next: snapshot => {
       dispatch({
         type: FILE_UPLOAD_PROGRESS,
-        path,
+        meta,
         payload: {
           snapshot,
           percent: Math.floor(
@@ -158,11 +162,10 @@ export const uploadFileWithProgress = (dispatch, firebase, { path, file }) => {
       })
     },
     error: err => {
-      dispatch({ type: FILE_UPLOAD_ERROR, path, payload: err })
+      dispatch({ type: FILE_UPLOAD_ERROR, meta, payload: err })
       unListen()
     },
     complete: () => {
-      dispatch({ type: FILE_UPLOAD_COMPLETE, path, payload: file })
       unListen()
     }
   })

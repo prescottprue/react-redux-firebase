@@ -35,7 +35,7 @@ export const uploadFile = (dispatch, firebase, config) => {
   if (!firebase.storage) {
     throw new Error('Firebase storage is required to upload files')
   }
-  const { path, file, dbPath, options = { progress: false } } = config
+  const { path, file, dbPath, options } = config
   const { enableLogging, logErrors } = firebase._.config
 
   // File renaming through options (supporting string and function)
@@ -44,12 +44,19 @@ export const uploadFile = (dispatch, firebase, config) => {
     : options.name
   const filename = nameFromOptions || file.name
 
+  const meta = { ...config, filename }
+
   // Dispatch start action
   dispatch({ type: FILE_UPLOAD_START, payload: { ...config, filename } })
 
   const uploadPromise = () =>
     options.progress
-      ? uploadFileWithProgress(dispatch, firebase, { path, file })
+      ? uploadFileWithProgress(dispatch, firebase, {
+          path,
+          file,
+          filename,
+          meta
+        })
       : firebase
           .storage()
           .ref(`${path}/${filename}`)
