@@ -1,11 +1,7 @@
 import { isFunction } from 'lodash'
 import { actionTypes } from '../constants'
 
-const {
-  FILE_UPLOAD_ERROR,
-  FILE_UPLOAD_PROGRESS,
-  FILE_UPLOAD_COMPLETE
-} = actionTypes
+const { FILE_UPLOAD_ERROR, FILE_UPLOAD_PROGRESS } = actionTypes
 
 /**
  * Delete file from Firebase Storage with support for deleteing meta
@@ -17,8 +13,8 @@ const {
  * Firestore depnding on config)
  * @return {Promise} Resolves with path and dbPath
  */
-export const deleteFile = (firebase, { path, dbPath }) =>
-  firebase
+export function deleteFile(firebase, { path, dbPath }) {
+  return firebase
     .storage()
     .ref(path)
     .delete()
@@ -28,22 +24,14 @@ export const deleteFile = (firebase, { path, dbPath }) =>
         return { path }
       }
 
-      // Removing file meta info from Firestore
-      if (firebase._.config.useFirestoreForStorageMeta) {
-        return firebase
-          .firestore()
-          .doc(dbPath)
-          .delete()
-          .then(() => ({ path, dbPath }))
-      }
+      // Choose delete function based on config (Handling Firestore and RTDB)
+      const metaDeletePromise = firebase._.config.useFirestoreForStorageMeta
+        ? firebase.firestore().doc(dbPath).delete // file meta in Firestore
+        : firebase.database().ref(dbPath).remove // file meta in RTDB
 
-      // Removing file meta info from Real Time Database
-      return firebase
-        .database()
-        .ref(dbPath)
-        .remove()
-        .then(() => ({ path, dbPath }))
+      return metaDeletePromise().then(() => ({ path, dbPath }))
     })
+}
 
 /**
  * Write file metadata to Database (either Real Time Datbase or Firestore
@@ -89,18 +77,15 @@ export function writeMetadataToDb({
       .firestore()
       .collection(dbPath)
       .add(fileData)
-      .then(metaDataSnapshot => {
-        const payload = {
-          snapshot: metaDataSnapshot,
-          File: fileData,
-          uploadTaskSnapshot,
-          id: metaDataSnapshot.id,
-          key: metaDataSnapshot.id, // Preserve interface from RTDB
-          uploadTaskSnaphot: uploadTaskSnapshot, // Preserving legacy typo
-          metaDataSnapshot
-        }
-        return payload
-      })
+      .then(metaDataSnapshot => ({
+        snapshot: metaDataSnapshot,
+        File: fileData,
+        uploadTaskSnapshot,
+        id: metaDataSnapshot.id,
+        key: metaDataSnapshot.id, // Preserve interface from RTDB
+        uploadTaskSnaphot: uploadTaskSnapshot, // Preserving legacy typo
+        metaDataSnapshot
+      }))
   }
 
   // Write metadata to Real Time Database
@@ -108,24 +93,22 @@ export function writeMetadataToDb({
     .database()
     .ref(dbPath)
     .push(fileData)
-    .then(metaDataSnapshot => {
-      const payload = {
-        snapshot: metaDataSnapshot,
-        key: metaDataSnapshot.key,
-        File: fileData,
-        uploadTaskSnapshot,
-        get uploadTaskSnaphot() {
-          /* eslint-disable no-console */
-          console.warn(
-            'Warning "uploadTaskSnaphot" method is deprecated (in favor of the correctly spelled version) and will be removed in the next major version'
-          )
-          /* eslint-enable no-console */
-          return uploadTaskSnapshot
-        },
-        metaDataSnapshot
+    .then(metaDataSnapshot => ({
+      snapshot: metaDataSnapshot,
+      key: metaDataSnapshot.key,
+      File: fileData,
+      metaDataSnapshot,
+      uploadTaskSnapshot,
+      // Deprecation of mispelled word
+      get uploadTaskSnaphot() {
+        /* eslint-disable no-console */
+        console.warn(
+          'Warning "uploadTaskSnaphot" method is deprecated (in favor of the correctly spelled version) and will be removed in the next major version'
+        )
+        /* eslint-enable no-console */
+        return uploadTaskSnapshot
       }
-      return payload
-    })
+    }))
 }
 
 /**
@@ -147,7 +130,6 @@ export function uploadFileWithProgress(
     .ref(`${path}/${filename}`)
     .put(file)
 
-  // TODO: Allow config to control whether progress it set to state or not
   const unListen = uploadEvent.on(firebase.storage.TaskEvent.STATE_CHANGED, {
     next: snapshot => {
       dispatch({
