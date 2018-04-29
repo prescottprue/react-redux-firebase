@@ -131,6 +131,14 @@ export const handleProfileWatchResponse = (
   }
 }
 
+/**
+ * Creates a function for handling errors from profile watcher. Used for
+ * both RTDB and Firestore.
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @return {Function} Profile watch error handler function
+ * @private
+ */
 function createProfileWatchErrorHandler(dispatch, firebase) {
   const { config: { onProfileListenerError } } = firebase._
   return err => {

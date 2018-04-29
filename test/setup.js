@@ -9,6 +9,7 @@ const JSDOM = require('jsdom').JSDOM
 const chaiEnzyme = require('chai-enzyme')
 const FirebaseServer = require('firebase-server')
 const Firebase = require('firebase')
+require('firebase/firestore')
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 const WebSocket = require('ws')
 
@@ -16,6 +17,7 @@ const WebSocket = require('ws')
 const fbConfig = {
   apiKey: 'AIzaSyCTUERDM-Pchn_UDTsfhVPiwM4TtNIxots', // placeholder
   authDomain: 'asdf', // placeholder
+  projectId: 'asdf',
   databaseURL: 'ws://127.0.1:5000',
   storageBucket: 'asdf', // placeholder
   messagingSenderId: 'asdf' // placeholder

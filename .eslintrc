@@ -14,7 +14,6 @@ env:
 rules:
   semi: [2, 'never']
   no-console: 'error'
-  object-curly-newline: 0
   prettier/prettier: ['error', {
     singleQuote: true,
     trailingComma: 'none',
