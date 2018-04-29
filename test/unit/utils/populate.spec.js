@@ -5,7 +5,7 @@ import {
   getPopulateObjs,
   getChildType,
   promisesForPopulate
-} from '../../../src/utils/populate'
+} from 'utils/populate'
 let res
 let populates
 

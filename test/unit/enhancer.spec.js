@@ -214,7 +214,8 @@ describe('enhancer', () => {
 
     describe('uploadFiles', () => {
       it('calls uploadFiles Firebase method', () => {
-        expect(store.firebase.uploadFiles('new@email.com')).to.be.rejected
+        expect(store.firebase.uploadFiles('test', [{ name: 'file1' }])).to.be
+          .rejected
       })
     })
 

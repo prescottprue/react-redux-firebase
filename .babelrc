@@ -18,19 +18,18 @@
   ],
   "env": {
     "es": {
-      "comments": false,
-      "plugins": [
-      ]
+      "comments": false
     },
     "commonjs": {
-      "comments": false,
-      "plugins": [
-      ]
+      "comments": false
     },
     "test": {
       "plugins": [
         "transform-runtime",
-        "transform-async-to-generator"
+        "transform-async-to-generator",
+        ["module-resolver", {
+         "root": ["./src"]
+       }]
       ]
     }
   }

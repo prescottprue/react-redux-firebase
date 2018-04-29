@@ -1,6 +1,6 @@
 import { get } from 'lodash'
 import { exampleData } from '../mockData'
-import * as helpers from '../../src/helpers'
+import * as helpers from 'helpers'
 
 let path
 let valName

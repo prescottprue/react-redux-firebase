@@ -7,9 +7,7 @@ import {
   ProviderMock,
   TestContainer
 } from '../utils'
-import firestoreConnect, {
-  createFirestoreConnect
-} from '../../src/firestoreConnect'
+import firestoreConnect, { createFirestoreConnect } from 'firestoreConnect'
 
 const createContainer = () => {
   const store = storeWithFirestore()

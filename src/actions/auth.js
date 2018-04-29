@@ -4,7 +4,8 @@ import { populate } from '../helpers'
 import {
   getLoginMethodAndParams,
   updateProfileOnRTDB,
-  updateProfileOnFirestore
+  updateProfileOnFirestore,
+  setupPresence
 } from '../utils/auth'
 import { promisesForPopulate, getPopulateObjs } from '../utils/populate'
 
@@ -291,68 +292,6 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
       }
       return Promise.reject(err)
     })
-}
-
-/**
- * @description Start presence management for a specificed user uid.
- * Presence collection contains a list of users that are online currently.
- * Sessions collection contains a record of all user sessions.
- * This function is called within login functions if enablePresence: true.
- * @param {Function} dispatch - Action dispatch function
- * @param {Object} firebase - Internal firebase object
- * @return {Promise}
- * @private
- */
-const setupPresence = (dispatch, firebase) => {
-  // exit if database does not exist on firebase instance
-  if (!firebase.database || !firebase.database.ServerValue) {
-    return
-  }
-  const ref = firebase.database().ref()
-  const { config: { presence, sessions }, authUid } = firebase._
-  const amOnline = ref.child('.info/connected')
-  const onlineRef = ref
-    .child(
-      isFunction(presence)
-        ? presence(firebase.auth().currentUser, firebase)
-        : presence
-    )
-    .child(authUid)
-  let sessionsRef = isFunction(sessions)
-    ? sessions(firebase.auth().currentUser, firebase)
-    : sessions
-  if (sessionsRef) {
-    sessionsRef = ref.child(sessions)
-  }
-  amOnline.on('value', snapShot => {
-    if (!snapShot.val()) return
-    // user is online
-    if (sessionsRef) {
-      // add session and set disconnect
-      dispatch({ type: actionTypes.SESSION_START, payload: authUid })
-      // add new session to sessions collection
-      const session = sessionsRef.push({
-        startedAt: firebase.database.ServerValue.TIMESTAMP,
-        user: authUid
-      })
-      // Support versions of react-native-firebase that do not have setPriority
-      // on firebase.database.ThenableReference
-      if (isFunction(session.setPriority)) {
-        // set authUid as priority for easy sorting
-        session.setPriority(authUid)
-      }
-      session
-        .child('endedAt')
-        .onDisconnect()
-        .set(firebase.database.ServerValue.TIMESTAMP, () => {
-          dispatch({ type: actionTypes.SESSION_END })
-        })
-    }
-    // add correct session id to user
-    // remove from presence list
-    onlineRef.set(true)
-    onlineRef.onDisconnect().remove()
-  })
 }
 
 /**

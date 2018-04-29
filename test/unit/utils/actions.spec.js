@@ -1,4 +1,4 @@
-import { wrapInDispatch } from '../../../src/utils/actions'
+import { wrapInDispatch } from 'utils/actions'
 const method = () => Promise.resolve()
 const failMethod = () => Promise.reject(new Error('Some Error'))
 const dispatch = () => {}

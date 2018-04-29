@@ -16,7 +16,7 @@ import {
   resetPassword,
   confirmPasswordReset,
   verifyPasswordResetCode
-} from '../../../src/actions/auth'
+} from 'actions/auth'
 import { cloneDeep } from 'lodash'
 import { actionTypes } from '../../../src/constants'
 import {
@@ -24,7 +24,7 @@ import {
   onAuthStateChangedSpy,
   firebaseWithConfig
 } from '../../utils'
-// import { promisesForPopulate } from '../../../src/utils/populate'
+// import { promisesForPopulate } from 'utils/populate'
 
 let functionSpy
 let dispatchSpy

@@ -4,7 +4,7 @@ import {
   watchEvents,
   unWatchEvents,
   remove
-} from '../../../src/actions/query'
+} from 'actions/query'
 import { actionTypes } from '../../../src/constants'
 let spy
 const dispatch = () => {}

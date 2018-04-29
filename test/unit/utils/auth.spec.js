@@ -1,4 +1,4 @@
-import { getLoginMethodAndParams } from '../../../src/utils/auth'
+import { getLoginMethodAndParams, setupPresence } from 'utils/auth'
 
 describe('Utils: Auth', () => {
   describe('getLoginMethodAndParams', () => {
@@ -72,6 +72,32 @@ describe('Utils: Auth', () => {
         scopes: ['some']
       })
       expect(method).to.equal('signInWithRedirect')
+    })
+  })
+
+  describe('setupPresence', () => {
+    it('throws if path is not defined', () => {
+      expect(() => setupPresence(() => {}, firebase)).to.Throw(
+        Error,
+        `Reference.child failed: First argument was an invalid path = "null". Paths must be non-empty strings and can't contain ".", "#", "$", "[", or "]"`
+      )
+    })
+
+    it('Valid path works', () => {
+      expect(
+        setupPresence(() => {}, {
+          ...firebase,
+          _: { config: { presence: 'online' }, authUid: 'test' }
+        })
+      ).to.equal(undefined)
+    })
+
+    it('exits if database is not defined', () => {
+      expect(setupPresence(() => {}, {})).to.equal(undefined)
+    })
+
+    it('exits if database.ServerValue', () => {
+      expect(setupPresence(() => {}, { database: {} })).to.equal(undefined)
     })
   })
 })

@@ -3,7 +3,7 @@ import {
   uploadFile,
   uploadFiles,
   deleteFile
-} from '../../../src/actions/storage'
+} from 'actions/storage'
 import { fakeFirebase } from '../../utils'
 
 let spy
