@@ -4,8 +4,8 @@ language: node_js
 
 node_js:
   - 6.11.5 # Cloud Functions Runtime (Used for firebase-functions)
-  - 8 # L.T.S
-  - 9 # Current
+  - 8
+  - 9
 
 notifications:
   # Only send notifications when travis status changes
@@ -24,11 +24,20 @@ cache:
 branches:
   only:
     - master
-    - v2.0.0
+    - next
 
 script:
   - npm run lint
   - npm run test:cov
+
+deploy:
+  skip_cleanup: true
+  provider: npm
+  email: $NPM_EMAIL
+  api_key: $NPM_TOKEN
+  on:
+    node: '9'
+    branch: 'master'
 
 after_success:
   - npm install -g codeclimate-test-reporter
