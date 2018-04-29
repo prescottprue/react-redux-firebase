@@ -64,7 +64,12 @@ try {
 } catch (err) {}
 
 // Mock Other Firebase services not included in firebase-server
-// Firebase.storage = () => ({})
+Firebase.storage = () => ({
+  ref: () => ({
+    delete: sinon.spy(() => Promise.resolve()),
+    put: sinon.spy(() => Promise.resolve())
+  })
+})
 // Firebase.messaging = () => ({})
 
 global.firebase = Object.defineProperty(Firebase, '_', {
