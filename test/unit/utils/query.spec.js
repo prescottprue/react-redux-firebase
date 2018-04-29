@@ -7,7 +7,7 @@ import {
   applyParamsToQuery,
   orderedFromSnapshot,
   populateAndDispatch
-} from '../../../src/utils/query'
+} from 'utils/query'
 import { fakeFirebase } from '../../utils'
 
 let createQueryFromParams = queryParams =>

@@ -4,7 +4,7 @@ import {
   watchEvents,
   unWatchEvents,
   remove
-} from '../../../src/actions/query'
+} from 'actions/query'
 import { actionTypes } from '../../../src/constants'
 let spy
 const dispatch = () => {}
@@ -77,6 +77,19 @@ describe('Actions: Query', () => {
       expect(() =>
         watchEvent(firebase, dispatch, { path: 'projects' }, 'projects')
       ).to.Throw
+    })
+
+    it('refcounts watching and unwatching of equal path', () => {
+      let projectPath = { type: 'value', path: 'projects/test' }
+      let numWatchers = () => Object.values(firebase._.watchers).length
+      let numWatchersBefore = numWatchers()
+      expect(watchEvent(firebase, dispatch, projectPath, 'projects'))
+      expect(watchEvent(firebase, dispatch, projectPath, 'projects'))
+      expect(numWatchers() - numWatchersBefore).to.be.equal(1)
+      expect(unWatchEvent(firebase, dispatch, projectPath, 'projects'))
+      expect(numWatchers() - numWatchersBefore).to.be.equal(1)
+      expect(unWatchEvent(firebase, dispatch, projectPath, 'projects'))
+      expect(numWatchers() - numWatchersBefore).to.be.equal(0)
     })
   })
 

@@ -161,7 +161,8 @@ describe('enhancer', () => {
       it('calls onComplete on error', async () => {
         const func = sinon.spy()
         try {
-          await store.firebase.uniqueSet(path, { some: 'asdf' }, func)
+          await store.firebase.set('test', { some: 'other' })
+          await store.firebase.uniqueSet('test', { some: 'other' }, func)
         } catch (err) {
           expect(func).to.have.been.calledOnce
           expect(err).to.exist
@@ -179,12 +180,48 @@ describe('enhancer', () => {
         // confirm data was removed
         expect(afterSnap.val()).to.equal(null)
       })
+
+      it('calls onComplete on success', async () => {
+        const func = sinon.spy()
+        await store.firebase.remove(path, func)
+        expect(func).to.have.been.calledOnce
+      })
+
+      it('calls onComplete on error', async () => {
+        const func = sinon.spy()
+        try {
+          await store.firebase.remove(path, func)
+        } catch (err) {
+          expect(func).to.have.been.calledOnce
+          expect(err).to.exist
+        }
+      })
     })
 
     describe('promiseEvents', () => {
       it('starts promiseEvents', async () => {
         await store.firebase.promiseEvents(['test'])
         expect(store.firebase.ref('test')).to.be.an.object
+      })
+    })
+
+    describe('uploadFile', () => {
+      it('calls uploadFile Firebase method', () => {
+        expect(store.firebase.uploadFile('some/path.pdf', {}, null, {})).to.be
+          .rejected
+      })
+    })
+
+    describe('uploadFiles', () => {
+      it('calls uploadFiles Firebase method', () => {
+        expect(store.firebase.uploadFiles('test', [{ name: 'file1' }])).to.be
+          .rejected
+      })
+    })
+
+    describe('deleteFile', () => {
+      it('calls deleteFile Firebase method', () => {
+        expect(store.firebase.deleteFile('new@email.com')).to.be.rejected
       })
     })
 
@@ -219,6 +256,18 @@ describe('enhancer', () => {
           .to.eventually.be.an.object
       })
     })
+    describe('resetPassword', () => {
+      it('calls resetPassword Firebase method', () => {
+        expect(store.firebase.resetPassword('testCode')).to.be.rejected
+      })
+    })
+
+    describe('confirmPasswordReset', () => {
+      it('calls confirmPasswordReset Firebase method', () => {
+        expect(store.firebase.confirmPasswordReset('testCode', 'testCode')).to
+          .be.rejected
+      })
+    })
 
     describe('verifyPasswordResetCode', () => {
       it('calls verifyPasswordResetCode Firebase method', () => {
@@ -227,6 +276,24 @@ describe('enhancer', () => {
         // .to.be.rejectedWith('Your API key is invalid, please check you have copied it correctly.')
         expect(store.firebase.verifyPasswordResetCode('testCode')).to.be
           .rejected
+      })
+    })
+
+    describe('updateProfile', () => {
+      it('calls updateProfile Firebase method', () => {
+        expect(store.firebase.updateProfile({ new: 'thing' })).to.be.rejected
+      })
+    })
+
+    describe('updateAuth', () => {
+      it('calls updateAuth Firebase method', () => {
+        expect(store.firebase.updateAuth({ new: 'thing' })).to.be.rejected
+      })
+    })
+
+    describe('updateEmail', () => {
+      it('calls updateEmail Firebase method', () => {
+        expect(store.firebase.updateEmail('new@email.com')).to.be.rejected
       })
     })
 
@@ -248,13 +315,16 @@ describe('enhancer', () => {
 
     describe('storage', () => {
       it('is undefined if storage does not exist', () => {
+        const original = Firebase.storage
+        Firebase.storage = null
         expect(() => store.firebase.storage()).to.Throw(
           'store.firebase.storage is not a function'
         )
+        // Reset to original
+        Firebase.storage = original
       })
 
-      // TODO: create an instance with storage mocked
-      it.skip('is exported if it exists', () => {
+      it('is exported if it exists', () => {
         Firebase.storage = () => ({})
         expect(store.firebase.storage()).to.be.an.object
         Firebase.storage = undefined
@@ -268,8 +338,7 @@ describe('enhancer', () => {
         )
       })
 
-      // TODO: create an instance with messaging mocked
-      it.skip('is exported if it exists', () => {
+      it('is exported if it exists', () => {
         Firebase.messaging = () => ({})
         expect(store.firebase.messaging()).to.be.an.object
         Firebase.messaging = undefined

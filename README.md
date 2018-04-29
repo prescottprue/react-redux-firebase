@@ -53,6 +53,7 @@ import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
 import firebase from 'firebase'
 // import { reduxFirestore, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
 // import 'firebase/firestore' // <- needed if using firestore
+// import 'firebase/functions' // <- needed if using httpsCallable
 
 const firebaseConfig = {}
 
@@ -62,11 +63,12 @@ const rrfConfig = {
   // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
 }
 
-// initialize firebase instance
+// Initialize firebase instance
 firebase.initializeApp(firebaseConfig)
 
-// initialize firestore
+// Initialize other services on firebase instance
 // firebase.firestore() // <- needed if using firestore
+// firebase.functions() // <- needed if using httpsCallable
 
 // Add reactReduxFirebase enhancer when making store creator
 const createStoreWithFirebase = compose(

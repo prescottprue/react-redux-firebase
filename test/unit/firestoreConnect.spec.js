@@ -7,14 +7,12 @@ import {
   ProviderMock,
   TestContainer
 } from '../utils'
-import firestoreConnect, {
-  createFirestoreConnect
-} from '../../src/firestoreConnect'
+import firestoreConnect, { createFirestoreConnect } from 'firestoreConnect'
 
 const createContainer = () => {
   const store = storeWithFirestore()
   const WrappedContainer = firestoreConnect(props => [
-    `test/${props.dynamicProp}`
+    props.dynamicProp ? `test/${props.dynamicProp}` : 'test'
   ])(Container)
 
   const tree = TestUtils.renderIntoDocument(
@@ -49,14 +47,17 @@ describe('firestoreConnect', () => {
 
   it('does not change watchers with props changes that do not change listener paths', () => {
     const { parent, container } = createContainer()
+    const data = container.prevData
     parent.setState({ test: 'somethingElse' })
-    expect(container.prevData).to.be.null
+    expect(container.prevData).to.equal(data)
   })
 
   it('reapplies watchers when props change', () => {
     const { parent, container } = createContainer()
+    const data = container.prevData
     parent.setState({ dynamic: 'somethingElse' })
-    expect(container.prevData).to.be.null
+    expect(container.prevData).to.have.property(0, 'test/somethingElse')
+    expect(container.prevData).to.not.equal(data)
   })
 
   describe('sets displayName static as ', () => {

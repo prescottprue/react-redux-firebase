@@ -195,9 +195,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    */
   const remove = (path, onComplete, options) =>
     queryActions.remove(firebase, dispatch, path, options).then(() => {
-      if (typeof onComplete === 'function') {
-        onComplete()
-      }
+      if (typeof onComplete === 'function') onComplete()
       return path
     })
 

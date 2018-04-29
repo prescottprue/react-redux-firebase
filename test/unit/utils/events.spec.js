@@ -1,4 +1,4 @@
-import { getEventsFromInput } from '../../../src/utils/events'
+import { getEventsFromInput } from 'utils/events'
 
 describe('Utils: Events', () => {
   describe('getEventsFromInput', () => {

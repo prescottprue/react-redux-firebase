@@ -19,15 +19,12 @@ export const storeWithFirestore = () => {
     reactReduxFirebase(Firebase, { userProfile: 'users' }),
     reduxFirestore(Firebase) // mock for reduxFirestore from redux-firestore
   )(createStore)
-  return {
-    ...createStoreWithMiddleware(
-      combineReducers({
-        test: (state = {}) => state,
-        firestore: firestoreReducer
-      })
-    ),
-    firestore: { add: () => ({}) }
-  }
+  return createStoreWithMiddleware(
+    combineReducers({
+      test: (state = {}) => state,
+      firestore: firestoreReducer
+    })
+  )
 }
 
 export const TestContainer = () => createSink()

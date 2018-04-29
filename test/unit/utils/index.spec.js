@@ -1,4 +1,4 @@
-import { createCallable } from '../../../src/utils'
+import { createCallable } from 'utils'
 
 describe('Utils: Index', () => {
   describe('createCallable', () => {

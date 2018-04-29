@@ -1,4 +1,4 @@
-import { deleteFile } from '../../../src/utils/storage'
+import { deleteFile } from 'utils/storage'
 import { fakeFirebase } from '../../utils'
 
 describe('Utils: Storage', () => {
