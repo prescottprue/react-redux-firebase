@@ -40,7 +40,20 @@ export function deleteFile(firebase, { path, dbPath }) {
     })
 }
 
+/**
+ * Create a function to handle response from upload.
+ * @param  {Object} fileData - File data which was uploaded
+ * @param  {Object} uploadTaskSnapshot - Snapshot from storage upload task
+ * @return {Function} Function for handling upload result
+ */
 function createUploadMetaResponseHandler({ fileData, uploadTaskSnapshot }) {
+  /**
+   * Converts upload meta data snapshot into an object (handling both
+   * RTDB and Firestore)
+   * @param  {Object} metaDataSnapshot - Snapshot from metadata upload (from
+   * RTDB or Firestore)
+   * @return {Object} Upload result including snapshot, key, File
+   */
   return function uploadResultFromSnap(metaDataSnapshot) {
     const result = {
       snapshot: metaDataSnapshot,
@@ -48,15 +61,8 @@ function createUploadMetaResponseHandler({ fileData, uploadTaskSnapshot }) {
       File: fileData,
       metaDataSnapshot,
       uploadTaskSnapshot,
-      // Deprecation of mispelled word
-      get uploadTaskSnaphot() {
-        /* eslint-disable no-console */
-        console.warn(
-          'Warning "uploadTaskSnaphot" method is deprecated (in favor of the correctly spelled version) and will be removed in the next major version'
-        )
-        /* eslint-enable no-console */
-        return uploadTaskSnapshot
-      }
+      // Support legacy method
+      uploadTaskSnaphot: uploadTaskSnapshot
     }
     if (metaDataSnapshot.id) {
       result.id = metaDataSnapshot.id
