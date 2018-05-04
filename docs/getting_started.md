@@ -31,6 +31,7 @@ const rootReducer = combineReducers({
 ```js
 import { compose } from 'redux'
 import { reactReduxFirebase } from 'react-redux-firebase'
+import firebase from 'firebase'
 
 // Firebase config
 const firebaseConfig = {
@@ -39,6 +40,8 @@ const firebaseConfig = {
   databaseURL: '<your-database-url>',
   storageBucket: '<your-storage-bucket>'
 }
+firebase.initializeApp(config)
+
 // react-redux-firebase options
 const config = {
   userProfile: 'users', // firebase root where user profiles are stored
@@ -51,7 +54,7 @@ const createStoreWithFirebase = compose(
 )(createStore)
 
 // Create store with reducers and initial state
-const store = createStoreWithFirebase(rootReducer, initialState)
+const store = createStoreWithFirebase(rootReducer)
 ```
 
 View the [config section](/config.html) for full list of configuration options.
