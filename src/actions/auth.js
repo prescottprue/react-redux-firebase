@@ -141,10 +141,15 @@ export const handleProfileWatchResponse = (
  * @private
  */
 function createProfileWatchErrorHandler(dispatch, firebase) {
-  const { config: { onProfileListenerError } } = firebase._
-  return err => {
-    /* eslint-disable no-console */
-    console.error(`Error with profile listener: ${err.message || ''}`, err)
+  const {
+    config: { onProfileListenerError, enableLogging, logErrors }
+  } = firebase._
+  return function handleProfileError(err) {
+    if (enableLogging || logErrors) {
+      /* eslint-disable no-console */
+      console.error(`Error with profile listener: ${err.message || ''}`, err)
+      /* eslint-enable no-console */
+    }
     if (isFunction(onProfileListenerError)) {
       const factoryResult = onProfileListenerError(err, firebase)
       if (isFunction(factoryResult.then)) {
