@@ -1,4 +1,6 @@
+/* eslint-disable no-console */
 const exec = require('child_process').exec
+
 const files = [
   {
     src: 'firebaseConnect.js',
@@ -41,27 +43,30 @@ const files = [
     dest: 'constants.md'
   }
 ]
-const pathToDocumentationJs = 'node_modules/documentation/bin/documentation.js'
 
-const generateDocForFile = (file) => {
+function generateDocForFile(file) {
   return new Promise((resolve, reject) => {
-    exec(`${pathToDocumentationJs} build src/${file.src} -f md -o docs/api/${file.dest} --shallow`, (error, stdout) => {
-      if (error !== null) {
-        return reject(error)
+    exec(
+      `$(npm bin)/documentation build src/${file.src} -f md -o docs/api/${
+        file.dest
+      } --shallow`,
+      (error, stdout) => {
+        if (error !== null) {
+          console.log('error generating doc: ', error.message || error)
+          reject(error)
+        } else {
+          console.log('Successfully generated', file)
+          resolve(stdout)
+        }
       }
-      resolve(stdout)
-    })
+    )
   })
 }
 
-(function () {
-  files.forEach(file => {
-    generateDocForFile(file)
-      .then((res) => {
-        console.log('Successfully generated', file) // eslint-disable-line no-console
-      })
-      .catch((err) => {
-        console.log('error generating doc: ', err) // eslint-disable-line no-console
-      })
-  })
+;(async function() {
+  console.log(
+    'Generating API documentation (docs/api) from JSDoc comments within src...'
+  )
+  await Promise.all(files.map(generateDocForFile))
+  console.log('API documentation generated successfully!')
 })()
