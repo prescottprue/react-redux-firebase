@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Redux integration for Firebase. Comes with a Higher Order Components for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -9,7 +9,7 @@
   "unpkg": "dist/react-redux-firebase.min.js",
   "scripts": {
     "clean": "rimraf es lib dist coverage",
-    "lint": "eslint src/** test/unit/** test/setup.js",
+    "lint": "eslint ./src/** ./bin/** ./test/**/*.js",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
     "test": "mocha -R spec ./test/unit/**",
@@ -26,11 +26,11 @@
     "prepush": "npm run lint",
     "docs:clean": "rimraf _book",
     "docs:prepare": "gitbook install",
-    "docs:api": "node bin/api-docs-generate",
+    "docs:api": "babel-node bin/api-docs-generate",
     "docs:build": "npm run docs:prepare && gitbook build -g prescottprue/react-redux-firebase && npm run docs:api",
     "docs:watch": "npm run docs:prepare && gitbook serve",
     "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force",
-    "docs:upload": "node bin/api-docs-upload"
+    "docs:upload": "babel-node bin/api-docs-upload"
   },
   "license": "MIT",
   "homepage": "http://react-redux-firebase.com",

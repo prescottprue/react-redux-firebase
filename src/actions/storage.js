@@ -36,7 +36,7 @@ export const uploadFile = (dispatch, firebase, config) => {
     throw new Error('Firebase storage is required to upload files')
   }
   const { path, file, dbPath, options = { progress: false } } = config || {}
-  const { enableLogging, logErrors } = firebase._.config
+  const { logErrors } = firebase._.config
 
   // File renaming through options (supporting string and function)
   const nameFromOptions = isFunction(options.name)
@@ -95,7 +95,7 @@ export const uploadFile = (dispatch, firebase, config) => {
       })
     })
     .catch(err => {
-      if (enableLogging || logErrors) {
+      if (logErrors) {
         /* eslint-disable no-console */
         console.error &&
           console.error(`RRF: Error uploading file: ${err.message || err}`, err)

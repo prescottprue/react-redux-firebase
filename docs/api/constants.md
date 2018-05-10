@@ -87,13 +87,13 @@ Default configuration options
 -   `sessions` **([String][4] \| [Function][5])** `sessions` Location on Firebase where user
     sessions are stored (only if presense is set). Often set to `'sessions'` or
     `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
--   `enableLogging` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not firebase
+-   `enableLogging` **[Boolean][6]** `false` Whether or not firebase
     database logging is enabled. Providing `true` turns on error logging
     (enabled by itself through `logErrors`).
--   `logErrors` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to log internal
+-   `logErrors` **[Boolean][6]** `true` Whether or not to log internal
     Firebase errors (i.e. error querying or writing data) to the javascript
     console .
--   `preserveOnLogout` **([Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object))** `null` Data parameters to
+-   `preserveOnLogout` **([Array][7] \| [Object][8])** `null` Data parameters to
     preserve when logging out. If Array is passed, each item represents keys
     within state.firebase.data preserve. If an object is passed, Keys associate
     with parts of state to preserve, and the values are Arrays contain keys
@@ -107,9 +107,11 @@ Default configuration options
     whatever is returned from the function is set to that slice of state (`auth`).
 -   `updateProfileOnLogin` **[Boolean][6]** `true` Whether or not to update
     user profile when logging in.
--   `useFirestoreForStorageMeta` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Write storage
+-   `useFirestoreForProfile` **[Boolean][6]** `false` Write profile
+    data to Firestore instead of Real Time Database.
+-   `useFirestoreForStorageMeta` **[Boolean][6]** `false` Write storage
     file metadata to Firestore instead of Real Time Database.
--   `resetBeforeLogin` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to reset auth
+-   `resetBeforeLogin` **[Boolean][6]** `true` Whether or not to reset auth
     and profile when logging in (see issue
     [#254][9]
     for more details).
