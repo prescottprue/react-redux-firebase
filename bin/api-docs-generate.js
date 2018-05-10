@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const exec = require('child_process').exec
+const exec = require('child-process-promise').exec
 
 const files = [
   {
@@ -45,28 +45,31 @@ const files = [
 ]
 
 function generateDocForFile(file) {
-  return new Promise((resolve, reject) => {
-    exec(
-      `$(npm bin)/documentation build src/${file.src} -f md -o docs/api/${
-        file.dest
-      } --shallow`,
-      (error, stdout) => {
-        if (error !== null) {
-          console.log('error generating doc: ', error.message || error)
-          reject(error)
-        } else {
-          console.log('Successfully generated', file)
-          resolve(stdout)
-        }
-      }
-    )
-  })
+  return exec(
+    `$(npm bin)/documentation build src/${file.src} -f md -o docs/api/${
+      file.dest
+    } --shallow`
+  )
+    .then(res => {
+      console.log('Successfully generated', file.dest || file)
+      return res
+    })
+    .catch(error => {
+      console.log('error generating doc: ', error.message || error)
+      return Promise.reject(error)
+    })
 }
 
 ;(async function() {
   console.log(
-    'Generating API documentation (docs/api) from JSDoc comments within src...'
+    'Generating API documentation (docs/api) from JSDoc comments within src...\n'
   )
-  await Promise.all(files.map(generateDocForFile))
-  console.log('API documentation generated successfully!')
+  try {
+    await Promise.all(files.map(generateDocForFile))
+    console.log('\nAPI documentation generated successfully!')
+    process.exit(0)
+  } catch (err) {
+    console.log('Error generating API documentation: ', err.message || err)
+    process.exit(1)
+  }
 })()

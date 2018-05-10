@@ -6,5 +6,4 @@ es/**
 lib/**
 _book/**
 _site/**
-test/mocha.opts
 docs/**
