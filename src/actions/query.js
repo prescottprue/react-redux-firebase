@@ -35,7 +35,7 @@ export const watchEvent = (firebase, dispatch, options) => {
     isQuery,
     storeAs
   } = options
-  const { config: { enableLogging, logErrors } } = firebase._
+  const { config: { logErrors } } = firebase._
 
   const watchPath = !storeAs ? path : `${path}@${storeAs}`
   const id = queryId || getQueryIdFromPath(path)
@@ -159,7 +159,7 @@ export const watchEvent = (firebase, dispatch, options) => {
       })
     },
     err => {
-      if (enableLogging || logErrors) {
+      if (logErrors) {
         // eslint-disable-next-line no-console
         console.log(
           `RRF: Error retrieving data for path: ${path}, storeAs: ${storeAs}. Firebase:`,
