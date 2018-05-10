@@ -9,7 +9,7 @@ import { getFirebase } from 'react-redux-firebase'
 import { combineEpics } from 'redux-observable'
 
 const rootEpic = (...args) =>
-  combineEpics(somethingEpic, epic2)(..args, getFirebase)
+  combineEpics(somethingEpic, epic2)(...args, getFirebase)
 
 // then later in your epics
 const somethingEpic = (action$, store, getFirebase) =>
