@@ -43,6 +43,7 @@ new FirebaseServer(5000, 'localhost.firebaseio.test', {
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 chai.use(chaiEnzyme())
+
 // globals
 global.Firebase = Firebase
 global.expect = chai.expect

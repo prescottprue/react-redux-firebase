@@ -85,7 +85,7 @@
     "chai-as-promised": "^6.0.0",
     "chai-enzyme": "^0.8.0",
     "child-process-promise": "^2.2.1",
-    "codecov": "^2.3.0",
+    "codecov": "^3.0.2",
     "cross-env": "^5.1.0",
     "docdown": "^0.7.2",
     "documentation": "^5.3.2",
