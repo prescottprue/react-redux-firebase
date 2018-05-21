@@ -192,7 +192,7 @@ const enhance = compose(
     ]
   }),
   connect(({ firebase }, props) => ({
-    todo: getVal(firebase, `todos/${props.params.todoId}`), // lodash's get can also be used
+    todo: getVal(firebase, `data/todos/${props.params.todoId}`), // lodash's get can also be used
   }))
 )
 
