@@ -1,7 +1,9 @@
 import { createStore, compose } from 'redux'
 import rootReducer from './reducer'
 import { firebase as fbConfig } from './config'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
 import 'firebase/firestore' // make sure you add this for firestore
 import { reactReduxFirebase } from 'react-redux-firebase'
 import { reduxFirestore } from 'redux-firestore'
@@ -9,7 +11,8 @@ import { reduxFirestore } from 'redux-firestore'
 export default function configureStore (initialState, history) {
   // Initialize Firebase instance
   firebase.initializeApp(fbConfig)
-  firebase.firestore() // Initialize Firestore
+  // Initialize Firestore with timeshot settings
+  firebase.firestore().settings({ timestampsInSnapshots: true })
 
   const createStoreWithMiddleware = compose(
     reactReduxFirebase(firebase,
@@ -22,6 +25,7 @@ export default function configureStore (initialState, history) {
     reduxFirestore(firebase),
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
   )(createStore)
+
   const store = createStoreWithMiddleware(rootReducer)
 
   if (module.hot) {
