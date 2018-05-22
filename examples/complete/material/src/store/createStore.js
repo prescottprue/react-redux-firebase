@@ -2,9 +2,12 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
+// import { reduxFirestore } from 'redux-firestore'
 import makeRootReducer from './reducers'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
 // import 'firebase/firestore' // make sure you add this for firestore
+import 'firebase/database' // make sure you add this for firestore
+import 'firebase/auth' // make sure you add this for firestore
 import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
 import { version } from '../../package.json'
 import { updateLocation } from './location'
@@ -47,6 +50,7 @@ export default (initialState = {}) => {
     compose(
       // pass firebase or app instance and config
       reactReduxFirebase(firebase, reduxConfig),
+      // reduxFirestore(firebase),
       applyMiddleware(...middleware),
       ...enhancers
     )

@@ -21,7 +21,7 @@
   "author": "testuser (https://github.com/testuser)",
   "license": "MIT",
   "dependencies": {
-    "firebase": "^4.12.1",
+    "firebase": "^5.0.1",
     "lodash": "^4.17.4",
     "material-ui": "^0.19.1",
     "normalize.css": "^7.0.0",

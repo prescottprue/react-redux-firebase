@@ -240,7 +240,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
     return firebase
       .firestore()
       .collection(config.userProfile)
-      .doc(userData.uid)
+      .doc(userData.uid || userData.user.uid)
       .get()
       .then(profileSnap => {
         // Return if config for updating profile is not enabled and profile exists
@@ -254,7 +254,9 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
           newProfile = profile
         } else {
           // Convert to JSON format (to prevent issue of writing invalid type to Firestore)
-          const userDataObject = userData.toJSON ? userData.toJSON() : userData
+          const userDataObject = userData.uid
+            ? userData.toJSON ? userData.toJSON() : userData
+            : userData.user.toJSON ? userData.user.toJSON() : userData.user
           // Remove unnecessary auth params (configurable) and preserve types of timestamps
           newProfile = {
             ...omit(userDataObject, config.keysToRemoveFromAuth),
