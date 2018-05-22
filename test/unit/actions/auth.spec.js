@@ -323,7 +323,7 @@ describe('Actions: Auth -', () => {
           // message indicates firebase's internal auth method called
           // invalid key is intentionally provided
           .to.equal(
-            'The custom token format is incorrect. Please check the documentation.'
+            'Invalid assertion format. 3 dot separated segments required.'
           )
       }
     })
