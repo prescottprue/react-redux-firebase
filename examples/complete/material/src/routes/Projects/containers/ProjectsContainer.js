@@ -76,6 +76,10 @@ export default class Projects extends Component {
     const { projects, auth } = this.props
     const { newProjectModal } = this.state
 
+    if (isEmpty(projects)) {
+      return <div className={classes.empty}>No Projects Found</div>
+    }
+
     if (!isLoaded(projects, auth)) {
       return <LoadingSpinner />
     }

@@ -280,7 +280,11 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
   return firebase
     .database()
     .ref()
-    .child(`${config.userProfile}/${userData.uid}`)
+    .child(
+      `${config.userProfile}/${
+        userData.user ? userData.user.uid : userData.uid
+      }`
+    )
     .once('value')
     .then(
       profileSnap =>
