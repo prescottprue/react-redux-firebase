@@ -1,3 +1,4 @@
 import SignupPage from './SignupPage'
+import enhance from './SignupPage.enhancer'
 
-export default SignupPage
+export default enhance(SignupPage)

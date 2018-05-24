@@ -25,7 +25,7 @@ rules:
   jsx-quotes: ['error', 'prefer-double']
   prettier/prettier: ['error', {
     singleQuote: true,
-    trailingComma: 'es6',
+    trailingComma: 'none',
     semi: false,
     bracketSpacing: true,
     jsxBracketSameLine: true,

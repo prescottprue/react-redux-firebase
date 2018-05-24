@@ -3,25 +3,26 @@ import PropTypes from 'prop-types'
 import { map } from 'lodash'
 import { compose, withHandlers } from 'recompose'
 import { isEmpty, withFirebase } from 'react-redux-firebase'
-import { List } from 'material-ui/List'
-import Paper from 'material-ui/Paper'
-import Subheader from 'material-ui/Subheader'
+import List from '@material-ui/core/List'
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 import { withNotifications } from 'modules/notification'
 import { spinnerWhileLoading } from 'utils/components'
 import TodoItem from '../TodoItem'
 import classes from './TodosList.scss'
 
-const TodosList = ({ todos, toggleDone, deleteTodo }) => (
+const TodosList = ({ todos, toggleDone, deleteTodo, uid }) => (
   <Paper className={classes.container}>
     {!isEmpty(todos) ? (
       <div>
-        <Subheader>Todos</Subheader>
+        <Typography>Todos</Typography>
         <List className={classes.list}>
           {map(todos, (todo, id) => (
             <TodoItem
               key={id}
               id={id}
               todo={todo}
+              disabled={todo.createdBy !== uid}
               onCompleteClick={toggleDone}
               onDeleteClick={deleteTodo}
             />
@@ -36,8 +37,9 @@ const TodosList = ({ todos, toggleDone, deleteTodo }) => (
 
 TodosList.propTypes = {
   todos: PropTypes.object,
-  toggleDone: PropTypes.func, // from withHandlers
-  deleteTodo: PropTypes.func, // from withHandlers
+  uid: PropTypes.string,
+  toggleDone: PropTypes.func.isRequired, // from withHandlers
+  deleteTodo: PropTypes.func.isRequired, // from withHandlers
   firebase: PropTypes.object // eslint-disable-line react/no-unused-prop-types
 }
 
@@ -47,8 +49,8 @@ export default compose(
   spinnerWhileLoading(['todos']),
   withHandlers({
     toggleDone: props => (todo, id) => {
-      const { firebase, auth } = props
-      if (!auth || !auth.uid) {
+      const { firebase, uid } = props
+      if (!uid) {
         return props.showError('You must be Logged into Toggle Done')
       }
       return firebase.set(`todos/${id}/done`, !todo.done)

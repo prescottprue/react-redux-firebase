@@ -1,36 +1,23 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { browserHistory, Router } from 'react-router'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import { Provider } from 'react-redux'
-import { Notifications } from 'modules/notification'
+import ThemeSettings from 'theme'
 
-// Themeing/Styling
-import Theme from 'theme'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
+const theme = createMuiTheme(ThemeSettings)
 
-export default class AppContainer extends Component {
-  static childContextTypes = {
-    muiTheme: PropTypes.object
-  }
+const App = ({ routes, store }) => (
+  <MuiThemeProvider theme={theme}>
+    <Provider store={store}>
+      <Router history={browserHistory}>{routes}</Router>
+    </Provider>
+  </MuiThemeProvider>
+)
 
-  static propTypes = {
-    routes: PropTypes.object.isRequired,
-    store: PropTypes.object.isRequired
-  }
-
-  getChildContext = () => ({
-    muiTheme: getMuiTheme(Theme)
-  })
-
-  render() {
-    const { routes, store } = this.props
-    return (
-      <Provider store={store}>
-        <div>
-          <Router history={browserHistory}>{routes}</Router>
-          <Notifications />
-        </div>
-      </Provider>
-    )
-  }
+App.propTypes = {
+  routes: PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired
 }
+
+export default App

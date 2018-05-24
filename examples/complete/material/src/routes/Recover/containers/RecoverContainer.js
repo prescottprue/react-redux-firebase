@@ -1,16 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { firebaseConnect } from 'react-redux-firebase'
-import Snackbar from 'material-ui/Snackbar'
-import Paper from 'material-ui/Paper'
+import { withFirebase } from 'react-redux-firebase'
+import Snackbar from '@material-ui/core/Snackbar'
+import Paper from '@material-ui/core/Paper'
 import RecoverForm from '../components/RecoverForm'
 import EmailForm from '../components/EmailForm'
 
-@firebaseConnect() // adds this.props.firebase
-export default class RecoverContainer extends Component {
-  static propTypes = {
-    firebase: PropTypes.object
-  }
+class RecoverContainer extends Component {
+  /* eslint-disable no-undef */
   state = {
     message: null,
     open: false
@@ -32,6 +29,7 @@ export default class RecoverContainer extends Component {
       })
 
   recoverAccount = ({ code, password }) => {
+    /* eslint-enable no-undef */
     const {
       verifyPasswordResetCode,
       confirmPasswordReset
@@ -68,3 +66,9 @@ export default class RecoverContainer extends Component {
     )
   }
 }
+
+RecoverContainer.propTypes = {
+  firebase: PropTypes.object.isRequired
+}
+
+export default withFirebase(RecoverContainer)

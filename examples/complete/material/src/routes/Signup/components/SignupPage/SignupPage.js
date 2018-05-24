@@ -2,11 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import GoogleButton from 'react-google-button'
-import Paper from 'material-ui/Paper'
-import { withFirebase } from 'react-redux-firebase'
-import { withHandlers, pure, compose } from 'recompose'
-import { UserIsNotAuthenticated } from 'utils/router'
-import { withNotifications } from 'modules/notification'
+import Paper from '@material-ui/core/Paper'
 import { LOGIN_PATH } from 'constants'
 import SignupForm from '../SignupForm'
 
@@ -31,29 +27,9 @@ export const SignupPage = ({ emailSignup, googleLogin, onSubmitFail }) => (
 )
 
 SignupPage.propTypes = {
-  emailSignup: PropTypes.func,
-  onSubmitFail: PropTypes.func,
-  googleLogin: PropTypes.func
+  emailSignup: PropTypes.func, // from enhancer (withHandlers - firebase)
+  googleLogin: PropTypes.func, // from enhancer (withHandlers - firebase)
+  onSubmitFail: PropTypes.func // from enhancer (reduxForm)
 }
 
-export default compose(
-  UserIsNotAuthenticated, // redirect to list page if logged in
-  pure,
-  withNotifications, // add props.showError
-  withFirebase, // add props.firebase (firebaseConnect() can also be used)
-  withHandlers({
-    onSubmitFail: props => (formErrs, dispatch, err) =>
-      props.showError(formErrs ? 'Form Invalid' : err.message || 'Error'),
-    googleLogin: ({ firebase, showError }) => e =>
-      firebase
-        .login({ provider: 'google', type: 'popup' })
-        .catch(err => showError(err.message)),
-    emailSignup: ({ firebase, showError }) => creds =>
-      firebase
-        .createUser(creds, {
-          email: creds.email,
-          username: creds.username
-        })
-        .catch(err => showError(err.message))
-  })
-)(SignupPage)
+export default SignupPage

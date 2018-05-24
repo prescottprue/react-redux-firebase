@@ -1,83 +1,43 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router'
-import { Field, reduxForm } from 'redux-form'
+import { Field } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
-import RaisedButton from 'material-ui/RaisedButton'
-import Checkbox from 'material-ui/Checkbox'
-import { RECOVER_PATH, LOGIN_FORM_NAME } from 'constants'
-import { validateEmail } from 'utils/form'
+import Button from '@material-ui/core/Button'
+import { required, validateEmail } from 'utils/form'
 import classes from './LoginForm.scss'
 
-export const LoginForm = ({
-  pristine,
-  reset,
-  submitting,
-  handleSubmit,
-  loginDisabled
-}) => (
+export const LoginForm = ({ pristine, submitting, handleSubmit }) => (
   <form className={classes.container} onSubmit={handleSubmit}>
     <Field
       name="email"
       component={TextField}
-      floatingLabelText="Email"
-      validate={[validateEmail]}
+      label="Email"
+      validate={[required, validateEmail]}
     />
     <Field
       name="password"
       component={TextField}
-      floatingLabelText="Password"
+      label="Password"
       type="password"
-    />
-    <div>
-      <strong>OR</strong>
-    </div>
-    <Field
-      name="phoneNumber"
-      component={TextField}
-      disabled={loginDisabled}
-      floatingLabelText="Phone"
+      validate={required}
     />
     <div className={classes.submit}>
-      <RaisedButton
-        label={submitting ? 'Loading' : 'Clear'}
-        secondary
-        onTouchTap={reset}
-        type="reset"
-        disabled={pristine || submitting}
-        style={{ marginRight: '2rem' }}
-      />
-      <RaisedButton
-        label={submitting ? 'Loading' : 'Login'}
-        primary
+      <Button
+        color="primary"
         type="submit"
-        disabled={loginDisabled || pristine || submitting}
-      />
-    </div>
-    <div className={classes.options}>
-      <div className={classes.remember}>
-        <Checkbox
-          name="remember"
-          value="remember"
-          label="Remember"
-          labelStyle={{ fontSize: '.8rem' }}
-        />
-      </div>
-      <Link className={classes.recover} to={RECOVER_PATH}>
-        Forgot Password?
-      </Link>
+        raised
+        disabled={pristine || submitting}>
+        {submitting ? 'Loading' : 'Login'}
+      </Button>
     </div>
   </form>
 )
 
 LoginForm.propTypes = {
-  loginDisabled: PropTypes.bool,
+  onSubmit: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
   pristine: PropTypes.bool.isRequired, // added by redux-form
-  reset: PropTypes.func.isRequired, // added by redux-form
   submitting: PropTypes.bool.isRequired, // added by redux-form
-  handleSubmit: PropTypes.func.isRequired // added by redux-form
+  handleSubmit: PropTypes.func.isRequired // added by redux-form (calls onSubmit)
 }
 
-export default reduxForm({
-  form: LOGIN_FORM_NAME
-})(LoginForm)
+export default LoginForm

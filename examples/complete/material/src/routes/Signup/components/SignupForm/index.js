@@ -1,3 +1,4 @@
 import SignupForm from './SignupForm'
+import enhance from './SignupForm.enhancer'
 
-export default SignupForm
+export default enhance(SignupForm)

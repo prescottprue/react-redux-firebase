@@ -1,120 +1,60 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router'
-import AppBar from 'material-ui/AppBar'
-import IconMenu from 'material-ui/IconMenu'
-import IconButton from 'material-ui/IconButton'
-import MenuItem from 'material-ui/MenuItem'
-import FlatButton from 'material-ui/FlatButton'
-import DownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down'
-import Avatar from 'material-ui/Avatar'
-import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
-import { LIST_PATH, ACCOUNT_PATH, LOGIN_PATH, SIGNUP_PATH } from 'constants'
-import defaultUserImage from 'static/User.png'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import AccountMenu from './AccountMenu'
+import LoginMenu from './LoginMenu'
+import { LIST_PATH } from 'constants'
 import classes from './Navbar.scss'
 
-const buttonStyle = {
-  color: 'white',
-  textDecoration: 'none',
-  alignSelf: 'center'
-}
-
-const avatarStyles = {
-  wrapper: { marginTop: 0 },
-  button: { marginRight: '.5rem', width: '200px', height: '64px' },
-  buttonSm: {
-    marginRight: '.5rem',
-    width: '30px',
-    height: '64px',
-    padding: '0'
-  }
-}
-
-@firebaseConnect()
-@connect(({ firebase: { auth, profile } }) => ({
-  auth,
-  profile
-}))
-export default class Navbar extends Component {
-  static contextTypes = {
-    router: PropTypes.object.isRequired
-  }
-
-  static propTypes = {
-    profile: PropTypes.object,
-    auth: PropTypes.object,
-    firebase: PropTypes.object.isRequired
-  }
-
-  handleLogout = () => {
-    this.props.firebase.logout()
-    this.context.router.push('/')
-  }
-
-  render() {
-    const { profile, auth } = this.props
-    const dataLoaded = isLoaded(auth, profile)
-    const authExists = isLoaded(auth) && !isEmpty(auth)
-
-    const iconButton = (
-      <IconButton style={avatarStyles.button} disableTouchRipple>
-        <div className={classes.avatar}>
-          <div className="hidden-mobile">
-            <Avatar
-              src={
-                profile && profile.avatarUrl
-                  ? profile.avatarUrl
-                  : defaultUserImage
-              }
-            />
-          </div>
-          <div className={classes['avatar-text']}>
-            <span className={`${classes['avatar-text-name']} hidden-mobile`}>
-              {profile && profile.displayName ? profile.displayName : 'User'}
-            </span>
-            <DownArrow color="white" />
-          </div>
-        </div>
-      </IconButton>
-    )
-
-    const rightMenu =
-      dataLoaded && authExists ? (
-        <IconMenu
-          iconButtonElement={iconButton}
-          targetOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-          animated={false}>
-          <MenuItem
-            primaryText="Account"
-            onTouchTap={() => this.context.router.push(ACCOUNT_PATH)}
-          />
-          <MenuItem primaryText="Sign out" onTouchTap={this.handleLogout} />
-        </IconMenu>
+export const Navbar = ({
+  avatarUrl,
+  displayName,
+  authExists,
+  goToAccount,
+  handleLogout,
+  closeAccountMenu,
+  anchorEl,
+  handleMenu
+}) => (
+  <AppBar position="static">
+    <Toolbar>
+      <Typography
+        type="title"
+        color="inherit"
+        className={classes.flex}
+        component={Link}
+        to={authExists ? LIST_PATH : '/'}>
+        material
+      </Typography>
+      {authExists ? (
+        <AccountMenu
+          avatarUrl={avatarUrl}
+          displayName={displayName}
+          onLogoutClick={handleLogout}
+          goToAccount={goToAccount}
+          closeAccountMenu={closeAccountMenu}
+          handleMenu={handleMenu}
+          anchorEl={anchorEl}
+        />
       ) : (
-        <div className={classes.menu}>
-          <Link to={SIGNUP_PATH}>
-            <FlatButton label="Sign Up" style={buttonStyle} />
-          </Link>
-          <Link to={LOGIN_PATH}>
-            <FlatButton label="Login" style={buttonStyle} />
-          </Link>
-        </div>
-      )
+        <LoginMenu />
+      )}
+    </Toolbar>
+  </AppBar>
+)
 
-    return (
-      <AppBar
-        title={
-          <Link to={authExists ? LIST_PATH : '/'} className={classes.brand}>
-            material
-          </Link>
-        }
-        showMenuIconButton={false}
-        iconElementRight={rightMenu}
-        iconStyleRight={authExists ? avatarStyles.wrapper : {}}
-        className={classes.appBar}
-      />
-    )
-  }
+Navbar.propTypes = {
+  displayName: PropTypes.string, // from enhancer (flattenProps - profile)
+  avatarUrl: PropTypes.string, // from enhancer (flattenProps - profile)
+  authExists: PropTypes.bool, // from enhancer (withProps - auth)
+  goToAccount: PropTypes.func.isRequired, // from enhancer (withHandlers - router)
+  handleLogout: PropTypes.func.isRequired, // from enhancer (withHandlers - firebase)
+  closeAccountMenu: PropTypes.func.isRequired, // from enhancer (withHandlers - firebase)
+  handleMenu: PropTypes.func.isRequired, // from enhancer (withHandlers - firebase)
+  anchorEl: PropTypes.object // from enhancer (withStateHandlers - handleMenu)
 }
+
+export default Navbar

@@ -2,13 +2,12 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
-// import { reduxFirestore } from 'redux-firestore'
 import makeRootReducer from './reducers'
 import firebase from 'firebase/app'
-// import 'firebase/firestore' // make sure you add this for firestore
-import 'firebase/database' // make sure you add this for firestore
-import 'firebase/auth' // make sure you add this for firestore
-import { firebase as fbConfig, reduxFirebase as reduxConfig } from '../config'
+import 'firebase/database'
+import 'firebase/auth'
+import 'firebase/storage'
+import { firebase as fbConfig, reduxFirebase as rrfConfig } from '../config'
 import { version } from '../../package.json'
 import { updateLocation } from './location'
 
@@ -37,9 +36,8 @@ export default (initialState = {}) => {
     }
   }
 
-  // Initialize Firebase instance and Firestore (optional)
+  // Initialize Firebase
   firebase.initializeApp(fbConfig)
-  // firebase.firestore()
 
   // ======================================================
   // Store Instantiation and HMR Setup
@@ -48,19 +46,12 @@ export default (initialState = {}) => {
     makeRootReducer(),
     initialState,
     compose(
-      // pass firebase or app instance and config
-      reactReduxFirebase(firebase, reduxConfig),
-      // reduxFirestore(firebase),
       applyMiddleware(...middleware),
+      reactReduxFirebase(firebase, rrfConfig),
       ...enhancers
     )
   )
   store.asyncReducers = {}
-
-  // optional way to listen for auth ready (requires attachAuthIsReady: true)
-  // store.firebaseAuthIsReady.then(() => {
-  //   console.log('Auth has loaded') // eslint-disable-line no-console
-  // })
 
   // To unsubscribe, invoke `store.unsubscribeHistory()` anytime
   store.unsubscribeHistory = browserHistory.listen(updateLocation(store))

@@ -1,3 +1,4 @@
 import Navbar from './Navbar'
+import enhance from './Navbar.enhancer'
 
-export default Navbar
+export default enhance(Navbar)

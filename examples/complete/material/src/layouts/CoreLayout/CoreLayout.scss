@@ -2,8 +2,11 @@
 
 .container {
   height: 100%;
-  overflow-y: hidden;
+  /* momentum scrolling */
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
+
 .children {
   height: calc(100% - 48px);
   overflow-y: scroll;
