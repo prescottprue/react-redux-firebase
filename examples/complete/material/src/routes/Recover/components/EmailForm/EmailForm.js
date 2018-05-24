@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Field, reduxForm } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
-import RaisedButton from 'material-ui/RaisedButton'
+import Button from '@material-ui/core/Button'
 import { required, email } from 'utils/forms'
 import { RECOVER_EMAIL_FORM_NAME } from 'constants'
 import classes from './EmailForm.scss'
@@ -23,7 +23,9 @@ export const EmailForm = ({
       validate={[required, email]}
     />
     <div className={classes.submit}>
-      <RaisedButton label="Send" primary type="submit" disabled={submitting} />
+      <Button color="primary" type="submit" disabled={submitting}>
+        {submitting ? 'Loading...' : 'Send'}
+      </Button>
     </div>
   </form>
 )

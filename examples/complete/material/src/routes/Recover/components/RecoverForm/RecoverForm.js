@@ -2,8 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Field, reduxForm } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
-import RaisedButton from 'material-ui/RaisedButton'
-import Subheader from 'material-ui/Subheader'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 import { required } from 'utils/forms'
 import { RECOVER_CODE_FORM_NAME } from 'constants'
 import classes from './RecoverForm.scss'
@@ -19,29 +19,30 @@ export const RecoverForm = ({
   <form className={classes.container} onSubmit={handleSubmit}>
     <h4>Recover Using Code From Email</h4>
     <div>
-      <Subheader>
+      <Typography>
         <strong>Note:</strong> Not used for OAuth
-      </Subheader>
+      </Typography>
     </div>
-    <Field
-      name="code"
-      component={TextField}
-      label="Recover Code"
-      validate={[required]}
-    />
-    <Field
-      name="password"
-      component={TextField}
-      label="New Password"
-      validate={[required]}
-    />
-    <div className={classes.submit}>
-      <RaisedButton
-        label="Recover"
-        primary
-        type="submit"
-        disabled={submitting}
+    <div>
+      <Field
+        name="code"
+        component={TextField}
+        label="Recover Code"
+        className={classes.field}
+        validate={[required]}
       />
+      <Field
+        name="password"
+        component={TextField}
+        label="New Password"
+        validate={[required]}
+        className={classes.field}
+      />
+    </div>
+    <div className={classes.submit}>
+      <Button color="primary" type="submit" disabled={submitting}>
+        {submitting ? 'Loading...' : 'Recover'}
+      </Button>
     </div>
   </form>
 )

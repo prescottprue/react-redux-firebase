@@ -9,7 +9,7 @@ export default store => ({
       require => {
         /*  Webpack - use require callback to define
           dependencies for bundling   */
-        const Project = require('./containers/ProjectContainer').default
+        const Project = require('./components/ProjectPage').default
 
         /*  Return getComponent   */
         cb(null, Project)

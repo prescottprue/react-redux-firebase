@@ -3,21 +3,36 @@ import PropTypes from 'prop-types'
 import { size } from 'lodash'
 import { connect } from 'react-redux'
 import { pure, compose, renderNothing, branch } from 'recompose'
-import Snackbar from 'material-ui/Snackbar'
-import CloseIcon from 'material-ui/svg-icons/navigation/close'
+import Snackbar from '@material-ui/core/Snackbar'
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
 import * as actions from '../actions'
-const closeIconStyle = { paddingTop: '5px', height: '30px' }
+import { withStyles } from '@material-ui/core/styles'
 
-export const Notifications = ({ allIds, byId, dismissNotification }) => (
+const styles = {
+  buttonRoot: {
+    color: 'white'
+  }
+}
+
+export const Notifications = ({
+  allIds,
+  byId,
+  dismissNotification,
+  classes
+}) => (
   <div>
     {allIds.map(id => (
       <Snackbar
         key={id}
         open
-        contentStyle={{ color: 'white' }}
-        bodyStyle={{ paddingRight: 0 }}
-        action={<CloseIcon color="white" style={closeIconStyle} />}
-        onActionTouchTap={() => dismissNotification(id)}
+        action={
+          <IconButton
+            onClick={() => dismissNotification(id)}
+            classes={{ root: classes.buttonRoot }}>
+            <CloseIcon />
+          </IconButton>
+        }
         message={byId[id].message}
       />
     ))}
@@ -27,11 +42,13 @@ export const Notifications = ({ allIds, byId, dismissNotification }) => (
 Notifications.propTypes = {
   allIds: PropTypes.array.isRequired,
   byId: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
   dismissNotification: PropTypes.func.isRequired
 }
 
 export default compose(
   pure,
+  withStyles(styles),
   connect(({ notifications: { allIds, byId } }) => ({ allIds, byId }), actions),
   branch(props => !size(props.allIds), renderNothing) // only render if notifications exist
 )(Notifications)

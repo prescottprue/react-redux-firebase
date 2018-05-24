@@ -1,3 +1,4 @@
 import AccountPage from './AccountPage'
+import enhance from './AccountPage.enhancer'
 
-export default AccountPage
+export default enhance(AccountPage)

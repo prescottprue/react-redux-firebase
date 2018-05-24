@@ -2,17 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Field, reduxForm } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
-import Paper from 'material-ui/Paper'
-import IconButton from 'material-ui/IconButton'
-import ContentAdd from 'material-ui/svg-icons/content/add'
-import Subheader from 'material-ui/Subheader'
+import Paper from '@material-ui/core/Paper'
+import IconButton from '@material-ui/core/IconButton'
+import ContentAdd from '@material-ui/icons/Add'
+import Typography from '@material-ui/core/Typography'
 import { NEW_TODO_FORM_NAME } from 'constants'
 import { required } from 'utils/form'
 import classes from './NewTodoPanel.scss'
 
 const NewTodoPanel = ({ submitting, handleSubmit, disabled }) => (
   <Paper className={classes.container}>
-    <Subheader>New Todo</Subheader>
+    <Typography>New Todo</Typography>
     <form className={classes.inputSection} onSubmit={handleSubmit}>
       <Field
         name="text"
@@ -23,7 +23,6 @@ const NewTodoPanel = ({ submitting, handleSubmit, disabled }) => (
       <IconButton
         type="submit"
         disabled={submitting}
-        tooltipPosition="top-center"
         tooltip={disabled ? 'Login To Add Todo' : 'Add Todo'}>
         <ContentAdd />
       </IconButton>

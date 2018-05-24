@@ -59,22 +59,23 @@ config.module.rules.push({
   test: /\.(js|jsx)$/,
   exclude: [
     /node_modules/,
-    /react-redux-firebase\/es/,
     /redux-firestore\/es/,
+    /react-redux-firebase\/es/
+    // Add other packages that you are npm linking here
   ],
   use: [
     {
       loader: 'babel-loader',
       query: {
         cacheDirectory: true,
-        // Ignore .babelrc file (prevents issue with global babelrc)
+        // ignore root .babelrc (Check issue #59 for more details)
         babelrc: false,
         plugins: [
           'lodash',
           'transform-decorators-legacy',
-          'transform-export-extensions',
           'babel-plugin-transform-class-properties',
           'babel-plugin-syntax-dynamic-import',
+          'babel-plugin-transform-export-extensions',
           [
             'babel-plugin-transform-runtime',
             {
@@ -159,13 +160,22 @@ config.plugins.push(extractStyles)
 
 // Images
 // ------------------------------------
-config.module.rules.push({
-  test: /\.(png|jpg|gif)$/,
-  loader: 'url-loader',
-  options: {
-    limit: 8192
+config.module.rules.push(
+  {
+    test: /\.(png|jpg|gif)$/,
+    loader: 'url-loader',
+    options: {
+      limit: 8192
+    }
+  },
+  {
+    test: /octicons\.css$/,
+    loader: 'url-loader',
+    options: {
+      limit: 8192
+    }
   }
-})
+)
 
 // Fonts
 // ------------------------------------
@@ -207,8 +217,9 @@ config.plugins.push(
 // ------------------------------------
 if (__DEV__) {
   config.entry.main.push(
-    `webpack-hot-middleware/client.js?path=${config.output
-      .publicPath}__webpack_hmr`
+    `webpack-hot-middleware/client.js?path=${
+      config.output.publicPath
+    }__webpack_hmr`
   )
   config.plugins.push(
     new webpack.HotModuleReplacementPlugin(),

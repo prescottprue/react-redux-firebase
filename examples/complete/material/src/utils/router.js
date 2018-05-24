@@ -13,7 +13,6 @@ const UNAUTHED_REDIRECT = 'UNAUTHED_REDIRECT'
  * @return {Component} wrappedComponent
  */
 export const UserIsAuthenticated = UserAuthWrapper({
-  // eslint-disable-line new-cap
   wrapperDisplayName: 'UserIsAuthenticated',
   LoadingComponent: LoadingSpinner,
   authSelector: ({ firebase: { auth } }) => auth,
@@ -38,7 +37,6 @@ export const UserIsAuthenticated = UserAuthWrapper({
  * @return {Component} wrappedComponent
  */
 export const UserIsNotAuthenticated = UserAuthWrapper({
-  // eslint-disable-line new-cap
   wrapperDisplayName: 'UserIsNotAuthenticated',
   allowRedirectBack: false,
   LoadingComponent: LoadingSpinner,
@@ -48,10 +46,9 @@ export const UserIsNotAuthenticated = UserAuthWrapper({
   authSelector: ({ firebase: { auth } }) => auth,
   authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
     !auth.isLoaded || isInitializing,
-  // predicate: auth => auth === null,
   predicate: auth => auth.isEmpty,
   redirectAction: newLoc => dispatch => {
-    browserHistory.push(newLoc)
+    browserHistory.replace(newLoc)
     dispatch({ type: AUTHED_REDIRECT })
   }
 })

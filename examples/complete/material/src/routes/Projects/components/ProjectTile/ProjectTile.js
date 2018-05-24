@@ -1,36 +1,37 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Paper from 'material-ui/Paper'
-import { isObject } from 'lodash'
-import IconButton from 'material-ui/IconButton'
-import DeleteIcon from 'material-ui/svg-icons/action/delete'
+import Paper from '@material-ui/core/Paper'
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
+import DeleteIcon from '@material-ui/icons/Delete'
 import classes from './ProjectTile.scss'
 
-export const ProjectTile = ({ project, onSelect, onDelete, showDelete }) => (
+export const ProjectTile = ({ name, onSelect, onDelete, showDelete }) => (
   <Paper className={classes.container}>
     <div className={classes.top}>
-      <span className={classes.name} onClick={() => onSelect(project)}>
-        {project.name}
+      <span className={classes.name} onClick={onSelect}>
+        {name || 'No Name'}
       </span>
       {showDelete && onDelete ? (
-        <IconButton tooltip="delete" onClick={onDelete}>
-          <DeleteIcon />
-        </IconButton>
+        <Tooltip title="delete">
+          <IconButton onClick={onDelete}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
       ) : null}
     </div>
-    <span className={classes.owner}>
-      {isObject(project.createdBy)
-        ? project.createdBy.displayName
-        : project.createdBy || 'No Owner'}
-    </span>
   </Paper>
 )
 
 ProjectTile.propTypes = {
-  project: PropTypes.object.isRequired,
+  name: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
   onDelete: PropTypes.func,
   showDelete: PropTypes.bool
+}
+
+ProjectTile.defaultProps = {
+  showDelete: true
 }
 
 export default ProjectTile

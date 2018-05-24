@@ -1,3 +1,4 @@
 import NewProjectDialog from './NewProjectDialog'
+import enhance from './NewProjectDialog.enhancer'
 
-export default NewProjectDialog
+export default enhance(NewProjectDialog)

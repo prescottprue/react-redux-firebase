@@ -1,3 +1,4 @@
 import LoginForm from './LoginForm'
+import enhance from './LoginForm.enhancer'
 
-export default LoginForm
+export default enhance(LoginForm)
