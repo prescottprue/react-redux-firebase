@@ -33,7 +33,7 @@
     "normalize.css": "^7.0.0",
     "object-assign": "^4.1.1",
     "promise": "^7.1.1",
-    "prop-types": "^15.5.10",
+    "prop-types": "^15.6.1",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
     "react-google-button": "^0.3.0",
