@@ -57,7 +57,7 @@ export default compose(
 ```js
 import firebase from 'firebase'
 import { compose, createStore, applyMiddleware } from 'redux'
-import { reactReduxFirebase } from 'react-redux-firebase'
+import { getFirebase, reactReduxFirebase } from 'react-redux-firebase'
 
 // Firebase config
 const firebaseConfig = {
