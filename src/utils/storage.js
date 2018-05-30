@@ -101,10 +101,14 @@ export function writeMetadataToDb({
     fullPath,
     size,
     contentType,
-    downloadURL: downloadURLs[0],
     createdAt: useFirestoreForStorageMeta
       ? firebase.firestore.FieldValue.serverTimestamp()
       : firebase.database.ServerValue.TIMESTAMP
+  }
+
+  // Only attach downloadURL if downloadURLs is defined (not defined in v5.*.*)
+  if (downloadURLs && downloadURLs[0]) {
+    originalFileMeta.downloadURL = downloadURLs[0]
   }
 
   // Apply fileMetadataFactory if it exists in config
