@@ -247,12 +247,9 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
         if (!config.updateProfileOnLogin && profileSnap.exists) {
           return profileSnap.data()
         }
-
-        let newProfile = {}
+        let newProfile = profile
         // If the user did supply a profileFactory, we should use the result of it for the new Profile
-        if (isFunction(config.profileFactory)) {
-          newProfile = profile
-        } else {
+        if (!newProfile) {
           // Convert to JSON format (to prevent issue of writing invalid type to Firestore)
           const userDataObject = userData.uid
             ? userData.toJSON ? userData.toJSON() : userData
@@ -487,12 +484,17 @@ export const login = (dispatch, firebase, credentials) => {
       // Create profile when logging in with external provider
       const user = userData.user || userData
 
-      return createUserProfile(dispatch, firebase, user, {
-        email: user.email,
-        displayName: user.providerData[0].displayName || user.email,
-        avatarUrl: user.providerData[0].photoURL,
-        providerData: user.providerData
-      }).then(profile => ({ profile, ...userData }))
+      return createUserProfile(
+        dispatch,
+        firebase,
+        user,
+        credentials.profile || {
+          email: user.email,
+          displayName: user.providerData[0].displayName || user.email,
+          avatarUrl: user.providerData[0].photoURL,
+          providerData: user.providerData
+        }
+      ).then(profile => ({ profile, ...userData }))
     })
     .catch(err => {
       dispatchLoginError(dispatch, err)
