@@ -97,7 +97,7 @@ export const getLoginMethodAndParams = (firebase, creds) => {
     return { method: 'signInWithRedirect', params: [authProvider] }
   }
   if (token) {
-    return { method: 'signInWithCustomToken', params: [token] }
+    return { method: 'signInAndRetrieveDataWithCustomToken', params: [token] }
   }
   if (phoneNumber) {
     if (!applicationVerifier) {

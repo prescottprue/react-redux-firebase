@@ -129,7 +129,7 @@ export const fakeFirebase = {
               email: 'test@test.com',
               providerData: [{}]
             }),
-    signInWithCustomToken: () => {
+    signInAndRetrieveDataWithCustomToken: () => {
       return Promise.resolve({
         toJSON: () => ({
           stsTokenManager: {

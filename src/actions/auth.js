@@ -457,7 +457,7 @@ export const login = (dispatch, firebase, credentials) => {
       // TODO: Only call createUserProfile once, and just pass different settings
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
-      if (method === 'signInWithCustomToken') {
+      if (method === 'signInAndRetrieveDataWithCustomToken') {
         if (!firebase._.config.updateProfileOnLogin) {
           return { user: userData }
         }
