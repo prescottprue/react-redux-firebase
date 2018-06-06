@@ -110,7 +110,10 @@ export const getLoginMethodAndParams = (firebase, creds) => {
       params: [phoneNumber, applicationVerifier]
     }
   }
-  return { method: 'signInWithEmailAndPassword', params: [email, password] }
+  return {
+    method: 'signInAndRetrieveDataWithEmailAndPassword',
+    params: [email, password]
+  }
 }
 
 /**
