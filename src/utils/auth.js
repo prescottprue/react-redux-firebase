@@ -97,7 +97,13 @@ export const getLoginMethodAndParams = (firebase, creds) => {
     return { method: 'signInWithRedirect', params: [authProvider] }
   }
   if (token) {
-    return { method: 'signInAndRetrieveDataWithCustomToken', params: [token] }
+    const tokenAuth = firebase.auth().signInAndRetrieveDataWithCustomToken
+
+    if (tokenAuth) {
+      return { method: 'signInAndRetrieveDataWithCustomToken', params: [token] }
+    }
+
+    return { method: 'signInWithCustomToken', params: [token] }
   }
   if (phoneNumber) {
     if (!applicationVerifier) {
@@ -110,10 +116,18 @@ export const getLoginMethodAndParams = (firebase, creds) => {
       params: [phoneNumber, applicationVerifier]
     }
   }
-  return {
-    method: 'signInAndRetrieveDataWithEmailAndPassword',
-    params: [email, password]
+
+  const emailPasswordAuth = firebase.auth()
+    .signInAndRetrieveDataWithEmailAndPassword
+
+  if (emailPasswordAuth) {
+    return {
+      method: 'signInAndRetrieveDataWithEmailAndPassword',
+      params: [email, password]
+    }
   }
+
+  return { method: 'signInWithEmailAndPassword', params: [email, password] }
 }
 
 /**

@@ -443,35 +443,31 @@ export const login = (dispatch, firebase, credentials) => {
 
   const { method, params } = getLoginMethodAndParams(firebase, credentials)
 
-  const firebaseAuth = firebase.auth()
-
-  let firebaseMethod = firebaseAuth[method]
-
-  // support older versions of firebase that still use signInWithCustomToken & signInWithEmailAndPassword
-  switch (method) {
-    case 'signInAndRetrieveDataWithCustomToken':
-      firebaseMethod = firebaseAuth.signInWithCustomToken
-      break
-    case 'signInAndRetrieveDataWithEmailAndPassword':
-      firebaseMethod = firebaseAuth.signInWithEmailAndPassword
-      break
-    default:
-      break
-  }
-
-  return firebaseMethod(...params)
+  return firebase
+    .auth()
+    [method](...params)
     .then(userData => {
       // Handle null response from getRedirectResult before redirect has happened
       if (!userData) return Promise.resolve(null)
 
       // For email auth return uid (createUser is used for creating a profile)
-      if (method === 'signInAndRetrieveDataWithEmailAndPassword') {
+      if (
+        [
+          'signInWithEmailAndPassword',
+          'signInAndRetrieveDataWithEmailAndPassword'
+        ].includes(method)
+      ) {
         return { user: userData }
       }
       // TODO: Only call createUserProfile once, and just pass different settings
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
-      if (method === 'signInAndRetrieveDataWithCustomToken') {
+      if (
+        [
+          'signInWithCustomToken',
+          'signInAndRetrieveDataWithCustomToken'
+        ].includes(method)
+      ) {
         if (!firebase._.config.updateProfileOnLogin) {
           return { user: userData }
         }
