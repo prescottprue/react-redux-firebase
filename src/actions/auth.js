@@ -448,13 +448,23 @@ export const login = (dispatch, firebase, credentials) => {
       if (!userData) return Promise.resolve(null)
 
       // For email auth return uid (createUser is used for creating a profile)
-      if (method === 'signInWithEmailAndPassword') {
+      if (
+        [
+          'signInWithEmailAndPassword',
+          'signInAndRetrieveDataWithEmailAndPassword'
+        ].includes(method)
+      ) {
         return { user: userData }
       }
       // TODO: Only call createUserProfile once, and just pass different settings
 
       // For token auth, the user key doesn't exist. Instead, return the JWT.
-      if (method === 'signInWithCustomToken') {
+      if (
+        [
+          'signInWithCustomToken',
+          'signInAndRetrieveDataWithCustomToken'
+        ].includes(method)
+      ) {
         if (!firebase._.config.updateProfileOnLogin) {
           return { user: userData }
         }
