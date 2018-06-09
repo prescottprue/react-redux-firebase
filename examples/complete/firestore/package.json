@@ -13,6 +13,7 @@
     "react-google-button": "*",
     "react-redux": "^4.4.5",
     "react-redux-firebase": "latest",
+    "recompose": "^0.27.1",
     "redux": "^3.6.0",
     "redux-firestore": "latest"
   },

@@ -46,7 +46,11 @@ export function deleteFile(firebase, { path, dbPath }) {
  * @param  {Object} uploadTaskSnapshot - Snapshot from storage upload task
  * @return {Function} Function for handling upload result
  */
-function createUploadMetaResponseHandler({ fileData, uploadTaskSnapshot }) {
+function createUploadMetaResponseHandler({
+  fileData,
+  firebase,
+  uploadTaskSnapshot
+}) {
   /**
    * Converts upload meta data snapshot into an object (handling both
    * RTDB and Firestore)
@@ -55,6 +59,7 @@ function createUploadMetaResponseHandler({ fileData, uploadTaskSnapshot }) {
    * @return {Object} Upload result including snapshot, key, File
    */
   return function uploadResultFromSnap(metaDataSnapshot) {
+    const { useFirestoreForStorageMeta } = firebase._.config
     const result = {
       snapshot: metaDataSnapshot,
       key: metaDataSnapshot.key || metaDataSnapshot.id,
@@ -62,11 +67,29 @@ function createUploadMetaResponseHandler({ fileData, uploadTaskSnapshot }) {
       metaDataSnapshot,
       uploadTaskSnapshot,
       // Support legacy method
-      uploadTaskSnaphot: uploadTaskSnapshot
+      uploadTaskSnaphot: uploadTaskSnapshot,
+      createdAt: useFirestoreForStorageMeta
+        ? firebase.firestore.FieldValue.serverTimestamp()
+        : firebase.database.ServerValue.TIMESTAMP
     }
     if (metaDataSnapshot.id) {
       result.id = metaDataSnapshot.id
     }
+    // Handle different downloadURL patterns (Firebase JS SDK v5.*.* vs v4.*.*)
+    if (metaDataSnapshot.downloadURLs && metaDataSnapshot.downloadURLs[0]) {
+      // Only attach downloadURL if downloadURLs is defined (not defined in v5.*.*)
+      result.downloadURL = metaDataSnapshot.downloadURLs[0]
+    } else if (
+      uploadTaskSnapshot.ref &&
+      typeof uploadTaskSnapshot.ref.getDownloadURL === 'function'
+    ) {
+      // Get downloadURL and attach to response
+      return uploadTaskSnapshot.ref.getDownloadURL().then(downloadURL => ({
+        ...result,
+        downloadURL
+      }))
+    }
+
     return result
   }
 }
@@ -87,34 +110,24 @@ export function writeMetadataToDb({
   dbPath,
   options
 }) {
-  const {
-    metadata: { name, fullPath, downloadURLs, size, contentType }
-  } = uploadTaskSnapshot
   // Support metadata factories from both global config and options
   const { fileMetadataFactory, useFirestoreForStorageMeta } = firebase._.config
   const { metadataFactory } = options
   const metaFactoryFunction = metadataFactory || fileMetadataFactory
 
-  // File metadata object
-  const originalFileMeta = {
-    name,
-    fullPath,
-    size,
-    contentType,
-    downloadURL: downloadURLs[0],
-    createdAt: useFirestoreForStorageMeta
-      ? firebase.firestore.FieldValue.serverTimestamp()
-      : firebase.database.ServerValue.TIMESTAMP
-  }
-
   // Apply fileMetadataFactory if it exists in config
   const fileData = isFunction(metaFactoryFunction)
-    ? metaFactoryFunction(uploadTaskSnapshot, firebase, originalFileMeta)
-    : originalFileMeta
+    ? metaFactoryFunction(
+        uploadTaskSnapshot,
+        firebase,
+        uploadTaskSnapshot.metadata
+      )
+    : uploadTaskSnapshot.metadata
 
   // Create the snapshot handler function
   const resultFromSnap = createUploadMetaResponseHandler({
     fileData,
+    firebase,
     uploadTaskSnapshot
   })
 
