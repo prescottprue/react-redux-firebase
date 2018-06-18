@@ -10,12 +10,15 @@ import { browserHistory } from 'react-router'
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 import makeRootReducer from './reducers'
 import createSagaMiddleware from 'redux-saga'
+import firebase from 'firebase/app';
 
 const firebaseConfig = {} // firebase configuration including databaseURL
 const reduxFirebase = {
   userProfile: 'users',
   enableLogging: 'false'
 }
+
+firebase.initializeApp(firebaseConfig);
 
 function* helloSaga(getFirebase) {
   try {
@@ -35,7 +38,7 @@ export default (initialState = {}, history) => {
     makeRootReducer(),
     {}, // initial state
     compose(
-      reactReduxFirebase(fbConfig, reduxConfig),
+      reactReduxFirebase(firebase, reduxConfig),
       applyMiddleware(...middleware)
     )
   )
