@@ -55,7 +55,7 @@ const fbConfig = {} // object containing Firebase config
 const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
 
 // initialize firebase instance
-firebase.initializeApp(config) // <- new to v2.*.*
+firebase.initializeApp(fbConfig) // <- new to v2.*.*
 // firebase.firestore() // <- needed if using firestore
 
 // Add Firebase to reducers
