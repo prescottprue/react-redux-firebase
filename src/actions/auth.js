@@ -124,7 +124,7 @@ export const handleProfileWatchResponse = (
       .catch(err => {
         if (logErrors) {
           // eslint-disable-next-line no-console
-          console.log(
+          console.error(
             `RRF: Error retrieving data for profile population. Firebase:`,
             err
           )
