@@ -207,6 +207,13 @@ export const defaultConfig = {
     'redirectEventId',
     'stsTokenManager',
     'uid'
+  ],
+  keysToPreserveFromProviderData: [
+    'email',
+    'phoneNumber',
+    'photoURL',
+    'providerId',
+    'uid'
   ]
 }
 
