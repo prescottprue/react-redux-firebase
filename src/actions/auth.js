@@ -75,7 +75,8 @@ export const handleProfileWatchResponse = (
   const {
     profileParamsToPopulate,
     autoPopulateProfile,
-    useFirestoreForProfile
+    useFirestoreForProfile,
+    logErrors
   } = firebase._.config
   const profile = getProfileFromSnap(userProfileSnap)
   if (
@@ -121,6 +122,13 @@ export const handleProfileWatchResponse = (
         }
       })
       .catch(err => {
+        if (logErrors) {
+          // eslint-disable-next-line no-console
+          console.log(
+            `RRF: Error retrieving data for profile population. Firebase:`,
+            err
+          )
+        }
         // Error retrieving data for population onto profile.
         dispatch({
           type: actionTypes.UNAUTHORIZED_ERROR,
