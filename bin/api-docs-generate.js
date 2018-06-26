@@ -41,6 +41,10 @@ const files = [
   {
     src: 'constants.js',
     dest: 'constants.md'
+  },
+  {
+    src: 'reactReduxFirebase.js',
+    dest: 'compose.md'
   }
 ]
 
