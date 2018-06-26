@@ -1,4 +1,4 @@
-import { isArray, isString, isFunction, forEach, omit } from 'lodash'
+import { isArray, isString, isFunction, forEach, omit, pick } from 'lodash'
 import { actionTypes } from '../constants'
 import { populate } from '../helpers'
 import {
@@ -75,7 +75,8 @@ export const handleProfileWatchResponse = (
   const {
     profileParamsToPopulate,
     autoPopulateProfile,
-    useFirestoreForProfile
+    useFirestoreForProfile,
+    logErrors
   } = firebase._.config
   const profile = getProfileFromSnap(userProfileSnap)
   if (
@@ -121,6 +122,13 @@ export const handleProfileWatchResponse = (
         }
       })
       .catch(err => {
+        if (logErrors) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `RRF: Error retrieving data for profile population. Firebase:`,
+            err
+          )
+        }
         // Error retrieving data for population onto profile.
         dispatch({
           type: actionTypes.UNAUTHORIZED_ERROR,
@@ -248,6 +256,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
           return profileSnap.data()
         }
         let newProfile = profile
+
         // If the user did supply a profileFactory, we should use the result of it for the new Profile
         if (!newProfile) {
           // Convert to JSON format (to prevent issue of writing invalid type to Firestore)
@@ -259,6 +268,14 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
             ...omit(userDataObject, config.keysToRemoveFromAuth),
             avatarUrl: userDataObject.photoURL // match profile pattern used for RTDB
           }
+        }
+
+        // Convert custom object type within Provider data to a normal object
+        if (isArray(newProfile.providerData)) {
+          newProfile.providerData = newProfile.providerData.map(
+            providerDataItem =>
+              pick(providerDataItem, config.keysToPreserveFromProviderData)
+          )
         }
 
         // Create/Update the profile
@@ -365,7 +382,7 @@ export const handleRedirectResult = (dispatch, firebase, authData) => {
       preserve: firebase._.config.preserveOnLogin
     })
 
-    createUserProfile(dispatch, firebase, user, {
+    return createUserProfile(dispatch, firebase, user, {
       email: user.email,
       displayName: user.providerData[0].displayName || user.email,
       avatarUrl: user.providerData[0].photoURL,
