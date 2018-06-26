@@ -60,14 +60,14 @@ import { compose, createStore, applyMiddleware } from 'redux'
 import { getFirebase, reactReduxFirebase } from 'react-redux-firebase'
 
 // Firebase config
-const firebaseConfig = {
+const fbConfig = {
   apiKey: '<your-api-key>',
   authDomain: '<your-auth-domain>',
   databaseURL: '<your-database-url>',
   storageBucket: '<your-storage-bucket>'
 }
 // react-redux-firebase options
-const config = {
+const rrfConfig = {
   userProfile: 'users', // firebase root where user profiles are stored
   attachAuthIsReady: true, // attaches auth is ready promise to store
   firebaseStateName: 'firebase' // should match the reducer name ('firebase' is default)
@@ -82,7 +82,7 @@ const createStore = (initialState = {}) => {
     rootReducer,
     initialState,
     compose(
-      reactReduxFirebase(firebase, config),
+      reactReduxFirebase(firebase, rrfConfig),
       applyMiddleware(thunk.withExtraArgument(getFirebase))
     )
   )
@@ -138,12 +138,12 @@ The logic that runs this is partially based on:
 Include the `userProfile` parameter in config when setting up store middleware:
 
 ```js
-const config = {
+const rrfConfig = {
   userProfile: 'users', // where profiles are stored in database
   presence: 'presence', // where list of online users is stored in database
   sessions: 'sessions' // where list of user sessions is stored in database (presence must be enabled)
 }
-reactReduxFirebase(fbConfig, config)
+reactReduxFirebase(fbConfig, rrfConfig)
 ```
 
 Now when logging in through `login` method, user will be listed as online until they logout or end the session (close the tab or window).
