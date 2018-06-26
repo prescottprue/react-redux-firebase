@@ -75,7 +75,7 @@ const config = {
 
 const createStore = (initialState = {}) => {
   // Initialize Firebase instance
-  firebase.initializeApp(fbConfig)
+  firebase.initializeApp(firebaseConfig)
 
   // Add redux Firebase to compose
   const createStoreWithFirebase = createStore(
@@ -143,7 +143,7 @@ const config = {
   presence: 'presence', // where list of online users is stored in database
   sessions: 'sessions' // where list of user sessions is stored in database (presence must be enabled)
 }
-reactReduxFirebase(fbConfig, config)
+reactReduxFirebase(firebaseConfig, config)
 ```
 
 Now when logging in through `login` method, user will be listed as online until they logout or end the session (close the tab or window).
