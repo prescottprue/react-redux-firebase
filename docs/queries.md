@@ -221,14 +221,21 @@ compose(
 
 ### Types Of Queries
 
-#### Once
-To load a firebase location once instead of binding, type `'once'` can be used:
+Just [like with Firebase's SDK different event types can be passed to listeners](https://firebase.google.com/docs/reference/js/firebase.database.Reference#on). To Switch the event type of your listener simply pass the `type` parameter to the query config:
 
 ```javascript
 firebaseConnect([
   { type: 'once', path: '/todos' }
 ])
 ```
+
+The options for event type on queries are as follows:
+* 'value' - (default) This event will trigger once with the initial data stored at this location, and then trigger again each time the data changes.
+* 'once' - Listens for exactly one event of the specified event type, and then stops listening (internally calls [Firebase's `once`](https://firebase.google.com/docs/reference/js/firebase.database.Reference#once))
+* 'child_added' - This event will be triggered once for each initial child at this location, and it will be triggered again every time a new child is added
+* 'child_removed' - This event will be triggered once every time a child is removed
+* 'child_changed' - This event will be triggered when the data stored in a child (or any of its descendants) changes
+* 'child_moved' - This event will be triggered when a child's sort order changes such that its position relative to its siblings changes
 
 ### Query Params
 
