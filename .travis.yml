@@ -3,9 +3,8 @@ sudo: false
 language: node_js
 
 node_js:
-  - 6.14.0 # Maintenance LTS (Used by Cloud Functions Runtime)
-  - 8 # Active LTS
-  - 9
+  - 6 # Maintenance
+  - 8 # Active
   - 10 # Current release
 
 notifications:
