@@ -772,7 +772,7 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
     .then(payload => {
       dispatch({
         type: actionTypes.AUTH_UPDATE_SUCCESS,
-        payload: firebase.auth().currentUser
+        auth: firebase.auth().currentUser
       })
       if (updateInProfile) {
         return updateProfile(dispatch, firebase, authUpdate)
