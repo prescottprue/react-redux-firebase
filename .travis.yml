@@ -5,7 +5,9 @@ language: node_js
 node_js:
   - 6 # Maintenance
   - 8 # Active
-  - 10 # Current release
+  - 9
+  # - 10 disabled due to issues with targaryen + firebase-server and npm ci:
+  # "npm ERR! stringstream not accessible from targaryen:request"
 
 notifications:
   email:
@@ -37,7 +39,7 @@ deploy:
     email: $NPM_EMAIL
     api_key: $NPM_TOKEN
     on:
-      node: '10'
+      node: '9'
       branch: 'master'
   - provider: npm
     skip_cleanup: true
@@ -45,7 +47,7 @@ deploy:
     api_key: $NPM_TOKEN
     tag: next
     on:
-      node: '10'
+      node: '9'
       branch: 'next'
 
 after_success:
