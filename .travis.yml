@@ -5,9 +5,7 @@ language: node_js
 node_js:
   - 6 # Maintenance
   - 8 # Active
-  - 9
-  # - 10 disabled due to issues with targaryen + firebase-server and npm ci:
-  # "npm ERR! stringstream not accessible from targaryen:request"
+  - 10
 
 notifications:
   email:
@@ -20,18 +18,21 @@ cache:
   directories:
     - $HOME/.npm
 
-addons:
-  code_climate:
-    repo_token: $CODE_CLIMATE
-
 branches:
   only:
     - master
     - next
 
+install:
+  - npm i
+
 script:
   - npm run lint
   - npm run test:cov
+
+addons:
+  code_climate:
+    repo_token: $CODE_CLIMATE
 
 deploy:
   - provider: npm
@@ -39,7 +40,7 @@ deploy:
     email: $NPM_EMAIL
     api_key: $NPM_TOKEN
     on:
-      node: '9'
+      node: '10'
       branch: 'master'
   - provider: npm
     skip_cleanup: true
@@ -47,7 +48,7 @@ deploy:
     api_key: $NPM_TOKEN
     tag: next
     on:
-      node: '9'
+      node: '10'
       branch: 'next'
 
 after_success:
