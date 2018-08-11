@@ -2,8 +2,8 @@
 
 ### Table of Contents
 
--   [createFirebaseConnect][1]
--   [firebaseConnect][2]
+-   [createFirebaseConnect](#createfirebaseconnect)
+-   [firebaseConnect](#firebaseconnect)
 
 ## createFirebaseConnect
 
@@ -15,7 +15,7 @@ needing to access a firebase instance created under a different store key.
 
 **Parameters**
 
--   `storeKey` **[String][3]** Name of redux store which contains
+-   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
     Firebase state (state.firebase) (optional, default `'store'`)
 
 **Examples**
@@ -31,7 +31,7 @@ const firebaseConnect = createFirebaseConnect('anotherStore')
 export default firebaseConnect()(SomeComponent)
 ```
 
-Returns **[Function][4]** HOC that accepts a watchArray and wraps a component
+Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** HOC that accepts a watchArray and wraps a component
 
 ## firebaseConnect
 
@@ -42,7 +42,7 @@ to provided firebase paths using React's Lifecycle hooks.
 
 **Parameters**
 
--   `watchArray` **[Array][5]** Array of objects or strings for paths to sync
+-   `watchArray` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
     from Firebase. Can also be a function that returns the array. The function
     is passed the current props and the firebase object.
 
@@ -123,14 +123,4 @@ export default compose(
 )(SomeComponent)
 ```
 
-Returns **[Function][4]** that accepts a component to wrap and returns the wrapped component
-
-[1]: #createfirebaseconnect
-
-[2]: #firebaseconnect
-
-[3]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
-
-[4]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
-
-[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the wrapped component
