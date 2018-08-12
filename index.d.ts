@@ -167,7 +167,7 @@ export function isEmpty(...args: any[]): boolean;
 
 export function isLoaded(...args: any[]): boolean;
 
-export function populate(state: object, path: string, populates: any, notSetValue: any): any;
+export function populate(state: object, path: string, populates: any, notSetValue?: any): any;
 
 export function reactReduxFirebase(instance: object, otherConfig: any): any;
 
@@ -277,13 +277,13 @@ export namespace getVal {
 export namespace helpers {
     function fixPath(path: any): any;
 
-    function getVal(firebase: any, path: any, notSetValue: any): any;
+    function getVal(firebase: any, path: any, notSetValue?: any): any;
 
     function isEmpty(...args: any[]): any;
 
     function isLoaded(...args: any[]): any;
 
-    function populate(state: any, path: any, populates: any, notSetValue: any): any;
+    function populate(state: any, path: any, populates: any, notSetValue?: any): any;
 
     namespace fixPath {
         const prototype: {
