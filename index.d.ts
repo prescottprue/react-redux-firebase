@@ -161,7 +161,7 @@ export function fixPath(path: string): string;
  */
 export function getFirebase(): any;
 
-export function getVal(firebase: object, path: string, notSetValue: any): any;
+export function getVal(firebase: object, path: string, notSetValue?: any): any;
 
 export function isEmpty(...args: any[]): boolean;
 
