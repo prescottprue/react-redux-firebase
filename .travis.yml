@@ -19,7 +19,7 @@ addons:
 
 cache:
   directories:
-    - node_modules
+    - $HOME/.npm
 
 branches:
   only:
