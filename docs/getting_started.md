@@ -40,7 +40,7 @@ const firebaseConfig = {
   databaseURL: '<your-database-url>',
   storageBucket: '<your-storage-bucket>'
 }
-firebase.initializeApp(config)
+firebase.initializeApp(firebaseConfig)
 
 // react-redux-firebase options
 const config = {
