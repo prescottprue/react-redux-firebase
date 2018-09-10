@@ -68,6 +68,72 @@ export const firebaseWithConfig = (config = {}) => ({
   }
 })
 
+/**
+ * Create a Sinon stub that returns with a resolved Promise Object
+ * @param {Any} some
+ * @returns {Sinon.stub}
+ */
+export function createSuccessStub(some) {
+  return sinon.stub().returns(Promise.resolve(some))
+}
+
+/**
+ * Create a Sinon stub that returns with a rejected Promise Object
+ * constaining an Error object with the message "test"
+ * @returns {Sinon.stub}
+ */
+export function createFailureStub(some) {
+  return sinon.stub().returns(Promise.reject(new Error('test')))
+}
+
+let profileUpdate = {}
+
+const stubbedRtdbProfileRef = {
+  update: sinon.spy(setData => {
+    profileUpdate = setData
+    return Promise.resolve()
+  }),
+  once: sinon
+    .stub()
+    .returns(
+      Promise.resolve({ val: () => ({ ...existingProfile, ...profileUpdate }) })
+    )
+}
+
+const stubbedFirestoreProfileRef = {
+  update: sinon.stub().returns(Promise.resolve()),
+  set: sinon.spy(setData => {
+    profileUpdate = setData
+    return Promise.resolve()
+  }),
+  get: sinon.stub().returns(
+    Promise.resolve({
+      data: () => ({ ...existingProfile, ...profileUpdate })
+    })
+  )
+}
+
+export const stubbedFirebase = {
+  _: {
+    uid,
+    config: {
+      userProfile: 'users'
+    }
+  },
+  database: sinon.stub().returns({
+    ref: sinon
+      .stub()
+      .withArgs(`users/${uid}`)
+      .returns(stubbedRtdbProfileRef)
+  }),
+  firestore: sinon.stub().returns({
+    doc: sinon
+      .stub()
+      .withArgs(`users/${uid}`)
+      .returns(stubbedFirestoreProfileRef)
+  })
+}
+
 export const fakeFirebase = {
   _: {
     authUid: '123',
@@ -107,6 +173,10 @@ export const fakeFirebase = {
       equalTo: () => ({}),
       startAt: () => ({}),
       endAt: () => ({})
+      // update: sinon.stub().returns(Promise.resolve()), // used with profile update
+      // once: sinon.stub().returns(Promise.resolve()) // used with profile update
+      // .withArgs('fail')
+      // .returns(Promise.reject(new Error('test')))
     }),
     update: () =>
       Promise.resolve({

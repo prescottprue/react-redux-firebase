@@ -58,7 +58,9 @@ global.XMLHttpRequest = XMLHttpRequest
 global.WebSocket = WebSocket
 global.fbConfig = fbConfig
 global.uid = uid
-
+global.existingProfile = {
+  existing: 'profileVal'
+}
 // Swallow firebase reinitialize error (useful when using watch)
 try {
   Firebase.initializeApp(fbConfig)

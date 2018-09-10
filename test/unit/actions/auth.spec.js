@@ -18,11 +18,14 @@ import {
   verifyPasswordResetCode
 } from 'actions/auth'
 import { cloneDeep } from 'lodash'
-import { actionTypes } from '../../../src/constants'
+import { actionTypes } from 'constants' // eslint-disable-line node/no-deprecated-api
 import {
   fakeFirebase,
+  stubbedFirebase,
+  createSuccessStub,
   onAuthStateChangedSpy,
-  firebaseWithConfig
+  firebaseWithConfig,
+  createFailureStub
 } from '../../utils'
 // import { promisesForPopulate } from 'utils/populate'
 
@@ -32,9 +35,7 @@ let res
 let profile
 let profileSnap
 let dispatch
-const createSuccessSpy = some => sinon.spy(() => Promise.resolve(some))
-const createFailureSpy = () =>
-  sinon.spy(() => Promise.reject(new Error('test')))
+
 const addSpyToCurrentUser = (methodName, spyFunc) => ({
   ...fakeFirebase,
   auth: () => ({
@@ -551,8 +552,75 @@ describe('Actions: Auth -', () => {
   })
 
   describe('updateProfile', () => {
-    it('returns a promise', () => {
-      expect(updateProfile(dispatch, firebase, {})).to.respondTo('then')
+    it('dispatches PROFILE_UPDATE_START with profile', async () => {
+      const payload = null
+      await updateProfile(dispatch, stubbedFirebase, payload)
+      expect(dispatch).to.have.been.calledWith({
+        type: actionTypes.PROFILE_UPDATE_START,
+        payload
+      })
+    })
+
+    it('dispatches PROFILE_UPDATE_SUCCESS with profile if successful', async () => {
+      const profileUpdate = { some: 'value' }
+      await updateProfile(dispatch, stubbedFirebase, profileUpdate)
+      expect(dispatch).to.have.been.calledWith({
+        type: actionTypes.PROFILE_UPDATE_SUCCESS,
+        payload: { ...profileUpdate, ...existingProfile }
+      })
+    })
+
+    it('returns the user profile snap on success when using RTDB', async () => {
+      const profileUpdate = { some: 'value' }
+      const res = await updateProfile(dispatch, stubbedFirebase, profileUpdate)
+      expect(res).to.have.property('val')
+      expect(res.val).to.be.a.function
+      expect(res.val()).to.have.property('some', profileUpdate.some)
+      expect(res.val()).to.have.property('existing', existingProfile.existing)
+    })
+
+    it('returns the user profile snap on success when using Firestore', async () => {
+      const profileUpdate = { some: 'value' }
+      const newStubbed = stubbedFirebase
+      newStubbed._ = {
+        ...newStubbed._,
+        config: { userProfile: 'users', useFirestoreForProfile: true }
+      }
+      res = await updateProfile(dispatch, newStubbed, profileUpdate)
+      expect(dispatch).to.have.been.calledWith({
+        type: actionTypes.PROFILE_UPDATE_START,
+        payload: profileUpdate
+      })
+      expect(dispatch).to.have.been.calledWith({
+        type: actionTypes.PROFILE_UPDATE_SUCCESS,
+        payload: { ...profileUpdate, ...existingProfile }
+      })
+      expect(res).to.have.property('data')
+      expect(res.data).to.be.a.function
+      expect(res.data()).to.have.property('some', profileUpdate.some)
+      expect(res.data()).to.have.property('existing', existingProfile.existing)
+    })
+
+    it('updates profile when using RTDB', async () => {
+      const profileUpdate = { some: 'value' }
+      await updateProfile(dispatch, stubbedFirebase, profileUpdate)
+      expect(stubbedFirebase.database().ref().update).to.have.been.calledWith(
+        profileUpdate
+      )
+    })
+
+    it('updates profile when using Firestore', async () => {
+      const profileUpdate = { some: 'value' }
+      const newStubbed = stubbedFirebase
+      newStubbed._ = {
+        ...newStubbed._,
+        config: { userProfile: 'users', useFirestoreForProfile: true }
+      }
+      res = await updateProfile(dispatch, newStubbed, profileUpdate)
+      expect(stubbedFirebase.firestore().doc().set).to.have.been.calledWith(
+        profileUpdate,
+        { merge: true }
+      )
     })
 
     it('rejects if profile is not an object', async () => {
@@ -584,7 +652,7 @@ describe('Actions: Auth -', () => {
     })
 
     it('calls firebase updateProfile method', async () => {
-      const updateAuthSpy = createSuccessSpy()
+      const updateAuthSpy = createSuccessStub()
       const newFakeFirebase = addSpyToCurrentUser(
         'updateProfile',
         updateAuthSpy
@@ -594,7 +662,7 @@ describe('Actions: Auth -', () => {
     })
 
     it('calls update profile if updateInProfile is true', async () => {
-      const updateAuthSpy = createSuccessSpy()
+      const updateAuthSpy = createSuccessStub()
       const newFakeFirebase = addSpyToCurrentUser(
         'updateProfile',
         updateAuthSpy
@@ -612,7 +680,7 @@ describe('Actions: Auth -', () => {
     })
 
     it('rejects and dispatches on failure', async () => {
-      const updateAuthSpy = createFailureSpy()
+      const updateAuthSpy = createFailureStub()
       const newFakeFirebase = addSpyToCurrentUser(
         'updateProfile',
         updateAuthSpy
@@ -645,14 +713,14 @@ describe('Actions: Auth -', () => {
     })
 
     it('calls firebase updateEmail method', async () => {
-      const updateEmailSpy = createSuccessSpy()
+      const updateEmailSpy = createSuccessStub()
       const newFakeFirebase = addSpyToCurrentUser('updateEmail', updateEmailSpy)
       await updateEmail(dispatch, newFakeFirebase, 'test')
       expect(updateEmailSpy).to.have.been.calledOnce
     })
 
     it('rejects and dispatches on failure', async () => {
-      const updateEmailSpy = createFailureSpy()
+      const updateEmailSpy = createFailureStub()
       const newFakeFirebase = addSpyToCurrentUser('updateEmail', updateEmailSpy)
       try {
         await updateEmail(dispatch, newFakeFirebase, 'test')
@@ -665,7 +733,7 @@ describe('Actions: Auth -', () => {
     })
 
     it('calls update profile if updateInProfile is true', async () => {
-      const updateEmailSpy = createSuccessSpy()
+      const updateEmailSpy = createSuccessStub()
       const newFakeFirebase = addSpyToCurrentUser('updateEmail', updateEmailSpy)
       try {
         await updateEmail(dispatch, newFakeFirebase, 'test', true)
@@ -693,14 +761,14 @@ describe('Actions: Auth -', () => {
     })
 
     it('calls firebase reloadAuth method', async () => {
-      const reloadAuthSpy = createSuccessSpy()
+      const reloadAuthSpy = createSuccessStub()
       const newFakeFirebase = addSpyToCurrentUser('reload', reloadAuthSpy)
       await reloadAuth(dispatch, newFakeFirebase)
       expect(reloadAuthSpy).to.have.been.calledOnce
     })
 
     it('rejects and dispatches on failure', async () => {
-      const reloadAuthSpy = createFailureSpy()
+      const reloadAuthSpy = createFailureStub()
       const newFakeFirebase = addSpyToCurrentUser('reload', reloadAuthSpy)
       try {
         await reloadAuth(dispatch, newFakeFirebase)
@@ -726,7 +794,7 @@ describe('Actions: Auth -', () => {
     })
 
     it('calls firebase linkWithCredential method', async () => {
-      const linkWithCredentialSpy = createSuccessSpy(() => Promise.resolve())
+      const linkWithCredentialSpy = createSuccessStub(() => Promise.resolve())
       const newFakeFirebase = addSpyToCurrentUser(
         'linkWithCredential',
         linkWithCredentialSpy
@@ -736,7 +804,7 @@ describe('Actions: Auth -', () => {
     })
 
     it('attaches confirm method on successful resolve', async () => {
-      const linkWithCredentialSpy = createSuccessSpy({
+      const linkWithCredentialSpy = createSuccessStub({
         confirm: () => Promise.resolve({})
       })
       const newFakeFirebase = addSpyToCurrentUser(
@@ -755,7 +823,7 @@ describe('Actions: Auth -', () => {
     })
 
     it('rejects and dispatches on failure', async () => {
-      const linkWithCredentialSpy = createFailureSpy()
+      const linkWithCredentialSpy = createFailureStub()
       const newFakeFirebase = addSpyToCurrentUser(
         'linkWithCredential',
         linkWithCredentialSpy
@@ -784,7 +852,9 @@ describe('Actions: Auth -', () => {
     })
 
     it('calls firebase signInWithPhoneNumber method', async () => {
-      const signInWithPhoneNumberSpy = createSuccessSpy(() => Promise.resolve())
+      const signInWithPhoneNumberSpy = createSuccessStub(() =>
+        Promise.resolve()
+      )
       const newFakeFirebase = addSpyWithArgsToAuthMethod(
         'signInWithPhoneNumber',
         signInWithPhoneNumberSpy,
@@ -795,7 +865,7 @@ describe('Actions: Auth -', () => {
     })
 
     it('attaches confirm method on successful resolve', async () => {
-      const signInWithPhoneNumberSpy = createSuccessSpy({
+      const signInWithPhoneNumberSpy = createSuccessStub({
         confirm: () => Promise.resolve({})
       })
       const newFakeFirebase = addSpyWithArgsToAuthMethod(
@@ -815,7 +885,7 @@ describe('Actions: Auth -', () => {
     })
 
     it('rejects and dispatches on failure', async () => {
-      const signInWithPhoneNumberSpy = createFailureSpy()
+      const signInWithPhoneNumberSpy = createFailureStub()
       const newFakeFirebase = addSpyWithArgsToAuthMethod(
         'signInWithPhoneNumber',
         signInWithPhoneNumberSpy,
