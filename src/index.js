@@ -1,3 +1,4 @@
+import '@babel/polyfill'
 import { createFirebaseInstance } from './createFirebaseInstance'
 import firebaseConnect, { createFirebaseConnect } from './firebaseConnect'
 import firestoreConnect, { createFirestoreConnect } from './firestoreConnect'
