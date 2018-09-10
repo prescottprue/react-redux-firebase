@@ -543,10 +543,13 @@ export const logout = (dispatch, firebase) => {
     .auth()
     .signOut()
     .then(() => {
-      dispatch({
-        type: actionTypes.LOGOUT,
-        preserve: firebase._.config.preserveOnLogout
-      })
+      const action = {
+        type: actionTypes.LOGOUT
+      }
+      if (firebase._.config.preserveOnLogout) {
+        action.preserve = firebase._.config.preserveOnLogout
+      }
+      dispatch(action)
       firebase._.authUid = null
       return firebase
     })

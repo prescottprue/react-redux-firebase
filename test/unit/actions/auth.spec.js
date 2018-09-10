@@ -21,7 +21,7 @@ import { cloneDeep } from 'lodash'
 import { actionTypes } from 'constants' // eslint-disable-line node/no-deprecated-api
 import {
   fakeFirebase,
-  stubbedFirebase,
+  createFirebaseStub,
   createSuccessStub,
   onAuthStateChangedSpy,
   firebaseWithConfig,
@@ -35,6 +35,7 @@ let res
 let profile
 let profileSnap
 let dispatch
+let firebaseStub
 
 const addSpyToCurrentUser = (methodName, spyFunc) => ({
   ...fakeFirebase,
@@ -61,6 +62,7 @@ const fakeLogin = {
 describe('Actions: Auth -', () => {
   beforeEach(() => {
     dispatch = sinon.spy()
+    firebaseStub = createFirebaseStub()
   })
   describe('init -', () => {
     it("calls firebase's onAuthStateChanged", () => {
@@ -331,28 +333,34 @@ describe('Actions: Auth -', () => {
   })
 
   describe('logout', () => {
-    beforeEach(() => {
-      functionSpy = sinon.spy(firebase.auth(), 'signOut')
-    })
-    afterEach(() => {
-      firebase.auth().signOut.restore()
-    })
-
     it('calls firebase.auth().signOut()', async () => {
-      await logout(dispatch, firebase)
-      expect(functionSpy).to.have.been.calledOnce
+      await logout(dispatch, firebaseStub)
+      expect(firebaseStub.auth().signOut).to.have.been.calledOnce
     })
 
     it('sets authUid to null', async () => {
-      fakeFirebase._.authUid = 'asdfasdf'
-      await logout(dispatch, fakeFirebase)
-      expect(fakeFirebase._.authUid).to.be.null
+      firebaseStub._.authUid = 'asdfasdf'
+      await logout(dispatch, firebaseStub)
+      expect(firebaseStub._.authUid).to.be.null
     })
-    // TODO: dispatch spy not being called
-    it.skip('calls dispatch', async () => {
-      dispatchSpy = sinon.spy(dispatch)
-      await logout(dispatch, fakeFirebase)
-      expect(dispatchSpy).to.have.been.calledOnce
+
+    it('calls dispatch', async () => {
+      await logout(dispatch, firebaseStub)
+      expect(dispatch).to.have.been.calledWith({
+        type: actionTypes.LOGOUT
+      })
+    })
+
+    it('calls dispatch with preserve setting if provided', async () => {
+      const preserveSetting = ['some']
+      await logout(
+        dispatch,
+        createFirebaseStub({ preserveOnLogout: preserveSetting })
+      )
+      expect(dispatch).to.have.been.calledWith({
+        type: actionTypes.LOGOUT,
+        preserve: preserveSetting
+      })
     })
   })
 
@@ -554,7 +562,7 @@ describe('Actions: Auth -', () => {
   describe('updateProfile', () => {
     it('dispatches PROFILE_UPDATE_START with profile', async () => {
       const payload = null
-      await updateProfile(dispatch, stubbedFirebase, payload)
+      await updateProfile(dispatch, firebaseStub, payload)
       expect(dispatch).to.have.been.calledWith({
         type: actionTypes.PROFILE_UPDATE_START,
         payload
@@ -563,7 +571,7 @@ describe('Actions: Auth -', () => {
 
     it('dispatches PROFILE_UPDATE_SUCCESS with profile if successful', async () => {
       const profileUpdate = { some: 'value' }
-      await updateProfile(dispatch, stubbedFirebase, profileUpdate)
+      await updateProfile(dispatch, firebaseStub, profileUpdate)
       expect(dispatch).to.have.been.calledWith({
         type: actionTypes.PROFILE_UPDATE_SUCCESS,
         payload: { ...profileUpdate, ...existingProfile }
@@ -572,7 +580,7 @@ describe('Actions: Auth -', () => {
 
     it('returns the user profile snap on success when using RTDB', async () => {
       const profileUpdate = { some: 'value' }
-      const res = await updateProfile(dispatch, stubbedFirebase, profileUpdate)
+      const res = await updateProfile(dispatch, firebaseStub, profileUpdate)
       expect(res).to.have.property('val')
       expect(res.val).to.be.a.function
       expect(res.val()).to.have.property('some', profileUpdate.some)
@@ -581,7 +589,7 @@ describe('Actions: Auth -', () => {
 
     it('returns the user profile snap on success when using Firestore', async () => {
       const profileUpdate = { some: 'value' }
-      const newStubbed = stubbedFirebase
+      const newStubbed = firebaseStub
       newStubbed._ = {
         ...newStubbed._,
         config: { userProfile: 'users', useFirestoreForProfile: true }
@@ -603,29 +611,37 @@ describe('Actions: Auth -', () => {
 
     it('updates profile when using RTDB', async () => {
       const profileUpdate = { some: 'value' }
-      await updateProfile(dispatch, stubbedFirebase, profileUpdate)
-      expect(stubbedFirebase.database().ref().update).to.have.been.calledWith(
+      await updateProfile(dispatch, firebaseStub, profileUpdate)
+      expect(firebaseStub.database().ref().update).to.have.been.calledWith(
         profileUpdate
       )
     })
 
     it('updates profile when using Firestore', async () => {
       const profileUpdate = { some: 'value' }
-      const newStubbed = stubbedFirebase
+      const newStubbed = firebaseStub
       newStubbed._ = {
         ...newStubbed._,
         config: { userProfile: 'users', useFirestoreForProfile: true }
       }
       res = await updateProfile(dispatch, newStubbed, profileUpdate)
-      expect(stubbedFirebase.firestore().doc().set).to.have.been.calledWith(
+      expect(firebaseStub.firestore().doc().set).to.have.been.calledWith(
         profileUpdate,
         { merge: true }
       )
     })
 
-    it('rejects if profile is not an object', async () => {
+    it('rejects if profile update fails', async () => {
       try {
-        res = await updateProfile(dispatch, firebase, 'test')
+        res = await updateProfile(dispatch, firebaseStub, 'fail')
+      } catch (err) {
+        expect(err).to.have.property('message', 'test')
+      }
+    })
+
+    it('rejects with internal firebase error if profile is not an object', async () => {
+      try {
+        res = await updateProfile(dispatch, firebaseStub, 'asdf')
       } catch (err) {
         expect(err).to.have.property(
           'message',

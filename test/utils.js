@@ -1,6 +1,7 @@
 import React, { Children, Component, cloneElement } from 'react'
 import PropTypes from 'prop-types'
 import { createSink } from 'recompose'
+import { isObject } from 'lodash'
 import { createStore, compose, combineReducers } from 'redux'
 import { reduxFirestore, reducer as firestoreReducer } from 'redux-firestore'
 import reactReduxFirebase from '../src/enhancer'
@@ -86,52 +87,120 @@ export function createFailureStub(some) {
   return sinon.stub().returns(Promise.reject(new Error('test')))
 }
 
-let profileUpdate = {}
-
-const stubbedRtdbProfileRef = {
-  update: sinon.spy(setData => {
-    profileUpdate = setData
-    return Promise.resolve()
-  }),
-  once: sinon
-    .stub()
-    .returns(
-      Promise.resolve({ val: () => ({ ...existingProfile, ...profileUpdate }) })
-    )
+/**
+ * Create an object representing a "profileReference" (a Firebase
+ * RTDB Reference at the Profile path) which contains Sinon stubs
+ * in place of Firebase JS SDK methods (such as update and once)
+ * @returns {Object}
+ */
+function createRtdbProfileRefStub() {
+  let profileUpdate = {}
+  return {
+    update: sinon.spy(setData => {
+      // Fail automatically for intentionally rejected promise
+      // (used in testing that rejecting set promise is handled)
+      if (setData === 'fail') {
+        return Promise.reject(new Error('test'))
+      }
+      profileUpdate = setData
+      return Promise.resolve()
+    }),
+    once: createSuccessStub({
+      val: () => ({ ...existingProfile, ...profileUpdate })
+    })
+  }
 }
 
-const stubbedFirestoreProfileRef = {
-  update: sinon.stub().returns(Promise.resolve()),
-  set: sinon.spy(setData => {
-    profileUpdate = setData
-    return Promise.resolve()
-  }),
-  get: sinon.stub().returns(
-    Promise.resolve({
+/**
+ * Create an object representing a "profileReference" (a Firebase
+ * Firestore Reference for the current user's profile document) which
+ * contains Sinon stubs in place of Firebase JS SDK methods (such as
+ * update and get)
+ * @returns {Object}
+ */
+function createFirestoreProfileRefStub() {
+  let profileUpdate = {}
+  return {
+    update: createSuccessStub(),
+    set: sinon.spy(setData => {
+      // Fail automatically for intentionally rejected promise
+      // (used in testing that rejecting set promise is handled)
+      if (setData === 'fail') {
+        return Promise.reject(new Error('test'))
+      }
+      // Emulate Firebase's error for trying to call update without an object
+      if (!isObject(setData)) {
+        return Promise.reject(
+          new Error(
+            'Reference.update failed: First argument  must be an object containing the children to replace.'
+          )
+        )
+      }
+      profileUpdate = setData
+      return Promise.resolve()
+    }),
+    get: createSuccessStub({
       data: () => ({ ...existingProfile, ...profileUpdate })
     })
-  )
+  }
 }
 
-export const stubbedFirebase = {
-  _: {
-    uid,
-    config: {
-      userProfile: 'users'
-    }
-  },
-  database: sinon.stub().returns({
-    ref: sinon
-      .stub()
-      .withArgs(`users/${uid}`)
-      .returns(stubbedRtdbProfileRef)
-  }),
-  firestore: sinon.stub().returns({
+/**
+ * Create a Sinon stub for Firestore
+ * @returns {Sinon.stub}
+ */
+function createFirestoreStub() {
+  return sinon.stub().returns({
     doc: sinon
       .stub()
+      // Current User's Profile
       .withArgs(`users/${uid}`)
-      .returns(stubbedFirestoreProfileRef)
+      .returns(createFirestoreProfileRefStub())
   })
+}
+
+/**
+ * Create a Sinon stub for RTDB
+ * @returns {Sinon.stub}
+ */
+function createRtdbStub() {
+  return sinon.stub().returns({
+    ref: sinon
+      .stub()
+      // Current User's Profile
+      .withArgs(`users/${uid}`)
+      .returns(createRtdbProfileRefStub())
+  })
+}
+
+/**
+ * Create a Sinon stub for RTDB
+ * @returns {Sinon.stub}
+ */
+function createAuthStub() {
+  return sinon.stub().returns({
+    signOut: sinon.stub().returns(Promise.resolve())
+  })
+}
+
+/**
+ * @param {Object} otherConfig - Config to be spread onto _.config object
+ * @returns {Object} Stubbed version of Firebase JS SDK extended with
+ * react-redux-firebase config
+ */
+export function createFirebaseStub(otherConfig = {}) {
+  return {
+    _: {
+      uid,
+      config: {
+        userProfile: 'users',
+        ...otherConfig
+      }
+    },
+    auth: createAuthStub(),
+    database: createRtdbStub(),
+    firestore: createFirestoreStub()
+  }
 }
 
 export const fakeFirebase = {
