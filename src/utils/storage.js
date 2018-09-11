@@ -85,18 +85,19 @@ function createUploadMetaResponseHandler({
   }
 }
 
-async function getDownloadURLFromUploadTaskSnapshot(uploadTaskSnapshot) {
+function getDownloadURLFromUploadTaskSnapshot(uploadTaskSnapshot) {
   // Handle different downloadURL patterns (Firebase JS SDK v5.*.* vs v4.*.*)
-  if (uploadTaskSnapshot.downloadURLs && uploadTaskSnapshot.downloadURLs[0]) {
-    // Only attach downloadURL if downloadURLs is defined (not defined in v5.*.*)
-    return uploadTaskSnapshot.downloadURLs[0]
-  } else if (
+  if (
     uploadTaskSnapshot.ref &&
     typeof uploadTaskSnapshot.ref.getDownloadURL === 'function'
   ) {
     // Get downloadURL and attach to response
     return uploadTaskSnapshot.ref.getDownloadURL()
   }
+  // Only attach downloadURL if downloadURLs is defined (not defined in v5.*.*)
+  return Promise.resolve(
+    uploadTaskSnapshot.downloadURLs && uploadTaskSnapshot.downloadURLs[0]
+  )
 }
 
 /**
