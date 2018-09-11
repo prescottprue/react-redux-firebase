@@ -160,26 +160,41 @@ function createFirestoreStub() {
 }
 
 /**
- * Create a Sinon stub for RTDB
+ * Create a Sinon stub for Firebase Real Time Database (RTDB)
  * @returns {Sinon.stub}
  */
 function createRtdbStub() {
-  return sinon.stub().returns({
-    ref: sinon
-      .stub()
-      // Current User's Profile
-      .withArgs(`users/${uid}`)
-      .returns(createRtdbProfileRefStub())
+  const stubbedRtdb = sinon.stub().returns({
+    ref: sinon.stub().returns({
+      push: createSuccessStub(),
+      ...createRtdbProfileRefStub()
+    })
   })
+  stubbedRtdb.ServerValue = { TIMESTAMP: 'test' }
+  return stubbedRtdb
 }
 
 /**
- * Create a Sinon stub for RTDB
+ * Create a Sinon stub for Firebase's Auth
  * @returns {Sinon.stub}
  */
 function createAuthStub() {
   return sinon.stub().returns({
     signOut: sinon.stub().returns(Promise.resolve())
+  })
+}
+
+/**
+ * Create a Sinon stub for Firebase Storage
+ * @returns {Sinon.stub}
+ */
+function createStorageStub() {
+  return sinon.stub().returns({
+    ref: sinon.stub().returns({
+      put: createSuccessStub({
+        getDownloadUrl: createSuccessStub()
+      })
+    })
   })
 }
 
@@ -199,7 +214,8 @@ export function createFirebaseStub(otherConfig = {}) {
     },
     auth: createAuthStub(),
     database: createRtdbStub(),
-    firestore: createFirestoreStub()
+    firestore: createFirestoreStub(),
+    storage: createStorageStub()
   }
 }
 
