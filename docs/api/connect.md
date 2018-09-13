@@ -91,7 +91,7 @@ const enhance = compose(
     `posts/${props.postId}` // sync /posts/postId from firebase into redux
   ]),
   connect(({ firebase: { data } }, props) => ({
-    todo: data.posts && data.todos[postId],
+    post: data.posts && data.posts[postId],
   })
 )
 
