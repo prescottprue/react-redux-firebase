@@ -7,15 +7,16 @@ Usage with [redux-persist](https://github.com/rt2zz/redux-persist) depends on wh
 *createStore.js*
 
 ```js
-import { Provider } from 'react-redux'
-import { createStore, combineReducers, compose } from 'redux'
-import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
+import { browserHistory } from 'react-router'
+import { createStore, compose } from 'redux'
+import { reactReduxFirebase } from 'react-redux-firebase'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
 import { persistStore, persistReducer, autoRehydrate } from 'redux-persist'
 import localStorage from 'redux-persist/lib/storage' // defaults to localStorage for web and AsyncStorage for react-native
-import hardSet from 'redux-persist/lib/stateReconciler/hardSet'
+import makeRootReducer from './reducers'
+import { updateLocation } from './location'
 import {
   firebase as firebaseConfig, // firebase config
   reduxFirebase as reduxConfig // redux-persist config
@@ -23,34 +24,81 @@ import {
 
 const persistConfig = {
   key: 'root',
-  storage,
+  storage: localStorage
 }
 
 export default (initialState = {}, history) => {
   // Initialize firebase instance
   firebase.initializeApp(firebaseConfig)
 
-  // Add reactReduxFirebase store enhancer when making store creator
-  const createStoreWithFirebase = compose(
-    reactReduxFirebase(firebase, rrfConfig), // firebase instance as first argument
-  )(createStore)
+  const persistedReducer = persistReducer(persistConfig, makeRootReducer())
 
-  // Add firebase to reducers (uses persistReducer and hardSet)
-  const rootReducer = combineReducers({
-    firebase: persistReducer(
-      { key: 'firepersist', storage: localStorage, stateReconciler: hardSet },
-      firebaseReducer
-    ),
-    anotherReducer
-  });
+  const store = createStore(
+    persistedReducer,
+    initialState,
+    compose(
+      reactReduxFirebase(firebase, reduxConfig),
+      autoRehydrate()
+    )
+  )
 
-  const persistedReducer = persistReducer(persistConfig, rootReducer)
-  const store = createStoreWithFirebase(persistedReducer, initialState)
+  // To unsubscribe, invoke `store.unsubscribeHistory()` anytime
+  store.unsubscribeHistory = browserHistory.listen(updateLocation(store))
+
   const persistor = persistStore(store)
 
   return { store, persistor }
 }
 ```
+
+*location.js*
+
+```js
+// Constants
+export const LOCATION_CHANGE = 'LOCATION_CHANGE'
+
+// Actions
+export function locationChange(location = '/') {
+  return {
+    type: LOCATION_CHANGE,
+    payload: location
+  }
+}
+
+// Specialized Action Creator
+export function updateLocation({ dispatch }) {
+  return nextLocation => dispatch(locationChange(nextLocation))
+}
+
+// Reducer
+const initialState = null
+export default function locationReducer(state = initialState, action) {
+  return action.type === LOCATION_CHANGE ? action.payload : state
+}
+```
+
+*reducers.js*
+
+```js
+import { combineReducers } from 'redux'
+import { firebaseReducer as firebase } from 'react-redux-firebase'
+import { persistReducer } from 'redux-persist'
+import localStorage from 'redux-persist/lib/storage' // defaults to localStorage for web and AsyncStorage for react-native
+import hardSet from 'redux-persist/lib/stateReconciler/hardSet'
+import locationReducer from './location'
+
+export default function makeRootReducer() {
+  return combineReducers({
+    // Add sync reducers here
+    firebase: persistReducer(
+      { key: 'firebaseState', storage: localStorage, stateReconciler: hardSet },
+      firebase
+    ),
+    location: locationReducer
+  })
+}
+```
+
 
 *App.js*
 

@@ -1,19 +1,23 @@
 # Firestore
 
+The Firestore integration is build on [`redux-firestore`](https://github.com/prescottprue/redux-firestore). Auth, Storage, and RTDB interactions still go on within `react-redux-firebase`, while `redux-firestore` handles attaching listeners and updating state for Firestore.
+
 To begin using Firestore with `react-redux-firebase`, make sure you have the following:
 * `v2.0.0` or higher of `react-redux-firebase`
 * Install `redux-firestore` in your project using `npm i --save redux-firestore@latest`
 * `firestore` imported with `import 'firebase/firestore'`
 * `firestore` initialize with `firebase.firestore()`
 * `reduxFirestore` enhancer added to store creator
-* `firestoreReducer` added to your reducers (will be combinable with main before v2.0.0 release)
+* `firestoreReducer` added to your reducers
 
 Should look something similar to:
 
 ```js
 import { createStore, combineReducers, compose } from 'redux'
-import firebase from 'firebase'
-import 'firebase/firestore' // add this to use Firestore
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
+import 'firebase/firestore' // make sure you add this for firestore
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
 import { reduxFirestore, firestoreReducer } from 'redux-firestore'
 
@@ -24,16 +28,19 @@ const rrfConfig = {
 }
 
 // initialize firebase instance with config from console
-const firebaseConfig = {}
+const firebaseConfig = {
+  // your firebase config here
+}
+
 firebase.initializeApp(firebaseConfig)
 
-// initialize Firestore
-firebase.firestore()
+// Initialize Firestore with timeshot settings
+firebase.firestore().settings({ timestampsInSnapshots: true })
 
 // Add BOTH store enhancers when making store creator
 const createStoreWithFirebase = compose(
-  reactReduxFirebase(firebase, rrfConfig),
-  reduxFirestore(firebase)
+  reduxFirestore(firebase),
+  reactReduxFirebase(firebase, rrfConfig)
 )(createStore)
 
 // Add firebase and firestore to reducers
@@ -120,7 +127,7 @@ class Todos extends Component {
     store: PropTypes.object.isRequired
   }
 
-  componentWillMount () {
+  componentDidMount () {
     const { firebase } = this.context.store
     firebase.setListener('todos')
     // firebase.setListener({ collection: 'todos' }) // or object notation
@@ -199,7 +206,7 @@ const enhance = compose(
     loadData: props => path => props.firestore.get(path)
   }),
   lifecycle({
-    componentWillMount() {
+    componentDidMount() {
       this.props.loadData('todos')
       // this.props.firestore.get('todos') // equivalent without withHandlers
     }
@@ -230,11 +237,13 @@ const myProjectsReduxName = 'myProjects'
 
 compose(
   firestoreConnect(props => [
-    { path: 'projects' },
+    { collection: 'projects' },
     {
-      path: 'projects',
-      storeAs: myProjectsReduxName,
-      queryParams: ['orderByChild=uid', '123']
+      collection: 'projects',
+      where: [
+        ['uid', '==', '123']
+      ],
+      storeAs: myProjectsReduxName
     }
   ]),
   connect((state, props) => ({
@@ -247,7 +256,3 @@ compose(
 ## Populate {#populate}
 
 Populate is not yet supported for the Firestore integration, but will be coming soon. Progress can be tracked [within issue #48](https://github.com/prescottprue/redux-firestore/issues/48).
-
-## More Info {#more}
-
-The Firestore integration is build on [`redux-firestore`](https://github.com/prescottprue/redux-firestore).
