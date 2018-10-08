@@ -26,7 +26,7 @@ let firebaseInstance
  * profile when logging in. (default: `true`)
  * @param {Boolean} config.resetBeforeLogin - Whether or not to empty profile
  * and auth state on login
- * @param {Object|Array} config.perserveOnLogout - Data parameters to perserve
+ * @param {Object|Array} config.preserveOnLogout - Data parameters to preserve
  * when logging out. If Array is passed, each item represents keys
  * within `state.firebase.data` to preserve. If an object is passed,
  * keys associate with slices of state to preserve, and the values can be either
