@@ -111,7 +111,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
  * // props.firebase set on App component as firebase object with helpers
  * import { firebaseConnect } from 'react-redux-firebase'
  * export default firebaseConnect()(App)
- * @example <caption>Data</caption>
+ * @example <caption>Ordered Data</caption>
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
  * import { firebaseConnect } from 'react-redux-firebase'
@@ -124,47 +124,35 @@ export const createFirebaseConnect = (storeKey = 'store') => (
  *     todos: state.firebase.ordered.todos
  *   })
  * )
+ * 
  * // use enhnace to pass todos list as props.todos
  * const Todos = enhance(({ todos })) =>
  *   <div>
  *     {JSON.stringify(todos, null, 2)}
  *   </div>
  * )
+ * 
+ * export default enhance(Todos)
  * @example <caption>Data that depends on props</caption>
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import { firebaseConnect } from 'react-redux-firebase'
+ * import { firebaseConnect, getVal } from 'react-redux-firebase'
  *
  * const enhance = compose(
  *   firebaseConnect((props) => ([
  *     `posts/${props.postId}` // sync /posts/postId from firebase into redux
  *   ]),
- *   connect(({ firebase: { data } }, props) => ({
- *     todo: data.posts && data.todos[postId],
+ *   connect((state, props) => ({
+ *     post: getVal(state.firebase.data, `posts/${props.postId}`),
  *   })
  * )
  *
- * const Posts = ({ done, text, author }) => (
- *   <article>
- *     <h1>{title}</h1>
- *     <h2>By {author.name}</h2>
- *     <div>{content}</div>
- *   </article>
+ * const Post = ({ post }) => (
+ *   <div>
+ *     {JSON.stringify(post, null, 2)}
+ *   </div>
  * )
  *
- * export default enhance(Posts)
- * @example <caption>Data that depends on state</caption>
- * import { compose } from 'redux'
- * import { connect } from 'react-redux'
- * import { firebaseConnect } from 'react-redux-firebase'
- *
- * export default compose(
- *   firebaseConnect((props, store) => ([
- *     `todos/${store.getState().firebase.auth.uid}`
- *   ]),
- *   connect(({ firebase: { data, auth } }) => ({
- *     todosList: data.todos && data.todos[auth.uid],
- *   }))
- * )(SomeComponent)
+ * export default enhance(Post)
  */
 export default createFirebaseConnect()
