@@ -17,7 +17,7 @@ import {
  * @description Create standardized populate object from strings or objects
  * @param {String|Object} str - String or Object to standardize into populate object
  */
-export const getPopulateObj = str => {
+export function getPopulateObj(str) {
   if (!isString(str)) {
     return str
   }
@@ -25,12 +25,13 @@ export const getPopulateObj = str => {
   // TODO: Handle childParam
   return { child: strArray[0], root: strArray[1] }
 }
+
 /**
  * @private
  * @description Determine the structure of the child parameter to populate onto
  * @param {String|Object} child - Value at child parameter
  */
-export const getChildType = child => {
+export function getChildType(child) {
   if (isString(child)) {
     return 'string'
   }
@@ -48,7 +49,7 @@ export const getChildType = child => {
  * @description Create standardized populate object from strings or objects
  * @param {String|Object} str - String or Object to standardize into populate object
  */
-export const getPopulateObjs = arr => {
+export function getPopulateObjs(arr) {
   if (!isArray(arr)) {
     return arr
   }
@@ -60,7 +61,7 @@ export const getPopulateObjs = arr => {
  * @description Get array of populates from list of query params
  * @param {Array} queryParams - Query parameters from which to get populates
  */
-export const getPopulates = params => {
+export function getPopulates(params) {
   const populates = filter(
     params,
     param =>
@@ -81,8 +82,8 @@ export const getPopulates = params => {
  * @param {Object} populate.root - Firebase root path from which to load populate item
  * @param {String} id - String id
  */
-export const getPopulateChild = (firebase, populate, id) =>
-  firebase
+export function getPopulateChild(firebase, populate, id) {
+  return firebase
     .database()
     .ref()
     .child(`${populate.root}/${id}`)
@@ -91,6 +92,7 @@ export const getPopulateChild = (firebase, populate, id) =>
       // Return id if population value does not exist
       snap.val()
     )
+}
 
 /**
  * @private
@@ -100,7 +102,7 @@ export const getPopulateChild = (firebase, populate, id) =>
  * @param {Object} populate - Object containing populate information
  * @param {Object} results - Object containing results of population from other populates
  */
-export const populateList = (firebase, list, p, results) => {
+export function populateList(firebase, list, p, results) {
   // Handle root not being defined
   if (!results[p.root]) {
     set(results, p.root, {})
@@ -127,12 +129,12 @@ export const populateList = (firebase, list, p, results) => {
  * @param {Object} originalObj - Object to have parameter populated
  * @param {Object} populateString - String containg population data
  */
-export const promisesForPopulate = (
+export function promisesForPopulate(
   firebase,
   dataKey,
   originalData,
   populatesIn
-) => {
+) {
   // TODO: Handle selecting of parameter to populate with (i.e. displayName of users/user)
   let promisesArray = []
   let results = {}
@@ -211,5 +213,3 @@ export const promisesForPopulate = (
   // Return original data after population promises run
   return Promise.all(promisesArray).then(() => results)
 }
-
-export default { promisesForPopulate }

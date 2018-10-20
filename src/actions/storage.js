@@ -31,7 +31,7 @@ const {
  * @return {Promise} Resolves with meta object
  * @private
  */
-export const uploadFile = (dispatch, firebase, config) => {
+export function uploadFile(dispatch, firebase, config) {
   if (!firebase.storage) {
     throw new Error('Firebase storage is required to upload files')
   }
@@ -117,10 +117,11 @@ export const uploadFile = (dispatch, firebase, config) => {
  * @param {String} opts.dbPath - Datbase path to write file meta data to
  * @private
  */
-export const uploadFiles = (dispatch, firebase, { files, ...other }) =>
-  Promise.all(
+export function uploadFiles(dispatch, firebase, { files, ...other }) {
+  return Promise.all(
     map(files, file => uploadFile(dispatch, firebase, { file, ...other }))
   )
+}
 
 /**
  * @description Delete File from Firebase Storage with option to remove meta
@@ -131,9 +132,10 @@ export const uploadFiles = (dispatch, firebase, { files, ...other }) =>
  * @param {String} opts.dbPath - Datbase path to write file meta data to
  * @private
  */
-export const deleteFile = (dispatch, firebase, { path, dbPath }) =>
-  wrapInDispatch(dispatch, {
+export function deleteFile(dispatch, firebase, { path, dbPath }) {
+  return wrapInDispatch(dispatch, {
     method: deleteFileFromFb,
     args: [firebase, { path, dbPath }],
     types: [FILE_DELETE_START, FILE_DELETE_COMPLETE, FILE_DELETE_ERROR]
   })
+}

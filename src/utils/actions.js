@@ -9,10 +9,10 @@ import { isObject, mapValues } from 'lodash'
  * @param {Array} opts.types - Action types array ([BEFORE, SUCCESS, FAILURE])
  * @private
  */
-export const wrapInDispatch = (
+export function wrapInDispatch(
   dispatch,
   { ref, meta, method, args = [], types }
-) => {
+) {
   const [requestingType, successType, errorType] = types
   dispatch({
     type: isObject(requestingType) ? requestingType.type : requestingType,
@@ -46,17 +46,15 @@ export const wrapInDispatch = (
  * @return {Function} A wrapper that accepts a function to wrap with firebase
  * and dispatch.
  */
-const createWithFirebaseAndDispatch = (
-  firebase,
-  dispatch,
-  dispatchFirst
-) => func => (...args) =>
-  func.apply(
-    firebase,
-    dispatchFirst
-      ? [dispatch, firebase, ...args]
-      : [firebase, dispatch, ...args]
-  )
+function createWithFirebaseAndDispatch(firebase, dispatch, dispatchFirst) {
+  return func => (...args) =>
+    func.apply(
+      firebase,
+      dispatchFirst
+        ? [dispatch, firebase, ...args]
+        : [firebase, dispatch, ...args]
+    )
+}
 
 /**
  * Map each action with Firebase and Dispatch. Includes aliasing of actions.
@@ -65,12 +63,12 @@ const createWithFirebaseAndDispatch = (
  * @param  {Object} actions - Action functions to map with firebase and dispatch
  * @return {Object} Actions mapped with firebase and dispatch
  */
-export const mapWithFirebaseAndDispatch = (
+export function mapWithFirebaseAndDispatch(
   firebase,
   dispatch,
   actions,
   aliases = []
-) => {
+) {
   const withFirebaseAndDispatch = createWithFirebaseAndDispatch(
     firebase,
     dispatch

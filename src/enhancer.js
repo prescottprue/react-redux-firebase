@@ -93,45 +93,45 @@ let firebaseInstance
  * // Use Function later to create store
  * const store = createStoreWithFirebase(rootReducer, initialState)
  */
-export default (instance, otherConfig) => next => (
-  reducer,
-  initialState,
-  middleware
-) => {
-  const store = next(reducer, initialState, middleware)
+export default function reactReduxFirebase(instance, otherConfig) {
+  return function createStoreEnhancer(next) {
+    return function(reducer, initialState, middleware) {
+      const store = next(reducer, initialState, middleware)
 
-  // firebase library or app instance not being passed in as first argument
-  if (!instance.SDK_VERSION && !instance.firebase_ && !instance.database) {
-    throw new Error(
-      'v2.0.0-beta and higher require passing a firebase app instance or a firebase library instance. View the migration guide for details.'
-    )
+      // firebase library or app instance not being passed in as first argument
+      if (!instance.SDK_VERSION && !instance.firebase_ && !instance.database) {
+        throw new Error(
+          'v2.0.0-beta and higher require passing a firebase app instance or a firebase library instance. View the migration guide for details.'
+        )
+      }
+
+      // Support existing _ config (i.e. reduxFirestore before)
+      const existingConfig = (instance && instance._) || {}
+
+      // Combine all configs
+      const configs = { ...existingConfig, ...defaultConfig, ...otherConfig }
+
+      // Create firebase instance with config and dispatch
+      firebaseInstance = createFirebaseInstance(
+        instance.firebase_ || instance,
+        configs,
+        store.dispatch
+      )
+
+      // Inialize auth (attaches auth state change listener)
+      authActions.init(store.dispatch, firebaseInstance)
+
+      // Attach instance (with methods wrapped in dispatch) to store
+      store.firebase = firebaseInstance
+
+      // Attach firebaseAuthIsReady promise unless disabled through config
+      if (configs.attachAuthIsReady) {
+        store.firebaseAuthIsReady = createAuthIsReady(store, configs)
+      }
+
+      return store
+    }
   }
-
-  // Support existing _ config (i.e. reduxFirestore before)
-  const existingConfig = (instance && instance._) || {}
-
-  // Combine all configs
-  const configs = { ...existingConfig, ...defaultConfig, ...otherConfig }
-
-  // Create firebase instance with config and dispatch
-  firebaseInstance = createFirebaseInstance(
-    instance.firebase_ || instance,
-    configs,
-    store.dispatch
-  )
-
-  // Inialize auth (attaches auth state change listener)
-  authActions.init(store.dispatch, firebaseInstance)
-
-  // Attach instance (with methods wrapped in dispatch) to store
-  store.firebase = firebaseInstance
-
-  // Attach firebaseAuthIsReady promise unless disabled through config
-  if (configs.attachAuthIsReady) {
-    store.firebaseAuthIsReady = createAuthIsReady(store, configs)
-  }
-
-  return store
 }
 
 /**
@@ -169,7 +169,7 @@ export default (instance, otherConfig) => next => (
  * };
  *
  */
-export const getFirebase = () => {
+export function getFirebase() {
   // TODO: Handle recieveing config and creating firebase instance if it doesn't exist
   /* istanbul ignore next: Firebase instance always exists during tests */
   if (!firebaseInstance) {

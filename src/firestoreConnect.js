@@ -39,7 +39,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       return !!this.store.firestore
     }
 
-    componentWillMount() {
+    componentDidMount() {
       const { firestore } = this.store
       if (this.firestoreIsEnabled) {
         // Allow function to be passed
@@ -50,7 +50,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       }
     }
 
-    componentWillUnmount() {
+    componentDidUnmount() {
       const { firestore } = this.store
       if (this.firestoreIsEnabled && this.prevData) {
         firestore.unsetListeners(this.prevData)

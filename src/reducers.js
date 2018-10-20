@@ -40,7 +40,7 @@ const {
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-export const isInitializingReducer = (state = false, action) => {
+export function isInitializingReducer(state = false, action) {
   switch (action.type) {
     case AUTHENTICATION_INIT_STARTED:
       return true
@@ -59,7 +59,7 @@ export const isInitializingReducer = (state = false, action) => {
  * @param  {String} action.path - Path of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-export const requestingReducer = (state = {}, { type, path }) => {
+export function requestingReducer(state = {}, { type, path }) {
   switch (type) {
     case START:
       return {
@@ -85,7 +85,7 @@ export const requestingReducer = (state = {}, { type, path }) => {
  * @param  {String} action.path - Path of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-export const requestedReducer = (state = {}, { type, path }) => {
+export function requestedReducer(state = {}, { type, path }) {
   switch (type) {
     case START:
       return {
@@ -111,7 +111,7 @@ export const requestedReducer = (state = {}, { type, path }) => {
  * @param  {String} action.path - Path of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-export const timestampsReducer = (state = {}, { type, path }) => {
+export function timestampsReducer(state = {}, { type, path }) {
   switch (type) {
     case START:
     case NO_VALUE:
@@ -136,43 +136,45 @@ export const timestampsReducer = (state = {}, { type, path }) => {
  * @return {Object} Data state after reduction
  * @private
  */
-const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
-  switch (action.type) {
-    case SET:
-      return setWith(
-        Object,
-        getDotStrPath(action.path),
-        action[actionKey],
-        state
-      )
-    case MERGE:
-      const previousData = get(state, getDotStrPath(action.path), {})
-      const mergedData = assign(previousData, action[actionKey])
-      return setWith(Object, getDotStrPath(action.path), mergedData, state)
-    case NO_VALUE:
-      return setWith(Object, getDotStrPath(action.path), null, state)
-    case REMOVE:
-      if (actionKey === 'data') {
-        return recursiveUnset(getDotStrPath(action.path), state)
-      }
-      return state
-    case LOGOUT:
-      // support keeping data when logging out - #125
-      if (action.preserve) {
-        if (isArray(action.preserve)) {
-          return pick(state, action.preserve) // pick returns a new object
-        } else if (isObject(action.preserve)) {
-          return action.preserve[actionKey]
-            ? preserveValuesFromState(state, action.preserve[actionKey], {})
-            : {}
-        }
-        throw new Error(
-          'Invalid preserve parameter. It must be an Object or an Array'
+function createDataReducer(actionKey = 'data') {
+  return function dataReducer(state = {}, action) {
+    switch (action.type) {
+      case SET:
+        return setWith(
+          Object,
+          getDotStrPath(action.path),
+          action[actionKey],
+          state
         )
-      }
-      return {}
-    default:
-      return state
+      case MERGE:
+        const previousData = get(state, getDotStrPath(action.path), {})
+        const mergedData = assign(previousData, action[actionKey])
+        return setWith(Object, getDotStrPath(action.path), mergedData, state)
+      case NO_VALUE:
+        return setWith(Object, getDotStrPath(action.path), null, state)
+      case REMOVE:
+        if (actionKey === 'data') {
+          return recursiveUnset(getDotStrPath(action.path), state)
+        }
+        return state
+      case LOGOUT:
+        // support keeping data when logging out - #125
+        if (action.preserve) {
+          if (isArray(action.preserve)) {
+            return pick(state, action.preserve) // pick returns a new object
+          } else if (isObject(action.preserve)) {
+            return action.preserve[actionKey]
+              ? preserveValuesFromState(state, action.preserve[actionKey], {})
+              : {}
+          }
+          throw new Error(
+            'Invalid preserve parameter. It must be an Object or an Array'
+          )
+        }
+        return {}
+      default:
+        return state
+    }
   }
 }
 
@@ -183,10 +185,10 @@ const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-export const authReducer = (
+export function authReducer(
   state = { isLoaded: false, isEmpty: true },
   action
-) => {
+) {
   switch (action.type) {
     case LOGIN:
     case AUTH_UPDATE_SUCCESS:
@@ -243,7 +245,7 @@ export const authReducer = (
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} authError state after reduction
  */
-export const authErrorReducer = (state = null, action) => {
+export function authErrorReducer(state = null, action) {
   switch (action.type) {
     case LOGIN:
     case LOGOUT:
@@ -264,10 +266,10 @@ export const authErrorReducer = (state = null, action) => {
  * @param  {String} action.type - Type of action that was dispatched
  * @return {Object} Profile state after reduction
  */
-export const profileReducer = (
+export function profileReducer(
   state = { isLoaded: false, isEmpty: true },
   action
-) => {
+) {
   switch (action.type) {
     case SET_PROFILE:
       if (!action.profile) {
@@ -321,7 +323,7 @@ export const profileReducer = (
  * preserving errors
  * @return {Object} Profile state after reduction
  */
-export const errorsReducer = (state = [], action) => {
+export function errorsReducer(state = [], action) {
   switch (action.type) {
     case LOGIN_ERROR:
     case UNAUTHORIZED_ERROR:
@@ -355,7 +357,7 @@ export const errorsReducer = (state = [], action) => {
  * @return {Object} listenersById state after reduction (used in listeners)
  * @private
  */
-const listenersById = (state = {}, { type, path, payload }) => {
+function listenersById(state = {}, { type, path, payload }) {
   switch (type) {
     case SET_LISTENER:
       return {
@@ -381,7 +383,7 @@ const listenersById = (state = {}, { type, path, payload }) => {
  * @return {Object} allListeners state after reduction (used in listeners)
  * @private
  */
-const allListeners = (state = [], { type, path, payload }) => {
+function allListeners(state = [], { type, path, payload }) {
   switch (type) {
     case SET_LISTENER:
       return [...state, payload.id]

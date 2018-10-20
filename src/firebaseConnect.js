@@ -84,13 +84,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     }
 
     render() {
-      return (
-        <WrappedComponent
-          {...this.props}
-          {...this.state}
-          firebase={this.firebase}
-        />
-      )
+      return <WrappedComponent {...this.props} firebase={this.firebase} />
     }
   }
 

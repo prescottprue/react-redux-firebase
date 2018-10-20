@@ -488,7 +488,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @description Firebase auth service instance including all Firebase auth methods
    * @return {firebase.database.Auth}
    */
-  const helpers = {
+  return Object.assign(firebase, {
     ref: path => firebase.database().ref(path),
     set,
     setWithMeta,
@@ -516,7 +516,5 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     linkWithCredential,
     promiseEvents,
     ...actionCreators
-  }
-
-  return Object.assign(firebase, helpers, { helpers })
+  })
 }

@@ -7,7 +7,7 @@ import { getQueryIdFromPath } from './query'
  * @param {String} path - Path that can contain query parameters and populates
  * @return {Object} watchEvents - Array of watch events
  */
-export const pathStrToObj = path => {
+export function pathStrToObj(path) {
   let pathObj = { path, type: 'value', isQuery: false }
   const queryId = getQueryIdFromPath(path)
   // If Query id exists split params from path
@@ -36,8 +36,8 @@ export const pathStrToObj = path => {
  * @param {Array} paths - Array of path strings, objects, and arrays to watch
  * @return {Array} watchEvents - Array of watch events
  */
-export const getEventsFromInput = paths =>
-  flatMap(paths, path => {
+export function getEventsFromInput(paths) {
+  return flatMap(paths, path => {
     if (isString(path)) {
       return [pathStrToObj(path)]
     }
@@ -79,5 +79,6 @@ export const getEventsFromInput = paths =>
       `Invalid Path Definition: ${path}. Only strings, objects, and arrays accepted.`
     )
   })
+}
 
 export default { getEventsFromInput }

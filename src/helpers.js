@@ -73,7 +73,7 @@ import { getDotStrPath } from './utils/reducers'
  *
  * export default enhance(SomeComponent)
  */
-export const getVal = (firebase, path, notSetValue) => {
+export function getVal(firebase, path, notSetValue) {
   if (!firebase) {
     return notSetValue
   }
@@ -123,10 +123,11 @@ export const getVal = (firebase, path, notSetValue) => {
  *
  * export default enhance(Todos)
  */
-export const isLoaded = (...args) =>
-  !args || !args.length
+export function isLoaded(...args) {
+  return !args || !args.length
     ? true
     : every(args, arg => arg !== undefined && get(arg, 'isLoaded') !== false)
+}
 
 /**
  * @description Detect whether items are empty or not
@@ -167,8 +168,9 @@ export const isLoaded = (...args) =>
  *
  * export default enhance(Todos)
  */
-export const isEmpty = (...args) =>
-  some(args, arg => !(arg && size(arg)) || arg.isEmpty === true)
+export function isEmpty(...args) {
+  return some(args, arg => !(arg && size(arg)) || arg.isEmpty === true)
+}
 
 /**
  * @description Fix path by adding "/" to path if needed
@@ -176,7 +178,9 @@ export const isEmpty = (...args) =>
  * @return {String} - Fixed path
  * @private
  */
-export const fixPath = path => (path.substring(0, 1) === '/' ? '' : '/') + path
+export function fixPath(path) {
+  return (path.substring(0, 1) === '/' ? '' : '/') + path
+}
 
 /**
  * @private
@@ -221,7 +225,7 @@ const buildChildList = (state, list, p) =>
  * @param {Object} child - Path of parameter to load
  * @param {Object} populateSettings - Object with population settings
  */
-const populateChild = (state, child, p) => {
+function populateChild(state, child, p) {
   // no matching child parameter
   const childVal = get(child, p.child)
   if (!child || !childVal) {
@@ -282,7 +286,7 @@ const populateChild = (state, child, p) => {
  *
  * export default enhance(SomeComponent)
  */
-export const populate = (state, path, populates, notSetValue) => {
+export function populate(state, path, populates, notSetValue) {
   const splitPath = compact(path.split('/'))
   // append 'data' prefix to path if it is not a top level path
   const pathArr =
