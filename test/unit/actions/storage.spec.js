@@ -105,7 +105,10 @@ describe('Actions: Storage', () => {
           metadata: fileMetaData
         })
       )
-      const pushSpy = sinon.spy(() => Promise.resolve({}))
+      const setSpy = sinon.stub().returns(Promise.resolve({}))
+      const pushSpy = sinon.stub().returns({
+        set: setSpy
+      })
       const fake = {
         storage: () => ({ ref: () => ({ put: putSpy }) }),
         database: Object.assign(() => ({ ref: () => ({ push: pushSpy }) }), {
@@ -116,8 +119,10 @@ describe('Actions: Storage', () => {
       await uploadFile(spy, fake, { ...defaultFileMeta, dbPath: 'test' })
       // firebase.storage() put method is called
       expect(putSpy).to.have.been.calledOnce
-      // firebase.storage() put method is called
-      expect(pushSpy).to.have.been.calledWith(fileMetaData)
+      // Creates new ref for metadata (by calling push)
+      expect(pushSpy).to.have.been.calledOnce
+      // Metadata is set to newly created ref (from push)
+      expect(setSpy).to.have.been.calledWith(fileMetaData)
       // dispatch is called twice (once for FILE_UPLOAD_START, the other for FILE_UPLOAD_COMPLETE)
       expect(spy).to.have.been.calledTwice
     })
@@ -143,9 +148,10 @@ describe('Actions: Storage', () => {
         'storageTest'
       )
       // firebase.database() push method is called with file metadata (provided by factory)
-      expect(newFirebaseStub.database().ref().push).to.have.been.calledWith(
-        fileMetadata
-      )
+      expect(newFirebaseStub.database().ref().push).to.have.been.calledOnce
+      // expect(newFirebaseStub.database().ref().push).to.have.been.calledWith(
+      //   fileMetadata
+      // )
     })
 
     it('dispatches for errors and rejects', async () => {
@@ -248,10 +254,15 @@ describe('Actions: Storage', () => {
         expect(firebaseStub.database().ref).to.have.been.calledWith(
           'storageTest'
         )
+        const pushSpy = firebaseStub.database().ref().push
+        expect(pushSpy).to.have.been.calledOnce
+        const setSpy = firebaseStub
+          .database()
+          .ref()
+          .push().set
+        const metaArg = setSpy.getCall(0).args[0]
         // firebase.database() push method is called with file metadata (provided by factory)
-        expect(firebaseStub.database().ref().push).to.have.been.calledWith(
-          fileMetadata
-        )
+        expect(metaArg).to.have.property('asdf', fileMetadata.asdf)
       })
     })
   })
