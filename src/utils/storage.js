@@ -1,4 +1,4 @@
-import { isFunction } from 'lodash'
+import { isFunction, omitBy, isUndefined } from 'lodash'
 import { actionTypes } from '../constants'
 
 const { FILE_UPLOAD_ERROR, FILE_UPLOAD_PROGRESS } = actionTypes
@@ -131,7 +131,7 @@ export function writeMetadataToDb({
             uploadTaskSnapshot.metadata,
             downloadURL
           )
-        : uploadTaskSnapshot.metadata
+        : omitBy(uploadTaskSnapshot.metadata, isUndefined)
 
       // Create the snapshot handler function
       const resultFromSnap = createUploadMetaResponseHandler({
