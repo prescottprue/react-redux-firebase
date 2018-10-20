@@ -1,4 +1,4 @@
-import { isFunction } from 'lodash'
+import { isFunction, omitBy, isUndefined } from 'lodash'
 import { actionTypes } from '../constants'
 
 const { FILE_UPLOAD_ERROR, FILE_UPLOAD_PROGRESS } = actionTypes
@@ -131,7 +131,7 @@ export function writeMetadataToDb({
             uploadTaskSnapshot.metadata,
             downloadURL
           )
-        : uploadTaskSnapshot.metadata
+        : omitBy(uploadTaskSnapshot.metadata, isUndefined)
 
       // Create the snapshot handler function
       const resultFromSnap = createUploadMetaResponseHandler({
@@ -141,17 +141,21 @@ export function writeMetadataToDb({
         downloadURL
       })
 
-      const metaSetPromise = fileData =>
-        useFirestoreForStorageMeta
-          ? firebase // Write metadata to Firestore
-              .firestore()
-              .collection(dbPath)
-              .add(fileData)
-          : firebase // Write metadata to Real Time Database
-              .database()
-              .ref(dbPath)
-              .push(fileData)
-              .then(() => firebase.database().ref(dbPath))
+      const metaSetPromise = fileData => {
+        if (useFirestoreForStorageMeta) {
+          return firebase // Write metadata to Firestore
+            .firestore()
+            .collection(dbPath)
+            .add(fileData)
+        }
+        // Create new reference for metadata
+        const newMetaRef = firebase
+          .database()
+          .ref(dbPath)
+          .push()
+        // Write metadata to Real Time Database and return new meta ref
+        return newMetaRef.set(fileData).then(res => newMetaRef)
+      }
 
       return metaSetPromise(fileData).then(resultFromSnap)
     }

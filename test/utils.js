@@ -166,7 +166,7 @@ function createFirestoreStub() {
 function createRtdbStub() {
   const stubbedRtdb = sinon.stub().returns({
     ref: sinon.stub().returns({
-      push: createSuccessStub(),
+      push: sinon.stub().returns({ set: createSuccessStub() }),
       ...createRtdbProfileRefStub()
     })
   })
