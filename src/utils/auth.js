@@ -78,6 +78,14 @@ export const getLoginMethodAndParams = (firebase, creds) => {
     credential
   } = creds
   if (credential) {
+    const credentialAuth = firebase.auth().signInAndRetrieveDataWithCredential
+
+    if (credentialAuth) {
+      return {
+        method: 'signInAndRetrieveDataWithCredential',
+        params: [credential]
+      }
+    }
     return { method: 'signInWithCredential', params: [credential] }
   }
   if (provider) {
