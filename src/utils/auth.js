@@ -77,9 +77,21 @@ export const getLoginMethodAndParams = (firebase, creds) => {
     applicationVerifier,
     credential
   } = creds
+  // Credential Auth
   if (credential) {
+    // Attempt to use signInAndRetrieveDataWithCredential if it exists (see #467 for more info)
+    const credentialAuth = firebase.auth().signInAndRetrieveDataWithCredential
+
+    if (credentialAuth) {
+      return {
+        method: 'signInAndRetrieveDataWithCredential',
+        params: [credential]
+      }
+    }
     return { method: 'signInWithCredential', params: [credential] }
   }
+
+  // Provider Auth
   if (provider) {
     // Verify providerName is valid
     if (supportedAuthProviders.indexOf(provider.toLowerCase()) === -1) {
@@ -96,7 +108,10 @@ export const getLoginMethodAndParams = (firebase, creds) => {
     }
     return { method: 'signInWithRedirect', params: [authProvider] }
   }
+
+  // Token Auth
   if (token) {
+    // Check for new sign in method (see #484 for more info)
     const tokenAuth = firebase.auth().signInAndRetrieveDataWithCustomToken
 
     if (tokenAuth) {
@@ -105,6 +120,8 @@ export const getLoginMethodAndParams = (firebase, creds) => {
 
     return { method: 'signInWithCustomToken', params: [token] }
   }
+
+  // Phone Number Auth
   if (phoneNumber) {
     if (!applicationVerifier) {
       throw new Error(
@@ -117,9 +134,10 @@ export const getLoginMethodAndParams = (firebase, creds) => {
     }
   }
 
+  // Email/Password Auth
+  // Check for new sign in method (see #484 for more info)
   const emailPasswordAuth = firebase.auth()
     .signInAndRetrieveDataWithEmailAndPassword
-
   if (emailPasswordAuth) {
     return {
       method: 'signInAndRetrieveDataWithEmailAndPassword',
