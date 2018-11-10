@@ -36,8 +36,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     store = this.context[storeKey]
 
     get firestoreIsEnabled() {
-      const { firebase, firestore } = this.store
-      return firebase && firebase.firestore && firestore
+      return !!this.store.firestore
     }
 
     componentWillMount() {
@@ -86,14 +85,11 @@ export const createFirestoreConnect = (storeKey = 'store') => (
 
     render() {
       const { firebase, firestore } = this.store
-      return (
-        <WrappedComponent
-          {...this.props}
-          {...this.state}
-          firebase={{ ...firebase, ...firebase.helpers }}
-          firestore={firestore}
-        />
-      )
+      const newProps = { ...this.props, firestore }
+      if (firebase) {
+        newProps.firebase = { ...firebase, ...firebase.helpers }
+      }
+      return <WrappedComponent {...newProps} />
     }
   }
 
