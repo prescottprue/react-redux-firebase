@@ -535,19 +535,25 @@ export const login = (dispatch, firebase, credentials) => {
  * @param {Object} firebase - Internal firebase object
  * @private
  */
-export const logout = (dispatch, firebase) =>
-  firebase
+export const logout = (dispatch, firebase) => {
+  // detach profile listener before logging out to prevent permission_denied
+  // errors (for more info see #494)
+  unWatchUserProfile(firebase)
+  return firebase
     .auth()
     .signOut()
     .then(() => {
-      dispatch({
-        type: actionTypes.LOGOUT,
-        preserve: firebase._.config.preserveOnLogout
-      })
+      const action = {
+        type: actionTypes.LOGOUT
+      }
+      if (firebase._.config.preserveOnLogout) {
+        action.preserve = firebase._.config.preserveOnLogout
+      }
+      dispatch(action)
       firebase._.authUid = null
-      unWatchUserProfile(firebase)
       return firebase
     })
+}
 
 /**
  * @description Create a new user in auth and add an account to userProfile root

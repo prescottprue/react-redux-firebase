@@ -1,4 +1,4 @@
-import { isFunction } from 'lodash'
+import { isFunction, omitBy, isUndefined } from 'lodash'
 import { actionTypes } from '../constants'
 
 const { FILE_UPLOAD_ERROR, FILE_UPLOAD_PROGRESS } = actionTypes
@@ -49,7 +49,8 @@ export function deleteFile(firebase, { path, dbPath }) {
 function createUploadMetaResponseHandler({
   fileData,
   firebase,
-  uploadTaskSnapshot
+  uploadTaskSnapshot,
+  downloadURL
 }) {
   /**
    * Converts upload meta data snapshot into an object (handling both
@@ -72,26 +73,31 @@ function createUploadMetaResponseHandler({
         ? firebase.firestore.FieldValue.serverTimestamp()
         : firebase.database.ServerValue.TIMESTAMP
     }
+    // Attach id if it exists (Firestore)
     if (metaDataSnapshot.id) {
       result.id = metaDataSnapshot.id
     }
-    // Handle different downloadURL patterns (Firebase JS SDK v5.*.* vs v4.*.*)
-    if (metaDataSnapshot.downloadURLs && metaDataSnapshot.downloadURLs[0]) {
-      // Only attach downloadURL if downloadURLs is defined (not defined in v5.*.*)
-      result.downloadURL = metaDataSnapshot.downloadURLs[0]
-    } else if (
-      uploadTaskSnapshot.ref &&
-      typeof uploadTaskSnapshot.ref.getDownloadURL === 'function'
-    ) {
-      // Get downloadURL and attach to response
-      return uploadTaskSnapshot.ref.getDownloadURL().then(downloadURL => ({
-        ...result,
-        downloadURL
-      }))
+    // Attach downloadURL if it exists
+    if (downloadURL) {
+      result.downloadURL = downloadURL
     }
-
     return result
   }
+}
+
+function getDownloadURLFromUploadTaskSnapshot(uploadTaskSnapshot) {
+  // Handle different downloadURL patterns (Firebase JS SDK v5.*.* vs v4.*.*)
+  if (
+    uploadTaskSnapshot.ref &&
+    typeof uploadTaskSnapshot.ref.getDownloadURL === 'function'
+  ) {
+    // Get downloadURL and attach to response
+    return uploadTaskSnapshot.ref.getDownloadURL()
+  }
+  // Only attach downloadURL if downloadURLs is defined (not defined in v5.*.*)
+  return Promise.resolve(
+    uploadTaskSnapshot.downloadURLs && uploadTaskSnapshot.downloadURLs[0]
+  )
 }
 
 /**
@@ -114,35 +120,46 @@ export function writeMetadataToDb({
   const { fileMetadataFactory, useFirestoreForStorageMeta } = firebase._.config
   const { metadataFactory } = options
   const metaFactoryFunction = metadataFactory || fileMetadataFactory
+  // Get download URL for use in metadata write
+  return getDownloadURLFromUploadTaskSnapshot(uploadTaskSnapshot).then(
+    downloadURL => {
+      // Apply fileMetadataFactory if it exists in config
+      const fileData = isFunction(metaFactoryFunction)
+        ? metaFactoryFunction(
+            uploadTaskSnapshot,
+            firebase,
+            uploadTaskSnapshot.metadata,
+            downloadURL
+          )
+        : omitBy(uploadTaskSnapshot.metadata, isUndefined)
 
-  // Apply fileMetadataFactory if it exists in config
-  const fileData = isFunction(metaFactoryFunction)
-    ? metaFactoryFunction(
-        uploadTaskSnapshot,
+      // Create the snapshot handler function
+      const resultFromSnap = createUploadMetaResponseHandler({
+        fileData,
         firebase,
-        uploadTaskSnapshot.metadata
-      )
-    : uploadTaskSnapshot.metadata
+        uploadTaskSnapshot,
+        downloadURL
+      })
 
-  // Create the snapshot handler function
-  const resultFromSnap = createUploadMetaResponseHandler({
-    fileData,
-    firebase,
-    uploadTaskSnapshot
-  })
-
-  const metaSetPromise = fileData =>
-    useFirestoreForStorageMeta
-      ? firebase // Write metadata to Firestore
-          .firestore()
-          .collection(dbPath)
-          .add(fileData)
-      : firebase // Write metadata to Real Time Database
+      const metaSetPromise = fileData => {
+        if (useFirestoreForStorageMeta) {
+          return firebase // Write metadata to Firestore
+            .firestore()
+            .collection(dbPath)
+            .add(fileData)
+        }
+        // Create new reference for metadata
+        const newMetaRef = firebase
           .database()
           .ref(dbPath)
-          .push(fileData)
+          .push()
+        // Write metadata to Real Time Database and return new meta ref
+        return newMetaRef.set(fileData).then(res => newMetaRef)
+      }
 
-  return metaSetPromise(fileData).then(resultFromSnap)
+      return metaSetPromise(fileData).then(resultFromSnap)
+    }
+  )
 }
 
 /**

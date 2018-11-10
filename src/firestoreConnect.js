@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { isEqual } from 'lodash'
+import { isEqual, some, filter } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { createCallable, wrapDisplayName } from './utils'
 
@@ -35,9 +35,13 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     prevData = null
     store = this.context[storeKey]
 
+    get firestoreIsEnabled() {
+      return !!this.store.firestore
+    }
+
     componentWillMount() {
-      const { firebase, firestore } = this.store
-      if (firebase.firestore && firestore) {
+      const { firestore } = this.store
+      if (this.firestoreIsEnabled) {
         // Allow function to be passed
         const inputAsFunc = createCallable(dataOrFn)
         this.prevData = inputAsFunc(this.props, this.store)
@@ -47,36 +51,45 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     }
 
     componentWillUnmount() {
-      const { firebase, firestore } = this.store
-      if (firebase.firestore && this.prevData) {
+      const { firestore } = this.store
+      if (this.firestoreIsEnabled && this.prevData) {
         firestore.unsetListeners(this.prevData)
       }
     }
 
     componentWillReceiveProps(np) {
-      const { firebase, firestore } = this.store
+      const { firestore } = this.store
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.store)
-      // Handle a data parameter having changed
-      if (firebase.firestore && !isEqual(data, this.prevData)) {
-        // UnWatch all current events
-        firestore.unsetListeners(this.prevData)
+
+      // Handle changes to data
+      if (this.firestoreIsEnabled && !isEqual(data, this.prevData)) {
+        const changes = this.getChanges(data, this.prevData)
+
         this.prevData = data
-        // Watch new events
-        firestore.setListeners(data)
+
+        // Remove listeners for inactive subscriptions
+        firestore.unsetListeners(changes.removed)
+
+        // Add listeners for new subscriptions
+        firestore.setListeners(changes.added)
       }
+    }
+
+    getChanges(data = [], prevData = []) {
+      const result = {}
+      result.added = filter(data, d => !some(prevData, p => isEqual(d, p)))
+      result.removed = filter(prevData, p => !some(data, d => isEqual(p, d)))
+      return result
     }
 
     render() {
       const { firebase, firestore } = this.store
-      return (
-        <WrappedComponent
-          {...this.props}
-          {...this.state}
-          firebase={{ ...firebase, ...firebase.helpers }}
-          firestore={firestore}
-        />
-      )
+      const newProps = { ...this.props, firestore }
+      if (firebase) {
+        newProps.firebase = { ...firebase, ...firebase.helpers }
+      }
+      return <WrappedComponent {...newProps} />
     }
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "2.1.9",
+  "version": "2.2.0",
   "description": "Redux integration for Firebase. Comes with a Higher Order Components for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -22,6 +22,7 @@
     "build:size": "cross-env SIZE=true BABEL_ENV=commonjs NODE_ENV=production webpack src/index.js dist/react-redux-firebase.min.js",
     "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "watch": "npm run build:commonjs -- --watch",
+    "watch:es": "npm run build:es -- --watch",
     "prepare": "npm run clean && npm run build",
     "prepush": "npm run lint",
     "docs:clean": "rimraf _book",

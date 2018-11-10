@@ -13,6 +13,7 @@ globals:
   firebase: true
   fbConfig: true
   uid: true
+  existingProfile: true
 
 rules:
   no-unused-expressions: [0]

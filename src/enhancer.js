@@ -107,16 +107,26 @@ export default (instance, otherConfig) => next => (
     )
   }
 
-  const configs = { ...defaultConfig, ...otherConfig }
+  // Support existing _ config (i.e. reduxFirestore before)
+  const existingConfig = (instance && instance._) || {}
+
+  // Combine all configs
+  const configs = { ...existingConfig, ...defaultConfig, ...otherConfig }
+
+  // Create firebase instance with config and dispatch
   firebaseInstance = createFirebaseInstance(
     instance.firebase_ || instance,
     configs,
     store.dispatch
   )
 
+  // Inialize auth (attaches auth state change listener)
   authActions.init(store.dispatch, firebaseInstance)
+
+  // Attach instance (with methods wrapped in dispatch) to store
   store.firebase = firebaseInstance
 
+  // Attach firebaseAuthIsReady promise unless disabled through config
   if (configs.attachAuthIsReady) {
     store.firebaseAuthIsReady = createAuthIsReady(store, configs)
   }

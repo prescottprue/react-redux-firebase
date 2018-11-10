@@ -4,15 +4,25 @@ import {
   uploadFiles,
   deleteFile
 } from 'actions/storage'
-import { fakeFirebase } from '../../utils'
+import {
+  fakeFirebase,
+  createFirebaseStub,
+  createSuccessStub
+} from '../../utils'
 
 let spy
+let firebaseStub
+
 const dispatch = () => {}
 const defaultFileMeta = { path: 'projects', file: { name: 'test.png' } }
 
 fakeFirebase.storage.TaskEvent = { STATE_CHANGED: 'asdf' }
 
 describe('Actions: Storage', () => {
+  beforeEach(() => {
+    firebaseStub = createFirebaseStub()
+  })
+
   describe('uploadFileWithProgress', () => {
     beforeEach(() => {
       spy = sinon.spy(dispatch)
@@ -85,16 +95,20 @@ describe('Actions: Storage', () => {
     })
 
     it('calls database.push', async () => {
+      const fileMetaData = {
+        name: 'file.png',
+        fullPath: 'test',
+        downloadURLs: [{ path: 'asdf' }]
+      }
       const putSpy = sinon.spy(() =>
         Promise.resolve({
-          metadata: {
-            name: 'file.png',
-            fullPath: 'test',
-            downloadURLs: [{ path: 'asdf' }]
-          }
+          metadata: fileMetaData
         })
       )
-      const pushSpy = sinon.spy(() => Promise.resolve({}))
+      const setSpy = sinon.stub().returns(Promise.resolve({}))
+      const pushSpy = sinon.stub().returns({
+        set: setSpy
+      })
       const fake = {
         storage: () => ({ ref: () => ({ put: putSpy }) }),
         database: Object.assign(() => ({ ref: () => ({ push: pushSpy }) }), {
@@ -105,10 +119,39 @@ describe('Actions: Storage', () => {
       await uploadFile(spy, fake, { ...defaultFileMeta, dbPath: 'test' })
       // firebase.storage() put method is called
       expect(putSpy).to.have.been.calledOnce
-      // firebase.storage() put method is called
+      // Creates new ref for metadata (by calling push)
       expect(pushSpy).to.have.been.calledOnce
+      // Metadata is set to newly created ref (from push)
+      expect(setSpy).to.have.been.calledWith(fileMetaData)
       // dispatch is called twice (once for FILE_UPLOAD_START, the other for FILE_UPLOAD_COMPLETE)
       expect(spy).to.have.been.calledTwice
+    })
+
+    it('supports fileMetadataFactory (calls getDownloadUrl)', async () => {
+      const fileMetadata = { asdf: 'asdf' }
+      const metadataFactorySpy = sinon.spy(() => fileMetadata)
+      const newFirebaseStub = createFirebaseStub({
+        fileMetadataFactory: metadataFactorySpy
+      })
+      await uploadFile(spy, newFirebaseStub, {
+        ...defaultFileMeta,
+        dbPath: 'storageTest'
+      })
+      // Confirm metadata factory was called with result of storage put
+      const putResult = await newFirebaseStub
+        .storage()
+        .ref()
+        .put()
+      expect(metadataFactorySpy).to.have.been.calledWith(putResult)
+      // firebase.storage() ref is in correct location
+      expect(newFirebaseStub.database().ref).to.have.been.calledWith(
+        'storageTest'
+      )
+      // firebase.database() push method is called with file metadata (provided by factory)
+      expect(newFirebaseStub.database().ref().push).to.have.been.calledOnce
+      // expect(newFirebaseStub.database().ref().push).to.have.been.calledWith(
+      //   fileMetadata
+      // )
     })
 
     it('dispatches for errors and rejects', async () => {
@@ -191,6 +234,35 @@ describe('Actions: Storage', () => {
             name: defaultFileMeta.file.name
           })
         })
+      })
+
+      it('metadataFactory option', async () => {
+        const fileMetadata = { asdf: 'asdf' }
+        const metadataFactorySpy = sinon.stub().returns(fileMetadata)
+        await uploadFile(spy, firebaseStub, {
+          ...defaultFileMeta,
+          dbPath: 'storageTest',
+          options: { metadataFactory: metadataFactorySpy }
+        })
+        // Confirm metadata factory was called with result of storage put
+        const putResult = await firebaseStub
+          .storage()
+          .ref()
+          .put()
+        expect(metadataFactorySpy).to.have.been.calledWith(putResult)
+        // firebase.storage() ref is in correct location
+        expect(firebaseStub.database().ref).to.have.been.calledWith(
+          'storageTest'
+        )
+        const pushSpy = firebaseStub.database().ref().push
+        expect(pushSpy).to.have.been.calledOnce
+        const setSpy = firebaseStub
+          .database()
+          .ref()
+          .push().set
+        const metaArg = setSpy.getCall(0).args[0]
+        // firebase.database() push method is called with file metadata (provided by factory)
+        expect(metaArg).to.have.property('asdf', fileMetadata.asdf)
       })
     })
   })

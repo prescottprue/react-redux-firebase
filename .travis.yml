@@ -5,19 +5,16 @@ language: node_js
 node_js:
   - 6 # Maintenance
   - 8 # Active
-  - 10 # Current release
+  - 10
 
 notifications:
-  # Only send notifications when travis status changes
   email:
+    # Only send notifications when travis status changes
     on_failure: change
     on_success: change
 
-addons:
-  code_climate:
-    repo_token: $CODE_CLIMATE
-
 cache:
+  bundler: true
   directories:
     - $HOME/.npm
 
@@ -26,9 +23,16 @@ branches:
     - master
     - next
 
+install:
+  - npm i
+
 script:
   - npm run lint
   - npm run test:cov
+
+addons:
+  code_climate:
+    repo_token: $CODE_CLIMATE
 
 deploy:
   - provider: npm

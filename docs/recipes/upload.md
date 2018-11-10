@@ -83,14 +83,14 @@ When uploading files as in the above example, you can modify how the file's meta
 
 // within your createStore.js or store.js file include the following config
 const config = {
-  fileMetadataFactory: (uploadRes) => {
+  fileMetadataFactory: (uploadRes, firebase, metadata, downloadURL) => {
     // upload response from Firebase's storage upload
-    const { metadata: { name, fullPath, downloadURLs } } = uploadRes
+    const { metadata: { name, fullPath } } = uploadRes
     // default factory includes name, fullPath, downloadURL
     return {
       name,
       fullPath,
-      downloadURL: downloadURLs[0]
+      downloadURL
     }
   }
 }
