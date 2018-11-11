@@ -1,0 +1,27 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "cars": {
+      ".read": "auth !== null",
+      ".write": "auth !== null"
+    },
+    "todos": {
+      ".read": true,
+      ".write": true
+    },
+    "projects": {
+      ".indexOn": ["createdBy"],
+      ".read": "auth !== null"
+    },
+    "users": {
+      "Anonymous": {
+      	".read": true
+      },
+      "$uid": {
+        ".read": "auth !== null",
+        ".write": "$uid === auth.uid"
+      }
+    }
+  }
+}
