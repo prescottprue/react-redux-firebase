@@ -1,19 +1,15 @@
-# material
+# react-redux-firebase Complete Material Example
 
 [![License][license-image]][license-url]
 [![Code Style][code-style-image]][code-style-url]
 
-## Table of Contents
+## What is Shown
 
-1. [Features](#features)
-1. [Requirements](#requirements)
-1. [Getting Started](#getting-started)
-1. [Application Structure](#application-structure)
-1. [Development](#development)
-    1. [Routing](#routing)
-1. [Configuration](#configuration)
-1. [Production](#production)
-1. [Deployment](#deployment)
+* Route protection using `redux-auth-wrapper`	
+* Data input/validation using `redux-form`
+* Async & Sync route loading
+* Real CI and Deployment settings (including `prod` and `stage` environments)
+* Using different instances of Firebase based on environment
 
 ## Requirements
 
@@ -114,7 +110,9 @@ There are two types of routes definitions:
 #### Sync Routes
 
 The most simple way to define a route is a simple object with `path` and `component`:
-*src/routes/Home/HomePage*
+
+*src/routes/Home/index.js*
+
 ```js
 import HomePage from './components/HomePage'
 
@@ -128,6 +126,8 @@ export default {
 #### Async Routes
 
 Routes can also be seperated into their own bundles which are only loaded when visiting that route, which helps decrease the size of your main application bundle. Routes that are loaded asynchronously are defined using `react-loadable`:
+
+*src/routes/NotFound/index.js*
 
 ```js
 import Loadable from 'react-loadable'
