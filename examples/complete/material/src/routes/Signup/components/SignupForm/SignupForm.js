@@ -4,10 +4,9 @@ import { Field } from 'redux-form'
 import { TextField } from 'redux-form-material-ui'
 import Button from '@material-ui/core/Button'
 import { required, validateEmail } from 'utils/form'
-import classes from './SignupForm.scss'
 
-const SignupForm = ({ pristine, submitting, handleSubmit }) => (
-  <form className={classes.container} onSubmit={handleSubmit}>
+const SignupForm = ({ pristine, submitting, handleSubmit, classes }) => (
+  <form className={classes.root} onSubmit={handleSubmit}>
     <Field
       name="username"
       component={TextField}
@@ -31,7 +30,7 @@ const SignupForm = ({ pristine, submitting, handleSubmit }) => (
       <Button
         color="primary"
         type="submit"
-        raised
+        variant="contained"
         disabled={pristine || submitting}>
         {submitting ? 'Loading' : 'Sign Up'}
       </Button>
@@ -40,10 +39,10 @@ const SignupForm = ({ pristine, submitting, handleSubmit }) => (
 )
 
 SignupForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
-  pristine: PropTypes.bool.isRequired, // added by redux-form
-  submitting: PropTypes.bool.isRequired, // added by redux-form
-  handleSubmit: PropTypes.func.isRequired // added by redux-form (calls onSubmit)
+  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
+  pristine: PropTypes.bool.isRequired, // from enhancer (reduxForm)
+  submitting: PropTypes.bool.isRequired, // from enhancer (reduxForm)
+  handleSubmit: PropTypes.func.isRequired // from enhancer (reduxForm - calls onSubmit)
 }
 
 export default SignupForm

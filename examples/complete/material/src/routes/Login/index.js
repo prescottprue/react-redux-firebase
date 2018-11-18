@@ -1,7 +1,10 @@
-import { LOGIN_PATH as path } from 'constants'
-import component from './components/LoginPage'
+import { Loadable } from 'utils/components'
+import { LOGIN_PATH as path } from 'constants/paths'
 
 export default {
   path,
-  component
+  component: Loadable({
+    loader: () =>
+      import(/* webpackChunkName: 'Login' */ './components/LoginPage')
+  })
 }

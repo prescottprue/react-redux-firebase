@@ -1,8 +1,13 @@
+# OS
 *.log
 **/*.log
 .DS_Store
 **/.DS_Store
-**/dist
+
+# Dependencies
 **/node_modules
-coverage
+
+# React App
+**/dist
 src/config.js
+.env

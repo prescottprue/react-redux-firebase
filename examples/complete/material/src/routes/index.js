@@ -1,47 +1,30 @@
-// We only need to import the modules necessary for initial render
+import React from 'react'
+import { Switch, Route } from 'react-router-dom'
 import CoreLayout from '../layouts/CoreLayout'
 import Home from './Home'
 import LoginRoute from './Login'
 import SignupRoute from './Signup'
 import ProjectsRoute from './Projects'
 import AccountRoute from './Account'
-import RecoverRoute from './Recover'
 import NotFoundRoute from './NotFound'
 
-/*  Note: Instead of using JSX, we recommend using react-router
-    PlainRoute objects to build route definitions.   */
-
-export const createRoutes = store => ({
-  path: '/',
-  component: CoreLayout,
-  indexRoute: Home,
-  childRoutes: [
-    AccountRoute,
-    LoginRoute,
-    SignupRoute,
-    ProjectsRoute(store), // async route definitions recieve store
-    RecoverRoute(store), // async route definitions recieve store
-    /* Place all Routes above here so NotFoundRoute can act as a 404 page */
-    NotFoundRoute(store) // async route definitions recieve store
-  ]
-})
-
-/*  Note: childRoutes can be chunked or otherwise loaded programmatically
-    using getChildRoutes with the following signature:
-
-    getChildRoutes (location, cb) {
-      require.ensure([], (require) => {
-        cb(null, [
-          // Remove imports!
-          require('./Counter').default(store)
-        ])
-      })
-    }
-
-    However, this is not necessary for code-splitting! It simply provides
-    an API for async route definitions. Your code splitting should occur
-    inside the route `getComponent` function, since it is only invoked
-    when the route exists and matches.
-*/
-
-export default createRoutes
+export default function createRoutes(store) {
+  return (
+    <CoreLayout>
+      <Switch>
+        <Route exact path={Home.path} component={Home.component} />
+        {/* Build Route components from routeSettings */
+        [
+          AccountRoute,
+          ProjectsRoute,
+          SignupRoute,
+          LoginRoute
+          /* Add More Routes Here */
+        ].map((settings, index) => (
+          <Route key={`Route-${index}`} {...settings} />
+        ))}
+        <Route component={NotFoundRoute.component} />
+      </Switch>
+    </CoreLayout>
+  )
+}

@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { pick, some } from 'lodash'
 import { isLoaded } from 'react-redux-firebase'
+import LoadableComponent from 'react-loadable'
 import { mapProps, branch, renderComponent } from 'recompose'
 import LoadingSpinner from 'components/LoadingSpinner'
 
@@ -67,28 +68,41 @@ export const logProps = (propNames, logName = '') =>
     return ownerProps
   })
 
-export const createWithFromContext = withVar => WrappedComponent => {
-  class WithFromContext extends Component {
-    render() {
-      const props = { [withVar]: this.context[withVar] }
-      if (this.context.store && this.context.store.dispatch) {
-        props.dispatch = this.context.store.dispatch
+export function createWithFromContext(withVar) {
+  return WrappedComponent => {
+    class WithFromContext extends Component {
+      render() {
+        const props = { [withVar]: this.context[withVar] }
+        if (this.context.store && this.context.store.dispatch) {
+          props.dispatch = this.context.store.dispatch
+        }
+        return <WrappedComponent {...this.props} {...props} />
       }
-      return <WrappedComponent {...this.props} {...props} />
     }
-  }
 
-  WithFromContext.contextTypes = {
-    [withVar]: PropTypes.object.isRequired
-  }
+    WithFromContext.contextTypes = {
+      [withVar]: PropTypes.object.isRequired
+    }
 
-  return WithFromContext
+    return WithFromContext
+  }
 }
-
-export const withRouter = createWithFromContext('router')
 
 /**
  * HOC that adds store to props
  * @return {HigherOrderComponent}
  */
 export const withStore = createWithFromContext('store')
+
+/**
+ * Create component which is loaded async, showing a loading spinner
+ * in the meantime.
+ * @param {Object} opts - Loading options
+ * @param {Function} opts.loader - Loader function (should return import promise)
+ */
+export function Loadable(opts) {
+  return LoadableComponent({
+    loading: LoadingSpinner,
+    ...opts
+  })
+}

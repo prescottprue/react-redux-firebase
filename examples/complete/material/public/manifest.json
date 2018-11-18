@@ -1,0 +1,9 @@
+{
+  "gcm_sender_id": "Material",
+  "short_name": "Material",
+  "name": "Material",
+  "start_url": "/login/",
+  "background_color": "#2196f3",
+  "theme_color": "#2196f3",
+  "display": "standalone"
+}
