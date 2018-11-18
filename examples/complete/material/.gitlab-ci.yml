@@ -1,0 +1,142 @@
+stages:
+  - build
+  - deploy_staging
+  - build_production
+  - deploy_production
+
+# Cache dependencies across jobs only pulling not uploading (upload to cache
+# happens in build stage)
+cache:
+  untracked: true
+  key: ${CI_COMMIT_REF_SLUG}
+  policy: pull # only pull cache, skip uploading
+  paths:
+    - node_modules/
+
+# Install dependencies for React App. 
+# Script run before all stages unless otherwise overriden
+before_script:
+  - CYPRESS_INSTALL_BINARY=0 npm i
+  - npm i firebase-tools@6.1.0 firebase-ci@next
+
+# Build Stage
+# Installs dependencies, builds app, and saves results for later (artifacts).
+# 1. Install dependencies for React App and Cloud Functions. Installing of
+# cypress binary is skipped (done in E2E Testing Stage)
+# 2. Build environment specific config file in src/config.js
+# 3. Confirm there is no lint within code (after config is injected for import linting)
+# 4. Build React app to dist folder
+# 5. Preserve build results and dependencies for future jobs in the pipeline
+Build:
+  stage: build
+  image: node:8
+  when: always
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-build/
+  artifacts:
+    expire_in: 2 weeks
+    when: always
+    paths:
+      - dist
+      - functions/dist
+      - node_modules/
+      - functions/node_modules/
+  # Override cache behavior set above since we want to both pull and push to
+  # the cache (no "policy" provided since pull-push is default)
+  cache:
+    untracked: true # track files that are untracked in git
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+      - functions/node_modules/
+  script:
+    - npm run build:config # create env specific src/config.js
+    - npm run lint
+    - npm run build
+    - npm run build:functions
+
+# Deploy Staging
+# Deploy React App and Cloud Functions
+Deploy Staging:
+  stage: deploy_staging
+  image: node:8
+  environment:
+    name: staging
+    url: https://material-stage.firebaseapp.com
+  when: on_success
+  only:
+    - master
+    - web
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-deploy/
+      - $CI_COMMIT_MESSAGE =~ /skip-stage-deploy/
+  artifacts:
+    name: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    expire_in: 1 weeks
+    when: on_failure
+    paths:
+      - firebase-debug.log
+  dependencies:
+    - Build
+  script:
+    - npm run deploy
+
+# Build Production version of bundle (has different config)
+Build Production:
+  stage: build_production
+  image: node:8
+  when: on_success
+  only:
+    - master
+    - prod
+    - web
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-deploy/
+      - $CI_COMMIT_MESSAGE =~ /skip-prod-deploy/
+  artifacts:
+    name: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    expire_in: 1 week
+    when: always
+    paths:
+      - dist
+  dependencies:
+    - Build
+  script:
+    - npm run clean # remove existing dist folder
+    - npm run build:config # create env specific src/config.js
+    - npm run build # rebuild bundle with new config
+    # Note: Functions are not rebuilt since a bundle with env specific config
+    # is not created as with React App
+
+# Deploy Production
+# Deploy React App and Cloud Functions to production environment
+Deploy Production:
+  stage: deploy_production
+  image: node:8
+  environment:
+    name: production
+    url: https://material.firebaseapp.com
+  when: manual # Only allow run through button on Gitlab site
+  only:
+    - master
+    - prod
+    - web
+  variables:
+    FIREBASE_CI_PROJECT: "prod" # deploy using prod project in .firebaserc
+  artifacts:
+    name: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    expire_in: 1 week
+    when: on_failure
+    paths:
+      - firebase-debug.log
+  dependencies:
+    - Build # Load artifacts from build stage
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /skip-deploy/
+      - $CI_COMMIT_MESSAGE =~ /skip-prod-deploy/
+  script:
+    - npm run deploy # Deploy Cloud Functions and React App (Firebase Hosting)

@@ -6,17 +6,19 @@ import {
   flattenProp,
   withStateHandlers
 } from 'recompose'
+import { withStyles } from '@material-ui/core/styles'
+import { withRouter } from 'react-router-dom'
 import { withFirebase, isEmpty, isLoaded } from 'react-redux-firebase'
-import { ACCOUNT_PATH } from 'constants'
-import { withRouter, spinnerWhileLoading } from 'utils/components'
+import { ACCOUNT_PATH } from 'constants/paths'
+import styles from './Navbar.styles'
 
 export default compose(
+  // Map redux state to props
   connect(({ firebase: { auth, profile } }) => ({
     auth,
     profile
   })),
-  // Wait for auth to be loaded before going further
-  spinnerWhileLoading(['profile']),
+  // State handlers as props
   withStateHandlers(
     ({ accountMenuOpenInitially = false }) => ({
       accountMenuOpen: accountMenuOpenInitially,
@@ -35,21 +37,24 @@ export default compose(
   withRouter,
   // Add props.firebase (used in handlers)
   withFirebase,
-  // Handlers
+  // Handlers as props
   withHandlers({
     handleLogout: props => () => {
       props.firebase.logout()
-      props.router.push('/')
+      props.history.push('/')
       props.closeAccountMenu()
     },
     goToAccount: props => () => {
-      props.router.push(ACCOUNT_PATH)
+      props.history.push(ACCOUNT_PATH)
       props.closeAccountMenu()
     }
   }),
+  // Add custom props
   withProps(({ auth, profile }) => ({
     authExists: isLoaded(auth) && !isEmpty(auth)
   })),
-  // Flatten profile so that avatarUrl and displayName are available
-  flattenProp('profile')
+  // Flatten profile so that avatarUrl and displayName are props
+  flattenProp('profile'),
+  // Add styles as classes prop
+  withStyles(styles)
 )

@@ -35,6 +35,7 @@ module.exports = {
     'redux-thunk',
     'react-router',
     'react-redux-firebase',
-    'material-ui'
+    '@material-ui/core',
+    '@material-ui/icons'
   ]
 }

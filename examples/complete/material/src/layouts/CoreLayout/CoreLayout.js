@@ -1,11 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Navbar from 'containers/Navbar'
-import classes from './CoreLayout.scss'
 import { Notifications } from 'modules/notification'
-import 'styles/core.scss'
 
-export const CoreLayout = ({ children }) => (
+export const CoreLayout = ({ children, classes }) => (
   <div className={classes.container}>
     <Navbar />
     <div className={classes.children}>{children}</div>
@@ -14,6 +12,7 @@ export const CoreLayout = ({ children }) => (
 )
 
 CoreLayout.propTypes = {
+  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
   children: PropTypes.element.isRequired
 }
 

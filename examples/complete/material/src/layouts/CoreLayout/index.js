@@ -1,3 +1,4 @@
 import CoreLayout from './CoreLayout'
+import enhance from './CoreLayout.enhancer'
 
-export default CoreLayout
+export default enhance(CoreLayout)
