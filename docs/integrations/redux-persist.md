@@ -7,13 +7,12 @@ Usage with [redux-persist](https://github.com/rt2zz/redux-persist) depends on wh
 *createStore.js*
 
 ```js
-import { browserHistory } from 'react-router'
 import { createStore, compose } from 'redux'
 import { reactReduxFirebase } from 'react-redux-firebase'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
-import { persistStore, persistReducer, autoRehydrate } from 'redux-persist'
+import { persistStore, persistReducer } from 'redux-persist'
 import localStorage from 'redux-persist/lib/storage' // defaults to localStorage for web and AsyncStorage for react-native
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
@@ -37,13 +36,9 @@ export default (initialState = {}, history) => {
     persistedReducer,
     initialState,
     compose(
-      reactReduxFirebase(firebase, reduxConfig),
-      autoRehydrate()
+      reactReduxFirebase(firebase, reduxConfig)
     )
   )
-
-  // To unsubscribe, invoke `store.unsubscribeHistory()` anytime
-  store.unsubscribeHistory = browserHistory.listen(updateLocation(store))
 
   const persistor = persistStore(store)
 
@@ -98,7 +93,6 @@ export default function makeRootReducer() {
   })
 }
 ```
-
 
 *App.js*
 
