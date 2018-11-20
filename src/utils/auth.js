@@ -10,12 +10,19 @@ import { supportedAuthProviders, actionTypes } from '../constants'
  * @private
  */
 const createAuthProvider = (firebase, providerName, scopes) => {
-  // TODO: Verify scopes are valid before adding
-  // TODO: Validate parameter inputs
   const capitalProviderName = `${capitalize(providerName)}AuthProvider`
+
+  // Throw if auth provider does not exist on Firebase instance
+  if (!firebase.auth[capitalProviderName]) {
+    throw new Error(
+      `${providerName} is not a valid auth provider for your firebase instance. If using react-native, use a RN specific auth library.`
+    )
+  }
+
   const provider = new firebase.auth[capitalProviderName]()
 
   // Custom Auth Parameters
+  // TODO: Validate parameter inputs
   const { customAuthParameters } = firebase._.config
   if (customAuthParameters && customAuthParameters[providerName]) {
     provider.setCustomParameters(customAuthParameters[providerName])
@@ -29,6 +36,7 @@ const createAuthProvider = (firebase, providerName, scopes) => {
     return provider
   }
 
+  // TODO: Verify scopes are valid before adding
   provider.addScope('email')
 
   if (scopes) {
