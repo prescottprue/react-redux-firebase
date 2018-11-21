@@ -37,7 +37,6 @@ export const actionTypes: {
   AUTH_RELOAD_ERROR: string
   AUTH_RELOAD_START: string
   AUTH_RELOAD_SUCCESS: string
-  CLEAR_ERRORS: string
   EMAIL_UPDATE_ERROR: string
   EMAIL_UPDATE_START: string
   EMAIL_UPDATE_SUCCESS: string
