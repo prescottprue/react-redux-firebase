@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Redux integration for Firebase. Comes with a Higher Order Components for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -86,7 +86,7 @@
     "chai-as-promised": "^6.0.0",
     "chai-enzyme": "^0.8.0",
     "child-process-promise": "^2.2.1",
-    "codecov": "^3.0.2",
+    "codecov": "^3.1.0",
     "cross-env": "^5.1.0",
     "docdown": "^0.7.2",
     "documentation": "^5.3.2",
