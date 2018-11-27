@@ -142,8 +142,16 @@ export const getLoginMethodAndParams = (firebase, creds) => {
     }
   }
 
+  // Check for new sign in method (see #484 for more info)
+  // Note: usage of signInAndRetrieveDataWithEmailAndPassword is now a fallback since it is deprecated (see #484 for more info)
+  if (!firebase.auth().signInWithEmailAndPassword) {
+    return {
+      method: 'signInAndRetrieveDataWithEmailAndPassword',
+      params: [email, password]
+    }
+  }
+
   // Email/Password Auth
-  // Note: usage of signInAndRetrieveDataWithEmailAndPassword removed since it is deprecated (see #484 for more info)
   return { method: 'signInWithEmailAndPassword', params: [email, password] }
 }
 
