@@ -1,7 +1,7 @@
 module.exports = {
+  'extends': ['react-app', 'prettier'],
   root: true,
   parser: 'babel-eslint',
-  extends: ['react-app', 'prettier'],
   plugins: ['import', 'babel', 'react', 'prettier'],
   settings: {
     react: {
@@ -35,28 +35,5 @@ module.exports = {
         useTabs: false
       }
     ]
-  },
-  overrides: [
-    {
-      files: ['*.test.js', '*.spec.js'],
-      env: {
-        jest: true
-      }
-    },
-    {
-      files: ['config/*', 'scripts/*'],
-      rules: {
-        'no-console': 0,
-        'func-names': 0,
-        'prefer-destructuring': 0,
-        'no-use-before-define': 0,
-        'import/order': 0,
-        'consistent-return': 0,
-        'no-param-reassign': 0,
-        'import/no-extraneous-dependencies': 0,
-        'global-require': 0,
-        'import/no-dynamic-require': 0
-      }
-    }
-  ]
+  }
 }

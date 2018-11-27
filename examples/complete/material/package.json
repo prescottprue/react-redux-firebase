@@ -7,7 +7,8 @@
     "clean": "rimraf dist",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "eject": "react-scripts eject","createConfig": "firebase-ci createConfig",
+    "eject": "react-scripts eject",
+    "build:config": "firebase-ci createConfig",
     "deploy": "firebase-ci deploy -s",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
@@ -32,12 +33,12 @@
     "prop-types": "^15.6.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-scripts": "2.1.1",
     "react-google-button": "^0.5.3",
     "react-loadable": "^5.5.0",
     "react-redux": "^5.0.7",
     "react-redux-firebase": "^2.1.9",
     "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.1",
     "recompose": "^0.30.0",
     "redux": "^4.0.0",
     "redux-auth-wrapper": "^2.0.3",
@@ -59,7 +60,7 @@
     "prettier": "^1.14.3"
   },
   "eslintConfig": {
-    "extends": "./eslintrc.json"
+    "extends": "./eslintrc.js"
   },
   "browserslist": [
     ">0.2%",

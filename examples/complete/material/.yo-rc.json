@@ -1,0 +1,16 @@
+{
+  "generator-react-firebase": {
+    "promptValues": {
+      "githubUser": "prescottprue",
+      "firebaseName": "redux-firebasev3",
+      "firebaseKey": "AIzaSyCTUERDM-Pchn_UDTsfhVPiwM4TtNIxots",
+      "includeRedux": true,
+      "includeFirestore": false,
+      "otherFeatures": [
+        "Config for Continuous Integration"
+      ],
+      "ciProvider": "gitlab",
+      "deployTo": "firebase"
+    }
+  }
+}
