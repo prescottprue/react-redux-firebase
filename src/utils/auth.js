@@ -143,16 +143,7 @@ export const getLoginMethodAndParams = (firebase, creds) => {
   }
 
   // Email/Password Auth
-  // Check for new sign in method (see #484 for more info)
-  const emailPasswordAuth = firebase.auth()
-    .signInAndRetrieveDataWithEmailAndPassword
-  if (emailPasswordAuth) {
-    return {
-      method: 'signInAndRetrieveDataWithEmailAndPassword',
-      params: [email, password]
-    }
-  }
-
+  // Note: usage of signInAndRetrieveDataWithEmailAndPassword removed since it is deprecated (see #484 for more info)
   return { method: 'signInWithEmailAndPassword', params: [email, password] }
 }
 
