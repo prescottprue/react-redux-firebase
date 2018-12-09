@@ -14,14 +14,11 @@ const initialState = window.__INITIAL_STATE__ // set initial state here
 const store = configureStore(initialState)
 // Initialize Firebase instance
 firebase.initializeApp(fbConfig)
-console.log('initial firebase:', firebase)
 
 export default () => (
   <Provider store={store}>
-    <div> 
-      <ReactReduxFirebaseProvider firebase={firebase} config={fbConfig} dispatch={store.dispatch}>
-        <Home />
-      </ReactReduxFirebaseProvider>
-    </div>
+    <ReactReduxFirebaseProvider firebase={firebase} config={fbConfig} dispatch={store.dispatch}>
+      <Home />
+    </ReactReduxFirebaseProvider>
   </Provider>
 )

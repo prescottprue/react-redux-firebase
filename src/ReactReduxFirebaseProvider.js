@@ -12,7 +12,7 @@ const ReactReduxFirebaseProvider = (props = {}) => {
   )
   return (
     <ReactReduxFirebaseContext.Provider value={extendedFirebaseInstance}>
-      {React.cloneElement(children, { dispatch })}
+      {children}
     </ReactReduxFirebaseContext.Provider>
   )
 }

@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
-import { withHandlers, branch, renderNothing } from 'recompose'
-import { withFirebase } from 'react-redux-firebase'
+import { withHandlers } from 'recompose'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import './Todo.css'
 
@@ -11,33 +11,35 @@ import './Todo.css'
 // 2. Adds props.firebase (used in handlers)
 // 3. Adds toggleDone and deleteTodo handlers (which use props.firebase)
 const enhance = compose(
-  // Render nothing if todo is not defined
-  branch(({ todo }) => !todo, renderNothing),
   // Add props.firebase
-  withFirebase,
+  firebaseConnect(),
   // Handlers as props
   withHandlers({
-    toggleDone: ({ firebase, todo, id }) => () =>
-      firebase.update(`todos/${id}`, { done: !todo.done }),
+    toggleDone: ({ firebase, done, id }) => () =>
+      firebase.update(`todos/${id}`, { done: !done }),
     deleteTodo: ({ firebase, todo, id }) => () =>
       firebase.remove(`todos/${id}`)
   })
 )
 
-const TodoItem = ({ deleteTodo, toggleDone, todo }) => (
-  <li className="Todo">
-    <input
-      className="Todo-Input"
-      type="checkbox"
-      checked={todo.done}
-      onChange={toggleDone}
-    />
-    {todo.text || todo.name}
-    <button className="Todo-Button" onClick={deleteTodo}>
-      Delete
-    </button>
-  </li>
-)
+const TodoItem = (props) => {
+  const { deleteTodo, toggleDone, text, name, done } = props
+  console.log('props', props)
+  return (
+    <li className="Todo">
+      <input
+        className="Todo-Input"
+        type="checkbox"
+        checked={done}
+        onChange={toggleDone}
+      />
+      {text || name}
+      <button className="Todo-Button" onClick={deleteTodo}>
+        Delete
+      </button>
+    </li>
+  )
+}
 
 TodoItem.propTypes = {
   todo: PropTypes.shape({

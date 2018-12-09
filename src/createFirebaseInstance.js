@@ -518,5 +518,5 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     ...actionCreators
   }
 
-  return Object.assign(firebase, helpers, { helpers })
+  return Object.assign(firebase, helpers, { helpers, dispatch })
 }
