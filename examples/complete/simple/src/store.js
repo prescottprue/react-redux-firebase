@@ -10,7 +10,7 @@ import { reduxFirestore } from 'redux-firestore'
 
 export default function configureStore (initialState, history) {
   // Initialize Firebase instance
-  firebase.initializeApp(fbConfig)
+  // firebase.initializeApp(fbConfig)
 
   const reduxFirebaseConfig = {
     userProfile: 'users',
@@ -19,8 +19,8 @@ export default function configureStore (initialState, history) {
   }
 
   const createStoreWithMiddleware = compose(
-    reactReduxFirebase(firebase, reduxFirebaseConfig),
-    reduxFirestore(firebase),
+    // reactReduxFirebase(firebase, reduxFirebaseConfig),
+    // reduxFirestore(firebase),
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
   )(createStore)
   const store = createStoreWithMiddleware(rootReducer)

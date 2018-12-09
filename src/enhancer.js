@@ -1,4 +1,4 @@
-import { createFirebaseInstance } from './createFirebaseInstance'
+import createFirebaseInstance from './createFirebaseInstance'
 import { createAuthIsReady } from './utils/auth'
 import { defaultConfig } from './constants'
 import { authActions } from './actions'

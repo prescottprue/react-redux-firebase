@@ -1,4 +1,7 @@
-import { createFirebaseInstance } from './createFirebaseInstance'
+import createFirebaseInstance from './createFirebaseInstance'
+import ReactReduxFirebaseProvider from './ReactReduxFirebaseProvider'
+import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
+import ReactReduxFirebaseConsumer from './ReactReduxFirebaseConsumer'
 import firebaseConnect, { createFirebaseConnect } from './firebaseConnect'
 import firestoreConnect, { createFirestoreConnect } from './firestoreConnect'
 import withFirebase, { createWithFirebase } from './withFirebase'
@@ -10,6 +13,9 @@ import { authIsReady } from './utils/auth'
 import * as helpers from './helpers'
 
 export default {
+  ReactReduxFirebaseProvider,
+  ReactReduxFirebaseContext,
+  ReactReduxFirebaseConsumer,
   firebase: firebaseConnect,
   createFirebaseInstance,
   firebaseConnect,

@@ -11,6 +11,7 @@ import logo from './logo.svg'
 import TodoItem from './TodoItem'
 import './App.css'
 import NewTodo from './NewTodo';
+import { ReactReduxFirebaseConsumer } from 'react-redux-firebase';
 
 const Home = ({ firebase, todos }) => (
   <div className='App'>
@@ -19,6 +20,7 @@ const Home = ({ firebase, todos }) => (
       <img src={logo} className='App-logo' alt='logo' />
     </div>
     <div className='App-todos'>
+        {console.log('firebase', firebase)}
       <h4>
         Loaded From
         <span className='App-Url'>
@@ -47,7 +49,7 @@ const Home = ({ firebase, todos }) => (
 )
 
 Home.propTypes = {
-  firebase: PropTypes.object.isRequired
+  // firebase: PropTypes.object.isRequired
 }
 
 const enhance = compose(

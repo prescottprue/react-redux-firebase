@@ -63,7 +63,8 @@
     "prop-types": "^15.6.2"
   },
   "peerDependencies": {
-    "react": "^0.14.6 || ^15.0.0-0 || ^16.0.0-0"
+    "react": "^0.14.6 || ^15.0.0-0 || ^16.0.0-0",
+    "react-redux": "^6.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -111,9 +112,10 @@
     "jsdom": "^11.10.0",
     "mocha": "^3.5.3",
     "prettier": "1.10.2",
-    "react": "^15.4.2",
-    "react-addons-test-utils": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react": "^16.6.3",
+    "react-addons-test-utils": "^15.6.2",
+    "react-dom": "^16.6.3",
+    "react-redux": "^6.0.0",
     "recompose": "^0.26.0",
     "redux": "4.0.0",
     "redux-firestore": "0.5.7",
