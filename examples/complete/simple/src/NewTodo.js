@@ -2,11 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { withStateHandlers, withHandlers } from 'recompose'
-import { firebaseConnect } from 'react-redux-firebase'
+import { withFirebase } from 'react-redux-firebase'
 import './App.css'
 
 const enhance = compose(
-  firebaseConnect(),
+  withFirebase,
   // withFirebase, // not yet supporting the new API
   withStateHandlers(
     ({ initialVal = '' }) => ({

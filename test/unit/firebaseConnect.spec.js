@@ -45,11 +45,6 @@ const createContainer = () => {
 }
 
 describe('firebaseConnect', () => {
-  it('should receive the store in the context', () => {
-    const { container, store } = createContainer()
-    expect(container.context.store).to.equal(store)
-  })
-
   it('disables watchers on unmount', () => {
     const { container, store } = createContainer()
     ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(container).parentNode)

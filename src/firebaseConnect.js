@@ -92,13 +92,13 @@ export const createFirebaseConnect = (storeKey = 'store') => (
 
   const HoistedComp = hoistStatics(FirebaseConnectWrapped, WrappedComponent)
 
-  const FirebaseConnect = ({ dispatch, ...other }) => (
+  const FirebaseConnect = props => (
     <ReactReduxFirebaseConsumer>
       {firebase => (
         <HoistedComp
           firebase={firebase}
           dispatch={firebase.dispatch}
-          {...other}
+          {...props}
         />
       )}
     </ReactReduxFirebaseConsumer>

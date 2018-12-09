@@ -2,17 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { withHandlers } from 'recompose'
-import { firebaseConnect } from 'react-redux-firebase'
+import { withFirebase } from 'react-redux-firebase'
 
 import './Todo.css'
 
 // Create enhancer to wrap component below. It does the following
-// 1. Renders nothing if todo is undefined
-// 2. Adds props.firebase (used in handlers)
-// 3. Adds toggleDone and deleteTodo handlers (which use props.firebase)
+// 1. Adds props.firebase (used in handlers)
+// 2. Adds toggleDone and deleteTodo handlers (which use props.firebase)
 const enhance = compose(
   // Add props.firebase
-  firebaseConnect(),
+  withFirebase,
   // Handlers as props
   withHandlers({
     toggleDone: ({ firebase, done, id }) => () =>
