@@ -13,9 +13,18 @@ function createAuthProvider(firebase, providerName, scopes) {
   // TODO: Verify scopes are valid before adding
   // TODO: Validate parameter inputs
   const capitalProviderName = `${capitalize(providerName)}AuthProvider`
+
+  // Throw if auth provider does not exist on Firebase instance
+  if (!firebase.auth[capitalProviderName]) {
+    throw new Error(
+      `${providerName} is not a valid auth provider for your firebase instance. If using react-native, use a RN specific auth library.`
+    )
+  }
+
   const provider = new firebase.auth[capitalProviderName]()
 
   // Custom Auth Parameters
+  // TODO: Validate parameter inputs
   const { customAuthParameters } = firebase._.config
   if (customAuthParameters && customAuthParameters[providerName]) {
     provider.setCustomParameters(customAuthParameters[providerName])
@@ -29,6 +38,7 @@ function createAuthProvider(firebase, providerName, scopes) {
     return provider
   }
 
+  // TODO: Verify scopes are valid before adding
   provider.addScope('email')
 
   if (scopes) {
@@ -134,17 +144,16 @@ export function getLoginMethodAndParams(firebase, creds) {
     }
   }
 
-  // Email/Password Auth
   // Check for new sign in method (see #484 for more info)
-  const emailPasswordAuth = firebase.auth()
-    .signInAndRetrieveDataWithEmailAndPassword
-  if (emailPasswordAuth) {
+  // Note: usage of signInAndRetrieveDataWithEmailAndPassword is now a fallback since it is deprecated (see #484 for more info)
+  if (!firebase.auth().signInWithEmailAndPassword) {
     return {
       method: 'signInAndRetrieveDataWithEmailAndPassword',
       params: [email, password]
     }
   }
 
+  // Email/Password Auth
   return { method: 'signInWithEmailAndPassword', params: [email, password] }
 }
 

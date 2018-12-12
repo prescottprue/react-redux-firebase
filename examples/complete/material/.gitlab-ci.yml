@@ -102,8 +102,6 @@ Build Production:
     when: always
     paths:
       - dist
-  dependencies:
-    - Build
   script:
     - npm run clean # remove existing dist folder
     - npm run build:config # create env specific src/config.js
@@ -132,8 +130,6 @@ Deploy Production:
     when: on_failure
     paths:
       - firebase-debug.log
-  dependencies:
-    - Build # Load artifacts from build stage
   except:
     variables:
       - $CI_COMMIT_MESSAGE =~ /skip-deploy/

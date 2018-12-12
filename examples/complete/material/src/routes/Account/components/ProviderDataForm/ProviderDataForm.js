@@ -6,21 +6,18 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import AccountCircle from '@material-ui/icons/AccountCircle'
-import classes from './ProviderDataForm.scss'
 
-export const ProviderData = ({ providerData }) => (
-  <div className={classes.container}>
-    <List subheader={<ListSubheader>Accounts</ListSubheader>}>
-      {providerData.map((providerAccount, i) => (
-        <ListItem key={i}>
-          <ListItemIcon>
-            <AccountCircle />
-          </ListItemIcon>
-          <ListItemText primary={providerAccount.providerId} />
-        </ListItem>
-      ))}
-    </List>
-  </div>
+const ProviderData = ({ providerData }) => (
+  <List subheader={<ListSubheader>Accounts</ListSubheader>}>
+    {providerData.map((providerAccount, i) => (
+      <ListItem key={i}>
+        <ListItemIcon>
+          <AccountCircle />
+        </ListItemIcon>
+        <ListItemText primary={providerAccount.providerId} />
+      </ListItem>
+    ))}
+  </List>
 )
 
 ProviderData.propTypes = {

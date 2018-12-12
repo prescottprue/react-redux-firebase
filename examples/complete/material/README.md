@@ -1,15 +1,19 @@
-# react-redux-firebase Complete Material Example
+# material
 
 [![License][license-image]][license-url]
 [![Code Style][code-style-image]][code-style-url]
 
-## What is Shown
+## Table of Contents
 
-* Route protection using `redux-auth-wrapper`	
-* Data input/validation using `redux-form`
-* Async & Sync route loading
-* Real CI and Deployment settings (including `prod` and `stage` environments)
-* Using different instances of Firebase based on environment
+1. [Features](#features)
+1. [Requirements](#requirements)
+1. [Getting Started](#getting-started)
+1. [Application Structure](#application-structure)
+1. [Development](#development)
+    1. [Routing](#routing)
+1. [Configuration](#configuration)
+1. [Production](#production)
+1. [Deployment](#deployment)
 
 ## Requirements
 
@@ -40,9 +44,9 @@ While developing, you will probably rely mostly on `npm start`; however, there a
 
 |`npm run <script>`    |Description|
 |-------------------|-----------|
-|`start`            |Serves your app at `localhost:3000` and displays [Webpack Dashboard](https://github.com/FormidableLabs/webpack-dashboard)|
-|`start:simple`     |Serves your app at `localhost:3000` without [Webpack Dashboard](https://github.com/FormidableLabs/webpack-dashboard)|
-|`build`            |Builds the application to ./dist|
+|`start`            |Serves your app at `localhost:3000` with automatic refreshing and hot module replacement|
+|`start:dist`       |Builds the application to `./dist` then serves at `localhost:3000` using `firebase serve`|
+|`build`            |Builds the application to `./dist`|
 |`lint`             |[Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors|
 |`lint:fix`         |Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix)|
 
@@ -52,7 +56,6 @@ While developing, you will probably rely mostly on `npm start`; however, there a
 
 There are multiple configuration files:
 
-* Project Path Configuration - `project.config.js`
 * Firebase Project Configuration (including settings for how `src/config.js` is built on CI) - `.firebaserc`
 * Project Configuration used within source (can change based on environment variables on CI) - `src/config.js`
 * Cloud Functions Local Configuration - `functions/.runtimeconfig.json`
@@ -61,22 +64,20 @@ More details in the [Application Structure Section](#application-structure)
 
 ## Application Structure
 
-The application structure presented in this boilerplate is **fractal**, where functionality is grouped primarily by feature rather than file type. Please note, however, that this structure is only meant to serve as a guide, it is by no means prescriptive. That said, it aims to represent generally accepted guidelines and patterns for building scalable applications. If you wish to read more about this pattern, please check out this [awesome writeup](https://github.com/davezuko/react-redux-starter-kit/wiki/Fractal-Project-Structure) by [Justin Greenberg](https://github.com/justingreenberg).
+The application structure presented in this boilerplate is **fractal**, where functionality is grouped primarily by feature rather than file type. Please note, however, that this structure is only meant to serve as a guide, it is by no means prescriptive. That said, it aims to represent generally accepted guidelines and patterns for building scalable applications.
 
 ```
-├── build                    # All build-related configuration
+├── public                   # All build-related configuration
+│   ├── index.html           # Main HTML page container for app
 │   ├── scripts              # Scripts used within the building process
-│   ├── karma.config.js      # Test configuration for Karma
-│   └── webpack.config.js    # Environment-specific configuration files for webpack
-├── server                   # Express application that provides webpack middleware
-│   └── main.js              # Server application entry point
+│   │  └── compile.js        # Custom Compiler that calls Webpack compiler
+│   │  └── start.js          # Starts the custom compiler
 ├── src                      # Application source code
 │   ├── config.js            # Environment specific config file with settings from Firebase (created by CI)
-│   ├── constants.js         # Project constants such as firebase paths and form names
-│   ├── index.html           # Main HTML page container for app
-│   ├── main.js              # Application bootstrap and rendering
-│   ├── normalize.js         # Browser normalization and polyfills
 │   ├── components           # Global Reusable Presentational Components
+│   ├── constants            # Project constants such as firebase paths and form names
+│   │  ├── formNames.js      # Names of redux forms
+│   │  └── paths.js          # Paths for application routes
 │   ├── containers           # Global Reusable Container Components (connected to redux state)
 │   ├── layouts              # Components that dictate major page structure
 │   │   └── CoreLayout       # Global application layout in which to render routes
@@ -93,21 +94,29 @@ The application structure presented in this boilerplate is **fractal**, where fu
 │   │   ├── createStore.js   # Create and instrument redux store
 │   │   └── reducers.js      # Reducer registry and injection
 │   ├── styles               # Application-wide styles (generally settings)
-│   └── utils                 # General Utilities (used throughout application)
-│   │   ├── components.js   # Utilities for building/implementing react components (often used in enhancers)
-│   │   ├── form.js         # For forms (often used in enhancers that use redux-form)
-│   │   └── router.js       # Utilities for routing such as those that redirect back to home if not logged in
-├── project.config.js        # Project configuration settings
+│   └── utils                # General Utilities (used throughout application)
+│   │   ├── components.js    # Utilities for building/implementing react components (often used in enhancers)
+│   │   ├── form.js          # For forms (often used in enhancers that use redux-form)
+│   │   └── router.js        # Utilities for routing such as those that redirect back to home if not logged in
+├── tests                    # Unit tests
+├── .env.local               # Environment settings for when running locally
+├── .eslintignore            # ESLint ignore file
+├── .eslintrc.js             # ESLint configuration
 ├── .firebaserc              # Firebase Project configuration settings (including ci settings)
-└── tests                    # Unit tests
+├── database.rules.json      # Rules for Firebase Real Time Database
+├── firebase.json            # Firebase Service settings (Hosting, Functions, etc)
+├── firestore.indexes.json   # Indexs for Cloud Firestore
+├── firestore.rules          # Rules for Cloud Firestore
+└── storage.rules            # Rules for Cloud Storage For Firebase
 ```
 
-### Routing
+## Routing
+
 We use `react-router-dom` [route matching](https://reacttraining.com/react-router/web/guides/basic-components/route-matching) (`<route>/index.js`) to define units of logic within our application. The application routes are defined within `src/routes/index.js`, which loads route settings which live in each route's `index.js`. The component with the suffix `Page` is the top level component of each route (i.e. `HomePage` is the top level component for `Home` route).
 
 There are two types of routes definitions:
 
-#### Sync Routes
+### Sync Routes
 
 The most simple way to define a route is a simple object with `path` and `component`:
 
@@ -123,7 +132,7 @@ export default {
 }
 ```
 
-#### Async Routes
+### Async Routes
 
 Routes can also be seperated into their own bundles which are only loaded when visiting that route, which helps decrease the size of your main application bundle. Routes that are loaded asynchronously are defined using `react-loadable`:
 
@@ -147,41 +156,6 @@ With this setting, the name of the file (called a "chunk") is defined as part of
 
 More about how routing works is available in [the react-router-dom docs](https://reacttraining.com/react-router/web/guides/quick-start).
 
-## Production
-
-Build code before deployment by running `npm run build`. There are multiple options below for types of deployment, if you are unsure, checkout the Firebase section.
-
-### Deployment
-
-
-1. Install Firebase Command Line Tool: `npm i -g firebase-tools`
-
-#### CI Deploy (recommended)
-
-**Note**: Config for this is located within
-`firebase-ci` has been added to simplify the CI deployment process. All that is required is providing authentication with Firebase:
-
-1. Login: `firebase login:ci` to generate an authentication token (will be used to give Travis-CI rights to deploy on your behalf)
-1. Set `FIREBASE_TOKEN` environment variable within Travis-CI environment
-1. Run a build on CI
-
-If you would like to deploy to different Firebase instances for different branches (i.e. `prod`), change `ci` settings within `.firebaserc`.
-
-For more options on CI settings checkout the [firebase-ci docs](https://github.com/prescottprue/firebase-ci)
-
-#### Manual deploy
-
-1. Run `firebase:login`
-1. Initialize project with `firebase init` then answer:
-    * What file should be used for Database Rules?  -> `database.rules.json`
-    * What do you want to use as your public directory? -> `build`
-    * Configure as a single-page app (rewrite all urls to /index.html)? -> `Yes`
-    * What Firebase project do you want to associate as default?  -> **your Firebase project name**
-1. Build Project: `npm run build`
-1. Confirm Firebase config by running locally: `firebase serve`
-1. Deploy to Firebase (everything including Hosting and Functions): `firebase deploy`
-
-**NOTE:** You can use `firebase serve` to test how your application will work when deployed to Firebase, but make sure you run `npm run build` first.
 
 ## FAQ
 

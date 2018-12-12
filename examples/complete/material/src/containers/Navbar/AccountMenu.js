@@ -12,7 +12,7 @@ const styles = {
   }
 }
 
-export const AccountMenu = ({
+const AccountMenu = ({
   avatarUrl,
   displayName,
   goToAccount,
@@ -44,14 +44,14 @@ export const AccountMenu = ({
 )
 
 AccountMenu.propTypes = {
-  displayName: PropTypes.string,
-  avatarUrl: PropTypes.string,
+  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
   goToAccount: PropTypes.func.isRequired,
   onLogoutClick: PropTypes.func.isRequired,
-  anchorEl: PropTypes.object,
   closeAccountMenu: PropTypes.func.isRequired,
   handleMenu: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired // from withStyles
+  displayName: PropTypes.string,
+  avatarUrl: PropTypes.string,
+  anchorEl: PropTypes.object
 }
 
 export default withStyles(styles)(AccountMenu)
