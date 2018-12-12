@@ -336,13 +336,15 @@ Please visit the [FAQ section of the docs](http://docs.react-redux-firebase.com/
 
 Most commonly people consume Redux Firestore as a [CommonJS module](http://webpack.github.io/docs/commonjs.html). This module is what you get when you import redux in a Webpack, Browserify, or a Node environment.
 
-If you don't use a module bundler, it's also fine. The redux-firestore npm package includes precompiled production and development [UMD builds](https://github.com/umdjs/umd) in the [dist folder](https://unpkg.com/redux-firestore@latest/dist/). They can be used directly without a bundler and are thus compatible with many popular JavaScript module loaders and environments. For example, you can drop a UMD build as a `<script>` tag on the page. The UMD builds make Redux Firestore available as a `window.ReduxFirestore` global variable.
+If you don't use a module bundler, it's also fine. The redux-firestore npm package includes precompiled production and development [UMD builds](https://github.com/umdjs/umd) in the [dist folder](https://unpkg.com/redux-firestore@latest/dist/). They can be used directly without a bundler and are thus compatible with many popular JavaScript module loaders and environments. For example, you can drop a UMD build as a `<script>` tag on the page. The UMD builds make Redux Firestore available as a `window.ReactReduxFirebase` global variable.
 
 It can be imported like so:
 
 ```html
 <script src="../node_modules/react-redux-firebase/dist/react-redux-firebase.min.js"></script>
+<script src="../node_modules/redux-firestore/dist/redux-firestore.min.js"></script>
 <!-- or through cdn: <script src="https://unpkg.com/react-redux-firebase@latest/dist/react-redux-firebase.min.js"></script> -->
+<!-- or through cdn: <script src="https://unpkg.com/redux-firestore@latest/dist/redux-firestore.min.js"></script> -->
 <script>console.log('react redux firebase:', window.ReactReduxFirebase)</script>
 ```
 
@@ -365,8 +367,8 @@ Thank you to all our backers! 🙏
 [npm-downloads-image]: https://img.shields.io/npm/dm/react-redux-firebase.svg?style=flat-square
 [quality-image]: http://npm.packagequality.com/shield/react-redux-firebase.svg?style=flat-square
 [quality-url]: https://packagequality.com/#?package=react-redux-firebase
-[backers]:https://opencollective.com/react-redux-firebase/backers/badge.svg?style=flat-square&color=blue
-[become-a-backer]:https://opencollective.com/react-redux-firebase#backer
+[backers]: https://opencollective.com/react-redux-firebase/backers/badge.svg?style=flat-square&color=blue
+[become-a-backer]: https://opencollective.com/react-redux-firebase#backer
 [travis-image]: https://img.shields.io/travis/prescottprue/react-redux-firebase/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/prescottprue/react-redux-firebase
 [daviddm-image]: https://img.shields.io/david/prescottprue/react-redux-firebase.svg?style=flat-square

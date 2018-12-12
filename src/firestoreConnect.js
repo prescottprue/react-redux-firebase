@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { isEqual, some, filter } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { createCallable, wrapDisplayName } from './utils'
-import ReactReduxFirebaseConsumer from './ReactReduxFirebaseConsumer'
+import ReduxFirestoreContext from './ReduxFirestoreContext'
 
 /**
  * @name createFirestoreConnect
@@ -81,12 +81,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     }
 
     render() {
-      const { firebase, firestore } = this.props
-      const newProps = { ...this.props, firestore }
-      if (firebase) {
-        newProps.firebase = { ...firebase, ...firebase.helpers }
-      }
-      return <WrappedComponent {...newProps} />
+      return <WrappedComponent {...this.props} />
     }
   }
 
@@ -98,23 +93,17 @@ export const createFirestoreConnect = (storeKey = 'store') => (
 
   const HoistedComp = hoistStatics(FirestoreConnectWrapped, WrappedComponent)
 
-  const FirebaseConnect = props => (
-    <ReactReduxFirebaseConsumer>
-      {firebase => (
-        <HoistedComp
-          firebase={firebase}
-          dispatch={firebase.dispatch}
-          {...props}
-        />
-      )}
-    </ReactReduxFirebaseConsumer>
+  const FirestoreConnect = props => (
+    <ReduxFirestoreContext.Consumer>
+      {firestore => <HoistedComp firestore={firestore} {...props} />}
+    </ReduxFirestoreContext.Consumer>
   )
 
-  FirebaseConnect.propTypes = {
+  FirestoreConnect.propTypes = {
     dispatch: PropTypes.func.isRequired
   }
 
-  return FirebaseConnect
+  return FirestoreConnect
 }
 
 /**

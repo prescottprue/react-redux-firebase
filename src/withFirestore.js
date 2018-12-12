@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import hoistStatics from 'hoist-non-react-statics'
 import { wrapDisplayName } from './utils'
-import ReactReduxFirebaseConsumer from './ReactReduxFirebaseConsumer'
+import ReduxFirestoreContext from './ReduxFirestoreContext'
 
 /**
  * @name createWithFirestore
@@ -35,15 +35,9 @@ export const createWithFirestore = (storeKey = 'store') => WrappedComponent => {
   const HoistedComp = hoistStatics(WithFirestore, WrappedComponent)
 
   const withFirestore = props => (
-    <ReactReduxFirebaseConsumer>
-      {firebase => (
-        <HoistedComp
-          firebase={firebase}
-          dispatch={firebase.dispatch}
-          {...props}
-        />
-      )}
-    </ReactReduxFirebaseConsumer>
+    <ReduxFirestoreContext.Consumer>
+      {firestore => <HoistedComp firestore={firestore} {...props} />}
+    </ReduxFirestoreContext.Consumer>
   )
 
   withFirestore.displayName = wrapDisplayName(WrappedComponent, 'withFirestore')
