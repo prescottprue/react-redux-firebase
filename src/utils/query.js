@@ -9,7 +9,7 @@ import { isNaN, forEach, size, isString } from 'lodash'
  * @return {Number|Any} Number if parse to number was successful, otherwise,
  * original value
  */
-const tryParseToNumber = value => {
+function tryParseToNumber(value) {
   const result = Number(value)
   if (isNaN(result)) {
     return value
@@ -24,7 +24,7 @@ const tryParseToNumber = value => {
  * @param {String} path - Path to watch with watcher
  * @return {String} watchPath
  */
-export const getWatchPath = (event, path) => {
+export function getWatchPath(event, path) {
   if (!event || event === '' || !path) {
     throw new Error('Event and path are required')
   }
@@ -38,7 +38,7 @@ export const getWatchPath = (event, path) => {
  * @param {String} path - Path from which to get query id
  * @param {String} event - Type of query event
  */
-export const getQueryIdFromPath = (path, event) => {
+export function getQueryIdFromPath(path, event) {
   if (!isString(path)) {
     throw new Error('Query path must be a string')
   }
@@ -73,7 +73,7 @@ export const getQueryIdFromPath = (path, event) => {
  * @param {String} queryId - Id of query
  * @return {Integer} watcherCount - count
  */
-export const setWatcher = (firebase, dispatch, event, path, queryId) => {
+export function setWatcher(firebase, dispatch, event, path, queryId) {
   const id =
     queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
 
@@ -97,7 +97,7 @@ export const setWatcher = (firebase, dispatch, event, path, queryId) => {
  * @param {String} queryId - Id of query
  * @return {Number} watcherCount
  */
-export const getWatcherCount = (firebase, event, path, queryId) => {
+export function getWatcherCount(firebase, event, path, queryId) {
   const id =
     queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   return firebase._.watchers[id]
@@ -112,7 +112,7 @@ export const getWatcherCount = (firebase, event, path, queryId) => {
  * @param {String} path - Path to watch with watcher
  * @param {String} queryId - Id of query
  */
-export const unsetWatcher = (firebase, dispatch, event, path, queryId) => {
+export function unsetWatcher(firebase, dispatch, event, path, queryId) {
   let id =
     queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   path = path.split('#')[0]
@@ -140,7 +140,7 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId) => {
  * @param {Object} query - Query object on which to apply query parameters
  * @return {FirebaseQuery}
  */
-export const applyParamsToQuery = (queryParams, query) => {
+export function applyParamsToQuery(queryParams, query) {
   let doNotParse = false
   if (queryParams) {
     queryParams.forEach(param => {
@@ -216,7 +216,7 @@ export const applyParamsToQuery = (queryParams, query) => {
  * an ordered array.
  * @return {Array|Null} Ordered list of children from snapshot or null
  */
-export const orderedFromSnapshot = snap => {
+export function orderedFromSnapshot(snap) {
   if (snap.hasChildren && !snap.hasChildren()) {
     return null
   }
@@ -242,7 +242,7 @@ export const orderedFromSnapshot = snap => {
  * loaded and associated actions have been dispatched
  * @private
  */
-export const populateAndDispatch = (firebase, dispatch, config) => {
+export function populateAndDispatch(firebase, dispatch, config) {
   const { data, populates, snapshot, path, storeAs } = config
   // TODO: Allow setting of unpopulated data before starting population through config
   return promisesForPopulate(firebase, snapshot.key, data, populates)

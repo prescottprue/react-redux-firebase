@@ -22,7 +22,7 @@ import {
  * @param {Boolean} options.isQuery - id of the query
  * @param {String} options.storeAs - Location within redux to store value
  */
-export const watchEvent = (firebase, dispatch, options) => {
+export function watchEvent(firebase, dispatch, options) {
   if (!firebase.database || typeof firebase.database !== 'function') {
     throw new Error('Firebase database is required to create watchers')
   }
@@ -162,7 +162,7 @@ export const watchEvent = (firebase, dispatch, options) => {
       if (logErrors) {
         // eslint-disable-next-line no-console
         console.log(
-          `RRF: Error retrieving data for path: ${path}, storeAs: ${storeAs}. Firebase:`,
+          `Error retrieving data for path: ${path}, storeAs: ${storeAs}. Firebase:`,
           err
         )
       }
@@ -189,11 +189,11 @@ export const watchEvent = (firebase, dispatch, options) => {
  * @param {String} config.queryId - Id of the query (used for idendifying)
  * in internal watchers list
  */
-export const unWatchEvent = (
+export function unWatchEvent(
   firebase,
   dispatch,
   { type, path, storeAs, queryId }
-) => {
+) {
   const watchPath = !storeAs ? path : `${path}@${storeAs}`
   unsetWatcher(firebase, dispatch, type, watchPath, queryId)
 }
@@ -204,7 +204,7 @@ export const unWatchEvent = (
  * @param {Function} dispatch - Action dispatch function
  * @param {Array} events - List of events for which to add watchers
  */
-export const watchEvents = (firebase, dispatch, events) => {
+export function watchEvents(firebase, dispatch, events) {
   if (!isArray(events)) {
     throw new Error('Events config must be an Array')
   }
@@ -217,8 +217,9 @@ export const watchEvents = (firebase, dispatch, events) => {
  * @param {Function} dispatch - Action dispatch function
  * @param {Array} events - List of events for which to remove watchers
  */
-export const unWatchEvents = (firebase, dispatch, events) =>
+export function unWatchEvents(firebase, dispatch, events) {
   events.forEach(event => unWatchEvent(firebase, dispatch, event))
+}
 
 /**
  * @description Add watchers to a list of events
@@ -230,7 +231,7 @@ export const unWatchEvents = (firebase, dispatch, events) =>
  * REMOVE action
  * @return {Promise} Resolves with path
  */
-export const remove = (firebase, dispatch, path, options = {}) => {
+export function remove(firebase, dispatch, path, options = {}) {
   const { dispatchAction = true } = options
   const { dispatchRemoveAction } = firebase._.config
   return firebase
@@ -248,5 +249,3 @@ export const remove = (firebase, dispatch, path, options = {}) => {
       return Promise.reject(err)
     })
 }
-
-export default { watchEvents, unWatchEvents, remove }

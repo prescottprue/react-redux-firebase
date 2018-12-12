@@ -49,17 +49,20 @@ export function getDotStrPath(path) {
  * passed object, and builds a state object with the same shape.
  * @private
  */
-export const combineReducers = reducers => (state = {}, action) =>
-  Object.keys(reducers).reduce((nextState, key) => {
-    nextState[key] = reducers[key](
-      // eslint-disable-line no-param-reassign
-      state[key],
-      action
-    )
-    return nextState
-  }, {})
+export function combineReducers(reducers) {
+  return (state = {}, action) => {
+    return Object.keys(reducers).reduce((nextState, key) => {
+      nextState[key] = reducers[key](
+        // eslint-disable-line no-param-reassign
+        state[key],
+        action
+      )
+      return nextState
+    }, {})
+  }
+}
 
-export const preserveValuesFromState = (state, preserveSetting, nextState) => {
+export function preserveValuesFromState(state, preserveSetting, nextState) {
   // Return result of function if preserve is a function
   if (isFunction(preserveSetting)) {
     return preserveSetting(state, nextState)
@@ -87,7 +90,7 @@ export const preserveValuesFromState = (state, preserveSetting, nextState) => {
  * @return {Object} The object with the property deeply unset
  * @private
  */
-export const recursiveUnset = (path, obj, isRecursiveCall = false) => {
+export function recursiveUnset(path, obj, isRecursiveCall = false) {
   if (!path) {
     return obj
   }

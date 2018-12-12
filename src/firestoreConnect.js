@@ -36,8 +36,8 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       return !!this.props.firestore
     }
 
-    componentWillMount() {
-      const { firestore } = this.props
+    componentDidMount() {
+      const { firestore } = this.store
       if (this.firestoreIsEnabled) {
         // Allow function to be passed
         const inputAsFunc = createCallable(dataOrFn)
@@ -47,8 +47,8 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       }
     }
 
-    componentWillUnmount() {
-      const { firestore } = this.props
+    componentDidUnmount() {
+      const { firestore } = this.store
       if (this.firestoreIsEnabled && this.prevData) {
         firestore.unsetListeners(this.prevData)
       }

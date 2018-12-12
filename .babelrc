@@ -1,25 +1,16 @@
 {
   "presets": [
     "@babel/preset-react",
-    [
-      "@babel/preset-env",
-      {
-        "targets": {
-          "chrome": 52,
-          "browsers": [
-            "last 2 versions",
-            "safari >= 7"
-          ]
-        }
+    ["@babel/env", {
+      "targets": {
+        "chrome": 52,
+        "browsers": ["last 2 versions", "safari >= 7"]
       }
-    ]
+    }]
   ],
   "plugins": [
     "lodash",
     "add-module-exports",
-    "@babel/plugin-transform-runtime",
-    "@babel/plugin-transform-async-to-generator",
-    "@babel/plugin-transform-regenerator",
     "@babel/plugin-proposal-class-properties"
   ],
   "env": {
@@ -31,6 +22,8 @@
     },
     "test": {
       "plugins": [
+        "@babel/plugin-transform-runtime",
+        "@babel/transform-async-to-generator",
         ["module-resolver", {
          "root": ["./src"]
        }]

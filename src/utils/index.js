@@ -6,9 +6,11 @@ export { getEventsFromInput } from './events'
  * @description Create a function if not already one
  * @param {Function|Object|Array|String} Callable function or value of return for new function
  */
-export const createCallable = f => (isFunction(f) ? f : () => f)
+export function createCallable(f) {
+  return isFunction(f) ? f : () => f
+}
 
-export const getDisplayName = Component => {
+export function getDisplayName(Component) {
   if (typeof Component === 'string') {
     return Component
   }
@@ -20,10 +22,11 @@ export const getDisplayName = Component => {
   return Component.displayName || Component.name || 'Component'
 }
 
-export const wrapDisplayName = (BaseComponent, hocName) =>
-  `${hocName}(${getDisplayName(BaseComponent)})`
+export function wrapDisplayName(BaseComponent, hocName) {
+  return `${hocName}(${getDisplayName(BaseComponent)})`
+}
 
-export const stringToDate = strInput => {
+export function stringToDate(strInput) {
   try {
     return new Date(JSON.parse(strInput))
   } catch (err) {

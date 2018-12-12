@@ -4,7 +4,7 @@ import { isEqual, differenceWith } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable, getDisplayName } from './utils'
-import ReactReduxFirebaseConsumer from './ReactReduxFirebaseConsumer'
+import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
  * @name createFirebaseConnect
@@ -93,7 +93,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
   const HoistedComp = hoistStatics(FirebaseConnectWrapped, WrappedComponent)
 
   const FirebaseConnect = props => (
-    <ReactReduxFirebaseConsumer>
+    <ReactReduxFirebaseContext.Provider>
       {firebase => (
         <HoistedComp
           firebase={firebase}
@@ -101,7 +101,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
           {...props}
         />
       )}
-    </ReactReduxFirebaseConsumer>
+    </ReactReduxFirebaseContext.Provider>
   )
 
   FirebaseConnect.propTypes = {
