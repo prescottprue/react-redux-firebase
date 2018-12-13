@@ -6,7 +6,8 @@ import { withFirebase } from 'react-redux-firebase'
 import './App.css'
 
 const enhance = compose(
-  withFirebase, // firestoreConnect() can also be used
+  withFirebase,
+  // withFirebase, // not yet supporting the new API
   withStateHandlers(
     ({ initialVal = '' }) => ({
       inputVal: initialVal

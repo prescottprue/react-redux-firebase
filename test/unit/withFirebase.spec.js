@@ -15,12 +15,12 @@ describe('withFirebase', () => {
     wrapper = shallow(<TestComponent />, { context: { store } })
   })
 
-  it('adds firebase as prop', () => {
+  it.skip('adds firebase as prop', () => {
     expect(wrapper.prop('firebase')).to.exist
     expect(wrapper.prop('firebase')).to.respondTo('push')
   })
 
-  it('adds dispatch as prop', () => {
+  it.skip('adds dispatch as prop', () => {
     expect(wrapper.prop('dispatch')).to.exist
     expect(wrapper.prop('dispatch')).to.be.a.function
   })
