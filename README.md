@@ -48,12 +48,13 @@ Include `reactReduxFirebase` (store enhancer) and  `firebaseReducer` (reducer) w
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { createStore, combineReducers, compose } from 'redux'
-import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
-import firebase from 'firebase'
-// import { reduxFirestore, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
+import firebase from 'firebase/app'
+import 'firebase/auth'
 // import 'firebase/firestore' // <- needed if using firestore
 // import 'firebase/functions' // <- needed if using httpsCallable
+import { createStore, combineReducers, compose } from 'redux'
+import { ReactReduxFirebaseProvider, firebaseReducer } from 'react-redux-firebase'
+// import { createFirestoreInstance, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
 
 const firebaseConfig = {}
 
@@ -70,12 +71,6 @@ firebase.initializeApp(firebaseConfig)
 // firebase.firestore() // <- needed if using firestore
 // firebase.functions() // <- needed if using httpsCallable
 
-// Add reactReduxFirebase enhancer when making store creator
-const createStoreWithFirebase = compose(
-  reactReduxFirebase(firebase, rrfConfig), // firebase instance as first argument
-  // reduxFirestore(firebase) // <- needed if using firestore
-)(createStore)
-
 // Add firebase to reducers
 const rootReducer = combineReducers({
   firebase: firebaseReducer,
@@ -84,12 +79,21 @@ const rootReducer = combineReducers({
 
 // Create store with reducers and initial state
 const initialState = {}
-const store = createStoreWithFirebase(rootReducer, initialState)
+const store = createStore(rootReducer, initialState)
+
+const rrfProps = {
+  firebase,
+  config: rrfConfig,
+  dispatch: store.dispatch,
+  // createFirestoreInstance // <- needed if using firestore
+}
 
 // Setup react-redux so that connect HOC can be used
 const App = () => (
   <Provider store={store}>
-    <Todos />
+    <ReactReduxFirebaseProvider {...rrfProps}>
+      <Todos />
+    </ReactReduxFirebaseProvider>
   </Provider>
 );
 
@@ -104,26 +108,30 @@ The Firebase instance can then be grabbed from context within your components (`
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withFirebase } from 'react-redux-firebase'
+import { compose, withHandlers } from 'recompose'
 
-const Todos = ({ firebase }) => {
-  const sampleTodo = { text: 'Sample', done: false }
-  const pushSample = () => firebase.push('todos', sampleTodo)
+function Todos({ firebase, addSampleTodo }) {
   return (
     <div>
-      <h1>Todos</h1>
-      <ul>
-        {todosList}
-      </ul>
-      <input type="text" ref="newTodo" />
-      <button onClick={pushSample}>
+      <h1>New Sample Todo</h1>
+      <button onClick={addSampleTodo}>
         Add
       </button>
     </div>
   )
 }
 
-export default withFirebase(Todos)
-// or firebaseConnect()(Todos)
+const enhance = compose(
+  withFirebase,
+  withHandlers({
+    addSampleTodo: props => () => {
+      const sampleTodo = { text: 'Sample', done: false }
+      return props.firebase.push('todos', sampleTodo)
+    }
+  })
+)
+
+export default enhance(Todos)
 ```
 
 **Load Data (listeners automatically managed on mount/unmount)**
@@ -135,33 +143,30 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 
-const Todos = ({ todos, firebase }) => {
-  // Build Todos list if todos exist and are loaded
-  const todosList = !isLoaded(todos)
-    ? 'Loading'
-    : isEmpty(todos)
-      ? 'Todo list is empty'
-      : Object.keys(todos).map(
-          (key, id) => (
-            <TodoItem key={key} id={id} todo={todos[key]}/>
-          )
-        )
+function Todos({ todos, firebase }) {
+  if (!isLoaded(todos)) {
+    return <div>Loading...</div>
+  }
+  if (isEmpty(todos)) {
+    return <div>Todos List Is Empty</div>
+  }
   return (
     <div>
-      <h1>Todos</h1>
       <ul>
-        {todosList}
+        {
+          Object.keys(todos).map(
+            (key, id) => (
+              <TodoItem key={key} id={id} todo={todos[key]}/>
+            )
+          )
+        }
       </ul>
-      <input type="text" ref="newTodo" />
-      <button onClick={this.handleAdd}>
-        Add
-      </button>
     </div>
   )
 }
 
 export default compose(
-  firebaseConnect([
+  firebaseConnect(() => [
     'todos' // { path: '/todos' } // object notation
   ]),
   connect((state) => ({
@@ -179,8 +184,8 @@ It is common to make a detail page that loads a single item instead of a whole l
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { compose } from 'redux'
 import { firebaseConnect, getVal } from 'react-redux-firebase'
+import { compose, withHandlers } from 'recompose'
 
 // Component enhancer that loads todo into redux then into the todo prop
 const enhance = compose(
@@ -193,21 +198,27 @@ const enhance = compose(
   }),
   connect(({ firebase }, props) => ({
     todo: getVal(firebase, `data/todos/${props.params.todoId}`), // lodash's get can also be used
-  }))
+  })),
+  withHandlers({
+    updateTodo: props => () => {
+      return firebase.update(`todos/${params.todoId}`, { done: !todo.isDone })
+    }
+  })
 )
 
-const Todo = ({ todo, firebase, params }) =>
-  <div>
-    <input
-      name="isDone"
-      type="checkbox"
-      checked={todo.isDone}
-      onChange={() =>
-        firebase.update(`todos/${params.todoId}`, { done: !todo.isDone })
-      }
-    />
-    <span>{todo.label}</span>
-  </div>
+function Todo({ todo }) {
+  return (
+    <div>
+      <input
+        name="isDone"
+        type="checkbox"
+        checked={todo.isDone}
+        onChange={updateTodo}
+      />
+      <span>{todo.label}</span>
+    </div>
+  )
+}
 
 // Export enhanced component
 export default enhance(Todo)
@@ -223,21 +234,38 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
 
-const Todos = ({ firebase }) => {
-  // Build Todos list if todos exist and are loaded
-  const todosList = !isLoaded(todos)
-    ? 'Loading'
-    : isEmpty(todos)
-      ? 'Todo list is empty'
-      : Object.keys(todos).map(
-          (key, id) => <TodoItem key={key} id={id} todo={todos[key]}/>
+function TodosList({ todos }) {
+  if (!isLoaded(todos)) {
+    return <div>Loading...</div>
+  }
+  if (isEmpty(todos)) {
+    return <div>Todos List Is Empty</div>
+  }
+  return (
+    <ul>
+      {
+        Object.keys(todos).map((key, id) =>
+          <TodoItem key={key} id={id} todo={todos[key]}/>
         )
+      }
+    </ul>
+  )
+}
+const withTodosData = compose(
+  withFirebase, // or firebaseConnect()
+  connect((state) => ({
+    todos: state.firebase.data.todos,
+    // profile: state.firebase.profile // load profile
+  }))
+)
+
+const EnhancedTodosList = withTodosData(TodosList)
+
+function Todos({ firebase }) {
   return (
     <div>
       <h1>Todos</h1>
-      <ul>
-        {todosList}
-      </ul>
+      <EnhancedTodosList />
       <button onClick={() => firebase.watchEvent('value', 'todos')}>
         Load Todos
       </button>
@@ -246,13 +274,7 @@ const Todos = ({ firebase }) => {
 }
 
 // Export enhanced component
-export default compose(
-  withFirebase, // or firebaseConnect()
-  connect((state) => ({
-    todos: state.firebase.data.todos,
-    // profile: state.firebase.profile // load profile
-  }))
-)(Todos)
+export default withFirebase(Todos)
 ```
 
 ## Firestore

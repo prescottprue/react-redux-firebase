@@ -23,10 +23,6 @@ const files = [
     dest: 'firebaseInstance.md'
   },
   {
-    src: 'enhancer.js',
-    dest: 'enhancer.md'
-  },
-  {
     src: 'helpers.js',
     dest: 'helpers.md'
   },

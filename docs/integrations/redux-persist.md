@@ -128,7 +128,6 @@ redux-persist `v4.*.*` is supported out of the box, meaning no transforms are re
 import { applyMiddleware, compose, createStore } from 'redux'
 import { browserHistory } from 'react-router'
 import firebase from 'firebase'
-import { reactReduxFirebase } from 'react-redux-firebase'
 import { persistStore, autoRehydrate } from 'redux-persist'
 import {
   firebase as firebaseConfig,
@@ -147,7 +146,6 @@ export default (initialState = {}, history) => {
     makeRootReducer(),
     initialState,
     compose(
-      reactReduxFirebase(firebase, reduxConfig),
       applyMiddleware(...middleware),
       autoRehydrate(),
       ...enhancers

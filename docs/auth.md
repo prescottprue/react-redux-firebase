@@ -203,8 +203,7 @@ createNewUser({
 ## logout()
 Logout from Firebase and delete all data from the store (`state.firebase.data` and `state.firebase.auth` are set to `null`).
 
-
-Looking to preserve data on logout? [`v2.0.0` supports the `preserve` config option](http://docs.react-redux-firebase.com/history/v2.0.0/docs/api/enhancer.html), which preserves data under the specified keys in state on logout.
+Looking to preserve data on logout? [checkout the `preserve` config option](/docs/api/contants), which preserves data under the specified keys in state on logout.
 
 ##### Examples
 

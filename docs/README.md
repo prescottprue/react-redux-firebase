@@ -43,7 +43,6 @@
     * [listenersReducer](/docs/api/reducers.md#listenersreducer)
     * [dataReducer](/docs/api/reducers.md#datareducer)
     * [orderedReducer](/docs/api/reducers.md#orderedreducer)
-  * [reactReduxFirebase](/docs/api/enhancer.md)
   * [props.firebase](/docs/api/props-firebase.md)
   * [getFirebase](/docs/api/get-firebase.md)
   * [firebaseInstance](/docs/api/firebaseInstance.md)
