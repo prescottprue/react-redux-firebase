@@ -7,7 +7,6 @@ import firebaseConnect, { createFirebaseConnect } from './firebaseConnect'
 import firestoreConnect, { createFirestoreConnect } from './firestoreConnect'
 import withFirebase, { createWithFirebase } from './withFirebase'
 import withFirestore, { createWithFirestore } from './withFirestore'
-import enhancer, { getFirebase } from './enhancer'
 import reducer from './reducer'
 import constants, { actionTypes } from './constants'
 import { authIsReady } from './utils/auth'
@@ -20,7 +19,6 @@ export default {
   ReduxFirestoreContext,
   ReduxFirestoreProvider,
   ReduxFirestoreConsumer: ReduxFirestoreContext.Consumer,
-  firebase: firebaseConnect,
   createFirebaseInstance,
   firebaseConnect,
   createFirebaseConnect,
@@ -33,12 +31,8 @@ export default {
   reducer,
   firebaseReducer: reducer,
   firebaseStateReducer: reducer,
-  reduxReactFirebase: enhancer,
-  reactReduxFirebase: enhancer,
-  reduxFirebase: enhancer,
   constants,
   actionTypes,
-  getFirebase,
   authIsReady,
   helpers,
   ...helpers
