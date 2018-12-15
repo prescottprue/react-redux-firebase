@@ -33,11 +33,11 @@ const Home = ({ firebase, todos }) => (
           ? 'Loading'
           : isEmpty(todos)
             ? 'Todo list is empty'
-            : todos.reverse().map((todo, ind) => (
+            : todos.reverse().map(({ value: todo, key }, ind) => (
               <TodoItem
-                key={`${todo.key}-${ind}`}
-                id={todo.key}
-                todo={todo.value}
+                key={`${key}-${ind}`}
+                id={key}
+                {...todo}
               />
             ))
       }
@@ -47,7 +47,7 @@ const Home = ({ firebase, todos }) => (
 )
 
 Home.propTypes = {
-  firebase: PropTypes.object.isRequired
+  // firebase: PropTypes.object.isRequired
 }
 
 const enhance = compose(

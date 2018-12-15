@@ -7,4 +7,10 @@ export const firebase = {
   projectId: 'redux-firebasev3'
 }
 
-export default { firebase }
+export const reduxFirebase = {
+  userProfile: 'users',
+  useFirestoreForProfile: true,
+  enableLogging: false
+}
+
+export default { firebase, reduxFirebase }

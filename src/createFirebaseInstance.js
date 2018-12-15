@@ -11,7 +11,7 @@ import { authActions, queryActions, storageActions } from './actions'
  * @return {Object} Extended Firebase instance
  * @private
  */
-export const createFirebaseInstance = (firebase, configs, dispatch) => {
+export default function createFirebaseInstance(firebase, configs, dispatch) {
   /* istanbul ignore next: Logging is external */
   // Enable Logging based on config (handling instances without i.e RNFirebase)
   if (
@@ -488,7 +488,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
    * @description Firebase auth service instance including all Firebase auth methods
    * @return {firebase.database.Auth}
    */
-  const helpers = {
+  return Object.assign(firebase, {
     ref: path => firebase.database().ref(path),
     set,
     setWithMeta,
@@ -515,8 +515,7 @@ export const createFirebaseInstance = (firebase, configs, dispatch) => {
     reloadAuth,
     linkWithCredential,
     promiseEvents,
+    dispatch,
     ...actionCreators
-  }
-
-  return Object.assign(firebase, helpers, { helpers })
+  })
 }

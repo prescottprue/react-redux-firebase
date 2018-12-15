@@ -35,34 +35,16 @@ const config = {
       root: 'PropTypes'
     }
   },
-  plugins: [
-    new webpack.optimize.ModuleConcatenationPlugin()
-  ]
+  plugins: []
 }
 
-if (env === 'production') {
-  config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      comments: false,
-      compressor: {
-        pure_getters: true,
-        unsafe: true,
-        unsafe_comps: true,
-        warnings: false,
-        screw_ie8: false
-      }
-    })
-  )
-
+if (config.mode === 'production') {
   if (process.env.SIZE) {
     config.plugins.push(new BundleAnalyzerPlugin())
   }
 }
 
 config.plugins.push(
-  new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify(env)
-  }),
   new webpack.BannerPlugin(
     {
       banner: `${pkg.name}${env === 'production' ? '.min' : ''}.js v${pkg.version}`,

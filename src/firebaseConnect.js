@@ -4,6 +4,7 @@ import { isEqual, differenceWith } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable, getDisplayName } from './utils'
+import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
  * @name createFirebaseConnect
@@ -26,24 +27,20 @@ import { getEventsFromInput, createCallable, getDisplayName } from './utils'
 export const createFirebaseConnect = (storeKey = 'store') => (
   dataOrFn = []
 ) => WrappedComponent => {
-  class FirebaseConnect extends Component {
+  class FirebaseConnectWrapped extends Component {
     static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)})`
     static wrappedComponent = WrappedComponent
-    static contextTypes = {
-      [storeKey]: PropTypes.object.isRequired
-    }
 
     firebaseEvents = []
     firebase = null
     prevData = null
-    store = this.context[storeKey]
 
     componentWillMount() {
-      const { firebase, dispatch } = this.store
+      const { firebase, dispatch } = this.props
 
       // Allow function to be passed
       const inputAsFunc = createCallable(dataOrFn)
-      this.prevData = inputAsFunc(this.props, this.store)
+      this.prevData = inputAsFunc(this.props, this.props)
 
       const { ref, helpers, storage, database, auth } = firebase
       this.firebase = { ref, storage, database, auth, ...helpers }
@@ -54,12 +51,12 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     }
 
     componentWillUnmount() {
-      const { firebase, dispatch } = this.store
+      const { firebase, dispatch } = this.props
       unWatchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
     componentWillReceiveProps(np) {
-      const { firebase, dispatch } = this.store
+      const { firebase, dispatch } = this.props
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.store)
 
@@ -84,17 +81,34 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     }
 
     render() {
-      return (
-        <WrappedComponent
-          {...this.props}
-          {...this.state}
-          firebase={this.firebase}
-        />
-      )
+      return <WrappedComponent {...this.props} />
     }
   }
 
-  return hoistStatics(FirebaseConnect, WrappedComponent)
+  FirebaseConnectWrapped.propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    firebase: PropTypes.object
+  }
+
+  const HoistedComp = hoistStatics(FirebaseConnectWrapped, WrappedComponent)
+
+  const FirebaseConnect = props => (
+    <ReactReduxFirebaseContext.Provider>
+      {firebase => (
+        <HoistedComp
+          firebase={firebase}
+          dispatch={firebase.dispatch}
+          {...props}
+        />
+      )}
+    </ReactReduxFirebaseContext.Provider>
+  )
+
+  FirebaseConnect.propTypes = {
+    dispatch: PropTypes.func.isRequired
+  }
+
+  return FirebaseConnect
 }
 
 /**

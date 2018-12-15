@@ -15,18 +15,19 @@ import { promisesForPopulate, getPopulateObjs } from '../utils/populate'
  * @param {Object} authError - Error object
  * @private
  */
-const dispatchLoginError = (dispatch, authError) =>
-  dispatch({
+function dispatchLoginError(dispatch, authError) {
+  return dispatch({
     type: actionTypes.LOGIN_ERROR,
     authError
   })
+}
 
 /**
  * @description Remove listener from user profile
  * @param {Object} firebase - Internal firebase object
  * @private
  */
-export const unWatchUserProfile = firebase => {
+export function unWatchUserProfile(firebase) {
   const {
     authUid,
     config: { userProfile, useFirestoreForProfile }
@@ -46,7 +47,7 @@ export const unWatchUserProfile = firebase => {
   }
 }
 
-const getProfileFromSnap = snap => {
+function getProfileFromSnap(snap) {
   // Real Time Database
   if (snap && snap.val) {
     return snap.val()
@@ -67,11 +68,11 @@ const getProfileFromSnap = snap => {
  * Snapshot from profile watcher
  * @private
  */
-export const handleProfileWatchResponse = (
+export function handleProfileWatchResponse(
   dispatch,
   firebase,
   userProfileSnap
-) => {
+) {
   const {
     profileParamsToPopulate,
     autoPopulateProfile,
@@ -900,35 +901,16 @@ export const linkWithCredential = (dispatch, firebase, credential) => {
  * @param {Object} applicationVerifier - Phone number
  * @return {Promise} Resolves with auth
  */
-export const signInWithPhoneNumber = (
+export function signInWithPhoneNumber(
   firebase,
   dispatch,
   phoneNumber,
   applicationVerifier,
   options = {}
-) => {
+) {
   return login(dispatch, firebase, {
     phoneNumber,
     applicationVerifier,
     ...options
   })
-}
-
-export default {
-  dispatchLoginError,
-  unWatchUserProfile,
-  watchUserProfile,
-  init,
-  createUserProfile,
-  login,
-  logout,
-  createUser,
-  resetPassword,
-  confirmPasswordReset,
-  verifyPasswordResetCode,
-  updateAuth,
-  updateProfile,
-  updateEmail,
-  reloadAuth,
-  signInWithPhoneNumber
 }

@@ -1,16 +1,24 @@
-import { createFirebaseInstance } from './createFirebaseInstance'
+import createFirebaseInstance from './createFirebaseInstance'
+import ReactReduxFirebaseProvider from './ReactReduxFirebaseProvider'
+import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
+import ReduxFirestoreProvider from './ReduxFirestoreProvider'
+import ReduxFirestoreContext from './ReduxFirestoreContext'
 import firebaseConnect, { createFirebaseConnect } from './firebaseConnect'
 import firestoreConnect, { createFirestoreConnect } from './firestoreConnect'
 import withFirebase, { createWithFirebase } from './withFirebase'
 import withFirestore, { createWithFirestore } from './withFirestore'
-import enhancer, { getFirebase } from './enhancer'
 import reducer from './reducer'
 import constants, { actionTypes } from './constants'
 import { authIsReady } from './utils/auth'
 import * as helpers from './helpers'
 
 export default {
-  firebase: firebaseConnect,
+  ReactReduxFirebaseProvider,
+  ReactReduxFirebaseConsumer: ReactReduxFirebaseContext.Consumer,
+  ReactReduxFirebaseContext,
+  ReduxFirestoreContext,
+  ReduxFirestoreProvider,
+  ReduxFirestoreConsumer: ReduxFirestoreContext.Consumer,
   createFirebaseInstance,
   firebaseConnect,
   createFirebaseConnect,
@@ -23,12 +31,8 @@ export default {
   reducer,
   firebaseReducer: reducer,
   firebaseStateReducer: reducer,
-  reduxReactFirebase: enhancer,
-  reactReduxFirebase: enhancer,
-  reduxFirebase: enhancer,
   constants,
   actionTypes,
-  getFirebase,
   authIsReady,
   helpers,
   ...helpers

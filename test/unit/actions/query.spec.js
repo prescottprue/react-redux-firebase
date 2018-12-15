@@ -81,7 +81,7 @@ describe('Actions: Query', () => {
 
     it('refcounts watching and unwatching of equal path', () => {
       let projectPath = { type: 'value', path: 'projects/test' }
-      let numWatchers = () => Object.values(firebase._.watchers).length
+      let numWatchers = () => Object.keys(firebase._.watchers).length
       let numWatchersBefore = numWatchers()
       expect(watchEvent(firebase, dispatch, projectPath, 'projects'))
       expect(watchEvent(firebase, dispatch, projectPath, 'projects'))

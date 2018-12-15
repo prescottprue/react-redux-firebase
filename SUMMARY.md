@@ -2,7 +2,6 @@
 
 * [Read Me](/README.md)
 * [Getting Started](/docs/getting_started.md)
-* [v2 Migration Guide](/docs/v2-migration-guide.md)
 * [Auth](/docs/auth.md)
 * [Queries](/docs/queries.md)
 * [Firestore](/docs/firestore.md)
@@ -43,11 +42,13 @@
     * [listenersReducer](/docs/api/reducers.md#listenersreducer)
     * [dataReducer](/docs/api/reducers.md#datareducer)
     * [orderedReducer](/docs/api/reducers.md#orderedreducer)
-  * [reactReduxFirebase](/docs/api/enhancer.md)
   * [props.firebase](/docs/api/props-firebase.md)
   * [getFirebase](/docs/api/get-firebase.md)
   * [firebaseInstance](/docs/api/firebaseInstance.md)
   * [helpers](/docs/api/helpers.md)
+* Migration Guides
+  * [v3 Migration Guide](/docs/v3-migration-guide.md)
+  * [v2 Migration Guide](/docs/v2-migration-guide.md)
 * [FAQ](/docs/FAQ.md)
 * [Roadmap](/docs/roadmap.md)
 * [Contributing](/docs/contributing.md)

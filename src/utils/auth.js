@@ -9,7 +9,9 @@ import { supportedAuthProviders, actionTypes } from '../constants'
  * @return {firebase.auth.AuthCredential} provider - Auth Provider
  * @private
  */
-const createAuthProvider = (firebase, providerName, scopes) => {
+function createAuthProvider(firebase, providerName, scopes) {
+  // TODO: Verify scopes are valid before adding
+  // TODO: Validate parameter inputs
   const capitalProviderName = `${capitalize(providerName)}AuthProvider`
 
   // Throw if auth provider does not exist on Firebase instance
@@ -73,7 +75,7 @@ const createAuthProvider = (firebase, providerName, scopes) => {
  * (i.e. email)
  * @private
  */
-export const getLoginMethodAndParams = (firebase, creds) => {
+export function getLoginMethodAndParams(firebase, creds) {
   const {
     email,
     password,
@@ -166,7 +168,7 @@ export const getLoginMethodAndParams = (firebase, creds) => {
  * react-redux-firebase reducer is not in a combined reducer.
  * @return {Promise} Resolves when Firebase auth is ready in the store.
  */
-const isAuthReady = (store, stateName) => {
+function isAuthReady(store, stateName) {
   const state = store.getState()
   const firebaseState = stateName ? state[stateName] : state
   const firebaseAuthState = firebaseState && firebaseState.auth
@@ -191,8 +193,8 @@ const isAuthReady = (store, stateName) => {
  * combined reducer.
  * @return {Promise} Resolve when Firebase auth is ready in the store.
  */
-export const authIsReady = (store, stateName = 'firebase') =>
-  new Promise(resolve => {
+export function authIsReady(store, stateName = 'firebase') {
+  return new Promise(resolve => {
     if (isAuthReady(store, stateName)) {
       resolve()
     } else {
@@ -204,6 +206,7 @@ export const authIsReady = (store, stateName = 'firebase') =>
       })
     }
   })
+}
 
 /**
  * Function that creates and authIsReady promise
@@ -214,7 +217,7 @@ export const authIsReady = (store, stateName = 'firebase') =>
  * @param {string} config.firebaseStateName - Config options for authIsReady
  * @return {Promise} Resolves when Firebase auth is ready in the store.
  */
-export const createAuthIsReady = (store, config) => {
+export function createAuthIsReady(store, config) {
   return isFunction(config.authIsReady)
     ? config.authIsReady(store, config)
     : authIsReady(store, config.firebaseStateName)
@@ -226,7 +229,7 @@ export const createAuthIsReady = (store, config) => {
  * @param  {Object} profileUpdate - Updates to profile object
  * @return {Promise} Resolves with results of profile get
  */
-export const updateProfileOnRTDB = (firebase, profileUpdate) => {
+export function updateProfileOnRTDB(firebase, profileUpdate) {
   const { database, _: { config, authUid } } = firebase
   const profileRef = database().ref(`${config.userProfile}/${authUid}`)
   return profileRef.update(profileUpdate).then(() => profileRef.once('value'))
@@ -246,11 +249,11 @@ export const updateProfileOnRTDB = (firebase, profileUpdate) => {
  * setting profile
  * @return {Promise} Resolves with results of profile get
  */
-export const updateProfileOnFirestore = (
+export function updateProfileOnFirestore(
   firebase,
   profileUpdate,
   options = {}
-) => {
+) {
   const { useSet = true, merge = true } = options
   const { firestore, _: { config, authUid } } = firebase
   const profileRef = firestore().doc(`${config.userProfile}/${authUid}`)
