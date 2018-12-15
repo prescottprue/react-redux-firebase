@@ -11,7 +11,6 @@
 
 [![Gitter][gitter-image]][gitter-url]
 
-
 > Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 
 ## [Demo](https://demo.react-redux-firebase.com)
@@ -19,7 +18,7 @@
 The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) is deployed to [demo.react-redux-firebase.com](https://demo.react-redux-firebase.com).
 
 ## Features
-- Integrated into redux
+
 - Out of the box support for authentication (with auto load user profile)
 - Full Firebase Platform Support Including Real Time Database, Firestore, and Storage
 - Automatic binding/unbinding of listeners through React Higher Order Components (`firebaseConnect`  and `firestoreConnect`)
@@ -31,6 +30,8 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 - [`react-native` support](http://react-redux-firebase.com/docs/integrations/react-native.html) using [native modules](http://react-redux-firebase.com/docs/integrations/react-native.html#native-modules) or [web sdk](http://react-redux-firebase.com/docs/integrations/react-native.html#jsweb)
 
 ## Installation
+
+Interested in support for [`react-redux@^6`](https://github.com/reduxjs/react-redux) or the [new react context API](https://reactjs.org/docs/context.html)? Checkout [the `next` branch which contains the next upcoming major version](https://github.com/prescottprue/react-redux-firebase/tree/next) (installed through `npm i --save react-redux-firebase@next`).
 
 ```bash
 npm install --save react-redux-firebase
