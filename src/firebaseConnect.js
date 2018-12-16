@@ -93,7 +93,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
   const HoistedComp = hoistStatics(FirebaseConnectWrapped, WrappedComponent)
 
   const FirebaseConnect = props => (
-    <ReactReduxFirebaseContext.Provider>
+    <ReactReduxFirebaseContext.Consumer>
       {firebase => (
         <HoistedComp
           firebase={firebase}
@@ -101,7 +101,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
           {...props}
         />
       )}
-    </ReactReduxFirebaseContext.Provider>
+    </ReactReduxFirebaseContext.Consumer>
   )
 
   FirebaseConnect.propTypes = {
