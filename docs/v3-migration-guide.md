@@ -104,7 +104,7 @@ const fbConfig = {} // object containing Firebase config
 const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
 
 // Initialize firebase instance
-firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(fbConfig)
 
 export default () => {
   return createStore(
@@ -178,7 +178,7 @@ const fbConfig = {} // object containing Firebase config
 const rrfConfig = { userProfile: 'users' } // react-redux-firebase config
 
 // Initialize firebase instance
-firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(fbConfig)
 
 const store = createReduxStore()
 

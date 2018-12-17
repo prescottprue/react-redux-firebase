@@ -39,7 +39,7 @@ import { createStore, combineReducers, compose } from 'redux'
 import { ReactReduxFirebaseProvider, firebaseReducer } from 'react-redux-firebase'
 // import { createFirestoreInstance, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
 
-const firebaseConfig = {}
+const fbConfig = {}
 
 // react-redux-firebase config
 const rrfConfig = {
@@ -48,7 +48,7 @@ const rrfConfig = {
 }
 
 // Initialize firebase instance
-firebase.initializeApp(firebaseConfig)
+firebase.initializeApp(fbConfig)
 
 // Initialize other services on firebase instance
 // firebase.firestore() // <- needed if using firestore
