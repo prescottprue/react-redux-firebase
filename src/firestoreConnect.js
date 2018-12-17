@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { isEqual, some, filter } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { createCallable, wrapDisplayName } from './utils'
+import { v3ErrorMessage } from './constants'
 
 /**
  * @name createFirestoreConnect
@@ -40,6 +41,11 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     }
 
     componentWillMount() {
+      // Throw if using with react-redux@^6
+      if (!this.context || !this.context[storeKey]) {
+        // Use react-redux-firebase@^3 for react-redux@^6 support. More info available in the migration guide: http://bit.ly/2SRNdiO'
+        throw new Error(v3ErrorMessage)
+      }
       const { firestore } = this.store
       if (this.firestoreIsEnabled) {
         // Allow function to be passed

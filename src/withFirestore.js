@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import hoistStatics from 'hoist-non-react-statics'
 import { wrapDisplayName } from './utils'
+import { v3ErrorMessage } from './constants'
 
 /**
  * @name createWithFirestore
@@ -34,6 +35,11 @@ export const createWithFirestore = (storeKey = 'store') => WrappedComponent => {
     store = this.context[storeKey]
 
     render() {
+      // Throw if using with react-redux@^6
+      if (!this.context || !this.context[storeKey]) {
+        // Use react-redux-firebase@^3 for react-redux@^6 support. More info available in the migration guide: http://bit.ly/2SRNdiO'
+        throw new Error(v3ErrorMessage)
+      }
       return (
         <WrappedComponent
           {...this.props}
