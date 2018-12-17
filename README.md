@@ -42,7 +42,7 @@ If you're not, you can access the library on [unpkg](https://unpkg.com/redux-fir
 
 ## Use
 
-Include `reactReduxFirebase` (store enhancer) and  `firebaseReducer` (reducer) while creating your redux store:
+Include `firebaseReducer` (reducer) while creating your redux store then pass dispatch and your firebase instance to `ReactReduxFirebaseProvider` (context provider):
 
 ```javascript
 import React from 'react'
