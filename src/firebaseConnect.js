@@ -4,6 +4,7 @@ import { isEqual, differenceWith } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable, getDisplayName } from './utils'
+import { v3ErrorMessage } from './constants'
 
 /**
  * @name createFirebaseConnect
@@ -39,6 +40,11 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     store = this.context[storeKey]
 
     componentWillMount() {
+      // Throw if using with react-redux@^6
+      if (!this.context || !this.context[storeKey]) {
+        // Use react-redux-firebase@^3 for react-redux@^6 support. More info available in the migration guide: http://bit.ly/2SRNdiO'
+        throw new Error(v3ErrorMessage)
+      }
       const { firebase, dispatch } = this.store
 
       // Allow function to be passed
