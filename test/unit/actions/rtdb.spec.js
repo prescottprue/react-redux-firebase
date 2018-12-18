@@ -4,12 +4,12 @@ import {
   watchEvents,
   unWatchEvents,
   remove
-} from 'actions/query'
+} from 'actions/rtdb'
 import { actionTypes } from '../../../src/constants'
 let spy
 const dispatch = () => {}
 
-describe('Actions: Query', () => {
+describe('Actions: Real Time Database (RTDB)', () => {
   beforeEach(() => {
     spy = sinon.spy(dispatch)
   })
@@ -26,69 +26,51 @@ describe('Actions: Query', () => {
     })
 
     it('runs given basic params', () => {
-      expect(
-        watchEvent(
-          firebase,
-          dispatch,
-          { type: 'once', path: 'projects' },
-          'projects'
-        )
-      ).to.eventually.be.an.object
+      expect(watchEvent(firebase, dispatch, 'once', 'projects')).to.eventually
+        .be.an.object
     })
 
     it('runs given first_child', () => {
-      expect(
-        watchEvent(
-          firebase,
-          dispatch,
-          { type: 'first_child', path: 'projects' },
-          'projects'
-        )
-      ).to.eventually.be.an.object
+      expect(watchEvent(firebase, dispatch, 'first_child', 'projects')).to
+        .eventually.be.an.object
     })
 
     it('runs value query', () => {
-      expect(
-        watchEvent(
-          firebase,
-          dispatch,
-          { type: 'value', path: 'projects' },
-          'projects'
-        )
-      )
+      expect(watchEvent(firebase, dispatch, 'value', 'projects', 'projects'))
     })
 
     it('handles populates', () => {
       expect(
-        watchEvent(
-          firebase,
-          dispatch,
-          {
-            type: 'value',
-            path: 'projects',
-            populates: [{ child: 'uid', root: 'users' }]
-          },
-          'projects'
-        )
+        watchEvent(firebase, dispatch, 'value', 'projects', 'projects', {
+          populates: [{ child: 'uid', root: 'users' }]
+        })
       )
     })
 
     it('throws for null type', () => {
       expect(() =>
         watchEvent(firebase, dispatch, { path: 'projects' }, 'projects')
-      ).to.Throw
+      ).to.Throw(
+        'Query.on failed: First argument must be a valid event type = "value", "child_added", "child_removed", "child_changed", or "child_moved".'
+      )
     })
 
     it('refcounts watching and unwatching of equal path', () => {
       let projectPath = { type: 'value', path: 'projects/test' }
       let numWatchers = () => Object.keys(firebase._.watchers).length
       let numWatchersBefore = numWatchers()
-      expect(watchEvent(firebase, dispatch, projectPath, 'projects'))
-      expect(watchEvent(firebase, dispatch, projectPath, 'projects'))
+      const watchEventsArgs = [
+        firebase,
+        dispatch,
+        projectPath.type,
+        projectPath.path
+      ]
+      expect(watchEvent(...watchEventsArgs))
+      expect(watchEvent(...watchEventsArgs))
       expect(numWatchers() - numWatchersBefore).to.be.equal(1)
-      expect(unWatchEvent(firebase, dispatch, projectPath, 'projects'))
+      expect(unWatchEvent(...watchEventsArgs))
       expect(numWatchers() - numWatchersBefore).to.be.equal(1)
-      expect(unWatchEvent(firebase, dispatch, projectPath, 'projects'))
+      expect(unWatchEvent(...watchEventsArgs))
       expect(numWatchers() - numWatchersBefore).to.be.equal(0)
     })
   })
@@ -99,9 +81,8 @@ describe('Actions: Query', () => {
     })
 
     it('runs given basic params', () => {
-      expect(
-        unWatchEvent(firebase, dispatch, { type: 'once', path: 'projects' })
-      ).to.be.a.function
+      expect(unWatchEvent(firebase, dispatch, 'once', 'projects')).to.be.a
+        .function
     })
   })
 

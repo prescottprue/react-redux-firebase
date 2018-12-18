@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { isEqual, differenceWith } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
-import { watchEvents, unWatchEvents } from './actions/query'
+import { watchEvents, unWatchEvents } from './actions/rtdb'
 import { getEventsFromInput, createCallable, getDisplayName } from './utils'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 

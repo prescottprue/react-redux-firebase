@@ -20,7 +20,7 @@
     "build:umd": "cross-env BABEL_ENV=commonjs webpack --mode development src/index.js -o dist/react-redux-firebase.js",
     "build:umd:min": "cross-env BABEL_ENV=commonjs webpack --mode production src/index.js -o dist/react-redux-firebase.min.js",
     "build:size": "cross-env SIZE=true BABEL_ENV=commonjs webpack --mode production src/index.js -o dist/react-redux-firebase.min.js",
-    "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
+    "build": "npm run clean && npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "watch": "npm run build:commonjs -- --watch",
     "watch:es": "npm run build:es -- --watch",
     "prepare": "npm run clean && npm run build",
