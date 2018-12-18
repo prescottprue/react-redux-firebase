@@ -37,20 +37,18 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     }
 
     componentDidMount() {
-      const { firestore } = this.store
       if (this.firestoreIsEnabled) {
-        // Allow function to be passed
+        // Listener configs as object (handling function being passed)
         const inputAsFunc = createCallable(dataOrFn)
         this.prevData = inputAsFunc(this.props, this.props)
-
-        firestore.setListeners(this.prevData)
+        // Attach listeners based on listener config
+        this.props.firestore.setListeners(this.prevData)
       }
     }
 
     componentDidUnmount() {
-      const { firestore } = this.store
       if (this.firestoreIsEnabled && this.prevData) {
-        firestore.unsetListeners(this.prevData)
+        this.props.firestore.unsetListeners(this.prevData)
       }
     }
 
@@ -59,7 +57,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.props)
 
-      // Handle changes to data
+      // Check for changes in the listener configs
       if (this.firestoreIsEnabled && !isEqual(data, this.prevData)) {
         const changes = this.getChanges(data, this.prevData)
 
@@ -127,11 +125,9 @@ export const createFirestoreConnect = (storeKey = 'store') => (
  *
  * // pass todos list from redux as this.props.todosList
  * export default compose(
- *   firestoreConnect(['todos']), // sync todos collection from Firestore into redux
+ *   firestoreConnect(() => ['todos']), // sync todos collection from Firestore into redux
  *   connect((state) => ({
- *     todosList: state.firestore.data.todos,
- *     profile: state.firestore.profile, // pass profile data as this.props.profile
- *     auth: state.firestore.auth // pass auth data as this.props.auth
+ *     todosList: state.firestore.data.todos
  *   })
  * )(SomeComponent)
  */

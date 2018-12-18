@@ -87,7 +87,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
 
   FirebaseConnectWrapped.propTypes = {
     dispatch: PropTypes.func.isRequired,
-    firebase: PropTypes.object
+    firebase: PropTypes.object.isRequired
   }
 
   const HoistedComp = hoistStatics(FirebaseConnectWrapped, WrappedComponent)
