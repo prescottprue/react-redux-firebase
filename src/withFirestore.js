@@ -11,7 +11,7 @@ import ReduxFirestoreContext from './ReduxFirestoreContext'
  * **WARNING!!** This is an advanced feature, and should only be used when
  * needing to access a firebase instance created under a different store key.
  * @param {String} [storeKey='store'] - Name of redux store which contains
- * Firebase state (`state.firebase`)
+ * Firestore state (`state.firestore`)
  * @return {Function} - Higher Order Component which accepts an array of
  * watchers config and wraps a React Component
  * @example <caption>Basic</caption>
@@ -57,37 +57,46 @@ export const createWithFirestore = (storeKey = 'store') => WrappedComponent => {
  * @return {Function} - Which accepts a component to wrap and returns the
  * wrapped component
  * @example <caption>Basic</caption>
+ * import React from 'react'
  * import { withFirestore } from 'react-redux-firebase'
  *
- * const AddTodo = ({ firestore: { add } }) =>
- *   <div>
- *     <button onClick={() => add('todos', { done: false, text: 'Sample' })}>
- *       Add Sample Todo
- *     </button>
- *   </div>
+ * function AddData({ firebase: { add } }) {
+ *   return (
+ *     <div>
+ *       <button onClick={() => add('todos', { done: false, text: 'Sample' })}>
+ *         Add Sample Todo
+ *       </button>
+ *     </div>
+ *   )
+ * }
  *
  * export default withFirestore(AddTodo)
  * @example <caption>Within HOC Composition</caption>
+ * import React from 'react'
  * import { compose } from 'redux' // can also come from recompose
  * import { withHandlers } from 'recompose'
  * import { withFirestore } from 'react-redux-firebase'
  *
- * const AddTodo = ({ addTodo }) =>
- *   <div>
- *     <button onClick={addTodo}>
- *       Add Sample Todo
- *     </button>
- *   </div>
+ * function AddTodo({ addTodo }) {
+ *   return (
+ *     <div>
+ *       <button onClick={addTodo}>
+ *         Add Sample Todo
+ *       </button>
+ *     </div>
+ *   )
+ * }
  *
- * export default compose(
- *   withFirestore(AddTodo),
+ * const enhance = compose(
+ *   withFirestore,
  *   withHandlers({
- *     addTodo: props => () =>
- *        props.firestore.add(
- *          { collection: 'todos' },
- *          { done: false, text: 'Sample' }
- *        )
+ *     addTodo: props => () => {
+ *       const newTodo = { done: false, text: 'Sample' }
+ *       return props.firestore.add({ collection: 'todos' }, newTodo)
+ *     }
  *   })
  * )
+ *
+ * export default enhance(AddTodo)
  */
 export default createWithFirestore()

@@ -15,7 +15,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * @return {Function} - Higher Order Component which accepts an array of
  * watchers config and wraps a React Component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { createWithFirebase } from 'react-redux-firebase'
  *
  * // create withFirebase that uses another redux store
@@ -68,12 +68,15 @@ export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
  * @example <caption>Basic</caption>
  * import { withFirebase } from 'react-redux-firebase'
  *
- * const AddData = ({ firebase: { push } }) =>
- *   <div>
- *     <button onClick={() => push('todos', { done: false, text: 'Sample' })}>
- *       Add Sample Todo
- *     </button>
- *   </div>
+ * function AddData({ firebase: { push } }) {
+ *   return (
+ *     <div>
+ *       <button onClick={() => push('todos', { done: false, text: 'Sample' })}>
+ *         Add Sample Todo
+ *       </button>
+ *     </div>
+ *   )
+ * }
  *
  * export default withFirebase(AddData)
  * @example <caption>Within HOC Composition</caption>
@@ -81,15 +84,18 @@ export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
  * import { withHandlers } from 'recompose'
  * import { withFirebase } from 'react-redux-firebase'
  *
- * const AddTodo = ({ addTodo }) =>
- *   <div>
- *     <button onClick={addTodo}>
- *       Add Sample Todo
- *     </button>
- *   </div>
+ * function AddTodo({ addTodo }) {
+ *   return (
+ *     <div>
+ *       <button onClick={addTodo}>
+ *         Add Sample Todo
+ *       </button>
+ *     </div>
+ *   )
+ * }
  *
- * export default compose(
- *   withFirebase(AddTodo),
+ * const enhance = compose(
+ *   withFirebase,
  *   withHandlers({
  *     addTodo: props => () =>
  *        props.firestore.add(
@@ -98,5 +104,7 @@ export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
  *        )
  *   })
  * )
+ *
+ * export default enhance(AddTodo)
  */
 export default createWithFirebase()

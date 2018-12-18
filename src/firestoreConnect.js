@@ -16,7 +16,7 @@ import ReduxFirestoreContext from './ReduxFirestoreContext'
  * Firebase state (state.firebase)
  * @return {Function} - HOC that accepts a watchArray and wraps a component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { createFirestoreConnect } from 'react-redux-firebase'
  * // create firebase connect that uses another redux store
  * const firestoreConnect = createFirestoreConnect('anotherStore')
@@ -28,7 +28,10 @@ export const createFirestoreConnect = (storeKey = 'store') => (
 ) => WrappedComponent => {
   class FirestoreConnectWrapped extends Component {
     static wrappedComponent = WrappedComponent
-    static displayName = wrapDisplayName(WrappedComponent, 'FirestoreConnect')
+    static displayName = wrapDisplayName(
+      WrappedComponent,
+      'FirestoreConnectWrapped'
+    )
 
     prevData = null
 
@@ -46,7 +49,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       }
     }
 
-    componentDidUnmount() {
+    componentWillUnmount() {
       if (this.firestoreIsEnabled && this.prevData) {
         this.props.firestore.unsetListeners(this.prevData)
       }
@@ -84,7 +87,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
   }
 
   FirestoreConnectWrapped.propTypes = {
-    dispatch: PropTypes.func.isRequired,
+    dispatch: PropTypes.func,
     firebase: PropTypes.object,
     firestore: PropTypes.object
   }
@@ -95,6 +98,10 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     <ReduxFirestoreContext.Consumer>
       {firestore => <HoistedComp firestore={firestore} {...props} />}
     </ReduxFirestoreContext.Consumer>
+  )
+  FirestoreConnect.displayName = wrapDisplayName(
+    WrappedComponent,
+    'FirestoreConnect'
   )
 
   FirestoreConnect.propTypes = {
@@ -116,14 +123,14 @@ export const createFirestoreConnect = (storeKey = 'store') => (
  * is passed the current props and the firebase object.
  * @return {Function} - that accepts a component to wrap and returns the wrapped component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { firestoreConnect } from 'react-redux-firebase'
  * export default firestoreConnect()(SomeComponent)
  * @example <caption>Basic</caption>
  * import { connect } from 'react-redux'
  * import { firestoreConnect } from 'react-redux-firebase'
  *
- * // pass todos list from redux as this.props.todosList
+ * // pass todos list from redux as props.todosList
  * export default compose(
  *   firestoreConnect(() => ['todos']), // sync todos collection from Firestore into redux
  *   connect((state) => ({
