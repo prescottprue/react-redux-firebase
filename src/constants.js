@@ -239,6 +239,16 @@ export const supportedAuthProviders = [
  */
 export const topLevelPaths = ['auth', 'profile', 'ordered', 'data']
 
+/**
+ * @constant
+ * @description Error message shown if runnning react-redux v6 with a v2.0.0 version
+ * of react-redux-firebase
+ * @type {String}
+ * @private
+ */
+export const v3ErrorMessage =
+  'Context from react-redux not found. If you are using react-redux v6 a v3.*.* version of react-redux-firebase is required. Please checkout the v3 migration guide: http://bit.ly/2SRNdiO'
+
 export default {
   actionTypes,
   defaultConfig
