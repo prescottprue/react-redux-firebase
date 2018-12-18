@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { isEqual, differenceWith } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { watchEvents, unWatchEvents } from './actions/query'
-import { getEventsFromInput, createCallable, getDisplayName } from './utils'
+import { getEventsFromInput, createCallable, wrapDisplayName } from './utils'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
@@ -28,14 +28,17 @@ export const createFirebaseConnect = (storeKey = 'store') => (
   dataOrFn = []
 ) => WrappedComponent => {
   class FirebaseConnectWrapped extends Component {
-    static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)})`
+    static displayName = wrapDisplayName(
+      WrappedComponent,
+      'FirebaseConnectWrapped'
+    )
     static wrappedComponent = WrappedComponent
 
     firebaseEvents = []
     firebase = null
     prevData = null
 
-    componentWillMount() {
+    componentDidMount() {
       const { firebase, dispatch } = this.props
 
       // Allow function to be passed
@@ -87,7 +90,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
 
   FirebaseConnectWrapped.propTypes = {
     dispatch: PropTypes.func.isRequired,
-    firebase: PropTypes.object
+    firebase: PropTypes.object.isRequired
   }
 
   const HoistedComp = hoistStatics(FirebaseConnectWrapped, WrappedComponent)
@@ -104,9 +107,10 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     </ReactReduxFirebaseContext.Consumer>
   )
 
-  FirebaseConnect.propTypes = {
-    dispatch: PropTypes.func.isRequired
-  }
+  FirebaseConnect.displayName = wrapDisplayName(
+    WrappedComponent,
+    'FirebaseConnect'
+  )
 
   return FirebaseConnect
 }

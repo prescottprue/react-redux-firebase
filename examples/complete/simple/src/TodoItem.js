@@ -21,9 +21,8 @@ const enhance = compose(
   })
 )
 
-const TodoItem = (props) => {
+function TodoItem(props) {
   const { deleteTodo, toggleDone, text, name, done } = props
-  console.log('props', props)
   return (
     <li className="Todo">
       <input

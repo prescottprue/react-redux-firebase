@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import ReduxFirestoreContext from './ReduxFirestoreContext'
 
-const ReduxFirestoreProvider = (props = {}) => {
+function ReduxFirestoreProvider(props = {}) {
   const {
     children,
     config,

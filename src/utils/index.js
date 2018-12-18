@@ -10,7 +10,7 @@ export function createCallable(f) {
   return isFunction(f) ? f : () => f
 }
 
-export function getDisplayName(Component) {
+function getDisplayName(Component) {
   if (typeof Component === 'string') {
     return Component
   }
@@ -22,6 +22,11 @@ export function getDisplayName(Component) {
   return Component.displayName || Component.name || 'Component'
 }
 
+/**
+ * Get provided react component's display name and wrap with with a passed name.
+ * @param {React.Component} BaseComponent - Component from which to get name to wrap
+ * @param {String} hocName - Name of wrapping hoc
+ */
 export function wrapDisplayName(BaseComponent, hocName) {
   return `${hocName}(${getDisplayName(BaseComponent)})`
 }

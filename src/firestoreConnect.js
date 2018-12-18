@@ -16,7 +16,7 @@ import ReduxFirestoreContext from './ReduxFirestoreContext'
  * Firebase state (state.firebase)
  * @return {Function} - HOC that accepts a watchArray and wraps a component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { createFirestoreConnect } from 'react-redux-firebase'
  * // create firebase connect that uses another redux store
  * const firestoreConnect = createFirestoreConnect('anotherStore')
@@ -28,7 +28,10 @@ export const createFirestoreConnect = (storeKey = 'store') => (
 ) => WrappedComponent => {
   class FirestoreConnectWrapped extends Component {
     static wrappedComponent = WrappedComponent
-    static displayName = wrapDisplayName(WrappedComponent, 'FirestoreConnect')
+    static displayName = wrapDisplayName(
+      WrappedComponent,
+      'FirestoreConnectWrapped'
+    )
 
     prevData = null
 
@@ -37,20 +40,18 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     }
 
     componentDidMount() {
-      const { firestore } = this.store
       if (this.firestoreIsEnabled) {
-        // Allow function to be passed
+        // Listener configs as object (handling function being passed)
         const inputAsFunc = createCallable(dataOrFn)
         this.prevData = inputAsFunc(this.props, this.props)
-
-        firestore.setListeners(this.prevData)
+        // Attach listeners based on listener config
+        this.props.firestore.setListeners(this.prevData)
       }
     }
 
-    componentDidUnmount() {
-      const { firestore } = this.store
+    componentWillUnmount() {
       if (this.firestoreIsEnabled && this.prevData) {
-        firestore.unsetListeners(this.prevData)
+        this.props.firestore.unsetListeners(this.prevData)
       }
     }
 
@@ -59,7 +60,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.props)
 
-      // Handle changes to data
+      // Check for changes in the listener configs
       if (this.firestoreIsEnabled && !isEqual(data, this.prevData)) {
         const changes = this.getChanges(data, this.prevData)
 
@@ -86,7 +87,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
   }
 
   FirestoreConnectWrapped.propTypes = {
-    dispatch: PropTypes.func.isRequired,
+    dispatch: PropTypes.func,
     firebase: PropTypes.object,
     firestore: PropTypes.object
   }
@@ -97,6 +98,10 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     <ReduxFirestoreContext.Consumer>
       {firestore => <HoistedComp firestore={firestore} {...props} />}
     </ReduxFirestoreContext.Consumer>
+  )
+  FirestoreConnect.displayName = wrapDisplayName(
+    WrappedComponent,
+    'FirestoreConnect'
   )
 
   FirestoreConnect.propTypes = {
@@ -118,20 +123,18 @@ export const createFirestoreConnect = (storeKey = 'store') => (
  * is passed the current props and the firebase object.
  * @return {Function} - that accepts a component to wrap and returns the wrapped component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { firestoreConnect } from 'react-redux-firebase'
  * export default firestoreConnect()(SomeComponent)
  * @example <caption>Basic</caption>
  * import { connect } from 'react-redux'
  * import { firestoreConnect } from 'react-redux-firebase'
  *
- * // pass todos list from redux as this.props.todosList
+ * // pass todos list from redux as props.todosList
  * export default compose(
- *   firestoreConnect(['todos']), // sync todos collection from Firestore into redux
+ *   firestoreConnect(() => ['todos']), // sync todos collection from Firestore into redux
  *   connect((state) => ({
- *     todosList: state.firestore.data.todos,
- *     profile: state.firestore.profile, // pass profile data as this.props.profile
- *     auth: state.firestore.auth // pass auth data as this.props.auth
+ *     todosList: state.firestore.data.todos
  *   })
  * )(SomeComponent)
  */

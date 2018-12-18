@@ -4,7 +4,7 @@ import createFirebaseInstance from './createFirebaseInstance'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 import ReduxFirestoreProvider from './ReduxFirestoreProvider'
 
-const ReactReduxFirebaseProvider = (props = {}) => {
+function ReactReduxFirebaseProvider(props = {}) {
   const {
     children,
     config,
