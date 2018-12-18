@@ -19,9 +19,12 @@ export default function configureStore (initialState, history) {
   }
 
   const createStoreWithMiddleware = compose(
+    // enhance store with store.firebase
     reactReduxFirebase(firebase, reduxFirebaseConfig),
+    // enhance store with store.firestore
     reduxFirestore(firebase),
-    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
+    // support redux devtools
+    typeof window === 'object' && typeof window.__REDUX_DEVTOOLS_EXTENSION__ === 'function' ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f
   )(createStore)
   const store = createStoreWithMiddleware(rootReducer)
 
