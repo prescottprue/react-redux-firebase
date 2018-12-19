@@ -1,13 +1,5 @@
 # Auth Recipes
 
-Auth recipes assume that you have passed the following config when creating your store:
-
-```js
-const rrfConfig = {
-  userProfile: 'users', // can be any string path
-}
-```
-
 ## Google Login
 
 Here is an example of a component that shows a Google login button if the user is not logged in, and a welcome message if they are. The initial loading state is handled with a simple "Loading..." message:
@@ -17,26 +9,29 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
 // import GoogleButton from 'react-google-button' // optional
 
-export const LoginPage = ({ firebase, auth }) => (
-  <div className={classes.container}>
-    <button // <GoogleButton/> button can be used instead
-      onClick={() => firebase.login({ provider: 'google', type: 'popup' })}
-    >Login With Google</button>
-    <div>
-      <h2>Auth</h2>
-      {
-        !isLoaded(auth)
-        ? <span>Loading...</span>
-        : isEmpty(auth)
-          ? <span>Not Authed</span>
-          : <pre>{JSON.stringify(auth, null, 2)}</pre>
-      }
+export function LoginPage ({ firebase, auth }) {
+  return (
+    <div className={classes.container}>
+      {/* <GoogleButton/> button can be used instead */ }
+      <button onClick={() => firebase.login({ provider: 'google', type: 'popup' })}>
+        Login With Google
+      </button>
+      <div>
+        <h2>Auth</h2>
+        {
+          !isLoaded(auth)
+          ? <span>Loading...</span>
+          : isEmpty(auth)
+            ? <span>Not Authed</span>
+            : <pre>{JSON.stringify(auth, null, 2)}</pre>
+        }
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 LoginPage.propTypes = {
   firebase: PropTypes.shape({
@@ -46,18 +41,108 @@ LoginPage.propTypes = {
 }
 
 export default compose(
-  firebaseConnect(), // withFirebase can also be used
+  withFirebase,
   connect(({ firebase: { auth } }) => ({ auth }))
 )(LoginPage)
 ```
 
+## Wait For Auth To Load
+Waiting for auth to load is done similarly to [how waiting for data is done](/docs/queries.html#loading):
 
-## Wait For Auth To Be Ready
+```js
+import React from 'react'
+import PropTypes from 'prop-types'
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
+// import GoogleButton from 'react-google-button' // optional
+
+function LoginPage ({ firebase, auth }) {
+  // Wait for auth to load
+  if (!isLoaded(auth)) {
+
+  }
+  return (
+    <div className={classes.container}>
+      <button // <GoogleButton/> button can be used instead
+        onClick={() => firebase.login({ provider: 'google', type: 'popup' })}
+      >Login With Google</button>
+      <div>
+        <h2>Auth</h2>
+        {
+          !isLoaded(auth)
+          ? <span>Loading...</span>
+          : isEmpty(auth)
+            ? <span>Not Authed</span>
+            : <pre>{JSON.stringify(auth, null, 2)}</pre>
+        }
+      </div>
+    </div>
+  )
+}
+
+LoginPage.propTypes = {
+  firebase: PropTypes.shape({
+    login: PropTypes.func.isRequired
+  }),
+  auth: PropTypes.object
+}
+
+function mapStateToProps(state) {
+  return {
+    auth: state.firebase.auth
+  }
+}
+
+export default connect(mapStateToProps)(LoginPage)
+```
+
+### Using HOCs
+HOCs can be used to make functional wrappers for this logic. More info is covered [the recompose example in the queries section](/docs/queries.html#loadingHOCs), but for auth it would look like:
+
+```js
+const enhance = compose(
+  connect(mapStateToProps),
+  // show loading spinner while auth is loading
+  spinnerWhileLoading(['auth']),
+  // render empty message if auth is not found
+  renderIfEmpty(['auth'], NotAuthedComponent) // NotAuthedComponent is a react component
+)
+
+export default enhance(LoginPage)
+```
+
+## List of Online Users (Presence)
+
+Presence keeps a list of which users are currently online as well as a history of all user sessions.
+
+The logic that runs this is partially based on:
+* [blog post by Firebase](https://firebase.googleblog.com/2013/06/how-to-build-presence-system.html)/
+* [Firebase's Sample Presence App](https://firebase.google.com/docs/database/web/offline-capabilities#section-sample)
+
+Include the `presense` parameter your rrfConfig:
+
+```js
+const rrfConfig = {
+  userProfile: 'users', // where profiles are stored in database
+  presence: 'presence', // where list of online users is stored in database
+  sessions: 'sessions' // where list of user sessions is stored in database (presence must be enabled)
+}
+reactReduxFirebase(fbConfig, rrfConfig)
+```
+
+Now when logging in through `login` method, user will be listed as online until they logout or end the session (close the tab or window).
+
+**Note:** Currently this is not triggered on logout, but that is a [planned feature for the upcoming v3.0.0 version](https://github.com/prescottprue/react-redux-firebase/wiki/v3.0.0-Roadmap). Currently, the presense status will only change when the user becomes disconnected from the Database (i.e. closes the tab).
+
+## Wait For Auth To Be Ready (SSR)
+
+Waiting for auth to be ready is usually only required in an SSR environment.
 
 ```js
 import firebase from 'firebase'
 import { compose, createStore, applyMiddleware } from 'redux'
-import { getFirebase, reactReduxFirebase } from 'react-redux-firebase'
+import { reactReduxFirebase } from 'react-redux-firebase'
 
 // Firebase config
 const fbConfig = {
@@ -82,8 +167,7 @@ const createStore = (initialState = {}) => {
     rootReducer,
     initialState,
     compose(
-      reactReduxFirebase(firebase, rrfConfig),
-      applyMiddleware(thunk.withExtraArgument(getFirebase))
+      reactReduxFirebase(firebase, rrfConfig)
     )
   )
 
@@ -125,25 +209,3 @@ const config = {
   })
 }
 ```
-
-## List of Online Users (Presence)
-
-Presence keeps a list of which users are currently online as well as a history of all user sessions.
-
-The logic that runs this is partially based on:
-* [blog post by Firebase](https://firebase.googleblog.com/2013/06/how-to-build-presence-system.html)/
-* [Firebase's Sample Presence App](https://firebase.google.com/docs/database/web/offline-capabilities#section-sample)
-
-## Basic
-Include the `userProfile` parameter in config when setting up store middleware:
-
-```js
-const rrfConfig = {
-  userProfile: 'users', // where profiles are stored in database
-  presence: 'presence', // where list of online users is stored in database
-  sessions: 'sessions' // where list of user sessions is stored in database (presence must be enabled)
-}
-reactReduxFirebase(fbConfig, rrfConfig)
-```
-
-Now when logging in through `login` method, user will be listed as online until they logout or end the session (close the tab or window).
