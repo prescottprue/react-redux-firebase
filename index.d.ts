@@ -193,16 +193,32 @@ export interface ReactReduxFirebaseContextProps {
 }
 
 /**
- * React Context provider for Firebase instance. Needed to use HOCs like firebaseConnect and withFirebase
+ * React Context for Firebase instance.
  */
 export namespace ReactReduxFirebaseContext {
   const prototype: {}
 }
 
 /**
- * React Context provider for Firebase instance. Needed to use HOCs like firebaseConnect and withFirebase
+ * React Context provider for Firebase instance (with methods wrapped in dispatch). Needed to use HOCs
+ * like firebaseConnect and withFirebase.
+ */
+export namespace ReactReduxFirebaseProvider {
+  const prototype: {}
+}
+
+/**
+ * React Context for Firebase instance.
  */
 export namespace ReduxFirestoreContext {
+  const prototype: {}
+}
+
+/**
+ * React Context provider for Firestore instance (with methods wrapped in dispatch). Needed to use HOCs
+ * like firestoreConnect and withFirestore.
+ */
+export namespace ReduxFirestoreProvider {
   const prototype: {}
 }
 
