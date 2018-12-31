@@ -64,7 +64,7 @@ export function uploadFile(dispatch, firebase, config) {
 
   return uploadPromise()
     .then(uploadTaskSnapshot => {
-      if (!dbPath || !firebase.database) {
+      if (!dbPath || (!firebase.database && !firebase.firestore)) {
         dispatch({
           type: FILE_UPLOAD_COMPLETE,
           meta: { ...config, filename },
