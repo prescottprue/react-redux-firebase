@@ -193,9 +193,10 @@ export interface ReactReduxFirebaseProviderProps<T> {
   value: T;
   firebase: object;
   config: object;
-  children?: React.ReactNode;
   dispatch: (action: object) => void;
-  createFirestoreInstance?: (firebase: object, config: object, dispatch: (action: object) => void) => object
+  children?: React.ReactNode;
+  initalizeAuth?: boolean;
+  createFirestoreInstance?: (firebase: object, config: object, dispatch: (action: object) => void) => object;
 }
 
 /**
@@ -213,7 +214,8 @@ export interface ReduxFirestoreProviderProps {
   config: object;
   dispatch: (action: object) => void;
   createFirestoreInstance: (firebase: object, config: object, dispatch: (action: object) => void) => object;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  initalizeAuth?: boolean;
 }
 
 /**

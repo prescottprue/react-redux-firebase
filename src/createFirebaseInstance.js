@@ -464,9 +464,20 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @param {firebase.auth.ConfirmationResult} credential - The auth credential
    * @return {Promise}
    */
-  const actionCreators = mapWithFirebaseAndDispatch(firebase, dispatch, {
-    signInWithPhoneNumber: authActions.signInWithPhoneNumber
-  })
+  const actionCreators = mapWithFirebaseAndDispatch(
+    firebase,
+    dispatch,
+    // Actions with arg order (firebase, dispatch)
+    {
+      signInWithPhoneNumber: authActions.signInWithPhoneNumber
+    },
+    // Actions with arg order (dispatch, firebase)
+    {
+      initializeAuth: authActions.init
+    }
+  )
+
+  console.log('action createors', authActions, actionCreators)
 
   /**
    * @name ref

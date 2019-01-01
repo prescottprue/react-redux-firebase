@@ -1,6 +1,8 @@
 {
   "presets": [
-    ["minify", { "keepFnName": true }],
+    ["minify", {
+      "mangle": false
+    }],
     "@babel/preset-react",
     ["@babel/env", {
       "targets": {
