@@ -464,6 +464,10 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @param {firebase.auth.ConfirmationResult} credential - The auth credential
    * @return {Promise}
    */
+  /**
+   * @name initializeAuth
+   * @description Initialize auth to work with build in profile support
+   */
   const actionCreators = mapWithFirebaseAndDispatch(
     firebase,
     dispatch,
@@ -476,8 +480,6 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
       initializeAuth: authActions.init
     }
   )
-
-  console.log('action createors', authActions, actionCreators)
 
   /**
    * @name ref

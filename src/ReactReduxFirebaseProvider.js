@@ -47,7 +47,7 @@ ReactReduxFirebaseProvider.propTypes = {
   config: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   firebase: PropTypes.object.isRequired,
-  initalizeAuth: PropTypes.bool,
+  initializeAuth: PropTypes.bool,
   createFirestoreInstance: PropTypes.func
 }
 

@@ -10,7 +10,7 @@ function ReduxFirestoreProvider(props = {}) {
     dispatch,
     firebase,
     createFirestoreInstance,
-    initalizeAuth
+    initializeAuth
   } = props
   const extendedFirebaseInstance = createFirebaseInstance(
     firebase,
@@ -23,7 +23,7 @@ function ReduxFirestoreProvider(props = {}) {
     dispatch
   )
   // Initialize auth if not disabled
-  if (initalizeAuth) {
+  if (initializeAuth) {
     extendedFirebaseInstance.initializeAuth()
   }
   return (
@@ -34,7 +34,7 @@ function ReduxFirestoreProvider(props = {}) {
 }
 
 ReduxFirestoreProvider.defaultProps = {
-  initalizeAuth: true
+  initializeAuth: true
 }
 
 ReduxFirestoreProvider.propTypes = {
@@ -42,7 +42,7 @@ ReduxFirestoreProvider.propTypes = {
   config: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   createFirestoreInstance: PropTypes.func.isRequired,
-  initalizeAuth: PropTypes.bool,
+  initializeAuth: PropTypes.bool,
   firebase: PropTypes.object.isRequired
 }
 
