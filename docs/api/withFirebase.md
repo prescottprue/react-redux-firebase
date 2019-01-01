@@ -23,7 +23,7 @@ needing to access a firebase instance created under a different store key.
 _Basic_
 
 ```javascript
-// this.props.firebase set on App component as firebase object with helpers
+// props.firebase set on App component as firebase object with helpers
 import { createWithFirebase } from 'react-redux-firebase'
 
 // create withFirebase that uses another redux store
@@ -55,12 +55,15 @@ _Basic_
 ```javascript
 import { withFirebase } from 'react-redux-firebase'
 
-const AddData = ({ firebase: { push } }) =>
-  <div>
-    <button onClick={() => push('todos', { done: false, text: 'Sample' })}>
-      Add Sample Todo
-    </button>
-  </div>
+function AddData({ firebase: { push } }) {
+  return (
+    <div>
+      <button onClick={() => push('todos', { done: false, text: 'Sample' })}>
+        Add Sample Todo
+      </button>
+    </div>
+  )
+}
 
 export default withFirebase(AddData)
 ```
@@ -72,15 +75,18 @@ import { compose } from 'redux' // can also come from recompose
 import { withHandlers } from 'recompose'
 import { withFirebase } from 'react-redux-firebase'
 
-const AddTodo = ({ addTodo }) =>
-  <div>
-    <button onClick={addTodo}>
-      Add Sample Todo
-    </button>
-  </div>
+function AddTodo({ addTodo }) {
+  return (
+    <div>
+      <button onClick={addTodo}>
+        Add Sample Todo
+      </button>
+    </div>
+  )
+}
 
-export default compose(
-  withFirebase(AddTodo),
+const enhance = compose(
+  withFirebase,
   withHandlers({
     addTodo: props => () =>
        props.firestore.add(
@@ -89,6 +95,8 @@ export default compose(
        )
   })
 )
+
+export default enhance(AddTodo)
 ```
 
 Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Which accepts a component to wrap and returns the
