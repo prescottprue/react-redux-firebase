@@ -16,7 +16,7 @@ needing to access a firebase instance created under a different store key.
 **Parameters**
 
 -   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
-    Firebase state (`state.firebase`) (optional, default `'store'`)
+    Firestore state (`state.firestore`) (optional, default `'store'`)
 
 **Examples**
 
@@ -50,14 +50,18 @@ from `store.firestore`, which is attached to store by the store enhancer
 _Basic_
 
 ```javascript
+import React from 'react'
 import { withFirestore } from 'react-redux-firebase'
 
-const AddTodo = ({ firestore: { add } }) =>
-  <div>
-    <button onClick={() => add('todos', { done: false, text: 'Sample' })}>
-      Add Sample Todo
-    </button>
-  </div>
+function AddData({ firebase: { add } }) {
+  return (
+    <div>
+      <button onClick={() => add('todos', { done: false, text: 'Sample' })}>
+        Add Sample Todo
+      </button>
+    </div>
+  )
+}
 
 export default withFirestore(AddTodo)
 ```
@@ -65,27 +69,32 @@ export default withFirestore(AddTodo)
 _Within HOC Composition_
 
 ```javascript
+import React from 'react'
 import { compose } from 'redux' // can also come from recompose
 import { withHandlers } from 'recompose'
 import { withFirestore } from 'react-redux-firebase'
 
-const AddTodo = ({ addTodo }) =>
-  <div>
-    <button onClick={addTodo}>
-      Add Sample Todo
-    </button>
-  </div>
+function AddTodo({ addTodo }) {
+  return (
+    <div>
+      <button onClick={addTodo}>
+        Add Sample Todo
+      </button>
+    </div>
+  )
+}
 
-export default compose(
-  withFirestore(AddTodo),
+const enhance = compose(
+  withFirestore,
   withHandlers({
-    addTodo: props => () =>
-       props.firestore.add(
-         { collection: 'todos' },
-         { done: false, text: 'Sample' }
-       )
+    addTodo: props => () => {
+      const newTodo = { done: false, text: 'Sample' }
+      return props.firestore.add({ collection: 'todos' }, newTodo)
+    }
   })
 )
+
+export default enhance(AddTodo)
 ```
 
 Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Which accepts a component to wrap and returns the
