@@ -13,7 +13,9 @@
 
 > Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 
-## [Demo](https://demo.react-redux-firebase.com)
+## [Simple Example](https://codesandbox.io/s/zrr0n5m2zp)
+
+[![Edit Simple Example](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/zrr0n5m2zp)
 
 The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) is deployed to [demo.react-redux-firebase.com](https://demo.react-redux-firebase.com).
 
