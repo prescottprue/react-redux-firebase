@@ -39,7 +39,7 @@ function ReactReduxFirebaseProvider(props = {}) {
 }
 
 ReactReduxFirebaseProvider.defaultProps = {
-  initalizeAuth: true
+  initializeAuth: true
 }
 
 ReactReduxFirebaseProvider.propTypes = {
