@@ -28,6 +28,7 @@
 -   [reloadAuth](#reloadauth)
 -   [linkWithCredential](#linkwithcredential)
 -   [signInWithPhoneNumber](#signinwithphonenumber)
+-   [initializeAuth](#initializeauth)
 -   [ref](#ref)
 -   [database](#database)
 -   [storage](#storage)
@@ -455,6 +456,10 @@ authenticates and does profile handling.
 -   `credential` **firebase.auth.ConfirmationResult** The auth credential
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+## initializeAuth
+
+Initialize auth to work with build in profile support
 
 ## ref
 

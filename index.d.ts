@@ -180,31 +180,49 @@ export function populate(
   notSetValue?: any
 ): any
 
-export function reactReduxFirebase(instance: object, otherConfig: any): any
+/**
+ * React Context provider for Firebase instance (with methods wrapped in dispatch). Needed to use HOCs
+ * like firebaseConnect and withFirebase.
+ */
+export function ReactReduxFirebaseProvider(props: ReactReduxFirebaseProviderProps): any;
 
 /**
  * Props passed to ReactReduFirebaseContext component
  */
-export interface ReactReduxFirebaseContextProps {
-  firebase: object,
-  config: object,
-  dispatch: (action) => void
-  createFirestoreInstance?: (firebase: object, config: object, dispatch: (action) => void) => object
+export interface ReactReduxFirebaseProviderProps<T> {
+  value: T;
+  firebase: object;
+  config: object;
+  dispatch: (action: object) => void;
+  children?: React.ReactNode;
+  initalizeAuth?: boolean;
+  createFirestoreInstance?: (firebase: object, config: object, dispatch: (action: object) => void) => object;
 }
 
 /**
- * React Context provider for Firebase instance. Needed to use HOCs like firebaseConnect and withFirebase
- */
-export namespace ReactReduxFirebaseContext {
-  const prototype: {}
-}
-
-/**
- * React Context provider for Firebase instance. Needed to use HOCs like firebaseConnect and withFirebase
+ * React Context for Firebase instance.
  */
 export namespace ReduxFirestoreContext {
   const prototype: {}
 }
+
+/**
+ * Props passed to ReactReduFirebaseContext component
+ */
+export interface ReduxFirestoreProviderProps {
+  firebase: object;
+  config: object;
+  dispatch: (action: object) => void;
+  createFirestoreInstance: (firebase: object, config: object, dispatch: (action: object) => void) => object;
+  children?: React.ReactNode;
+  initalizeAuth?: boolean;
+}
+
+/**
+ * React Context provider for Firestore instance (with methods wrapped in dispatch). Needed to use HOCs
+ * like firestoreConnect and withFirestore.
+ */
+export function ReduxFirestoreProvider(props: ReduxFirestoreProviderProps): any;
 
 /**
  * React Higher Order Component that passes firebase as a prop (comes from context.store.firebase)
@@ -264,10 +282,6 @@ export namespace firestoreReducer {
 }
 
 export namespace fixPath {
-  const prototype: {}
-}
-
-export namespace getFirebase {
   const prototype: {}
 }
 

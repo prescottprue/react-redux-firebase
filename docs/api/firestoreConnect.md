@@ -23,7 +23,7 @@ needing to access a firebase instance created under a different store key.
 _Basic_
 
 ```javascript
-// this.props.firebase set on App component as firebase object with helpers
+// props.firebase set on App component as firebase object with helpers
 import { createFirestoreConnect } from 'react-redux-firebase'
 // create firebase connect that uses another redux store
 const firestoreConnect = createFirestoreConnect('anotherStore')
@@ -53,7 +53,7 @@ attempting to use. **Note** Populate is not yet supported.
 _Basic_
 
 ```javascript
-// this.props.firebase set on App component as firebase object with helpers
+// props.firebase set on App component as firebase object with helpers
 import { firestoreConnect } from 'react-redux-firebase'
 export default firestoreConnect()(SomeComponent)
 ```
@@ -64,13 +64,11 @@ _Basic_
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 
-// pass todos list from redux as this.props.todosList
+// pass todos list from redux as props.todosList
 export default compose(
-  firestoreConnect(['todos']), // sync todos collection from Firestore into redux
+  firestoreConnect(() => ['todos']), // sync todos collection from Firestore into redux
   connect((state) => ({
-    todosList: state.firestore.data.todos,
-    profile: state.firestore.profile, // pass profile data as this.props.profile
-    auth: state.firestore.auth // pass auth data as this.props.auth
+    todosList: state.firestore.data.todos
   })
 )(SomeComponent)
 ```

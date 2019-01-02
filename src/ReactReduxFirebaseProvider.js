@@ -10,6 +10,7 @@ function ReactReduxFirebaseProvider(props = {}) {
     config,
     dispatch,
     firebase,
+    initializeAuth,
     createFirestoreInstance
   } = props
   const extendedFirebaseInstance = createFirebaseInstance(
@@ -17,10 +18,16 @@ function ReactReduxFirebaseProvider(props = {}) {
     config,
     dispatch
   )
+  // Initialize auth if not disabled
+  if (initializeAuth) {
+    extendedFirebaseInstance.initializeAuth()
+  }
   if (createFirestoreInstance) {
     return (
       <ReactReduxFirebaseContext.Provider value={extendedFirebaseInstance}>
-        <ReduxFirestoreProvider {...props}>{children}</ReduxFirestoreProvider>
+        <ReduxFirestoreProvider {...props} initializeAuth={false}>
+          {children}
+        </ReduxFirestoreProvider>
       </ReactReduxFirebaseContext.Provider>
     )
   }
@@ -31,11 +38,16 @@ function ReactReduxFirebaseProvider(props = {}) {
   )
 }
 
+ReactReduxFirebaseProvider.defaultProps = {
+  initalizeAuth: true
+}
+
 ReactReduxFirebaseProvider.propTypes = {
   children: PropTypes.node,
   config: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   firebase: PropTypes.object.isRequired,
+  initializeAuth: PropTypes.bool,
   createFirestoreInstance: PropTypes.func
 }
 

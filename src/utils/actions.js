@@ -61,26 +61,26 @@ function createWithFirebaseAndDispatch(firebase, dispatch, dispatchFirst) {
  * @param  {Object} firebase - Internal firebase instance
  * @param  {Function} dispatch - Redux's dispatch function
  * @param  {Object} actions - Action functions to map with firebase and dispatch
+ * @param  {Object} reverseActions - Action functions to map with dispatch and firebase (i.e. reverse arg order)
  * @return {Object} Actions mapped with firebase and dispatch
  */
 export function mapWithFirebaseAndDispatch(
   firebase,
   dispatch,
   actions,
-  aliases = []
+  reverseActions
 ) {
   const withFirebaseAndDispatch = createWithFirebaseAndDispatch(
     firebase,
     dispatch
   )
+  const withDispatchAndFirebase = createWithFirebaseAndDispatch(
+    firebase,
+    dispatch,
+    true
+  )
   return {
     ...mapValues(actions, withFirebaseAndDispatch),
-    ...aliases.reduce(
-      (acc, { action, name }) => ({
-        ...acc,
-        [name]: withFirebaseAndDispatch(action)
-      }),
-      {}
-    )
+    ...mapValues(reverseActions, withDispatchAndFirebase)
   }
 }
