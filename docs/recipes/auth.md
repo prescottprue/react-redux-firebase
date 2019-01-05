@@ -102,7 +102,7 @@ export const LoginPage = ({
 
 LoginPage.propTypes = {
   firebase: PropTypes.shape({
-    login: PropTypes.func.isRequired
+    handleRedirectResult: PropTypes.func.isRequired
   }),
   auth: PropTypes.object
 }
