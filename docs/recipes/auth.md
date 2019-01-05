@@ -51,6 +51,69 @@ export default compose(
 )(LoginPage)
 ```
 
+## Firebase UI React
+
+Here is an example of a component that shows a usage of [Firebase UI](https://firebase.google.com/docs/auth/web/firebaseui), especially their [react component](https://github.com/firebase/firebaseui-web-react) and integrate the flow with this library:
+
+```js
+import React from 'react'
+import PropTypes from 'prop-types'
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+// import { withRouter } from 'react-router-dom'; // if you use react-router
+// import GoogleButton from 'react-google-button' // optional
+
+export const LoginPage = ({
+  firebase,
+  auth,
+  //history if you use react-router
+  }) => (
+  <div className={classes.container}>
+    <StyledFirebaseAuth
+      uiConfig={{
+        signInFlow: 'popup',
+        signInSuccessUrl: '/signedIn',
+        signInOptions: [this.props.firebase.auth.GoogleAuthProvider.PROVIDER_ID],
+        callbacks: {
+          signInSuccessWithAuthResult: (authResult, redirectUrl) => {
+            firebase.handleRedirectResult(authResult).then(() => {
+              // history.push(redirectUrl); if you use react router to redirect
+            });
+            return false;
+          },
+        },
+      }}
+      firebaseAuth={firebase.auth()}
+        />
+    <div>
+      <h2>Auth</h2>
+      {
+        !isLoaded(auth)
+        ? <span>Loading...</span>
+        : isEmpty(auth)
+          ? <span>Not Authed</span>
+          : <pre>{JSON.stringify(auth, null, 2)}</pre>
+      }
+    </div>
+  </div>
+)
+
+LoginPage.propTypes = {
+  firebase: PropTypes.shape({
+    login: PropTypes.func.isRequired
+  }),
+  auth: PropTypes.object
+}
+
+export default compose(
+  //withRouter, if you use react router to redirect
+  firebaseConnect(), // withFirebase can also be used
+  connect(({ firebase: { auth } }) => ({ auth }))
+)(LoginPage)
+```
+
 
 ## Wait For Auth To Be Ready
 
