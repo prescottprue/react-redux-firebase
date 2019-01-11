@@ -43,7 +43,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     prevData = null
 
     componentDidMount() {
-      const { _firebaseRef, dispatch } = this.props
+      const { _firebaseRef, _dispatch } = this.props
 
       // Check props to see
 
@@ -56,12 +56,12 @@ export const createFirebaseConnect = (storeKey = 'store') => (
 
       this._firebaseEvents = getEventsFromInput(this.prevData)
 
-      watchEvents(_firebaseRef, dispatch, this._firebaseEvents)
+      watchEvents(_firebaseRef, _dispatch, this._firebaseEvents)
     }
 
     componentWillUnmount() {
-      const { _firebaseRef, dispatch } = this.props
-      unWatchEvents(_firebaseRef, dispatch, this._firebaseEvents)
+      const { _firebaseRef, _dispatch } = this.props
+      unWatchEvents(_firebaseRef, _dispatch, this._firebaseEvents)
     }
 
     componentWillReceiveProps(np) {
@@ -99,7 +99,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
   }
 
   FirebaseConnectWrapped.propTypes = {
-    dispatch: PropTypes.func.isRequired,
+    _dispatch: PropTypes.func.isRequired,
     _firebaseRef: PropTypes.object.isRequired
   }
 
