@@ -45,8 +45,6 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     componentDidMount() {
       const { _firebaseRef, _dispatch } = this.props
 
-      // Check props to see
-
       // Allow function to be passed
       const inputAsFunc = createCallable(dataOrFn)
       this.prevData = inputAsFunc(this.props, this.props)
