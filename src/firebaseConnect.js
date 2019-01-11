@@ -117,7 +117,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
       throw new Error(
         `Supplied prop/s "${clashes.join(
           '", "'
-        )}" are reserved for internal firebaseConnect() use.`
+        )}" are reserved for internal firebaseConnect() useage.`
       )
     }
 
