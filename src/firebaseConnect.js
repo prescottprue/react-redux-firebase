@@ -92,10 +92,14 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     }
 
     render() {
-      // Prevent internal refs from being passed down to children
-      let props = { ...this.props }
-      delete props._firebaseRef
-      delete props._dispatch
+      // Prevent reserved props from being passed down to children
+      let props = Object.keys(this.props).reduce((acc, p) => {
+        if (RESERVED_PROPS.indexOf(p) === -1) {
+          acc[p] = this.props[p]
+        }
+        return acc
+      }, {})
+
       return <WrappedComponent {...props} />
     }
   }
