@@ -22,6 +22,8 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     firebase.database.enableLogging(configs.enableLogging)
   }
 
+  console.log('Creating firebase instance', firebase)
+
   // Add internal variables to firebase instance
   const defaultInternals = {
     watchers: {},

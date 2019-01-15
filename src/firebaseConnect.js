@@ -111,7 +111,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
       k => !!RESERVED_PROPS.find(r => r === k)
     )
 
-    if (clashes) {
+    if (clashes.length > 0) {
       throw new Error(
         `Supplied prop/s "${clashes.join(
           '", "'
