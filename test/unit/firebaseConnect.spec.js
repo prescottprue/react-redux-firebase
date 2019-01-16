@@ -20,7 +20,7 @@ const getFirebaseWatchers = store => {
   return { ...store.firebase._.watchers }
 }
 
-const createContainer = () => {
+const createContainer = additionalWrappedProps => {
   const store = storeWithFirebase()
   const WrappedContainer = firebaseConnect(props => {
     const itemsToSubscribe =
@@ -33,12 +33,12 @@ const createContainer = () => {
 
   const tree = TestUtils.renderIntoDocument(
     <ProviderMock store={store}>
-      <WrappedContainer pass="through" />
+      <WrappedContainer pass="through" {...additionalWrappedProps} />
     </ProviderMock>
   )
 
   return {
-    container: TestUtils.findRenderedComponentWithType(tree, WrappedContainer),
+    // container: TestUtils.findRenderedComponentWithType(tree, WrappedContainer),
     parent: TestUtils.findRenderedComponentWithType(tree, ProviderMock),
     store
   }
@@ -104,6 +104,21 @@ describe('firebaseConnect', () => {
     })
 
     expect(values(getFirebaseWatchers(store))).to.eql([1])
+  })
+
+  it('throws an exception if passed a prop that clashes with a reserved param', () => {
+    let exceptions = []
+
+    try {
+      createContainer({
+        _firebaseRef: '__SECRET_INTERNALS',
+        _dispatch: '__SECRET_INTERNALS'
+      })
+    } catch (e) {
+      exceptions.push(e)
+    }
+
+    expect(exceptions.length).to.equal(1)
   })
 
   describe.skip('sets displayName static as ', () => {
