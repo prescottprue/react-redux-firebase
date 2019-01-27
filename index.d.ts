@@ -248,7 +248,6 @@ export interface WithFirestoreProps {
 export interface WithFirebaseProps<T = File> {
   firebase: {
     /**
-     * auth: ƒ serviceNamespace(appArg)
      * confirmPasswordReset: ƒ confirmPasswordReset(code, password)
      * createUser: ƒ createUser(credentials, profile)
      * deleteFile: ƒ deleteFile(path, dbPath)
@@ -277,8 +276,6 @@ export interface WithFirebaseProps<T = File> {
      * updateEmail: ƒ updateEmail(newEmail, updateInProfile)
      * updateProfile: ƒ updateProfile(profileUpdate, options)
      * updateWithMeta: ƒ updateWithMeta(path, value, onComplete)
-     * uploadFile: ƒ uploadFile(path, file, dbPath, options)
-     * uploadFiles: ƒ uploadFiles(path, files, dbPath, options)
      * verifyPasswordResetCode: ƒ verifyPasswordResetCode(code)
      * watchEvent: ƒ watchEvent(type, path, storeAs)
      */
