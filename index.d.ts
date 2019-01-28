@@ -139,7 +139,7 @@ export function createWithFirestore(storeKey: any): any
 
 export function firebase(...args: any[]): any
 
-export interface ReactReduxFirebaseState<T> {
+export interface ReduxState<T> {
   auth: {
     apiKey: string
     appName: string
@@ -186,9 +186,7 @@ export interface ReactReduxFirebaseState<T> {
   timestamps: {}
 }
 
-/**
- * https://github.com/prescottprue/redux-firestore#query-options
- */
+// https://github.com/prescottprue/redux-firestore#query-options
 type WhereOptions = [string, FirestoreTypes.WhereFilterOp, any]
 export interface FirestoreQueryOptions {
   // https://github.com/prescottprue/redux-firestore#collection
@@ -364,26 +362,12 @@ interface Profile<T> {
 interface Storage {
   storage: () => StorageTypes.FirebaseStorage
 
-  /**
-     * Delete file from Firebase Storage with support for deleteing meta
-     * data from database (either Real Time Database or Firestore depending on
-     * config)
-     
-     * @param  {String} path - Path within Firebase Storage of File to delete.
-     * @param  {String} dbPath - Path of meta data with Database (Real Time 
-     * Or Firestore depnding on config) from which to remove File metadata.
-     */
+  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html#deletefile
   deleteFile: (
     path: string,
     dbPath?: string
   ) => Promise<{ path: string; dbPath: string }>
 
-  /**
-   * Upload multiple files to Firebase Storage with the option to store their metadata in Firebase Database
-   * @path String Path to location on Firebase which to set
-   * @files File File object to upload (usually from a select-file or a drag/drop onDrop)
-   * @dbPath String Database path to place uploaded files metadata.
-   */
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html#uploadfile
   uploadFile: (
     path: string,
@@ -392,12 +376,6 @@ interface Storage {
     options?: Object
   ) => Promise<StorageTypes.UploadTaskSnapshot>
 
-  /**
-   * Upload multiple files to Firebase Storage with the option to store their metadata in Firebase Database
-   * @path String Path to location on Firebase which to set
-   * @files Array Array of File objects to upload (usually from a select-file or a drag/drop onDrop)
-   * @dbPath String Database path to place uploaded files metadata.
-   */
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html#uploadfiles
   uploadFiles: (
     path: string,
