@@ -1,5 +1,4 @@
 import React from 'react'
-import * as FirebaseTypes from 'firebase'
 import * as FirestoreTypes from '@firebase/firestore-types'
 import * as DatabaseTypes from '@firebase/database-types'
 import * as StorageTypes from '@firebase/storage-types'
