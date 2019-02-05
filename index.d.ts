@@ -235,11 +235,15 @@ export function ReduxFirestoreProvider(props: ReduxFirestoreProviderProps): any
 /**
  * React Higher Order Component that passes firebase as a prop (comes from context.store.firebase)
  */
-export function withFirebase(...args: any[]): any
+export function withFirebase(
+  ...args: any[]
+): React.ComponentType<WithFirebaseProps>
 /**
  * React Higher Order Component that passes firestore as a prop (comes from context.store.firestore)
  */
-export function withFirestore(...args: any[]): any
+export function withFirestore(
+  ...args: any[]
+): React.ComponentType<WithFirestoreProps>
 
 export namespace authIsReady {
   const prototype: {}
@@ -522,8 +526,14 @@ interface FirestoreStatics {
   WriteBatch: firebase.firestore.WriteBatch
 }
 
-// firebase.firestore.Firestore
-
+// https://react-redux-firebase.com/docs/api/withFirestore.html
 export interface WithFirestoreProps {
   firestore: typeof firebase.firestore & firebase.firestore.Firestore
+  firebase: typeof firebase
+  dispatch: any
+}
+
+export interface WithFirebaseProps {
+  firebase: typeof firebase
+  dispatch: any
 }
