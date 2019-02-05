@@ -494,7 +494,10 @@ export function firebaseStateReducer(...args: any[]): any
 /**
  * React HOC that attaches/detaches Cloud Firestore listeners on mount/unmount
  */
-export function firestoreConnect(...args: FirestoreQueryOptions[]): any
+type FirestoreConnectArgs = (
+  props: any
+) => FirestoreQueryOptions[] | FirestoreQueryOptions[]
+export function firestoreConnect(FirestoreConnectArgs): any
 
 /**
  * Reducer for Firestore state
