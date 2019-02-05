@@ -141,7 +141,7 @@ export function firebaseConnect(...args: any[]): any
 /**
  * Reducer for Firebase state
  */
-export function firebaseReducer(...args: any[]): any
+export function firebaseReducer(...args: any[]): firebaseReducer.Reducer
 
 /**
  * Reducer for Firebase state
@@ -156,7 +156,7 @@ export function firestoreConnect(...args: any[]): any
 /**
  * Reducer for Firestore state
  */
-export function firestoreReducer(...args: any[]): any
+export function firestoreReducer(...args: any[]): firestoreReducer.Reducer
 
 export function fixPath(path: string): string
 
@@ -270,6 +270,41 @@ export namespace firebaseConnect {
 }
 
 export namespace firebaseReducer {
+  export interface Reducer {
+    auth: Auth
+    profile: Profile
+    authError: any
+    data: any
+    errors: any[]
+    listeners: Listeners
+    ordered: Ordered
+    requested: any
+    requesting: any
+    timestamps: any
+  }
+
+  export interface Auth extends firebase.UserInfo {
+    isLoaded: boolean
+    isEmpty: boolean
+  }
+
+  // can be extended for optional properties from your database
+  export interface Profile {
+    isLoaded: boolean
+    isEmpty: boolean
+  }
+
+  export interface Listeners {
+    allIds: any[]
+    byId: {
+      [key: string]: any
+    }
+  }
+
+  export interface Ordered {
+    [key: string]: any[]
+  }
+
   const prototype: {}
 }
 
@@ -282,6 +317,34 @@ export namespace firestoreConnect {
 }
 
 export namespace firestoreReducer {
+  export interface Reducer {
+    composite: any
+    data: object
+    errors: {
+      allIds: any[]
+      byQuery: any[]
+    }
+    listeners: Listeners
+    ordered: Ordered
+    queries: any
+    status: {
+      requested: any
+      requesting: any
+      timestamps: any
+    }
+  }
+
+  export interface Listeners {
+    allIds: any[]
+    byId: {
+      [key: string]: any
+    }
+  }
+
+  export interface Ordered {
+    [key: string]: any[]
+  }
+
   const prototype: {}
 }
 
