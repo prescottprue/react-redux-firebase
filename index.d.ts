@@ -286,6 +286,21 @@ export namespace firebaseReducer {
   export interface Auth extends firebase.UserInfo {
     isLoaded: boolean
     isEmpty: boolean
+    apiKey: string
+    appName: string
+    authDomain: string
+    createdAt: string
+    emailVerified: boolean
+    isAnonymous: boolean
+    lastLoginAt: string
+    providerData: firebase.UserInfo[] | null
+    redirectEventId: null
+    stsTokenManager: {
+      accessToken: string
+      apiKey: string
+      expirationTime: number
+      refreshToken: string
+    }
   }
 
   // can be extended for optional properties from your database
