@@ -439,3 +439,91 @@ export namespace withFirebase {
 export namespace withFirestore {
   const prototype: {}
 }
+
+type WhereOptions = [string, firebase.firestore.WhereFilterOp, any]
+// https://github.com/prescottprue/redux-firestore#query-options
+export interface FirestoreQueryOptions {
+  // https://github.com/prescottprue/redux-firestore#collection
+  collection: string
+  // https://github.com/prescottprue/redux-firestore#document
+  doc?: string
+  // https://github.com/prescottprue/redux-firestore#sub-collections
+  subcollections?: FirestoreQueryOptions[]
+  // https://github.com/prescottprue/redux-firestore#where
+  where?: WhereOptions | WhereOptions[]
+  // https://github.com/prescottprue/redux-firestore#orderby
+  orderBy?: string[] | string[][]
+  // https://github.com/prescottprue/redux-firestore#limit
+  limit?: number
+  // https://github.com/prescottprue/redux-firestore#startat
+  startAt?: number
+  // https://github.com/prescottprue/redux-firestore#startafter
+  startAfter?: number
+  // https://github.com/prescottprue/redux-firestore#endat
+  endAt?: number
+  // https://github.com/prescottprue/redux-firestore#endbefore
+  endBefore?: number
+  // https://github.com/prescottprue/redux-firestore#storeas
+  storeAs?: string
+}
+
+// https://github.com/prescottprue/redux-firestore#api
+interface ReduxFirestoreApi {
+  // https://github.com/prescottprue/redux-firestore#get
+  // https://github.com/prescottprue/redux-firestore#get-1
+  get: (docPath: string | FirestoreQueryOptions) => void
+
+  // https://github.com/prescottprue/redux-firestore#set
+  set: (docPath: string | FirestoreQueryOptions, data: Object) => void
+
+  // https://github.com/prescottprue/redux-firestore#add
+  add: (
+    collectionPath: string | FirestoreQueryOptions,
+    data: Object
+  ) => Promise<{ id: string }>
+
+  // https://github.com/prescottprue/redux-firestore#update
+  update: (
+    docPath: string | FirestoreQueryOptions,
+    data: Object
+  ) => Promise<void>
+
+  // https://github.com/prescottprue/redux-firestore#delete
+  delete: (docPath: string | FirestoreQueryOptions) => void
+
+  // https://github.com/prescottprue/redux-firestore#runtransaction
+  runTransaction: (transaction: WithFirestoreProps['firestore']) => Promise<any>
+
+  // https://github.com/prescottprue/redux-firestore#onsnapshotsetlistener
+  onSnapshot: (options: FirestoreQueryOptions) => void
+
+  //https://github.com/prescottprue/redux-firestore#setlisteners
+  setListener: (options: FirestoreQueryOptions) => void
+
+  // https://github.com/prescottprue/redux-firestore#unsetlistener--unsetlisteners
+  unsetListener: (options: FirestoreQueryOptions) => void
+  unsetListeners: (options: FirestoreQueryOptions[]) => void
+}
+
+// https://github.com/prescottprue/redux-firestore#other-firebase-statics
+interface FirestoreStatics {
+  FieldValue: firebase.firestore.FieldValue
+  FieldPath: firebase.firestore.FieldPath
+  setLogLevel: (logLevel: firebase.firestore.LogLevel) => void
+  Blob: firebase.firestore.Blob
+  CollectionReference: firebase.firestore.CollectionReference
+  DocumentReference: firebase.firestore.DocumentReference
+  DocumentSnapshot: firebase.firestore.DocumentSnapshot
+  GeoPoint: firebase.firestore.GeoPoint
+  Query: firebase.firestore.Query
+  QuerySnapshot: firebase.firestore.QuerySnapshot
+  Timestamp: any
+  Transaction: firebase.firestore.Transaction
+  WriteBatch: firebase.firestore.WriteBatch
+}
+
+// firebase.firestore.Firestore
+
+export interface WithFirestoreProps {
+  firestore: typeof firebase.firestore & firebase.firestore.Firestore
+}
