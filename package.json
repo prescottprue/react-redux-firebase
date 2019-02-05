@@ -1,7 +1,8 @@
 {
   "name": "react-redux-firebase",
   "version": "3.0.0-alpha.6",
-  "description": "Redux integration for Firebase. Comes with a Higher Order Components for use with React.",
+  "description":
+    "Redux integration for Firebase. Comes with a Higher Order Components for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
@@ -15,12 +16,17 @@
     "test": "mocha -R spec ./test/unit/**",
     "test:cov": "istanbul cover $(npm bin)/_mocha ./test/unit/**",
     "codecov": "cat coverage/lcov.info | codecov",
-    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib --source-maps",
+    "build:commonjs":
+      "cross-env BABEL_ENV=commonjs babel src --out-dir lib --source-maps",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es --source-maps",
-    "build:umd": "cross-env BABEL_ENV=commonjs webpack --mode development src/index.js -o dist/react-redux-firebase.js",
-    "build:umd:min": "cross-env BABEL_ENV=commonjs webpack --mode production src/index.js -o dist/react-redux-firebase.min.js",
-    "build:size": "cross-env SIZE=true BABEL_ENV=commonjs webpack --mode production src/index.js -o dist/react-redux-firebase.min.js",
-    "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
+    "build:umd":
+      "cross-env BABEL_ENV=commonjs webpack --mode development src/index.js -o dist/react-redux-firebase.js",
+    "build:umd:min":
+      "cross-env BABEL_ENV=commonjs webpack --mode production src/index.js -o dist/react-redux-firebase.min.js",
+    "build:size":
+      "cross-env SIZE=true BABEL_ENV=commonjs webpack --mode production src/index.js -o dist/react-redux-firebase.min.js",
+    "build":
+      "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "watch": "npm run build:commonjs -- --watch",
     "watch:es": "npm run build:es -- --watch",
     "prepare": "npm run clean && npm run build",
@@ -28,9 +34,11 @@
     "docs:clean": "rimraf _book",
     "docs:prepare": "gitbook install",
     "docs:api": "node bin/api-docs-generate",
-    "docs:build": "npm run docs:prepare && gitbook build -g prescottprue/react-redux-firebase && npm run docs:api",
+    "docs:build":
+      "npm run docs:prepare && gitbook build -g prescottprue/react-redux-firebase && npm run docs:api",
     "docs:watch": "npm run docs:prepare && gitbook serve",
-    "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force",
+    "docs:publish":
+      "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force",
     "docs:upload": "node bin/api-docs-upload"
   },
   "license": "MIT",
@@ -105,7 +113,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.4.0",
     "eslint-plugin-standard": "^3.0.1",
-    "firebase": "^5.8.1",
+    "firebase": "4.12.0",
     "firebase-server": "^0.12.0",
     "gitbook-cli": "^2.3.2",
     "husky": "^1.2.0",
@@ -123,8 +131,8 @@
     "sinon": "^3.3.0",
     "sinon-chai": "^3.3.0",
     "webpack": "^4.27.0",
-    "webpack-bundle-analyzer": "^2.9.0",
     "webpack-cli": "^3.1.2",
+    "webpack-bundle-analyzer": "^2.9.0",
     "ws": "^3.2.0",
     "xmlhttprequest": "^1.8.0"
   },
