@@ -184,19 +184,25 @@ export function populate(
  * React Context provider for Firebase instance (with methods wrapped in dispatch). Needed to use HOCs
  * like firebaseConnect and withFirebase.
  */
-export function ReactReduxFirebaseProvider(props: ReactReduxFirebaseProviderProps): any;
+export function ReactReduxFirebaseProvider(
+  props: ReactReduxFirebaseProviderProps<any>
+): any
 
 /**
  * Props passed to ReactReduFirebaseContext component
  */
 export interface ReactReduxFirebaseProviderProps<T> {
-  value: T;
-  firebase: object;
-  config: object;
-  dispatch: (action: object) => void;
-  children?: React.ReactNode;
-  initalizeAuth?: boolean;
-  createFirestoreInstance?: (firebase: object, config: object, dispatch: (action: object) => void) => object;
+  value: T
+  firebase: object
+  config: object
+  dispatch: (action: object) => void
+  children?: React.ReactNode
+  initalizeAuth?: boolean
+  createFirestoreInstance?: (
+    firebase: object,
+    config: object,
+    dispatch: (action: object) => void
+  ) => object
 }
 
 /**
@@ -210,19 +216,23 @@ export namespace ReduxFirestoreContext {
  * Props passed to ReactReduFirebaseContext component
  */
 export interface ReduxFirestoreProviderProps {
-  firebase: object;
-  config: object;
-  dispatch: (action: object) => void;
-  createFirestoreInstance: (firebase: object, config: object, dispatch: (action: object) => void) => object;
-  children?: React.ReactNode;
-  initalizeAuth?: boolean;
+  firebase: object
+  config: object
+  dispatch: (action: object) => void
+  createFirestoreInstance: (
+    firebase: object,
+    config: object,
+    dispatch: (action: object) => void
+  ) => object
+  children?: React.ReactNode
+  initalizeAuth?: boolean
 }
 
 /**
  * React Context provider for Firestore instance (with methods wrapped in dispatch). Needed to use HOCs
  * like firestoreConnect and withFirestore.
  */
-export function ReduxFirestoreProvider(props: ReduxFirestoreProviderProps): any;
+export function ReduxFirestoreProvider(props: ReduxFirestoreProviderProps): any
 
 /**
  * React Higher Order Component that passes firebase as a prop (comes from context.store.firebase)
