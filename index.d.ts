@@ -128,7 +128,7 @@ export function createFirebaseConnect(...args: any[]): any
 export function createFirebaseInstance(
   firebase: any,
   configs: any,
-  dispatch: any,
+  dispatch: Dispatch,
   ...args: any[]
 ): any
 
@@ -226,7 +226,7 @@ export interface WithFirestoreProps {
     ReduxFirestoreApi &
     FirestoreStatics
   firebase: AppTypes.FirebaseApp
-  dispatch: any
+  dispatch: Dispatch
 }
 
 type Credentials =
