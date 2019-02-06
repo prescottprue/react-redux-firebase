@@ -514,7 +514,7 @@ export function populate(
  */
 export function ReactReduxFirebaseProvider<T = {}>(
   props: ReactReduxFirebaseProviderProps<T>
-): T
+): any
 
 /**
  * Props passed to ReactReduxFirebaseContext component
