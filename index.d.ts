@@ -1,4 +1,5 @@
 import React from 'react'
+import * as Firebase from 'firebase'
 import * as FirestoreTypes from '@firebase/firestore-types'
 import * as DatabaseTypes from '@firebase/database-types'
 import * as StorageTypes from '@firebase/storage-types'
@@ -143,7 +144,7 @@ export function authIsReady(store: object, ...args: any[]): any
 export function createFirebaseConnect(...args: any[]): any
 
 export function createFirebaseInstance(
-  firebase: any,
+  firebase: typeof Firebase,
   configs: any,
   dispatch: Dispatch,
   ...args: any[]
@@ -242,7 +243,7 @@ export interface WithFirestoreProps {
   firestore: FirestoreTypes.FirebaseFirestore &
     ReduxFirestoreApi &
     FirestoreStatics
-  firebase: AppTypes.FirebaseApp
+  firebase: typeof Firebase
   dispatch: Dispatch
 }
 
@@ -360,10 +361,9 @@ export interface WithFirebaseProps<ProfileType> {
   firebase: Auth &
     Profile<ProfileType> &
     Storage & {
-      /**
-       * initializeApp: ƒ initializeApp(options, rawConfig)
-       * initializeAuth: ƒ ()
-       */
+      initializeApp: (options: Object, name?: string) => firebase.app.App
+
+      initializeAuth: VoidFunction
 
       ref: (path: string | DatabaseTypes.Reference) => DatabaseTypes.Reference
 
@@ -514,20 +514,20 @@ export function populate(
  */
 export function ReactReduxFirebaseProvider<T = {}>(
   props: ReactReduxFirebaseProviderProps<T>
-): any
+): T
 
 /**
  * Props passed to ReactReduxFirebaseContext component
  */
-export interface ReactReduxFirebaseProviderProps<T = {}> {
+export interface ReactReduxFirebaseProviderProps<T = any> {
   value?: T
-  firebase: AppTypes.FirebaseApp
+  firebase: typeof Firebase
   config: ReactReduxFirebaseConfig
   dispatch: Dispatch
   children?: React.ReactNode
   initalizeAuth?: boolean
   createFirestoreInstance?: (
-    firebase: AppTypes.FirebaseApp,
+    firebase: typeof Firebase,
     config: ReactReduxFirebaseConfig,
     dispatch: Dispatch
   ) => object
@@ -550,11 +550,11 @@ interface ReactReduxFirebaseConfig {
  * Props passed to ReactReduFirebaseContext component
  */
 export interface ReduxFirestoreProviderProps {
-  firebase: AppTypes.FirebaseApp
+  firebase: typeof Firebase
   config: ReactReduxFirebaseConfig
   dispatch: (action: object) => void
   createFirestoreInstance: (
-    firebase: AppTypes.FirebaseApp,
+    firebase: typeof Firebase,
     config: ReactReduxFirebaseConfig,
     dispatch: Dispatch
   ) => object
