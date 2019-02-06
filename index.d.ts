@@ -307,9 +307,9 @@ interface Auth {
 }
 
 //http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html
-interface Profile<ProfileType> {
+interface Profile<T = ProfileType> {
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html#update-profile
-  updateProfile: (profile: Partial<ProfileType>, options: Object) => void
+  updateProfile: (profile: Partial<T>, options: Object) => void
 }
 
 //http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html
@@ -339,9 +339,9 @@ interface Storage {
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }[]>
 }
 
-export interface WithFirebaseProps<ProfileType> {
+export interface WithFirebaseProps<T = ProfileType> {
   firebase: Auth &
-    Profile<ProfileType> &
+    Profile<T> &
     Storage & {
       /**
        * initializeApp: ƒ initializeApp(options, rawConfig)
@@ -545,9 +545,9 @@ export function ReduxFirestoreProvider(props: ReduxFirestoreProviderProps): any
  * React Higher Order Component that passes firebase as a prop (comes from context.store.firebase)
  * http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/withFirebase.html
  */
-export function withFirebase<ProfileType>(
+export function withFirebase<T = ProfileType>(
   ...args: any[]
-): React.ComponentType<WithFirebaseProps<ProfileType>>
+): React.ComponentType<WithFirebaseProps<T>>
 
 /**
  * React Higher Order Component that passes firestore as a prop (comes from context.store.firestore)
@@ -601,9 +601,9 @@ export interface Ordered {
 }
 
 export namespace firebaseReducer {
-  export interface Reducer<ProfileType> {
+  export interface Reducer<T = ProfileType> {
     auth: Auth
-    profile: ProfileType
+    profile: T
     // profile: Profile
     authError: any
     data: {}
