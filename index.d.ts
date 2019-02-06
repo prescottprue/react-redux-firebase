@@ -512,9 +512,9 @@ export function populate(
  * React Context provider for Firebase instance (with methods wrapped in dispatch).
  * Needed to use HOCs like firebaseConnect and withFirebase.
  */
-export function ReactReduxFirebaseProvider<T = {}>(
-  props: ReactReduxFirebaseProviderProps<T>
-): T
+export function ReactReduxFirebaseProvider(
+  props: ReactReduxFirebaseProviderProps
+): any
 
 /**
  * Props passed to ReactReduxFirebaseContext component
