@@ -519,8 +519,7 @@ export function ReactReduxFirebaseProvider(
 /**
  * Props passed to ReactReduxFirebaseContext component
  */
-export interface ReactReduxFirebaseProviderProps<T = any> {
-  value?: T
+export interface ReactReduxFirebaseProviderProps {
   firebase: typeof Firebase
   config: ReactReduxFirebaseConfig
   dispatch: Dispatch
