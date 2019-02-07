@@ -611,12 +611,20 @@ export type ProfileType = object
 export interface Listeners {
   allIds: string[]
   byId: {
-    [key: string]: any
+    [path: string]: {
+      name: string
+    }
   }
 }
 
 export interface Ordered {
-  [key: string]: any[]
+  [collection: string]: (FirestoreTypes.DocumentData & { id: string })[]
+}
+
+export interface Data {
+  [collection: string]: {
+    [documentId: string]: FirestoreTypes.DocumentData
+  }
 }
 
 export namespace firebaseReducer {
@@ -625,7 +633,7 @@ export namespace firebaseReducer {
     profile: ProfileType
     // profile: Profile
     authError: any
-    data: {}
+    data: Data
     errors: any[]
     isInitializing: boolean
     listeners: Listeners
