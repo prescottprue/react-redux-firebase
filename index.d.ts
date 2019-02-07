@@ -764,11 +764,3 @@ export namespace reduxFirebase {
 export namespace reduxReactFirebase {
   const prototype: {}
 }
-
-export namespace withFirebase {
-  const prototype: {}
-}
-
-export namespace withFirestore {
-  const prototype: {}
-}
