@@ -462,12 +462,12 @@ export function firebaseConnect<ProfileType, TInner = {}>(
  */
 export function firebaseReducer<UserType>(
   ...args: any[]
-): firebaseReducer.Reducer<UserType>
+): FirebaseReducer.Reducer<UserType>
 
 /**
  * Reducer for Firebase state
  */
-export function firebaseStateReducer(...args: any[]): firestoreReducer.Reducer
+export function firebaseStateReducer(...args: any[]): FirestoreReducer.Reducer
 
 /**
  * React HOC that attaches/detaches Cloud Firestore listeners on mount/unmount
@@ -485,7 +485,7 @@ export function firestoreConnect<TInner = {}>(
 /**
  * Reducer for Firestore state
  */
-export function firestoreReducer(...args: any[]): any
+export function firestoreReducer(...args: any[]): FirestoreReducer.Reducer
 
 export function fixPath(path: string): string
 
@@ -605,7 +605,7 @@ export namespace createWithFirestore {
 
 // Your Firebase/Firestore user profile object type
 // http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html
-export type ProfileType = object
+export type ProfileType = {}
 
 export interface Listeners {
   allIds: string[]
@@ -626,11 +626,10 @@ export interface Data {
   }
 }
 
-export namespace firebaseReducer {
-  export interface Reducer<ProfileType> {
+export namespace FirebaseReducer {
+  export interface Reducer<ProfileType = {}> {
     auth: Auth
-    profile: ProfileType
-    // profile: Profile
+    profile: Profile<ProfileType>
     authError: any
     data: Data
     errors: any[]
@@ -663,19 +662,17 @@ export namespace firebaseReducer {
   }
 
   // can be extended for optional properties from your database
-  export interface Profile {
+  export type Profile<ProfileType> = {
     isLoaded: boolean
     isEmpty: boolean
+  } & ProfileType
+
+  export namespace firebaseStateReducer {
+    const prototype: {}
   }
-
-  const prototype: {}
 }
 
-export namespace firebaseStateReducer {
-  const prototype: {}
-}
-
-export namespace firestoreReducer {
+export namespace FirestoreReducer {
   export interface Reducer {
     composite: any
     data: {}
