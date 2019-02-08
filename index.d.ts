@@ -474,7 +474,7 @@ export function firebaseStateReducer(...args: any[]): FirestoreReducer.Reducer
  */
 export function firestoreConnect<TInner = {}>(
   connect?:
-    | mapper<TInner, string[] | FirestoreQueryOptions[]>
+    | mapper<TInner, (string | FirestoreQueryOptions)[]>
     | FirestoreQueryOptions[]
     | string[]
 ): InferableComponentEnhancerWithProps<
@@ -616,13 +616,13 @@ export interface Listeners {
   }
 }
 
-export interface Ordered {
-  [collection: string]: (FirestoreTypes.DocumentData & { id: string })[]
+export interface Ordered<T extends FirestoreTypes.DocumentData> {
+  [collection: string]: (T & { id: string })[]
 }
 
-export interface Data {
+export interface Data<T extends FirestoreTypes.DocumentData> {
   [collection: string]: {
-    [documentId: string]: FirestoreTypes.DocumentData
+    [documentId: string]: T
   }
 }
 
@@ -631,11 +631,11 @@ export namespace FirebaseReducer {
     auth: Auth
     profile: Profile<ProfileType>
     authError: any
-    data: Data
+    data: Data<any>
+    ordered: Ordered<any>
     errors: any[]
     isInitializing: boolean
     listeners: Listeners
-    ordered: Ordered
     requested: {}
     requesting: {}
     timestamps: {}
@@ -675,13 +675,13 @@ export namespace FirebaseReducer {
 export namespace FirestoreReducer {
   export interface Reducer {
     composite: any
-    data: {}
+    data: Data<any>
     errors: {
       allIds: string[]
       byQuery: any[]
     }
     listeners: Listeners
-    ordered: Ordered
+    ordered: Ordered<any>
     queries: any
     status: {
       requested: {}
