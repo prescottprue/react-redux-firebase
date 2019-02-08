@@ -158,6 +158,7 @@ export function createWithFirestore(storeKey: any): any
 
 // https://github.com/prescottprue/redux-firestore#query-options
 type WhereOptions = [string, FirestoreTypes.WhereFilterOp, any]
+type OrderByOptions = [string, FirestoreTypes.OrderByDirection]
 export interface FirestoreQueryOptions {
   // https://github.com/prescottprue/redux-firestore#collection
   collection: string
@@ -168,7 +169,7 @@ export interface FirestoreQueryOptions {
   // https://github.com/prescottprue/redux-firestore#where
   where?: WhereOptions | WhereOptions[]
   // https://github.com/prescottprue/redux-firestore#orderby
-  orderBy?: string[] | string[][]
+  orderBy?: OrderByOptions | OrderByOptions[]
   // https://github.com/prescottprue/redux-firestore#limit
   limit?: number
   // https://github.com/prescottprue/redux-firestore#startat
@@ -673,7 +674,7 @@ export namespace FirebaseReducer {
 
 export namespace FirestoreReducer {
   export interface Reducer {
-    composite: Data<any>
+    composite?: Data<any>
     data: {
       [collection: string]: any | Dictionary<any>
     }
