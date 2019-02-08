@@ -190,7 +190,7 @@ interface ReduxFirestoreApi {
   get: (docPath: string | FirestoreQueryOptions) => void
 
   // https://github.com/prescottprue/redux-firestore#set
-  set: (docPath: string | FirestoreQueryOptions, data: Object) => void
+  set: (docPath: string | FirestoreQueryOptions, data: Object) => Promise<void>
 
   // https://github.com/prescottprue/redux-firestore#add
   add: (
@@ -617,10 +617,12 @@ export interface Ordered<T extends FirestoreTypes.DocumentData> {
   [collection: string]: (T & { id: string })[]
 }
 
+export interface Dictionary<T> {
+  [documentId: string]: T
+}
+
 export interface Data<T extends FirestoreTypes.DocumentData> {
-  [collection: string]: {
-    [documentId: string]: T
-  }
+  [collection: string]: Dictionary<T>
 }
 
 export namespace FirebaseReducer {
@@ -671,8 +673,10 @@ export namespace FirebaseReducer {
 
 export namespace FirestoreReducer {
   export interface Reducer {
-    composite: any
-    data: Data<any>
+    composite: Data<any>
+    data: {
+      [collection: string]: any | Dictionary<any>
+    }
     errors: {
       allIds: string[]
       byQuery: any[]
