@@ -9,10 +9,10 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "firebase": "^5.7.2",
+    "firebase": "^5.8.2",
     "prop-types": "^15.6.2",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
     "react-google-button": "*",
     "react-redux": "^5.0.0",
     "react-redux-firebase": "latest",

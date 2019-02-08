@@ -27,11 +27,11 @@
     "prepush": "npm run lint",
     "docs:clean": "rimraf _book",
     "docs:prepare": "gitbook install",
-    "docs:api": "babel-node bin/api-docs-generate",
+    "docs:api": "node bin/api-docs-generate",
     "docs:build": "npm run docs:prepare && gitbook build -g prescottprue/react-redux-firebase && npm run docs:api",
     "docs:watch": "npm run docs:prepare && gitbook serve",
     "docs:publish": "npm run docs:clean && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:prescottprue/react-redux-firebase gh-pages --force",
-    "docs:upload": "babel-node bin/api-docs-upload"
+    "docs:upload": "node bin/api-docs-upload"
   },
   "license": "MIT",
   "homepage": "http://react-redux-firebase.com",

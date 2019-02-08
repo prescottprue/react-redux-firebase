@@ -16,7 +16,7 @@ import { v3ErrorMessage } from './constants'
  * @return {Function} - Higher Order Component which accepts an array of
  * watchers config and wraps a React Component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { createWithFirebase } from 'react-redux-firebase'
  *
  * // create withFirebase that uses another redux store
@@ -68,27 +68,35 @@ export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
  * @return {Function} - Which accepts a component to wrap and returns the
  * wrapped component
  * @example <caption>Basic</caption>
+ * import React from 'react'
  * import { withFirebase } from 'react-redux-firebase'
  *
- * const AddData = ({ firebase: { push } }) =>
- *   <div>
- *     <button onClick={() => push('todos', { done: false, text: 'Sample' })}>
- *       Add Sample Todo
- *     </button>
- *   </div>
+ * function AddTodo({ firebase: { push } }) {
+ *   return (
+ *     <div>
+ *       <button onClick={() => push('todos', { done: false, text: 'Sample' })}>
+ *         Add Sample Todo
+ *       </button>
+ *     </div>
+ *    )
+ * }
  *
- * export default withFirebase(AddData)
+ * export default withFirebase(AddTodo)
  * @example <caption>Within HOC Composition</caption>
+ * import React from 'react'
  * import { compose } from 'redux' // can also come from recompose
  * import { withHandlers } from 'recompose'
  * import { withFirebase } from 'react-redux-firebase'
  *
- * const AddTodo = ({ addTodo }) =>
- *   <div>
- *     <button onClick={addTodo}>
- *       Add Sample Todo
- *     </button>
- *   </div>
+ * function AddTodo({ addTodo }) {
+ *   return (
+ *     <div>
+ *       <button onClick={addTodo}>
+ *         Add Sample Todo
+ *       </button>
+ *     </div>
+ *   )
+ * }
  *
  * export default compose(
  *   withFirebase(AddTodo),

@@ -66,9 +66,11 @@ import { firestoreConnect } from 'react-redux-firebase'
 
 // pass todos list from redux as props.todosList
 export default compose(
-  firestoreConnect(() => ['todos']), // sync todos collection from Firestore into redux
+  firestoreConnect(['todos']), // sync todos collection from Firestore into redux
   connect((state) => ({
-    todosList: state.firestore.data.todos
+    todosList: state.firestore.data.todos,
+    profile: state.firestore.profile, // pass profile data as props.profile
+    auth: state.firestore.auth // pass auth data as props.auth
   })
 )(SomeComponent)
 ```
