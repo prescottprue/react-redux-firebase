@@ -45,7 +45,6 @@ _Base Paths_
 ```javascript
 import { connect } from 'react-redux'
 import { firebaseConnect, getVal } from 'react-redux-firebase'
-// easily replace pathToJS with getVal
 
 export default connect(({ firebase }) => ({
   // this.props.auth loaded from state.firebase.auth
@@ -106,7 +105,7 @@ const enhance = compose(
   }))
 )
 
-const Todos = ({ todos }) => {
+function Todos({ todos }) {
   // Message for if todos are loading
   if(!isLoaded(todos)) {
     return <span>Loading...</span>
@@ -155,7 +154,7 @@ const enhance = compose(
   }))
 )
 
-const Todos = ({ todos }) => {
+function Todos({ todos }) {
   // Message for if todos are loading
   if(!isLoaded(todos)) {
     return <span>Loading...</span>
