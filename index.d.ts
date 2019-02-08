@@ -322,10 +322,8 @@ interface Auth {
     },
     updateInProfile: boolean
   ) => Promise<void>
-}
 
-//http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html
-interface Profile<ProfileType> {
+  //http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html#update-profile
   updateProfile: (profile: Partial<ProfileType>, options: Object) => void
 }
@@ -359,7 +357,6 @@ interface Storage {
 
 export interface WithFirebaseProps<ProfileType> {
   firebase: Auth &
-    Profile<ProfileType> &
     Storage & {
       initializeApp: (options: Object, name?: string) => firebase.app.App
 
