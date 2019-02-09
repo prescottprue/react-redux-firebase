@@ -188,7 +188,7 @@ export interface FirestoreQueryOptions {
 interface ReduxFirestoreApi {
   // https://github.com/prescottprue/redux-firestore#get
   // https://github.com/prescottprue/redux-firestore#get-1
-  get: (docPath: string | FirestoreQueryOptions) => void
+  get: (docPath: string | FirestoreQueryOptions) => Promise<void>
 
   // https://github.com/prescottprue/redux-firestore#set
   set: (docPath: string | FirestoreQueryOptions, data: Object) => Promise<void>
