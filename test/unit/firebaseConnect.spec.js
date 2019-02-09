@@ -1,26 +1,27 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-dom/test-utils'
-import { createSink } from 'recompose'
 import { keys, values } from 'lodash'
-
 import {
   storeWithFirebase,
   Container,
   ProviderMock,
-  TestContainer
+  TestContainer,
+  firebaseWithConfig
 } from '../utils'
 import firebaseConnect, {
   createFirebaseConnect
 } from '../../src/firebaseConnect'
-
+import ReactReduxFirebaseProvider from '../../src/ReactReduxFirebaseProvider'
+import { createFirestoreInstance } from 'redux-firestore'
+const dispatchSpy = sinon.spy()
 const DYNAMIC_PROPS_SEPARATOR = ','
 
 const getFirebaseWatchers = store => {
   return { ...store.firebase._.watchers }
 }
 
-const createContainer = additionalWrappedProps => {
+const createContainer = (additionalWrappedProps, listeners) => {
   const store = storeWithFirebase()
   const WrappedContainer = firebaseConnect(props => {
     const itemsToSubscribe =
@@ -28,23 +29,58 @@ const createContainer = additionalWrappedProps => {
       props.dynamicProp
         .split(DYNAMIC_PROPS_SEPARATOR)
         .map(item => `test/${item}`)
-    return [...itemsToSubscribe]
+    return itemsToSubscribe ? [...itemsToSubscribe] : []
   })(Container)
 
   const tree = TestUtils.renderIntoDocument(
     <ProviderMock store={store}>
-      <WrappedContainer pass="through" {...additionalWrappedProps} />
+      <ReactReduxFirebaseProvider
+        dispatch={dispatchSpy}
+        firebase={firebaseWithConfig()}
+        createFirestoreInstance={createFirestoreInstance}
+        config={{}}>
+        <WrappedContainer pass="through" {...additionalWrappedProps} />
+      </ReactReduxFirebaseProvider>
     </ProviderMock>
   )
-
   return {
-    // container: TestUtils.findRenderedComponentWithType(tree, WrappedContainer),
+    wrapped: TestUtils.findRenderedComponentWithType(tree, Container),
     parent: TestUtils.findRenderedComponentWithType(tree, ProviderMock),
     store
   }
 }
 
 describe('firebaseConnect', () => {
+  it('passes firebase prop to child', () => {
+    const { wrapped } = createContainer()
+    expect(wrapped.props).to.have.a.property('firebase')
+  })
+
+  it('passes dispatch prop to child', () => {
+    const { wrapped } = createContainer()
+    expect(wrapped.props).to.have.a.property('dispatch')
+  })
+
+  it('passes through existing props', () => {
+    const { wrapped } = createContainer()
+    expect(wrapped.props).to.have.a.property('pass', 'through')
+  })
+
+  it('throws an exception if passed a prop that clashes with a reserved param', () => {
+    let exceptions = []
+
+    try {
+      createContainer({
+        firebase: '__SECRET_INTERNALS',
+        dispatch: '__SECRET_INTERNALS'
+      })
+    } catch (e) {
+      exceptions.push(e)
+    }
+
+    expect(exceptions.length).to.equal(1)
+  })
+
   it.skip('disables watchers on unmount', () => {
     const { container, store } = createContainer()
     ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(container).parentNode)
@@ -68,7 +104,7 @@ describe('firebaseConnect', () => {
   })
 
   it.skip('applies new watchers when props change', () => {
-    const { parent, store } = createContainer()
+    const { parent, wrapped } = createContainer()
     parent.setState({
       dynamic: 'somethingElse'
     })
@@ -77,7 +113,7 @@ describe('firebaseConnect', () => {
       dynamic: 'somethingElse, anotherSomethingElse'
     })
 
-    expect(keys(getFirebaseWatchers(store)).length).to.equal(2)
+    expect(keys(wrapped.props.firebase._.watchers).length).to.equal(2)
   })
 
   it.skip('correctly maintains watcher count when props change with extra listener paths', () => {
@@ -106,22 +142,7 @@ describe('firebaseConnect', () => {
     expect(values(getFirebaseWatchers(store))).to.eql([1])
   })
 
-  it('throws an exception if passed a prop that clashes with a reserved param', () => {
-    let exceptions = []
-
-    try {
-      createContainer({
-        _firebaseRef: '__SECRET_INTERNALS',
-        _dispatch: '__SECRET_INTERNALS'
-      })
-    } catch (e) {
-      exceptions.push(e)
-    }
-
-    expect(exceptions.length).to.equal(1)
-  })
-
-  describe.skip('sets displayName static as ', () => {
+  describe('sets displayName static as ', () => {
     /* eslint-disable no-template-curly-in-string */
     describe('FirebaseConnect(${WrappedComponentName}) for', () => {
       /* eslint-enable no-template-curly-in-string */
@@ -145,10 +166,9 @@ describe('firebaseConnect', () => {
     })
   })
 
-  it.skip('sets WrappedComponent static as component which was wrapped', () => {
-    const component = createSink()
-    const containerPrime = firebaseConnect()(component)
-    expect(containerPrime.wrappedComponent).to.equal(component)
+  it('sets WrappedComponent static as component which was wrapped', () => {
+    const containerPrime = firebaseConnect()(Container)
+    expect(containerPrime.wrappedComponent).to.equal(Container)
   })
 })
 

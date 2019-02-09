@@ -8,7 +8,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 // Reserved props that should not be passed into a firebaseConnect wrapped
 // component. Will throw an error if they are.
-const RESERVED_PROPS = ['_firebaseRef', '_dispatch']
+const RESERVED_PROPS = ['firebase', 'dispatch']
 
 /**
  * @name createFirebaseConnect
@@ -43,27 +43,27 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     prevData = null
 
     componentDidMount() {
-      const { _firebaseRef, _dispatch } = this.props
+      const { firebase, dispatch } = this.props
 
       // Allow function to be passed
       const inputAsFunc = createCallable(dataOrFn)
       this.prevData = inputAsFunc(this.props, this.props)
 
-      const { ref, helpers, storage, database, auth } = _firebaseRef
+      const { ref, helpers, storage, database, auth } = firebase
       this.firebase = { ref, storage, database, auth, ...helpers }
 
       this._firebaseEvents = getEventsFromInput(this.prevData)
 
-      watchEvents(_firebaseRef, _dispatch, this._firebaseEvents)
+      watchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
     componentWillUnmount() {
-      const { _firebaseRef, _dispatch } = this.props
-      unWatchEvents(_firebaseRef, _dispatch, this._firebaseEvents)
+      const { firebase, dispatch } = this.props
+      unWatchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
     componentWillReceiveProps(np) {
-      const { _firebaseRef, _dispatch } = this.props
+      const { firebase, dispatch } = this.props
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.store)
 
@@ -75,38 +75,26 @@ export const createFirebaseConnect = (storeKey = 'store') => (
         this.prevData = data
         // UnWatch all current events
         unWatchEvents(
-          _firebaseRef,
-          _dispatch,
+          firebase,
+          dispatch,
           getEventsFromInput(itemsToUnsubscribe)
         )
         // Get watch events from new data
         this._firebaseEvents = getEventsFromInput(data)
 
         // Watch new events
-        watchEvents(
-          _firebaseRef,
-          _dispatch,
-          getEventsFromInput(itemsToSubscribe)
-        )
+        watchEvents(firebase, dispatch, getEventsFromInput(itemsToSubscribe))
       }
     }
 
     render() {
-      // Prevent reserved props from being passed down to children
-      let props = Object.keys(this.props).reduce((acc, p) => {
-        if (RESERVED_PROPS.indexOf(p) === -1) {
-          acc[p] = this.props[p]
-        }
-        return acc
-      }, {})
-
-      return <WrappedComponent {...props} />
+      return <WrappedComponent {...this.props} />
     }
   }
 
   FirebaseConnectWrapped.propTypes = {
-    _dispatch: PropTypes.func.isRequired,
-    _firebaseRef: PropTypes.object.isRequired
+    dispatch: PropTypes.func.isRequired,
+    firebase: PropTypes.object.isRequired
   }
 
   const HoistedComp = hoistStatics(FirebaseConnectWrapped, WrappedComponent)
@@ -115,9 +103,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     // Check that reserved props are not supplied to a FirebaseConnected
     // component and if they are, throw an error so the developer can rectify
     // this issue.
-    const clashes = Object.keys(props).filter(
-      k => !!RESERVED_PROPS.find(r => r === k)
-    )
+    const clashes = Object.keys(props).filter(k => RESERVED_PROPS.includes(k))
 
     if (clashes.length > 0) {
       throw new Error(
@@ -129,10 +115,10 @@ export const createFirebaseConnect = (storeKey = 'store') => (
 
     return (
       <ReactReduxFirebaseContext.Consumer>
-        {_firebaseRef => (
+        {_internalFirebase => (
           <HoistedComp
-            _firebaseRef={_firebaseRef}
-            _dispatch={_firebaseRef.dispatch}
+            firebase={_internalFirebase}
+            dispatch={_internalFirebase.dispatch}
             {...props}
           />
         )}
@@ -144,6 +130,8 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     WrappedComponent,
     'FirebaseConnect'
   )
+
+  FirebaseConnect.wrappedComponent = WrappedComponent
 
   return FirebaseConnect
 }
