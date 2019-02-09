@@ -161,6 +161,7 @@ export function createWithFirestore(storeKey: any): any
 
 // https://github.com/prescottprue/redux-firestore#query-options
 type WhereOptions = [string, FirestoreTypes.WhereFilterOp, any]
+type OrderByOptions = [string, FirestoreTypes.OrderByDirection]
 export interface FirestoreQueryOptions {
   // https://github.com/prescottprue/redux-firestore#collection
   collection: string
@@ -171,7 +172,7 @@ export interface FirestoreQueryOptions {
   // https://github.com/prescottprue/redux-firestore#where
   where?: WhereOptions | WhereOptions[]
   // https://github.com/prescottprue/redux-firestore#orderby
-  orderBy?: string[] | string[][]
+  orderBy?: OrderByOptions | OrderByOptions[]
   // https://github.com/prescottprue/redux-firestore#limit
   limit?: number
   // https://github.com/prescottprue/redux-firestore#startat
@@ -190,10 +191,10 @@ export interface FirestoreQueryOptions {
 interface ReduxFirestoreApi {
   // https://github.com/prescottprue/redux-firestore#get
   // https://github.com/prescottprue/redux-firestore#get-1
-  get: (docPath: string | FirestoreQueryOptions) => void
+  get: (docPath: string | FirestoreQueryOptions) => Promise<void>
 
   // https://github.com/prescottprue/redux-firestore#set
-  set: (docPath: string | FirestoreQueryOptions, data: Object) => void
+  set: (docPath: string | FirestoreQueryOptions, data: Object) => Promise<void>
 
   // https://github.com/prescottprue/redux-firestore#add
   add: (
@@ -325,10 +326,8 @@ interface Auth {
     },
     updateInProfile: boolean
   ) => Promise<void>
-}
 
-//http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html
-interface Profile<ProfileType> {
+  //http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html#update-profile
   updateProfile: (profile: Partial<ProfileType>, options: Object) => void
 }
@@ -362,7 +361,6 @@ interface Storage {
 
 export interface WithFirebaseProps<ProfileType> {
   firebase: Auth &
-    Profile<ProfileType> &
     Storage & {
       initializeApp: (options: Object, name?: string) => firebase.app.App
 
@@ -477,7 +475,7 @@ export function firebaseStateReducer(...args: any[]): FirestoreReducer.Reducer
  */
 export function firestoreConnect<TInner = {}>(
   connect?:
-    | mapper<TInner, string[] | FirestoreQueryOptions[]>
+    | mapper<TInner, (string | FirestoreQueryOptions)[]>
     | FirestoreQueryOptions[]
     | string[]
 ): InferableComponentEnhancerWithProps<
@@ -619,14 +617,16 @@ export interface Listeners {
   }
 }
 
-export interface Ordered {
-  [collection: string]: (FirestoreTypes.DocumentData & { id: string })[]
+export interface Ordered<T extends FirestoreTypes.DocumentData> {
+  [collection: string]: (T & { id: string })[]
 }
 
-export interface Data {
-  [collection: string]: {
-    [documentId: string]: FirestoreTypes.DocumentData
-  }
+export interface Dictionary<T> {
+  [documentId: string]: T
+}
+
+export interface Data<T extends FirestoreTypes.DocumentData> {
+  [collection: string]: Dictionary<T>
 }
 
 export namespace FirebaseReducer {
@@ -634,11 +634,11 @@ export namespace FirebaseReducer {
     auth: Auth
     profile: Profile<ProfileType>
     authError: any
-    data: Data
+    data: Data<any>
+    ordered: Ordered<any>
     errors: any[]
     isInitializing: boolean
     listeners: Listeners
-    ordered: Ordered
     requested: {}
     requesting: {}
     timestamps: {}
@@ -677,14 +677,16 @@ export namespace FirebaseReducer {
 
 export namespace FirestoreReducer {
   export interface Reducer {
-    composite: any
-    data: {}
+    composite?: Data<any>
+    data: {
+      [collection: string]: any | Dictionary<any>
+    }
     errors: {
       allIds: string[]
       byQuery: any[]
     }
     listeners: Listeners
-    ordered: Ordered
+    ordered: Ordered<any>
     queries: any
     status: {
       requested: {}
