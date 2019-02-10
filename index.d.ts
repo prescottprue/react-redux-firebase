@@ -614,8 +614,10 @@ export interface Listeners {
   }
 }
 
+export type TypeWithId<T> = T & { id: string }
+
 export interface Ordered<T extends FirestoreTypes.DocumentData> {
-  [collection: string]: (T & { id: string })[]
+  [collection: string]: TypeWithId<T>[]
 }
 
 export interface Dictionary<T> {
