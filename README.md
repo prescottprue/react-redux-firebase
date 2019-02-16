@@ -51,10 +51,12 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, combineReducers, compose } from 'redux'
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
-import firebase from 'firebase'
-// import { reduxFirestore, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
+import firebase from 'firebase/app'
+import  'firebase/auth'
+import  'firebase/database'
 // import 'firebase/firestore' // <- needed if using firestore
 // import 'firebase/functions' // <- needed if using httpsCallable
+// import { reduxFirestore, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
 
 const firebaseConfig = {}
 
