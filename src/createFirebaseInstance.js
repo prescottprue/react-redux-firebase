@@ -1,4 +1,5 @@
 import { isObject } from 'lodash'
+import { merge } from 'lodash/fp'
 import { getEventsFromInput, createCallable } from './utils'
 import { mapWithFirebaseAndDispatch } from './utils/actions'
 import { authActions, queryActions, storageActions } from './actions'
@@ -32,12 +33,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authUid: null
   }
 
-  Object.defineProperty(firebase, '_', {
-    value: defaultInternals,
-    writable: true,
-    enumerable: true,
-    configurable: true
-  })
+  firebase._ = merge(defaultInternals, firebase._) // eslint-disable-line no-param-reassign
 
   /**
    * @private
