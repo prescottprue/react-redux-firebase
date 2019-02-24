@@ -617,8 +617,10 @@ export interface Listeners {
   }
 }
 
+export type TypeWithId<T> = T & { id: string }
+
 export interface Ordered<T extends FirestoreTypes.DocumentData> {
-  [collection: string]: (T & { id: string })[]
+  [collection: string]: TypeWithId<T>[]
 }
 
 export interface Dictionary<T> {
@@ -626,7 +628,7 @@ export interface Dictionary<T> {
 }
 
 export interface Data<T extends FirestoreTypes.DocumentData> {
-  [collection: string]: Dictionary<T>
+  [collection: string]: T
 }
 
 export namespace FirebaseReducer {
@@ -634,14 +636,14 @@ export namespace FirebaseReducer {
     auth: Auth
     profile: Profile<ProfileType>
     authError: any
-    data: Data<any>
+    data: Data<any | Dictionary<any>>
     ordered: Ordered<any>
     errors: any[]
     isInitializing: boolean
     listeners: Listeners
-    requested: {}
-    requesting: {}
-    timestamps: {}
+    requested: Dictionary<boolean>
+    requesting: Dictionary<boolean>
+    timestamps: Dictionary<number>
   }
 
   export interface Auth extends AuthTypes.UserInfo {
@@ -677,21 +679,19 @@ export namespace FirebaseReducer {
 
 export namespace FirestoreReducer {
   export interface Reducer {
-    composite?: Data<any>
-    data: {
-      [collection: string]: any | Dictionary<any>
-    }
+    composite?: Data<any | Dictionary<any>>
+    data: Data<any | Dictionary<any>>
     errors: {
       allIds: string[]
       byQuery: any[]
     }
     listeners: Listeners
     ordered: Ordered<any>
-    queries: any
+    queries: Data<FirestoreQueryOptions & (Dictionary<any> | any)>
     status: {
-      requested: {}
-      requesting: {}
-      timestamps: {}
+      requested: Dictionary<boolean>
+      requesting: Dictionary<boolean>
+      timestamps: Dictionary<number>
     }
   }
 
