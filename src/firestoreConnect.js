@@ -4,6 +4,7 @@ import { isEqual, some, filter } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { createCallable, wrapDisplayName } from './utils'
 import ReduxFirestoreContext from './ReduxFirestoreContext'
+import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
  * @name createFirestoreConnect
@@ -87,7 +88,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
   }
 
   FirestoreConnectWrapped.propTypes = {
-    dispatch: PropTypes.func,
+    dispatch: PropTypes.func.isRequired,
     firebase: PropTypes.object,
     firestore: PropTypes.object
   }
@@ -95,18 +96,26 @@ export const createFirestoreConnect = (storeKey = 'store') => (
   const HoistedComp = hoistStatics(FirestoreConnectWrapped, WrappedComponent)
 
   const FirestoreConnect = props => (
-    <ReduxFirestoreContext.Consumer>
-      {firestore => <HoistedComp firestore={firestore} {...props} />}
-    </ReduxFirestoreContext.Consumer>
+    <ReactReduxFirebaseContext.Consumer>
+      {firebase => (
+        <ReduxFirestoreContext.Consumer>
+          {firestore => (
+            <HoistedComp
+              firestore={firestore}
+              firebase={firebase}
+              dispatch={firebase.dispatch}
+              {...props}
+            />
+          )}
+        </ReduxFirestoreContext.Consumer>
+      )}
+    </ReactReduxFirebaseContext.Consumer>
   )
+
   FirestoreConnect.displayName = wrapDisplayName(
     WrappedComponent,
     'FirestoreConnect'
   )
-
-  FirestoreConnect.propTypes = {
-    dispatch: PropTypes.func.isRequired
-  }
 
   return FirestoreConnect
 }
