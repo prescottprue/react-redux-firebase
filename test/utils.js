@@ -19,7 +19,11 @@ export const storeWithFirestore = () => {
 }
 
 export const TestContainer = () => createSink()
-export const Container = () => <div />
+export class Container extends Component {
+  render() {
+    return <div />
+  }
+}
 
 export class ProviderMock extends Component {
   getChildContext() {

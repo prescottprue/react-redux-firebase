@@ -143,6 +143,9 @@ export function authIsReady(store: object, ...args: any[]): any
  */
 export function createFirebaseConnect(...args: any[]): any
 
+/**
+ * Create a firebase instance that has helpers attached for dispatching actions
+ */
 export function createFirebaseInstance(
   firebase: typeof Firebase,
   configs: any,

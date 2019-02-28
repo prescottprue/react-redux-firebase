@@ -1,4 +1,5 @@
 import { isObject } from 'lodash'
+import { merge } from 'lodash/fp'
 import { getEventsFromInput, createCallable } from './utils'
 import { mapWithFirebaseAndDispatch } from './utils/actions'
 import { authActions, queryActions, storageActions } from './actions'
@@ -32,12 +33,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authUid: null
   }
 
-  Object.defineProperty(firebase, '_', {
-    value: defaultInternals,
-    writable: true,
-    enumerable: true,
-    configurable: true
-  })
+  firebase._ = merge(defaultInternals, firebase._) // eslint-disable-line no-param-reassign
 
   /**
    * @private
@@ -359,6 +355,15 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.login(dispatch, firebase, credentials)
 
   /**
+   * @description Logs user into Firebase using external. For examples, visit the
+   * [auth section](/docs/recipes/auth.md)
+   * @param {Object} authData - Auth data from Firebase's getRedirectResult
+   * @return {Promise} Containing user's profile
+   */
+  const handleRedirectResult = authData =>
+    authActions.handleRedirectResult(dispatch, firebase, authData)
+
+  /**
    * @description Logs user out of Firebase and empties firebase state from
    * redux store
    * @return {Promise}
@@ -512,6 +517,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     update,
     updateWithMeta,
     login,
+    handleRedirectResult,
     logout,
     updateAuth,
     updateEmail,
