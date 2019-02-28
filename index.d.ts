@@ -218,7 +218,7 @@ interface ReduxFirestoreApi {
   onSnapshot: (options: FirestoreQueryOptions) => void
 
   //https://github.com/prescottprue/redux-firestore#setlisteners
-  setListener: (options: FirestoreQueryOptions) => void
+  setListener: (options: FirestoreQueryOptions) => Promise<void>
 
   // https://github.com/prescottprue/redux-firestore#unsetlistener--unsetlisteners
   unsetListener: (options: FirestoreQueryOptions) => void
