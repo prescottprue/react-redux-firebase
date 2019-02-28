@@ -215,10 +215,11 @@ interface ReduxFirestoreApi {
   runTransaction: (transaction: WithFirestoreProps['firestore']) => Promise<any>
 
   // https://github.com/prescottprue/redux-firestore#onsnapshotsetlistener
-  onSnapshot: (options: FirestoreQueryOptions) => void
+  onSnapshot: (options: FirestoreQueryOptions) => Promise<void>
+  setListener: (options: FirestoreQueryOptions) => Promise<void>
 
   //https://github.com/prescottprue/redux-firestore#setlisteners
-  setListener: (options: FirestoreQueryOptions) => Promise<void>
+  setListeners: (optionsArray: FirestoreQueryOptions[]) => Promise<void>
 
   // https://github.com/prescottprue/redux-firestore#unsetlistener--unsetlisteners
   unsetListener: (options: FirestoreQueryOptions) => void
