@@ -175,16 +175,16 @@ export interface FirestoreQueryOptions {
   orderBy?: OrderByOptions | OrderByOptions[]
   // https://github.com/prescottprue/redux-firestore#limit
   limit?: number
-  // https://github.com/prescottprue/redux-firestore#startat
-  startAt?: number
-  // https://github.com/prescottprue/redux-firestore#startafter
-  startAfter?: number
-  // https://github.com/prescottprue/redux-firestore#endat
-  endAt?: number
-  // https://github.com/prescottprue/redux-firestore#endbefore
-  endBefore?: number
   // https://github.com/prescottprue/redux-firestore#storeas
   storeAs?: string
+  // https://github.com/prescottprue/redux-firestore#startat
+  startAt?: FirestoreTypes.DocumentSnapshot | any[]
+  // https://github.com/prescottprue/redux-firestore#startafter
+  startAfter?: FirestoreTypes.DocumentSnapshot | any[]
+  // https://github.com/prescottprue/redux-firestore#endat
+  endAt?: FirestoreTypes.DocumentSnapshot | any[]
+  // https://github.com/prescottprue/redux-firestore#endbefore
+  endBefore?: FirestoreTypes.DocumentSnapshot | any[]
 }
 
 // https://github.com/prescottprue/redux-firestore#api
