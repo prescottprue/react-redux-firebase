@@ -178,13 +178,13 @@ export interface FirestoreQueryOptions {
   // https://github.com/prescottprue/redux-firestore#storeas
   storeAs?: string
   // https://github.com/prescottprue/redux-firestore#startat
-  startAt?: FirestoreTypes.DocumentSnapshot | any[]
+  startAt?: FirestoreTypes.DocumentSnapshot | any | any[]
   // https://github.com/prescottprue/redux-firestore#startafter
-  startAfter?: FirestoreTypes.DocumentSnapshot | any[]
+  startAfter?: FirestoreTypes.DocumentSnapshot | any | any[]
   // https://github.com/prescottprue/redux-firestore#endat
-  endAt?: FirestoreTypes.DocumentSnapshot | any[]
+  endAt?: FirestoreTypes.DocumentSnapshot | any | any[]
   // https://github.com/prescottprue/redux-firestore#endbefore
-  endBefore?: FirestoreTypes.DocumentSnapshot | any[]
+  endBefore?: FirestoreTypes.DocumentSnapshot | any | any[]
 }
 
 // https://github.com/prescottprue/redux-firestore#api
