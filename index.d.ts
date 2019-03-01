@@ -512,7 +512,7 @@ export interface ReactReduxFirebaseProviderProps {
   initalizeAuth?: boolean
   createFirestoreInstance?: (
     firebase: typeof Firebase,
-    config: Partial<ReduxFirestoreConfig>,
+    configs: Partial<ReduxFirestoreConfig>,
     dispatch: Dispatch
   ) => object
 }
