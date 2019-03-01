@@ -113,24 +113,7 @@ export const constants: {
     UNAUTHORIZED_ERROR: string
     UNSET_LISTENER: string
   }
-  defaultConfig: {
-    attachAuthIsReady: boolean
-    autoPopulateProfile: boolean
-    dispatchOnUnsetListener: boolean
-    dispatchRemoveAction: boolean
-    enableEmptyAuthChanges: boolean
-    enableLogging: boolean
-    enableRedirectHandling: boolean
-    firebaseStateName: string
-    presence: any
-    preserveOnEmptyAuthChange: any
-    preserveOnLogout: any
-    resetBeforeLogin: boolean
-    sessions: string
-    setProfilePopulateResults: boolean
-    updateProfileOnLogin: boolean
-    userProfile: any
-  }
+  defaultConfig: ReactReduxFirebaseConfig
 }
 
 /**
@@ -148,7 +131,7 @@ export function createFirebaseConnect(...args: any[]): any
  */
 export function createFirebaseInstance(
   firebase: typeof Firebase,
-  configs: any,
+  configs: Partial<ReduxFirestoreConfig>,
   dispatch: Dispatch,
   ...args: any[]
 ): any
@@ -523,13 +506,13 @@ export function ReactReduxFirebaseProvider(
  */
 export interface ReactReduxFirebaseProviderProps {
   firebase: typeof Firebase
-  config: ReactReduxFirebaseConfig
+  config: Partial<ReactReduxFirebaseConfig>
   dispatch: Dispatch
   children?: React.ReactNode
   initalizeAuth?: boolean
   createFirestoreInstance?: (
     firebase: typeof Firebase,
-    config: ReactReduxFirebaseConfig,
+    config: Partial<ReduxFirestoreConfig>,
     dispatch: Dispatch
   ) => object
 }
@@ -542,9 +525,60 @@ export namespace ReduxFirestoreContext {
 }
 
 interface ReactReduxFirebaseConfig {
-  userProfile: string
+  attachAuthIsReady: boolean
+  autoPopulateProfile: boolean
+  dispatchOnUnsetListener: boolean
+  dispatchRemoveAction: boolean
+  enableEmptyAuthChanges: boolean
+  enableLogging: boolean
+  enableRedirectHandling: boolean
+  firebaseStateName: string
+  logErrors: boolean
+  presence: any
+  preserveOnEmptyAuthChange: any
+  preserveOnLogout: any
+  resetBeforeLogin: boolean
+  sessions: string
+  setProfilePopulateResults: boolean
+  updateProfileOnLogin: boolean
+  userProfile: string | null
   // Use Firestore for Profile instead of Realtime DB
   useFirestoreForProfile?: boolean
+}
+
+export interface ReduxFirestoreConfig {
+  enableLogging: boolean
+
+  helpersNamespace: string | null
+
+  // https://github.com/prescottprue/redux-firestore#loglistenererror
+  logListenerError: boolean
+
+  // https://github.com/prescottprue/redux-firestore#enhancernamespace
+  enhancerNamespace: string
+
+  // https://github.com/prescottprue/redux-firestore#allowmultiplelisteners
+  allowMultipleListeners:
+    | ((listenerToAttach: any, currentListeners: any) => boolean)
+    | boolean
+
+  // https://github.com/prescottprue/redux-firestore#preserveondelete
+  preserveOnDelete: null | object
+
+  // https://github.com/prescottprue/redux-firestore#preserveonlistenererror
+  preserveOnListenerError: null | object
+
+  // https://github.com/prescottprue/redux-firestore#onattemptcollectiondelete
+  onAttemptCollectionDelete: null | ((queryOption, dispatch, firebase) => void)
+
+  // https://github.com/prescottprue/redux-firestore#mergeordered
+  mergeOrdered: boolean
+
+  // https://github.com/prescottprue/redux-firestore#mergeordereddocupdate
+  mergeOrderedDocUpdate: boolean
+
+  // https://github.com/prescottprue/redux-firestore#mergeorderedcollectionupdates
+  mergeOrderedCollectionUpdates: boolean
 }
 
 /**
@@ -552,11 +586,11 @@ interface ReactReduxFirebaseConfig {
  */
 export interface ReduxFirestoreProviderProps {
   firebase: typeof Firebase
-  config: ReactReduxFirebaseConfig
+  config: Partial<ReactReduxFirebaseConfig>
   dispatch: (action: object) => void
   createFirestoreInstance: (
     firebase: typeof Firebase,
-    config: ReactReduxFirebaseConfig,
+    configs: Partial<ReduxFirestoreConfig>,
     dispatch: Dispatch
   ) => object
   children?: React.ReactNode
