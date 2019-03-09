@@ -12,11 +12,12 @@ _redux-thunk integration_
 ```javascript
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { reactReduxFirebase } from 'react-redux-firebase';
+import firebase from 'firebase';
+import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
 import makeRootReducer from './reducers';
-import { getFirebase } from 'react-redux-firebase';
 
 const fbConfig = {} // your firebase config
+firebase.initializeApp(fbConfig)
 
 const store = createStore(
   makeRootReducer(),
@@ -26,7 +27,7 @@ const store = createStore(
       // Pass getFirebase function as extra argument
       thunk.withExtraArgument(getFirebase)
     ]),
-    reactReduxFirebase(fbConfig)
+    reactReduxFirebase(firebase)
   )
 );
 // then later
