@@ -105,8 +105,8 @@ Firestore queries can be created in two ways:
     firestoreConnect((props) => [
       { collection: 'todos', doc: props.todoId } // or `todos/${props.todoId}`
     ]),
-    connect(({ firestore: { ordered } }, props) => ({
-      todos: ordered.todos && ordered.todos[todoId]
+    connect(({ firestore: { data } }, props) => ({
+      todos: data.todos && data.todos[todoId]
     }))
   )(SomeComponent)
   ```
