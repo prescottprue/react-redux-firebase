@@ -331,7 +331,15 @@ interface Storage {
     path: string,
     files: File,
     dbPath?: string,
-    options?: Object
+    options?: {
+      name:
+        | string
+        | ((
+            file: File,
+            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
+            uploadConfig: object
+          ) => string)
+    }
   ) => Promise<StorageTypes.UploadTaskSnapshot>
 
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html#uploadfiles
@@ -339,7 +347,15 @@ interface Storage {
     path: string,
     files: File[],
     dbPath?: string,
-    options?: Object
+    options?: {
+      name:
+        | string
+        | ((
+            file: File,
+            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
+            uploadConfig: object
+          ) => string)
+    }
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }[]>
 }
 
