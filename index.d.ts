@@ -222,7 +222,7 @@ interface FirestoreStatics {
   Query: FirestoreTypes.Query
   QueryDocumentSnapshot: FirestoreTypes.QueryDocumentSnapshot
   QuerySnapshot: FirestoreTypes.QuerySnapshot
-  Timestamp: FirestoreTypes.Timestamp
+  Timestamp: FirestoreTypes.FieldValue
   Transaction: FirestoreTypes.Transaction
   WriteBatch: FirestoreTypes.WriteBatch
 }
