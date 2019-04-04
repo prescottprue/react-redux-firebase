@@ -1,9 +1,9 @@
-import React from 'react'
+import * as React from 'react'
 import logo from './logo.svg';
 import './App.css';
-import { withFirebase } from 'react-redux-firebase'
+import { withFirebase, EnhancedFirebaseInstance } from 'react-redux-firebase'
 
-function Home({ firebase }) {
+const Home: React.FunctionComponent<{ firebase: EnhancedFirebaseInstance }> = function Home({ firebase }) {
   console.log('firebase', firebase)
   return (
     <div className="Home">
