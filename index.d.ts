@@ -113,24 +113,7 @@ export const constants: {
     UNAUTHORIZED_ERROR: string
     UNSET_LISTENER: string
   }
-  defaultConfig: {
-    attachAuthIsReady: boolean
-    autoPopulateProfile: boolean
-    dispatchOnUnsetListener: boolean
-    dispatchRemoveAction: boolean
-    enableEmptyAuthChanges: boolean
-    enableLogging: boolean
-    enableRedirectHandling: boolean
-    firebaseStateName: string
-    presence: any
-    preserveOnEmptyAuthChange: any
-    preserveOnLogout: any
-    resetBeforeLogin: boolean
-    sessions: string
-    setProfilePopulateResults: boolean
-    updateProfileOnLogin: boolean
-    userProfile: any
-  }
+  defaultConfig: ReactReduxFirebaseConfig
 }
 
 /**
@@ -148,7 +131,7 @@ export function createFirebaseConnect(...args: any[]): any
  */
 export function createFirebaseInstance(
   firebase: typeof Firebase,
-  configs: any,
+  configs: Partial<ReduxFirestoreConfig>,
   dispatch: Dispatch,
   ...args: any[]
 ): any
@@ -175,16 +158,16 @@ export interface FirestoreQueryOptions {
   orderBy?: OrderByOptions | OrderByOptions[]
   // https://github.com/prescottprue/redux-firestore#limit
   limit?: number
-  // https://github.com/prescottprue/redux-firestore#startat
-  startAt?: number
-  // https://github.com/prescottprue/redux-firestore#startafter
-  startAfter?: number
-  // https://github.com/prescottprue/redux-firestore#endat
-  endAt?: number
-  // https://github.com/prescottprue/redux-firestore#endbefore
-  endBefore?: number
   // https://github.com/prescottprue/redux-firestore#storeas
   storeAs?: string
+  // https://github.com/prescottprue/redux-firestore#startat
+  startAt?: FirestoreTypes.DocumentSnapshot | any | any[]
+  // https://github.com/prescottprue/redux-firestore#startafter
+  startAfter?: FirestoreTypes.DocumentSnapshot | any | any[]
+  // https://github.com/prescottprue/redux-firestore#endat
+  endAt?: FirestoreTypes.DocumentSnapshot | any | any[]
+  // https://github.com/prescottprue/redux-firestore#endbefore
+  endBefore?: FirestoreTypes.DocumentSnapshot | any | any[]
 }
 
 // https://github.com/prescottprue/redux-firestore#api
@@ -215,10 +198,11 @@ interface ReduxFirestoreApi {
   runTransaction: (transaction: WithFirestoreProps['firestore']) => Promise<any>
 
   // https://github.com/prescottprue/redux-firestore#onsnapshotsetlistener
-  onSnapshot: (options: FirestoreQueryOptions) => void
+  onSnapshot: (options: FirestoreQueryOptions) => Promise<void>
+  setListener: (options: FirestoreQueryOptions) => Promise<void>
 
   //https://github.com/prescottprue/redux-firestore#setlisteners
-  setListener: (options: FirestoreQueryOptions) => void
+  setListeners: (optionsArray: FirestoreQueryOptions[]) => Promise<void>
 
   // https://github.com/prescottprue/redux-firestore#unsetlistener--unsetlisteners
   unsetListener: (options: FirestoreQueryOptions) => void
@@ -238,7 +222,7 @@ interface FirestoreStatics {
   Query: FirestoreTypes.Query
   QueryDocumentSnapshot: FirestoreTypes.QueryDocumentSnapshot
   QuerySnapshot: FirestoreTypes.QuerySnapshot
-  Timestamp: FirestoreTypes.Timestamp
+  Timestamp: FirestoreTypes.FieldValue
   Transaction: FirestoreTypes.Transaction
   WriteBatch: FirestoreTypes.WriteBatch
 }
@@ -347,7 +331,15 @@ interface Storage {
     path: string,
     files: File,
     dbPath?: string,
-    options?: Object
+    options?: {
+      name:
+        | string
+        | ((
+            file: File,
+            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
+            uploadConfig: object
+          ) => string)
+    }
   ) => Promise<StorageTypes.UploadTaskSnapshot>
 
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html#uploadfiles
@@ -355,7 +347,15 @@ interface Storage {
     path: string,
     files: File[],
     dbPath?: string,
-    options?: Object
+    options?: {
+      name:
+        | string
+        | ((
+            file: File,
+            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
+            uploadConfig: object
+          ) => string)
+    }
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }[]>
 }
 
@@ -522,13 +522,13 @@ export function ReactReduxFirebaseProvider(
  */
 export interface ReactReduxFirebaseProviderProps {
   firebase: typeof Firebase
-  config: ReactReduxFirebaseConfig
+  config: Partial<ReactReduxFirebaseConfig>
   dispatch: Dispatch
   children?: React.ReactNode
   initalizeAuth?: boolean
   createFirestoreInstance?: (
     firebase: typeof Firebase,
-    config: ReactReduxFirebaseConfig,
+    configs: Partial<ReduxFirestoreConfig>,
     dispatch: Dispatch
   ) => object
 }
@@ -541,9 +541,60 @@ export namespace ReduxFirestoreContext {
 }
 
 interface ReactReduxFirebaseConfig {
-  userProfile: string
+  attachAuthIsReady: boolean
+  autoPopulateProfile: boolean
+  dispatchOnUnsetListener: boolean
+  dispatchRemoveAction: boolean
+  enableEmptyAuthChanges: boolean
+  enableLogging: boolean
+  enableRedirectHandling: boolean
+  firebaseStateName: string
+  logErrors: boolean
+  presence: any
+  preserveOnEmptyAuthChange: any
+  preserveOnLogout: any
+  resetBeforeLogin: boolean
+  sessions: string
+  setProfilePopulateResults: boolean
+  updateProfileOnLogin: boolean
+  userProfile: string | null
   // Use Firestore for Profile instead of Realtime DB
   useFirestoreForProfile?: boolean
+}
+
+export interface ReduxFirestoreConfig {
+  enableLogging: boolean
+
+  helpersNamespace: string | null
+
+  // https://github.com/prescottprue/redux-firestore#loglistenererror
+  logListenerError: boolean
+
+  // https://github.com/prescottprue/redux-firestore#enhancernamespace
+  enhancerNamespace: string
+
+  // https://github.com/prescottprue/redux-firestore#allowmultiplelisteners
+  allowMultipleListeners:
+    | ((listenerToAttach: any, currentListeners: any) => boolean)
+    | boolean
+
+  // https://github.com/prescottprue/redux-firestore#preserveondelete
+  preserveOnDelete: null | object
+
+  // https://github.com/prescottprue/redux-firestore#preserveonlistenererror
+  preserveOnListenerError: null | object
+
+  // https://github.com/prescottprue/redux-firestore#onattemptcollectiondelete
+  onAttemptCollectionDelete: null | ((queryOption, dispatch, firebase) => void)
+
+  // https://github.com/prescottprue/redux-firestore#mergeordered
+  mergeOrdered: boolean
+
+  // https://github.com/prescottprue/redux-firestore#mergeordereddocupdate
+  mergeOrderedDocUpdate: boolean
+
+  // https://github.com/prescottprue/redux-firestore#mergeorderedcollectionupdates
+  mergeOrderedCollectionUpdates: boolean
 }
 
 /**
@@ -551,11 +602,11 @@ interface ReactReduxFirebaseConfig {
  */
 export interface ReduxFirestoreProviderProps {
   firebase: typeof Firebase
-  config: ReactReduxFirebaseConfig
+  config: Partial<ReactReduxFirebaseConfig>
   dispatch: (action: object) => void
   createFirestoreInstance: (
     firebase: typeof Firebase,
-    config: ReactReduxFirebaseConfig,
+    configs: Partial<ReduxFirestoreConfig>,
     dispatch: Dispatch
   ) => object
   children?: React.ReactNode
