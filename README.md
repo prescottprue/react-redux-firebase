@@ -56,7 +56,8 @@ import 'firebase/auth'
 // import 'firebase/firestore' // <- needed if using firestore
 // import 'firebase/functions' // <- needed if using httpsCallable
 import { createStore, combineReducers, compose } from 'redux'
-import { ReactReduxFirebaseProvider, firebaseReducer } from 'react-redux-firebase'
+import ReactReduxFirebaseProvider from 'react-redux-firebase/lib/ReactReduxFirebaseProvider'
+import firebaseReducer from 'react-redux-firebase/lib/reducer'
 // import { createFirestoreInstance, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
 
 const fbConfig = {}
@@ -92,13 +93,15 @@ const rrfProps = {
 }
 
 // Setup react-redux so that connect HOC can be used
-const App = () => (
-  <Provider store={store}>
-    <ReactReduxFirebaseProvider {...rrfProps}>
-      <Todos />
-    </ReactReduxFirebaseProvider>
-  </Provider>
-);
+function App() {
+  return (
+    <Provider store={store}>
+      <ReactReduxFirebaseProvider {...rrfProps}>
+        <Todos />
+      </ReactReduxFirebaseProvider>
+    </Provider>
+  );
+}
 
 render(<App/>, document.getElementById('root'));
 ```
@@ -110,7 +113,7 @@ The Firebase instance can then be grabbed from context within your components (`
 ```jsx
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withFirebase } from 'react-redux-firebase'
+import withFirebase from 'react-redux-firebase/lib/withFirebase'
 import { compose, withHandlers } from 'recompose'
 
 function Todos({ firebase, addSampleTodo }) {
@@ -144,7 +147,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import firebaseConnect from 'react-redux-firebase/lib/firebaseConnect'
+import { isLoaded, isEmpty } from 'react-redux-firebase/lib/helpers'
 
 function Todos({ todos, firebase }) {
   if (!isLoaded(todos)) {
@@ -187,7 +191,8 @@ It is common to make a detail page that loads a single item instead of a whole l
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { firebaseConnect, getVal } from 'react-redux-firebase'
+import { get } from 'lodash'
+import firebaseConnect from 'react-redux-firebase/lib/firebaseConnect'
 import { compose, withHandlers } from 'recompose'
 
 // Component enhancer that loads todo into redux then into the todo prop
@@ -385,7 +390,7 @@ This project exists thanks to all the people who contribute.
 
 Thank you to all our backers! 🙏
 
-* [Reside Network Inc.](https://github.com/reside-eng)
+* [Side Inc.](https://github.com/reside-eng)
 
 [npm-image]: https://img.shields.io/npm/v/react-redux-firebase.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/react-redux-firebase
