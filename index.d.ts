@@ -453,11 +453,19 @@ export interface WithFirebaseProps<ProfileType> {
     }
 }
 
+export interface FirebaseConnectQueryObject {
+  path: string
+  type?: 'value' | 'once' | 'child_added' | 'child_removed' | 'child_changed' | 'child_moved'
+  queryParams?: string[]
+}
+
+export type FirebaseConnectQuery = (FirebaseConnectQueryObject | string)[]
+
 /**
  * React HOC that attaches/detaches Firebase Real Time Database listeners on mount/unmount
  */
 export function firebaseConnect<ProfileType, TInner = {}>(
-  connect?: mapper<TInner, string[]> | string[]
+  connect?: mapper<TInner, FirebaseConnectQuery> | FirebaseConnectQuery
 ): InferableComponentEnhancerWithProps<
   TInner & WithFirebaseProps<ProfileType>,
   WithFirebaseProps<ProfileType>
