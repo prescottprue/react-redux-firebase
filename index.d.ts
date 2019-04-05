@@ -248,7 +248,7 @@ type Credentials =
   | {
       provider: 'facebook' | 'google' | 'twitter'
       type: 'popup' | 'redirect'
-      scopes: string[]
+      scopes?: string[]
     }
   | AuthTypes.AuthCredential
   | {
