@@ -364,7 +364,7 @@ interface Storage {
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }[]>
 }
 
-export interface WithFirebaseProps {
+export interface WithFirebaseProps<ProfileType> {
   firebase: Auth &
     Storage & {
       initializeApp: (options: Object, name?: string) => FirebaseInstance
@@ -453,11 +453,19 @@ export interface WithFirebaseProps {
     }
 }
 
+export interface FirebaseConnectQueryObject {
+  path: string
+  type?: 'value' | 'once' | 'child_added' | 'child_removed' | 'child_changed' | 'child_moved'
+  queryParams?: string[]
+}
+
+export type FirebaseConnectQuery = (FirebaseConnectQueryObject | string)[]
+
 /**
  * React HOC that attaches/detaches Firebase Real Time Database listeners on mount/unmount
  */
 export function firebaseConnect<ProfileType, TInner = {}>(
-  connect?: mapper<TInner, string[]> | string[]
+  connect?: mapper<TInner, FirebaseConnectQuery> | FirebaseConnectQuery
 ): InferableComponentEnhancerWithProps<
   TInner & WithFirebaseProps<ProfileType>,
   WithFirebaseProps<ProfileType>
@@ -526,7 +534,7 @@ export function ReactReduxFirebaseProvider(
  * Props passed to ReactReduxFirebaseContext component
  */
 export interface ReactReduxFirebaseProviderProps {
-  firebase: FirebaseApp
+  firebase: FirebaseInstance
   config: Partial<ReactReduxFirebaseConfig>
   dispatch: Dispatch
   children?: React.ReactNode
@@ -630,7 +638,7 @@ export function ReduxFirestoreProvider(props: ReduxFirestoreProviderProps): any
  */
 export function withFirebase(
   ComponentToWrap: React.ComponentType
-): React.ComponentType<WithFirebaseProps>
+): React.ComponentType<WithFirebaseProps<ProfileType>>
 
 /**
  * React Higher Order Component that passes firestore as a prop (comes from context.store.firestore)
