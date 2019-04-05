@@ -364,7 +364,7 @@ interface Storage {
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }[]>
 }
 
-export interface WithFirebaseProps {
+export interface WithFirebaseProps<ProfileType> {
   firebase: Auth &
     Storage & {
       initializeApp: (options: Object, name?: string) => FirebaseInstance
@@ -526,7 +526,7 @@ export function ReactReduxFirebaseProvider(
  * Props passed to ReactReduxFirebaseContext component
  */
 export interface ReactReduxFirebaseProviderProps {
-  firebase: FirebaseApp
+  firebase: FirebaseInstance
   config: Partial<ReactReduxFirebaseConfig>
   dispatch: Dispatch
   children?: React.ReactNode
@@ -630,7 +630,7 @@ export function ReduxFirestoreProvider(props: ReduxFirestoreProviderProps): any
  */
 export function withFirebase(
   ComponentToWrap: React.ComponentType
-): React.ComponentType<WithFirebaseProps>
+): React.ComponentType<WithFirebaseProps<ProfileType>>
 
 /**
  * React Higher Order Component that passes firestore as a prop (comes from context.store.firestore)
