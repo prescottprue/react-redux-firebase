@@ -34,8 +34,6 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig)
 
-// Initialize Firestore with timeshot settings
-firebase.firestore().settings({ timestampsInSnapshots: true })
 
 // Add BOTH store enhancers when making store creator
 const createStoreWithFirebase = compose(
