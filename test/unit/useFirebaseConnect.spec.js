@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-dom/test-utils'
-import { some, keys, values, isMatch, filter } from 'lodash'
+import { some, isMatch, filter } from 'lodash'
 import { storeWithFirebase, firebaseWithConfig, sleep } from '../utils'
 import useFirebaseConnect, {
   createUseFirebaseConnect
@@ -85,11 +85,10 @@ describe('useFirebaseConnect', () => {
     await sleep()
     parent.setState({ dynamic: null })
     await sleep()
-    console.log(dispatch.args)
     expect(
       filter(dispatch.args, arg =>
         isMatch(arg[0], {
-          type: '@@reactReduxFirebase/SET_LISTENER',
+          type: '@@reactReduxFirebase/SET_LISTENER'
         })
       )
     ).to.have.lengthOf(1)
@@ -132,8 +131,6 @@ describe('useFirebaseConnect', () => {
       )
     ).to.have.lengthOf(1)
   })
-
-
 })
 
 describe('createUseFirebaseConnect', () => {

@@ -85,17 +85,16 @@ describe('firestoreConnect', () => {
       )
     ).to.be.true
   })
-  
+
   it('disables watchers on null as query', async () => {
     const { parent, dispatch } = createContainer()
     await sleep()
     parent.setState({ dynamic: null })
     await sleep()
-    console.log(dispatch.args)
     expect(
       filter(dispatch.args, arg =>
         isMatch(arg[0], {
-          type: '@@reduxFirestore/SET_LISTENER',
+          type: '@@reduxFirestore/SET_LISTENER'
         })
       )
     ).to.have.lengthOf(1)

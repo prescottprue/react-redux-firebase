@@ -27,7 +27,7 @@ export const createUseFirebaseConnect = () => (dataOrFn = []) => {
 
   const firebaseEvents = useMemo(
     () => {
-      if(!data) { 
+      if (!data) {
         return null
       }
       if (isArray(data)) {

@@ -1,5 +1,5 @@
 import { isArray } from 'lodash'
-import React, { useMemo, useEffect } from 'react'
+import { useMemo, useEffect } from 'react'
 import { createCallable } from './utils'
 import useFirestore from './useFirestore'
 
@@ -14,14 +14,12 @@ import useFirestore from './useFirestore'
  * @example <caption>Basic</caption>
  * // props.firebase set on App component as firebase object with helpers
  * import { createUseFirestoreConnect } from 'react-redux-firebase'
- * 
+ *
  * const firestoreConnect = createUseFirestoreConnect()
- * 
+ *
  * export default useFirestoreConnect()
  */
-export const createUseFirestoreConnect = () => (
-  dataOrFn = []
-) => {
+export const createUseFirestoreConnect = () => (dataOrFn = []) => {
   const firestore = useFirestore()
 
   const inputAsFunc = createCallable(dataOrFn)
@@ -30,7 +28,7 @@ export const createUseFirestoreConnect = () => (
 
   const payload = useMemo(
     () => {
-      if(!data) { 
+      if (!data) {
         return null
       }
       if (isArray(data)) {
@@ -48,7 +46,7 @@ export const createUseFirestoreConnect = () => (
 
   useEffect(
     () => {
-      if (data !== null) { 
+      if (data !== null) {
         firestore.setListeners(payload)
         return () => {
           firestore.unsetListeners(payload)
@@ -62,7 +60,7 @@ export const createUseFirestoreConnect = () => (
 /**
  * @name useFirestoreConnect
  * @description React hook that automatically listens/unListens
- * to provided Cloud Firestore paths. Make sure you have required/imported 
+ * to provided Cloud Firestore paths. Make sure you have required/imported
  * Cloud Firestore, including it's reducer, before attempting to use.
  * **Note** Populate is not yet supported.
  * **Note2** Only single path is allowed per one hook
@@ -76,10 +74,10 @@ export const createUseFirestoreConnect = () => (
  *
  * const TodosList = ({ todosList }) => {
  *   useFirebaseConnect('todos') // sync todos collection from Firestore into redux
- *   
+ *
  *   return <ul>{_.map(todosList, todo => <li>{todo}</li>)}</ul>
  * }
- * 
+ *
  * // pass todos list from redux as props.todosList
  * export default compose(
  *   connect((state) => ({
@@ -93,18 +91,18 @@ export const createUseFirestoreConnect = () => (
  * import { useFirebaseConnect } from 'react-redux-firebase'
  *
  * const TodoItem = ({ todoId, todoData }) => {
- *   cosnt query = useMemo( // Make sure that everytime component rerender will not create a new query object which cause unnecessary set/unset listener 
+ *   cosnt query = useMemo( // Make sure that everytime component rerender will not create a new query object which cause unnecessary set/unset listener
  *     () => ({
  *       collection: 'todos',
- *       doc: todoId 
+ *       doc: todoId
  *     }),
  *     [todoId] // useMemo's dependency
  *   )
  *   useFirebaseConnect(query) // sync todos collection from Firestore into redux
- *   
+ *
  *   return <div>{JSON.stringify(todoData)}</div>
  * }
- * 
+ *
  * // pass todo data from redux as props.todosList
  * export default compose(
  *   connect((state) => ({

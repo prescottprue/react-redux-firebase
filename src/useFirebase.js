@@ -8,7 +8,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * **WARNING!!** This is an advanced feature, and should only be used when
  * needing to access a firebase instance created under a different store key.
  * Firebase state (`state.firebase`)
- * @return {Function} - A hook fucntion that return firebase object. 
+ * @return {Function} - A hook fucntion that return firebase object.
  * @example <caption>Basic</caption>
  * import { createUseFirebase } from 'react-redux-firebase'
  *
