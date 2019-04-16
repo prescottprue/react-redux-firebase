@@ -3,24 +3,17 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
  * @name createUseFirebase
- * @description Function that creates a Higher Order Component that
- * which provides `firebase` and `dispatch` as a props to React Components.
+ * @description Function that creates a react hook which provides `firebase` object.
  *
  * **WARNING!!** This is an advanced feature, and should only be used when
  * needing to access a firebase instance created under a different store key.
- * @param {String} [storeKey='store'] - Name of redux store which contains
  * Firebase state (`state.firebase`)
- * @return {Function} - Higher Order Component which accepts an array of
- * watchers config and wraps a React Component
+ * @return {Function} - A hook fucntion that return firebase object. 
  * @example <caption>Basic</caption>
- * // props.firebase set on App component as firebase object with helpers
- * import { createWithFirebase } from 'react-redux-firebase'
+ * import { createUseFirebase } from 'react-redux-firebase'
  *
- * // create withFirebase that uses another redux store
- * const withFirebase = createWithFirebase('anotherStore')
- *
- * // use the withFirebase to wrap a component
- * export default withFirebase(SomeComponent)
+ * // create useFirebase
+ * const useFirebase = createUseFirebase()
  */
 export const createUseFirebase = () => () => {
   return useContext(ReactReduxFirebaseContext)
@@ -34,16 +27,15 @@ export const createUseFirebase = () => () => {
  * **NOTE**: This version of the Firebase library has extra methods, config,
  * and functionality which give it it's capabilities such as dispatching
  * actions.
- * @return {Object} - Firebase object
+ * @return {Object} - Firebase instance
  * @example <caption>Basic</caption>
  * import { useFirebase } from 'react-redux-firebase'
  *
  * function AddData() {
  *   const firebase = useFirebase()
- *   const push = firebase.push
  *   return (
  *     <div>
- *       <button onClick={() => push('todos', { done: false, text: 'Sample' })}>
+ *       <button onClick={() => firebase.push('todos', { done: false, text: 'Sample' })}>
  *         Add Sample Todo
  *       </button>
  *     </div>

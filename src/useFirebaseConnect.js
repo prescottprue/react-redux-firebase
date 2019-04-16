@@ -27,6 +27,9 @@ export const createUseFirebaseConnect = () => (dataOrFn = []) => {
 
   const firebaseEvents = useMemo(
     () => {
+      if(!data) { 
+        return null
+      }
       if (isArray(data)) {
         if (data.length > 1) {
           throw new Error(
@@ -42,12 +45,14 @@ export const createUseFirebaseConnect = () => (dataOrFn = []) => {
 
   useEffect(
     () => {
-      watchEvents(firebase, firebase.dispatch, firebaseEvents)
-      return () => {
-        unWatchEvents(firebase, firebase.dispatch, firebaseEvents)
+      if (data !== null) {
+        watchEvents(firebase, firebase.dispatch, firebaseEvents)
+        return () => {
+          unWatchEvents(firebase, firebase.dispatch, firebaseEvents)
+        }
       }
     },
-    [firebaseEvents[0].path]
+    [data]
   )
 }
 
@@ -56,7 +61,8 @@ export const createUseFirebaseConnect = () => (dataOrFn = []) => {
  * @name useFirebaseConnect
  * @description Hook that automatically listens/unListens
  * to provided firebase paths using React's useEffect hook.
- * @param {Array} watchArray - Object or string for path to sync
+ * **Note** Only single path is allowed per one hook
+ * @param {Object|String} queriesConfig - Object or string for path to sync
  * from Firebase or null if hook doesn't need to sync.
  * Can also be a function that returns an object or a path string.
  * @example <caption>Ordered Data</caption>

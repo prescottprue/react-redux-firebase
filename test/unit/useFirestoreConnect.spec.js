@@ -1,28 +1,32 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-dom/test-utils'
-import { some, keys, values, isMatch, filter } from 'lodash'
-import { storeWithFirebase, firebaseWithConfig, sleep } from '../utils'
-import useFirebaseConnect, {
-  createUseFirebaseConnect
-} from '../../src/useFirebaseConnect'
+import { some, isMatch, filter } from 'lodash'
+import { storeWithFirestore, firebaseWithConfig, sleep } from '../utils'
+import useFirestoreConnect, {
+  createUseFirestoreConnect
+} from '../../src/useFirestoreConnect'
 import ReactReduxFirebaseProvider from '../../src/ReactReduxFirebaseProvider'
 import { createFirestoreInstance } from 'redux-firestore'
 
 /* eslint-disable react/prop-types */
 function TestComponent({ dynamicProps }) {
-  useFirebaseConnect(!dynamicProps ? dynamicProps : `test/${dynamicProps}`)
+  useFirestoreConnect(
+    dynamicProps === null
+      ? dynamicProps
+      : `test${dynamicProps ? '/' + dynamicProps : ''}`
+  )
   return <div />
 }
 /* eslint-enable react/prop-types */
 
 const createContainer = (additionalWrappedProps, listeners) => {
   const firebase = firebaseWithConfig()
-  const store = storeWithFirebase()
+  const store = storeWithFirestore()
   sinon.spy(store, 'dispatch')
 
   class Container extends Component {
-    state = { test: 'testing', dynamic: 'start' }
+    state = { test: 'testing', dynamic: '' }
 
     render() {
       return (
@@ -51,15 +55,16 @@ const createContainer = (additionalWrappedProps, listeners) => {
   }
 }
 
-describe('useFirebaseConnect', () => {
-  it('enebles watchers on mount', async () => {
+describe('firestoreConnect', () => {
+  it('enables watchers on mount', async () => {
     const { dispatch } = createContainer()
     await sleep()
     expect(
       some(dispatch.args, arg =>
         isMatch(arg[0], {
-          type: '@@reactReduxFirebase/SET_LISTENER',
-          path: 'test/start'
+          type: '@@reduxFirestore/SET_LISTENER',
+          meta: { collection: 'test' },
+          payload: { name: 'test' }
         })
       )
     ).to.be.true
@@ -73,13 +78,14 @@ describe('useFirebaseConnect', () => {
     expect(
       some(dispatch.args, arg =>
         isMatch(arg[0], {
-          type: '@@reactReduxFirebase/UNSET_LISTENER',
-          path: 'test/start'
+          type: '@@reduxFirestore/UNSET_LISTENER',
+          meta: { collection: 'test' },
+          payload: { name: 'test' }
         })
       )
     ).to.be.true
   })
-
+  
   it('disables watchers on null as query', async () => {
     const { parent, dispatch } = createContainer()
     await sleep()
@@ -89,13 +95,13 @@ describe('useFirebaseConnect', () => {
     expect(
       filter(dispatch.args, arg =>
         isMatch(arg[0], {
-          type: '@@reactReduxFirebase/SET_LISTENER',
+          type: '@@reduxFirestore/SET_LISTENER',
         })
       )
     ).to.have.lengthOf(1)
   })
 
-  it('does not change watchers props changes that do not change listener paths', async () => {
+  it('does not change watchers with props changes that do not change listener paths', async () => {
     const { parent, dispatch } = createContainer()
     await sleep()
     parent.setState({ test: 'somethingElse' })
@@ -103,7 +109,7 @@ describe('useFirebaseConnect', () => {
     expect(
       filter(dispatch.args, arg =>
         isMatch(arg[0], {
-          type: '@@reactReduxFirebase/SET_LISTENER'
+          type: '@@reduxFirestore/SET_LISTENER'
         })
       )
     ).to.have.lengthOf(1)
@@ -118,26 +124,26 @@ describe('useFirebaseConnect', () => {
     expect(
       filter(dispatch.args, arg =>
         isMatch(arg[0], {
-          type: '@@reactReduxFirebase/UNSET_LISTENER',
-          path: 'test/start'
+          type: '@@reduxFirestore/UNSET_LISTENER',
+          meta: { collection: 'test' },
+          payload: { name: 'test' }
         })
       )
     ).to.have.lengthOf(1)
     expect(
       filter(dispatch.args, arg =>
         isMatch(arg[0], {
-          type: '@@reactReduxFirebase/SET_LISTENER',
-          path: 'test/somethingElse'
+          type: '@@reduxFirestore/SET_LISTENER',
+          meta: { collection: 'test', doc: 'somethingElse' },
+          payload: { name: 'test/somethingElse' }
         })
       )
     ).to.have.lengthOf(1)
   })
-
-
 })
 
-describe('createUseFirebaseConnect', () => {
-  it('accepts a different store key', () => {
-    createUseFirebaseConnect('store2')
+describe('createUseFirestoreConnect', () => {
+  it('creates a function', () => {
+    expect(createUseFirestoreConnect('store2')).to.be.a.function
   })
 })
