@@ -88,7 +88,7 @@ export default compose(
 
 ### Decorators
 
-They are completely optional, but ES7 Decorators can be used. [The Simple Example](examples/simple) shows implementation without decorators, while [the Decorators Example](examples/decorators) shows the same application with decorators implemented.
+They are completely optional, but ES7 Decorators can be used. [The Simple Example](https://github.com/prescottprue/react-redux-firebase/blob/master/examples/complete/simple/src/Home.js) shows implementation without decorators, while [the Decorators Example](https://github.com/prescottprue/react-redux-firebase/blob/master/examples/snippets/decorators/App.js) shows the same application with decorators implemented.
 
 A side by side comparison using [react-redux](https://github.com/reactjs/react-redux)'s `connect` function/HOC is the best way to illustrate the difference:
 
