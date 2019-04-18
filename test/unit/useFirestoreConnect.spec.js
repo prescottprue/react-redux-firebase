@@ -2,7 +2,12 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-dom/test-utils'
 import { some, isMatch, filter } from 'lodash'
-import { storeWithFirestore, firebaseWithConfig, sleep } from '../utils'
+import {
+  ErrorBoundary,
+  storeWithFirestore,
+  firebaseWithConfig,
+  sleep
+} from '../utils'
 import useFirestoreConnect, {
   createUseFirestoreConnect
 } from '../../src/useFirestoreConnect'
@@ -20,7 +25,11 @@ function TestComponent({ dynamicProps }) {
 }
 /* eslint-enable react/prop-types */
 
-const createContainer = (additionalWrappedProps, listeners) => {
+const createContainer = ({
+  additionalComponentProps,
+  listeners,
+  component = TestComponent
+} = {}) => {
   const firebase = firebaseWithConfig()
   const store = storeWithFirestore()
   sinon.spy(store, 'dispatch')
@@ -29,17 +38,20 @@ const createContainer = (additionalWrappedProps, listeners) => {
     state = { test: 'testing', dynamic: '' }
 
     render() {
+      const InnerComponent = component
       return (
         <ReactReduxFirebaseProvider
           dispatch={store.dispatch}
           firebase={firebase}
           createFirestoreInstance={createFirestoreInstance}
           config={{}}>
-          <TestComponent
-            dynamicProps={this.state.dynamic}
-            testProps={this.state.test}
-            {...additionalWrappedProps}
-          />
+          <ErrorBoundary>
+            <InnerComponent
+              dynamicProps={this.state.dynamic}
+              testProps={this.state.test}
+              {...additionalComponentProps}
+            />
+          </ErrorBoundary>
         </ReactReduxFirebaseProvider>
       )
     }
@@ -138,6 +150,17 @@ describe('firestoreConnect', () => {
         })
       )
     ).to.have.lengthOf(1)
+  })
+
+  it('should not accept array', async () => {
+    const useFirestoreConnectSpy = sinon.spy(useFirestoreConnect)
+    const Component = () => {
+      useFirestoreConnectSpy(['test'])
+      return <div />
+    }
+    createContainer({ component: Component })
+    await sleep()
+    expect(useFirestoreConnectSpy.threw()).to.be.true
   })
 })
 

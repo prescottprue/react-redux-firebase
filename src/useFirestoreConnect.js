@@ -19,7 +19,7 @@ import useFirestore from './useFirestore'
  *
  * export default useFirestoreConnect()
  */
-export const createUseFirestoreConnect = () => (dataOrFn = []) => {
+export const createUseFirestoreConnect = () => dataOrFn => {
   const firestore = useFirestore()
 
   const inputAsFunc = createCallable(dataOrFn)
@@ -32,12 +32,7 @@ export const createUseFirestoreConnect = () => (dataOrFn = []) => {
         return null
       }
       if (isArray(data)) {
-        if (data.length > 1) {
-          throw new Error(
-            "Array of multiple query isn't allowed inside useFirestoreConnect hook."
-          )
-        }
-        return data
+        throw new Error("Array isn't allowed inside useFirestoreConnect hook.")
       }
       return [data]
     },

@@ -18,7 +18,7 @@ import useFirebase from './useFirebase'
  * // create firebase connect that uses another redux store
  * const useFirebaseConnect = createUseFirebaseConnect()
  */
-export const createUseFirebaseConnect = () => (dataOrFn = []) => {
+export const createUseFirebaseConnect = () => dataOrFn => {
   const firebase = useFirebase()
 
   const inputAsFunc = createCallable(dataOrFn)
@@ -31,12 +31,7 @@ export const createUseFirebaseConnect = () => (dataOrFn = []) => {
         return null
       }
       if (isArray(data)) {
-        if (data.length > 1) {
-          throw new Error(
-            "Array of multiple paths isn't allowed inside useFirebaseConnect hook."
-          )
-        }
-        return getEventsFromInput(data)
+        throw new Error("Array isn't allowed inside useFirebaseConnect hook.")
       }
       return getEventsFromInput([data])
     },
