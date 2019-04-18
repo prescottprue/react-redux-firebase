@@ -57,7 +57,7 @@ const createStoreWithFirebase = compose(
 const store = createStoreWithFirebase(rootReducer)
 ```
 
-View the [config section](/enhancer.html) for full list of configuration options.
+View the [config section](docs/api/enhancer) for full list of configuration options.
 
 ## Use in Components
 
