@@ -12,20 +12,20 @@ import { connect } from 'react-redux'
 import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
 // import GoogleButton from 'react-google-button' // optional
 
-export function LoginPage ({ firebase, auth }) {
+function LoginPage ({ firebase, auth }) {
+  function loginWithGoogle() {
+    return firebase.login({ provider: 'google', type: 'popup' })
+  }
   return (
     <div className={classes.container}>
-      {/* <GoogleButton/> button can be used instead */ }
-      <button onClick={() => firebase.login({ provider: 'google', type: 'popup' })}>
-        Login With Google
-      </button>
       <div>
         <h2>Auth</h2>
         {
           !isLoaded(auth)
           ? <span>Loading...</span>
           : isEmpty(auth)
-            ? <span>Not Authed</span>
+            // <GoogleButton/> button can be used instead
+            ? <button onClick={loginWithGoogle}>Login With Google</button>
             : <pre>{JSON.stringify(auth, null, 2)}</pre>
         }
       </div>
@@ -55,28 +55,18 @@ import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
-// import GoogleButton from 'react-google-button' // optional
 
-function LoginPage ({ firebase, auth }) {
-  // Wait for auth to load
+function AuthPage ({ firebase, auth }) {
   if (!isLoaded(auth)) {
-
+    return <span>Loading...</span>
+  }
+  if (isEmpty(auth)) {
+    return <span>Not Authed, Please Login</span>
   }
   return (
-    <div className={classes.container}>
-      <button // <GoogleButton/> button can be used instead
-        onClick={() => firebase.login({ provider: 'google', type: 'popup' })}
-      >Login With Google</button>
-      <div>
-        <h2>Auth</h2>
-        {
-          !isLoaded(auth)
-          ? <span>Loading...</span>
-          : isEmpty(auth)
-            ? <span>Not Authed</span>
-            : <pre>{JSON.stringify(auth, null, 2)}</pre>
-        }
-      </div>
+    <div>
+      <h3>Auth Data</h3>
+      <pre>{JSON.stringify(auth, null, 2)}</pre>
     </div>
   )
 }
@@ -133,11 +123,13 @@ reactReduxFirebase(fbConfig, rrfConfig)
 
 Now when logging in through `login` method, user will be listed as online until they logout or end the session (close the tab or window).
 
-**Note:** Currently this is not triggered on logout, but that is a [planned feature for the upcoming v3.0.0 version](https://github.com/prescottprue/react-redux-firebase/wiki/v3.0.0-Roadmap). Currently, the presense status will only change when the user becomes disconnected from the Database (i.e. closes the tab).
+**NOTE:** Currently this is not triggered on logout, but that is a [planned feature for the upcoming v3.0.0 version](https://github.com/prescottprue/react-redux-firebase/wiki/v3.0.0-Roadmap). Currently, the presense status will only change when the user becomes disconnected from the Database (i.e. closes the tab).
 
 ## Wait For Auth To Be Ready (SSR)
 
 Waiting for auth to be ready is usually only required in an SSR environment.
+
+**NOTE:** This should only be used to prevent loading in a server side environment - if this is done directly on a client it can cause long application bootup times.
 
 ```js
 import firebase from 'firebase'
@@ -187,6 +179,8 @@ In order for this to work, the promise must know the name of the location within
 #### Custom Auth Ready Logic
 
 If you want to write your own custom logic for the promise that actually confirms that auth is ready, you can pass a promise as the `authIsReady` config option.
+
+**NOTE:** This should only be used to prevent loading in a server side environment - if this is done directly on a client it can cause long application bootup times.
 
 Here is an example showing the default logic:
 
