@@ -113,7 +113,7 @@ describe('enhancer', () => {
       it('accepts object', async () => {
         // undefined represents snapshot
         const res = await store.firebase.update('test', { some: 'asdf' })
-        expect(res).to.equal(undefined)
+        expect(res).to.be.undefined
       })
     })
 
@@ -124,7 +124,7 @@ describe('enhancer', () => {
         })
         const after = await valAtPath('test')
         expect(after.updatedAt).to.exist
-        expect(updateRes).to.equal(undefined)
+        expect(updateRes).to.be.undefined
       })
     })
 
@@ -178,7 +178,7 @@ describe('enhancer', () => {
         await store.firebase.remove('test')
         const afterSnap = await store.firebase.ref('test').once('value')
         // confirm data was removed
-        expect(afterSnap.val()).to.equal(null)
+        expect(afterSnap.val()).to.be.null
       })
 
       it('calls onComplete on success', async () => {

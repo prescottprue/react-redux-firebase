@@ -89,15 +89,15 @@ describe('Utils: Auth', () => {
           ...firebase,
           _: { config: { presence: 'online' }, authUid: 'test' }
         })
-      ).to.equal(undefined)
+      ).to.be.undefined
     })
 
     it('exits if database is not defined', () => {
-      expect(setupPresence(() => {}, {})).to.equal(undefined)
+      expect(setupPresence(() => {}, {})).to.be.undefined
     })
 
     it('exits if database.ServerValue', () => {
-      expect(setupPresence(() => {}, { database: {} })).to.equal(undefined)
+      expect(setupPresence(() => {}, { database: {} })).to.be.undefined
     })
   })
 })
