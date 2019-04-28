@@ -5,6 +5,12 @@ parser: babel-eslint
 extends: [standard, standard-react, prettier, prettier/react]
 plugins: [babel, react, prettier]
 
+settings: {
+  react: {
+    version: 'detect'
+  }
+}
+
 env:
   browser: true
   es6: true
