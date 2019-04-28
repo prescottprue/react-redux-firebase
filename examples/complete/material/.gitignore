@@ -8,6 +8,6 @@
 **/node_modules
 
 # React App
-**/dist
+**/build
 src/config.js
 .env
