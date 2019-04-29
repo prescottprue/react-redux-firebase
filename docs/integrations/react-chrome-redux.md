@@ -27,13 +27,13 @@ const store = new Store({
 // Do not call firebaseConnect here
 export default connect(null, { login })(LoginForm);
 ```
-Then, create your alias in the background script, import `react-redux-firebase` as well as `redux-thunk` to wait for Firebase's reply before updating the state (see reply in [ issue #84 on react-chrome-redux](https://github.com/tshaddix/react-chrome-redux/issues/84)).
+Then, create your alias in the background script, import `react-redux-firebase` as well as `redux-thunk` to wait for Firebase's reply before updating the state (see reply in [issue #84 on react-chrome-redux](https://github.com/tshaddix/react-chrome-redux/issues/84)).
 
 ```js
 // in event (background script)
 // ...
 import thunk from 'redux-thunk'
-import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
+import { reactReduxFirebase } from 'react-redux-firebase'
 // ...
 // Add redux Firebase to compose
 const createStoreWithFirebase = compose(
@@ -49,27 +49,4 @@ const store = createStoreWithFirebase(
 wrapStore(store, {
   portName: 'example'
 });
-// ...
-const aliases = {
-  USER_LOGGING_IN: (payload) => {
-    return (dispatch) => {
-      getFirebase().login({
-        email: payload.data.email,
-        password: payload.data.password
-      })
-      .then(() => {
-        dispatch({
-          type: constants.USER_LOGGED_IN,
-          payload: "ok"
-        })
-      })
-      .catch(() => {
-        dispatch({
-          type: constants.USER_LOGGED_OUT,
-          payload: "logout"
-        })
-      })
-    }
-  }
-};
 ```

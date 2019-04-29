@@ -11,7 +11,6 @@ Just like [redux](http://redux.js.org/docs/api/index.html), the react-redux-fire
 * [withFirestore](/docs/api/withFirestore.md)
 * [reducer](/docs/api/reducer.md) (also exported as `firebaseReducer`)
 * [reactReduxFirebase](/docs/api/enhancer.md)
-* [getFirebase](/docs/api/get-firebase.md)
 * [constants](/docs/api/constants.md)
 * [actionTypes](/docs/api/constants.md)
 * [helpers](/docs/api/helpers.md)

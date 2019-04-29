@@ -8,7 +8,7 @@ For Examples of how to use these methods, please visit the [recipes section](/do
 
 Upload an array of files to a location on Firebase storage. This includes the option to also write meta data for the object to Firebase database.
 
-Available on `props.firebase` if using `firebaseConnect` HOC or using `getFirebase`.
+Available on `props.firebase` if using `firebaseConnect` HOC.
 
 #### Parameters
 -   `path` [**String**][string-url] - Path within Firebase Storage at which to upload File.
@@ -24,7 +24,7 @@ Available on `props.firebase` if using `firebaseConnect` HOC or using `getFireba
 
 Upload a single file to a location.
 
-Available on `props.firebase` if using `firebaseConnect` HOC or using `getFirebase`.
+Available on `props.firebase` if using `firebaseConnect` HOC.
 
 #### Parameters
 -   `path` [**String**][string-url] - Path within Firebase Storage at which to upload File.
@@ -44,7 +44,7 @@ Available on `props.firebase` if using `firebaseConnect` HOC or using `getFireba
 
 Delete a file from Firebase storage with the option to remove metadata from real time database.
 
-Available on `props.firebase` if using `firebaseConnect` HOC or using `getFirebase`.
+Available on `props.firebase` if using `firebaseConnect` HOC.
 
 #### Parameters
 -   `path` [**String**][string-url] - Path within Firebase Storage of File to delete.
