@@ -17,6 +17,7 @@
 -   [unWatchEvent](#unwatchevent)
 -   [promiseEvents](#promiseevents)
 -   [login](#login)
+-   [handleRedirectResult](#handleredirectresult)
 -   [logout](#logout)
 -   [createUser](#createuser)
 -   [resetPassword](#resetpassword)
@@ -330,6 +331,17 @@ Logs user into Firebase. For examples, visit the
     -   `credentials.password` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Credentials for authenticating (only used with email)
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Containing user's auth data
+
+## handleRedirectResult
+
+Logs user into Firebase using external. For examples, visit the
+[auth section](/docs/recipes/auth.md)
+
+**Parameters**
+
+-   `authData` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Auth data from Firebase's getRedirectResult
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Containing user's profile
 
 ## logout
 

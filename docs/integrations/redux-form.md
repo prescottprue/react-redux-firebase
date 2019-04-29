@@ -9,6 +9,8 @@ Examples below assume that you have setup `redux-observable` middleware so that 
 Debounce writing of info that is typed to a ref on Firebase (useful for syncing changes typed into redux-form inputs).
 
 ```javascript
+import firebase from 'firebase/app'
+import 'firebase/database'
 import { actionTypes } from 'redux-form';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/switchMap';
@@ -22,10 +24,10 @@ const blur = action$ => action$.ofType(actionTypes.BLUR);
 // Combine form input streams
 const formInput = actionStreams$ => Observable.merge(...actionStreams$);
 
-const firebaseSet$ = (getFirebase, path, payload) =>
-  Observable.fromPromise(getFirebase().ref(path).set(payload));
+const firebaseSet$ = (path, payload) =>
+  Observable.fromPromise(firebase.database().ref(path).set(payload));
 
-export const reduxFormFieldChangeEpic = (action$, { getState, dispatch }, getFirebase) =>
+export const reduxFormFieldChangeEpic = (action$, { getState, dispatch }) =>
   // create a stream of formInput actions, listen to change and blur events
   formInput([change(action$), blur(action$)])
     .do(({ meta }) => { // create a side-effect for dispatching action before update
@@ -39,7 +41,7 @@ export const reduxFormFieldChangeEpic = (action$, { getState, dispatch }, getFir
       const path = 'some/path'
 
       // make call to update firebase
-      return firebaseSet$(getFirebase, path, payload)
+      return firebaseSet$(path, payload)
        // map each promise to an action that indicates the update complete
         .mapTo(({
           type: 'FORM_FIELD_UPDATED',
@@ -53,6 +55,8 @@ export const reduxFormFieldChangeEpic = (action$, { getState, dispatch }, getFir
 Writing of info that is changed in a redux-form array to firebase.
 
 ```js
+import firebase from 'firebase/app'
+import 'firebase/database'
 import { actionTypes } from 'redux-form';
 import { get } from 'lodash';
 import { Observable } from 'rxjs';
@@ -65,12 +69,13 @@ const arrayPush = action$ => action$.ofType(actionTypes.ARRAY_PUSH);
 // Combine form array action streams
 const formArrayAction = actionStream$ => Observable.merge(...actionStream$);
 
-const firebaseSet$ = (getFirebase, path, payload) =>
-  Observable.fromPromise(getFirebase().ref(path).set(payload));
+export function firebaseSet$(path, payload) {
+  return Observable.fromPromise(firebase.database().ref(path).set(payload));
+}
 
-export const reduxFormArrayEpic = (action$, { getState }, getFirebase) =>
+export function reduxFormArrayEpic(action$, { getState }) {
   // create a stream of formArray actions, listen to add and remove events
-  formArrayAction([arrayRemove(action$), arrayPush(action$)])
+  return formArrayAction([arrayRemove(action$), arrayPush(action$)])
   // map arrayActions to an Observable which is merged in the output Observable of promises
     .mergeMap((action) => {
       const { form } = getState();
@@ -79,16 +84,12 @@ export const reduxFormArrayEpic = (action$, { getState }, getFirebase) =>
       const path = 'some/path'
 
       // make call to update firebase
-      return firebaseSet$(getFirebase, path, payload)
+      return firebaseSet$(path, payload)
        // the action indicating the action was completed
         .mapTo(({
           type: 'FORM_ARRAY_CHANGE',
           payload: meta,
         }));
     });
-
-export default {
-  reduxFormFieldChangeEpic,
-  reduxFormArrayEpic,
-};
+}
 ```

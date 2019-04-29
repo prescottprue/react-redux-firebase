@@ -490,12 +490,6 @@ export function firestoreReducer(...args: any[]): FirestoreReducer.Reducer
 
 export function fixPath(path: string): string
 
-/**
- * Get Firebase instance
- * http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/get-firebase.html
- */
-export function getFirebase(): AppTypes.FirebaseApp
-
 export function getVal(firebase: object, path: string, notSetValue?: any): any
 
 export function isEmpty(...args: any[]): boolean

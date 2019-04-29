@@ -16,7 +16,7 @@ const enhance = connect(
 enhance(SomeComponent)
 ```
 
-If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()` or `getFirebase().auth()`.
+If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()`
 
 #### NOTE
 All examples below assume you have passed `firebase` from `context` to props. Wrapping your component with with the `withFirebase` or `firebaseConnect` Higher Order Components will make `props.firebase` available within your component:

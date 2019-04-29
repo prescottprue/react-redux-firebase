@@ -7,7 +7,7 @@ In order to get the most out of writing your thunks, make sure to set up your th
 ```javascript
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
+import { reactReduxFirebase } from 'react-redux-firebase';
 import makeRootReducer from './reducers';
 
 const fbConfig = {} // your firebase config
@@ -16,9 +16,7 @@ const store = createStore(
   makeRootReducer(),
   initialState,
   compose(
-    applyMiddleware(
-      thunk.withExtraArgument(getFirebase) // Pass getFirebase function as extra argument
-    ),
+    applyMiddleware(thunk),
     reactReduxFirebase(fbConfig, { userProfile: 'users', enableLogging: false })
   )
 );
@@ -27,8 +25,6 @@ const store = createStore(
 
 ## Example Thunk
 
-After following the setup above, `getFirebase` function becomes available within your thunks as the third argument:
-
 ```javascript
 const sendNotification = (payload) => ({
   type: NOTIFICATION,
@@ -36,10 +32,10 @@ const sendNotification = (payload) => ({
 })
 
 export const addTodo = (newTodo) =>
-  (dispatch, getState, getFirebase) => {
-    const firebase = getFirebase()
-    firebase
-      .push('todos', newTodo)
+  (dispatch, getState) => {
+    return firebase
+      .ref('todos')
+      .push(newTodo)
       .then(() => {
         dispatch(sendNotification('Todo Added'))
       })

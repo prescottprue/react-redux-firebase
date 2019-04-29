@@ -43,7 +43,6 @@
     * [dataReducer](/docs/api/reducers.md#datareducer)
     * [orderedReducer](/docs/api/reducers.md#orderedreducer)
   * [props.firebase](/docs/api/props-firebase.md)
-  * [getFirebase](/docs/api/get-firebase.md)
   * [firebaseInstance](/docs/api/firebaseInstance.md)
   * [helpers](/docs/api/helpers.md)
 * Migration Guides
