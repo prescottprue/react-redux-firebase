@@ -25,6 +25,31 @@ export class Container extends Component {
   }
 }
 
+export class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true, error }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>
+    }
+
+    return this.props.children
+  }
+}
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.node.isRequired
+}
+
 export class ProviderMock extends Component {
   getChildContext() {
     return { store: this.props.store }
@@ -334,4 +359,8 @@ export const fakeFirebase = {
       delete: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
     })
   })
+}
+
+export function sleep(ms = 0) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
