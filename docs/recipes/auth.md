@@ -120,7 +120,7 @@ export default compose(
 ```js
 import firebase from 'firebase'
 import { compose, createStore, applyMiddleware } from 'redux'
-import { getFirebase, reactReduxFirebase } from 'react-redux-firebase'
+import { reactReduxFirebase } from 'react-redux-firebase'
 
 // Firebase config
 const fbConfig = {
@@ -146,7 +146,7 @@ const createStore = (initialState = {}) => {
     initialState,
     compose(
       reactReduxFirebase(firebase, rrfConfig),
-      applyMiddleware(thunk.withExtraArgument(getFirebase))
+      applyMiddleware(thunk)
     )
   )
 

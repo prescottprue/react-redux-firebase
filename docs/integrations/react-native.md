@@ -28,7 +28,7 @@ Passing in an instance also allows for libraries with similar APIs (such as [`re
   ```js
   import { compose, createStore } from 'redux';
   import RNFirebase from 'react-native-firebase';
-  import { getFirebase, reactReduxFirebase } from 'react-redux-firebase';
+  import { reactReduxFirebase } from 'react-redux-firebase';
   import thunk from 'redux-thunk';
   import makeRootReducer from './reducers';
 
