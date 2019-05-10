@@ -1,4 +1,4 @@
-import { isFunction } from 'lodash'
+import { isFunction, constant } from 'lodash'
 export { getEventsFromInput } from './events'
 
 /**
@@ -7,7 +7,7 @@ export { getEventsFromInput } from './events'
  * @param {Function|Object|Array|String} Callable function or value of return for new function
  */
 export function createCallable(f) {
-  return isFunction(f) ? f : () => f
+  return isFunction(f) ? f : constant(f)
 }
 
 function getDisplayName(Component) {

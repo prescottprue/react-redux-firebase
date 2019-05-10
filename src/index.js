@@ -7,6 +7,14 @@ import firebaseConnect, { createFirebaseConnect } from './firebaseConnect'
 import firestoreConnect, { createFirestoreConnect } from './firestoreConnect'
 import withFirebase, { createWithFirebase } from './withFirebase'
 import withFirestore, { createWithFirestore } from './withFirestore'
+import useFirebaseConnect, {
+  createUseFirebaseConnect
+} from './useFirebaseConnect'
+import useFirestoreConnect, {
+  createUseFirestoreConnect
+} from './useFirestoreConnect'
+import useFirebase, { createUseFirebase } from './useFirebase'
+import useFirestore, { createUseFirestore } from './useFirestore'
 import reducer from './reducer'
 import constants, { actionTypes } from './constants'
 import { authIsReady } from './utils/auth'
@@ -28,6 +36,14 @@ export default {
   createWithFirebase,
   withFirestore,
   createWithFirestore,
+  useFirebase,
+  createUseFirebase,
+  useFirebaseConnect,
+  createUseFirebaseConnect,
+  useFirestore,
+  createUseFirestore,
+  useFirestoreConnect,
+  createUseFirestoreConnect,
   reducer,
   firebaseReducer: reducer,
   firebaseStateReducer: reducer,
