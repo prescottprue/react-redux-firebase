@@ -731,7 +731,7 @@ export const verifyPasswordResetCode = (dispatch, firebase, code) => {
  * @return {Promise}
  * @private
  */
-export const updateProfile = (dispatch, firebase, profileUpdate) => {
+export const updateProfile = (dispatch, firebase, profileUpdate, options) => {
   const { _: { config } } = firebase
   dispatch({
     type: actionTypes.PROFILE_UPDATE_START,
@@ -741,7 +741,7 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
   const updatePromise = config.useFirestoreForProfile
     ? updateProfileOnFirestore
     : updateProfileOnRTDB
-  return updatePromise(firebase, profileUpdate)
+  return updatePromise(firebase, profileUpdate, options)
     .then(snap => {
       dispatch({
         type: actionTypes.PROFILE_UPDATE_SUCCESS,
