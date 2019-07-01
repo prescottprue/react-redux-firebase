@@ -78,7 +78,7 @@ describe('Actions: Auth -', () => {
     it('calls profile unwatch', () => {
       fakeFirebase._.profileWatch = () => {}
       unWatchUserProfile(fakeFirebase)
-      expect(fakeFirebase._.profileWatch).to.equal(null)
+      expect(fakeFirebase._.profileWatch).to.be.null
     })
 
     it('calls profile watch then sets to null when useFirestoreForProfile: true', () => {
@@ -90,8 +90,8 @@ describe('Actions: Auth -', () => {
       currentFake._.config.useFirestoreForProfile = true
       currentFake.firestore = {}
       unWatchUserProfile(currentFake)
-      expect(currentFake._.profileWatch).to.equal(null)
-      expect(profileCalled).to.equal(true)
+      expect(currentFake._.profileWatch).to.be.null
+      expect(profileCalled).to.be.true
     })
   })
 

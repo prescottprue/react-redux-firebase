@@ -16,7 +16,7 @@ import { v3ErrorMessage } from './constants'
  * Firebase state (state.firebase)
  * @return {Function} - HOC that accepts a watchArray and wraps a component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { createFirestoreConnect } from 'react-redux-firebase'
  * // create firebase connect that uses another redux store
  * const firestoreConnect = createFirestoreConnect('anotherStore')
@@ -114,20 +114,20 @@ export const createFirestoreConnect = (storeKey = 'store') => (
  * is passed the current props and the firebase object.
  * @return {Function} - that accepts a component to wrap and returns the wrapped component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { firestoreConnect } from 'react-redux-firebase'
  * export default firestoreConnect()(SomeComponent)
  * @example <caption>Basic</caption>
  * import { connect } from 'react-redux'
  * import { firestoreConnect } from 'react-redux-firebase'
  *
- * // pass todos list from redux as this.props.todosList
+ * // pass todos list from redux as props.todosList
  * export default compose(
  *   firestoreConnect(['todos']), // sync todos collection from Firestore into redux
  *   connect((state) => ({
  *     todosList: state.firestore.data.todos,
- *     profile: state.firestore.profile, // pass profile data as this.props.profile
- *     auth: state.firestore.auth // pass auth data as this.props.auth
+ *     profile: state.firestore.profile, // pass profile data as props.profile
+ *     auth: state.firestore.auth // pass auth data as props.auth
  *   })
  * )(SomeComponent)
  */

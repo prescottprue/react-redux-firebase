@@ -60,16 +60,17 @@ function generateDocForFile(file) {
     })
 }
 
-;(async function() {
+;(function() {
   console.log(
     'Generating API documentation (docs/api) from JSDoc comments within src...\n'
   )
-  try {
-    await Promise.all(files.map(generateDocForFile))
-    console.log('\nAPI documentation generated successfully!')
-    process.exit(0)
-  } catch (err) {
-    console.log('Error generating API documentation: ', err.message || err)
-    process.exit(1)
-  }
+  Promise.all(files.map(generateDocForFile))
+    .then(() => {
+      console.log('\nAPI documentation generated successfully!')
+      process.exit(0)
+    })
+    .catch(err => {
+      console.log('Error generating API documentation: ', err.message || err)
+      process.exit(1)
+    })
 })()

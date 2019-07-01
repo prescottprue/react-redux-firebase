@@ -23,7 +23,7 @@ needing to access a firebase instance created under a different store key.
 _Basic_
 
 ```javascript
-// this.props.firebase set on App component as firebase object with helpers
+// props.firebase set on App component as firebase object with helpers
 import { createFirebaseConnect } from 'react-redux-firebase'
 // create firebase connect that uses another redux store
 const firebaseConnect = createFirebaseConnect('anotherStore')
@@ -59,6 +59,7 @@ export default firebaseConnect()(App)
 _Ordered Data_
 
 ```javascript
+import React from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
@@ -72,12 +73,13 @@ const enhance = compose(
   })
 )
 
-// use enhnace to pass todos list as props.todos
-const Todos = enhance(({ todos })) =>
-  <div>
-    {JSON.stringify(todos, null, 2)}
-  </div>
-)
+function Todos({ todos }) {
+  return (
+    <div>
+      {JSON.stringify(todos, null, 2)}
+    </div>
+  )
+}
 
 export default enhance(Todos)
 ```
@@ -85,24 +87,28 @@ export default enhance(Todos)
 _Data that depends on props_
 
 ```javascript
+import React from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect, getVal } from 'react-redux-firebase'
+import { get } from 'lodash'
+import { firebaseConnect } from 'react-redux-firebase'
 
 const enhance = compose(
   firebaseConnect((props) => ([
     `posts/${props.postId}` // sync /posts/postId from firebase into redux
   ]),
   connect((state, props) => ({
-    post: getVal(state.firebase.data, `posts/${props.postId}`),
+    post: get(state.firebase.data, `posts.${props.postId}`),
   })
 )
 
-const Post = ({ post }) => (
-  <div>
-    {JSON.stringify(post, null, 2)}
-  </div>
-)
+function Post({ post }) {
+  return (
+    <div>
+      {JSON.stringify(post, null, 2)}
+    </div>
+  )
+}
 
 export default enhance(Post)
 ```

@@ -17,7 +17,7 @@ import { v3ErrorMessage } from './constants'
  * Firebase state (state.firebase)
  * @return {Function} - HOC that accepts a watchArray and wraps a component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { createFirebaseConnect } from 'react-redux-firebase'
  * // create firebase connect that uses another redux store
  * const firebaseConnect = createFirebaseConnect('anotherStore')
@@ -118,6 +118,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
  * import { firebaseConnect } from 'react-redux-firebase'
  * export default firebaseConnect()(App)
  * @example <caption>Ordered Data</caption>
+ * import React from 'react'
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
  * import { firebaseConnect } from 'react-redux-firebase'
@@ -131,33 +132,38 @@ export const createFirebaseConnect = (storeKey = 'store') => (
  *   })
  * )
  * 
- * // use enhnace to pass todos list as props.todos
- * const Todos = enhance(({ todos })) =>
- *   <div>
- *     {JSON.stringify(todos, null, 2)}
- *   </div>
- * )
+ * function Todos({ todos }) {
+ *   return (
+ *     <div>
+ *       {JSON.stringify(todos, null, 2)}
+ *     </div>
+ *   )
+ * }
  * 
  * export default enhance(Todos)
  * @example <caption>Data that depends on props</caption>
+ * import React from 'react'
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, getVal } from 'react-redux-firebase'
+ * import { get } from 'lodash'
+ * import { firebaseConnect } from 'react-redux-firebase'
  *
  * const enhance = compose(
  *   firebaseConnect((props) => ([
  *     `posts/${props.postId}` // sync /posts/postId from firebase into redux
  *   ]),
  *   connect((state, props) => ({
- *     post: getVal(state.firebase.data, `posts/${props.postId}`),
+ *     post: get(state.firebase.data, `posts.${props.postId}`),
  *   })
  * )
  *
- * const Post = ({ post }) => (
- *   <div>
- *     {JSON.stringify(post, null, 2)}
- *   </div>
- * )
+ * function Post({ post }) {
+ *   return (
+ *     <div>
+ *       {JSON.stringify(post, null, 2)}
+ *     </div>
+ *   )
+ * }
  *
  * export default enhance(Post)
  */

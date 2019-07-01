@@ -34,8 +34,6 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig)
 
-// Initialize Firestore with timeshot settings
-firebase.firestore().settings({ timestampsInSnapshots: true })
 
 // Add BOTH store enhancers when making store creator
 const createStoreWithFirebase = compose(
@@ -45,7 +43,7 @@ const createStoreWithFirebase = compose(
 
 // Add firebase and firestore to reducers
 const rootReducer = combineReducers({
-  firebase: firebaseStateReducer,
+  firebase: firebaseReducer,
   firestore: firestoreReducer
 })
 
@@ -105,15 +103,15 @@ Firestore queries can be created in two ways:
     firestoreConnect((props) => [
       { collection: 'todos', doc: props.todoId } // or `todos/${props.todoId}`
     ]),
-    connect(({ firestore: { ordered } }, props) => ({
-      todos: ordered.todos && ordered.todos[todoId]
+    connect(({ firestore: { data } }, props) => ({
+      todos: data.todos && data.todos[todoId]
     }))
   )(SomeComponent)
   ```
 
 ## Manual {#manual}
 
-If you want to trigger a query based on a click or mange listeners yourself, you can use `setListener` or `setListeners`. When doing this, make sure you call `unsetLister` for each listener you set.
+If you want to trigger a query based on a click or mange listeners yourself, you can use `setListener` or `setListeners`. When doing this, make sure you call `unsetListener` for each listener you set.
 
 ##### Component Class
 
