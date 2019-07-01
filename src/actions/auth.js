@@ -271,7 +271,10 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
         }
 
         // Convert custom object type within Provider data to a normal object
-        if (isArray(newProfile.providerData)) {
+        if (
+          isArray(newProfile.providerData) &&
+          newProfile.providerData.length
+        ) {
           newProfile.providerData = newProfile.providerData.map(
             providerDataItem =>
               pick(providerDataItem, config.keysToPreserveFromProviderData)
