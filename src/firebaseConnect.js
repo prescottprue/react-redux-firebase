@@ -6,13 +6,8 @@ import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable, wrapDisplayName } from './utils'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
-// Reserved props that should not be passed into a firebaseConnect wrapped
-// component. Will throw an error if they are.
-const RESERVED_PROPS = ['firebase', 'dispatch']
-
 /**
- * @name createFirebaseConnect
- * @description Function that creates a Higher Order Component that
+ * Function that creates a Higher Order Component which
  * automatically listens/unListens to provided firebase paths using
  * React's Lifecycle hooks.
  * **WARNING!!** This is an advanced feature, and should only be used when
@@ -103,13 +98,9 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     // Check that reserved props are not supplied to a FirebaseConnected
     // component and if they are, throw an error so the developer can rectify
     // this issue.
-    const clashes = Object.keys(props).filter(k => RESERVED_PROPS.includes(k))
-
-    if (clashes.length > 0) {
+    if (Object.keys(props).includes('firebase')) {
       throw new Error(
-        `Supplied prop/s "${clashes.join(
-          '", "'
-        )}" are reserved for internal firebaseConnect() usage.`
+        `Supplied prop "firebase" is reserved for internal firebaseConnect() usage.`
       )
     }
 
@@ -117,9 +108,9 @@ export const createFirebaseConnect = (storeKey = 'store') => (
       <ReactReduxFirebaseContext.Consumer>
         {_internalFirebase => (
           <HoistedComp
-            firebase={_internalFirebase}
-            dispatch={_internalFirebase.dispatch}
             {...props}
+            dispatch={_internalFirebase.dispatch}
+            firebase={_internalFirebase}
           />
         )}
       </ReactReduxFirebaseContext.Consumer>
@@ -161,7 +152,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
  *   ]),
  *   connect((state) => ({
  *     todos: state.firebase.ordered.todos
- *   })
+ *   }))
  * )
  * 
  * // use enhnace to pass todos list as props.todos
@@ -180,17 +171,19 @@ export const createFirebaseConnect = (storeKey = 'store') => (
  * const enhance = compose(
  *   firebaseConnect((props) => ([
  *     `posts/${props.postId}` // sync /posts/postId from firebase into redux
- *   ]),
+ *   ])),
  *   connect((state, props) => ({
  *     post: getVal(state.firebase.data, `posts/${props.postId}`),
- *   })
+ *   }))
  * )
  *
- * const Post = ({ post }) => (
- *   <div>
- *     {JSON.stringify(post, null, 2)}
- *   </div>
- * )
+ * function Post({ post }) {
+ *   return (
+ *     <div>
+ *       {JSON.stringify(post, null, 2)}
+ *     </div>
+ *   )
+ * }
  *
  * export default enhance(Post)
  */

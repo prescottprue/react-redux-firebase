@@ -1,10 +1,9 @@
-import React from 'react'
-import logo from './logo.svg';
-import './App.css';
-import { withFirebase } from 'react-redux-firebase'
+import React from "react";
+import AddTodo from "./AddTodo";
+import "./App.css";
+import logo from "./logo.svg";
 
-function Home({ firebase }) {
-  console.log('firebase', firebase)
+function Home() {
   return (
     <div className="Home">
       <header className="App-header">
@@ -20,9 +19,10 @@ function Home({ firebase }) {
         >
           Learn React
           </a>
+          <AddTodo />
       </header>
     </div>
-  )
+  );
 }
 
-export default withFirebase(Home);
+export default Home;

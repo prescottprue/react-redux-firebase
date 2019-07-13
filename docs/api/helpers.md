@@ -82,7 +82,7 @@ Returns **Any** Data located at path within firebase.
 
 ## isLoaded
 
-Detect whether items are loaded yet or not
+Detect whether data from redux state is loaded yet or not
 
 **Parameters**
 
@@ -97,7 +97,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import firebaseConnect from 'react-redux-firebase/lib/firebaseConnect'
+import { isLoaded, isEmpty } from 'react-redux-firebase/lib/utils'
 
 const enhance = compose(
   firebaseConnect(['todos']),
@@ -106,7 +107,7 @@ const enhance = compose(
   }))
 )
 
-const Todos = ({ todos }) => {
+function Todos({ todos }) {
   // Message for if todos are loading
   if(!isLoaded(todos)) {
     return <span>Loading...</span>

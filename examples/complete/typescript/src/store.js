@@ -1,11 +1,16 @@
 import { createStore, compose } from 'redux'
 import rootReducer from './reducer.js'
+import { FirebaseReducer } from 'react-redux-firebase'
+
+export interface RootState {
+  firebase: FirebaseReducer.Reducer
+}
 
 export default function configureStore (initialState, history) {
   const createStoreWithMiddleware = compose(
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? () => window.__REDUX_DEVTOOLS_EXTENSION__ : f => f
   )(createStore)
-  const store = createStoreWithMiddleware(rootReducer)
+  const store: RootState = createStoreWithMiddleware(rootReducer)
 
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers

@@ -85,7 +85,7 @@ export function getVal(firebase, path, notSetValue) {
 }
 
 /**
- * @description Detect whether items are loaded yet or not
+ * @description Detect whether data from redux state is loaded yet or not
  * @param {Object} item - Item to check loaded status of. A comma separated
  * list is also acceptable.
  * @return {Boolean} Whether or not item is loaded
@@ -94,7 +94,8 @@ export function getVal(firebase, path, notSetValue) {
  * import PropTypes from 'prop-types'
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+ * import firebaseConnect from 'react-redux-firebase/lib/firebaseConnect'
+ * import { isLoaded, isEmpty } from 'react-redux-firebase/lib/utils'
  *
  * const enhance = compose(
  *   firebaseConnect(['todos']),
@@ -103,7 +104,7 @@ export function getVal(firebase, path, notSetValue) {
  *   }))
  * )
  *
- * const Todos = ({ todos }) => {
+ * function Todos({ todos }) {
  *   // Message for if todos are loading
  *   if(!isLoaded(todos)) {
  *     return <span>Loading...</span>

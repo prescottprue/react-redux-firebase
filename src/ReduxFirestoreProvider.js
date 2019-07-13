@@ -3,6 +3,17 @@ import PropTypes from 'prop-types'
 import ReduxFirestoreContext from './ReduxFirestoreContext'
 import createFirebaseInstance from './createFirebaseInstance'
 
+/**
+ * Provider for context containing extended firestore instance created
+ * by react-redux-firebase
+ * @param {Object} props
+ * @param {Object} props.config - react-redux-firebase config
+ * @param {Function} props.dispatch - Redux's dispatch function
+ * @param {Object} props.firebase - Firebase library
+ * @param {Boolean} props.initializeAuth - Whether or not to initialize auth
+ * @param {Function} props.createFirestoreInstance - Function for creating
+ * extended firestore instance
+ */
 function ReduxFirestoreProvider(props = {}) {
   const {
     children,
@@ -12,20 +23,27 @@ function ReduxFirestoreProvider(props = {}) {
     createFirestoreInstance,
     initializeAuth
   } = props
-  const extendedFirebaseInstance = createFirebaseInstance(
-    firebase,
-    config,
-    dispatch
+  const extendedFirestoreInstance = React.useMemo(
+    () => {
+      const extendedFirebaseInstance = createFirebaseInstance(
+        firebase,
+        config,
+        dispatch
+      )
+      const extendedFirestoreInstance = createFirestoreInstance(
+        firebase,
+        config,
+        dispatch
+      )
+      // Initialize auth if not disabled
+      if (initializeAuth) {
+        extendedFirebaseInstance.initializeAuth()
+      }
+
+      return extendedFirestoreInstance
+    },
+    [firebase, config, dispatch, createFirestoreInstance, initializeAuth]
   )
-  const extendedFirestoreInstance = createFirestoreInstance(
-    firebase,
-    config,
-    dispatch
-  )
-  // Initialize auth if not disabled
-  if (initializeAuth) {
-    extendedFirebaseInstance.initializeAuth()
-  }
   return (
     <ReduxFirestoreContext.Provider value={extendedFirestoreInstance}>
       {children}

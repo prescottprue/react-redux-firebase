@@ -3,8 +3,8 @@
 Just like [redux](http://redux.js.org/docs/api/index.html), the react-redux-firebase API surface is intentionally as small as possible.
 
 ## Top-Level Exports
-* [firebaseConnect](/docs/api/connect.md#firebaseconnect)
-* [createFirebaseConnect](/docs/api/connect.md#createfirebaseconnect)
+* [firebaseConnect](/docs/api/firebaseConnect.md#firebaseconnect)
+* [createFirebaseConnect](/docs/api/firebaseConnect.md#createfirebaseconnect)
 * [withFirebase](/docs/api/withFirebase.md)
 * [firestoreConnect](/docs/api/firestoreConnect.md#firebaseconnect)
 * [createFirestoreConnect](/docs/api/firestoreConnect.md#createfirestoreconnect)

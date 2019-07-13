@@ -5,10 +5,11 @@ import { mapWithFirebaseAndDispatch } from './utils/actions'
 import { authActions, queryActions, storageActions } from './actions'
 
 /**
- * Create a firebase instance that has helpers attached for dispatching actions
- * @param  {Object} firebase - Firebase instance which to extend
- * @param  {Object} configs - Configuration object
- * @param  {Function} dispatch - Action dispatch function
+ * Create an extended firebase instance that has methods attached
+ * which dispatch redux actions.
+ * @param {Object} firebase - Firebase instance which to extend
+ * @param {Object} configs - Configuration object
+ * @param {Function} dispatch - Action dispatch function
  * @return {Object} Extended Firebase instance
  * @private
  */
@@ -37,7 +38,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 
   /**
    * @private
-   * @description Calls a method and attaches meta to value object
+   * Calls a method and attaches meta to value object
    * @param {String} method - Method to run with meta attached
    * @param {String} path - Path to location on Firebase which to set
    * @param {Object|String|Boolean|Number} value - Value to write to Firebase
@@ -66,7 +67,8 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
   }
 
   /**
-   * @description Sets data to Firebase.
+   * Sets data to Firebase. More info available in
+   * [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#set).
    * @param {String} path - Path to location on Firebase which to set
    * @param {Object|String|Boolean|Number} value - Value to write to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -75,11 +77,13 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * import React, { Component } from 'react'
    * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'
-   * const Example = ({ firebase: { set } }) => (
-   *   <button onClick={() => set('some/path', { here: 'is a value' })}>
+   * function Example({ firebase: { set } }) {
+   *   return (
+   *     <button onClick={() => set('some/path', { here: 'is a value' })}>
    *     Set To Firebase
-   *   </button>
-   * )
+   *     </button>
+   *   )
+   * }
    * export default firebaseConnect()(Example)
    */
   const set = (path, value, onComplete) =>
@@ -89,10 +93,10 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
       .set(value, onComplete)
 
   /**
-   * @description Sets data to Firebase along with meta data. Currently,
+   * Sets data to Firebase along with meta data. Currently,
    * this includes createdAt and createdBy. *Warning* using this function
    * may have unintented consequences (setting createdAt even if data already
-   * exists)
+   * exists). More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#update).
    * @param {String} path - Path to location on Firebase which to set
    * @param {Object|String|Boolean|Number} value - Value to write to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -102,20 +106,24 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     withMeta('set', path, value, onComplete)
 
   /**
-   * @description Pushes data to Firebase.
+   * Pushes data to Firebase. More info
+   * available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#push).
    * @param {String} path - Path to location on Firebase which to push
    * @param {Object|String|Boolean|Number} value - Value to push to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @return {Promise} Containing reference snapshot
    * @example <caption>Basic</caption>
-   * import React, { Component } from 'react'
+   * import React from 'react'
    * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'
-   * const Example = ({ firebase: { push } }) => (
-   *   <button onClick={() => push('some/path', true)}>
-   *     Push To Firebase
-   *   </button>
-   * )
+   *
+   * function Example({ firebase: { push } }) {
+   *   return (
+   *     <button onClick={() => push('some/path', true)}>
+   *       Push To Firebase
+   *     </button>
+   *   )
+   * }
    * export default firebaseConnect()(Example)
    */
   const push = (path, value, onComplete) =>
@@ -125,8 +133,9 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
       .push(value, onComplete)
 
   /**
-   * @description Pushes data to Firebase along with meta data. Currently,
-   * this includes createdAt and createdBy.
+   * Pushes data to Firebase along with meta data. Currently,
+   * this includes createdAt and createdBy. More info
+   * available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#pushWithMeta).
    * @param {String} path - Path to location on Firebase which to set
    * @param {Object|String|Boolean|Number} value - Value to write to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -136,20 +145,28 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     withMeta('push', path, value, onComplete)
 
   /**
-   * @description Updates data on Firebase and sends new data.
+   * Updates data on Firebase and sends new data. More info
+   * available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#update).
    * @param {String} path - Path to location on Firebase which to update
    * @param {Object|String|Boolean|Number} value - Value to update to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @return {Promise} Containing reference snapshot
    * @example <caption>Basic</caption>
-   * import React, { Component } from 'react'
+   * import React from 'react'
    * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'
-   * const Example = ({ firebase: { update } }) => (
-   *   <button onClick={() => update('some/path', { here: 'is a value' })}>
-   *     Update To Firebase
-   *   </button>
-   * )
+   *
+   * function Example({ firebase: { update } }) {
+   *   function updateData() {
+   *     update('some/path', { here: 'is a value' })
+   *   }
+   * }
+   *   return (
+   *     <button onClick={updateData}>
+   *       Update To Firebase
+   *     </button>
+   *   )
+   * }
    * export default firebaseConnect()(Example)
    */
   const update = (path, value, onComplete) =>
@@ -159,9 +176,10 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
       .update(value, onComplete)
 
   /**
-   * @description Updates data on Firebase along with meta. *Warning*
+   * Updates data on Firebase along with meta. *Warning*
    * using this function may have unintented consequences (setting
-   * createdAt even if data already exists)
+   * createdAt even if data already exists). More info available
+   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#updateWithMeta).
    * @param {String} path - Path to location on Firebase which to update
    * @param {Object|String|Boolean|Number} value - Value to update to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -171,22 +189,26 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     withMeta('update', path, value, onComplete)
 
   /**
-   * @description Removes data from Firebase at a given path. **NOTE** A
+   * Removes data from Firebase at a given path. **NOTE** A
    * seperate action is not dispatched unless `dispatchRemoveAction: true` is
    * provided to config on store creation. That means that a listener must
    * be attached in order for state to be updated when calling remove.
+   * More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#remove).
    * @param {String} path - Path to location on Firebase which to remove
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @return {Promise} Containing reference snapshot
    * @example <caption>Basic</caption>
-   * import React, { Component } from 'react'
+   * import React from 'react'
    * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'
-   * const Example = ({ firebase: { remove } }) => (
-   *   <button onClick={() => remove('some/path')}>
-   *     Remove From Firebase
-   *   </button>
-   * )
+   *
+   * function Example({ firebase: { remove } }) {
+   *   return (
+   *     <button onClick={() => remove('some/path')}>
+   *       Remove From Firebase
+   *     </button>
+   *   )
+   * }
    * export default firebaseConnect()(Example)
    */
   const remove = (path, onComplete, options) =>
@@ -196,9 +218,10 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     })
 
   /**
-   * @description Sets data to Firebase only if the path does not already
+   * Sets data to Firebase only if the path does not already
    * exist, otherwise it rejects. Internally uses a Firebase transaction to
    * prevent a race condition between seperate clients calling uniqueSet.
+   * More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uniqueSet).
    * @param {String} path - Path to location on Firebase which to set
    * @param {Object|String|Boolean|Number} value - Value to write to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -207,11 +230,14 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * import React, { Component } from 'react'
    * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'
-   * const Example = ({ firebase: { uniqueSet } }) => (
-   *   <button onClick={() => uniqueSet('some/unique/path', true)}>
-   *     Unique Set To Firebase
-   *   </button>
-   * )
+   *
+   * function Example({ firebase: { uniqueSet } }) {
+   *   return (
+   *     <button onClick={() => uniqueSet('some/unique/path', true)}>
+   *       Unique Set To Firebase
+   *     </button>
+   *   )
+   * }
    * export default firebaseConnect()(Example)
    */
   const uniqueSet = (path, value, onComplete) =>
@@ -230,8 +256,9 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
       })
 
   /**
-   * @description Upload a file to Firebase Storage with the option to store
-   * its metadata in Firebase Database
+   * Upload a file to Firebase Storage with the option to store
+   * its metadata in Firebase Database. More info available
+   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uploadFile).
    * @param {String} path - Path to location on Firebase which to set
    * @param {File} file - File object to upload (usually first element from
    * array output of select-file or a drag/drop `onDrop`)
@@ -249,8 +276,9 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     })
 
   /**
-   * @description Upload multiple files to Firebase Storage with the option
-   * to store their metadata in Firebase Database
+   * Upload multiple files to Firebase Storage with the option
+   * to store their metadata in Firebase Database. More info available
+   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uploadFiles).
    * @param {String} path - Path to location on Firebase which to set
    * @param {Array} files - Array of File objects to upload (usually from
    * a select-file or a drag/drop `onDrop`)
@@ -268,8 +296,9 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     })
 
   /**
-   * @description Delete a file from Firebase Storage with the option to
-   * remove its metadata in Firebase Database
+   * Delete a file from Firebase Storage with the option to
+   * remove its metadata in Firebase Database. More info available
+   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#deleteFile).
    * @param {String} path - Path to location on Firebase which to set
    * @param {String} dbPath - Database path to place uploaded file metadata
    * @return {Promise} Containing the File object
@@ -278,8 +307,9 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     storageActions.deleteFile(dispatch, firebase, { path, dbPath })
 
   /**
-   * @description Watch event. **Note:** this method is used internally
+   * Watch event. **Note:** this method is used internally
    * so examples have not yet been created, and it may not work as expected.
+   * More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#watchEvent).
    * @param {String} type - Type of watch event
    * @param {String} path - Path to location on Firebase which to set listener
    * @param {String} storeAs - Name of listener results within redux store
@@ -297,9 +327,9 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     })
 
   /**
-   * @description Unset a listener watch event. **Note:** this method is used
+   * Unset a listener watch event. **Note:** this method is used
    * internally so examples have not yet been created, and it may not work
-   * as expected.
+   * as expected. More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#unwatchevent).
    * @param {String} type - Type of watch event
    * @param {String} path - Path to location on Firebase which to unset listener
    * @param {String} queryId - Id of the listener
@@ -315,7 +345,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     })
 
   /**
-   * @description Similar to the firebaseConnect Higher Order Component but
+   * Similar to the firebaseConnect Higher Order Component but
    * presented as a function (not a React Component). Useful for populating
    * your redux state without React, e.g., for server side rendering. Only
    * `once` type should be used as other query types such as `value` do not
@@ -340,8 +370,8 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
   }
 
   /**
-   * @description Logs user into Firebase. For examples, visit the
-   * [auth section](/docs/auth.md)
+   * Logs user into Firebase. For examples, visit the
+   * [auth section of the docs](/docs/auth.md)
    * @param {Object} credentials - Credentials for authenticating
    * @param {String} credentials.provider - External provider (google |
    * facebook | twitter)
@@ -355,7 +385,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.login(dispatch, firebase, credentials)
 
   /**
-   * @description Logs user into Firebase using external. For examples, visit the
+   * Logs user into Firebase using external. For examples, visit the
    * [auth section](/docs/recipes/auth.md)
    * @param {Object} authData - Auth data from Firebase's getRedirectResult
    * @return {Promise} Containing user's profile
@@ -364,14 +394,14 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.handleRedirectResult(dispatch, firebase, authData)
 
   /**
-   * @description Logs user out of Firebase and empties firebase state from
+   * Logs user out of Firebase and empties firebase state from
    * redux store
    * @return {Promise}
    */
   const logout = () => authActions.logout(dispatch, firebase)
 
   /**
-   * @description Creates a new user in Firebase authentication. If
+   * Creates a new user in Firebase authentication. If
    * `userProfile` config option is set, user profiles will be set to this
    * location.
    * @param {Object} credentials - Credentials for authenticating
@@ -384,7 +414,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.createUser(dispatch, firebase, credentials, profile)
 
   /**
-   * @description Sends password reset email
+   * Sends password reset email
    * @param {Object} credentials - Credentials for authenticating
    * @param {String} credentials.email - Credentials for authenticating
    * @return {Promise}
@@ -393,7 +423,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.resetPassword(dispatch, firebase, credentials)
 
   /**
-   * @description Confirm that a user's password has been reset
+   * Confirm that a user's password has been reset
    * @param {String} code - Password reset code to verify
    * @param {String} password - New Password to confirm reset to
    * @return {Promise}
@@ -402,7 +432,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.confirmPasswordReset(dispatch, firebase, code, password)
 
   /**
-   * @description Verify that a password reset code from a password reset
+   * Verify that a password reset code from a password reset
    * email is valid
    * @param {String} code - Password reset code to verify
    * @return {Promise} Containing user auth info
@@ -411,7 +441,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.verifyPasswordResetCode(dispatch, firebase, code)
 
   /**
-   * @description Update user profile on Firebase Real Time Database or
+   * Update user profile on Firebase Real Time Database or
    * Firestore (if `useFirestoreForProfile: true` config passed to
    * reactReduxFirebase). Real Time Database update uses `update` method
    * internally while updating profile on Firestore uses `set` with
@@ -429,7 +459,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.updateProfile(dispatch, firebase, profileUpdate, options)
 
   /**
-   * @description Update Auth Object
+   * Update Auth Object
    * @param {Object} authUpdate - Update to be auth object
    * @param {Boolean} updateInProfile - Update in profile
    * @return {Promise}
@@ -438,7 +468,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.updateAuth(dispatch, firebase, authUpdate, updateInProfile)
 
   /**
-   * @description Update user's email
+   * Update user's email
    * @param {String} newEmail - Update to be auth object
    * @param {Boolean} updateInProfile - Update in profile
    * @return {Promise}
@@ -447,13 +477,13 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.updateEmail(dispatch, firebase, newEmail, updateInProfile)
 
   /**
-   * @description Reload user's auth object. Must be authenticated.
+   * Reload user's auth object. Must be authenticated.
    * @return {Promise}
    */
   const reloadAuth = () => authActions.reloadAuth(dispatch, firebase)
 
   /**
-   * @description Links the user account with the given credentials.
+   * Links the user account with the given credentials.
    * @param {firebase.auth.AuthCredential} credential - The auth credential
    * @return {Promise}
    */
