@@ -322,7 +322,7 @@ export function createFirebaseInstance(
  * @param [storeKey='store'] - Name of redux store which contains
  * Firebase state (state.firebase)
  */
-export function createFirebaseConnect(storeKey: string): firebaseConnect
+export function createFirebaseConnect(storeKey: string): typeof firebaseConnect
 
 /**
  * Function that creates a Higher Order Component which
@@ -333,11 +333,25 @@ export function createFirebaseConnect(storeKey: string): firebaseConnect
  * @param {String} [storeKey='store'] - Name of redux store which contains
  * Firebase state (state.firebase)
  */
-export function createFirestoreConnect(storeKey: string): firestoreConnect
+export function createFirestoreConnect(storeKey: string): typeof firestoreConnect
 
-export function createWithFirebase(storeKey: string): withFirebase
+export function createWithFirebase(storeKey: string): typeof withFirebase
 
-export function createWithFirestore(storeKey: string): withFirestore
+export function createWithFirestore(storeKey: string): typeof withFirestore
+
+export type QueryParamOption = 'orderByKey' | 'orderByChild' | 'orderByPriority' | 'limitToFirst' | 'limitToLast' | 'notParsed' | 'parsed'
+
+export type QueryParamOptions = QueryParamOption|string[]
+
+export interface ReactReduxFirebaseQuerySetting {
+  path: string
+  type?: 'value' | 'once' | 'child_added' | 'child_removed' | 'child_changed' | 'child_moved'
+  queryParams?: QueryParamOptions
+  storeAs?: string
+}
+
+ export type ReactReduxFirebaseQueries = (ReactReduxFirebaseQuerySetting | string)[]
+
 
 // https://github.com/prescottprue/redux-firestore#query-options
 type WhereOptions = [string, FirestoreTypes.WhereFilterOp, any]
@@ -347,13 +361,13 @@ type OrderByOptions = [string, FirestoreTypes.OrderByDirection]
  * Options which can be passed to firestore query through
  * redux-firestore or react-redux-firebase
  */
-export interface FirestoreQueryOptions {
+export interface ReduxFirestoreQuerySetting {
   // https://github.com/prescottprue/redux-firestore#collection
   collection: string
   // https://github.com/prescottprue/redux-firestore#document
   doc?: string
   // https://github.com/prescottprue/redux-firestore#sub-collections
-  subcollections?: FirestoreQueryOptions[]
+  subcollections?: ReduxFirestoreQuerySetting[]
   // https://github.com/prescottprue/redux-firestore#where
   where?: WhereOptions | WhereOptions[]
   // https://github.com/prescottprue/redux-firestore#orderby
@@ -372,45 +386,48 @@ export interface FirestoreQueryOptions {
   endBefore?: FirestoreTypes.DocumentSnapshot | any | any[]
 }
 
+export type ReduxFirestoreQueries = (ReduxFirestoreQuerySetting | string)[]
+
+
 /**
  * Firestore instance extended with methods which dispatch redux actions.
  * More info available in the [API section of the redux-firestore docs](https://github.com/prescottprue/redux-firestore#api).
  */
 interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
   // Get data from firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#get).
-  get: (docPath: string | FirestoreQueryOptions) => Promise<void>
+  get: (docPath: string | ReduxFirestoreQuerySetting) => Promise<void>
 
   // Set data to firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#set).
-  set: (docPath: string | FirestoreQueryOptions, data: Object) => Promise<void>
+  set: (docPath: string | ReduxFirestoreQuerySetting, data: Object) => Promise<void>
 
   // https://github.com/prescottprue/redux-firestore#add
   add: (
-    collectionPath: string | FirestoreQueryOptions,
+    collectionPath: string | ReduxFirestoreQuerySetting,
     data: Object
   ) => Promise<{ id: string }>
 
   // https://github.com/prescottprue/redux-firestore#update
   update: (
-    docPath: string | FirestoreQueryOptions,
+    docPath: string | ReduxFirestoreQuerySetting,
     data: Object
   ) => Promise<void>
 
   // https://github.com/prescottprue/redux-firestore#delete
-  delete: (docPath: string | FirestoreQueryOptions) => void
+  delete: (docPath: string | ReduxFirestoreQuerySetting) => void
 
   // https://github.com/prescottprue/redux-firestore#runtransaction
-  runTransaction: (transaction: WithFirestoreProps['firestore']) => Promise<any>
+  // runTransaction: (transaction: WithFirestoreProps['firestore']) => Promise<any>
 
   // https://github.com/prescottprue/redux-firestore#onsnapshotsetlistener
-  onSnapshot: (options: FirestoreQueryOptions) => Promise<void>
-  setListener: (options: FirestoreQueryOptions) => Promise<void>
+  onSnapshot: (options: ReduxFirestoreQuerySetting) => Promise<void>
+  setListener: (options: ReduxFirestoreQuerySetting) => Promise<void>
 
   //https://github.com/prescottprue/redux-firestore#setlisteners
-  setListeners: (optionsArray: FirestoreQueryOptions[]) => Promise<void>
+  setListeners: (optionsArray: ReduxFirestoreQuerySetting[]) => Promise<void>
 
   // https://github.com/prescottprue/redux-firestore#unsetlistener--unsetlisteners
-  unsetListener: (options: FirestoreQueryOptions) => void
-  unsetListeners: (options: FirestoreQueryOptions[]) => void
+  unsetListener: (options: ReduxFirestoreQuerySetting) => void
+  unsetListeners: (options: ReduxFirestoreQuerySetting[]) => void
 }
 
 // https://github.com/prescottprue/redux-firestore#other-firebase-statics
@@ -439,15 +456,18 @@ export interface WithFirestoreProps {
   dispatch: Dispatch
 }
 
+interface CreateUserCredentials {
+  email: string
+  password: string
+  signIn?: boolean // default true
+}
+
 type Credentials =
-  | {
-      email: string
-      password: string
-    }
+  | CreateUserCredentials
   | {
       provider: 'facebook' | 'google' | 'twitter'
       type: 'popup' | 'redirect'
-      scopes: string[]
+      scopes?: string[]
     }
   | AuthTypes.AuthCredential
   | {
@@ -458,12 +478,6 @@ type Credentials =
       phoneNumber: string
       applicationVerifier: AuthTypes.ApplicationVerifier
     }
-
-interface CreateUserCredentials {
-  email: string
-  password: string
-  signIn?: boolean // default true
-}
 
 interface UserProfile {
   email: string
@@ -572,7 +586,7 @@ export interface WithFirebaseProps<ProfileType> {
  * React HOC that attaches/detaches Firebase Real Time Database listeners on mount/unmount
  */
 export function firebaseConnect<ProfileType, TInner = {}>(
-  connect?: mapper<TInner, string[]> | string[]
+  connect?: mapper<TInner, ReactReduxFirebaseQueries> | ReactReduxFirebaseQueries
 ): InferableComponentEnhancerWithProps<
   TInner & WithFirebaseProps<ProfileType>,
   WithFirebaseProps<ProfileType>
@@ -594,10 +608,7 @@ export function firebaseStateReducer(...args: any[]): FirestoreReducer.Reducer
  * React HOC that attaches/detaches Cloud Firestore listeners on mount/unmount
  */
 export function firestoreConnect<TInner = {}>(
-  connect?:
-    | mapper<TInner, (string | FirestoreQueryOptions)[]>
-    | FirestoreQueryOptions[]
-    | string[]
+  connect?: mapper<TInner, ReduxFirestoreQueries> | ReduxFirestoreQueries
 ): InferableComponentEnhancerWithProps<
   TInner & WithFirestoreProps,
   WithFirestoreProps
@@ -630,6 +641,17 @@ export function isLoaded(...args: any[]): boolean
 export function useFirebase(): ExtendedFirebaseInstance
 
 /**
+ * React hook that automatically listens/unListens
+ * to provided Cloud Firestore paths. Make sure you have required/imported
+ * Cloud Firestore, including it's reducer, before attempting to use.
+ * @param queriesConfig - An object or string for paths to sync
+ * from firestore. Can also be a function that returns the object or string. 
+ */
+export function useFirebaseConnect<TInner>(
+  connect?: mapper<TInner, ReactReduxFirebaseQueries> | ReactReduxFirebaseQueries
+): void
+
+/**
  * React hook that return firestore object.
  * Firestore instance is gathered from `store.firestore`, which is attached
  * to store by the store enhancer (`reduxFirestore`) during setup of
@@ -644,10 +666,10 @@ export function useFirestore(): ExtendedFirestoreInstance
  * @param queriesConfig - An object or string for paths to sync
  * from firestore. Can also be a function that returns the object or string. 
  */
-export function useFirestoreConnect(
+export function useFirestoreConnect<TInner>(
   connect?:
-    | mapper<TInner, (string | FirestoreQueryOptions)[]>
-    | FirestoreQueryOptions[]
+    | mapper<TInner, (string | ReduxFirestoreQuerySetting)[]>
+    | ReduxFirestoreQuerySetting[]
     | string[]
 ): void
 
@@ -674,7 +696,7 @@ export interface ReactReduxFirebaseProviderProps {
   config: Partial<ReactReduxFirebaseConfig>
   dispatch: Dispatch
   children?: React.ReactNode
-  initalizeAuth?: boolean
+  initializeAuth?: boolean
   createFirestoreInstance?: (
     firebase: typeof Firebase,
     configs: Partial<ReduxFirestoreConfig>,
@@ -759,7 +781,7 @@ export interface ReduxFirestoreProviderProps {
     dispatch: Dispatch
   ) => object
   children?: React.ReactNode
-  initalizeAuth?: boolean
+  initializeAuth?: boolean
 }
 
 /**
@@ -774,7 +796,7 @@ export function ReduxFirestoreProvider(props: ReduxFirestoreProviderProps): any
  */
 export function withFirebase<P extends object>(
   componentToWrap: React.ComponentType<P>
-): React.FC<P & WithFirebaseProps>
+): React.FC<P & WithFirebaseProps<P>>
 
 /**
  * React Higher Order Component that passes firestore as a prop (comes from context.store.firestore)
@@ -783,14 +805,6 @@ export function withFirebase<P extends object>(
 export function withFirestore<P extends object>(
   componentToWrap: React.ComponentType<P>
 ): React.FC<P & WithFirestoreProps>
-
-export namespace withFirebase {
-  const prototype: {}
-}
-
-export namespace withFirestore {
-  const prototype: {}
-}
 
 export namespace authIsReady {
   const prototype: {}
@@ -884,7 +898,7 @@ export namespace FirestoreReducer {
     }
     listeners: Listeners
     ordered: Ordered<any>
-    queries: Data<FirestoreQueryOptions & (Dictionary<any> | any)>
+    queries: Data<ReduxFirestoreQuerySetting & (Dictionary<any> | any)>
     status: {
       requested: Dictionary<boolean>
       requesting: Dictionary<boolean>
