@@ -174,12 +174,12 @@ export function writeMetadataToDb({
 export function uploadFileWithProgress(
   dispatch,
   firebase,
-  { path, file, filename, meta }
+  { path, file, filename, meta, fileMetadata }
 ) {
   const uploadEvent = firebase
     .storage()
     .ref(`${path}/${filename}`)
-    .put(file)
+    .put(file, fileMetadata)
 
   const unListen = uploadEvent.on(firebase.storage.TaskEvent.STATE_CHANGED, {
     next: snapshot => {

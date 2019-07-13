@@ -271,7 +271,10 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
         }
 
         // Convert custom object type within Provider data to a normal object
-        if (isArray(newProfile.providerData)) {
+        if (
+          isArray(newProfile.providerData) &&
+          newProfile.providerData.length
+        ) {
           newProfile.providerData = newProfile.providerData.map(
             providerDataItem =>
               pick(providerDataItem, config.keysToPreserveFromProviderData)
@@ -730,7 +733,7 @@ export const verifyPasswordResetCode = (dispatch, firebase, code) => {
  * @return {Promise}
  * @private
  */
-export const updateProfile = (dispatch, firebase, profileUpdate) => {
+export const updateProfile = (dispatch, firebase, profileUpdate, options) => {
   const { _: { config } } = firebase
   dispatch({
     type: actionTypes.PROFILE_UPDATE_START,
@@ -740,7 +743,7 @@ export const updateProfile = (dispatch, firebase, profileUpdate) => {
   const updatePromise = config.useFirestoreForProfile
     ? updateProfileOnFirestore
     : updateProfileOnRTDB
-  return updatePromise(firebase, profileUpdate)
+  return updatePromise(firebase, profileUpdate, options)
     .then(snap => {
       dispatch({
         type: actionTypes.PROFILE_UPDATE_SUCCESS,

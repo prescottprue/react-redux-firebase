@@ -3,7 +3,9 @@
 const webpack = require('webpack')
 const pkg = require('./package.json')
 const env = process.env.NODE_ENV
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 const config = {
   module: {
@@ -36,7 +38,8 @@ const config = {
     }
   },
   plugins: [
-    new webpack.optimize.ModuleConcatenationPlugin()
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new LodashModuleReplacementPlugin()
   ]
 }
 
@@ -63,13 +66,13 @@ config.plugins.push(
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(env)
   }),
-  new webpack.BannerPlugin(
-    {
-      banner: `${pkg.name}${env === 'production' ? '.min' : ''}.js v${pkg.version}`,
-      raw: false,
-      entryOnly: true
-    }
-  )
+  new webpack.BannerPlugin({
+    banner: `${pkg.name}${env === 'production' ? '.min' : ''}.js v${
+      pkg.version
+    }`,
+    raw: false,
+    entryOnly: true
+  })
 )
 
 module.exports = config

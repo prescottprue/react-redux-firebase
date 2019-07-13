@@ -28,6 +28,8 @@ const {
  * @param {Object} config.options - Options
  * @param {String|Function} config.options.name - Name of file. If a function
  * is provided it recieves (fileObject, internalFirebase, config) as arguments.
+ * @param {String|Function} config.options.metdata - Metadata for file to be passed along
+ * to storage.put calls
  * @return {Promise} Resolves with meta object
  * @private
  */
@@ -36,6 +38,7 @@ export const uploadFile = (dispatch, firebase, config) => {
     throw new Error('Firebase storage is required to upload files')
   }
   const { path, file, dbPath, options = { progress: false } } = config || {}
+  const { metadata: fileMetadata } = options
   const { logErrors } = firebase._.config
 
   // File renaming through options (supporting string and function)
@@ -55,12 +58,13 @@ export const uploadFile = (dispatch, firebase, config) => {
           path,
           file,
           filename,
-          meta
+          meta,
+          fileMetadata
         })
       : firebase
           .storage()
           .ref(`${path}/${filename}`)
-          .put(file)
+          .put(file, fileMetadata)
 
   return uploadPromise()
     .then(uploadTaskSnapshot => {
