@@ -492,7 +492,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 
   /**
    * @name signInWithPhoneNumber
-   * Asynchronously signs in using a phone number. This method
+   * @description Asynchronously signs in using a phone number. This method
    * sends a code via SMS to the given phone number, and returns a modified
    * firebase.auth.ConfirmationResult. The `confirm` method
    * authenticates and does profile handling.
@@ -501,7 +501,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    */
   /**
    * @name initializeAuth
-   * Initialize auth to work with build in profile support
+   * @description Initialize auth to work with build in profile support
    */
   const actionCreators = mapWithFirebaseAndDispatch(
     firebase,
@@ -518,22 +518,22 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 
   /**
    * @name ref
-   * Firebase ref function
+   * @description Firebase ref function
    * @return {firebase.database.Reference}
    */
   /**
    * @name database
-   * Firebase database service instance including all Firebase storage methods
+   * @description Firebase database service instance including all Firebase storage methods
    * @return {firebase.database.Database} Firebase database service
    */
   /**
    * @name storage
-   * Firebase storage service instance including all Firebase storage methods
+   * @description Firebase storage service instance including all Firebase storage methods
    * @return {firebase.database.Storage} Firebase storage service
    */
   /**
    * @name auth
-   * Firebase auth service instance including all Firebase auth methods
+   * @description Firebase auth service instance including all Firebase auth methods
    * @return {firebase.database.Auth}
    */
   return Object.assign(firebase, {

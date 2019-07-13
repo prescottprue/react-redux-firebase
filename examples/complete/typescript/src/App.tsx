@@ -1,18 +1,18 @@
-import React from 'react'
-import { Provider } from 'react-redux'
-import Home from './Home'
-import configureStore from './store'
-import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/database'
-import 'firebase/firestore' // make sure you add this for firestore
-import { firebase as fbConfig, reduxFirebase as rfConfig } from './config'
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/database";
+import "firebase/firestore"; // make sure you add this for firestore
+import React from "react";
+import { Provider } from "react-redux";
+import { ReactReduxFirebaseProvider } from "react-redux-firebase";
+import { firebase as fbConfig, reduxFirebase as rfConfig } from "./config";
+import Home from "./Home";
+import configureStore from "./store";
 
-const initialState = {}
-const store = configureStore(initialState)
+const initialState = {};
+const store = configureStore(initialState);
 // Initialize Firebase instance
-firebase.initializeApp(fbConfig)
+firebase.initializeApp(fbConfig);
 
 export default () => (
   <Provider store={store}>
@@ -23,5 +23,5 @@ export default () => (
       <Home />
     </ReactReduxFirebaseProvider>
   </Provider>
-)
+);
 

@@ -1,11 +1,9 @@
 import React from "react";
-import { ExtendedFirebaseInstance, useFirebase} from "react-redux-firebase";
+import AddTodo from "./AddTodo";
 import "./App.css";
 import logo from "./logo.svg";
 
 function Home() {
-  const firebase: ExtendedFirebaseInstance = useFirebase();
-  firebase.push;
   return (
     <div className="Home">
       <header className="App-header">
@@ -21,6 +19,7 @@ function Home() {
         >
           Learn React
           </a>
+          <AddTodo />
       </header>
     </div>
   );
