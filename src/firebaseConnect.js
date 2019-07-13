@@ -6,10 +6,6 @@ import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable, wrapDisplayName } from './utils'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
-// Reserved props that should not be passed into a firebaseConnect wrapped
-// component. Will throw an error if they are.
-const RESERVED_PROPS = ['firebase', 'dispatch']
-
 /**
  * Function that creates a Higher Order Component which
  * automatically listens/unListens to provided firebase paths using
@@ -102,13 +98,11 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     // Check that reserved props are not supplied to a FirebaseConnected
     // component and if they are, throw an error so the developer can rectify
     // this issue.
-    const clashes = Object.keys(props).filter(k => RESERVED_PROPS.includes(k))
+    const clashes = Object.keys(props).includes('firebase')
 
     if (clashes.length > 0) {
       throw new Error(
-        `Supplied prop/s "${clashes.join(
-          '", "'
-        )}" are reserved for internal firebaseConnect() usage.`
+        `Supplied prop "firebase" is reserved for internal firebaseConnect() usage.`
       )
     }
 
@@ -116,9 +110,9 @@ export const createFirebaseConnect = (storeKey = 'store') => (
       <ReactReduxFirebaseContext.Consumer>
         {_internalFirebase => (
           <HoistedComp
-            firebase={_internalFirebase}
-            dispatch={_internalFirebase.dispatch}
             {...props}
+            dispatch={_internalFirebase.dispatch}
+            firebase={_internalFirebase}
           />
         )}
       </ReactReduxFirebaseContext.Consumer>
