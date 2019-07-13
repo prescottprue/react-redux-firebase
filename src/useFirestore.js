@@ -32,7 +32,7 @@ export const createUseFirestore = () => () => {
  * Firestore instance is gathered from `store.firestore`, which is attached
  * to store by the store enhancer (`reduxFirestore`) during setup of
  * [`redux-firestore`](https://github.com/prescottprue/redux-firestore)
- * @return {Function} - Firestore instance
+ * @return {Object} - Firestore instance
  * @example <caption>Basic</caption>
  * import React from 'react'
  * import { useFirestore } from 'react-redux-firebase'

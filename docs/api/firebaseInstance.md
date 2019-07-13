@@ -37,7 +37,8 @@
 
 ## set
 
-Sets data to Firebase.
+Sets data to Firebase. More info available in
+[the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#set).
 
 **Parameters**
 
@@ -53,11 +54,13 @@ _Basic_
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
-const Example = ({ firebase: { set } }) => (
-  <button onClick={() => set('some/path', { here: 'is a value' })}>
+function Example({ firebase: { set } }) {
+  return (
+    <button onClick={() => set('some/path', { here: 'is a value' })}>
     Set To Firebase
-  </button>
-)
+    </button>
+  )
+}
 export default firebaseConnect()(Example)
 ```
 
@@ -68,7 +71,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 Sets data to Firebase along with meta data. Currently,
 this includes createdAt and createdBy. _Warning_ using this function
 may have unintented consequences (setting createdAt even if data already
-exists)
+exists). More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#update).
 
 **Parameters**
 
@@ -80,7 +83,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ## push
 
-Pushes data to Firebase.
+Pushes data to Firebase. More info
+available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#push).
 
 **Parameters**
 
@@ -93,14 +97,17 @@ Pushes data to Firebase.
 _Basic_
 
 ```javascript
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
-const Example = ({ firebase: { push } }) => (
-  <button onClick={() => push('some/path', true)}>
-    Push To Firebase
-  </button>
-)
+
+function Example({ firebase: { push } }) {
+  return (
+    <button onClick={() => push('some/path', true)}>
+      Push To Firebase
+    </button>
+  )
+}
 export default firebaseConnect()(Example)
 ```
 
@@ -109,7 +116,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 ## pushWithMeta
 
 Pushes data to Firebase along with meta data. Currently,
-this includes createdAt and createdBy.
+this includes createdAt and createdBy. More info
+available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#pushWithMeta).
 
 **Parameters**
 
@@ -121,7 +129,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ## update
 
-Updates data on Firebase and sends new data.
+Updates data on Firebase and sends new data. More info
+available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#update).
 
 **Parameters**
 
@@ -134,14 +143,21 @@ Updates data on Firebase and sends new data.
 _Basic_
 
 ```javascript
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
-const Example = ({ firebase: { update } }) => (
-  <button onClick={() => update('some/path', { here: 'is a value' })}>
-    Update To Firebase
-  </button>
-)
+
+function Example({ firebase: { update } }) {
+  function updateData() {
+    update('some/path', { here: 'is a value' })
+  }
+}
+  return (
+    <button onClick={updateData}>
+      Update To Firebase
+    </button>
+  )
+}
 export default firebaseConnect()(Example)
 ```
 
@@ -151,7 +167,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Updates data on Firebase along with meta. _Warning_
 using this function may have unintented consequences (setting
-createdAt even if data already exists)
+createdAt even if data already exists). More info available
+in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#updateWithMeta).
 
 **Parameters**
 
@@ -167,6 +184,7 @@ Removes data from Firebase at a given path. **NOTE** A
 seperate action is not dispatched unless `dispatchRemoveAction: true` is
 provided to config on store creation. That means that a listener must
 be attached in order for state to be updated when calling remove.
+More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#remove).
 
 **Parameters**
 
@@ -179,14 +197,17 @@ be attached in order for state to be updated when calling remove.
 _Basic_
 
 ```javascript
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
-const Example = ({ firebase: { remove } }) => (
-  <button onClick={() => remove('some/path')}>
-    Remove From Firebase
-  </button>
-)
+
+function Example({ firebase: { remove } }) {
+  return (
+    <button onClick={() => remove('some/path')}>
+      Remove From Firebase
+    </button>
+  )
+}
 export default firebaseConnect()(Example)
 ```
 
@@ -197,6 +218,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 Sets data to Firebase only if the path does not already
 exist, otherwise it rejects. Internally uses a Firebase transaction to
 prevent a race condition between seperate clients calling uniqueSet.
+More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uniqueSet).
 
 **Parameters**
 
@@ -212,11 +234,14 @@ _Basic_
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
-const Example = ({ firebase: { uniqueSet } }) => (
-  <button onClick={() => uniqueSet('some/unique/path', true)}>
-    Unique Set To Firebase
-  </button>
-)
+
+function Example({ firebase: { uniqueSet } }) {
+  return (
+    <button onClick={() => uniqueSet('some/unique/path', true)}>
+      Unique Set To Firebase
+    </button>
+  )
+}
 export default firebaseConnect()(Example)
 ```
 
@@ -225,7 +250,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 ## uploadFile
 
 Upload a file to Firebase Storage with the option to store
-its metadata in Firebase Database
+its metadata in Firebase Database. More info available
+in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uploadFile).
 
 **Parameters**
 
@@ -241,7 +267,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 ## uploadFiles
 
 Upload multiple files to Firebase Storage with the option
-to store their metadata in Firebase Database
+to store their metadata in Firebase Database. More info available
+in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uploadFiles).
 
 **Parameters**
 
@@ -257,7 +284,8 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 ## deleteFile
 
 Delete a file from Firebase Storage with the option to
-remove its metadata in Firebase Database
+remove its metadata in Firebase Database. More info available
+in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#deleteFile).
 
 **Parameters**
 
@@ -270,6 +298,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Watch event. **Note:** this method is used internally
 so examples have not yet been created, and it may not work as expected.
+More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#watchEvent).
 
 **Parameters**
 
@@ -286,7 +315,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Unset a listener watch event. **Note:** this method is used
 internally so examples have not yet been created, and it may not work
-as expected.
+as expected. More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#unwatchevent).
 
 **Parameters**
 
@@ -318,7 +347,7 @@ Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 ## login
 
 Logs user into Firebase. For examples, visit the
-[auth section](/docs/auth.md)
+[auth section of the docs](/docs/auth.md)
 
 **Parameters**
 

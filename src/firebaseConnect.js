@@ -11,8 +11,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 const RESERVED_PROPS = ['firebase', 'dispatch']
 
 /**
- * @name createFirebaseConnect
- * @description Function that creates a Higher Order Component that
+ * Function that creates a Higher Order Component which
  * automatically listens/unListens to provided firebase paths using
  * React's Lifecycle hooks.
  * **WARNING!!** This is an advanced feature, and should only be used when
@@ -161,7 +160,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
  *   ]),
  *   connect((state) => ({
  *     todos: state.firebase.ordered.todos
- *   })
+ *   }))
  * )
  * 
  * // use enhnace to pass todos list as props.todos
@@ -180,17 +179,19 @@ export const createFirebaseConnect = (storeKey = 'store') => (
  * const enhance = compose(
  *   firebaseConnect((props) => ([
  *     `posts/${props.postId}` // sync /posts/postId from firebase into redux
- *   ]),
+ *   ])),
  *   connect((state, props) => ({
  *     post: getVal(state.firebase.data, `posts/${props.postId}`),
- *   })
+ *   }))
  * )
  *
- * const Post = ({ post }) => (
- *   <div>
- *     {JSON.stringify(post, null, 2)}
- *   </div>
- * )
+ * function Post({ post }) {
+ *   return (
+ *     <div>
+ *       {JSON.stringify(post, null, 2)}
+ *     </div>
+ *   )
+ * }
  *
  * export default enhance(Post)
  */

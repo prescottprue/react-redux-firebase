@@ -1,10 +1,11 @@
-import React from 'react'
-import logo from './logo.svg';
-import './App.css';
-import { withFirebase } from 'react-redux-firebase'
+import React from "react";
+import { ExtendedFirebaseInstance, useFirebase} from "react-redux-firebase";
+import "./App.css";
+import logo from "./logo.svg";
 
-function Home({ firebase }) {
-  console.log('firebase', firebase)
+function Home() {
+  const firebase: ExtendedFirebaseInstance = useFirebase();
+  firebase.push;
   return (
     <div className="Home">
       <header className="App-header">
@@ -22,7 +23,7 @@ function Home({ firebase }) {
           </a>
       </header>
     </div>
-  )
+  );
 }
 
-export default withFirebase(Home);
+export default Home;
