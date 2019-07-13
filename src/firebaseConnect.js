@@ -98,9 +98,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     // Check that reserved props are not supplied to a FirebaseConnected
     // component and if they are, throw an error so the developer can rectify
     // this issue.
-    const clashes = Object.keys(props).includes('firebase')
-
-    if (clashes.length > 0) {
+    if (Object.keys(props).includes('firebase')) {
       throw new Error(
         `Supplied prop "firebase" is reserved for internal firebaseConnect() usage.`
       )
