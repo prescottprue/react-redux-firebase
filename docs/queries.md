@@ -19,17 +19,19 @@ import { withFirebase } from 'react-redux-firebase'
 
 const todosPath = 'todos'
 
-const Todos = ({ firebase, todos }) => (
-  <div>
-    <h1>Todos</h1>
+function Todos ({ firebase, todos }) {
+  return (
     <div>
-      {JSON.stringify(todos, null, 2)}
+      <h1>Todos</h1>
+      <div>
+        {JSON.stringify(todos, null, 2)}
+      </div>
+      <button onClick={() => firebase.watchEvent('value', todosPath)}>
+        Load Todos
+      </button>
     </div>
-    <button onClick={() => firebase.watchEvent('value', todosPath)}>
-      Load Todos
-    </button>
-  </div>
-)
+  )
+}
 
 export default compose(
   withFirebase,
@@ -57,25 +59,29 @@ By default the results of queries are stored in redux under the path of the quer
 import React from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
-const Todos = ({ firebase, todos }) => (
-  <div>
-    <h1>Todos</h1>
+function Todos ({ firebase, todos }) {
+  return (
     <div>
-      {JSON.stringify(todos, null, 2)}
+      <h1>Todos</h1>
+      <div>
+        {JSON.stringify(todos, null, 2)}
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
-export default compose(
+const enhance = compose(
   firebaseConnect((props) => [
-    { path: 'todos' } // string equivalent 'todos'
+    { path: 'todos' }
   ]),
   connect((state, props) => ({
     todos: state.firebase.data.todos
   }))
-)(Todos)
+)
+
+export default enhance(Todos)
 ```
 
 **NOTE:**
@@ -93,7 +99,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 
-const Todos = ({ firebase, todos }) => {
+function Todos({ firebase, todos }) {
   // Build Todos list if todos exist and are loaded
   if (!isLoaded(todos)) {
     return <div>Loading...</div>
@@ -111,14 +117,16 @@ const Todos = ({ firebase, todos }) => {
   )
 }
 
-export default compose(
+const enhance = compose(
   firebaseConnect((props) => [
-    { path: 'todos' } // string equivalent 'todos'
+    { path: 'todos' }
   ]),
   connect((state) => ({
     todos: state.firebase.data.todos,
   }))
-)(Todos)
+)
+
+export default enhance(Todos)
 ```
 
 ##### Functional Approach Using Recompose {#loadingHOCs}
@@ -137,19 +145,21 @@ import {
 } from 'recompose'
 
 // HOC that shows a component while condition is true
-export const renderWhile = (condition, component) =>
-  branch(condition, renderComponent(component))
+export function renderWhile(condition, component) {
+  return branch(condition, renderComponent(component))
+}
 
 // HOC that shows loading spinner component while list of propNames are loading
-export const spinnerWhileLoading = propNames =>
-  renderWhile(
+export function spinnerWhileLoadingpropNames {
+  return renderWhile(
     props => some(propNames, name => !isLoaded(get(props, name))),
     LoadingSpinner
   )
+}
 
 // HOC that shows a component while any of a list of props isEmpty
-export const renderIfEmpty = (propsNames, component) =>
-  renderWhile(
+export function renderIfEmpty(propsNames, component) {
+  return renderWhile(
     // Any of the listed prop name correspond to empty props (supporting dot path names)
     props => some(propNames, (name) => {
       const propValue = get(props, name)
@@ -157,16 +167,20 @@ export const renderIfEmpty = (propsNames, component) =>
     }),
     component
   )
+}
 ```
 
 That can then be used in HOC compositions to wait for data to load like so:
 
-```js
+```jsx
+import React from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 
-const EmptyMessage = () => <div>No Projects Found</div>
+function EmptyMessage() {
+  return <div>No Projects Found</div>
+}
 
 const enhance = compose(
   // set/unset listener to "projects" path on component mount/unmount
@@ -381,7 +395,7 @@ Start query at a specific location by providing the specific number or value
 firebaseConnect([
   { path: '/todos', queryParams: [ 'startAt=5', 'limitToFirst=10' ] }
   // 'todos#startAt=val1&limitToFirst=10' // string notation
-])(SomeComponent)
+])
 ```
 
 #### endAt

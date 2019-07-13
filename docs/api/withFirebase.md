@@ -53,24 +53,26 @@ actions.
 _Basic_
 
 ```javascript
+import React from 'react'
 import { withFirebase } from 'react-redux-firebase'
 
-function AddData({ firebase: { push } }) {
+function AddTodo({ firebase: { push } }) {
   return (
     <div>
       <button onClick={() => push('todos', { done: false, text: 'Sample' })}>
         Add Sample Todo
       </button>
     </div>
-  )
+   )
 }
 
-export default withFirebase(AddData)
+export default withFirebase(AddTodo)
 ```
 
 _Within HOC Composition_
 
 ```javascript
+import React from 'react'
 import { compose } from 'redux' // can also come from recompose
 import { withHandlers } from 'recompose'
 import { withFirebase } from 'react-redux-firebase'

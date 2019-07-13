@@ -23,12 +23,13 @@ All examples below assume you have passed `firebase` from `context` to props. Wr
 
 ```js
 import React from 'react'
-import PropTypes from 'prop-types'
 import { withFirebase } from 'react-redux-firebase'
 
-const SomeComponent = (props) => (
-  // use props.firebase
-)
+function SomeComponent (props) {
+  return (
+    // use props.firebase
+  )
+}
 
 export default withFirebase(SomeComponent) // or firebaseConnect()(SomeComponent)
 ```
@@ -37,7 +38,6 @@ Works same with class components (make sure you import `Component` from react):
 
 ```js
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 
 class SomeComponent extends Component {
@@ -48,6 +48,8 @@ class SomeComponent extends Component {
 
 export default firebaseConnect()(SomeComponent) // or withFirebase(SomeComponent)
 ```
+
+For examples of how to use this API, checkout the [auth recipes section](/docs/recipes/auth.html).
 
 ## login(credentials)
 

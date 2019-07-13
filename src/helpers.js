@@ -45,7 +45,6 @@ import { getDotStrPath } from './utils/reducers'
  * @example <caption>Base Paths</caption>
  * import { connect } from 'react-redux'
  * import { firebaseConnect, getVal } from 'react-redux-firebase'
- * // easily replace pathToJS with getVal
  *
  * export default connect(({ firebase }) => ({
  *   // this.props.auth loaded from state.firebase.auth
@@ -149,7 +148,7 @@ export function isLoaded(...args) {
  *   }))
  * )
  *
- * const Todos = ({ todos }) => {
+ * function Todos({ todos }) {
  *   // Message for if todos are loading
  *   if(!isLoaded(todos)) {
  *     return <span>Loading...</span>

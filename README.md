@@ -21,15 +21,15 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 
 ## Features
 
-- Out of the box support for authentication (with auto load user profile)
-- Full Firebase Platform Support Including Real Time Database, Firestore, and Storage
-- Automatic binding/unbinding of listeners through React Higher Order Components (`firebaseConnect`  and `firestoreConnect`)
-- [Population capability](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
-- Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed` )
-- Multiple queries types supported including `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo`
-- Tons of examples of integrations including [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/)
-- Server Side Rendering Support
-- [`react-native` support](http://react-redux-firebase.com/docs/integrations/react-native.html) using [native modules](http://react-redux-firebase.com/docs/integrations/react-native.html#native-modules) or [web sdk](http://react-redux-firebase.com/docs/integrations/react-native.html#jsweb)
+* Out of the box support for authentication (with auto load user profile)
+* Full Firebase Platform Support Including Real Time Database, Firestore, and Storage
+* Automatic binding/unbinding of listeners through React Higher Order Components (`firebaseConnect` and `firestoreConnect`)
+* [Population capability](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
+* Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed` )
+* Multiple queries types supported including `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo`
+* Tons of examples of integrations including [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/)
+* Server Side Rendering Support
+* [`react-native` support](http://react-redux-firebase.com/docs/integrations/react-native.html) using [native modules](http://react-redux-firebase.com/docs/integrations/react-native.html#native-modules) or [web sdk](http://react-redux-firebase.com/docs/integrations/react-native.html#jsweb)
 
 ## Installation
 
@@ -64,7 +64,7 @@ const fbConfig = {}
 
 // react-redux-firebase config
 const rrfConfig = {
-  userProfile: 'users',
+  userProfile: 'users'
   // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
 }
 
@@ -77,7 +77,7 @@ firebase.initializeApp(fbConfig)
 
 // Add firebase to reducers
 const rootReducer = combineReducers({
-  firebase: firebaseReducer,
+  firebase: firebaseReducer
   // firestore: firestoreReducer // <- needed if using firestore
 })
 
@@ -103,7 +103,7 @@ function App() {
   );
 }
 
-render(<App/>, document.getElementById('root'));
+render(<App />, document.getElementById('root'))
 ```
 
 The Firebase instance can then be grabbed from context within your components (`withFirebase` and `firebaseConnect` Higher Order Components provided to help):
@@ -176,8 +176,8 @@ export default compose(
   firebaseConnect(() => [
     'todos' // { path: '/todos' } // object notation
   ]),
-  connect((state) => ({
-    todos: state.firebase.data.todos,
+  connect(state => ({
+    todos: state.firebase.data.todos
     // profile: state.firebase.profile // load profile
   }))
 )(Todos)
@@ -197,10 +197,10 @@ import { compose, withHandlers } from 'recompose'
 
 // Component enhancer that loads todo into redux then into the todo prop
 const enhance = compose(
-  firebaseConnect((props) => {
+  firebaseConnect(props => {
     // Set listeners based on props (prop is route parameter from react-router in this case)
     return [
-      { path: `todos/${props.params.todoId}` }, // create todo listener
+      { path: `todos/${props.params.todoId}` } // create todo listener
       // `todos/${props.params.todoId}` // equivalent string notation
     ]
   }),
@@ -231,7 +231,6 @@ function Todo({ todo }) {
 // Export enhanced component
 export default enhance(Todo)
 ```
-
 
 **Load Data On Click**
 
@@ -294,6 +293,7 @@ If you plan to use Firestore, you should checkout [`redux-firestore`][redux-fire
 Currently `react-redux-firebase` still handles auth when using [`redux-firestore`][redux-firestore] - The future plan is to also have auth standalone auth library that will allow the developer to choose which pieces they do/do not want.
 
 ## [Docs](http://react-redux-firebase.com)
+
 See full documentation at [react-redux-firebase.com](http://react-redux-firebase.com)
 
 * [Getting Started](http://react-redux-firebase.com/docs/getting_started)
@@ -306,6 +306,7 @@ See full documentation at [react-redux-firebase.com](http://react-redux-firebase
 ## [Examples](examples)
 
 ### Real World Applications
+
 * [fireadmin.io](http://fireadmin.io) - Firebase Instance Management Tool (source [available here](https://github.com/prescottprue/fireadmin))
 
 If you would like a project added to this section please reach out [over gitter][gitter-url]
@@ -328,7 +329,7 @@ A simple example that was created using [create-react-app](https://github.com/fa
 
 #### [Material App Example](examples/complete/material)
 
-An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command.  Shows a list of todo items and allows you to add to them. This is what is deployed to [redux-firebasev3.firebaseapp.com](https://redux-firebasev3.firebaseapp.com/).
+An example that user Material UI built on top of the output of [create-react-app](https://github.com/facebookincubator/create-react-app)'s eject command. Shows a list of todo items and allows you to add to them. This is what is deployed to [redux-firebasev3.firebaseapp.com](https://redux-firebasev3.firebaseapp.com/).
 
 ## Discussion
 
