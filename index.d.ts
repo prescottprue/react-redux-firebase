@@ -668,9 +668,9 @@ export function useFirestore(): ExtendedFirestoreInstance
  */
 export function useFirestoreConnect<TInner>(
   connect?:
-    | mapper<TInner, (string | ReduxFirestoreQuerySetting)[]>
-    | ReduxFirestoreQuerySetting[]
-    | string[]
+    | mapper<TInner, (string | ReduxFirestoreQuerySetting)>
+    | ReduxFirestoreQuerySetting
+    | string
 ): void
 
 export function populate(
