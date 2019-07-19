@@ -15,9 +15,10 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * // create useFirebase
  * const useFirebase = createUseFirebase()
  */
-export const createUseFirebase = () => () => {
-  return useContext(ReactReduxFirebaseContext)
-}
+export const createUseFirebase = () =>
+  function useFirebase() {
+    return useContext(ReactReduxFirebaseContext)
+  }
 
 /**
  * @name useFirebase

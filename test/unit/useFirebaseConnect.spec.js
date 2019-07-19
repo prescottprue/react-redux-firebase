@@ -16,7 +16,9 @@ import { createFirestoreInstance } from 'redux-firestore'
 
 /* eslint-disable react/prop-types */
 function TestComponent({ dynamicProps }) {
-  useFirebaseConnect(!dynamicProps ? dynamicProps : `test/${dynamicProps}`)
+  useFirebaseConnect(!dynamicProps ? dynamicProps : `test/${dynamicProps}`, [
+    dynamicProps
+  ])
   return <div />
 }
 /* eslint-enable react/prop-types */
@@ -72,6 +74,32 @@ describe('useFirebaseConnect', () => {
         isMatch(arg[0], {
           type: '@@reactReduxFirebase/SET_LISTENER',
           path: 'test/start'
+        })
+      )
+    ).to.be.true
+  })
+
+  it('enables multiple watchers', async () => {
+    const { dispatch } = createContainer({
+      component: () => {
+        useFirebaseConnect(['test1', 'test2'], [])
+        return null
+      }
+    })
+    await sleep()
+    expect(
+      some(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reactReduxFirebase/SET_LISTENER',
+          path: 'test1'
+        })
+      )
+    ).to.be.true
+    expect(
+      some(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reactReduxFirebase/SET_LISTENER',
+          path: 'test2'
         })
       )
     ).to.be.true
@@ -142,17 +170,6 @@ describe('useFirebaseConnect', () => {
         })
       )
     ).to.have.lengthOf(1)
-  })
-
-  it('should not accept array', async () => {
-    const useFirebaseConnectSpy = sinon.spy(useFirebaseConnect)
-    const Component = () => {
-      useFirebaseConnectSpy(['test'])
-      return <div />
-    }
-    createContainer({ component: Component })
-    await sleep()
-    expect(useFirebaseConnectSpy.threw()).to.be.true
   })
 })
 

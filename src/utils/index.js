@@ -1,4 +1,4 @@
-import { isFunction, constant } from 'lodash'
+import { isFunction, constant, isEqual, some, filter } from 'lodash'
 export { getEventsFromInput } from './events'
 
 /**
@@ -38,4 +38,11 @@ export function stringToDate(strInput) {
     console.error('Error parsing string to date:', err.message || err) // eslint-disable-line no-console
     return strInput
   }
+}
+
+export function getChanges(data = [], prevData = []) {
+  const result = {}
+  result.added = filter(data, d => !some(prevData, p => isEqual(d, p)))
+  result.removed = filter(prevData, p => !some(data, d => isEqual(p, d)))
+  return result
 }

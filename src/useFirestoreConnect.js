@@ -1,54 +1,67 @@
-import { isArray } from 'lodash'
-import { useMemo, useEffect } from 'react'
-import { createCallable } from './utils'
+import { isArray, isEqual } from 'lodash'
+import { useRef, useMemo, useEffect } from 'react'
+import { createCallable, getChanges } from './utils'
 import useFirestore from './useFirestore'
 
 /**
+ * @name createUseFirestoreConnect
  * @description React hook that automatically listens/unListens to provided
- * firestore paths.
+ * firebase paths.
  * **WARNING!!** This is an advanced feature, and should only be used when
  * needing to access a firebase instance created under a different store key.
- * Firestore state (state.firestore)
+ * Firebase state (state.firebase)
  * @return {Function} - React hook that accepts watch query
  * @example <caption>Basic</caption>
- * // props.firestore set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { createUseFirestoreConnect } from 'react-redux-firebase'
  *
  * const firestoreConnect = createUseFirestoreConnect()
  *
  * export default useFirestoreConnect()
  */
-export const createUseFirestoreConnect = () => dataOrFn => {
+export const createUseFirestoreConnect = () => (dataOrFn, deps) => {
   const firestore = useFirestore()
+  const firestoreIsEnabled = !!firestore
+  const queryRef = useRef()
 
-  const inputAsFunc = createCallable(dataOrFn)
+  const data = useMemo(() => {
+    const inputAsFunc = createCallable(dataOrFn)
+    const innerData = inputAsFunc()
 
-  const data = inputAsFunc()
-
-  const payload = useMemo(
-    () => {
-      if (!data) {
-        return null
-      }
-      if (isArray(data)) {
-        throw new Error("Array isn't allowed inside useFirestoreConnect hook.")
-      }
-      return [data]
-    },
-    [data]
-  )
+    if (!innerData) {
+      return null
+    }
+    if (isArray(innerData)) {
+      return innerData
+    }
+    return [innerData]
+  }, deps)
 
   useEffect(
     () => {
-      if (data !== null) {
-        firestore.setListeners(payload)
-        return () => {
-          firestore.unsetListeners(payload)
-        }
+      if (firestoreIsEnabled && !isEqual(data, queryRef.current)) {
+        const changes = getChanges(data, queryRef.current)
+
+        queryRef.current = data
+
+        // Remove listeners for inactive subscriptions
+        firestore.unsetListeners(changes.removed)
+
+        // Add listeners for new subscriptions
+        firestore.setListeners(changes.added)
       }
     },
     [data]
   )
+
+  // Emulate componentWillUnmount
+  useEffect(() => {
+    return () => {
+      if (firestoreIsEnabled && queryRef.current) {
+        firestore.unsetListeners(queryRef.current)
+      }
+    }
+  }, [])
 }
 
 /**
@@ -64,10 +77,10 @@ export const createUseFirestoreConnect = () => dataOrFn => {
  * import React from 'react'
  * import { map } from 'lodash'
  * import { connect } from 'react-redux'
- * import { useFirestoreConnect } from 'react-redux-firebase'
+ * import { useFirebaseConnect } from 'react-redux-firebase'
  *
- * function TodosList({ todosList }) {
- *   useFirestoreConnect('todos') // sync todos collection from Firestore into redux
+ * const TodosList = ({ todosList }) => {
+ *   useFirebaseConnect('todos') // sync todos collection from Firestore into redux
  *
  *   return <ul>{_.map(todosList, todo => <li>{todo}</li>)}</ul>
  * }
@@ -82,17 +95,17 @@ export const createUseFirestoreConnect = () => dataOrFn => {
  * import React, { useMemo } from 'react'
  * import { get } from 'lodash'
  * import { connect } from 'react-redux'
- * import { useFirestoreConnect } from 'react-redux-firebase'
+ * import { useFirebaseConnect } from 'react-redux-firebase'
  *
- * function TodoItem({ todoId, todoData }) {
- *   const query = useMemo( // Make sure that everytime component rerender will not create a new query object which cause unnecessary set/unset listener
+ * const TodoItem = ({ todoId, todoData }) => {
+ *   cosnt query = useMemo( // Make sure that everytime component rerender will not create a new query object which cause unnecessary set/unset listener
  *     () => ({
  *       collection: 'todos',
  *       doc: todoId
  *     }),
  *     [todoId] // useMemo's dependency
  *   )
- *   useFirestoreConnect(query) // sync todos collection from Firestore into redux
+ *   useFirebaseConnect(query) // sync todos collection from Firestore into redux
  *
  *   return <div>{JSON.stringify(todoData)}</div>
  * }

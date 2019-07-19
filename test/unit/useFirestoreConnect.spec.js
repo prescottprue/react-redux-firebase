@@ -19,7 +19,8 @@ function TestComponent({ dynamicProps }) {
   useFirestoreConnect(
     dynamicProps === null
       ? dynamicProps
-      : `test${dynamicProps ? '/' + dynamicProps : ''}`
+      : `test${dynamicProps ? '/' + dynamicProps : ''}`,
+    [dynamicProps]
   )
   return <div />
 }
@@ -67,7 +68,7 @@ const createContainer = ({
   }
 }
 
-describe('firestoreConnect', () => {
+describe('useFirestoreConnect', () => {
   it('enables watchers on mount', async () => {
     const { dispatch } = createContainer()
     await sleep()
@@ -77,6 +78,35 @@ describe('firestoreConnect', () => {
           type: '@@reduxFirestore/SET_LISTENER',
           meta: { collection: 'test' },
           payload: { name: 'test' }
+        })
+      )
+    ).to.be.true
+  })
+
+  it('enables multiple watchers', async () => {
+    const { dispatch } = createContainer({
+      component: () => {
+        useFirestoreConnect(
+          [{ collection: 'test1' }, { collection: 'test2' }],
+          []
+        )
+        return null
+      }
+    })
+    await sleep()
+    expect(
+      some(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reduxFirestore/SET_LISTENER',
+          meta: { collection: 'test1' }
+        })
+      )
+    ).to.be.true
+    expect(
+      some(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reduxFirestore/SET_LISTENER',
+          meta: { collection: 'test2' }
         })
       )
     ).to.be.true
@@ -150,17 +180,6 @@ describe('firestoreConnect', () => {
         })
       )
     ).to.have.lengthOf(1)
-  })
-
-  it('should not accept array', async () => {
-    const useFirestoreConnectSpy = sinon.spy(useFirestoreConnect)
-    const Component = () => {
-      useFirestoreConnectSpy(['test'])
-      return <div />
-    }
-    createContainer({ component: Component })
-    await sleep()
-    expect(useFirestoreConnectSpy.threw()).to.be.true
   })
 })
 

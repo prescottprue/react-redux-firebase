@@ -1,5 +1,5 @@
-import { isArray } from 'lodash'
-import { useMemo, useEffect } from 'react'
+import { isArray, isEqual, differenceWith } from 'lodash'
+import { useMemo, useEffect, useRef } from 'react'
 import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable } from './utils'
 import useFirebase from './useFirebase'
@@ -18,37 +18,61 @@ import useFirebase from './useFirebase'
  * // create firebase connect that uses another redux store
  * const useFirebaseConnect = createUseFirebaseConnect()
  */
-export const createUseFirebaseConnect = () => dataOrFn => {
+export const createUseFirebaseConnect = () => (dataOrFn, deps) => {
   const firebase = useFirebase()
+  const eventRef = useRef()
+  const dataRef = useRef()
 
-  const inputAsFunc = createCallable(dataOrFn)
+  const data = useMemo(() => {
+    const inputAsFunc = createCallable(dataOrFn)
+    const innerData = inputAsFunc()
 
-  const data = inputAsFunc()
-
-  const firebaseEvents = useMemo(
-    () => {
-      if (!data) {
-        return null
-      }
-      if (isArray(data)) {
-        throw new Error("Array isn't allowed inside useFirebaseConnect hook.")
-      }
-      return getEventsFromInput([data])
-    },
-    [data]
-  )
+    if (!innerData) {
+      return null
+    }
+    if (isArray(innerData)) {
+      return innerData
+    }
+    return [innerData]
+  }, deps)
 
   useEffect(
     () => {
-      if (data !== null) {
-        watchEvents(firebase, firebase.dispatch, firebaseEvents)
-        return () => {
-          unWatchEvents(firebase, firebase.dispatch, firebaseEvents)
-        }
+      if (data !== null && !isEqual(data, dataRef.current)) {
+        const itemsToSubscribe = differenceWith(data, dataRef.current, isEqual)
+        const itemsToUnsubscribe = differenceWith(
+          dataRef.current,
+          data,
+          isEqual
+        )
+
+        dataRef.current = data
+        // UnWatch all current events
+        unWatchEvents(
+          firebase,
+          firebase.dispatch,
+          getEventsFromInput(itemsToUnsubscribe)
+        )
+        // Get watch events from new data
+        eventRef.current = getEventsFromInput(data)
+
+        // Watch new events
+        watchEvents(
+          firebase,
+          firebase.dispatch,
+          getEventsFromInput(itemsToSubscribe)
+        )
       }
     },
     [data]
   )
+
+  // Emulate componentWillUnmount
+  useEffect(() => {
+    return () => {
+      unWatchEvents(firebase, firebase.dispatch, eventRef.current)
+    }
+  }, [])
 }
 
 /**
