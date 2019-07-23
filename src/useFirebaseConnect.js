@@ -69,10 +69,12 @@ export const createUseFirebaseConnect = () => (dataOrFn, deps) => {
  * @name useFirebaseConnect
  * @description Hook that automatically listens/unListens
  * to provided firebase paths using React's useEffect hook.
- * **Note** Only single path is allowed per one hook
- * @param {Object|String} queriesConfig - Object or string for path to sync
- * from Firebase or null if hook doesn't need to sync.
- * Can also be a function that returns an object or a path string.
+ * @param {Object|String|Function|Array} queriesConfigs - Object, string, or
+ * array contains object or string for path to sync from Firebase or null if
+ * hook doesn't need to sync. Can also be a function that returns an object,
+ * a path string, or array of an object or a path string.
+ * @param {Array} deps - Dependency for memoizing query object. It's recommend
+ * to include deps if using object, array or function as a query.
  * @example <caption>Ordered Data</caption>
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
@@ -108,6 +110,27 @@ export const createUseFirebaseConnect = () => (dataOrFn, deps) => {
  *
  * const Post = ({ post, postId }) => {
  *   useFirebaseConnect(`posts/${postId}`) // sync /posts/postId from firebase into redux
+ *   return (
+ *     <div>
+ *       {JSON.stringify(post, null, 2)}
+ *     </div>
+ *   )
+ * }
+ * 
+ * export default enhance(Post)
+ * @example <caption>Data that depends on props, an array as a query</caption>
+ * import { compose } from 'redux'
+ * import { connect } from 'react-redux'
+ * import { firebaseUseConnect, getVal } from 'react-redux-firebase'
+ *
+ * const enhance = compose(
+ *   connect((state, props) => ({
+ *     post: getVal(state.firebase.data, `posts/${props.postId}`),
+ *   })
+ * )
+ *
+ * const Post = ({ post, postId }) => {
+ *   useFirebaseConnect([`posts/${postId}`], [postId]) // sync /posts/postId from firebase into redux
  *   return (
  *     <div>
  *       {JSON.stringify(post, null, 2)}

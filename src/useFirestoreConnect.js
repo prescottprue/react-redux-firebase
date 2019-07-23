@@ -59,9 +59,11 @@ export const createUseFirestoreConnect = () => (dataOrFn, deps) => {
  * to provided Cloud Firestore paths. Make sure you have required/imported
  * Cloud Firestore, including it's reducer, before attempting to use.
  * **Note** Populate is not yet supported.
- * **Note2** Only single path is allowed per one hook
- * @param {Object|String} queriesConfig - An object or string for paths to sync
- * from firestore. Can also be a function that returns the object or string.
+ * @param {Object|String|Array|Function} queriesConfig - An object, string,
+ * or array of object or string for paths to sync from firestore. Can also be
+ * a function that returns the object, string, or array of object or string.
+ * @param {Array} deps - Dependency for memoizing query object. It's recommend
+ * to include deps if using object, array or function as a query.
  * @example <caption>Basic</caption>
  * import React from 'react'
  * import { map } from 'lodash'
@@ -87,14 +89,10 @@ export const createUseFirestoreConnect = () => (dataOrFn, deps) => {
  * import { useFirebaseConnect } from 'react-redux-firebase'
  *
  * const TodoItem = ({ todoId, todoData }) => {
- *   cosnt query = useMemo( // Make sure that everytime component rerender will not create a new query object which cause unnecessary set/unset listener
- *     () => ({
- *       collection: 'todos',
- *       doc: todoId
- *     }),
- *     [todoId] // useMemo's dependency
- *   )
- *   useFirebaseConnect(query) // sync todos collection from Firestore into redux
+ *   useFirebaseConnect(() => ({
+ *     collection: 'todos',
+ *     doc: todoId
+ *   }), [todoId]) // include dependency in the hook
  *
  *   return <div>{JSON.stringify(todoData)}</div>
  * }

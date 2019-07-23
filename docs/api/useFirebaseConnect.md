@@ -30,13 +30,15 @@ Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference
 
 Hook that automatically listens/unListens
 to provided firebase paths using React's useEffect hook.
-**Note** Only single path is allowed per one hook
 
 **Parameters**
 
--   `queriesConfig` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String))** Object or string for path to sync
-    from Firebase or null if hook doesn't need to sync.
-    Can also be a function that returns an object or a path string.
+-   `queriesConfigs` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array))** Object, string, or
+    array contains object or string for path to sync from Firebase or null if
+    hook doesn't need to sync. Can also be a function that returns an object,
+    a path string, or array of an object or a path string.
+-   `deps` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Dependency for memoizing query object. It's recommend
+    to include deps if using object, array or function as a query.
 
 **Examples**
 
@@ -81,6 +83,31 @@ const enhance = compose(
 
 const Post = ({ post, postId }) => {
   useFirebaseConnect(`posts/${postId}`) // sync /posts/postId from firebase into redux
+  return (
+    <div>
+      {JSON.stringify(post, null, 2)}
+    </div>
+  )
+}
+
+export default enhance(Post)
+```
+
+_Data that depends on props, an array as a query_
+
+```javascript
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { firebaseUseConnect, getVal } from 'react-redux-firebase'
+
+const enhance = compose(
+  connect((state, props) => ({
+    post: getVal(state.firebase.data, `posts/${props.postId}`),
+  })
+)
+
+const Post = ({ post, postId }) => {
+  useFirebaseConnect([`posts/${postId}`], [postId]) // sync /posts/postId from firebase into redux
   return (
     <div>
       {JSON.stringify(post, null, 2)}

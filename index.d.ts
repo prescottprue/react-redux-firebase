@@ -350,7 +350,12 @@ export interface ReactReduxFirebaseQuerySetting {
   storeAs?: string
 }
 
- export type ReactReduxFirebaseQueries = (ReactReduxFirebaseQuerySetting | string)[]
+export type ReactReduxFirebaseQueries =
+  (ReactReduxFirebaseQuerySetting | string)[]
+  | (ReactReduxFirebaseQuerySetting | string)
+
+export type ReactReduxFirebaseQueriesFunction =
+  (props?) => ReactReduxFirebaseQueries
 
 
 // https://github.com/prescottprue/redux-firestore#query-options
@@ -386,8 +391,11 @@ export interface ReduxFirestoreQuerySetting {
   endBefore?: FirestoreTypes.DocumentSnapshot | any | any[]
 }
 
-export type ReduxFirestoreQueries = (ReduxFirestoreQuerySetting | string)[]
+export type ReduxFirestoreQueries =
+  (ReduxFirestoreQuerySetting | string)[]
+  | (ReduxFirestoreQuerySetting | string)
 
+export type ReduxFirestoreQueriesFunction = (props?) => ReduxFirestoreQueries 
 
 /**
  * Firestore instance extended with methods which dispatch redux actions.
@@ -645,10 +653,13 @@ export function useFirebase(): ExtendedFirebaseInstance
  * to provided Cloud Firestore paths. Make sure you have required/imported
  * Cloud Firestore, including it's reducer, before attempting to use.
  * @param queriesConfig - An object or string for paths to sync
- * from firestore. Can also be a function that returns the object or string. 
+ * from firestore. Can also be a function that returns the object or string.
+ * @param deps - Dependency for memoizing query object. It's recommend
+ * to include deps if using object, array or function as a query. 
  */
-export function useFirebaseConnect<TInner>(
-  connect?: mapper<TInner, ReactReduxFirebaseQueries> | ReactReduxFirebaseQueries
+export function useFirebaseConnect(
+  connect?: ReactReduxFirebaseQueries | ReactReduxFirebaseQueriesFunction,
+  deps?: any[]
 ): void
 
 /**
@@ -664,13 +675,19 @@ export function useFirestore(): ExtendedFirestoreInstance
  * to provided Cloud Firestore paths. Make sure you have required/imported
  * Cloud Firestore, including it's reducer, before attempting to use.
  * @param queriesConfig - An object or string for paths to sync
- * from firestore. Can also be a function that returns the object or string. 
+ * from firestore. Can also be a function that returns the object or string.
+ * @param deps - Dependency for memoizing query object. It's recommend
+ * to include deps if using object, array or function as a query. 
  */
 export function useFirestoreConnect<TInner>(
   connect?:
     | mapper<TInner, (string | ReduxFirestoreQuerySetting)[]>
     | ReduxFirestoreQuerySetting[]
     | string[]
+    | mapper<TInner, (string | ReduxFirestoreQuerySetting)>
+    | ReduxFirestoreQuerySetting
+    | string,
+  deps?: any[]
 ): void
 
 export function populate(
