@@ -92,8 +92,6 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     firebase: PropTypes.object.isRequired
   }
 
-  const HoistedComp = hoistStatics(FirebaseConnectWrapped, WrappedComponent)
-
   const FirebaseConnect = props => {
     // Check that reserved props are not supplied to a FirebaseConnected
     // component and if they are, throw an error so the developer can rectify
@@ -107,7 +105,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     return (
       <ReactReduxFirebaseContext.Consumer>
         {_internalFirebase => (
-          <HoistedComp
+          <FirebaseConnectWrapped
             {...props}
             dispatch={_internalFirebase.dispatch}
             firebase={_internalFirebase}
@@ -124,7 +122,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
 
   FirebaseConnect.wrappedComponent = WrappedComponent
 
-  return FirebaseConnect
+  return hoistStatics(FirebaseConnect, WrappedComponent)
 }
 
 /**
