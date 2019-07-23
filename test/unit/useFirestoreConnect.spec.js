@@ -1,76 +1,25 @@
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-dom/test-utils'
+import React from 'react'
 import { some, isMatch, filter } from 'lodash'
-import {
-  ErrorBoundary,
-  storeWithFirestore,
-  firebaseWithConfig,
-  sleep
-} from '../utils'
+import { createContainer, sleep } from '../utils'
 import useFirestoreConnect, {
   createUseFirestoreConnect
 } from '../../src/useFirestoreConnect'
-import ReactReduxFirebaseProvider from '../../src/ReactReduxFirebaseProvider'
-import { createFirestoreInstance } from 'redux-firestore'
 
 /* eslint-disable react/prop-types */
-function TestComponent({ dynamicProps }) {
+function TestComponent({ dynamicProp }) {
   useFirestoreConnect(
-    dynamicProps === null
-      ? dynamicProps
-      : `test${dynamicProps ? '/' + dynamicProps : ''}`,
-    [dynamicProps]
+    dynamicProp === null
+      ? dynamicProp
+      : `test${dynamicProp ? '/' + dynamicProp : ''}`,
+    [dynamicProp]
   )
   return <div />
 }
 /* eslint-enable react/prop-types */
 
-const createContainer = ({
-  additionalComponentProps,
-  listeners,
-  component = TestComponent
-} = {}) => {
-  const firebase = firebaseWithConfig()
-  const store = storeWithFirestore()
-  sinon.spy(store, 'dispatch')
-
-  class Container extends Component {
-    state = { test: 'testing', dynamic: '' }
-
-    render() {
-      const InnerComponent = component
-      return (
-        <ReactReduxFirebaseProvider
-          dispatch={store.dispatch}
-          firebase={firebase}
-          createFirestoreInstance={createFirestoreInstance}
-          config={{}}>
-          <ErrorBoundary>
-            <InnerComponent
-              dynamicProps={this.state.dynamic}
-              testProps={this.state.test}
-              {...additionalComponentProps}
-            />
-          </ErrorBoundary>
-        </ReactReduxFirebaseProvider>
-      )
-    }
-  }
-
-  const tree = TestUtils.renderIntoDocument(<Container />)
-
-  return {
-    parent: TestUtils.findRenderedComponentWithType(tree, Container),
-    dispatch: store.dispatch,
-    firebase,
-    store
-  }
-}
-
 describe('useFirestoreConnect', () => {
   it('enables watchers on mount', async () => {
-    const { dispatch } = createContainer()
+    const { dispatch } = createContainer({ component: TestComponent })
     await sleep()
     expect(
       some(dispatch.args, arg =>
@@ -113,9 +62,9 @@ describe('useFirestoreConnect', () => {
   })
 
   it('disables watchers on unmount', async () => {
-    const { parent, dispatch } = createContainer()
+    const { wrapper, dispatch } = createContainer({ component: TestComponent })
     await sleep()
-    ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(parent).parentNode)
+    wrapper.unmount()
     await sleep()
     expect(
       some(dispatch.args, arg =>
@@ -129,9 +78,9 @@ describe('useFirestoreConnect', () => {
   })
 
   it('disables watchers on null as query', async () => {
-    const { parent, dispatch } = createContainer()
+    const { wrapper, dispatch } = createContainer({ component: TestComponent })
     await sleep()
-    parent.setState({ dynamic: null })
+    wrapper.setState({ dynamic: null })
     await sleep()
     expect(
       filter(dispatch.args, arg =>
@@ -143,9 +92,9 @@ describe('useFirestoreConnect', () => {
   })
 
   it('does not change watchers with props changes that do not change listener paths', async () => {
-    const { parent, dispatch } = createContainer()
+    const { wrapper, dispatch } = createContainer({ component: TestComponent })
     await sleep()
-    parent.setState({ test: 'somethingElse' })
+    wrapper.setState({ test: 'somethingElse' })
     await sleep()
     expect(
       filter(dispatch.args, arg =>
@@ -157,9 +106,9 @@ describe('useFirestoreConnect', () => {
   })
 
   it('reapplies watchers when props change', async () => {
-    const { parent, dispatch } = createContainer()
+    const { wrapper, dispatch } = createContainer({ component: TestComponent })
     await sleep()
-    parent.setState({ dynamic: 'somethingElse' })
+    wrapper.setState({ dynamic: 'somethingElse' })
     await sleep()
 
     expect(

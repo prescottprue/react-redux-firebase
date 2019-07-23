@@ -1,6 +1,6 @@
-import { isArray, isEqual } from 'lodash'
+import { isEqual } from 'lodash'
 import { useRef, useMemo, useEffect } from 'react'
-import { createCallable, getChanges } from './utils'
+import { invokeArrayQuery, getChanges } from './utils'
 import useFirestore from './useFirestore'
 
 /**
@@ -24,18 +24,7 @@ export const createUseFirestoreConnect = () => (dataOrFn, deps) => {
   const firestoreIsEnabled = !!firestore
   const queryRef = useRef()
 
-  const data = useMemo(() => {
-    const inputAsFunc = createCallable(dataOrFn)
-    const innerData = inputAsFunc()
-
-    if (!innerData) {
-      return null
-    }
-    if (isArray(innerData)) {
-      return innerData
-    }
-    return [innerData]
-  }, deps)
+  const data = useMemo(() => invokeArrayQuery(dataOrFn), deps)
 
   useEffect(
     () => {

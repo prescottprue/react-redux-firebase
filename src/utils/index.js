@@ -1,4 +1,4 @@
-import { isFunction, constant, isEqual, some, filter } from 'lodash'
+import { isArray, isFunction, constant, isEqual, some, filter } from 'lodash'
 export { getEventsFromInput } from './events'
 
 /**
@@ -8,6 +8,17 @@ export { getEventsFromInput } from './events'
  */
 export function createCallable(f) {
   return isFunction(f) ? f : constant(f)
+}
+
+export function invokeArrayQuery(f, props) {
+  const result = createCallable(f)(props)
+  if (isArray(result)) {
+    return result
+  }
+  if (!result) {
+    return null
+  }
+  return [result]
 }
 
 function getDisplayName(Component) {

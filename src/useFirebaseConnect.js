@@ -1,7 +1,7 @@
-import { isArray, isEqual, differenceWith } from 'lodash'
+import { isEqual, differenceWith } from 'lodash'
 import { useMemo, useEffect, useRef } from 'react'
 import { watchEvents, unWatchEvents } from './actions/query'
-import { getEventsFromInput, createCallable } from './utils'
+import { getEventsFromInput, invokeArrayQuery } from './utils'
 import useFirebase from './useFirebase'
 
 /**
@@ -23,18 +23,7 @@ export const createUseFirebaseConnect = () => (dataOrFn, deps) => {
   const eventRef = useRef()
   const dataRef = useRef()
 
-  const data = useMemo(() => {
-    const inputAsFunc = createCallable(dataOrFn)
-    const innerData = inputAsFunc()
-
-    if (!innerData) {
-      return null
-    }
-    if (isArray(innerData)) {
-      return innerData
-    }
-    return [innerData]
-  }, deps)
+  const data = useMemo(() => invokeArrayQuery(dataOrFn), deps)
 
   useEffect(
     () => {

@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { get } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { wrapDisplayName } from './utils'
-import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
+import useFirebase from './useFirebase'
 
 /**
  * @name createWithFirebase
@@ -25,32 +26,21 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * export default withFirebase(SomeComponent)
  */
 export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
-  class WithFirebase extends Component {
-    static wrappedComponent = WrappedComponent
-
-    render() {
-      return <WrappedComponent {...this.props} />
-    }
+  const WithFirebase = function WithFirebase(props) {
+    const firebase = useFirebase()
+    return (
+      <WrappedComponent
+        firebase={firebase}
+        dispatch={get(firebase, 'dispatch')}
+        {...props}
+      />
+    )
   }
 
-  const HoistedComp = hoistStatics(WithFirebase, WrappedComponent)
+  WithFirebase.displayName = wrapDisplayName(WrappedComponent, 'withFirebase')
+  WithFirebase.wrappedComponent = WrappedComponent
 
-  const withFirebase = props => (
-    <ReactReduxFirebaseContext.Consumer>
-      {firebase => (
-        <HoistedComp
-          firebase={firebase}
-          dispatch={firebase.dispatch}
-          {...props}
-        />
-      )}
-    </ReactReduxFirebaseContext.Consumer>
-  )
-
-  withFirebase.displayName = wrapDisplayName(WrappedComponent, 'withFirebase')
-  withFirebase.wrappedComponent = WrappedComponent
-
-  return withFirebase
+  return hoistStatics(WithFirebase, WrappedComponent)
 }
 
 /**
