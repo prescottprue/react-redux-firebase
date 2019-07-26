@@ -659,7 +659,6 @@ export function useFirebase(): ExtendedFirebaseInstance
  */
 export function useFirebaseConnect(
   connect?: ReactReduxFirebaseQueries | ReactReduxFirebaseQueriesFunction,
-  deps?: any[]
 ): void
 
 /**
@@ -687,7 +686,6 @@ export function useFirestoreConnect<TInner>(
     | mapper<TInner, (string | ReduxFirestoreQuerySetting)>
     | ReduxFirestoreQuerySetting
     | string,
-  deps?: any[]
 ): void
 
 export function populate(

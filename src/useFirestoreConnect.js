@@ -19,12 +19,12 @@ import useFirestore from './useFirestore'
  *
  * export default useFirestoreConnect()
  */
-export const createUseFirestoreConnect = () => (dataOrFn, deps) => {
+export const createUseFirestoreConnect = () => dataOrFn => {
   const firestore = useFirestore()
   const firestoreIsEnabled = !!firestore
   const queryRef = useRef()
 
-  const data = useMemo(() => invokeArrayQuery(dataOrFn), deps)
+  const data = useMemo(() => invokeArrayQuery(dataOrFn), [dataOrFn])
 
   useEffect(
     () => {
@@ -62,8 +62,6 @@ export const createUseFirestoreConnect = () => (dataOrFn, deps) => {
  * @param {Object|String|Array|Function} queriesConfig - An object, string,
  * or array of object or string for paths to sync from firestore. Can also be
  * a function that returns the object, string, or array of object or string.
- * @param {Array} deps - Dependency for memoizing query object. It's recommend
- * to include deps if using object, array or function as a query.
  * @example <caption>Basic</caption>
  * import React from 'react'
  * import { map } from 'lodash'

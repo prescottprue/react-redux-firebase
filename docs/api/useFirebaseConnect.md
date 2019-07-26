@@ -37,8 +37,6 @@ to provided firebase paths using React's useEffect hook.
     array contains object or string for path to sync from Firebase or null if
     hook doesn't need to sync. Can also be a function that returns an object,
     a path string, or array of an object or a path string.
--   `deps` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Dependency for memoizing query object. It's recommend
-    to include deps if using object, array or function as a query.
 
 **Examples**
 

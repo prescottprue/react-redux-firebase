@@ -30,7 +30,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     const firebase = props.firebase || contextFirebase
     const data = invokeArrayQuery(dataOrFn, props)
 
-    useFirebaseConnect(data, [data])
+    useFirebaseConnect(data)
 
     return (
       <WrappedComponent

@@ -18,12 +18,12 @@ import useFirebase from './useFirebase'
  * // create firebase connect that uses another redux store
  * const useFirebaseConnect = createUseFirebaseConnect()
  */
-export const createUseFirebaseConnect = () => (dataOrFn, deps) => {
+export const createUseFirebaseConnect = () => dataOrFn => {
   const firebase = useFirebase()
   const eventRef = useRef()
   const dataRef = useRef()
 
-  const data = useMemo(() => invokeArrayQuery(dataOrFn), deps)
+  const data = useMemo(() => invokeArrayQuery(dataOrFn), [dataOrFn])
 
   useEffect(
     () => {
@@ -73,8 +73,6 @@ export const createUseFirebaseConnect = () => (dataOrFn, deps) => {
  * array contains object or string for path to sync from Firebase or null if
  * hook doesn't need to sync. Can also be a function that returns an object,
  * a path string, or array of an object or a path string.
- * @param {Array} deps - Dependency for memoizing query object. It's recommend
- * to include deps if using object, array or function as a query.
  * @example <caption>Ordered Data</caption>
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'

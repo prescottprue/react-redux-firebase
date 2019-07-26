@@ -40,8 +40,6 @@ Cloud Firestore, including it's reducer, before attempting to use.
 -   `queriesConfig` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** An object, string,
     or array of object or string for paths to sync from firestore. Can also be
     a function that returns the object, string, or array of object or string.
--   `deps` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Dependency for memoizing query object. It's recommend
-    to include deps if using object, array or function as a query.
 
 **Examples**
 

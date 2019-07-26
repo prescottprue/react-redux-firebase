@@ -33,7 +33,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
     const firestore = props.firestore || contextFirestore
     const data = invokeArrayQuery(dataOrFn, props)
 
-    useFirestoreConnect(data, [data])
+    useFirestoreConnect(data)
 
     return (
       <WrappedComponent
