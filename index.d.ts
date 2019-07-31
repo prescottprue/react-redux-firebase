@@ -19,7 +19,7 @@ export interface InferableComponentEnhancerWithProps<
   TNeedsProps
 > {
   <P extends TInjectedProps>(
-    component: React.Component<P>
+    component: React.ComponentType<P>
   ): React.ComponentType<Omit<P, keyof TInjectedProps> & TNeedsProps>
 }
 
