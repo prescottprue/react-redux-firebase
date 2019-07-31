@@ -95,15 +95,6 @@ export const createFirebaseConnect = (storeKey = 'store') => (
   const HoistedComp = hoistStatics(FirebaseConnectWrapped, WrappedComponent)
 
   const FirebaseConnect = props => {
-    // Check that reserved props are not supplied to a FirebaseConnected
-    // component and if they are, throw an error so the developer can rectify
-    // this issue.
-    if (Object.keys(props).includes('firebase')) {
-      throw new Error(
-        `Supplied prop "firebase" is reserved for internal firebaseConnect() usage.`
-      )
-    }
-
     return (
       <ReactReduxFirebaseContext.Consumer>
         {_internalFirebase => (
