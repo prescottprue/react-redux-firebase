@@ -6,10 +6,6 @@ import { createCallable, wrapDisplayName } from './utils'
 import ReduxFirestoreContext from './ReduxFirestoreContext'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
-// Reserved props that should not be passed into a firebaseConnect wrapped
-// component. Will throw an error if they are.
-const RESERVED_PROPS = ['firebase', 'firestore']
-
 /**
  * Function that creates a Higher Order Component which
  * automatically listens/unListens to provided firebase paths using
