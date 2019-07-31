@@ -19,7 +19,7 @@ export interface InferableComponentEnhancerWithProps<
   TNeedsProps
 > {
   <P extends TInjectedProps>(
-    component: React.Component<P>
+    component: React.ComponentType<P>
   ): React.ComponentType<Omit<P, keyof TInjectedProps> & TNeedsProps>
 }
 
@@ -470,9 +470,8 @@ interface CreateUserCredentials {
   signIn?: boolean // default true
 }
 
-type Credentials =
-  | CreateUserCredentials
-  | {
+type Credentials = CreateUserCredentials |
+    {
       provider: 'facebook' | 'google' | 'twitter'
       type: 'popup' | 'redirect'
       scopes?: string[]
@@ -490,6 +489,7 @@ type Credentials =
 interface UserProfile {
   email: string
   username: string
+  [a: string]: any
 }
 
 // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html

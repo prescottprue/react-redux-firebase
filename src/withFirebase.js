@@ -56,9 +56,10 @@ export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
  * @return {Function} - Which accepts a component to wrap and returns the
  * wrapped component
  * @example <caption>Basic</caption>
+ * import React from 'react'
  * import { withFirebase } from 'react-redux-firebase'
  *
- * function AddData({ firebase: { push } }) {
+ * function AddTodo({ firebase: { push } }) {
  *   return (
  *     <div>
  *       <button onClick={() => push('todos', { done: false, text: 'Sample' })}>
@@ -68,8 +69,9 @@ export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
  *   )
  * }
  *
- * export default withFirebase(AddData)
+ * export default withFirebase(AddTodo)
  * @example <caption>Within HOC Composition</caption>
+ * import React from 'react'
  * import { compose } from 'redux' // can also come from recompose
  * import { withHandlers } from 'recompose'
  * import { withFirebase } from 'react-redux-firebase'

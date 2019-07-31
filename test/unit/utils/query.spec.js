@@ -159,7 +159,7 @@ describe('Utils: Query', () => {
             `equalTo=${equalTo}`
           ])
           expect(queryParams.child).to.equal(child)
-          expect(queryParams.equalTo).to.equal(true)
+          expect(queryParams.equalTo).to.be.true
         })
         it('string containing null', () => {
           const child = 'emailAddress'
@@ -169,7 +169,7 @@ describe('Utils: Query', () => {
             `equalTo=${equalTo}`
           ])
           expect(queryParams.child).to.equal(child)
-          expect(queryParams.equalTo).to.equal(null)
+          expect(queryParams.equalTo).to.be.null
         })
         it('string containing a number', () => {
           const child = 'emailAddress'
@@ -215,9 +215,7 @@ describe('Utils: Query', () => {
   describe('orderedFromSnapshot -', () => {
     it('returns null if hasChildren is a function and is false', () => {
       const hasChildrenSpy = sinon.spy(() => false)
-      expect(orderedFromSnapshot({ hasChildren: hasChildrenSpy })).to.equal(
-        null
-      )
+      expect(orderedFromSnapshot({ hasChildren: hasChildrenSpy })).to.be.null
       expect(hasChildrenSpy).to.have.been.calledOnce
     })
 
@@ -228,7 +226,7 @@ describe('Utils: Query', () => {
     })
 
     it('returns null if ordered is an empty array', () => {
-      expect(orderedFromSnapshot({ forEach: () => ({}) })).to.equal(null)
+      expect(orderedFromSnapshot({ forEach: () => ({}) })).to.be.null
     })
 
     it('adds children to ordered if they exist', () => {

@@ -36,24 +36,6 @@ describe('firebaseConnect', () => {
     expect(leaf).to.have.prop('pass', 'through')
   })
 
-  // Prop clashes shouldn't be problem any more since connector will internally
-  // pull firebase instance from context directly
-
-  // it('throws an exception if passed a prop that clashes with a reserved param', () => {
-  //   let exceptions = []
-
-  //   try {
-  //     createContainer({
-  //       firebase: '__SECRET_INTERNALS',
-  //       dispatch: '__SECRET_INTERNALS'
-  //     })
-  //   } catch (e) {
-  //     exceptions.push(e)
-  //   }
-
-  //   expect(exceptions.length).to.equal(1)
-  // })
-
   it('enebles watchers on mount', async () => {
     const { dispatch } = createContainer({
       hoc: withFirebaseConnect,
