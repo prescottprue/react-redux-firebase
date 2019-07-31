@@ -47,7 +47,7 @@ describe('Helpers:', () => {
     })
 
     it('returns null for null data', () => {
-      expect(helpers.populate(exampleData, '/missing/data', [])).to.equal(null)
+      expect(helpers.populate(exampleData, '/missing/data', [])).to.be.null
     })
 
     it('returns unpopulated data for no populates', () => {

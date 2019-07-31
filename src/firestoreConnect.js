@@ -6,10 +6,6 @@ import { createCallable, wrapDisplayName } from './utils'
 import ReduxFirestoreContext from './ReduxFirestoreContext'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
-// Reserved props that should not be passed into a firebaseConnect wrapped
-// component. Will throw an error if they are.
-const RESERVED_PROPS = ['firebase', 'firestore']
-
 /**
  * Function that creates a Higher Order Component which
  * automatically listens/unListens to provided firebase paths using
@@ -99,20 +95,6 @@ export const createFirestoreConnect = (storeKey = 'store') => (
   const HoistedComp = hoistStatics(FirestoreConnectWrapped, WrappedComponent)
 
   const FirestoreConnect = props => {
-    // Check that reserved props are not supplied to a FirebaseConnected
-    // component and if they are, throw an error so the developer can rectify
-    // this issue.
-    const clashes = Object.keys(props).filter(k => RESERVED_PROPS.includes(k))
-
-    if (clashes.length > 0) {
-      const moreThanOne = clashes.length > 1
-      throw new Error(
-        `Supplied prop${moreThanOne ? 's' : ''} "${clashes.join('", "')}" ${
-          moreThanOne ? 'are' : 'is'
-        } reserved for internal firestoreConnect() usage.`
-      )
-    }
-
     return (
       <ReactReduxFirebaseContext.Consumer>
         {firebase => (

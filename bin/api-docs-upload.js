@@ -74,15 +74,16 @@ function uploadList(files) {
   )
 }
 
-;(async function() {
-  try {
-    await runCommand('gsutil') // check for existence of gsutil
-    await uploadList(first)
-    await uploadList(second)
-    console.log('Docs uploaded successfully') // eslint-disable-line no-console
-    process.exit(0)
-  } catch (err) {
-    console.log('Error uploading docs:', err.message) // eslint-disable-line no-console
-    process.exit(1)
-  }
+;(function() {
+  runCommand('gsutil') // check for existence of gsutil
+    .then(() => uploadList(first))
+    .then(() => uploadList(second))
+    .then(() => {
+      console.log('Docs uploaded successfully') // eslint-disable-line no-console
+      process.exit(0)
+    })
+    .catch(err => {
+      console.log('Error uploading docs:', err.message) // eslint-disable-line no-console
+      process.exit(1)
+    })
 })()

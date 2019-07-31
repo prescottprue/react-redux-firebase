@@ -53,7 +53,7 @@ _Basic_
 import React from 'react'
 import { withFirestore } from 'react-redux-firebase'
 
-function AddData({ firebase: { add } }) {
+function AddTodo({ firestore: { add } }) {
   return (
     <div>
       <button onClick={() => add('todos', { done: false, text: 'Sample' })}>

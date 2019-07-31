@@ -65,6 +65,6 @@ Your app is ready to be deployed!
 
 ### Integrating Auth
 
-Checkout [the auth recipes](/docs/recipes/auth) for some simple examples of how to integrate auth.
+Checkout [the auth recipes](../../../docs/recipes/auth.md) for some simple examples of how to integrate auth.
 
 **Warning**: You need to handle the loading state of auth! The recipes go over this, [but as mentioned in this issue here](https://github.com/prescottprue/react-redux-firebase/issues/93), it can seem unclear initially.

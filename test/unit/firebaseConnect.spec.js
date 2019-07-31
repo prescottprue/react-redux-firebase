@@ -66,21 +66,6 @@ describe('firebaseConnect', () => {
     expect(wrapped.props).to.have.a.property('pass', 'through')
   })
 
-  it('throws an exception if passed a prop that clashes with a reserved param', () => {
-    let exceptions = []
-
-    try {
-      createContainer({
-        firebase: '__SECRET_INTERNALS',
-        dispatch: '__SECRET_INTERNALS'
-      })
-    } catch (e) {
-      exceptions.push(e)
-    }
-
-    expect(exceptions.length).to.equal(1)
-  })
-
   it.skip('disables watchers on unmount', () => {
     const { container, store } = createContainer()
     ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(container).parentNode)
