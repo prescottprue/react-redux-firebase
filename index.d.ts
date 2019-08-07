@@ -130,7 +130,7 @@ interface RemoveOptions {
  * redux actions. More info available in
  * [firebaseInstance section of the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html).
  */
-interface ExtendedFirebaseInstance extends Firebase.database {
+interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
   initializeAuth: VoidFunction
 
   firestore: ExtendedFirestoreInstance
@@ -638,7 +638,7 @@ export function isLoaded(...args: any[]): boolean
  * Firebase is gathered from `store.firebase`, which is attached to store
  * by the store enhancer (`reactReduxFirebase`) during setup.
  */
-export function useFirebase(): ExtendedFirebaseInstance
+export function useFirebase(): ExtendedFirebaseInstance & Auth & Storage
 
 /**
  * React hook that automatically listens/unListens
@@ -844,7 +844,7 @@ export interface Data<T extends FirestoreTypes.DocumentData> {
 
 export namespace FirebaseReducer {
   export interface Reducer<ProfileType = {}> {
-    auth: Auth
+    auth: AuthState
     profile: Profile<ProfileType>
     authError: any
     data: Data<any | Dictionary<any>>
@@ -857,7 +857,7 @@ export namespace FirebaseReducer {
     timestamps: Dictionary<number>
   }
 
-  export interface Auth extends AuthTypes.UserInfo {
+  export interface AuthState extends AuthTypes.UserInfo {
     isLoaded: boolean
     isEmpty: boolean
     apiKey: string
