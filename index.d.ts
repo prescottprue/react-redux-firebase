@@ -130,10 +130,10 @@ interface RemoveOptions {
  * redux actions. More info available in
  * [firebaseInstance section of the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html).
  */
-interface ExtendedFirebaseInstance extends Firebase.database {
+interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
   initializeAuth: VoidFunction
 
-  firestore: ExtendedFirestoreInstance
+  firestore: () => ExtendedFirestoreInstance
 
   dispatch: Dispatch
 
@@ -149,7 +149,7 @@ interface ExtendedFirebaseInstance extends Firebase.database {
     value: object | string | boolean | number,
     onComplete?: Function
   ) => Promise<DatabaseTypes.DataSnapshot>
-  
+
   /**
    * Sets data to Firebase along with meta data. Currently,
    * this includes createdAt and createdBy. *Warning* using this function
@@ -177,7 +177,7 @@ interface ExtendedFirebaseInstance extends Firebase.database {
     value: object | string | boolean | number,
     onComplete?: Function
   ) => Promise<DatabaseTypes.DataSnapshot>
-  
+
   /**
    * Pushes data to Firebase along with meta data. Currently,
    * this includes createdAt and createdBy.
@@ -220,7 +220,7 @@ interface ExtendedFirebaseInstance extends Firebase.database {
     value: object | string | boolean | number,
     onComplete?: Function
   ) => Promise<DatabaseTypes.DataSnapshot>
-  
+
   /**
    * Updates data on Firebase along with meta. *Warning*
    * using this function may have unintented consequences (setting
@@ -312,7 +312,6 @@ export function createFirebaseInstance(
   dispatch: Dispatch
 ): ExtendedFirebaseInstance & Auth & Storage
 
-
 /**
  * Function that creates a Higher Order Component which
  * automatically listens/unListens to provided firebase paths using
@@ -333,19 +332,34 @@ export function createFirebaseConnect(storeKey: string): typeof firebaseConnect
  * @param {String} [storeKey='store'] - Name of redux store which contains
  * Firebase state (state.firebase)
  */
-export function createFirestoreConnect(storeKey: string): typeof firestoreConnect
+export function createFirestoreConnect(
+  storeKey: string
+): typeof firestoreConnect
 
 export function createWithFirebase(storeKey: string): typeof withFirebase
 
 export function createWithFirestore(storeKey: string): typeof withFirestore
 
-export type QueryParamOption = 'orderByKey' | 'orderByChild' | 'orderByPriority' | 'limitToFirst' | 'limitToLast' | 'notParsed' | 'parsed'
+export type QueryParamOption =
+  | 'orderByKey'
+  | 'orderByChild'
+  | 'orderByPriority'
+  | 'limitToFirst'
+  | 'limitToLast'
+  | 'notParsed'
+  | 'parsed'
 
-export type QueryParamOptions = QueryParamOption|string[]
+export type QueryParamOptions = QueryParamOption | string[]
 
 export interface ReactReduxFirebaseQuerySetting {
   path: string
-  type?: 'value' | 'once' | 'child_added' | 'child_removed' | 'child_changed' | 'child_moved'
+  type?:
+    | 'value'
+    | 'once'
+    | 'child_added'
+    | 'child_removed'
+    | 'child_changed'
+    | 'child_moved'
   queryParams?: QueryParamOptions
   storeAs?: string
 }
@@ -356,7 +370,6 @@ export type ReactReduxFirebaseQueries =
 
 export type ReactReduxFirebaseQueriesFunction =
   (props?) => ReactReduxFirebaseQueries
-
 
 // https://github.com/prescottprue/redux-firestore#query-options
 type WhereOptions = [string, FirestoreTypes.WhereFilterOp, any]
@@ -406,7 +419,10 @@ interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
   get: (docPath: string | ReduxFirestoreQuerySetting) => Promise<void>
 
   // Set data to firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#set).
-  set: (docPath: string | ReduxFirestoreQuerySetting, data: Object) => Promise<void>
+  set: (
+    docPath: string | ReduxFirestoreQuerySetting,
+    data: Object
+  ) => Promise<void>
 
   // https://github.com/prescottprue/redux-firestore#add
   add: (
@@ -470,8 +486,9 @@ interface CreateUserCredentials {
   signIn?: boolean // default true
 }
 
-type Credentials = CreateUserCredentials |
-    {
+type Credentials =
+  | CreateUserCredentials
+  | {
       provider: 'facebook' | 'google' | 'twitter'
       type: 'popup' | 'redirect'
       scopes?: string[]
@@ -506,7 +523,7 @@ interface Auth {
   ) => Promise<AuthTypes.UserInfo>
 
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#logout
-  logout: VoidFunction
+  logout: () => Promise<void>
 
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#resetpasswordcredentials
   resetPassword: (
@@ -586,15 +603,16 @@ interface Storage {
 }
 
 export interface WithFirebaseProps<ProfileType> {
-  firebase: Auth &
-    Storage & ExtendedFirebaseInstance
+  firebase: Auth & Storage & ExtendedFirebaseInstance
 }
 
 /**
  * React HOC that attaches/detaches Firebase Real Time Database listeners on mount/unmount
  */
 export function firebaseConnect<ProfileType, TInner = {}>(
-  connect?: mapper<TInner, ReactReduxFirebaseQueries> | ReactReduxFirebaseQueries
+  connect?:
+    | mapper<TInner, ReactReduxFirebaseQueries>
+    | ReactReduxFirebaseQueries
 ): InferableComponentEnhancerWithProps<
   TInner & WithFirebaseProps<ProfileType>,
   WithFirebaseProps<ProfileType>
@@ -646,7 +664,7 @@ export function isLoaded(...args: any[]): boolean
  * Firebase is gathered from `store.firebase`, which is attached to store
  * by the store enhancer (`reactReduxFirebase`) during setup.
  */
-export function useFirebase(): ExtendedFirebaseInstance
+export function useFirebase(): ExtendedFirebaseInstance & Auth & Storage
 
 /**
  * React hook that automatically listens/unListens
@@ -829,7 +847,6 @@ export namespace createFirebaseConnect {
   const prototype: {}
 }
 
-
 // Your Firebase/Firestore user profile object type
 // http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html
 export type ProfileType = {}
@@ -859,7 +876,7 @@ export interface Data<T extends FirestoreTypes.DocumentData> {
 
 export namespace FirebaseReducer {
   export interface Reducer<ProfileType = {}> {
-    auth: Auth
+    auth: AuthState
     profile: Profile<ProfileType>
     authError: any
     data: Data<any | Dictionary<any>>
@@ -872,7 +889,7 @@ export namespace FirebaseReducer {
     timestamps: Dictionary<number>
   }
 
-  export interface Auth extends AuthTypes.UserInfo {
+  export interface AuthState extends AuthTypes.UserInfo {
     isLoaded: boolean
     isEmpty: boolean
     apiKey: string
