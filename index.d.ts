@@ -133,7 +133,7 @@ interface RemoveOptions {
 interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
   initializeAuth: VoidFunction
 
-  firestore: ExtendedFirestoreInstance
+  firestore: () => ExtendedFirestoreInstance
 
   dispatch: Dispatch
 
