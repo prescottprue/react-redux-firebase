@@ -6,13 +6,13 @@ import useFirestore from './useFirestore'
 /**
  * @name createUseFirestoreConnect
  * @description React hook that automatically listens/unListens to provided
- * firebase paths.
+ * firestore paths.
  * **WARNING!!** This is an advanced feature, and should only be used when
  * needing to access a firebase instance created under a different store key.
- * Firebase state (state.firebase)
+ * Firebase state (state.firestore)
  * @return {Function} - React hook that accepts watch query
  * @example <caption>Basic</caption>
- * // props.firebase set on App component as firebase object with helpers
+ * // props.firestore set on App component as firestore object with helpers
  * import { createUseFirestoreConnect } from 'react-redux-firebase'
  *
  * const firestoreConnect = createUseFirestoreConnect()
@@ -68,7 +68,7 @@ export const createUseFirestoreConnect = () => dataOrFn => {
  * import { connect } from 'react-redux'
  * import { useFirebaseConnect } from 'react-redux-firebase'
  *
- * const TodosList = ({ todosList }) => {
+ * function TodosList({ todosList }) {
  *   useFirebaseConnect('todos') // sync todos collection from Firestore into redux
  *
  *   return <ul>{_.map(todosList, todo => <li>{todo}</li>)}</ul>
@@ -86,7 +86,7 @@ export const createUseFirestoreConnect = () => dataOrFn => {
  * import { connect } from 'react-redux'
  * import { useFirebaseConnect } from 'react-redux-firebase'
  *
- * const TodoItem = ({ todoId, todoData }) => {
+ * function TodoItem({ todoId, todoData }) {
  *   useFirebaseConnect(() => ({
  *     collection: 'todos',
  *     doc: todoId

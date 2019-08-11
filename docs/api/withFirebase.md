@@ -63,7 +63,7 @@ function AddTodo({ firebase: { push } }) {
         Add Sample Todo
       </button>
     </div>
-   )
+  )
 }
 
 export default withFirebase(AddTodo)

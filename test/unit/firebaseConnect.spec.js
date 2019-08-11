@@ -199,9 +199,8 @@ describe('firebaseConnect', () => {
   })
 
   it('sets WrappedComponent static as component which was wrapped', () => {
-    const Container = () => <div />
-    const containerPrime = firebaseConnect()(Container)
-    expect(containerPrime.wrappedComponent).to.equal(Container)
+    const containerPrime = firebaseConnect()(TestContainer)
+    expect(containerPrime.wrappedComponent).to.equal(TestContainer)
   })
 })
 

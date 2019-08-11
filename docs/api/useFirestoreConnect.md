@@ -51,7 +51,7 @@ import { map } from 'lodash'
 import { connect } from 'react-redux'
 import { useFirebaseConnect } from 'react-redux-firebase'
 
-const TodosList = ({ todosList }) => {
+function TodosList({ todosList }) {
   useFirebaseConnect('todos') // sync todos collection from Firestore into redux
 
   return <ul>{_.map(todosList, todo => <li>{todo}</li>)}</ul>
@@ -73,7 +73,7 @@ import { get } from 'lodash'
 import { connect } from 'react-redux'
 import { useFirebaseConnect } from 'react-redux-firebase'
 
-const TodoItem = ({ todoId, todoData }) => {
+function TodoItem({ todoId, todoData }) {
   useFirebaseConnect(() => ({
     collection: 'todos',
     doc: todoId

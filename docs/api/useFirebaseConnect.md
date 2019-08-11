@@ -50,11 +50,11 @@ import { firebaseUseConnect } from 'react-redux-firebase'
 const enhance = compose(
   connect((state) => ({
     todos: state.firebase.ordered.todos
-  })
+  }))
 )
 
 // use enhnace to pass todos list as props.todos
-const Todos = enhance(({ todos })) => {
+function Todos({ todos })) {
   useFirebaseConnect('todos') // sync /todos from firebase into redux
   return (
     <div>
@@ -76,10 +76,10 @@ import { firebaseUseConnect, getVal } from 'react-redux-firebase'
 const enhance = compose(
   connect((state, props) => ({
     post: getVal(state.firebase.data, `posts/${props.postId}`),
-  })
+  }))
 )
 
-const Post = ({ post, postId }) => {
+function Post({ post, postId }) {
   useFirebaseConnect(`posts/${postId}`) // sync /posts/postId from firebase into redux
   return (
     <div>
@@ -101,10 +101,10 @@ import { firebaseUseConnect, getVal } from 'react-redux-firebase'
 const enhance = compose(
   connect((state, props) => ({
     post: getVal(state.firebase.data, `posts/${props.postId}`),
-  })
+  }))
 )
 
-const Post = ({ post, postId }) => {
+function Post({ post, postId }) {
   useFirebaseConnect([`posts/${postId}`], [postId]) // sync /posts/postId from firebase into redux
   return (
     <div>

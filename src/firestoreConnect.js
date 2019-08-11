@@ -9,7 +9,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 /**
  * Function that creates a Higher Order Component which
  * automatically listens/unListens to provided firebase paths using
- * React's Lifecycle hooks. NOTE:
+ * React's Lifecycle hooks.
  * **WARNING!!** This is an advanced feature, and should only be used when
  * needing to access a firebase instance created under a different store key.
  * @param {String} [storeKey='store'] - Name of redux store which contains
@@ -111,6 +111,13 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       </ReactReduxFirebaseContext.Consumer>
     )
   }
+
+  FirestoreConnect.displayName = wrapDisplayName(
+    WrappedComponent,
+    'FirestoreConnect'
+  )
+
+  FirestoreConnect.wrappedComponent = WrappedComponent
 
   return hoistStatics(FirestoreConnect, WrappedComponent)
 }
