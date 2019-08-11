@@ -2,29 +2,7 @@
 
 ### Table of Contents
 
--   [createUseFirebaseConnect](#createusefirebaseconnect)
 -   [useFirebaseConnect](#usefirebaseconnect)
-
-## createUseFirebaseConnect
-
-Function that creates a hook that
-automatically listens/unListens to provided firebase paths using
-React's useEffect hooks.
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-
-**Examples**
-
-_Basic_
-
-```javascript
-// this.props.firebase set on App component as firebase object with helpers
-import { createUseFirebaseConnect } from 'react-redux-firebase'
-// create firebase connect that uses another redux store
-const useFirebaseConnect = createUseFirebaseConnect()
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** HOC that accepts a watchArray and wraps a component
 
 ## useFirebaseConnect
 
@@ -70,17 +48,12 @@ _Data that depends on props_
 
 ```javascript
 import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { firebaseUseConnect, getVal } from 'react-redux-firebase'
+import { useSelector } from 'react-redux'
+import { firebaseUseConnect } from 'react-redux-firebase'
 
-const enhance = compose(
-  connect((state, props) => ({
-    post: getVal(state.firebase.data, `posts/${props.postId}`),
-  }))
-)
-
-function Post({ post, postId }) {
+function Post({ postId }) {
   useFirebaseConnect(`posts/${postId}`) // sync /posts/postId from firebase into redux
+  const post = useSelector(({ firebase }) => state.firebase.ordered.posts && state.firebase.ordered.posts[postId])
   return (
     <div>
       {JSON.stringify(post, null, 2)}
@@ -95,17 +68,14 @@ _Data that depends on props, an array as a query_
 
 ```javascript
 import { compose } from 'redux'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { firebaseUseConnect, getVal } from 'react-redux-firebase'
-
-const enhance = compose(
-  connect((state, props) => ({
-    post: getVal(state.firebase.data, `posts/${props.postId}`),
-  }))
-)
 
 function Post({ post, postId }) {
   useFirebaseConnect([`posts/${postId}`], [postId]) // sync /posts/postId from firebase into redux
+  const post = useSelector(state => {
+    return state.firebase.ordered.posts && state.firebase.ordered.posts[postId]
+  })
   return (
     <div>
       {JSON.stringify(post, null, 2)}
@@ -113,5 +83,5 @@ function Post({ post, postId }) {
   )
 }
 
-export default enhance(Post)
+export default Post
 ```

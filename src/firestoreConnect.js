@@ -90,15 +90,13 @@ export const createFirestoreConnect = () => (
     firestore: PropTypes.object
   }
 
-  const HoistedComp = hoistStatics(FirestoreConnectWrapped, WrappedComponent)
-
   const FirestoreConnect = props => {
     return (
       <ReactReduxFirebaseContext.Consumer>
         {firebase => (
           <ReduxFirestoreContext.Consumer>
             {firestore => (
-              <HoistedComp
+              <FirestoreConnectWrapped
                 {...props}
                 dispatch={firebase.dispatch}
                 firestore={firestore}

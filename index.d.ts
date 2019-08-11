@@ -684,7 +684,7 @@ export function useFirebase(): ExtendedFirebaseInstance & Auth & Storage
  * to include deps if using object, array or function as a query.
  */
 export function useFirebaseConnect(
-  connect?: ReactReduxFirebaseQueries | ReactReduxFirebaseQueriesFunction
+  querySettings?: ReactReduxFirebaseQueries | ReactReduxFirebaseQueriesFunction
 ): void
 
 /**
@@ -705,7 +705,7 @@ export function useFirestore(): ExtendedFirestoreInstance
  * to include deps if using object, array or function as a query.
  */
 export function useFirestoreConnect<TInner>(
-  connect?:
+  querySettings?:
     | mapper<TInner, (string | ReduxFirestoreQuerySetting)[]>
     | ReduxFirestoreQuerySetting[]
     | string[]
