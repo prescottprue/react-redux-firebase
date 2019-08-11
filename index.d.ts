@@ -8,14 +8,16 @@ import { Dispatch } from 'redux'
 
 /**
  * Diff / Omit taken from https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
- */ 
+ */
+
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 /**
  * Injects props and removes them from the prop requirements.
  * Will not pass through the injected props if they are passed in during
  * render. Also adds new prop requirements from TNeedsProps.
- */ 
+ */
+
 export interface InferableComponentEnhancerWithProps<
   TInjectedProps,
   TNeedsProps
@@ -370,11 +372,12 @@ export interface ReactReduxFirebaseQuerySetting {
 }
 
 export type ReactReduxFirebaseQueries =
-  (ReactReduxFirebaseQuerySetting | string)[]
+  | (ReactReduxFirebaseQuerySetting | string)[]
   | (ReactReduxFirebaseQuerySetting | string)
 
-export type ReactReduxFirebaseQueriesFunction =
-  (props?) => ReactReduxFirebaseQueries
+export type ReactReduxFirebaseQueriesFunction = (
+  props?
+) => ReactReduxFirebaseQueries
 
 // https://github.com/prescottprue/redux-firestore#query-options
 type WhereOptions = [string, FirestoreTypes.WhereFilterOp, any]
@@ -410,10 +413,10 @@ export interface ReduxFirestoreQuerySetting {
 }
 
 export type ReduxFirestoreQueries =
-  (ReduxFirestoreQuerySetting | string)[]
+  | (ReduxFirestoreQuerySetting | string)[]
   | (ReduxFirestoreQuerySetting | string)
 
-export type ReduxFirestoreQueriesFunction = (props?) => ReduxFirestoreQueries 
+export type ReduxFirestoreQueriesFunction = (props?) => ReduxFirestoreQueries
 
 /**
  * Firestore instance extended with methods which dispatch redux actions.
@@ -561,7 +564,7 @@ interface Auth {
 
   //http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html#update-profile
-  updateProfile: (profile: Partial<ProfileType>, options: Object) => void
+  updateProfile: (profile: Partial<ProfileType>, options?: Object) => void
 }
 
 //http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html
@@ -678,10 +681,10 @@ export function useFirebase(): ExtendedFirebaseInstance & Auth & Storage
  * @param queriesConfig - An object or string for paths to sync
  * from firestore. Can also be a function that returns the object or string.
  * @param deps - Dependency for memoizing query object. It's recommend
- * to include deps if using object, array or function as a query. 
+ * to include deps if using object, array or function as a query.
  */
 export function useFirebaseConnect(
-  querySettings?: ReactReduxFirebaseQueries | ReactReduxFirebaseQueriesFunction,
+  querySettings?: ReactReduxFirebaseQueries | ReactReduxFirebaseQueriesFunction
 ): void
 
 /**
@@ -699,16 +702,16 @@ export function useFirestore(): ExtendedFirestoreInstance
  * @param queriesConfig - An object or string for paths to sync
  * from firestore. Can also be a function that returns the object or string.
  * @param deps - Dependency for memoizing query object. It's recommend
- * to include deps if using object, array or function as a query. 
+ * to include deps if using object, array or function as a query.
  */
 export function useFirestoreConnect<TInner>(
   querySettings?:
     | mapper<TInner, (string | ReduxFirestoreQuerySetting)[]>
     | ReduxFirestoreQuerySetting[]
     | string[]
-    | mapper<TInner, (string | ReduxFirestoreQuerySetting)>
+    | mapper<TInner, string | ReduxFirestoreQuerySetting>
     | ReduxFirestoreQuerySetting
-    | string,
+    | string
 ): void
 
 export function populate(
