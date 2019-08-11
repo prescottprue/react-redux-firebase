@@ -329,7 +329,7 @@ interface Auth {
 
   //http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html#update-profile
-  updateProfile: (profile: Partial<ProfileType>, options: Object) => void
+  updateProfile: (profile: Partial<ProfileType>, options?: Object) => void
 }
 
 //http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html
