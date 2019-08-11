@@ -25,11 +25,9 @@ function ReduxFirestoreProvider(props = {}) {
   } = props
   const extendedFirestoreInstance = React.useMemo(
     () => {
-      const extendedFirebaseInstance = createFirebaseInstance(
-        firebase,
-        config,
-        dispatch
-      )
+      const extendedFirebaseInstance = firebase._reactReduxFirebaseExtended
+        ? firebase
+        : createFirebaseInstance(firebase, config, dispatch)
       const extendedFirestoreInstance = createFirestoreInstance(
         firebase,
         config,

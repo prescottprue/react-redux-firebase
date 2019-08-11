@@ -21,9 +21,10 @@ import ReduxFirestoreContext from './ReduxFirestoreContext'
  * // use the useFirestore to wrap a component
  * export default useFirestore(SomeComponent)
  */
-export const createUseFirestore = () => () => {
-  return useContext(ReduxFirestoreContext)
-}
+export const createUseFirestore = () =>
+  function useFirestore() {
+    return useContext(ReduxFirestoreContext)
+  }
 
 /**
  * @name useFirestore

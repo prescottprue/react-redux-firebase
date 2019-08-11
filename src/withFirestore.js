@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { get } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { wrapDisplayName } from './utils'
-import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
-import ReduxFirestoreContext from './ReduxFirestoreContext'
+import useFirebase from './useFirebase'
+import useFirestore from './useFirestore'
 
 /**
  * @name createWithFirestore
@@ -25,37 +26,23 @@ import ReduxFirestoreContext from './ReduxFirestoreContext'
  * export default withFirestore(SomeComponent)
  */
 export const createWithFirestore = (storeKey = 'store') => WrappedComponent => {
-  class WithFirestore extends Component {
-    static wrappedComponent = WrappedComponent
-
-    render() {
-      return <WrappedComponent {...this.props} />
-    }
+  const WithFirestore = function WithFirestore(props) {
+    const firebase = useFirebase()
+    const firestore = useFirestore()
+    return (
+      <WrappedComponent
+        firebase={firebase}
+        dispatch={get(firebase, 'dispatch')}
+        firestore={firestore}
+        {...props}
+      />
+    )
   }
 
-  const HoistedComp = hoistStatics(WithFirestore, WrappedComponent)
+  WithFirestore.displayName = wrapDisplayName(WrappedComponent, 'withFirestore')
+  WithFirestore.wrappedComponent = WrappedComponent
 
-  const withFirestore = props => (
-    <ReactReduxFirebaseContext.Consumer>
-      {firebase => (
-        <ReduxFirestoreContext.Consumer>
-          {firestore => (
-            <HoistedComp
-              firestore={firestore}
-              firebase={firebase}
-              dispatch={firebase.dispatch}
-              {...props}
-            />
-          )}
-        </ReduxFirestoreContext.Consumer>
-      )}
-    </ReactReduxFirebaseContext.Consumer>
-  )
-
-  withFirestore.displayName = wrapDisplayName(WrappedComponent, 'withFirestore')
-  withFirestore.wrappedComponent = WrappedComponent
-
-  return withFirestore
+  return hoistStatics(WithFirestore, WrappedComponent)
 }
 
 /**

@@ -537,6 +537,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @return {firebase.database.Auth}
    */
   return Object.assign(firebase, {
+    _reactReduxFirebaseExtended: true,
     ref: path => firebase.database().ref(path),
     set,
     setWithMeta,

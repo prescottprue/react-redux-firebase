@@ -8,17 +8,17 @@
 ## createUseFirestoreConnect
 
 React hook that automatically listens/unListens to provided
-firestore paths.
+firebase paths.
 **WARNING!!** This is an advanced feature, and should only be used when
 needing to access a firebase instance created under a different store key.
-Firestore state (state.firestore)
+Firebase state (state.firebase)
 
 **Examples**
 
 _Basic_
 
 ```javascript
-// props.firestore set on App component as firebase object with helpers
+// props.firebase set on App component as firebase object with helpers
 import { createUseFirestoreConnect } from 'react-redux-firebase'
 
 const firestoreConnect = createUseFirestoreConnect()
@@ -34,12 +34,12 @@ React hook that automatically listens/unListens
 to provided Cloud Firestore paths. Make sure you have required/imported
 Cloud Firestore, including it's reducer, before attempting to use.
 **Note** Populate is not yet supported.
-**Note2** Only single path is allowed per one hook
 
 **Parameters**
 
--   `queriesConfig` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String))** An object or string for paths to sync
-    from firestore. Can also be a function that returns the object or string.
+-   `queriesConfig` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** An object, string,
+    or array of object or string for paths to sync from firestore. Can also be
+    a function that returns the object, string, or array of object or string.
 
 **Examples**
 
@@ -49,10 +49,10 @@ _Basic_
 import React from 'react'
 import { map } from 'lodash'
 import { connect } from 'react-redux'
-import { useFirestoreConnect } from 'react-redux-firebase'
+import { useFirebaseConnect } from 'react-redux-firebase'
 
-function TodosList({ todosList }) {
-  useFirestoreConnect('todos') // sync todos collection from Firestore into redux
+const TodosList = ({ todosList }) => {
+  useFirebaseConnect('todos') // sync todos collection from Firestore into redux
 
   return <ul>{_.map(todosList, todo => <li>{todo}</li>)}</ul>
 }
@@ -71,17 +71,13 @@ _Object as query_
 import React, { useMemo } from 'react'
 import { get } from 'lodash'
 import { connect } from 'react-redux'
-import { useFirestoreConnect } from 'react-redux-firebase'
+import { useFirebaseConnect } from 'react-redux-firebase'
 
-function TodoItem({ todoId, todoData }) {
-  const query = useMemo( // Make sure that everytime component rerender will not create a new query object which cause unnecessary set/unset listener
-    () => ({
-      collection: 'todos',
-      doc: todoId
-    }),
-    [todoId] // useMemo's dependency
-  )
-  useFirestoreConnect(query) // sync todos collection from Firestore into redux
+const TodoItem = ({ todoId, todoData }) => {
+  useFirebaseConnect(() => ({
+    collection: 'todos',
+    doc: todoId
+  }), [todoId]) // include dependency in the hook
 
   return <div>{JSON.stringify(todoData)}</div>
 }

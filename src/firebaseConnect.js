@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { isEqual, differenceWith } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
-import { watchEvents, unWatchEvents } from './actions/query'
-import { getEventsFromInput, createCallable, wrapDisplayName } from './utils'
-import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
+import { invokeArrayQuery, wrapDisplayName } from './utils'
+import useFirebaseConnect from './useFirebaseConnect'
+import useFirebase from './useFirebase'
 
 /**
  * Function that creates a Higher Order Component which
@@ -26,84 +25,27 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 export const createFirebaseConnect = (storeKey = 'store') => (
   dataOrFn = []
 ) => WrappedComponent => {
-  class FirebaseConnectWrapped extends Component {
-    static displayName = wrapDisplayName(
-      WrappedComponent,
-      'FirebaseConnectWrapped'
-    )
-    static wrappedComponent = WrappedComponent
+  const FirebaseConnect = function FirebaseConnect(props) {
+    const contextFirebase = useFirebase()
+    const firebase = props.firebase || contextFirebase
+    const data = invokeArrayQuery(dataOrFn, props)
 
-    firebaseEvents = []
-    firebase = null
-    prevData = null
+    useFirebaseConnect(data)
 
-    componentDidMount() {
-      const { firebase, dispatch } = this.props
-
-      // Allow function to be passed
-      const inputAsFunc = createCallable(dataOrFn)
-      this.prevData = inputAsFunc(this.props, this.props)
-
-      const { ref, helpers, storage, database, auth } = firebase
-      this.firebase = { ref, storage, database, auth, ...helpers }
-
-      this._firebaseEvents = getEventsFromInput(this.prevData)
-
-      watchEvents(firebase, dispatch, this._firebaseEvents)
-    }
-
-    componentWillUnmount() {
-      const { firebase, dispatch } = this.props
-      unWatchEvents(firebase, dispatch, this._firebaseEvents)
-    }
-
-    componentWillReceiveProps(np) {
-      const { firebase, dispatch } = this.props
-      const inputAsFunc = createCallable(dataOrFn)
-      const data = inputAsFunc(np, this.store)
-
-      // Handle a data parameter having changed
-      if (!isEqual(data, this.prevData)) {
-        const itemsToSubscribe = differenceWith(data, this.prevData, isEqual)
-        const itemsToUnsubscribe = differenceWith(this.prevData, data, isEqual)
-
-        this.prevData = data
-        // UnWatch all current events
-        unWatchEvents(
-          firebase,
-          dispatch,
-          getEventsFromInput(itemsToUnsubscribe)
-        )
-        // Get watch events from new data
-        this._firebaseEvents = getEventsFromInput(data)
-
-        // Watch new events
-        watchEvents(firebase, dispatch, getEventsFromInput(itemsToSubscribe))
-      }
-    }
-
-    render() {
-      return <WrappedComponent {...this.props} />
-    }
-  }
-
-  FirebaseConnectWrapped.propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    firebase: PropTypes.object.isRequired
-  }
-
-  const FirebaseConnect = props => {
     return (
-      <ReactReduxFirebaseContext.Consumer>
-        {_internalFirebase => (
-          <FirebaseConnectWrapped
-            {...props}
-            dispatch={_internalFirebase.dispatch}
-            firebase={_internalFirebase}
-          />
-        )}
-      </ReactReduxFirebaseContext.Consumer>
+      <WrappedComponent
+        firebase={firebase}
+        dispatch={firebase.dispatch}
+        {...props}
+      />
     )
+  }
+
+  hoistStatics(FirebaseConnect, WrappedComponent)
+
+  FirebaseConnect.propTypes = {
+    ...(WrappedComponent.propTypes || {}),
+    firebase: PropTypes.object
   }
 
   FirebaseConnect.displayName = wrapDisplayName(

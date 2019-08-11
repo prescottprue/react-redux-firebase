@@ -1,7 +1,7 @@
-import { isArray } from 'lodash'
-import { useMemo, useEffect } from 'react'
+import { isEqual, differenceWith } from 'lodash'
+import { useMemo, useEffect, useRef } from 'react'
 import { watchEvents, unWatchEvents } from './actions/query'
-import { getEventsFromInput, createCallable } from './utils'
+import { getEventsFromInput, invokeArrayQuery } from './utils'
 import useFirebase from './useFirebase'
 
 /**
@@ -20,35 +20,48 @@ import useFirebase from './useFirebase'
  */
 export const createUseFirebaseConnect = () => dataOrFn => {
   const firebase = useFirebase()
+  const eventRef = useRef()
+  const dataRef = useRef()
 
-  const inputAsFunc = createCallable(dataOrFn)
-
-  const data = inputAsFunc()
-
-  const firebaseEvents = useMemo(
-    () => {
-      if (!data) {
-        return null
-      }
-      if (isArray(data)) {
-        throw new Error("Array isn't allowed inside useFirebaseConnect hook.")
-      }
-      return getEventsFromInput([data])
-    },
-    [data]
-  )
+  const data = useMemo(() => invokeArrayQuery(dataOrFn), [dataOrFn])
 
   useEffect(
     () => {
-      if (data !== null) {
-        watchEvents(firebase, firebase.dispatch, firebaseEvents)
-        return () => {
-          unWatchEvents(firebase, firebase.dispatch, firebaseEvents)
-        }
+      if (data !== null && !isEqual(data, dataRef.current)) {
+        const itemsToSubscribe = differenceWith(data, dataRef.current, isEqual)
+        const itemsToUnsubscribe = differenceWith(
+          dataRef.current,
+          data,
+          isEqual
+        )
+
+        dataRef.current = data
+        // UnWatch all current events
+        unWatchEvents(
+          firebase,
+          firebase.dispatch,
+          getEventsFromInput(itemsToUnsubscribe)
+        )
+        // Get watch events from new data
+        eventRef.current = getEventsFromInput(data)
+
+        // Watch new events
+        watchEvents(
+          firebase,
+          firebase.dispatch,
+          getEventsFromInput(itemsToSubscribe)
+        )
       }
     },
     [data]
   )
+
+  // Emulate componentWillUnmount
+  useEffect(() => {
+    return () => {
+      unWatchEvents(firebase, firebase.dispatch, eventRef.current)
+    }
+  }, [])
 }
 
 /**
@@ -56,10 +69,10 @@ export const createUseFirebaseConnect = () => dataOrFn => {
  * @name useFirebaseConnect
  * @description Hook that automatically listens/unListens
  * to provided firebase paths using React's useEffect hook.
- * **Note** Only single path is allowed per one hook
- * @param {Object|String} queriesConfig - Object or string for path to sync
- * from Firebase or null if hook doesn't need to sync.
- * Can also be a function that returns an object or a path string.
+ * @param {Object|String|Function|Array} queriesConfigs - Object, string, or
+ * array contains object or string for path to sync from Firebase or null if
+ * hook doesn't need to sync. Can also be a function that returns an object,
+ * a path string, or array of an object or a path string.
  * @example <caption>Ordered Data</caption>
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
@@ -95,6 +108,27 @@ export const createUseFirebaseConnect = () => dataOrFn => {
  *
  * const Post = ({ post, postId }) => {
  *   useFirebaseConnect(`posts/${postId}`) // sync /posts/postId from firebase into redux
+ *   return (
+ *     <div>
+ *       {JSON.stringify(post, null, 2)}
+ *     </div>
+ *   )
+ * }
+ * 
+ * export default enhance(Post)
+ * @example <caption>Data that depends on props, an array as a query</caption>
+ * import { compose } from 'redux'
+ * import { connect } from 'react-redux'
+ * import { firebaseUseConnect, getVal } from 'react-redux-firebase'
+ *
+ * const enhance = compose(
+ *   connect((state, props) => ({
+ *     post: getVal(state.firebase.data, `posts/${props.postId}`),
+ *   })
+ * )
+ *
+ * const Post = ({ post, postId }) => {
+ *   useFirebaseConnect([`posts/${postId}`], [postId]) // sync /posts/postId from firebase into redux
  *   return (
  *     <div>
  *       {JSON.stringify(post, null, 2)}
