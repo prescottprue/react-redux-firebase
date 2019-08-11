@@ -18,7 +18,11 @@ describe('firestoreConnect', () => {
     expect(component).to.have.lengthOf(1)
   })
 
-  it('disables watchers on unmount', () => {
+  // it('disables watchers on unmount', () => {
+  // TODO: write logic to confirm that watchers on signleton are updated
+  // })
+
+  it('dispatches "@@reduxFirestore/UNSET_LISTENER" action when listeners are detached on unmount', () => {
     const { wrapper, dispatch } = createContainer({ hoc: withFirestoreConnect })
     wrapper.unmount()
     expect(
@@ -32,7 +36,7 @@ describe('firestoreConnect', () => {
     ).to.be.true
   })
 
-  it('does not change watchers with props changes that do not change listener paths', async () => {
+  it('does not dispatch new actions for props changes which do not impact listener paths', async () => {
     const { wrapper, dispatch } = createContainer({ hoc: withFirestoreConnect })
     wrapper.setState({ test: 'somethingElse' })
     expect(

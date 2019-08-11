@@ -36,7 +36,7 @@ describe('firebaseConnect', () => {
     expect(leaf).to.have.prop('pass', 'through')
   })
 
-  it('enebles watchers on mount', async () => {
+  it('enables watchers on mount', async () => {
     const { dispatch } = createContainer({
       hoc: withFirebaseConnect,
       additionalComponentProps: { dynamic: 'start' }
@@ -51,7 +51,7 @@ describe('firebaseConnect', () => {
     ).to.be.true
   })
 
-  it('disables watchers on unmount', async () => {
+  it('dispatches "@@reactReduxFirebase/UNSET_LISTENER" action when listeners are detached on unmount', async () => {
     const { wrapper, dispatch } = createContainer({
       hoc: withFirebaseConnect,
       additionalComponentProps: { dynamic: 'start' }
@@ -67,7 +67,7 @@ describe('firebaseConnect', () => {
     ).to.be.true
   })
 
-  it('does not change watchers props changes that do not change listener paths', async () => {
+  it('does not dispatch new actions for props changes which do not impact listener paths', async () => {
     const { wrapper, dispatch } = createContainer({
       hoc: withFirebaseConnect,
       additionalComponentProps: { dynamic: 'start' }
