@@ -13,11 +13,6 @@ React's Lifecycle hooks.
 **WARNING!!** This is an advanced feature, and should only be used when
 needing to access a firebase instance created under a different store key.
 
-**Parameters**
-
--   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
-    Firebase state (state.firebase) (optional, default `'store'`)
-
 **Examples**
 
 _Basic_

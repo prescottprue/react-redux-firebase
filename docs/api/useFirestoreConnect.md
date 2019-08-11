@@ -2,31 +2,7 @@
 
 ### Table of Contents
 
--   [createUseFirestoreConnect](#createusefirestoreconnect)
 -   [useFirestoreConnect](#usefirestoreconnect)
-
-## createUseFirestoreConnect
-
-React hook that automatically listens/unListens to provided
-firestore paths.
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-Firebase state (state.firestore)
-
-**Examples**
-
-_Basic_
-
-```javascript
-// props.firestore set on App component as firestore object with helpers
-import { createUseFirestoreConnect } from 'react-redux-firebase'
-
-const firestoreConnect = createUseFirestoreConnect()
-
-export default useFirestoreConnect()
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** React hook that accepts watch query
 
 ## useFirestoreConnect
 
@@ -48,21 +24,21 @@ _Basic_
 ```javascript
 import React from 'react'
 import { map } from 'lodash'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useFirebaseConnect } from 'react-redux-firebase'
 
-function TodosList({ todosList }) {
+function TodosList() {
   useFirebaseConnect('todos') // sync todos collection from Firestore into redux
-
-  return <ul>{_.map(todosList, todo => <li>{todo}</li>)}</ul>
+  const todos = useSelector(state => state.firebase.data.todos)
+  return (
+    <ul>
+      {map(todos, (todo, todoId) => (
+       <li>id: {todoId} todo: {JSON.stringify(todo)}</li>
+      ))}
+   </ul>
+  )
 }
-
-// pass todos list from redux as props.todosList
-export default compose(
-  connect((state) => ({
-    todosList: state.firestore.data.todos
-  })
-)(TodosList)
+export default TodosList
 ```
 
 _Object as query_
