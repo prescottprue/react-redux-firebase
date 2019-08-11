@@ -2,42 +2,9 @@
 
 ### Table of Contents
 
--   [createUseFirestore](#createusefirestore)
 -   [useFirestore](#usefirestore)
 
-## createUseFirestore
-
-Function that creates a hook that which provides
-`firestore` object.
-
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-
-**Parameters**
-
--   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
-    Firestore state (`state.firestore`) (optional, default `'store'`)
-
-**Examples**
-
-_Basic_
-
-```javascript
-import { createUseFirestore } from 'react-redux-firebase'
-
-// create useFirestore that uses another redux store
-const useFirestore = createUseFirestore()
-
-// use the useFirestore to wrap a component
-export default useFirestore(SomeComponent)
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Higher Order Component which accepts an array of
-watchers config and wraps a React Component
-
 ## useFirestore
-
-**Extends React.Component**
 
 React hook that return firestore object.
 Firestore instance is gathered from `store.firestore`, which is attached
@@ -54,12 +21,15 @@ import { useFirestore } from 'react-redux-firebase'
 
 function AddData({ firebase: { add } }) {
   const firestore = useFirestore()
-  const add = todo => {
-    firestore.collection('todos').add(todo)
+
+  function addTodo() {
+    const exampleTodo = { done: false, text: 'Sample' }
+    return firestore.collection('todos').add(exampleTodo)
   }
+
   return (
     <div>
-      <button onClick={() => add({ done: false, text: 'Sample' })}>
+      <button onClick={addTodo}>
         Add Sample Todo
       </button>
     </div>
@@ -69,4 +39,4 @@ function AddData({ firebase: { add } }) {
 export default AddTodo
 ```
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firestore instance
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Extended Firestore instance

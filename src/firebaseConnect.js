@@ -61,6 +61,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
       const { firebase, dispatch } = this.props
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.store)
+
       // Handle a data parameter having changed
       if (!isEqual(data, this.prevData)) {
         const itemsToSubscribe = differenceWith(data, this.prevData, isEqual)

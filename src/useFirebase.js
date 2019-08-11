@@ -2,25 +2,6 @@ import { useContext } from 'react'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
- * @name createUseFirebase
- * @description Function that creates a react hook which provides `firebase` object.
- *
- * **WARNING!!** This is an advanced feature, and should only be used when
- * needing to access a firebase instance created under a different store key.
- * Firebase state (`state.firebase`)
- * @return {Function} - A hook fucntion that return firebase object.
- * @example <caption>Basic</caption>
- * import { createUseFirebase } from 'react-redux-firebase'
- *
- * // create useFirebase
- * const useFirebase = createUseFirebase()
- */
-export const createUseFirebase = () =>
-  function useFirebase() {
-    return useContext(ReactReduxFirebaseContext)
-  }
-
-/**
  * @name useFirebase
  * @description React hook that provides `firebase` object.
  * Firebase is gathered from `store.firebase`, which is attached to store
@@ -28,19 +9,28 @@ export const createUseFirebase = () =>
  * **NOTE**: This version of the Firebase library has extra methods, config,
  * and functionality which give it it's capabilities such as dispatching
  * actions.
- * @return {Object} - Firebase instance
+ * @return {Object} - Extended Firebase instance
  * @example <caption>Basic</caption>
  * import { useFirebase } from 'react-redux-firebase'
  *
  * function AddData() {
  *   const firebase = useFirebase()
+ *
+ *   function addTodo() {
+ *     const exampleTodo = { done: false, text: 'Sample' }
+ *     return firebase.push('todos', exampleTodo)
+ *   }
+ *
  *   return (
  *     <div>
- *       <button onClick={() => firebase.push('todos', { done: false, text: 'Sample' })}>
+ *       <button onClick={addTodo}>
  *         Add Sample Todo
  *       </button>
  *     </div>
  *   )
  * }
  */
-export default createUseFirebase()
+
+export default function useFirebase() {
+  return useContext(ReactReduxFirebaseContext)
+}

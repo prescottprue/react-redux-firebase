@@ -8,17 +8,17 @@
 ## createUseFirestoreConnect
 
 React hook that automatically listens/unListens to provided
-firebase paths.
+firestore paths.
 **WARNING!!** This is an advanced feature, and should only be used when
 needing to access a firebase instance created under a different store key.
-Firebase state (state.firebase)
+Firebase state (state.firestore)
 
 **Examples**
 
 _Basic_
 
 ```javascript
-// props.firebase set on App component as firebase object with helpers
+// props.firestore set on App component as firestore object with helpers
 import { createUseFirestoreConnect } from 'react-redux-firebase'
 
 const firestoreConnect = createUseFirestoreConnect()

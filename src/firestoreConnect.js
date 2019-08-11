@@ -68,6 +68,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
 
         // Remove listeners for inactive subscriptions
         firestore.unsetListeners(changes.removed)
+
         // Add listeners for new subscriptions
         firestore.setListeners(changes.added)
       }
@@ -86,7 +87,7 @@ export const createFirestoreConnect = (storeKey = 'store') => (
   }
 
   FirestoreConnectWrapped.propTypes = {
-    dispatch: PropTypes.func,
+    dispatch: PropTypes.func.isRequired,
     firebase: PropTypes.object,
     firestore: PropTypes.object
   }

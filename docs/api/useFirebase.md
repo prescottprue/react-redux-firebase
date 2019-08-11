@@ -2,29 +2,7 @@
 
 ### Table of Contents
 
--   [createUseFirebase](#createusefirebase)
 -   [useFirebase](#usefirebase)
-
-## createUseFirebase
-
-Function that creates a react hook which provides `firebase` object.
-
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-Firebase state (`state.firebase`)
-
-**Examples**
-
-_Basic_
-
-```javascript
-import { createUseFirebase } from 'react-redux-firebase'
-
-// create useFirebase
-const useFirebase = createUseFirebase()
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** A hook fucntion that return firebase object.
 
 ## useFirebase
 
@@ -44,9 +22,15 @@ import { useFirebase } from 'react-redux-firebase'
 
 function AddData() {
   const firebase = useFirebase()
+
+  function addTodo() {
+    const exampleTodo = { done: false, text: 'Sample' }
+    return firebase.push('todos', exampleTodo)
+  }
+
   return (
     <div>
-      <button onClick={() => firebase.push('todos', { done: false, text: 'Sample' })}>
+      <button onClick={addTodo}>
         Add Sample Todo
       </button>
     </div>
@@ -54,4 +38,4 @@ function AddData() {
 }
 ```
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase instance
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Extended Firebase instance
