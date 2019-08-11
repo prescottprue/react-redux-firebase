@@ -3,8 +3,8 @@ import ReactReduxFirebaseProvider from './ReactReduxFirebaseProvider'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 import ReduxFirestoreProvider from './ReduxFirestoreProvider'
 import ReduxFirestoreContext from './ReduxFirestoreContext'
-import firebaseConnect, { createFirebaseConnect } from './firebaseConnect'
-import firestoreConnect, { createFirestoreConnect } from './firestoreConnect'
+import firebaseConnect from './firebaseConnect'
+import firestoreConnect from './firestoreConnect'
 import withFirebase from './withFirebase'
 import withFirestore from './withFirestore'
 import useFirebaseConnect from './useFirebaseConnect'
@@ -25,9 +25,7 @@ export default {
   ReduxFirestoreConsumer: ReduxFirestoreContext.Consumer,
   createFirebaseInstance,
   firebaseConnect,
-  createFirebaseConnect,
   firestoreConnect,
-  createFirestoreConnect,
   withFirebase,
   withFirestore,
   useFirebase,

@@ -1,7 +1,7 @@
 import React from 'react'
 import { some, isMatch, filter } from 'lodash'
 import { sleep, createContainer, TestLeaf } from '../utils'
-import firestoreConnect, { createFirestoreConnect } from 'firestoreConnect'
+import firestoreConnect from 'firestoreConnect'
 
 /* eslint-disable react/prop-types */
 const withFirestoreConnect = firestoreConnect(props => [
@@ -99,11 +99,5 @@ describe('firestoreConnect', () => {
   it('sets WrappedComponent static as component which was wrapped', () => {
     const containerPrime = firestoreConnect()(TestLeaf)
     expect(containerPrime.wrappedComponent).to.equal(TestLeaf)
-  })
-})
-
-describe('createFirestoreConnect', () => {
-  it('creates a function', () => {
-    expect(createFirestoreConnect('store2')).to.be.a.function
   })
 })

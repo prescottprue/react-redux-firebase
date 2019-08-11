@@ -1,9 +1,7 @@
 import React from 'react'
 import { values, some, isMatch, filter } from 'lodash'
 import { TestContainer, sleep, createContainer } from '../utils'
-import firebaseConnect, {
-  createFirebaseConnect
-} from '../../src/firebaseConnect'
+import firebaseConnect from '../../src/firebaseConnect'
 const DYNAMIC_PROPS_SEPARATOR = ','
 
 const withFirebaseConnect = firebaseConnect(({ dynamicProp }) => {
@@ -201,11 +199,5 @@ describe('firebaseConnect', () => {
   it('sets WrappedComponent static as component which was wrapped', () => {
     const containerPrime = firebaseConnect()(TestContainer)
     expect(containerPrime.wrappedComponent).to.equal(TestContainer)
-  })
-})
-
-describe('createFirebaseConnect', () => {
-  it('accepts a different store key', () => {
-    createFirebaseConnect('store2')
   })
 })

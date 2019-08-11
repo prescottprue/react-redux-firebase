@@ -2,31 +2,7 @@
 
 ### Table of Contents
 
--   [createFirestoreConnect](#createfirestoreconnect)
 -   [firestoreConnect](#firestoreconnect)
-
-## createFirestoreConnect
-
-Function that creates a Higher Order Component which
-automatically listens/unListens to provided firebase paths using
-React's Lifecycle hooks.
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-
-**Examples**
-
-_Basic_
-
-```javascript
-// props.firebase set on App component as firebase object with helpers
-import { createFirestoreConnect } from 'react-redux-firebase'
-// create firebase connect that uses another redux store
-const firestoreConnect = createFirestoreConnect('anotherStore')
-// use the firebaseConnect to wrap a component
-export default firestoreConnect()(SomeComponent)
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** HOC that accepts a watchArray and wraps a component
 
 ## firestoreConnect
 
@@ -39,6 +15,7 @@ attempting to use. **Note** Populate is not yet supported.
 
 **Parameters**
 
+-   `dataOrFn`   (optional, default `[]`)
 -   `queriesConfig` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
     from Firebase. Can also be a function that returns the array. The function
     is passed the current props and the firebase object.

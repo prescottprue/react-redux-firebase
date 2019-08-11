@@ -2,31 +2,7 @@
 
 ### Table of Contents
 
--   [createFirebaseConnect](#createfirebaseconnect)
 -   [firebaseConnect](#firebaseconnect)
-
-## createFirebaseConnect
-
-Function that creates a Higher Order Component which
-automatically listens/unListens to provided firebase paths using
-React's Lifecycle hooks.
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-
-**Examples**
-
-_Basic_
-
-```javascript
-// props.firebase set on App component as firebase object with helpers
-import { createFirebaseConnect } from 'react-redux-firebase'
-// create firebase connect that uses another redux store
-const firebaseConnect = createFirebaseConnect('anotherStore')
-// use the firebaseConnect to wrap a component
-export default firebaseConnect()(SomeComponent)
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** HOC that accepts a watchArray and wraps a component
 
 ## firebaseConnect
 
@@ -37,6 +13,7 @@ to provided firebase paths using React's Lifecycle hooks.
 
 **Parameters**
 
+-   `dataOrFn`   (optional, default `[]`)
 -   `watchArray` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
     from Firebase. Can also be a function that returns the array. The function
     is passed the current props and the firebase object.
@@ -94,7 +71,7 @@ const enhance = compose(
   ])),
   connect((state, props) => ({
     post: get(state.firebase.data, `posts.${props.postId}`),
-  })
+  }))
 )
 
 function Post({ post }) {
