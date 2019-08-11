@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
-import { withFirebase } from 'react-redux-firebase'
+import withFirebase from 'react-redux-firebase/lib/withFirebase'
 import { withHandlers, compose, setPropTypes } from 'recompose'
 import { spinnerWhileLoading } from 'utils/components'
 import { withNotifications } from 'modules/notification'

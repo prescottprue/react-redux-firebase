@@ -7,13 +7,15 @@ import ThemeSettings from 'theme'
 
 const theme = createMuiTheme(ThemeSettings)
 
-const App = ({ routes, store }) => (
-  <MuiThemeProvider theme={theme}>
-    <Provider store={store}>
-      <Router>{routes}</Router>
-    </Provider>
-  </MuiThemeProvider>
-)
+function App({ routes, store }) {
+  return (
+    <MuiThemeProvider theme={theme}>
+      <Provider store={store}>
+        <Router>{routes}</Router>
+      </Provider>
+    </MuiThemeProvider>
+  )
+}
 
 App.propTypes = {
   routes: PropTypes.object.isRequired,

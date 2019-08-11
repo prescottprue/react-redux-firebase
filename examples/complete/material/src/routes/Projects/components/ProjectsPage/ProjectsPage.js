@@ -1,22 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'react-redux-firebase'
+import { isEmpty } from 'react-redux-firebase/lib/helpers'
 import { Route, Switch } from 'react-router-dom'
 import ProjectRoute from 'routes/Projects/routes/Project'
 import ProjectTile from '../ProjectTile'
 import NewProjectTile from '../NewProjectTile'
 import NewProjectDialog from '../NewProjectDialog'
+import { renderChildren } from 'utils/router'
 
-const renderChildren = (routes, match, parentProps) =>
-  routes.map(route => (
-    <Route
-      key={`${match.url}-${route.path}`}
-      path={`${match.url}/${route.path}`}
-      render={props => <route.component {...parentProps} {...props} />}
-    />
-  ))
-
-export const ProjectsPage = ({
+function ProjectsPage({
   projects,
   collabProjects,
   auth,
@@ -27,38 +19,40 @@ export const ProjectsPage = ({
   classes,
   match,
   goToProject
-}) => (
-  <Switch>
-    {/* Child routes */}
-    {renderChildren([ProjectRoute], match, { auth })}
-    {/* Main Route */}
-    <Route
-      exact
-      path={match.path}
-      render={() => (
-        <div className={classes.root}>
-          <NewProjectDialog
-            onSubmit={addProject}
-            open={newDialogOpen}
-            onRequestClose={toggleDialog}
-          />
-          <div className={classes.tiles}>
-            <NewProjectTile onClick={toggleDialog} />
-            {!isEmpty(projects) &&
-              projects.map((project, ind) => (
-                <ProjectTile
-                  key={`Project-${project.id}-${ind}`}
-                  name={project.name}
-                  onSelect={() => goToProject(project.id)}
-                  onDelete={() => deleteProject(project.id)}
-                />
-              ))}
+}) {
+  return (
+    <Switch>
+      {/* Child routes */}
+      {renderChildren([ProjectRoute], match, { auth })}
+      {/* Main Route */}
+      <Route
+        exact
+        path={match.path}
+        render={() => (
+          <div className={classes.root}>
+            <NewProjectDialog
+              onSubmit={addProject}
+              open={newDialogOpen}
+              onRequestClose={toggleDialog}
+            />
+            <div className={classes.tiles}>
+              <NewProjectTile onClick={toggleDialog} />
+              {!isEmpty(projects) &&
+                projects.map((project, ind) => (
+                  <ProjectTile
+                    key={`Project-${project.key}-${ind}`}
+                    name={project.value.name}
+                    onSelect={() => goToProject(project.key)}
+                    onDelete={() => deleteProject(project.key)}
+                  />
+                ))}
+            </div>
           </div>
-        </div>
-      )}
-    />
-  </Switch>
-)
+        )}
+      />
+    </Switch>
+  )
+}
 
 ProjectsPage.propTypes = {
   classes: PropTypes.object.isRequired, // from enhancer (withStyles)

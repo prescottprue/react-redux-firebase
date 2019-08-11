@@ -25,4 +25,5 @@ export function fpLog(message) {
  */
 export function initScripts() {
   // Initialize global scripts here
+  
 }

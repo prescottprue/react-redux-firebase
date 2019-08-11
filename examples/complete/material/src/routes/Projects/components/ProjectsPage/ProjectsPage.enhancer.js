@@ -1,16 +1,18 @@
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { LIST_PATH } from 'constants/paths'
-import { withHandlers, withStateHandlers } from 'recompose'
+import { withHandlers, withStateHandlers, setDisplayName } from 'recompose'
 import { withRouter } from 'react-router-dom'
-import { firebaseConnect } from 'react-redux-firebase'
+import firebaseConnect from 'react-redux-firebase/lib/firebaseConnect'
 import { withStyles } from '@material-ui/core/styles'
 import { withNotifications } from 'modules/notification'
 import { spinnerWhileLoading } from 'utils/components'
 import { UserIsAuthenticated } from 'utils/router'
+import { LIST_PATH } from 'constants/paths'
 import styles from './ProjectsPage.styles'
 
 export default compose(
+  // Set component display name (more clear in dev/error tools)
+  setDisplayName('EnhancedProjectsPage'),
   // redirect to /login if user is not logged in
   UserIsAuthenticated,
   // Map auth uid from state to props
@@ -18,7 +20,7 @@ export default compose(
   // Wait for uid to exist before going further
   spinnerWhileLoading(['uid']),
   // Create listeners based on current users UID
-  firebaseConnect(({ params, uid }) => [
+  firebaseConnect(({ uid }) => [
     {
       path: 'projects',
       queryParams: ['orderByChild=createdBy', `equalTo=${uid}`]
@@ -85,5 +87,6 @@ export default compose(
       history.push(`${LIST_PATH}/${projectId}`)
     }
   }),
+  // Add styles as props.classes
   withStyles(styles)
 )

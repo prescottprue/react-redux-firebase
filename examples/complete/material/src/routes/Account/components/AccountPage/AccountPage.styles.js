@@ -9,7 +9,7 @@ export default theme => ({
     ...theme.flexColumnCenter,
     justifyContent: 'space-around',
     flexBasis: '60%',
-    padding: theme.spacing.unit
+    padding: theme.spacing()
   },
   settings: {
     ...theme.flexRowCenter
