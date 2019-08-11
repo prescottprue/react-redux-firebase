@@ -8,7 +8,7 @@ import { LIST_PATH } from 'constants/paths'
 import AccountMenu from './AccountMenu'
 import LoginMenu from './LoginMenu'
 
-export const Navbar = ({
+function Navbar({
   avatarUrl,
   displayName,
   authExists,
@@ -18,33 +18,35 @@ export const Navbar = ({
   anchorEl,
   handleMenu,
   classes
-}) => (
-  <AppBar position="static">
-    <Toolbar>
-      <Typography
-        variant="h6"
-        color="inherit"
-        className={classes.flex}
-        component={Link}
-        to={authExists ? LIST_PATH : '/'}>
-        material
-      </Typography>
-      {authExists ? (
-        <AccountMenu
-          avatarUrl={avatarUrl}
-          displayName={displayName}
-          onLogoutClick={handleLogout}
-          goToAccount={goToAccount}
-          closeAccountMenu={closeAccountMenu}
-          handleMenu={handleMenu}
-          anchorEl={anchorEl}
-        />
-      ) : (
-        <LoginMenu />
-      )}
-    </Toolbar>
-  </AppBar>
-)
+}) {
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        <Typography
+          variant="h6"
+          color="inherit"
+          className={classes.flex}
+          component={Link}
+          to={authExists ? LIST_PATH : '/'}>
+          material
+        </Typography>
+        {authExists ? (
+          <AccountMenu
+            avatarUrl={avatarUrl}
+            displayName={displayName}
+            onLogoutClick={handleLogout}
+            goToAccount={goToAccount}
+            closeAccountMenu={closeAccountMenu}
+            handleMenu={handleMenu}
+            anchorEl={anchorEl}
+          />
+        ) : (
+          <LoginMenu />
+        )}
+      </Toolbar>
+    </AppBar>
+  )
+}
 
 Navbar.propTypes = {
   classes: PropTypes.object.isRequired, // from enhancer (withStyles)

@@ -1,130 +1,177 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-dom/test-utils'
-import { keys, values } from 'lodash'
-import {
-  storeWithFirebase,
-  Container,
-  ProviderMock,
-  TestContainer,
-  firebaseWithConfig
-} from '../utils'
+import { values, some, isMatch, filter } from 'lodash'
+import { TestContainer, sleep, createContainer } from '../utils'
 import firebaseConnect, {
   createFirebaseConnect
 } from '../../src/firebaseConnect'
-import ReactReduxFirebaseProvider from '../../src/ReactReduxFirebaseProvider'
-import { createFirestoreInstance } from 'redux-firestore'
-const dispatchSpy = sinon.spy()
 const DYNAMIC_PROPS_SEPARATOR = ','
 
-const getFirebaseWatchers = store => {
-  return { ...store.firebase._.watchers }
-}
+const withFirebaseConnect = firebaseConnect(({ dynamicProp }) => {
+  const itemsToSubscribe =
+    dynamicProp &&
+    dynamicProp.split(DYNAMIC_PROPS_SEPARATOR).map(item => `test/${item}`)
+  return itemsToSubscribe ? [...itemsToSubscribe] : []
+})
 
-const createContainer = (additionalWrappedProps, listeners) => {
-  const store = storeWithFirebase()
-  const WrappedContainer = firebaseConnect(props => {
-    const itemsToSubscribe =
-      props.dynamicProp &&
-      props.dynamicProp
-        .split(DYNAMIC_PROPS_SEPARATOR)
-        .map(item => `test/${item}`)
-    return itemsToSubscribe ? [...itemsToSubscribe] : []
-  })(Container)
-
-  const tree = TestUtils.renderIntoDocument(
-    <ProviderMock store={store}>
-      <ReactReduxFirebaseProvider
-        dispatch={dispatchSpy}
-        firebase={firebaseWithConfig()}
-        createFirestoreInstance={createFirestoreInstance}
-        config={{}}>
-        <WrappedContainer pass="through" {...additionalWrappedProps} />
-      </ReactReduxFirebaseProvider>
-    </ProviderMock>
-  )
-  return {
-    wrapped: TestUtils.findRenderedComponentWithType(tree, Container),
-    parent: TestUtils.findRenderedComponentWithType(tree, ProviderMock),
-    store
-  }
+const getFirebaseWatchers = firebase => {
+  return { ...firebase._.watchers }
 }
 
 describe('firebaseConnect', () => {
   it('passes firebase prop to child', () => {
-    const { wrapped } = createContainer()
-    expect(wrapped.props).to.have.a.property('firebase')
+    const { leaf } = createContainer({ hoc: withFirebaseConnect })
+    expect(leaf).to.have.prop('firebase')
   })
 
   it('passes dispatch prop to child', () => {
-    const { wrapped } = createContainer()
-    expect(wrapped.props).to.have.a.property('dispatch')
+    const { leaf } = createContainer({ hoc: withFirebaseConnect })
+    expect(leaf).to.have.prop('dispatch')
   })
 
   it('passes through existing props', () => {
-    const { wrapped } = createContainer()
-    expect(wrapped.props).to.have.a.property('pass', 'through')
+    const { leaf } = createContainer({
+      hoc: withFirebaseConnect,
+      additionalComponentProps: { pass: 'through' }
+    })
+    expect(leaf).to.have.prop('pass', 'through')
   })
 
-  it.skip('disables watchers on unmount', () => {
-    const { container, store } = createContainer()
-    ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(container).parentNode)
-    expect(container.context.store).to.equal(store)
+  it('enables watchers on mount', async () => {
+    const { dispatch } = createContainer({
+      hoc: withFirebaseConnect,
+      additionalComponentProps: { dynamic: 'start' }
+    })
+    expect(
+      some(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reactReduxFirebase/SET_LISTENER',
+          path: 'test/start'
+        })
+      )
+    ).to.be.true
   })
 
-  it.skip('does not change watchers props changes that do not change listener paths', () => {
-    const { parent, store } = createContainer()
-    const watchers = getFirebaseWatchers(store)
-    parent.setState({ test: 'somethingElse' })
-    expect(getFirebaseWatchers(store)).to.eql(watchers)
+  it('dispatches "@@reactReduxFirebase/UNSET_LISTENER" action when listeners are detached on unmount', async () => {
+    const { wrapper, dispatch } = createContainer({
+      hoc: withFirebaseConnect,
+      additionalComponentProps: { dynamic: 'start' }
+    })
+    wrapper.unmount()
+    expect(
+      some(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reactReduxFirebase/UNSET_LISTENER',
+          path: 'test/start'
+        })
+      )
+    ).to.be.true
   })
 
-  it.skip('reapplies watchers when props change', () => {
-    const { parent, store } = createContainer()
-    const watchers = getFirebaseWatchers(store)
-    parent.setState({
+  it('does not dispatch new actions for props changes which do not impact listener paths', async () => {
+    const { wrapper, dispatch } = createContainer({
+      hoc: withFirebaseConnect,
+      additionalComponentProps: { dynamic: 'start' }
+    })
+    wrapper.setState({ test: 'somethingElse' })
+    expect(
+      filter(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reactReduxFirebase/SET_LISTENER'
+        })
+      )
+    ).to.have.lengthOf(1)
+  })
+
+  it('reapplies watchers when props change', async () => {
+    const { wrapper, dispatch } = createContainer({
+      hoc: withFirebaseConnect,
+      additionalComponentProps: { dynamic: 'start' }
+    })
+    await sleep()
+    wrapper.setState({ dynamic: 'somethingElse' })
+    await sleep()
+
+    expect(
+      filter(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reactReduxFirebase/UNSET_LISTENER',
+          path: 'test/start'
+        })
+      )
+    ).to.have.lengthOf(1)
+    expect(
+      filter(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reactReduxFirebase/SET_LISTENER',
+          path: 'test/somethingElse'
+        })
+      )
+    ).to.have.lengthOf(1)
+  })
+
+  it('applies new watchers when props change', async () => {
+    const { wrapper, dispatch } = createContainer({
+      hoc: withFirebaseConnect,
+      additionalComponentProps: { dynamic: 'somethingElse' }
+    })
+
+    wrapper.setState({
+      dynamic: 'somethingElse,anotherSomethingElse'
+    })
+    await sleep()
+
+    expect(
+      filter(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reactReduxFirebase/SET_LISTENER',
+          path: 'test/somethingElse'
+        })
+      )
+    ).to.have.lengthOf(1)
+    expect(
+      filter(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reactReduxFirebase/SET_LISTENER',
+          path: 'test/anotherSomethingElse'
+        })
+      )
+    ).to.have.lengthOf(1)
+
+    expect(dispatch).to.not.calledWithMatch({
+      type: '@@reactReduxFirebase/UNSET_LISTENER'
+    })
+  })
+
+  it('correctly maintains watcher count when props change with extra listener paths', async () => {
+    const { wrapper, firebase } = createContainer({ hoc: withFirebaseConnect })
+    wrapper.setState({
       dynamic: 'somethingElse'
     })
-    expect(getFirebaseWatchers(store)).to.not.eql(watchers)
+
+    wrapper.setState({
+      dynamic: 'somethingElse,anotherSomethingElse'
+    })
+
+    await sleep()
+
+    expect(values(getFirebaseWatchers(firebase))).to.eql([1, 1])
   })
 
-  it.skip('applies new watchers when props change', () => {
-    const { parent, wrapped } = createContainer()
-    parent.setState({
+  it('correctly maintains watcher count when props change with removed listener paths', async () => {
+    const { wrapper, firebase } = createContainer({
+      hoc: withFirebaseConnect
+    })
+    wrapper.setState({
+      dynamic: 'somethingElse,anotherSomethingElse'
+    })
+
+    wrapper.setState({
       dynamic: 'somethingElse'
     })
 
-    parent.setState({
-      dynamic: 'somethingElse, anotherSomethingElse'
-    })
+    await sleep()
 
-    expect(keys(wrapped.props.firebase._.watchers).length).to.equal(2)
-  })
-
-  it.skip('correctly maintains watcher count when props change with extra listener paths', () => {
-    const { parent, store } = createContainer()
-    parent.setState({
-      dynamic: 'somethingElse'
-    })
-
-    parent.setState({
-      dynamic: 'somethingElse, anotherSomethingElse'
-    })
-
-    expect(values(getFirebaseWatchers(store))).to.eql([1, 1])
-  })
-
-  it.skip('correctly maintains watcher count when props change with removed listener paths', () => {
-    const { parent, store } = createContainer()
-    parent.setState({
-      dynamic: 'somethingElse, anotherSomethingElse'
-    })
-
-    parent.setState({
-      dynamic: 'somethingElse'
-    })
-
-    expect(values(getFirebaseWatchers(store))).to.eql([1])
+    expect(values(getFirebaseWatchers(firebase))).to.eql([1])
   })
 
   describe('sets displayName static as ', () => {
@@ -152,8 +199,8 @@ describe('firebaseConnect', () => {
   })
 
   it('sets WrappedComponent static as component which was wrapped', () => {
-    const containerPrime = firebaseConnect()(Container)
-    expect(containerPrime.wrappedComponent).to.equal(Container)
+    const containerPrime = firebaseConnect()(TestContainer)
+    expect(containerPrime.wrappedComponent).to.equal(TestContainer)
   })
 })
 

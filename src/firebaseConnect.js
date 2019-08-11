@@ -12,8 +12,6 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * React's Lifecycle hooks.
  * **WARNING!!** This is an advanced feature, and should only be used when
  * needing to access a firebase instance created under a different store key.
- * @param {String} [storeKey='store'] - Name of redux store which contains
- * Firebase state (state.firebase)
  * @return {Function} - HOC that accepts a watchArray and wraps a component
  * @example <caption>Basic</caption>
  * // props.firebase set on App component as firebase object with helpers
@@ -23,7 +21,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * // use the firebaseConnect to wrap a component
  * export default firebaseConnect()(SomeComponent)
  */
-export const createFirebaseConnect = (storeKey = 'store') => (
+export const createFirebaseConnect = () => (
   dataOrFn = []
 ) => WrappedComponent => {
   class FirebaseConnectWrapped extends Component {

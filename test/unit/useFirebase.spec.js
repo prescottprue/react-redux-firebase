@@ -2,7 +2,7 @@ import React from 'react'
 import TestUtils from 'react-dom/test-utils'
 import { firebaseWithConfig } from '../utils'
 import ReactReduxFirebaseProvider from '../../src/ReactReduxFirebaseProvider'
-import useFirebase, { createUseFirebase } from '../../src/useFirebase'
+import useFirebase from '../../src/useFirebase'
 
 describe('useFirebase', () => {
   it('return firebase object', () => {
@@ -23,11 +23,5 @@ describe('useFirebase', () => {
     )
     expect(spy).to.has.been.called
     expect(spy.lastCall.args[0]).to.respondTo('push')
-  })
-})
-
-describe('createUseFirebase', () => {
-  it('return hook', () => {
-    expect(createUseFirebase()).to.be.a('function')
   })
 })

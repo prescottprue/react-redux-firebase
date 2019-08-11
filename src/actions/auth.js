@@ -71,7 +71,8 @@ function getProfileFromSnap(snap) {
 export function handleProfileWatchResponse(
   dispatch,
   firebase,
-  userProfileSnap
+  userProfileSnap,
+  token
 ) {
   const {
     profileParamsToPopulate,
@@ -88,7 +89,10 @@ export function handleProfileWatchResponse(
     if (useFirestoreForProfile && profileParamsToPopulate) {
       console.warn('Profile population is not yet supported for Firestore') // eslint-disable-line no-console
     }
-    dispatch({ type: actionTypes.SET_PROFILE, profile })
+    dispatch({
+      type: actionTypes.SET_PROFILE,
+      profile: token ? { ...profile, token } : profile
+    })
   } else {
     // Convert array of populate config into an array of once query promises
     promisesForPopulate(
@@ -111,14 +115,21 @@ export function handleProfileWatchResponse(
         })
         if (!autoPopulateProfile) {
           // Dispatch action with profile combined with populated parameters
-          dispatch({ type: actionTypes.SET_PROFILE, profile })
+          dispatch({
+            type: actionTypes.SET_PROFILE,
+            profile: token ? { ...profile, token } : profile
+          })
         } else {
           // Auto Populate profile
           const populates = getPopulateObjs(profileParamsToPopulate)
           const profile = userProfileSnap.val()
           dispatch({
             type: actionTypes.SET_PROFILE,
-            profile: populate({ profile, data }, 'profile', populates)
+            profile: populate(
+              { profile: token ? { ...profile, token } : profile, data },
+              'profile',
+              populates
+            )
           })
         }
       })
@@ -177,7 +188,7 @@ function createProfileWatchErrorHandler(dispatch, firebase) {
 export const watchUserProfile = (dispatch, firebase) => {
   const {
     authUid,
-    config: { userProfile, useFirestoreForProfile }
+    config: { userProfile, useFirestoreForProfile, enableClaims }
   } = firebase._
   unWatchUserProfile(firebase)
 
@@ -187,11 +198,26 @@ export const watchUserProfile = (dispatch, firebase) => {
         .firestore()
         .collection(userProfile)
         .doc(authUid)
-        .onSnapshot(
-          userProfileSnap =>
-            handleProfileWatchResponse(dispatch, firebase, userProfileSnap),
-          createProfileWatchErrorHandler(dispatch, firebase)
-        )
+        .onSnapshot(userProfileSnap => {
+          return enableClaims
+            ? firebase
+                .auth()
+                .currentUser.getIdTokenResult(true)
+                .then(token =>
+                  handleProfileWatchResponse(
+                    dispatch,
+                    firebase,
+                    userProfileSnap,
+                    token
+                  )
+                )
+            : handleProfileWatchResponse(
+                dispatch,
+                firebase,
+                userProfileSnap,
+                null
+              )
+        }, createProfileWatchErrorHandler(dispatch, firebase))
     } else if (firebase.database) {
       firebase._.profileWatch = firebase // eslint-disable-line no-param-reassign
         .database()
@@ -199,8 +225,26 @@ export const watchUserProfile = (dispatch, firebase) => {
         .child(`${userProfile}/${authUid}`)
         .on(
           'value',
-          userProfileSnap =>
-            handleProfileWatchResponse(dispatch, firebase, userProfileSnap),
+          userProfileSnap => {
+            enableClaims
+              ? firebase
+                  .auth()
+                  .currentUser.getIdTokenResult(true)
+                  .then(token =>
+                    handleProfileWatchResponse(
+                      dispatch,
+                      firebase,
+                      userProfileSnap,
+                      token
+                    )
+                  )
+              : handleProfileWatchResponse(
+                  dispatch,
+                  firebase,
+                  userProfileSnap,
+                  null
+                )
+          },
           createProfileWatchErrorHandler(dispatch, firebase)
         )
     } else {

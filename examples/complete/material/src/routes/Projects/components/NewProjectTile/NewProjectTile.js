@@ -6,11 +6,13 @@ import Paper from '@material-ui/core/Paper'
 const iconSize = '6rem'
 const iconStyle = { width: iconSize, height: iconSize }
 
-export const NewProjectTile = ({ onClick, classes }) => (
-  <Paper className={classes.root} onClick={onClick}>
-    <ContentAddCircle style={iconStyle} />
-  </Paper>
-)
+function NewProjectTile({ onClick, classes }) {
+  return (
+    <Paper className={classes.root} onClick={onClick}>
+      <ContentAddCircle style={iconStyle} />
+    </Paper>
+  )
+}
 
 NewProjectTile.propTypes = {
   classes: PropTypes.object.isRequired, // from enhancer (withStyles)

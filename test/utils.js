@@ -1,9 +1,14 @@
 import React, { Children, Component, cloneElement } from 'react'
 import PropTypes from 'prop-types'
 import { createSink } from 'recompose'
-import { isObject } from 'lodash'
+import { isObject, identity } from 'lodash'
 import { createStore, combineReducers } from 'redux'
-import { reducer as firestoreReducer } from 'redux-firestore'
+import {
+  reducer as firestoreReducer,
+  createFirestoreInstance
+} from 'redux-firestore'
+import { mount } from 'enzyme'
+import ReactReduxFirebaseProvider from '../src/ReactReduxFirebaseProvider'
 
 export const storeWithFirebase = () => {
   return createStore(combineReducers({ test: (state = {}) => state }))
@@ -359,6 +364,68 @@ export const fakeFirebase = {
       delete: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
     })
   })
+}
+
+export const TestLeaf = () => <div id="leaf" />
+
+export const createContainer = ({
+  additionalComponentProps,
+  listeners,
+  withFirestore = true,
+  withFirebase = true,
+  withErrorBoundary = false,
+  hoc = identity,
+  component = TestLeaf
+} = {}) => {
+  const firebase = firebaseWithConfig()
+  const store = storeWithFirestore()
+  sinon.spy(store, 'dispatch')
+
+  const WrappedComponent = hoc(component)
+
+  class Container extends Component {
+    state = { test: 'testing', dynamic: '' }
+
+    constructor(props) {
+      super(props)
+      // eslint-disable-next-line react/prop-types
+      this.state.dynamic = props.dynamic
+      // remove rrf specific setting initialization
+      delete firebase._
+    }
+
+    render() {
+      let children = (
+        <WrappedComponent
+          {...this.props}
+          dynamicProp={this.state.dynamic}
+          testProp={this.state.test}
+        />
+      )
+      if (withErrorBoundary) {
+        children = <ErrorBoundary>{children}</ErrorBoundary>
+      }
+      return (
+        <ReactReduxFirebaseProvider
+          dispatch={store.dispatch}
+          firebase={firebase}
+          {...(withFirestore ? { createFirestoreInstance } : {})}
+          config={{}}>
+          {children}
+        </ReactReduxFirebaseProvider>
+      )
+    }
+  }
+  const wrapper = mount(<Container {...additionalComponentProps} />)
+
+  return {
+    wrapper,
+    leaf: wrapper.find(component),
+    component: wrapper.find(WrappedComponent),
+    dispatch: store.dispatch,
+    firebase,
+    store
+  }
 }
 
 export function sleep(ms = 0) {
