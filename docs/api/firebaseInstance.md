@@ -233,6 +233,8 @@ its metadata in Firebase Database
 -   `dbPath` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Database path to place uploaded file metadata
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options
     -   `options.name` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of the file
+    -   `options.metdata` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Metadata for the file (passed as second
+        argument to storage.put calls)
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Containing the File object
 

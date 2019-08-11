@@ -146,7 +146,7 @@ Default configuration options
     state (name given when passing reducer to combineReducers). Used in
     firebaseAuthIsReady promise (see
     [#264](https://github.com/prescottprue/react-redux-firebase/issues/264)).
--   `attachAuthIsReady` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `false` Whether or not to attach
+-   `attachAuthIsReady` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `true` Whether or not to attach
     firebaseAuthIsReady to store. authIsLoaded can be imported and used
     directly instead based on preference.
 -   `firestoreNamespace` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** `firestoreHelpers` Namespace for
