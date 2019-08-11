@@ -117,15 +117,15 @@ Firestore queries can be created in two ways:
     firestoreConnect((props) => [
       { collection: 'todos', doc: props.todoId } // or `todos/${props.todoId}`
     ]),
-    connect(({ firestore: { ordered } }, props) => ({
-      todos: ordered.todos && ordered.todos[todoId]
+    connect(({ firestore: { data } }, props) => ({
+      todos: data.todos && data.todos[todoId]
     }))
   )(SomeComponent)
   ```
 
 ## Manual {#manual}
 
-If you want to trigger a query based on a click or mange listeners yourself, you can use `setListener` or `setListeners`. When doing this, make sure you call `unsetLister` for each listener you set.
+If you want to trigger a query based on a click or mange listeners yourself, you can use `setListener` or `setListeners`. When doing this, make sure you call `unsetListener` for each listener you set.
 
 ##### Component Class
 

@@ -6,32 +6,34 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import { Field } from 'redux-form'
-import { TextField } from 'redux-form-material-ui'
+import TextField from 'components/FormTextField'
 import { required } from 'utils/form'
 
-const NewProjectDialog = ({ classes, handleSubmit, open, onRequestClose }) => (
-  <Dialog open={open} onClose={onRequestClose}>
-    <DialogTitle id="new-project-dialog-title">New Project</DialogTitle>
-    <form onSubmit={handleSubmit} className={classes.inputs}>
-      <DialogContent>
-        <Field
-          name="name"
-          component={TextField}
-          label="Project Name"
-          validate={[required]}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onRequestClose} color="secondary">
-          Cancel
-        </Button>
-        <Button type="submit" color="primary">
-          Create
-        </Button>
-      </DialogActions>
-    </form>
-  </Dialog>
-)
+function NewProjectDialog({ classes, handleSubmit, open, onRequestClose }) {
+  return (
+    <Dialog open={open} onClose={onRequestClose}>
+      <DialogTitle id="new-project-dialog-title">New Project</DialogTitle>
+      <form onSubmit={handleSubmit} className={classes.inputs}>
+        <DialogContent>
+          <Field
+            name="name"
+            component={TextField}
+            label="Project Name"
+            validate={[required]}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onRequestClose} color="secondary">
+            Cancel
+          </Button>
+          <Button type="submit" color="primary">
+            Create
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
+  )
+}
 
 NewProjectDialog.propTypes = {
   classes: PropTypes.object.isRequired, // from enhancer (withStyles)

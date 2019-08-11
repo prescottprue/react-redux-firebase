@@ -13,9 +13,9 @@ Setup and use `react-redux-firebase` as normal (described in the [use section of
 [react-native complete example app](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/react-native)
 
 **NOTES**
-
+* The web SDK is actually used directly, so this method is as close as it comes to web dev
+* Slighly less performant than using native modules since the render thread is used for all JS
 * Only works for versions `v2.0.0` and higher. For older versions please view the docs associated with previous version.
-* Will not perform as well as using native modules since the render thread is used for all JS
 
 ## Native Modules
 
@@ -28,7 +28,7 @@ Passing in an instance also allows for libraries with similar APIs (such as [`re
   ```js
   import { compose, createStore } from 'redux';
   import RNFirebase from 'react-native-firebase';
-  import { getFirebase, reactReduxFirebase } from 'react-redux-firebase';
+  import { reactReduxFirebase } from 'react-redux-firebase';
   import thunk from 'redux-thunk';
   import makeRootReducer from './reducers';
 

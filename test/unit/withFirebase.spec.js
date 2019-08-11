@@ -1,39 +1,34 @@
 import React from 'react'
-import { createSink } from 'recompose'
-import { shallow } from 'enzyme'
-import { storeWithFirebase } from '../utils'
-import withFirebase, { createWithFirebase } from '../../src/withFirebase'
+import { createContainer, TestLeaf } from '../utils'
+import withFirebase from '../../src/withFirebase'
 
-let store
-let TestComponent
 let wrapper
+let leaf
 
 describe('withFirebase', () => {
   beforeEach(() => {
-    store = storeWithFirebase()
-    TestComponent = withFirebase(createSink)
-    wrapper = shallow(<TestComponent />, { context: { store } })
+    const container = createContainer({ hoc: withFirebase })
+    wrapper = container.wrapper
+    leaf = container.leaf
   })
 
-  it.skip('adds firebase as prop', () => {
-    expect(wrapper.prop('firebase')).to.exist
-    expect(wrapper.prop('firebase')).to.respondTo('push')
+  it('adds firebase as prop', () => {
+    expect(leaf.prop('firebase')).to.exist
+    expect(leaf.prop('firebase')).to.respondTo('push')
   })
 
-  it.skip('adds dispatch as prop', () => {
-    expect(wrapper.prop('dispatch')).to.exist
-    expect(wrapper.prop('dispatch')).to.be.a.function
+  it('adds dispatch as prop', () => {
+    expect(leaf.prop('dispatch')).to.exist
+    expect(leaf.prop('dispatch')).to.be.a.function
   })
 
   describe('sets displayName static as', () => {
     /* eslint-disable no-template-curly-in-string */
     describe('withFirebase(${WrappedComponentName}) for', () => {
       /* eslint-enable no-template-curly-in-string */
-      it.skip('standard components', () => {
-        wrapper = shallow(<TestComponent />, { context: { store } })
-        expect(wrapper.instance.displayName).to.equal(
-          `withFirebase(TestContainer)`
-        )
+      it('standard components', () => {
+        const component = withFirebase(TestLeaf)
+        expect(component.displayName).to.equal(`withFirebase(TestLeaf)`)
       })
 
       it('string components', () => {
@@ -43,20 +38,13 @@ describe('withFirebase', () => {
       })
     })
 
-    it.skip('"Component" for all other types', () => {
-      wrapper = shallow(withFirebase()(<div />))
+    it('"Component" for all other types', () => {
+      wrapper = withFirebase(() => <div />)
       expect(wrapper.displayName).to.equal('withFirebase(Component)')
     })
   })
 
-  it.skip('sets WrappedComponent static as component which was wrapped', () => {
-    wrapper = shallow(<TestComponent />, { context: { store } })
-    expect(wrapper.wrappedComponent).to.be.instanceOf(TestComponent)
-  })
-})
-
-describe('createwithFirebase', () => {
-  it('accepts a different store key', () => {
-    createWithFirebase('store2')
+  it('sets WrappedComponent static as component which was wrapped', () => {
+    expect(leaf).to.match(TestLeaf)
   })
 })

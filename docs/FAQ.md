@@ -7,7 +7,6 @@
     * `react-native` support ([web/js](http://react-redux-firebase.com/docs/recipes/react-native.html) or native modules through [`react-native-firebase`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules))
     * tons of [integrations](#integrations)
     * [`profileFactory`](http://react-redux-firebase.com/docs/config) - change format of profile stored on Firebase
-    * [`getFirebase`](http://react-redux-firebase.com/docs/thunks) - access to firebase instance that fires actions when methods are called
     * [access to firebase's `storage`](http://react-redux-firebase.com/docs/storage) and `messaging` services
     * `uniqueSet` method helper for only setting if location doesn't already exist
     * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)

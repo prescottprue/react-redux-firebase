@@ -1,29 +1,31 @@
 {
-  "name": "react-redux-firebase-react-native-example",
-  "version": "0.0.1",
+  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "clean": "rimraf ios/build",
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "watch": "node ./scripts/watch-and-copy-src.js",
-    "packager": "sh node_modules/react-native/packager/packager.sh --root node_modules/react-native-google-signin",
-    "dev": "concurrently 'npm run watch' 'npm run packager'"
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject",
+    "test": "node ./node_modules/jest/bin/jest.js --watchAll"
+  },
+  "jest": {
+    "preset": "jest-expo"
   },
   "dependencies": {
-    "firebase": "^4.1.2",
-    "react": "15.4.1",
-    "react-native": "0.42.0",
-    "react-native-google-signin": "0.9.0",
-    "react-redux": "^5.0.3",
-    "react-redux-firebase": "next",
-    "redux": "^3.6.0"
+    "@expo/samples": "2.1.1",
+    "expo": "^32.0.0",
+    "firebase": "^5.8.2",
+    "prop-types": "^15.6.2",
+    "react": "16.5.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-navigation": "^3.0.9",
+    "react-redux": "^5.0.0",
+    "react-redux-firebase": "latest",
+    "recompose": "^0.30.0",
+    "redux": "^4.0.1"
   },
   "devDependencies": {
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-preset-react-native": "1.9.1",
-    "concurrently": "^3.4.0",
-    "fs-extra": "^2.0.0",
-    "minimatch": "^3.0.3",
-    "node-watch": "^0.4.1",
-    "rimraf": "^2.6.1"
-  }
+    "babel-preset-expo": "^5.0.0",
+    "jest-expo": "^32.0.0"
+  },
+  "private": true
 }

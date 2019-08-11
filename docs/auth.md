@@ -16,19 +16,20 @@ const enhance = connect(
 enhance(SomeComponent)
 ```
 
-If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()` or `getFirebase().auth()`.
+If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()`
 
 #### NOTE
 All examples below assume you have passed `firebase` from `context` to props. Wrapping your component with with the `withFirebase` or `firebaseConnect` Higher Order Components will make `props.firebase` available within your component:
 
 ```js
 import React from 'react'
-import PropTypes from 'prop-types'
 import { withFirebase } from 'react-redux-firebase'
 
-const SomeComponent = (props) => (
-  // use props.firebase
-)
+function SomeComponent (props) {
+  return (
+    // use props.firebase
+  )
+}
 
 export default withFirebase(SomeComponent) // or firebaseConnect()(SomeComponent)
 ```
@@ -37,7 +38,6 @@ Works same with class components (make sure you import `Component` from react):
 
 ```js
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
 
 class SomeComponent extends Component {
@@ -48,6 +48,16 @@ class SomeComponent extends Component {
 
 export default firebaseConnect()(SomeComponent) // or withFirebase(SomeComponent)
 ```
+
+#### Custom Claims
+
+ Firebase has a secure way of identifying and making claims about users with [custom claims](https://firebase.google.com/docs/auth/admin/custom-claims). This is a good way to provide roles for users.
+
+ If `enableClaims` config option is used along with `userProfile` you will find custom claims in `state.firebase.profile.token.claims`. 
+
+ **Note**: If a claim is added to a user who is already logged in those changes will not necessarily be propagated to the client. In order to assure the change is observed, use a `refreshToken` property in your `userProfile` collection and update it's value after the custom claim has been added. Because `react-redux-firebase` watches for profile changes, the custom claim will be fetched along with the `refreshToken` update.
+
+For examples of how to use this API, checkout the [auth recipes section](/docs/recipes/auth.html).
 
 ## login(credentials)
 

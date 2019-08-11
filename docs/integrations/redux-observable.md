@@ -1,21 +1,22 @@
 # redux-observable
-If you are using `redux-observable`, make sure to set up your redux-observable middleware so that firebase is available within your epics. Here is an example `combineEpics` function that adds `getFirebase` as third argument along with an epic that uses it:
+If you are using `redux-observable`, make sure to set up your redux-observable middleware so that firebase is available within your epics. Here is an example `combineEpics` function:
 
 ## Setup
-Examples below assume that you have setup `redux-observable` middleware so that firebase is available within your epics. Here is an example `combineEpics` function that adds `getFirebase` as the third argument along with an epic that uses it:
+Examples below assume that you have setup `redux-observable` middleware so that firebase is available within your epics.
 
 ```javascript
-import { getFirebase } from 'react-redux-firebase'
+import firebase from 'firebase/app'
+import 'firebase/database'
 import { combineEpics } from 'redux-observable'
 
 const rootEpic = (...args) =>
-  combineEpics(somethingEpic, epic2)(...args, getFirebase)
+  combineEpics(somethingEpic, epic2)(...args)
 
 // then later in your epics
-const somethingEpic = (action$, store, getFirebase) =>
+const somethingEpic = (action$, store) =>
   action$.ofType(SOMETHING)
     .map(() =>
-      getFirebase().push('somePath/onFirebase', { some: 'data' })
+      firebase.database().ref('somePath/onFirebase').push({ some: 'data' })
     )
 ```
 
@@ -31,12 +32,12 @@ Debounce is writing to a ref on Firebase such as `/notifications` (useful so tha
 ```js
 const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 
-export const notificationEpic = (action$, { getState, dispatch }, { getFirebase }) =>
+export const notificationEpic = (action$, { getState, dispatch }) =>
   action$.ofType(SEND_NOTIFICATION) // stream of notification actions
     .debounceTime(2000) // debounce SEND_NOTIFICATION actions by 2 seconds
     .do((action) => {
       // push the notification object to the notifications ref
-      return getFirebase().push('/notifications', action.payload)
+      return firebase.database().ref('notifications').push(action.payload)
     })
     .mapTo({ type: 'EMAIL_NOTIFICATION_CREATED' });
 ```
