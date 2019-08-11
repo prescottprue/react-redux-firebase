@@ -1,11 +1,13 @@
+import React from 'react'
+import { Route } from 'react-router-dom'
 import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect'
 import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper'
-import createHistory from 'history/createBrowserHistory'
+import { createBrowserHistory } from 'history'
 import LoadingSpinner from 'components/LoadingSpinner'
 import { LIST_PATH } from 'constants/paths'
 
 const locationHelper = locationHelperBuilder({})
-const history = createHistory()
+const history = createBrowserHistory()
 
 const AUTHED_REDIRECT = 'AUTHED_REDIRECT'
 const UNAUTHED_REDIRECT = 'UNAUTHED_REDIRECT'
@@ -62,3 +64,19 @@ export const UserIsNotAuthenticated = connectedRouterRedirect({
     })
   }
 })
+
+/**
+ * Render children based on route config objects
+ * @param {Array} routes - Routes settings array
+ * @param {Object} match - Routes settings array
+ * @param {Object} parentProps - Props to pass to children from parent
+ */
+export function renderChildren(routes, match, parentProps) {
+  return routes.map(route => (
+    <Route
+      key={`${match.url}-${route.path}`}
+      path={`${match.url}/${route.path}`}
+      render={props => <route.component {...parentProps} {...props} />}
+    />
+  ))
+}

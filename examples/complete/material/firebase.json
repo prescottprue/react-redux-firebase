@@ -6,11 +6,13 @@
     "rules": "storage.rules"
   },
   "hosting": {
-    "public": "dist",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "jsconfig.json",
+      "cypress/**"
     ],
     "rewrites": [
       {

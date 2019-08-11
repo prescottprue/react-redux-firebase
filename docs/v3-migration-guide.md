@@ -4,6 +4,7 @@
 
 * Support `react-redux` v6 and new React Context API - [#581](https://github.com/prescottprue/react-redux-firebase/issues/581). This mean no more `reactReduxFirebase` and `reduxFirestore` store enhancers (instance is passed through the new React context API) - [#581](https://github.com/prescottprue/react-redux-firebase/issues/581)
 * `componentDidMount` used in place of `componentWillMount` for data loading
+* `getFirebase` no longer part of the API
 
 ### Remove Store Enhancer
 
@@ -14,15 +15,15 @@ Replace store enhancer with `ReactReduxFirebaseProvider`
 _RTDB Diff_
 ```diff
 + import { ReactReduxFirebaseProvider } from 'react-redux-firebase'
-- import { reactReduxFirebase } from 'react-redux-firebase'
+- import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 
 const store = createStore(
   rootReducer,
   initialState,
-  compose(
+-  compose(
 -    reactReduxFirebase(firebase, rrfConfig), // pass in firebase instance instead of config
-    //  applyMiddleware(...middleware) // to add other middleware
-  )
+-    applyMiddleware([ thunk.withExtraArgument(getFirebase) ]) // to add other middleware
+-  )
 )
 
 + const rrfProps = {
@@ -150,7 +151,6 @@ export default combineReducers({
   // firestore: firestoreReducer // <- needed if using firestore
 })
 ```
-
 
 `createReduxStore.js`
 ```js

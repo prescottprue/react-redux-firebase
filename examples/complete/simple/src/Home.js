@@ -9,8 +9,8 @@ import {
 } from 'react-redux-firebase'
 import logo from './logo.svg'
 import TodoItem from './TodoItem'
+import NewTodo from './NewTodo'
 import './App.css'
-import NewTodo from './NewTodo';
 
 function Home({ firebase, todos }) {
   return (
@@ -49,7 +49,7 @@ function Home({ firebase, todos }) {
 }
 
 Home.propTypes = {
-  firebase: PropTypes.object.isRequired
+  todos: PropTypes.array
 }
 
 function mapStateToProps(state) {

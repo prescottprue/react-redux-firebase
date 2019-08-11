@@ -15,29 +15,26 @@ const styles = {
   }
 }
 
-export const Notifications = ({
-  allIds,
-  byId,
-  dismissNotification,
-  classes
-}) => (
-  <div>
-    {allIds.map(id => (
-      <Snackbar
-        key={id}
-        open
-        action={
-          <IconButton
-            onClick={() => dismissNotification(id)}
-            classes={{ root: classes.buttonRoot }}>
-            <CloseIcon />
-          </IconButton>
-        }
-        message={byId[id].message}
-      />
-    ))}
-  </div>
-)
+function Notifications({ allIds, byId, dismissNotification, classes }) {
+  return (
+    <div>
+      {allIds.map(id => (
+        <Snackbar
+          key={id}
+          open
+          action={
+            <IconButton
+              onClick={() => dismissNotification(id)}
+              classes={{ root: classes.buttonRoot }}>
+              <CloseIcon />
+            </IconButton>
+          }
+          message={byId[id].message}
+        />
+      ))}
+    </div>
+  )
+}
 
 Notifications.propTypes = {
   allIds: PropTypes.array.isRequired,

@@ -11,8 +11,6 @@ import { reduxFirestore } from 'redux-firestore'
 export default function configureStore (initialState, history) {
   // Initialize Firebase instance
   firebase.initializeApp(fbConfig)
-  // Initialize Firestore with timeshot settings
-  firebase.firestore().settings({ timestampsInSnapshots: true })
 
   const createStoreWithMiddleware = compose(
     reactReduxFirebase(firebase,
@@ -23,7 +21,7 @@ export default function configureStore (initialState, history) {
       }
     ),
     reduxFirestore(firebase),
-    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
+    window.__REDUX_DEVTOOLS_EXTENSION__ || f => f
   )(createStore)
 
   const store = createStoreWithMiddleware(rootReducer)

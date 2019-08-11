@@ -1,44 +1,39 @@
 import React from 'react'
-import { createSink } from 'recompose'
-import { shallow } from 'enzyme'
-import { storeWithFirestore } from '../utils'
-import withFirestore, { createWithFirestore } from '../../src/withFirestore'
+import { createContainer, TestLeaf } from '../utils'
+import withFirestore from '../../src/withFirestore'
 
-let store
-let TestComponent
 let wrapper
+let leaf
 
 describe('withFirestore', () => {
   beforeEach(() => {
-    store = storeWithFirestore()
-    TestComponent = withFirestore(createSink)
-    wrapper = shallow(<TestComponent />, { context: { store } })
+    const container = createContainer({ hoc: withFirestore })
+    wrapper = container.wrapper
+    leaf = container.leaf
   })
 
-  it.skip('adds firestore as prop', () => {
-    expect(wrapper.prop('firestore')).to.exist
-    expect(wrapper.prop('firestore')).to.respondTo('add')
+  it('adds firestore as prop', () => {
+    expect(leaf.prop('firestore')).to.exist
+    expect(leaf.prop('firestore')).to.respondTo('add')
   })
 
-  it.skip('adds firebase as prop', () => {
-    expect(wrapper.prop('firebase')).to.exist
-    expect(wrapper.prop('firebase')).to.respondTo('push')
+  it('adds firebase as prop', () => {
+    expect(leaf.prop('firebase')).to.exist
+    expect(leaf.prop('firebase')).to.respondTo('push')
   })
 
-  it.skip('adds dispatch as prop', () => {
-    expect(wrapper.prop('dispatch')).to.exist
-    expect(wrapper.prop('dispatch')).to.be.a.function
+  it('adds dispatch as prop', () => {
+    expect(leaf.prop('dispatch')).to.exist
+    expect(leaf.prop('dispatch')).to.be.a.function
   })
 
   describe('sets displayName static as', () => {
     /* eslint-disable no-template-curly-in-string */
     describe('withFirestore(${WrappedComponentName}) for', () => {
       /* eslint-enable no-template-curly-in-string */
-      it.skip('standard components', () => {
-        wrapper = shallow(<TestComponent />, { context: { store } })
-        expect(wrapper.instance.displayName).to.equal(
-          `withFirestore(TestContainer)`
-        )
+      it('standard components', () => {
+        const comp = withFirestore(TestLeaf)
+        expect(comp.displayName).to.equal(`withFirestore(TestLeaf)`)
       })
 
       it('string components', () => {
@@ -48,20 +43,13 @@ describe('withFirestore', () => {
       })
     })
 
-    it.skip('"Component" for all other types', () => {
-      wrapper = shallow(withFirestore()(<div />))
+    it('"Component" for all other types', () => {
+      wrapper = withFirestore(() => <div />)
       expect(wrapper.displayName).to.equal('withFirestore(Component)')
     })
   })
 
-  it.skip('sets WrappedComponent static as component which was wrapped', () => {
-    wrapper = shallow(<TestComponent />, { context: { store } })
-    expect(wrapper.wrappedComponent).to.be.instanceOf(TestComponent)
-  })
-})
-
-describe('createwithFirestore', () => {
-  it('accepts a store key', () => {
-    createWithFirestore('store2')
+  it('sets WrappedComponent static as component which was wrapped', () => {
+    expect(leaf).to.match(TestLeaf)
   })
 })

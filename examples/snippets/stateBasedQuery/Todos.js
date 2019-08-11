@@ -1,39 +1,42 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
-
 import TodoItem from './TodoItem'
 
-const Todos = ({ todos }) => (
-  <div className='Todos'>
-    {
-      (!isLoaded(todos))
+function Todos({ todos }) {
+  return (
+    <div className="Todos">
+      {!isLoaded(todos)
         ? 'Loading'
-        : (isEmpty(todos))
+        : isEmpty(todos)
           ? 'Todo list is empty'
-          : Object.keys(todos).map((key) => (
-            <TodoItem key={key} id={key} todo={todos[key]} />
-          ))
-    }
-  </div>
-)
+          : todos.map(({ key }) => <TodoItem key={key} id={key} />)}
+    </div>
+  )
+}
 
 Todos.propTypes = {
+  /* eslint-disable react/no-unused-prop-types */
   auth: PropTypes.shape({
     uid: PropTypes.string.isRequired
   }),
+  /* eslint-enable react/no-unused-prop-types */
   todos: PropTypes.object
 }
 
-export default compose(
-  firebaseConnect(({ auth }) => ([ // auth comes from props
+const enhance = compose(
+  firebaseConnect(props => [
+    // uid comes from props
     {
       path: 'todos',
-      queryParams: ['orderByChild=uid', `equalTo=${auth.uid}`]
+      queryParams: ['orderByChild=uid', `equalTo=${props.uid}`]
     }
-  ])),
-  connect(({ firebase: { ordered } }) => ({
-    todos: ordered.todos
+  ]),
+  connect(state => ({
+    todos: state.firebase.ordered.todos
   }))
-)(Todos)
+)
+
+export default enhance(Todos)

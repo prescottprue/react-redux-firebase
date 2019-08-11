@@ -7,14 +7,11 @@ import ReduxFirestoreContext from './ReduxFirestoreContext'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
- * @name createFirestoreConnect
- * @description Function that creates a Higher Order Component that
+ * Function that creates a Higher Order Component which
  * automatically listens/unListens to provided firebase paths using
  * React's Lifecycle hooks.
  * **WARNING!!** This is an advanced feature, and should only be used when
  * needing to access a firebase instance created under a different store key.
- * @param {String} [storeKey='store'] - Name of redux store which contains
- * Firebase state (state.firebase)
  * @return {Function} - HOC that accepts a watchArray and wraps a component
  * @example <caption>Basic</caption>
  * // props.firebase set on App component as firebase object with helpers
@@ -24,7 +21,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * // use the firebaseConnect to wrap a component
  * export default firestoreConnect()(SomeComponent)
  */
-export const createFirestoreConnect = (storeKey = 'store') => (
+export const createFirestoreConnect = () => (
   dataOrFn = []
 ) => WrappedComponent => {
   class FirestoreConnectWrapped extends Component {
@@ -95,29 +92,33 @@ export const createFirestoreConnect = (storeKey = 'store') => (
 
   const HoistedComp = hoistStatics(FirestoreConnectWrapped, WrappedComponent)
 
-  const FirestoreConnect = props => (
-    <ReactReduxFirebaseContext.Consumer>
-      {firebase => (
-        <ReduxFirestoreContext.Consumer>
-          {firestore => (
-            <HoistedComp
-              firestore={firestore}
-              firebase={firebase}
-              dispatch={firebase.dispatch}
-              {...props}
-            />
-          )}
-        </ReduxFirestoreContext.Consumer>
-      )}
-    </ReactReduxFirebaseContext.Consumer>
-  )
+  const FirestoreConnect = props => {
+    return (
+      <ReactReduxFirebaseContext.Consumer>
+        {firebase => (
+          <ReduxFirestoreContext.Consumer>
+            {firestore => (
+              <HoistedComp
+                {...props}
+                dispatch={firebase.dispatch}
+                firestore={firestore}
+                firebase={firebase}
+              />
+            )}
+          </ReduxFirestoreContext.Consumer>
+        )}
+      </ReactReduxFirebaseContext.Consumer>
+    )
+  }
 
   FirestoreConnect.displayName = wrapDisplayName(
     WrappedComponent,
     'FirestoreConnect'
   )
 
-  return FirestoreConnect
+  FirestoreConnect.wrappedComponent = WrappedComponent
+
+  return hoistStatics(FirestoreConnect, WrappedComponent)
 }
 
 /**

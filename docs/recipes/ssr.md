@@ -9,7 +9,7 @@ Preloading data is a common step to in serverside rendering. How it is done diff
 After creating your store:
 
 ```js
-store.firebase // getFirebase can also be used
+store.firebase
   .promiseEvents([
     { path: 'todos' },
     { path: 'users' }

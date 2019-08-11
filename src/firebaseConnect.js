@@ -6,29 +6,22 @@ import { watchEvents, unWatchEvents } from './actions/query'
 import { getEventsFromInput, createCallable, wrapDisplayName } from './utils'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
-// Reserved props that should not be passed into a firebaseConnect wrapped
-// component. Will throw an error if they are.
-const RESERVED_PROPS = ['firebase', 'dispatch']
-
 /**
- * @name createFirebaseConnect
- * @description Function that creates a Higher Order Component that
+ * Function that creates a Higher Order Component which
  * automatically listens/unListens to provided firebase paths using
  * React's Lifecycle hooks.
  * **WARNING!!** This is an advanced feature, and should only be used when
  * needing to access a firebase instance created under a different store key.
- * @param {String} [storeKey='store'] - Name of redux store which contains
- * Firebase state (state.firebase)
  * @return {Function} - HOC that accepts a watchArray and wraps a component
  * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
+ * // props.firebase set on App component as firebase object with helpers
  * import { createFirebaseConnect } from 'react-redux-firebase'
  * // create firebase connect that uses another redux store
  * const firebaseConnect = createFirebaseConnect('anotherStore')
  * // use the firebaseConnect to wrap a component
  * export default firebaseConnect()(SomeComponent)
  */
-export const createFirebaseConnect = (storeKey = 'store') => (
+export const createFirebaseConnect = () => (
   dataOrFn = []
 ) => WrappedComponent => {
   class FirebaseConnectWrapped extends Component {
@@ -97,29 +90,14 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     firebase: PropTypes.object.isRequired
   }
 
-  const HoistedComp = hoistStatics(FirebaseConnectWrapped, WrappedComponent)
-
   const FirebaseConnect = props => {
-    // Check that reserved props are not supplied to a FirebaseConnected
-    // component and if they are, throw an error so the developer can rectify
-    // this issue.
-    const clashes = Object.keys(props).filter(k => RESERVED_PROPS.includes(k))
-
-    if (clashes.length > 0) {
-      throw new Error(
-        `Supplied prop/s "${clashes.join(
-          '", "'
-        )}" are reserved for internal firebaseConnect() usage.`
-      )
-    }
-
     return (
       <ReactReduxFirebaseContext.Consumer>
         {_internalFirebase => (
-          <HoistedComp
-            firebase={_internalFirebase}
-            dispatch={_internalFirebase.dispatch}
+          <FirebaseConnectWrapped
             {...props}
+            dispatch={_internalFirebase.dispatch}
+            firebase={_internalFirebase}
           />
         )}
       </ReactReduxFirebaseContext.Consumer>
@@ -133,7 +111,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
 
   FirebaseConnect.wrappedComponent = WrappedComponent
 
-  return FirebaseConnect
+  return hoistStatics(FirebaseConnect, WrappedComponent)
 }
 
 /**
@@ -151,6 +129,7 @@ export const createFirebaseConnect = (storeKey = 'store') => (
  * import { firebaseConnect } from 'react-redux-firebase'
  * export default firebaseConnect()(App)
  * @example <caption>Ordered Data</caption>
+ * import React from 'react'
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
  * import { firebaseConnect } from 'react-redux-firebase'
@@ -161,36 +140,41 @@ export const createFirebaseConnect = (storeKey = 'store') => (
  *   ]),
  *   connect((state) => ({
  *     todos: state.firebase.ordered.todos
- *   })
+ *   }))
  * )
  * 
- * // use enhnace to pass todos list as props.todos
- * const Todos = enhance(({ todos })) =>
- *   <div>
- *     {JSON.stringify(todos, null, 2)}
- *   </div>
- * )
+ * function Todos({ todos }) {
+ *   return (
+ *     <div>
+ *       {JSON.stringify(todos, null, 2)}
+ *     </div>
+ *   )
+ * }
  * 
  * export default enhance(Todos)
  * @example <caption>Data that depends on props</caption>
+ * import React from 'react'
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import { firebaseConnect, getVal } from 'react-redux-firebase'
+ * import { get } from 'lodash'
+ * import { firebaseConnect } from 'react-redux-firebase'
  *
  * const enhance = compose(
  *   firebaseConnect((props) => ([
  *     `posts/${props.postId}` // sync /posts/postId from firebase into redux
- *   ]),
+ *   ])),
  *   connect((state, props) => ({
- *     post: getVal(state.firebase.data, `posts/${props.postId}`),
+ *     post: get(state.firebase.data, `posts.${props.postId}`),
  *   })
  * )
  *
- * const Post = ({ post }) => (
- *   <div>
- *     {JSON.stringify(post, null, 2)}
- *   </div>
- * )
+ * function Post({ post }) {
+ *   return (
+ *     <div>
+ *       {JSON.stringify(post, null, 2)}
+ *     </div>
+ *   )
+ * }
  *
  * export default enhance(Post)
  */

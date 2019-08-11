@@ -1,5 +1,9 @@
 import { createContext } from 'react'
 
-const ReactReduxFirebaseContext = createContext('ReactReduxFirebase')
+/**
+ * Context for extended firebase instance created
+ * by react-redux-firebase
+ */
+const ReactReduxFirebaseContext = createContext(null)
 
 export default ReactReduxFirebaseContext

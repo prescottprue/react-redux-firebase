@@ -7,7 +7,7 @@
 
 ## createFirestoreConnect
 
-Function that creates a Higher Order Component that
+Function that creates a Higher Order Component which
 automatically listens/unListens to provided firebase paths using
 React's Lifecycle hooks.
 **WARNING!!** This is an advanced feature, and should only be used when

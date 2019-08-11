@@ -81,6 +81,8 @@ Default configuration options
 
 -   `userProfile` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** `null` Location on Firebase where user
     profiles are stored. Often set to `'users'`.
+-   `profileFactory` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** `null` Function for changing how profile is written
+    to database (both RTDB and Firestore).
 -   `presence` **([String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** `null` Location on Firebase where of currently
     online users is stored. Often set to `'presence'` or `'onlineUsers'`. If a function
     is passed, the arguments are: `(currentUser, firebase)`.

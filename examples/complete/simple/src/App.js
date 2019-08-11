@@ -11,7 +11,7 @@ import 'firebase/firestore' // make sure you add this for firestore
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 import { createFirestoreInstance } from 'redux-firestore';
 
-const initialState = window.__INITIAL_STATE__ // set initial state here
+const initialState = window && window.__INITIAL_STATE__ // set initial state here
 const store = configureStore(initialState)
 // Initialize Firebase instance
 firebase.initializeApp(fbConfig)

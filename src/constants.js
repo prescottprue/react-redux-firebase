@@ -107,6 +107,8 @@ export const actionTypes = {
  * @description Default configuration options
  * @property {String} userProfile - `null` Location on Firebase where user
  * profiles are stored. Often set to `'users'`.
+ * @property {Function} profileFactory - `null` Function for changing how profile is written
+ * to database (both RTDB and Firestore).
  * @property {String|Function} presence - `null` Location on Firebase where of currently
  * online users is stored. Often set to `'presence'` or `'onlineUsers'`. If a function
  * is passed, the arguments are: `(currentUser, firebase)`.
