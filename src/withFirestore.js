@@ -6,46 +6,6 @@ import useFirebase from './useFirebase'
 import useFirestore from './useFirestore'
 
 /**
- * @name createWithFirestore
- * @description Function that creates a Higher Order Component that
- * which provides `firebase`, `firestore`, and `dispatch` to React Components.
- *
- * **WARNING!!** This is an advanced feature, and should only be used when
- * needing to access a firebase instance created under a different store key.
- * @param {String} [storeKey='store'] - Name of redux store which contains
- * Firestore state (`state.firestore`)
- * @return {Function} - Higher Order Component which accepts an array of
- * watchers config and wraps a React Component
- * @example <caption>Basic</caption>
- * import { createWithFirestore } from 'react-redux-firebase'
- *
- * // create withFirestore that uses another redux store
- * const withFirestore = createWithFirestore('anotherStore')
- *
- * // use the withFirestore to wrap a component
- * export default withFirestore(SomeComponent)
- */
-export const createWithFirestore = (storeKey = 'store') => WrappedComponent => {
-  const WithFirestore = function WithFirestore(props) {
-    const firebase = useFirebase()
-    const firestore = useFirestore()
-    return (
-      <WrappedComponent
-        firebase={firebase}
-        dispatch={get(firebase, 'dispatch')}
-        firestore={firestore}
-        {...props}
-      />
-    )
-  }
-
-  WithFirestore.displayName = wrapDisplayName(WrappedComponent, 'withFirestore')
-  WithFirestore.wrappedComponent = WrappedComponent
-
-  return hoistStatics(WithFirestore, WrappedComponent)
-}
-
-/**
  * @name withFirestore
  * @extends React.Component
  * @description Higher Order Component that attaches `firestore`, `firebase`
@@ -98,4 +58,22 @@ export const createWithFirestore = (storeKey = 'store') => WrappedComponent => {
  *
  * export default enhance(AddTodo)
  */
-export default createWithFirestore()
+export default function withFirestore(WrappedComponent) {
+  function WithFirestore(props) {
+    const firebase = useFirebase()
+    const firestore = useFirestore()
+    return (
+      <WrappedComponent
+        firebase={firebase}
+        dispatch={get(firebase, 'dispatch')}
+        firestore={firestore}
+        {...props}
+      />
+    )
+  }
+
+  WithFirestore.displayName = wrapDisplayName(WrappedComponent, 'withFirestore')
+  WithFirestore.wrappedComponent = WrappedComponent
+
+  return hoistStatics(WithFirestore, WrappedComponent)
+}

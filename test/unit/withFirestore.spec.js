@@ -1,6 +1,6 @@
 import React from 'react'
 import { createContainer, TestLeaf } from '../utils'
-import withFirestore, { createWithFirestore } from '../../src/withFirestore'
+import withFirestore from '../../src/withFirestore'
 
 let wrapper
 let leaf
@@ -51,11 +51,5 @@ describe('withFirestore', () => {
 
   it('sets WrappedComponent static as component which was wrapped', () => {
     expect(leaf).to.match(TestLeaf)
-  })
-})
-
-describe('createwithFirestore', () => {
-  it('accepts a store key', () => {
-    createWithFirestore('store2')
   })
 })

@@ -9,7 +9,7 @@ import useFirestore from './useFirestore'
  * firestore paths.
  * **WARNING!!** This is an advanced feature, and should only be used when
  * needing to access a firebase instance created under a different store key.
- * Firebase state (state.firestore)
+ * Firestore state (state.firestore)
  * @return {Function} - React hook that accepts watch query
  * @example <caption>Basic</caption>
  * // props.firestore set on App component as firestore object with helpers

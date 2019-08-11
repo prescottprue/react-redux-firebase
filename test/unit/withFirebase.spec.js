@@ -1,6 +1,6 @@
 import React from 'react'
 import { createContainer, TestLeaf } from '../utils'
-import withFirebase, { createWithFirebase } from '../../src/withFirebase'
+import withFirebase from '../../src/withFirebase'
 
 let wrapper
 let leaf
@@ -46,11 +46,5 @@ describe('withFirebase', () => {
 
   it('sets WrappedComponent static as component which was wrapped', () => {
     expect(leaf).to.match(TestLeaf)
-  })
-})
-
-describe('createwithFirebase', () => {
-  it('accepts a different store key', () => {
-    createWithFirebase('store2')
   })
 })
