@@ -91,7 +91,7 @@ export const Home = ({ classes }) => (
   </div>
 )
 
-Home.proptypes = {
+Home.propTypes = {
   classes: PropTypes.object.isRequired // from enhancer (withStyles)
 }
 

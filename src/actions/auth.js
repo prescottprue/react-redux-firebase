@@ -70,7 +70,8 @@ const getProfileFromSnap = snap => {
 export const handleProfileWatchResponse = (
   dispatch,
   firebase,
-  userProfileSnap
+  userProfileSnap,
+  token
 ) => {
   const {
     profileParamsToPopulate,
@@ -87,7 +88,10 @@ export const handleProfileWatchResponse = (
     if (useFirestoreForProfile && profileParamsToPopulate) {
       console.warn('Profile population is not yet supported for Firestore') // eslint-disable-line no-console
     }
-    dispatch({ type: actionTypes.SET_PROFILE, profile })
+    dispatch({
+      type: actionTypes.SET_PROFILE,
+      profile: token ? { ...profile, token } : profile
+    })
   } else {
     // Convert array of populate config into an array of once query promises
     promisesForPopulate(
@@ -117,7 +121,11 @@ export const handleProfileWatchResponse = (
           const profile = userProfileSnap.val()
           dispatch({
             type: actionTypes.SET_PROFILE,
-            profile: populate({ profile, data }, 'profile', populates)
+            profile: populate(
+              { profile: token ? { ...profile, token } : profile, data },
+              'profile',
+              populates
+            )
           })
         }
       })
@@ -176,7 +184,7 @@ function createProfileWatchErrorHandler(dispatch, firebase) {
 export const watchUserProfile = (dispatch, firebase) => {
   const {
     authUid,
-    config: { userProfile, useFirestoreForProfile }
+    config: { userProfile, useFirestoreForProfile, enableClaims }
   } = firebase._
   unWatchUserProfile(firebase)
 
@@ -186,11 +194,21 @@ export const watchUserProfile = (dispatch, firebase) => {
         .firestore()
         .collection(userProfile)
         .doc(authUid)
-        .onSnapshot(
-          userProfileSnap =>
-            handleProfileWatchResponse(dispatch, firebase, userProfileSnap),
-          createProfileWatchErrorHandler(dispatch, firebase)
-        )
+        .onSnapshot(userProfileSnap => {
+          return enableClaims
+            ? firebase
+                .auth()
+                .currentUser.getIdTokenResult(true)
+                .then(token =>
+                  handleProfileWatchResponse(
+                    dispatch,
+                    firebase,
+                    userProfileSnap,
+                    token
+                  )
+                )
+            : handleProfileWatchResponse(dispatch, firebase, userProfileSnap)
+        }, createProfileWatchErrorHandler(dispatch, firebase))
     } else if (firebase.database) {
       firebase._.profileWatch = firebase // eslint-disable-line no-param-reassign
         .database()
@@ -198,8 +216,21 @@ export const watchUserProfile = (dispatch, firebase) => {
         .child(`${userProfile}/${authUid}`)
         .on(
           'value',
-          userProfileSnap =>
-            handleProfileWatchResponse(dispatch, firebase, userProfileSnap),
+          userProfileSnap => {
+            return enableClaims
+              ? firebase
+                  .auth()
+                  .currentUser.getIdTokenResult(true)
+                  .then(token =>
+                    handleProfileWatchResponse(
+                      dispatch,
+                      firebase,
+                      userProfileSnap,
+                      token
+                    )
+                  )
+              : handleProfileWatchResponse(dispatch, firebase, userProfileSnap)
+          },
           createProfileWatchErrorHandler(dispatch, firebase)
         )
     } else {
@@ -890,6 +921,82 @@ export const linkWithCredential = (dispatch, firebase, credential) => {
       dispatch({ type: actionTypes.AUTH_LINK_ERROR, error })
       return Promise.reject(error)
     })
+}
+
+function linkWithAuthDispatch(promiseFunc, args, dispatch, firebase) {
+  dispatch({ type: actionTypes.AUTH_LINK_START })
+
+  // reject and dispatch error if not logged in
+  if (!firebase.auth().currentUser) {
+    const error = new Error('User must be logged in to link with credential.')
+    dispatch({ type: actionTypes.AUTH_LINK_ERROR, error })
+    return Promise.reject(error)
+  }
+
+  return promiseFunc(...args)
+    .then(auth => {
+      dispatch({ type: actionTypes.AUTH_LINK_SUCCESS, payload: auth })
+      return auth
+    })
+    .catch(error => {
+      dispatch({ type: actionTypes.AUTH_LINK_ERROR, error })
+      return Promise.reject(error)
+    })
+}
+
+/**
+ * @description Links the user account with the given credentials. Internally
+ * calls `firebase.auth().currentUser.linkAndRetrieveDataWithCredential`.
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} credential - Credential with which to link user account
+ * @return {Promise} Resolves with auth
+ */
+export function linkAndRetrieveDataWithCredential(
+  dispatch,
+  firebase,
+  credential
+) {
+  return linkWithAuthDispatch(
+    firebase.auth().currentUser.linkAndRetrieveDataWithCredential,
+    [credential],
+    dispatch,
+    firebase
+  )
+}
+
+/**
+ * @description Links the user account with the given credentials. Internally
+ * calls `firebase.auth().currentUser.linkWithPopup`.
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} credential - Credential with which to link user account
+ * @return {Promise} Resolves with auth
+ */
+export function linkWithPopup(dispatch, firebase, credential) {
+  return linkWithAuthDispatch(
+    firebase.auth().currentUser.linkWithPopup,
+    [credential],
+    dispatch,
+    firebase
+  )
+}
+
+/**
+ * @description Links the user account with the given credentials. Internally
+ * calls `firebase.auth().currentUser.linkWithRedirect`.
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} credential - Credential with which to link user account
+ * @return {Promise} Resolves with auth
+ */
+export function linkWithRedirect(dispatch, firebase, provider) {
+  return linkWithAuthDispatch(
+    firebase.auth().currentUser.linkWithRedirect,
+    [provider],
+    dispatch,
+    firebase
+  )
 }
 
 /**

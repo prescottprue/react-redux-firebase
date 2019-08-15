@@ -51,6 +51,14 @@ export default firebaseConnect()(SomeComponent) // or withFirebase(SomeComponent
 
 For examples of how to use this API, checkout the [auth recipes section](/docs/recipes/auth.html).
 
+#### Custom Claims
+
+ Firebase has a secure way of identifying and making claims about users with [custom claims](https://firebase.google.com/docs/auth/admin/custom-claims). This is a good way to provide roles for users.
+
+ If `enableClaims` config option is used along with `userProfile` you will find custom claims in `state.firebase.profile.token.claims`. 
+
+ **Note**: If a claim is added to a user who is already logged in those changes will not necessarily be propagated to the client. In order to assure the change is observed, use a `refreshToken` property in your `userProfile` collection and update it's value after the custom claim has been added. Because `react-redux-firebase` watches for profile changes, the custom claim will be fetched along with the `refreshToken` update.
+
 ## login(credentials)
 
 ##### Parameters
@@ -151,6 +159,18 @@ props.firebase.login({
   token: 'someJWTAuthToken',
   profile: { email: 'rick@sanchez.com' }
 })
+```
+  
+  *Expo/react-native Facebook Login*
+```js
+async function loginWithFacebook() {
+  const data = await Expo.Facebook.logInWithReadPermissionsAsync('FB_ID', { permissions: ['public_profile', 'email'] })
+
+  if (data.type === 'success') {
+    const credential = props.firebase.auth.FacebookAuthProvider.credential(data.token)
+    await props.firebase.login({ credential })
+  }
+}
 ```
 
 After logging in, profile and auth are available in redux state:
