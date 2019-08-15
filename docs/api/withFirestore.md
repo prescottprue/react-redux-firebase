@@ -2,38 +2,7 @@
 
 ### Table of Contents
 
--   [createWithFirestore](#createwithfirestore)
 -   [withFirestore](#withfirestore)
-
-## createWithFirestore
-
-Function that creates a Higher Order Component that
-which provides `firebase`, `firestore`, and `dispatch` to React Components.
-
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-
-**Parameters**
-
--   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
-    Firestore state (`state.firestore`) (optional, default `'store'`)
-
-**Examples**
-
-_Basic_
-
-```javascript
-import { createWithFirestore } from 'react-redux-firebase'
-
-// create withFirestore that uses another redux store
-const withFirestore = createWithFirestore('anotherStore')
-
-// use the withFirestore to wrap a component
-export default withFirestore(SomeComponent)
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Higher Order Component which accepts an array of
-watchers config and wraps a React Component
 
 ## withFirestore
 

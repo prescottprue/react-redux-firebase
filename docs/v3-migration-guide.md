@@ -3,8 +3,18 @@
 ## What Changed
 
 * Support `react-redux` v6 and new React Context API - [#581](https://github.com/prescottprue/react-redux-firebase/issues/581). This mean no more `reactReduxFirebase` and `reduxFirestore` store enhancers (instance is passed through the new React context API) - [#581](https://github.com/prescottprue/react-redux-firebase/issues/581)
-* `componentDidMount` used in place of `componentWillMount` for data loading
+* `componentDidMount` used in place of `componentWillMount` for data loading in `firebaseConnect` and `firestoreConnect`
 * `getFirebase` no longer part of the API
+* `createFirebaseConnect` and `createFirestoreConnect` are no longer part of the API
+
+### Remove createFirebaseConnect and createFirestoreConnect
+
+These are no longer needed since the extended firebase instance is now loaded through react context instead of through `store.firebase`.
+
+```diff
+-  const firebaseConnect = createFirebaseConnect('otherStoreKey')
+-  const firestoreConnect = createFirestoreConnect('otherStoreKey')
+```
 
 ### Remove Store Enhancer
 

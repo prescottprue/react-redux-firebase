@@ -1,9 +1,7 @@
 import React from 'react'
 import { createContainer, sleep } from '../utils'
 import { some, isMatch, filter } from 'lodash'
-import useFirebaseConnect, {
-  createUseFirebaseConnect
-} from '../../src/useFirebaseConnect'
+import useFirebaseConnect from '../../src/useFirebaseConnect'
 
 /* eslint-disable react/prop-types */
 function TestComponent({ dynamicProp }) {
@@ -118,11 +116,5 @@ describe('useFirebaseConnect', () => {
         })
       )
     ).to.have.lengthOf(1)
-  })
-})
-
-describe('createUseFirebaseConnect', () => {
-  it('accepts a different store key', () => {
-    createUseFirebaseConnect('store2')
   })
 })

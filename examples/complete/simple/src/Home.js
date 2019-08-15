@@ -1,18 +1,23 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import {
-  firebaseConnect,
   isLoaded,
-  isEmpty
+  isEmpty,
+  useFirebaseConnect
 } from 'react-redux-firebase'
 import logo from './logo.svg'
 import TodoItem from './TodoItem'
 import NewTodo from './NewTodo'
 import './App.css'
 
-function Home({ firebase, todos }) {
+function Home() {
+  useFirebaseConnect(() => [
+    {
+      path: 'todos',
+      queryParams: ['limitToLast=10']
+    }
+  ])
+  const todos = useSelector(state => state.firebase.ordered.todos)
   return (
     <div className='App'>
       <div className='App-header'>
@@ -48,24 +53,4 @@ function Home({ firebase, todos }) {
   )
 }
 
-Home.propTypes = {
-  todos: PropTypes.array
-}
-
-function mapStateToProps(state) {
-  return {
-    todos: state.firebase.ordered.todos
-  }
-}
-
-const enhance = compose(
-  firebaseConnect(() => [
-    {
-      path: 'todos',
-      queryParams: ['limitToLast=10']
-    }
-  ]),
-  connect(mapStateToProps)
-)
-
-export default enhance(Home)
+export default Home

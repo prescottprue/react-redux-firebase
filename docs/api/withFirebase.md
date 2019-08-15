@@ -2,39 +2,7 @@
 
 ### Table of Contents
 
--   [createWithFirebase](#createwithfirebase)
 -   [withFirebase](#withfirebase)
-
-## createWithFirebase
-
-Function that creates a Higher Order Component that
-which provides `firebase` and `dispatch` as a props to React Components.
-
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-
-**Parameters**
-
--   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
-    Firebase state (`state.firebase`) (optional, default `'store'`)
-
-**Examples**
-
-_Basic_
-
-```javascript
-// props.firebase set on App component as firebase object with helpers
-import { createWithFirebase } from 'react-redux-firebase'
-
-// create withFirebase that uses another redux store
-const withFirebase = createWithFirebase('anotherStore')
-
-// use the withFirebase to wrap a component
-export default withFirebase(SomeComponent)
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Higher Order Component which accepts an array of
-watchers config and wraps a React Component
 
 ## withFirebase
 
