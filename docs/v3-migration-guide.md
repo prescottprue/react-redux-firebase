@@ -2,12 +2,23 @@
 
 ## What Changed
 
-* Support `react-redux` v6 and new React Context API - [#581](https://github.com/prescottprue/react-redux-firebase/issues/581). This mean no more `reactReduxFirebase` and `reduxFirestore` store enhancers (instance is passed through the new React context API) - [#581](https://github.com/prescottprue/react-redux-firebase/issues/581)
-* `componentDidMount` used in place of `componentWillMount` for data loading in `firebaseConnect` and `firestoreConnect`
-* `getFirebase` no longer part of the API
-* `createFirebaseConnect` and `createFirestoreConnect` are no longer part of the API
+### Features
 
-### Remove createFirebaseConnect and createFirestoreConnect
+* Support `react-redux` v6 and new React Context API - [#581](https://github.com/prescottprue/react-redux-firebase/issues/581). This mean no more `reactReduxFirebase` and `reduxFirestore` store enhancers (instance is passed through the new React context API) - [#581](https://github.com/prescottprue/react-redux-firebase/issues/581)
+* React hooks (requires react `^16.8.0`) `useFirebase`, `useFirestore`, `useFirestoreConnect`, and `useFirebaseConnect` - (Tons of work by [@illuminist](https://github.com/illuminist))
+
+### Breaking Changes
+
+* Removed from API:
+  * `reactReduxFirebase` store enhancer ()
+  * `getFirebase` (`reactReduxFirebase` enhancer has been removed, which is what attached `store.firebase` to be used by `getFirebase`)
+  * `createFirebaseConnect` and `createFirestoreConnect` (see [below](#remove-createFirebaseConnect-and-createFirestoreConnect))
+  * `signIn` option from `createUser` (new user is automatically signed in through Firebase SDK) - #513
+* `componentDidMount` used in place of `componentWillMount` for data loading in `firebaseConnect` and `firestoreConnect`
+
+### Change Snippets
+
+#### Remove createFirebaseConnect and createFirestoreConnect
 
 These are no longer needed since the extended firebase instance is now loaded through react context instead of through `store.firebase`.
 
@@ -16,11 +27,11 @@ These are no longer needed since the extended firebase instance is now loaded th
 -  const firestoreConnect = createFirestoreConnect('otherStoreKey')
 ```
 
-### Remove Store Enhancer
+#### Remove Store Enhancer
 
 Replace store enhancer with `ReactReduxFirebaseProvider`
 
-#### Diff
+##### Diff
 
 _RTDB Diff_
 ```diff
@@ -82,7 +93,7 @@ const App = () => (
 );
 ```
 
-#### Full Examples
+## Code Examples
 
 **`v2.*.*`**
 

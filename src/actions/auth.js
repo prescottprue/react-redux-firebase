@@ -605,13 +605,15 @@ export const logout = (dispatch, firebase) => {
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @param {Object} credentials - Login credentials
+ * @param {string} credentials.email - Email of user
+ * @param {string} credentials.password - Password of new user
  * @return {Promise}
  * @private
  */
 export const createUser = (
   dispatch,
   firebase,
-  { email, password, signIn },
+  { email, password },
   profile
 ) => {
   dispatchLoginError(dispatch, null)
@@ -625,40 +627,9 @@ export const createUser = (
   return firebase
     .auth()
     .createUserWithEmailAndPassword(email, password)
-    .then(
-      userData =>
-        // Login to newly created account if signIn flag is not set to false
-        firebase.auth().currentUser || (!!signIn && signIn === false)
-          ? createUserProfile(
-              dispatch,
-              firebase,
-              userData,
-              profile || { email }
-            )
-          : login(dispatch, firebase, { email, password })
-              .then(() =>
-                createUserProfile(
-                  dispatch,
-                  firebase,
-                  userData,
-                  profile || { email }
-                )
-              )
-              .catch(err => {
-                if (err) {
-                  switch (err.code) {
-                    case 'auth/user-not-found':
-                      dispatchLoginError(
-                        dispatch,
-                        new Error('The specified user account does not exist.')
-                      )
-                      break
-                    default:
-                      dispatchLoginError(dispatch, err)
-                  }
-                }
-                return Promise.reject(err)
-              })
+    .then(userData =>
+      // Login to newly created account flag is not set to false
+      createUserProfile(dispatch, firebase, userData, profile || { email })
     )
     .catch(err => {
       dispatchLoginError(dispatch, err)
