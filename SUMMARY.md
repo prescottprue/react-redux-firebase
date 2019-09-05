@@ -47,7 +47,7 @@
     * [dataReducer](/docs/api/reducers.md#datareducer)
     * [orderedReducer](/docs/api/reducers.md#orderedreducer)
   * [props.firebase](/docs/api/props-firebase.md)
-  * [firebaseInstance](/docs/api/firebaseInstance.md)
+  * [getFirebase](/docs/api/getFirebase.md)
   * [ReactReduxFirebaseContext](/docs/api/ReactReduxFirebaseContext.md)
   * [ReactReduxFirebaseProvider](/docs/api/ReactReduxFirebaseProvider.md)
   * [ReduxFirestoreContext](/docs/api/ReduxFirestoreContext.md)

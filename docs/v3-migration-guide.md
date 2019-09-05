@@ -10,8 +10,7 @@
 ### Breaking Changes
 
 * Removed from API:
-  * `reactReduxFirebase` store enhancer ()
-  * `getFirebase` (`reactReduxFirebase` enhancer has been removed, which is what attached `store.firebase` to be used by `getFirebase`)
+  * `reactReduxFirebase` store enhancer (firebase instance is now created by context providers)
   * `createFirebaseConnect` and `createFirestoreConnect` (see [below](#remove-createFirebaseConnect-and-createFirestoreConnect))
   * `signIn` option from `createUser` (new user is automatically signed in through Firebase SDK) - #513
 * `componentDidMount` used in place of `componentWillMount` for data loading in `firebaseConnect` and `firestoreConnect`
@@ -35,7 +34,7 @@ Replace store enhancer with `ReactReduxFirebaseProvider`
 
 _RTDB Diff_
 ```diff
-+ import { ReactReduxFirebaseProvider } from 'react-redux-firebase'
++ import { ReactReduxFirebaseProvider, getFirebase } from 'react-redux-firebase'
 - import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 
 const store = createStore(
@@ -43,7 +42,7 @@ const store = createStore(
   initialState,
 -  compose(
 -    reactReduxFirebase(firebase, rrfConfig), // pass in firebase instance instead of config
--    applyMiddleware([ thunk.withExtraArgument(getFirebase) ]) // to add other middleware
+     applyMiddleware([ thunk.withExtraArgument(getFirebase) ]) // to add other middleware
 -  )
 )
 
