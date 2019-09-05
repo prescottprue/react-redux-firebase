@@ -304,6 +304,7 @@ View docs for recipes on integrations with:
 
 * [redux-firestore](http://react-redux-firebase.com/docs/firestore.html)
 * [redux-thunk](http://react-redux-firebase.com/docs/integrations/thunks.html)
+* [reselect](http://react-redux-firebase.com/docs/integrations/integrations/reselect.html)
 * [redux-observable](http://react-redux-firebase.com/docs/integrations/redux-observable.html)
 * [redux-saga](http://react-redux-firebase.com/docs/integrations/redux-saga.html)
 * [redux-form](http://react-redux-firebase.com/docs/integrations/redux-form.html)

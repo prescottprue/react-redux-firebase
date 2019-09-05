@@ -20,6 +20,7 @@
 * [Integrations](/docs/integrations/README.md)
   * [Redux Thunk](/docs/integrations/thunks.md)
   * [Redux Form](/docs/integrations/redux-form.md)
+  * [Reselect](/docs/integrations/reselect.md)
   * [Redux Persist](/docs/integrations/redux-persist.md)
   * [Redux Saga](/docs/integrations/redux-saga.md)
   * [Redux Observable](/docs/integrations/redux-observable.md)
