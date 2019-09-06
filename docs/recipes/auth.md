@@ -60,11 +60,8 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 // import { withRouter } from 'react-router-dom'; // if you use react-router
 // import GoogleButton from 'react-google-button' // optional
 
-export const LoginPage = ({
-  firebase,
-  auth,
-  //history if you use react-router
-  }) => (
+function LoginPage({ firebase, auth }) {
+  return (
   <div className={classes.container}>
     <StyledFirebaseAuth
       uiConfig={{

@@ -82,7 +82,9 @@ reactReduxFirebase(
 
 ## Automatically assign role when user signs up
 
-If you want to assign a role by default when users sign up, you can add a profileFactory to your config:+
+### Client Side
+
+If you want to assign a role by default when users sign up, you can add a profileFactory to your config:
 
 ```js
 reactReduxFirebase(
@@ -92,14 +94,38 @@ reactReduxFirebase(
     profileParamsToPopulate: [
       { child: 'role', root: 'roles' }, // populates user's role with matching role object from roles
     ],
-    profileFactory: user => ({
-      email: user.email || user.providerData[0].email,
-      role: 'user',
-      providerData: user.providerData
-    })
+    profileFactory: user => {
+      const profile = {
+        email: user.email || user.providerData[0].email,
+        role: 'user', 
+      }
+      if (user.providerData && user.providerData.length) {
+        profile.providerData = user.providerData
+      }
+    }
   }
 )
 ```
+
+**NOTE**: Your security rules should be set to only allow for users to be setting their role to user. For more granular control of this, you can move role assigning to a cloud function that is trigger on user create
+
+### Cloud Function
+
+Having cloud function contain logic about which users get assigned certain roles means that you do not need any write access for clients on the role parameter.
+
+```js
+const adminEmails = ['your@email.com'] // list of emails to automatically assign admin role to
+
+async function assignUserRole(user) {
+  const { uid, email, displayName } = user; // The email of the user.
+  const newRole = adminEmails.includes(email) ? 'admin' : 'user'
+  await admin.firestore().collection('users').doc(uid).set({ role: 'user' }, { merge: true })
+}
+
+exports.assignUserRole = functions.auth.user().onCreate(assignUserRole);
+```
+
+More info is available about doing this in the [extend auth with functions section of the firebase docs](https://firebase.google.com/docs/auth/extend-with-functions).
 
 ## The higher order component (where the actual verification happens)
 

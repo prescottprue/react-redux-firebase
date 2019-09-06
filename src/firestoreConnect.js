@@ -63,7 +63,9 @@ export default function firestoreConnect(dataOrFn = []) {
         }
       }
 
-      componentWillReceiveProps(np) {
+      /* eslint-disable camelcase */
+      UNSAFE_componentWillReceiveProps(np) {
+        /* eslint-enable camelcase */
         const { firestore } = this.props
         const inputAsFunc = createCallable(dataOrFn)
         const data = inputAsFunc(np, this.props)
@@ -100,7 +102,7 @@ export default function firestoreConnect(dataOrFn = []) {
       firestore: PropTypes.object
     }
 
-    const FirestoreConnectWithContext = props => {
+    function FirestoreConnectWithContext(props) {
       return (
         <ReactReduxFirebaseContext.Consumer>
           {_internalFirebase => (
