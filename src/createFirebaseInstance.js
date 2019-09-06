@@ -13,7 +13,6 @@ let firebaseInstance
  * @param {Object} configs - Configuration object
  * @param {Function} dispatch - Action dispatch function
  * @return {Object} Extended Firebase instance
- * @private
  */
 export default function createFirebaseInstance(firebase, configs, dispatch) {
   /* istanbul ignore next: Logging is external */
@@ -574,7 +573,6 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 }
 
 /**
- * @private
  * Expose Firebase instance created internally. Useful for
  * integrations into external libraries such as redux-thunk and redux-observable.
  * @example <caption>redux-thunk integration</caption>

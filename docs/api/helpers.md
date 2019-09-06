@@ -180,7 +180,7 @@ Returns **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ## populate
 
-Populate with data from redux.
+Populate with data from multiple locations of redux state.
 
 **Parameters**
 
