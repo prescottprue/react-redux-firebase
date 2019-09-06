@@ -1,5 +1,13 @@
-import { isArray, isFunction, constant, isEqual, some, filter } from 'lodash'
+import { constant, isEqual, some, filter } from 'lodash'
 export { getEventsFromInput } from './events'
+
+/**
+ * Check to see if a variable is a string
+ * @param {Any} varToCheck - Variable to check for type string
+ */
+export function isString(varToCheck) {
+  return typeof varToCheck === 'string' || varToCheck instanceof String
+}
 
 /**
  * @private
@@ -7,12 +15,12 @@ export { getEventsFromInput } from './events'
  * @param {Function|Object|Array|String} Callable function or value of return for new function
  */
 export function createCallable(f) {
-  return isFunction(f) ? f : constant(f)
+  return typeof f === 'function' ? f : constant(f)
 }
 
 export function invokeArrayQuery(f, props) {
   const result = createCallable(f)(props)
-  if (isArray(result)) {
+  if (Array.isArray(result)) {
     return result
   }
   if (!result) {
@@ -21,6 +29,13 @@ export function invokeArrayQuery(f, props) {
   return [result]
 }
 
+/**
+ * Get the displayName field of a component falling
+ * back to name field then finally to "component".
+ * @param {React.Component} Component - Component from
+ * which to get displayName
+ * @returns {String} Display name of component
+ */
 function getDisplayName(Component) {
   if (typeof Component === 'string') {
     return Component
@@ -40,15 +55,6 @@ function getDisplayName(Component) {
  */
 export function wrapDisplayName(BaseComponent, hocName) {
   return `${hocName}(${getDisplayName(BaseComponent)})`
-}
-
-export function stringToDate(strInput) {
-  try {
-    return new Date(JSON.parse(strInput))
-  } catch (err) {
-    console.error('Error parsing string to date:', err.message || err) // eslint-disable-line no-console
-    return strInput
-  }
 }
 
 export function getChanges(data = [], prevData = []) {

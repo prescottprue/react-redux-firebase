@@ -1,12 +1,4 @@
-import {
-  get,
-  replace,
-  size,
-  isFunction,
-  isBoolean,
-  pick,
-  isArray
-} from 'lodash'
+import { get, size, pick } from 'lodash'
 import { unset } from 'lodash/fp'
 
 /**
@@ -62,17 +54,25 @@ export function combineReducers(reducers) {
   }
 }
 
+/**
+ * Preserve values from redux state change
+ * @param {Object} state - Redux state
+ * @param {Function|Boolean|Array} preserveSetting - Setting for which values to preserve
+ * from redux state
+ * @param {Object} nextState - Next redux state
+ */
 export function preserveValuesFromState(state, preserveSetting, nextState) {
   // Return result of function if preserve is a function
-  if (isFunction(preserveSetting)) {
+  if (typeof preserveSetting === 'function') {
     return preserveSetting(state, nextState)
   }
+
   // Return original state if preserve is true
-  if (isBoolean(preserveSetting) && preserveSetting) {
+  if (preserveSetting === true) {
     return nextState ? { ...state, ...nextState } : state
   }
 
-  if (isArray(preserveSetting)) {
+  if (Array.isArray(preserveSetting)) {
     return pick(state, preserveSetting) // pick returns a new object
   }
 
@@ -84,10 +84,10 @@ export function preserveValuesFromState(state, preserveSetting, nextState) {
 /**
  * Recursively unset a property starting at the deep path, and unsetting the parent
  * property if there are no other enumerable properties at that level.
- * @param  {String} path - Deep dot path of the property to unset
+ * @param {String} path - Deep dot path of the property to unset
  * @param {Boolean} [isRecursiveCall=false] - Used internally to ensure that
  * the object size check is only performed after one iteration.
- * @return {Object} The object with the property deeply unset
+ * @returns {Object} The object with the property deeply unset
  * @private
  */
 export function recursiveUnset(path, obj, isRecursiveCall = false) {
@@ -101,6 +101,6 @@ export function recursiveUnset(path, obj, isRecursiveCall = false) {
   // The object does not have any other properties at this level.  Remove the
   // property.
   const objectWithRemovedKey = unset(path, obj)
-  const newPath = path.match(/\./) ? replace(path, /\.[^.]*$/, '') : ''
+  const newPath = path.match(/\./) ? path.replace(/\.[^.]*$/, '') : ''
   return recursiveUnset(newPath, objectWithRemovedKey, true)
 }

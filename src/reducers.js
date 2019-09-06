@@ -1,4 +1,4 @@
-import { pick, omit, get, isArray, isObject } from 'lodash'
+import { pick, omit, get, isObject } from 'lodash'
 import { setWith, assign } from 'lodash/fp'
 import { actionTypes } from './constants'
 import {
@@ -160,7 +160,7 @@ function createDataReducer(actionKey = 'data') {
       case LOGOUT:
         // support keeping data when logging out - #125
         if (action.preserve) {
-          if (isArray(action.preserve)) {
+          if (Array.isArray(action.preserve)) {
             return pick(state, action.preserve) // pick returns a new object
           } else if (isObject(action.preserve)) {
             return action.preserve[actionKey]
@@ -327,7 +327,7 @@ export function errorsReducer(state = [], action) {
   switch (action.type) {
     case LOGIN_ERROR:
     case UNAUTHORIZED_ERROR:
-      if (!isArray(state)) {
+      if (!Array.isArray(state)) {
         throw new Error('Errors state must be an array')
       }
       return [...state, action.authError]

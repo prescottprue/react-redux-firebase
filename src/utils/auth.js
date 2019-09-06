@@ -1,4 +1,4 @@
-import { capitalize, isArray, isString, isFunction } from 'lodash'
+import { capitalize } from 'lodash'
 import { supportedAuthProviders, actionTypes } from '../constants'
 
 /**
@@ -33,7 +33,7 @@ function createAuthProvider(firebase, providerName, scopes) {
   // Handle providers without scopes
   if (
     providerName.toLowerCase() === 'twitter' ||
-    !isFunction(provider.addScope)
+    typeof provider.addScope !== 'function'
   ) {
     return provider
   }
@@ -42,12 +42,13 @@ function createAuthProvider(firebase, providerName, scopes) {
   provider.addScope('email')
 
   if (scopes) {
-    if (isArray(scopes)) {
+    if (Array.isArray(scopes)) {
       scopes.forEach(scope => {
         provider.addScope(scope)
       })
     }
-    if (isString(scopes)) {
+    // Add single scope if it is a string
+    if (typeof scopes === 'string' || scopes instanceof String) {
       provider.addScope(scopes)
     }
   }
@@ -218,7 +219,7 @@ export function authIsReady(store, stateName = 'firebase') {
  * @return {Promise} Resolves when Firebase auth is ready in the store.
  */
 export function createAuthIsReady(store, config) {
-  return isFunction(config.authIsReady)
+  return typeof config.authIsReady === 'function'
     ? config.authIsReady(store, config)
     : authIsReady(store, config.firebaseStateName)
 }
@@ -285,14 +286,15 @@ export function setupPresence(dispatch, firebase) {
   const amOnline = ref.child('.info/connected')
   const onlineRef = ref
     .child(
-      isFunction(presence)
+      typeof presence === 'function'
         ? presence(firebase.auth().currentUser, firebase)
         : presence
     )
     .child(authUid)
-  let sessionsRef = isFunction(sessions)
-    ? sessions(firebase.auth().currentUser, firebase)
-    : sessions
+  let sessionsRef =
+    typeof sessions === 'function'
+      ? sessions(firebase.auth().currentUser, firebase)
+      : sessions
   if (sessionsRef) {
     sessionsRef = ref.child(sessions)
   }
@@ -309,7 +311,7 @@ export function setupPresence(dispatch, firebase) {
       })
       // Support versions of react-native-firebase that do not have setPriority
       // on firebase.database.ThenableReference
-      if (isFunction(session.setPriority)) {
+      if (typeof session.setPriority === 'function') {
         // set authUid as priority for easy sorting
         session.setPriority(authUid)
       }

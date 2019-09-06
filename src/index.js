@@ -39,6 +39,5 @@ export default {
   actionTypes,
   getFirebase,
   authIsReady,
-  helpers,
   ...helpers
 }

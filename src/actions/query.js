@@ -1,4 +1,3 @@
-import { isArray } from 'lodash'
 import { actionTypes } from '../constants'
 import {
   orderedFromSnapshot,
@@ -205,7 +204,7 @@ export function unWatchEvent(
  * @param {Array} events - List of events for which to add watchers
  */
 export function watchEvents(firebase, dispatch, events) {
-  if (!isArray(events)) {
+  if (!Array.isArray(events)) {
     throw new Error('Events config must be an Array')
   }
   return events.map(event => watchEvent(firebase, dispatch, event))
