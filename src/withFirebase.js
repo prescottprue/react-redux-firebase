@@ -1,8 +1,7 @@
 import React from 'react'
-import { get } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { wrapDisplayName } from './utils'
-import useFirebase from './useFirebase'
+import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
  * @name withFirebase
@@ -61,14 +60,17 @@ import useFirebase from './useFirebase'
  * export default enhance(AddTodo)
  */
 export default function withFirebase(WrappedComponent) {
-  const WithFirebase = function WithFirebase(props) {
-    const firebase = useFirebase()
+  function WithFirebase(props) {
     return (
-      <WrappedComponent
-        firebase={firebase}
-        dispatch={get(firebase, 'dispatch')}
-        {...props}
-      />
+      <ReactReduxFirebaseContext.Consumer>
+        {firebase => (
+          <WrappedComponent
+            firebase={firebase}
+            dispatch={firebase && firebase.dispatch}
+            {...props}
+          />
+        )}
+      </ReactReduxFirebaseContext.Consumer>
     )
   }
 

@@ -1,4 +1,4 @@
-import { isFunction, omitBy, isUndefined } from 'lodash'
+import { omitBy, isUndefined } from 'lodash'
 import { actionTypes } from '../constants'
 
 const { FILE_UPLOAD_ERROR, FILE_UPLOAD_PROGRESS } = actionTypes
@@ -124,14 +124,15 @@ export function writeMetadataToDb({
   return getDownloadURLFromUploadTaskSnapshot(uploadTaskSnapshot).then(
     downloadURL => {
       // Apply fileMetadataFactory if it exists in config
-      const fileData = isFunction(metaFactoryFunction)
-        ? metaFactoryFunction(
-            uploadTaskSnapshot,
-            firebase,
-            uploadTaskSnapshot.metadata,
-            downloadURL
-          )
-        : omitBy(uploadTaskSnapshot.metadata, isUndefined)
+      const fileData =
+        typeof metaFactoryFunction === 'function'
+          ? metaFactoryFunction(
+              uploadTaskSnapshot,
+              firebase,
+              uploadTaskSnapshot.metadata,
+              downloadURL
+            )
+          : omitBy(uploadTaskSnapshot.metadata, isUndefined)
 
       // Create the snapshot handler function
       const resultFromSnap = createUploadMetaResponseHandler({

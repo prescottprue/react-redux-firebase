@@ -1,16 +1,5 @@
-import {
-  filter,
-  isString,
-  isArray,
-  isFunction,
-  isObject,
-  map,
-  get,
-  forEach,
-  set,
-  has,
-  some
-} from 'lodash'
+import { filter, isObject, map, get, forEach, set, has, some } from 'lodash'
+import { isString } from './index'
 
 /**
  * @private
@@ -35,7 +24,7 @@ export function getChildType(child) {
   if (isString(child)) {
     return 'string'
   }
-  if (isArray(child)) {
+  if (Array.isArray(child)) {
     return 'array'
   }
   if (isObject(child)) {
@@ -50,7 +39,7 @@ export function getChildType(child) {
  * @param {String|Object} str - String or Object to standardize into populate object
  */
 export function getPopulateObjs(arr) {
-  if (!isArray(arr)) {
+  if (!Array.isArray(arr)) {
     return arr
   }
   return arr.map(o => (isObject(o) ? o : getPopulateObj(o)))
@@ -126,8 +115,9 @@ export function populateList(firebase, list, p, results) {
  * @private
  * @description Create an array of promises for population of an object or list
  * @param {Object} firebase - Internal firebase object
- * @param {Object} originalObj - Object to have parameter populated
- * @param {Object} populateString - String containg population data
+ * @param {string} dataKey - Object to have parameter populated
+ * @param {Object} originalData - Data before population
+ * @param {Function|Object} populatesIn - Populate configs or function returning configs
  */
 export function promisesForPopulate(
   firebase,
@@ -141,7 +131,9 @@ export function promisesForPopulate(
 
   // test if data is a single object, try generating populates and looking for the child
   const populatesForData = getPopulateObjs(
-    isFunction(populatesIn) ? populatesIn(dataKey, originalData) : populatesIn
+    typeof populatesIn === 'function'
+      ? populatesIn(dataKey, originalData)
+      : populatesIn
   )
 
   const dataHasPopulateChilds = some(populatesForData, populate =>
@@ -173,7 +165,7 @@ export function promisesForPopulate(
     forEach(originalData, (d, key) => {
       // generate populates for this data item if a fn was passed
       const populatesForDataItem = getPopulateObj(
-        isFunction(populatesIn) ? populatesIn(key, d) : populatesIn
+        typeof populatesIn === 'function' ? populatesIn(key, d) : populatesIn
       )
 
       // resolve each populate for this data item
@@ -200,7 +192,7 @@ export function promisesForPopulate(
         }
 
         // Parameter of each list item is a list of ids
-        if (isArray(idOrList) || isObject(idOrList)) {
+        if (Array.isArray(idOrList) || isObject(idOrList)) {
           // Create single promise that includes a promise for each child
           return promisesArray.push(
             populateList(firebase, idOrList, p, results)

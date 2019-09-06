@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { isEqual, some, filter } from 'lodash'
+import { isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
-import { createCallable, wrapDisplayName } from './utils'
+import { createCallable, wrapDisplayName, getChanges } from './utils'
 import ReduxFirestoreContext from './ReduxFirestoreContext'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
@@ -63,14 +63,16 @@ export default function firestoreConnect(dataOrFn = []) {
         }
       }
 
-      componentWillReceiveProps(np) {
+      /* eslint-disable camelcase */
+      UNSAFE_componentWillReceiveProps(np) {
+        /* eslint-enable camelcase */
         const { firestore } = this.props
         const inputAsFunc = createCallable(dataOrFn)
         const data = inputAsFunc(np, this.props)
 
         // Check for changes in the listener configs
         if (this.firestoreIsEnabled && !isEqual(data, this.prevData)) {
-          const changes = this.getChanges(data, this.prevData)
+          const changes = getChanges(data, this.prevData)
 
           this.prevData = data
 
@@ -80,13 +82,6 @@ export default function firestoreConnect(dataOrFn = []) {
           // Add listeners for new subscriptions
           firestore.setListeners(changes.added)
         }
-      }
-
-      getChanges(data = [], prevData = []) {
-        const result = {}
-        result.added = filter(data, d => !some(prevData, p => isEqual(d, p)))
-        result.removed = filter(prevData, p => !some(data, d => isEqual(p, d)))
-        return result
       }
 
       render() {
@@ -100,17 +95,17 @@ export default function firestoreConnect(dataOrFn = []) {
       firestore: PropTypes.object
     }
 
-    const FirestoreConnectWithContext = props => {
+    function FirestoreConnectWithContext(props) {
       return (
         <ReactReduxFirebaseContext.Consumer>
-          {firebase => (
+          {_internalFirebase => (
             <ReduxFirestoreContext.Consumer>
               {firestore => (
                 <FirestoreConnectWrapped
                   {...props}
-                  dispatch={firebase.dispatch}
+                  dispatch={_internalFirebase.dispatch}
                   firestore={firestore}
-                  firebase={firebase}
+                  firebase={_internalFirebase.dispatch}
                 />
               )}
             </ReduxFirestoreContext.Consumer>

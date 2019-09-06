@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "3.0.0-alpha.16",
+  "version": "3.0.0-beta",
   "description": "Redux integration for Firebase. Comes with a Higher Order Components for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -58,8 +58,8 @@
     "redux-react-firebase"
   ],
   "dependencies": {
-    "hoist-non-react-statics": "^3.2.1",
-    "lodash": "^4.17.11",
+    "hoist-non-react-statics": "^3.3.0",
+    "lodash": "^4.17.15",
     "prop-types": "^15.7.2"
   },
   "peerDependencies": {
@@ -114,8 +114,8 @@
     "mocha": "^3.5.3",
     "nyc": "^14.1.1",
     "prettier": "1.10.2",
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
     "react-redux": "^6.0.0",
     "recompose": "^0.30.0",
     "redux": "4.0.0",

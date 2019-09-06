@@ -1,9 +1,8 @@
 import React from 'react'
-import { get } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import { wrapDisplayName } from './utils'
-import useFirebase from './useFirebase'
-import useFirestore from './useFirestore'
+import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
+import ReduxFirestoreContext from './ReduxFirestoreContext'
 
 /**
  * @name withFirestore
@@ -60,15 +59,21 @@ import useFirestore from './useFirestore'
  */
 export default function withFirestore(WrappedComponent) {
   function WithFirestore(props) {
-    const firebase = useFirebase()
-    const firestore = useFirestore()
     return (
-      <WrappedComponent
-        firebase={firebase}
-        dispatch={get(firebase, 'dispatch')}
-        firestore={firestore}
-        {...props}
-      />
+      <ReactReduxFirebaseContext.Consumer>
+        {firebase => (
+          <ReduxFirestoreContext.Consumer>
+            {firestore => (
+              <WrappedComponent
+                firestore={firestore}
+                firebase={firebase}
+                dispatch={firebase.dispatch}
+                {...props}
+              />
+            )}
+          </ReduxFirestoreContext.Consumer>
+        )}
+      </ReactReduxFirebaseContext.Consumer>
     )
   }
 

@@ -1,6 +1,7 @@
-import { isArray, isString, isFunction, forEach, omit, pick } from 'lodash'
+import { forEach, omit, pick } from 'lodash'
 import { actionTypes } from '../constants'
 import { populate } from '../helpers'
+import { isString } from '../utils'
 import {
   getLoginMethodAndParams,
   updateProfileOnRTDB,
@@ -84,7 +85,8 @@ export function handleProfileWatchResponse(
   if (
     !profileParamsToPopulate ||
     useFirestoreForProfile || // populating profile through firestore not yet supported
-    (!isArray(profileParamsToPopulate) && !isString(profileParamsToPopulate))
+    (!Array.isArray(profileParamsToPopulate) &&
+      !isString(profileParamsToPopulate))
   ) {
     if (useFirestoreForProfile && profileParamsToPopulate) {
       console.warn('Profile population is not yet supported for Firestore') // eslint-disable-line no-console
@@ -167,10 +169,10 @@ function createProfileWatchErrorHandler(dispatch, firebase) {
       // eslint-disable-next-line no-console
       console.error(`Error with profile listener: ${err.message || ''}`, err)
     }
-    if (isFunction(onProfileListenerError)) {
+    if (typeof onProfileListenerError === 'function') {
       const factoryResult = onProfileListenerError(err, firebase)
       // Return factoryResult if it is a promise
-      if (isFunction(factoryResult.then)) {
+      if (typeof factoryResult.then === 'function') {
         return factoryResult
       }
     }
@@ -272,7 +274,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
     return Promise.resolve(userData)
   }
   // use profileFactory if it exists in config
-  if (isFunction(config.profileFactory)) {
+  if (typeof config.profileFactory === 'function') {
     // catch errors in user provided profileFactory function
     try {
       profile = config.profileFactory(userData, profile) // eslint-disable-line no-param-reassign
@@ -316,7 +318,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
         }
 
         // Convert custom object type within Provider data to a normal object
-        if (isArray(newProfile.providerData)) {
+        if (Array.isArray(newProfile.providerData)) {
           newProfile.providerData = newProfile.providerData.map(
             providerDataItem =>
               pick(providerDataItem, config.keysToPreserveFromProviderData)
@@ -355,7 +357,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
     .catch(err => {
       // Error reading user profile
       dispatch({ type: actionTypes.UNAUTHORIZED_ERROR, authError: err })
-      if (isFunction(config.onProfileWriteError)) {
+      if (typeof config.onProfileWriteError === 'function') {
         config.onProfileWriteError(err, firebase)
       }
       return Promise.reject(err)
@@ -373,7 +375,7 @@ const handleAuthStateChange = (dispatch, firebase, authData) => {
   const { config } = firebase._
   if (!authData) {
     // Run onAuthStateChanged if it exists in config and enableEmptyAuthChanges is set to true
-    if (isFunction(config.onAuthStateChanged)) {
+    if (typeof config.onAuthStateChanged === 'function') {
       firebase._.config.onAuthStateChanged(authData, firebase, dispatch)
     }
     dispatch({
@@ -397,7 +399,7 @@ const handleAuthStateChange = (dispatch, firebase, authData) => {
     watchUserProfile(dispatch, firebase)
 
     // Run onAuthStateChanged if it exists in config
-    if (isFunction(config.onAuthStateChanged)) {
+    if (typeof config.onAuthStateChanged === 'function') {
       config.onAuthStateChanged(authData, firebase, dispatch)
     }
   }
@@ -459,7 +461,7 @@ export const init = (dispatch, firebase) => {
   // set redirect result callback if enableRedirectHandling set to true
   if (
     firebase._.config.enableRedirectHandling &&
-    isFunction(firebase.auth().getRedirectResult) &&
+    typeof firebase.auth().getRedirectResult === 'function' &&
     (typeof window !== 'undefined' &&
       window.location &&
       window.location.protocol &&
@@ -605,13 +607,15 @@ export const logout = (dispatch, firebase) => {
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @param {Object} credentials - Login credentials
+ * @param {string} credentials.email - Email of user
+ * @param {string} credentials.password - Password of new user
  * @return {Promise}
  * @private
  */
 export const createUser = (
   dispatch,
   firebase,
-  { email, password, signIn },
+  { email, password },
   profile
 ) => {
   dispatchLoginError(dispatch, null)
@@ -625,40 +629,9 @@ export const createUser = (
   return firebase
     .auth()
     .createUserWithEmailAndPassword(email, password)
-    .then(
-      userData =>
-        // Login to newly created account if signIn flag is not set to false
-        firebase.auth().currentUser || (!!signIn && signIn === false)
-          ? createUserProfile(
-              dispatch,
-              firebase,
-              userData,
-              profile || { email }
-            )
-          : login(dispatch, firebase, { email, password })
-              .then(() =>
-                createUserProfile(
-                  dispatch,
-                  firebase,
-                  userData,
-                  profile || { email }
-                )
-              )
-              .catch(err => {
-                if (err) {
-                  switch (err.code) {
-                    case 'auth/user-not-found':
-                      dispatchLoginError(
-                        dispatch,
-                        new Error('The specified user account does not exist.')
-                      )
-                      break
-                    default:
-                      dispatchLoginError(dispatch, err)
-                  }
-                }
-                return Promise.reject(err)
-              })
+    .then(userData =>
+      // Login to newly created account flag is not set to false
+      createUserProfile(dispatch, firebase, userData, profile || { email })
     )
     .catch(err => {
       dispatchLoginError(dispatch, err)

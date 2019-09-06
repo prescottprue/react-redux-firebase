@@ -1,4 +1,4 @@
-import { map, isFunction } from 'lodash'
+import { map } from 'lodash'
 import { actionTypes } from '../constants'
 import { wrapInDispatch } from '../utils/actions'
 import {
@@ -39,9 +39,10 @@ export function uploadFile(dispatch, firebase, config) {
   const { logErrors } = firebase._.config
 
   // File renaming through options (supporting string and function)
-  const nameFromOptions = isFunction(options.name)
-    ? options.name(file, firebase, config)
-    : options.name
+  const nameFromOptions =
+    typeof options.name === 'function'
+      ? options.name(file, firebase, config)
+      : options.name
   const filename = nameFromOptions || file.name
 
   const meta = { ...config, filename }

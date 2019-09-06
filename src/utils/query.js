@@ -1,6 +1,7 @@
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from './populate'
-import { isNaN, forEach, size, isString } from 'lodash'
+import { isNaN, forEach } from 'lodash'
+import { isString } from './index'
 
 /**
  * @private
@@ -226,7 +227,7 @@ export function orderedFromSnapshot(snap) {
       ordered.push({ key: child.key, value: child.val() })
     })
   }
-  return size(ordered) ? ordered : null
+  return ordered.length ? ordered : null
 }
 
 /**

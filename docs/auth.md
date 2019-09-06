@@ -185,7 +185,6 @@ Similar to Firebase's `ref.createUser(credentials)` but with support for automat
 * `credentials` [**Object**][object-url]
   * `credentials.email` [**String**][string-url] - User's email
   * `credentials.password` [**String**][string-url] - User's password
-  * `credentials.signIn` [**String**][string-url] - Whether or not to sign in when user is signing up (defaults to `true`)
 
 * `profile` [**Object**][object-url]
   * `profile.username` [**String**][string-url]

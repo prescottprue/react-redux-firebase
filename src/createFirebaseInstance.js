@@ -4,6 +4,8 @@ import { getEventsFromInput, createCallable } from './utils'
 import { mapWithFirebaseAndDispatch } from './utils/actions'
 import { authActions, queryActions, storageActions } from './actions'
 
+let firebaseInstance
+
 /**
  * Create an extended firebase instance that has methods attached
  * which dispatch redux actions.
@@ -11,7 +13,6 @@ import { authActions, queryActions, storageActions } from './actions'
  * @param {Object} configs - Configuration object
  * @param {Function} dispatch - Action dispatch function
  * @return {Object} Extended Firebase instance
- * @private
  */
 export default function createFirebaseInstance(firebase, configs, dispatch) {
   /* istanbul ignore next: Logging is external */
@@ -536,7 +537,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @description Firebase auth service instance including all Firebase auth methods
    * @return {firebase.database.Auth}
    */
-  return Object.assign(firebase, {
+  firebaseInstance = Object.assign(firebase, {
     _reactReduxFirebaseExtended: true,
     ref: path => firebase.database().ref(path),
     set,
@@ -568,4 +569,49 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     dispatch,
     ...actionCreators
   })
+  return firebaseInstance
+}
+
+/**
+ * Expose Firebase instance created internally. Useful for
+ * integrations into external libraries such as redux-thunk and redux-observable.
+ * @example <caption>redux-thunk integration</caption>
+ * import { applyMiddleware, compose, createStore } from 'redux';
+ * import thunk from 'redux-thunk';
+ * import { getFirebase } from 'react-redux-firebase';
+ * import makeRootReducer from './reducers';
+ *
+ * const fbConfig = {} // your firebase config
+ *
+ * const store = createStore(
+ *   makeRootReducer(),
+ *   initialState,
+ *   compose(
+ *     applyMiddleware([
+ *       // Pass getFirebase function as extra argument
+ *       thunk.withExtraArgument(getFirebase)
+ *     ])
+ *   )
+ * );
+ * // then later
+ * export function addTodo(newTodo) {
+ *   return (dispatch, getState, getFirebase) => {
+ *     const firebase = getFirebase()
+ *     firebase
+ *       .push('todos', newTodo)
+ *       .then(() => {
+ *         dispatch({ type: 'SOME_ACTION' })
+ *       })
+ *   }
+ * }
+ *
+ */
+export function getFirebase() {
+  /* istanbul ignore next: Firebase instance always exists during tests */
+  if (!firebaseInstance) {
+    throw new Error(
+      'Firebase instance does not yet exist. Check your compose function.'
+    ) // eslint-disable-line no-console
+  }
+  return firebaseInstance
 }
