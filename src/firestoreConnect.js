@@ -100,12 +100,12 @@ export default function firestoreConnect(dataOrFn = []) {
         <ReactReduxFirebaseContext.Consumer>
           {_internalFirebase => (
             <ReduxFirestoreContext.Consumer>
-              {firestore => (
+              {_internalFirestore => (
                 <FirestoreConnectWrapped
                   {...props}
                   dispatch={_internalFirebase.dispatch}
-                  firestore={firestore}
-                  firebase={_internalFirebase.dispatch}
+                  firestore={_internalFirestore}
+                  firebase={_internalFirebase}
                 />
               )}
             </ReduxFirestoreContext.Consumer>
