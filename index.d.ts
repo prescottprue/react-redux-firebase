@@ -429,17 +429,24 @@ interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
     data: Object
   ) => Promise<{ id: string }>
 
-  // https://github.com/prescottprue/redux-firestore#update
+  /**
+   * Update document within firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#update).
+   */
   update: (
     docPath: string | ReduxFirestoreQuerySetting,
     data: Object
   ) => Promise<void>
 
-  // https://github.com/prescottprue/redux-firestore#delete
+  /**
+   * Delete a document within firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#delete).
+   */
   delete: (docPath: string | ReduxFirestoreQuerySetting) => void
 
-  // https://github.com/prescottprue/redux-firestore#runtransaction
-  // runTransaction: (transaction: WithFirestoreProps['firestore']) => Promise<any>
+  /**
+   * Executes the given updateFunction and then attempts to commit the changes applied within the
+   * transaction. More info available [in the docs](https://github.com/prescottprue/redux-firestore#runtransaction).
+   */
+  runTransaction: typeof firebase.firestore.Firestore.runTransaction
 
   // https://github.com/prescottprue/redux-firestore#onsnapshotsetlistener
   onSnapshot: (options: ReduxFirestoreQuerySetting) => Promise<void>
@@ -666,7 +673,7 @@ interface ExtendedStorageInstance {
             uploadConfig: object
           ) => string)
     }
-  ) => Promise<StorageTypes.UploadTaskSnapshot>
+  ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }>
 
   /**
    * Upload multiple files to Firebase Storage with the option
