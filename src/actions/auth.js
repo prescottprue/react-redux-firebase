@@ -11,7 +11,7 @@ import {
 import { promisesForPopulate, getPopulateObjs } from '../utils/populate'
 
 /**
- * @description Dispatch login error action
+ * Dispatch login error action
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} authError - Error object
  * @private
@@ -24,7 +24,7 @@ function dispatchLoginError(dispatch, authError) {
 }
 
 /**
- * @description Remove listener from user profile
+ * Remove listener from user profile
  * @param {Object} firebase - Internal firebase object
  * @private
  */
@@ -181,7 +181,7 @@ function createProfileWatchErrorHandler(dispatch, firebase) {
 }
 
 /**
- * @description Watch user profile. Internally dispatches sets firebase._.profileWatch
+ * Watch user profile. Internally dispatches sets firebase._.profileWatch
  * and calls SET_PROFILE actions. Supports both Realtime Database and Firestore
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
@@ -258,7 +258,7 @@ export const watchUserProfile = (dispatch, firebase) => {
 }
 
 /**
- * @description Create user profile if it does not already exist.
+ * Create user profile if it does not already exist.
  * `updateProfileOnLogin: false` can be passed to config to disable updating.
  * Profile factory is applied if it exists and is a function.
  * @param {Function} dispatch - Action dispatch function
@@ -439,7 +439,7 @@ export const handleRedirectResult = (dispatch, firebase, authData) => {
 }
 
 /**
- * @description Initialize authentication state change listener that
+ * Initialize authentication state change listener that
  * watches user profile and dispatches login action
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
@@ -483,7 +483,7 @@ export const init = (dispatch, firebase) => {
 }
 
 /**
- * @description Login with errors dispatched
+ * Login with errors dispatched
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @param {Object} credentials - Login credentials
@@ -577,7 +577,7 @@ export const login = (dispatch, firebase, credentials) => {
 }
 
 /**
- * @description Logout of firebase and dispatch logout event
+ * Logout of firebase and dispatch logout event
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @private
@@ -603,7 +603,7 @@ export const logout = (dispatch, firebase) => {
 }
 
 /**
- * @description Create a new user in auth and add an account to userProfile root
+ * Create a new user in auth and add an account to userProfile root
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @param {Object} credentials - Login credentials
@@ -640,7 +640,7 @@ export const createUser = (
 }
 
 /**
- * @description Send password reset email to provided email
+ * Send password reset email to provided email
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @param {String} email - Email to send recovery email to
@@ -670,7 +670,7 @@ export const resetPassword = (dispatch, firebase, email) => {
 }
 
 /**
- * @description Confirm the password reset with code and password
+ * Confirm the password reset with code and password
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @param {String} code - Email confirmation reset code
@@ -719,7 +719,7 @@ export const confirmPasswordReset = (dispatch, firebase, code, password) => {
 }
 
 /**
- * @description Verify that password reset code is valid
+ * Verify that password reset code is valid
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @param {String} code - Password reset code
@@ -740,7 +740,7 @@ export const verifyPasswordResetCode = (dispatch, firebase, code) => {
 }
 
 /**
- * @description Update user profile
+ * Update user profile
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
  * @param {Object} userData - User data object (response from authenticating)
@@ -773,7 +773,7 @@ export const updateProfile = (dispatch, firebase, profileUpdate, options) => {
 }
 
 /**
- * @description Update Auth Object. Internally calls
+ * Update Auth Object. Internally calls
  * `firebase.auth().currentUser.updateProfile` as seen [in the firebase docs](https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile).
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
@@ -810,7 +810,7 @@ export const updateAuth = (dispatch, firebase, authUpdate, updateInProfile) => {
 }
 
 /**
- * @description Update user's email within Firebase auth and optionally within
+ * Update user's email within Firebase auth and optionally within
  * users's profile. Internally calls `firebase.auth().currentUser.updateEmail`.
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
@@ -846,7 +846,7 @@ export const updateEmail = (dispatch, firebase, newEmail, updateInProfile) => {
 }
 
 /**
- * @description Reload Auth state. Internally calls
+ * Reload Auth state. Internally calls
  * `firebase.auth().currentUser.reload`.
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
@@ -877,7 +877,7 @@ export const reloadAuth = (dispatch, firebase) => {
 }
 
 /**
- * @description Links the user account with the given credentials. Internally
+ * Links the user account with the given credentials. Internally
  * calls `firebase.auth().currentUser.linkWithCredential`.
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} firebase - Internal firebase object
@@ -908,7 +908,7 @@ export const linkWithCredential = (dispatch, firebase, credential) => {
 }
 
 /**
- * @description Asynchronously signs in using a phone number and create's
+ * Asynchronously signs in using a phone number and create's
  * user profile. This method sends a code via SMS to the given phone number,
  * and returns a firebase.auth.ConfirmationResult. Internally
  * calls `firebase.auth().signInWithPhoneNumber`.

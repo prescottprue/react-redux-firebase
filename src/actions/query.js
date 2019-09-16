@@ -10,7 +10,7 @@ import {
 } from '../utils/query'
 
 /**
- * @description Watch a path in Firebase Real Time Database
+ * Watch a path in Firebase Real Time Database
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} options - Event options object
@@ -176,7 +176,7 @@ export function watchEvent(firebase, dispatch, options) {
 }
 
 /**
- * @description Remove watcher from an event
+ * Remove watcher from an event
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
  * @param {Object} config - Config object
@@ -198,7 +198,7 @@ export function unWatchEvent(
 }
 
 /**
- * @description Add watchers to a list of events
+ * Add watchers to a list of events
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
  * @param {Array} events - List of events for which to add watchers
@@ -211,7 +211,7 @@ export function watchEvents(firebase, dispatch, events) {
 }
 
 /**
- * @description Remove watchers from a list of events
+ * Remove watchers from a list of events
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
  * @param {Array} events - List of events for which to remove watchers
@@ -221,7 +221,7 @@ export function unWatchEvents(firebase, dispatch, events) {
 }
 
 /**
- * @description Add watchers to a list of events
+ * Add watchers to a list of events
  * @param {Object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
  * @param {String} path - Path of ref to be removed

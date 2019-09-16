@@ -266,6 +266,8 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @param {String} dbPath - Database path to place uploaded file metadata
    * @param {Object} options - Options
    * @param {String} options.name - Name of the file
+   * @param {Object} options.metdata - Metadata for the file (passed as second
+   * argument to storage.put calls)
    * @return {Promise} Containing the File object
    */
   const uploadFile = (path, file, dbPath, options) =>
