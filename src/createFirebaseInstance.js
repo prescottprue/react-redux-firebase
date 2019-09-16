@@ -575,7 +575,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 }
 
 /**
- * Expose Firebase instance created internally. Useful for
+ * Get internal Firebase instance with methods which are wrapped with action dispatches. Useful for
  * integrations into external libraries such as redux-thunk and redux-observable.
  * @example <caption>redux-thunk integration</caption>
  * import { applyMiddleware, compose, createStore } from 'redux';

@@ -768,9 +768,30 @@ export function firestoreReducer(
   action: any
 ): FirestoreReducer.Reducer
 
+/**
+ * Fix path by adding "/" to path if needed
+ * @param path - Path string to fix
+ */
 export function fixPath(path: string): string
 
-export function getVal(firebase: object, path: string, notSetValue?: any): any
+/**
+ * Get internal Firebase instance with methods which are wrapped with action dispatches. Useful for
+ * integrations into external libraries such as redux-thunk and redux-observable.
+ */
+export function getFirebase(): ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
+
+/**
+ * Get a value from firebase using slash notation.  This enables an easy
+ * migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
+ * **NOTE:** Setting a default value will cause `isLoaded` to always return true
+ * @param firebase - Firebase instance (state.firebase)
+ * @param path - Path of parameter to load
+ * @param notSetValue - Value to return if value is not
+ * found in redux. This will cause `isLoaded` to always return true (since
+ * value is set from the start).
+ * @returns Data located at path within firebase.
+ */
+export function getVal(firebase: any, path: string, notSetValue?: any): any
 
 /**
  * Detect whether data from redux state is loaded yet or not
