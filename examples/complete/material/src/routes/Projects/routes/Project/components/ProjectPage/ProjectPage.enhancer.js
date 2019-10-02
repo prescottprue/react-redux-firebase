@@ -3,12 +3,10 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import firebaseConnect from 'react-redux-firebase/lib/firebaseConnect'
-import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 import { setPropTypes, setDisplayName, withProps } from 'recompose'
 import { spinnerWhileLoading } from 'utils/components'
 import { UserIsAuthenticated } from 'utils/router'
-import styles from './ProjectPage.styles'
 
 export default compose(
   // Set component display name (more clear in dev/error tools)
@@ -37,7 +35,5 @@ export default compose(
     project: get(data, `projects.${projectId}`)
   })),
   // Show loading spinner while project is loading
-  spinnerWhileLoading(['project']),
-  // Add styles as props.classes
-  withStyles(styles)
+  spinnerWhileLoading(['project'])
 )

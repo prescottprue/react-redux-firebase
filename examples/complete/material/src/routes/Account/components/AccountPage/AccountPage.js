@@ -1,10 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Paper from '@material-ui/core/Paper'
+import { makeStyles } from '@material-ui/core/styles'
 import defaultUserImageUrl from 'static/User.png'
 import AccountForm from '../AccountForm'
+import styles from './AccountPage.styles'
 
-function AccountPage({ avatarUrl, updateAccount, profile, classes }) {
+const useStyles = makeStyles(styles)
+
+function AccountPage({ avatarUrl, updateAccount, profile }) {
+  const classes = useStyles()
+
   return (
     <div className={classes.root}>
       <Paper className={classes.pane}>
@@ -30,7 +36,6 @@ function AccountPage({ avatarUrl, updateAccount, profile, classes }) {
 }
 
 AccountPage.propTypes = {
-  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
   updateAccount: PropTypes.func.isRequired, // from enhancer (withHandlers)
   avatarUrl: PropTypes.string,
   profile: PropTypes.object

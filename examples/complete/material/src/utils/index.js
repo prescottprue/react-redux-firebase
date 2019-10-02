@@ -7,7 +7,7 @@
  * const original = []
  * flow(
  *   fpLog('Before Map'),
- *   fpMap('branchName') // get branchName
+ *   fpMap('name')
  *   fpLog('After Map'),
  * )(original)
  * // => 'Before Map' [{ name: 'test' }]
@@ -25,5 +25,4 @@ export function fpLog(message) {
  */
 export function initScripts() {
   // Initialize global scripts here
-  
 }

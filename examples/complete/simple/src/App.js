@@ -16,14 +16,16 @@ const store = configureStore(initialState)
 // Initialize Firebase instance
 firebase.initializeApp(fbConfig)
 
-export default () => (
-  <Provider store={store}>
-    <ReactReduxFirebaseProvider
-      firebase={firebase}
-      config={rfConfig}
-      dispatch={store.dispatch}
-      createFirestoreInstance={createFirestoreInstance}>
-      <Home />
-    </ReactReduxFirebaseProvider>
-  </Provider>
-)
+export default function App () {
+  return (
+    <Provider store={store}>
+      <ReactReduxFirebaseProvider
+        firebase={firebase}
+        config={rfConfig}
+        dispatch={store.dispatch}
+        createFirestoreInstance={createFirestoreInstance}>
+        <Home />
+      </ReactReduxFirebaseProvider>
+    </Provider>
+  )
+} 

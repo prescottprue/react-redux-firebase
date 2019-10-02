@@ -3,8 +3,14 @@ import PropTypes from 'prop-types'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
+import styles from './ProjectPage.styles'
 
-function ProjectPage({ project, projectId, classes }) {
+const useStyles = makeStyles(styles)
+
+function ProjectPage({ project, projectId }) {
+  const classes = useStyles()
+
   return (
     <div className={classes.root}>
       <Card className={classes.card}>
@@ -23,7 +29,6 @@ function ProjectPage({ project, projectId, classes }) {
 }
 
 ProjectPage.propTypes = {
-  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
   project: PropTypes.object.isRequired, // from enhancer (connect)
   projectId: PropTypes.string.isRequired // from enhancer (withProps)
 }

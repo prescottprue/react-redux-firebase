@@ -2,11 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'react-redux-firebase/lib/helpers'
 import { Route, Switch } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles'
 import ProjectRoute from 'routes/Projects/routes/Project'
 import ProjectTile from '../ProjectTile'
 import NewProjectTile from '../NewProjectTile'
 import NewProjectDialog from '../NewProjectDialog'
 import { renderChildren } from 'utils/router'
+import styles from './ProjectsPage.styles'
+
+const useStyles = makeStyles(styles)
 
 function ProjectsPage({
   projects,
@@ -16,10 +20,11 @@ function ProjectsPage({
   toggleDialog,
   deleteProject,
   addProject,
-  classes,
   match,
   goToProject
 }) {
+  const classes = useStyles()
+
   return (
     <Switch>
       {/* Child routes */}
@@ -55,7 +60,6 @@ function ProjectsPage({
 }
 
 ProjectsPage.propTypes = {
-  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
   match: PropTypes.object.isRequired, // from enhancer (withRouter)
   auth: PropTypes.object, // from enhancer (connect + firebaseConnect - firebase)
   projects: PropTypes.array, // from enhancer (connect + firebaseConnect - firebase)

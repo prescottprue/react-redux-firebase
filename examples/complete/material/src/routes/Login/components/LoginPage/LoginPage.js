@@ -3,10 +3,16 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import GoogleButton from 'react-google-button'
 import Paper from '@material-ui/core/Paper'
+import { makeStyles } from '@material-ui/core/styles'
 import { SIGNUP_PATH } from 'constants/paths'
 import LoginForm from '../LoginForm'
+import styles from './LoginPage.styles'
 
-function LoginPage({ emailLogin, googleLogin, onSubmitFail, classes }) {
+const useStyles = makeStyles(styles)
+
+function LoginPage({ emailLogin, googleLogin, onSubmitFail }) {
+  const classes = useStyles()
+
   return (
     <div className={classes.root}>
       <Paper className={classes.panel}>
@@ -27,7 +33,6 @@ function LoginPage({ emailLogin, googleLogin, onSubmitFail, classes }) {
 }
 
 LoginPage.propTypes = {
-  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
   emailLogin: PropTypes.func.isRequired, // from enhancer (withHandlers)
   onSubmitFail: PropTypes.func.isRequired, // from enhancer (withHandlers)
   googleLogin: PropTypes.func.isRequired // from enhancer (withHandlers)

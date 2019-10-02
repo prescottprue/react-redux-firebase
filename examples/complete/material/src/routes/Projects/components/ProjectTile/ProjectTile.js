@@ -4,8 +4,14 @@ import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { makeStyles } from '@material-ui/core/styles'
+import styles from './ProjectTile.styles'
 
-function ProjectTile({ name, onSelect, onDelete, showDelete, classes }) {
+const useStyles = makeStyles(styles)
+
+function ProjectTile({ name, onSelect, onDelete, showDelete }) {
+  const classes = useStyles()
+
   return (
     <Paper className={classes.root}>
       <div className={classes.top}>
@@ -25,7 +31,6 @@ function ProjectTile({ name, onSelect, onDelete, showDelete, classes }) {
 }
 
 ProjectTile.propTypes = {
-  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
   name: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
   onDelete: PropTypes.func,

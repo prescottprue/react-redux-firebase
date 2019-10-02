@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types'
 import withFirebase from 'react-redux-firebase/lib/withFirebase'
 import { withHandlers, compose, setPropTypes, setDisplayName } from 'recompose'
-import { withStyles } from '@material-ui/core/styles'
 import { UserIsNotAuthenticated } from 'utils/router'
 import { withNotifications } from 'modules/notification'
-import styles from './SignupPage.styles'
 
 export default compose(
   // Set component display name (more clear in dev/error tools)
@@ -38,7 +36,5 @@ export default compose(
           username: creds.username
         })
         .catch(err => showError(err.message))
-  }),
-  // Add styles as props.classes
-  withStyles(styles)
+  })
 )
