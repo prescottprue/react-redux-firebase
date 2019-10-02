@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import withFirebase from 'react-redux-firebase/lib/withFirebase'
+import { withFirebase } from 'react-redux-firebase'
 import { withHandlers, compose, setPropTypes, setDisplayName } from 'recompose'
 import { UserIsNotAuthenticated } from 'utils/router'
 import { withNotifications } from 'modules/notification'

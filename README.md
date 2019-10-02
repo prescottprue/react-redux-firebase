@@ -56,8 +56,7 @@ import 'firebase/auth'
 // import 'firebase/firestore' // <- needed if using firestore
 // import 'firebase/functions' // <- needed if using httpsCallable
 import { createStore, combineReducers, compose } from 'redux'
-import ReactReduxFirebaseProvider from 'react-redux-firebase/lib/ReactReduxFirebaseProvider'
-import firebaseReducer from 'react-redux-firebase/lib/reducer'
+import { ReactReduxFirebaseProvider, reducer as firebaseReducer } from 'react-redux-firebase'
 // import { createFirestoreInstance, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
 
 const fbConfig = {}
@@ -113,10 +112,16 @@ The Firebase instance can then be grabbed from context within your components (`
 ```jsx
 import React from 'react'
 import PropTypes from 'prop-types'
-import withFirebase from 'react-redux-firebase/lib/withFirebase'
-import { compose, withHandlers } from 'recompose'
+import { useFirebase } from 'react-redux-firebase'
 
 function Todos({ firebase, addSampleTodo }) {
+  const firebase = useFirebase()
+
+  function addSampleTodo() {
+    const sampleTodo = { text: 'Sample', done: false }
+    return firebase.push('todos', sampleTodo)
+  }
+
   return (
     <div>
       <h1>New Sample Todo</h1>
@@ -127,17 +132,7 @@ function Todos({ firebase, addSampleTodo }) {
   )
 }
 
-const enhance = compose(
-  withFirebase,
-  withHandlers({
-    addSampleTodo: props => () => {
-      const sampleTodo = { text: 'Sample', done: false }
-      return props.firebase.push('todos', sampleTodo)
-    }
-  })
-)
-
-export default enhance(Todos)
+export default Todos
 ```
 
 **Load Data (listeners automatically managed on mount/unmount)**
@@ -145,18 +140,24 @@ export default enhance(Todos)
 ```jsx
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
-import firebaseConnect from 'react-redux-firebase/lib/firebaseConnect'
-import { isLoaded, isEmpty } from 'react-redux-firebase/lib/helpers'
+import { useSelector } from 'react-redux'
+import { useFirebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase/lib/helpers'
 
-function Todos({ todos, firebase }) {
+export default function Todos() {
+  useFirebaseConnect(() => [
+    'todos' // { path: '/todos' } // object notation
+  ])
+  
+  const todos = useSelector(state => state.firebase.ordered.todos)
+
   if (!isLoaded(todos)) {
     return <div>Loading...</div>
   }
+
   if (isEmpty(todos)) {
     return <div>Todos List Is Empty</div>
   }
+
   return (
     <div>
       <ul>
@@ -171,16 +172,6 @@ function Todos({ todos, firebase }) {
     </div>
   )
 }
-
-export default compose(
-  firebaseConnect(() => [
-    'todos' // { path: '/todos' } // object notation
-  ]),
-  connect(state => ({
-    todos: state.firebase.data.todos
-    // profile: state.firebase.profile // load profile
-  }))
-)(Todos)
 ```
 
 **Queries Based On Props**

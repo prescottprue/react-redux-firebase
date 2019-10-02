@@ -5,8 +5,10 @@ import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import { makeStyles } from '@material-ui/core/styles'
+import { useHistory } from 'react-router-dom'
 import { ACCOUNT_PATH } from 'constants/paths'
 import enhance from './Navbar.enhancer'
+import { useFirebase } from 'react-redux-firebase'
 
 const useStyles = makeStyles(() => ({
   buttonRoot: {
@@ -14,9 +16,11 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-function AccountMenu({ firebase, history }) {
+function AccountMenu() {
   const classes = useStyles()
   const [anchorEl, setMenu] = useState(null)
+  const history = useHistory()
+  const firebase = useFirebase()
 
   function closeAccountMenu(e) {
     setMenu(null)
@@ -31,8 +35,8 @@ function AccountMenu({ firebase, history }) {
     })
   }
   function goToAccount() {
-    history.push(ACCOUNT_PATH)
     closeAccountMenu()
+    history.push(ACCOUNT_PATH)
   }
 
   return (

@@ -1,29 +1,100 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'react-redux-firebase/lib/helpers'
+import { isEmpty, isLoaded } from 'react-redux-firebase/lib/helpers'
 import { Route, Switch } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
+import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { useFirebase, useFirebaseConnect } from 'react-redux-firebase'
 import ProjectRoute from 'routes/Projects/routes/Project'
 import ProjectTile from '../ProjectTile'
 import NewProjectTile from '../NewProjectTile'
 import NewProjectDialog from '../NewProjectDialog'
 import { renderChildren } from 'utils/router'
 import styles from './ProjectsPage.styles'
+import LoadingSpinner from 'components/LoadingSpinner'
+import { LIST_PATH } from 'constants/paths'
 
 const useStyles = makeStyles(styles)
 
+function useProjects({ showError, showSuccess, toggleDialog }) {
+  const history = useHistory()
+  // TODO: Switch history to use router
+  // Get projects from redux state
+  const auth = useSelector(state => state.firebase.auth)
+  const { uid } = auth
+  // Attach todos listener
+  useFirebaseConnect(() => [
+    {
+      path: 'projects',
+      queryParams: ['limitToLast=10']
+      // queryParams: ['orderByChild=createdBy', `equalTo=${auth.uid}`]
+    }
+  ])
+
+  const firebase = useFirebase()
+
+  function addProject(newInstance) {
+    if (!uid) {
+      return showError('You must be logged in to create a project')
+    }
+    return firebase
+      .push('projects', {
+        ...newInstance,
+        createdBy: uid,
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+      })
+      .then(() => {
+        toggleDialog()
+        showSuccess('Project added successfully')
+      })
+      .catch(err => {
+        console.error('Error:', err) // eslint-disable-line no-console
+        showError(err.message || 'Could not add project')
+        return Promise.reject(err)
+      })
+  }
+
+  function deleteProject(projectId) {
+    return firebase
+      .remove(`projects/${projectId}`)
+      .then(() => showSuccess('Project deleted successfully'))
+      .catch(err => {
+        console.error('Error:', err) // eslint-disable-line no-console
+        showError(err.message || 'Could not delete project')
+        return Promise.reject(err)
+      })
+  }
+
+  function goToProject(projectId) {
+    history.push(`${LIST_PATH}/${projectId}`)
+  }
+
+  return { addProject, deleteProject, goToProject }
+}
+
 function ProjectsPage({
-  projects,
   collabProjects,
-  auth,
   newDialogOpen,
   toggleDialog,
-  deleteProject,
-  addProject,
-  match,
-  goToProject
+  showError,
+  showSuccess,
+  match
 }) {
   const classes = useStyles()
+
+  // Get projects from redux state
+  const projects = useSelector(state => state.firebase.ordered.projects)
+
+  const { addProject, deleteProject, goToProject, auth } = useProjects({
+    showError,
+    showSuccess,
+    toggleDialog
+  })
+
+  if (!isLoaded(projects)) {
+    return <LoadingSpinner />
+  }
 
   return (
     <Switch>
@@ -61,14 +132,8 @@ function ProjectsPage({
 
 ProjectsPage.propTypes = {
   match: PropTypes.object.isRequired, // from enhancer (withRouter)
-  auth: PropTypes.object, // from enhancer (connect + firebaseConnect - firebase)
-  projects: PropTypes.array, // from enhancer (connect + firebaseConnect - firebase)
   newDialogOpen: PropTypes.bool, // from enhancer (withStateHandlers)
-  toggleDialog: PropTypes.func.isRequired, // from enhancer (withStateHandlers)
-  deleteProject: PropTypes.func.isRequired, // from enhancer (withHandlers - firebase)
-  collabProjects: PropTypes.object, // from enhancer (withHandlers - firebase)
-  addProject: PropTypes.func.isRequired, // from enhancer (withHandlers - firebase)
-  goToProject: PropTypes.func.isRequired // from enhancer (withHandlers - router)
+  toggleDialog: PropTypes.func.isRequired // from enhancer (withStateHandlers)
 }
 
 export default ProjectsPage
