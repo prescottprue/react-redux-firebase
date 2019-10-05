@@ -1,17 +1,29 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import GoogleButton from 'react-google-button'
+import { useFirebase } from 'react-redux-firebase'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import { SIGNUP_PATH } from 'constants/paths'
+import { useNotifications } from 'modules/notification'
 import LoginForm from '../LoginForm'
 import styles from './LoginPage.styles'
 
 const useStyles = makeStyles(styles)
 
-function LoginPage({ emailLogin, googleLogin, onSubmitFail }) {
+function LoginPage() {
   const classes = useStyles()
+  const firebase = useFirebase()
+  const { showError } = useNotifications()
+
+  const onSubmitFail = (formErrs, dispatch, err) =>
+    showError(formErrs ? 'Form Invalid' : err.message || 'Error')
+  const googleLogin = () =>
+    firebase
+      .login({ provider: 'google', type: 'popup' })
+      .catch(err => showError(err.message))
+  const emailLogin = creds =>
+    firebase.login(creds).catch(err => showError(err.message))
 
   return (
     <div className={classes.root}>
@@ -30,12 +42,6 @@ function LoginPage({ emailLogin, googleLogin, onSubmitFail }) {
       </div>
     </div>
   )
-}
-
-LoginPage.propTypes = {
-  emailLogin: PropTypes.func.isRequired, // from enhancer (withHandlers)
-  onSubmitFail: PropTypes.func.isRequired, // from enhancer (withHandlers)
-  googleLogin: PropTypes.func.isRequired // from enhancer (withHandlers)
 }
 
 export default LoginPage

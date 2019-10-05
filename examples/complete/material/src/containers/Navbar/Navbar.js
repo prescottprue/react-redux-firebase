@@ -1,20 +1,23 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
-import { LIST_PATH, LOGIN_PATH } from 'constants/paths'
+import { useSelector } from 'react-redux'
 import { isLoaded, isEmpty } from 'react-redux-firebase/lib/helpers'
+import { LIST_PATH, LOGIN_PATH } from 'constants/paths'
 import AccountMenu from './AccountMenu'
 import styles from './Navbar.styles'
 
 const useStyles = makeStyles(styles)
 
-function Navbar({ history, firebase, auth, profile }) {
+function Navbar() {
   const classes = useStyles()
+
+  // Get auth from redux state
+  const auth = useSelector(state => state.firebase.auth)
   const authExists = isLoaded(auth) && !isEmpty(auth)
 
   return (
@@ -27,7 +30,7 @@ function Navbar({ history, firebase, auth, profile }) {
           to={authExists ? LIST_PATH : '/'}
           className={classes.brand}
           data-test="brand">
-          material
+          material example
         </Typography>
         <div className={classes.flex} />
         {authExists ? (
@@ -44,19 +47,6 @@ function Navbar({ history, firebase, auth, profile }) {
       </Toolbar>
     </AppBar>
   )
-}
-
-Navbar.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired // from enhancer (withRouter)
-  }),
-  firebase: PropTypes.shape({
-    logout: PropTypes.func.isRequired // from enhancer (withFirebase)
-  }),
-  profile: PropTypes.shape({
-    displayName: PropTypes.string, // from enhancer (connect)
-    avatarUrl: PropTypes.string // from enhancer (connect)
-  })
 }
 
 export default Navbar

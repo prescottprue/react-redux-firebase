@@ -1,8 +1,8 @@
 import * as actions from './actions'
 import reducer from './reducer'
-import withNotifications from './components/withNotifications'
+import useNotifications from './components/useNotifications'
 import Notifications from './components/Notifications'
 import * as actionTypes from './actionTypes'
 
 export default actions
-export { reducer, withNotifications, Notifications, actionTypes }
+export { reducer, useNotifications, Notifications, actionTypes }

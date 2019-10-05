@@ -1,28 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty, isLoaded } from 'react-redux-firebase/lib/helpers'
 import { Route, Switch } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import { useFirebase, useFirebaseConnect } from 'react-redux-firebase'
 import ProjectRoute from 'routes/Projects/routes/Project'
+import { useNotifications } from 'modules/notification'
+import { renderChildren } from 'utils/router'
+import LoadingSpinner from 'components/LoadingSpinner'
 import ProjectTile from '../ProjectTile'
 import NewProjectTile from '../NewProjectTile'
 import NewProjectDialog from '../NewProjectDialog'
-import { renderChildren } from 'utils/router'
 import styles from './ProjectsPage.styles'
-import LoadingSpinner from 'components/LoadingSpinner'
-import { LIST_PATH } from 'constants/paths'
 
 const useStyles = makeStyles(styles)
 
-function useProjects({ showError, showSuccess, toggleDialog }) {
-  const history = useHistory()
-  // TODO: Switch history to use router
-  // Get projects from redux state
+function useProjects() {
+  const { showSuccess, showError } = useNotifications()
+  const firebase = useFirebase()
+  // Get auth from redux state
   const auth = useSelector(state => state.firebase.auth)
-  const { uid } = auth
+
   // Attach todos listener
   useFirebaseConnect(() => [
     {
@@ -32,16 +31,21 @@ function useProjects({ showError, showSuccess, toggleDialog }) {
     }
   ])
 
-  const firebase = useFirebase()
+  // Get projects from redux state
+  const projects = useSelector(state => state.firebase.ordered.projects)
+  
+  // New dialog
+  const [newDialogOpen, changeDialogState] = useState(false)
+  const toggleDialog = () => changeDialogState(!newDialogOpen)
 
   function addProject(newInstance) {
-    if (!uid) {
+    if (!auth.uid) {
       return showError('You must be logged in to create a project')
     }
     return firebase
       .push('projects', {
         ...newInstance,
-        createdBy: uid,
+        createdBy: auth.uid,
         createdAt: firebase.database.ServerValue.TIMESTAMP
       })
       .then(() => {
@@ -55,43 +59,21 @@ function useProjects({ showError, showSuccess, toggleDialog }) {
       })
   }
 
-  function deleteProject(projectId) {
-    return firebase
-      .remove(`projects/${projectId}`)
-      .then(() => showSuccess('Project deleted successfully'))
-      .catch(err => {
-        console.error('Error:', err) // eslint-disable-line no-console
-        showError(err.message || 'Could not delete project')
-        return Promise.reject(err)
-      })
-  }
-
-  function goToProject(projectId) {
-    history.push(`${LIST_PATH}/${projectId}`)
-  }
-
-  return { addProject, deleteProject, goToProject }
+  return { auth, projects, addProject, newDialogOpen, toggleDialog }
 }
 
-function ProjectsPage({
-  collabProjects,
-  newDialogOpen,
-  toggleDialog,
-  showError,
-  showSuccess,
-  match
-}) {
+function ProjectsPage({ match }) {
   const classes = useStyles()
-
-  // Get projects from redux state
-  const projects = useSelector(state => state.firebase.ordered.projects)
-
-  const { addProject, deleteProject, goToProject, auth } = useProjects({
-    showError,
-    showSuccess,
+  const {
+    auth,
+    projects,
+    addProject,
+    newDialogOpen,
     toggleDialog
-  })
+  } = useProjects()
 
+
+  // Show spinner while projects are loading
   if (!isLoaded(projects)) {
     return <LoadingSpinner />
   }
@@ -114,14 +96,15 @@ function ProjectsPage({
             <div className={classes.tiles}>
               <NewProjectTile onClick={toggleDialog} />
               {!isEmpty(projects) &&
-                projects.map((project, ind) => (
-                  <ProjectTile
-                    key={`Project-${project.key}-${ind}`}
-                    name={project.value.name}
-                    onSelect={() => goToProject(project.key)}
-                    onDelete={() => deleteProject(project.key)}
-                  />
-                ))}
+                projects.map((project, ind) => {
+                  return (
+                    <ProjectTile
+                      key={`Project-${project.key}-${ind}`}
+                      name={project.value.name}
+                      projectId={project.key}
+                    />
+                  )
+                })}
             </div>
           </div>
         )}
@@ -132,8 +115,6 @@ function ProjectsPage({
 
 ProjectsPage.propTypes = {
   match: PropTypes.object.isRequired, // from enhancer (withRouter)
-  newDialogOpen: PropTypes.bool, // from enhancer (withStateHandlers)
-  toggleDialog: PropTypes.func.isRequired // from enhancer (withStateHandlers)
 }
 
 export default ProjectsPage

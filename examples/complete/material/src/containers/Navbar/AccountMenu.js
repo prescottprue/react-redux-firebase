@@ -1,14 +1,13 @@
 import React, { Fragment, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useFirebase } from 'react-redux-firebase'
+import { useHistory } from 'react-router-dom'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import { makeStyles } from '@material-ui/core/styles'
-import { useHistory } from 'react-router-dom'
 import { ACCOUNT_PATH } from 'constants/paths'
-import enhance from './Navbar.enhancer'
-import { useFirebase } from 'react-redux-firebase'
 
 const useStyles = makeStyles(() => ({
   buttonRoot: {
@@ -71,4 +70,4 @@ AccountMenu.propTypes = {
   })
 }
 
-export default enhance(AccountMenu)
+export default AccountMenu
