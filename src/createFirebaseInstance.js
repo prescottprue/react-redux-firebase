@@ -266,6 +266,8 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @param {String} dbPath - Database path to place uploaded file metadata
    * @param {Object} options - Options
    * @param {String} options.name - Name of the file
+   * @param {Object} options.metdata - Metadata for the file (passed as second
+   * argument to storage.put calls)
    * @return {Promise} Containing the File object
    */
   const uploadFile = (path, file, dbPath, options) =>
@@ -573,7 +575,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 }
 
 /**
- * Expose Firebase instance created internally. Useful for
+ * Get internal Firebase instance with methods which are wrapped with action dispatches. Useful for
  * integrations into external libraries such as redux-thunk and redux-observable.
  * @example <caption>redux-thunk integration</caption>
  * import { applyMiddleware, compose, createStore } from 'redux';

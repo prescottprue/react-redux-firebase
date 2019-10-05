@@ -1,14 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Field } from 'redux-form'
+import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+import { Field } from 'redux-form'
 import TextField from 'components/FormTextField'
 import ProviderDataForm from '../ProviderDataForm'
+import styles from './AccountForm.styles'
 
-function AccountForm({ account, handleSubmit, submitting, pristine, classes }) {
+const useStyles = makeStyles(styles)
+
+function AccountForm({ account, handleSubmit, submitting, pristine }) {
+  const classes = useStyles()
+
   return (
     <form className={classes.root} onSubmit={handleSubmit}>
-      <h4>Account</h4>
+      <Typography variant="h2">Account</Typography>
       <div className={classes.fields}>
         <Field
           fullWidth
@@ -26,7 +33,7 @@ function AccountForm({ account, handleSubmit, submitting, pristine, classes }) {
       </div>
       {!!account && !!account.providerData && (
         <div>
-          <h4>Linked Accounts</h4>
+          <Typography variant="h4">Linked Accounts</Typography>
           <ProviderDataForm providerData={account.providerData} />
         </div>
       )}
@@ -39,7 +46,6 @@ function AccountForm({ account, handleSubmit, submitting, pristine, classes }) {
 
 AccountForm.propTypes = {
   account: PropTypes.object,
-  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
   handleSubmit: PropTypes.func.isRequired, // from enhancer (reduxForm)
   pristine: PropTypes.bool.isRequired, // from enhancer (reduxForm)
   submitting: PropTypes.bool.isRequired // from enhancer (reduxForm)

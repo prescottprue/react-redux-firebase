@@ -429,17 +429,24 @@ interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
     data: Object
   ) => Promise<{ id: string }>
 
-  // https://github.com/prescottprue/redux-firestore#update
+  /**
+   * Update document within firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#update).
+   */
   update: (
     docPath: string | ReduxFirestoreQuerySetting,
     data: Object
   ) => Promise<void>
 
-  // https://github.com/prescottprue/redux-firestore#delete
+  /**
+   * Delete a document within firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#delete).
+   */
   delete: (docPath: string | ReduxFirestoreQuerySetting) => void
 
-  // https://github.com/prescottprue/redux-firestore#runtransaction
-  // runTransaction: (transaction: WithFirestoreProps['firestore']) => Promise<any>
+  /**
+   * Executes the given updateFunction and then attempts to commit the changes applied within the
+   * transaction. More info available [in the docs](https://github.com/prescottprue/redux-firestore#runtransaction).
+   */
+  runTransaction: typeof firebase.firestore.Firestore.runTransaction
 
   // https://github.com/prescottprue/redux-firestore#onsnapshotsetlistener
   onSnapshot: (options: ReduxFirestoreQuerySetting) => Promise<void>
@@ -666,7 +673,7 @@ interface ExtendedStorageInstance {
             uploadConfig: object
           ) => string)
     }
-  ) => Promise<StorageTypes.UploadTaskSnapshot>
+  ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }>
 
   /**
    * Upload multiple files to Firebase Storage with the option
@@ -761,9 +768,30 @@ export function firestoreReducer(
   action: any
 ): FirestoreReducer.Reducer
 
+/**
+ * Fix path by adding "/" to path if needed
+ * @param path - Path string to fix
+ */
 export function fixPath(path: string): string
 
-export function getVal(firebase: object, path: string, notSetValue?: any): any
+/**
+ * Get internal Firebase instance with methods which are wrapped with action dispatches. Useful for
+ * integrations into external libraries such as redux-thunk and redux-observable.
+ */
+export function getFirebase(): ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
+
+/**
+ * Get a value from firebase using slash notation.  This enables an easy
+ * migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
+ * **NOTE:** Setting a default value will cause `isLoaded` to always return true
+ * @param firebase - Firebase instance (state.firebase)
+ * @param path - Path of parameter to load
+ * @param notSetValue - Value to return if value is not
+ * found in redux. This will cause `isLoaded` to always return true (since
+ * value is set from the start).
+ * @returns Data located at path within firebase.
+ */
+export function getVal(firebase: any, path: string, notSetValue?: any): any
 
 /**
  * Detect whether data from redux state is loaded yet or not

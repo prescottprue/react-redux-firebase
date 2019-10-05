@@ -15,7 +15,7 @@ import { getPopulateObjs } from './utils/populate'
 import { getDotStrPath } from './utils/reducers'
 
 /**
- * @description Get a value from firebase using slash notation.  This enables an easy
+ * Get a value from firebase using slash notation.  This enables an easy
  * migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
  * **NOTE:** Setting a default value will cause `isLoaded` to always return true
  * @param {Object} firebase - Firebase instance (state.firebase)

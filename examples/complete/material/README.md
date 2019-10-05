@@ -45,8 +45,8 @@ While developing, you will probably rely mostly on `npm start`; however, there a
 |`npm run <script>`    |Description|
 |-------------------|-----------|
 |`start`            |Serves your app at `localhost:3000` with automatic refreshing and hot module replacement|
-|`start:build`       |Builds the application to `./build` then serves at `localhost:3000` using `firebase serve`|
-|`build`            |Builds the application to `./build`|
+|`start:dist`       |Builds the application to `./dist` then serves at `localhost:3000` using `firebase serve`|
+|`build`            |Builds the application to `./dist`|
 |`lint`             |[Lints](http://stackoverflow.com/questions/8503559/what-is-linting) the project for potential errors|
 |`lint:fix`         |Lints the project and [fixes all correctable errors](http://eslint.org/docs/user-guide/command-line-interface.html#fix)|
 

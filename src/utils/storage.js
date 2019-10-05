@@ -142,6 +142,7 @@ export function writeMetadataToDb({
         downloadURL
       })
 
+      // Function for creating promise for writing file metadata (handles writing to RTDB or Firestore)
       const metaSetPromise = fileData => {
         if (useFirestoreForStorageMeta) {
           return firebase // Write metadata to Firestore
@@ -170,17 +171,18 @@ export function writeMetadataToDb({
  * @param {Object} opts - File data object
  * @param {Object} opts.path - Location within Firebase Stroage at which to upload file.
  * @param {Blob} opts.file - File to upload
+ * @param {Object} opts.fileMetadata - Metadata to pass along to storageRef.put call
  * @private
  */
 export function uploadFileWithProgress(
   dispatch,
   firebase,
-  { path, file, filename, meta }
+  { path, file, filename, meta, fileMetadata }
 ) {
   const uploadEvent = firebase
     .storage()
     .ref(`${path}/${filename}`)
-    .put(file)
+    .put(file, fileMetadata)
 
   const unListen = uploadEvent.on(firebase.storage.TaskEvent.STATE_CHANGED, {
     next: snapshot => {

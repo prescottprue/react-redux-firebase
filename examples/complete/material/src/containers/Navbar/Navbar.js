@@ -1,63 +1,52 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import { LIST_PATH } from 'constants/paths'
+import Button from '@material-ui/core/Button'
+import { makeStyles } from '@material-ui/core/styles'
+import { useSelector } from 'react-redux'
+import { isLoaded, isEmpty } from 'react-redux-firebase/lib/helpers'
+import { LIST_PATH, LOGIN_PATH } from 'constants/paths'
 import AccountMenu from './AccountMenu'
-import LoginMenu from './LoginMenu'
+import styles from './Navbar.styles'
 
-function Navbar({
-  avatarUrl,
-  displayName,
-  authExists,
-  goToAccount,
-  handleLogout,
-  closeAccountMenu,
-  anchorEl,
-  handleMenu,
-  classes
-}) {
+const useStyles = makeStyles(styles)
+
+function Navbar() {
+  const classes = useStyles()
+
+  // Get auth from redux state
+  const auth = useSelector(state => state.firebase.auth)
+  const authExists = isLoaded(auth) && !isEmpty(auth)
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" className={classes.appBar}>
       <Toolbar>
         <Typography
-          variant="h6"
           color="inherit"
-          className={classes.flex}
+          variant="h6"
           component={Link}
-          to={authExists ? LIST_PATH : '/'}>
-          material
+          to={authExists ? LIST_PATH : '/'}
+          className={classes.brand}
+          data-test="brand">
+          material example
         </Typography>
+        <div className={classes.flex} />
         {authExists ? (
-          <AccountMenu
-            avatarUrl={avatarUrl}
-            displayName={displayName}
-            onLogoutClick={handleLogout}
-            goToAccount={goToAccount}
-            closeAccountMenu={closeAccountMenu}
-            handleMenu={handleMenu}
-            anchorEl={anchorEl}
-          />
+          <AccountMenu />
         ) : (
-          <LoginMenu />
+          <Button
+            className={classes.signIn}
+            component={Link}
+            to={LOGIN_PATH}
+            data-test="sign-in">
+            Sign In
+          </Button>
         )}
       </Toolbar>
     </AppBar>
   )
-}
-
-Navbar.propTypes = {
-  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
-  displayName: PropTypes.string, // from enhancer (flattenProps - profile)
-  avatarUrl: PropTypes.string, // from enhancer (flattenProps - profile)
-  authExists: PropTypes.bool, // from enhancer (withProps - auth)
-  goToAccount: PropTypes.func.isRequired, // from enhancer (withHandlers - router)
-  handleLogout: PropTypes.func.isRequired, // from enhancer (withHandlers - firebase)
-  closeAccountMenu: PropTypes.func.isRequired, // from enhancer (withHandlers - firebase)
-  handleMenu: PropTypes.func.isRequired, // from enhancer (withHandlers - firebase)
-  anchorEl: PropTypes.object // from enhancer (withStateHandlers - handleMenu)
 }
 
 export default Navbar

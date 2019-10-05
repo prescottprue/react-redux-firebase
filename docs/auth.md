@@ -296,18 +296,18 @@ const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', 
   'size': 'invisible',
 });
 firebase.signInWithPhoneNumber(phoneNumber, appVerifier)
-    .then((confirmationResult) => {
-      // SMS sent. Prompt user to type the code from the message, then sign the
-      // user in with confirmationResult.confirm(code).
-      const verificationCode = window.prompt('Please enter the verification ' +
-          'code that was sent to your mobile device.');
-      return confirmationResult.confirm(verificationCode);
-    })
-    .catch((error) => {
-      // Error; SMS not sent
-      // Handle Errors Here
-      return Promise.reject(error)
-    });
+  .then((confirmationResult) => {
+    // SMS sent. Prompt user to type the code from the message, then sign the
+    // user in with confirmationResult.confirm(code).
+    const verificationCode = window.prompt('Please enter the verification ' +
+        'code that was sent to your mobile device.');
+    return confirmationResult.confirm(verificationCode);
+  })
+  .catch((error) => {
+    // Error; SMS not sent
+    // Handle Errors Here
+    return Promise.reject(error)
+  });
 ```
 
 ##### Parameters

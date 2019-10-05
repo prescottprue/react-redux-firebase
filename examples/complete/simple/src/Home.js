@@ -1,23 +1,10 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import {
-  isLoaded,
-  isEmpty,
-  useFirebaseConnect
-} from 'react-redux-firebase'
-import logo from './logo.svg'
-import TodoItem from './TodoItem'
+import Todos from './Todos'
 import NewTodo from './NewTodo'
+import logo from './logo.svg'
 import './App.css'
 
 function Home() {
-  useFirebaseConnect(() => [
-    {
-      path: 'todos',
-      queryParams: ['limitToLast=10']
-    }
-  ])
-  const todos = useSelector(state => state.firebase.ordered.todos)
   return (
     <div className='App'>
       <div className='App-header'>
@@ -34,19 +21,7 @@ function Home() {
           </span>
         </h4>
         <h4>Todos List</h4>
-        {
-          !isLoaded(todos)
-            ? 'Loading'
-            : isEmpty(todos)
-              ? 'Todo list is empty'
-              : todos.reverse().map(({ value: todo, key }, ind) => (
-                <TodoItem
-                  key={`${key}-${ind}`}
-                  id={key}
-                  {...todo}
-                />
-              ))
-        }
+        <Todos />
         <NewTodo />
       </div>
     </div>

@@ -1,17 +1,22 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles'
 import {
   ACCOUNT_PATH,
   LIST_PATH,
   LOGIN_PATH,
   SIGNUP_PATH
 } from 'constants/paths'
+import styles from './HomePage.styles'
 
 const authWrapperUrl = 'https://github.com/mjrussell/redux-auth-wrapper'
 const reactRouterUrl = 'https://github.com/ReactTraining/react-router'
 
-function Home({ classes }) {
+const useStyles = makeStyles(styles)
+
+function Home() {
+  const classes = useStyles()
+
   return (
     <div className={classes.root}>
       <div className="flex-row-center">
@@ -94,10 +99,6 @@ function Home({ classes }) {
       </div>
     </div>
   )
-}
-
-Home.propTypes = {
-  classes: PropTypes.object.isRequired // from enhancer (withStyles)
 }
 
 export default Home
