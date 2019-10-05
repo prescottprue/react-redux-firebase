@@ -7,15 +7,18 @@ Here is an example of a component that shows a Google login button if the user i
 ```js
 import React from 'react'
 import PropTypes from 'prop-types'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
+import { useSelector } from 'react-redux'
+import { useFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
 // import GoogleButton from 'react-google-button' // optional
 
-function LoginPage ({ firebase, auth }) {
+function LoginPage () {
+  const firebase = useFirebase()
+  const auth = useSelector(state => state.firebase.auth)
+
   function loginWithGoogle() {
     return firebase.login({ provider: 'google', type: 'popup' })
   }
+
   return (
     <div className={classes.container}>
       <div>
@@ -33,17 +36,7 @@ function LoginPage ({ firebase, auth }) {
   )
 }
 
-LoginPage.propTypes = {
-  firebase: PropTypes.shape({
-    login: PropTypes.func.isRequired
-  }),
-  auth: PropTypes.object
-}
-
-export default compose(
-  withFirebase,
-  connect(({ firebase: { auth } }) => ({ auth }))
-)(LoginPage)
+export default LoginPage
 ```
 
 ## Firebase UI React
@@ -52,22 +45,23 @@ Here is an example of a component that shows a usage of [Firebase UI](https://fi
 
 ```js
 import React from 'react'
-import PropTypes from 'prop-types'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { useSelector } from 'react-redux'
+import { useFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-// import { withRouter } from 'react-router-dom'; // if you use react-router
+// import { useHistory } from 'react-router-dom'; // if you use react-router
 // import GoogleButton from 'react-google-button' // optional
 
-function LoginPage({ firebase, auth }) {
+function LoginPage() {
+  const firebase = useFirebase()
+  const auth = useSelector(state => state.firebase.auth)
+
   return (
   <div className={classes.container}>
     <StyledFirebaseAuth
       uiConfig={{
         signInFlow: 'popup',
         signInSuccessUrl: '/signedIn',
-        signInOptions: [this.props.firebase.auth.GoogleAuthProvider.PROVIDER_ID],
+        signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
         callbacks: {
           signInSuccessWithAuthResult: (authResult, redirectUrl) => {
             firebase.handleRedirectResult(authResult).then(() => {
@@ -92,16 +86,5 @@ function LoginPage({ firebase, auth }) {
   </div>
 )
 
-LoginPage.propTypes = {
-  firebase: PropTypes.shape({
-    handleRedirectResult: PropTypes.func.isRequired
-  }),
-  auth: PropTypes.object
-}
-
-export default compose(
-  //withRouter, if you use react router to redirect
-  firebaseConnect(), // withFirebase can also be used
-  connect(({ firebase: { auth } }) => ({ auth }))
-)(LoginPage)
+export default LoginPage
 ```

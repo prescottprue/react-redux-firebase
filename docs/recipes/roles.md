@@ -50,32 +50,24 @@ Each user should have a role parameter that correlates to a role. For example:
 
 In order for us to check our role for permissions, we will want to populate the role on a profile. This will turn the role string (i.e. admin) into the object representing that role from the roles collection.
 
-Make sure you have the following config when creating your store:
-
 ```js
-reactReduxFirebase(
-  fbConfig,
-  {
-    userProfile: 'users',
-    profileParamsToPopulate: [
-      { child: 'role', root: 'roles' }, // populates user's role with matching role object from roles
-    ]
-  }
-)
+{
+  userProfile: 'users',
+  profileParamsToPopulate: [
+    { child: 'role', root: 'roles' }, // populates user's role with matching role object from roles
+  ]
+}
 ```
 
-You can also use string notation for the profileParamsToPopulate, like so:
+You can also use string notation for the `profileParamsToPopulate`, like so:
 
 ```js
-reactReduxFirebase(
-  fbConfig,
-  {
-    userProfile: 'users',
-    profileParamsToPopulate: [
-      ['role:roles'], // populates user's role with matching role object from roles
-    ]
-  }
-)
+{
+  userProfile: 'users',
+  profileParamsToPopulate: [
+    ['role:roles'], // populates user's role with matching role object from roles
+  ]
+}
 ```
 
 **Note:** beware that the `role` parameter on each user will remain a string, and won't be "converted" into an object. Something that may be apparent to some developers, but not to others ;-)
@@ -87,24 +79,21 @@ reactReduxFirebase(
 If you want to assign a role by default when users sign up, you can add a profileFactory to your config:
 
 ```js
-reactReduxFirebase(
-  fbConfig,
-  {
-    userProfile: 'users',
-    profileParamsToPopulate: [
-      { child: 'role', root: 'roles' }, // populates user's role with matching role object from roles
-    ],
-    profileFactory: user => {
-      const profile = {
-        email: user.email || user.providerData[0].email,
-        role: 'user', 
-      }
-      if (user.providerData && user.providerData.length) {
-        profile.providerData = user.providerData
-      }
+{
+  userProfile: 'users',
+  profileParamsToPopulate: [
+    { child: 'role', root: 'roles' }, // populates user's role with matching role object from roles
+  ],
+  profileFactory: user => {
+    const profile = {
+      email: user.email || user.providerData[0].email,
+      role: 'user',
+    }
+    if (user.providerData && user.providerData.length) {
+      profile.providerData = user.providerData
     }
   }
-)
+}
 ```
 
 **NOTE**: Your security rules should be set to only allow for users to be setting their role to user. For more granular control of this, you can move role assigning to a cloud function that is trigger on user create

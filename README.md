@@ -111,10 +111,9 @@ The Firebase instance can then be grabbed from context within your components (`
 
 ```jsx
 import React from 'react'
-import PropTypes from 'prop-types'
 import { useFirebase } from 'react-redux-firebase'
 
-function Todos({ firebase, addSampleTodo }) {
+export default function Todos() {
   const firebase = useFirebase()
 
   function addSampleTodo() {
@@ -131,8 +130,6 @@ function Todos({ firebase, addSampleTodo }) {
     </div>
   )
 }
-
-export default Todos
 ```
 
 **Load Data (listeners automatically managed on mount/unmount)**
@@ -144,7 +141,7 @@ import { useSelector } from 'react-redux'
 import { useFirebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 
 export default function Todos() {
-  useFirebaseConnect(() => [
+  useFirebaseConnect([
     'todos' // { path: '/todos' } // object notation
   ])
   
@@ -189,13 +186,10 @@ import { useParams } from 'react-router-dom'
 export default function Todo() {
   const { todoId } = useParams() // matches todos/:todoId in route
 
-  useFirebaseConnect(() => {
-     // Set listeners based on props (prop is route parameter from react-router in this case)
-    return [
-      { path: `todos/${todoId}` } // create todo listener
-      // `todos/${props.params.todoId}` // equivalent string notation
-    ]
-  })
+  useFirebaseConnect([
+    { path: `todos/${todoId}` } // create todo listener
+    // `todos/${props.params.todoId}` // equivalent string notation
+  ])
   
   const todo = useSelector(({ firebase: { data } }) => data.todos && data.todos[todoId])
 
@@ -203,7 +197,7 @@ export default function Todo() {
     return firebase.update(`todos/${params.todoId}`, { done: !todo.isDone })
   }
 
-return (
+  return (
     <div>
       <input
         name="isDone"
@@ -246,7 +240,7 @@ function TodosList() {
   )
 }
 
-function Todos({ firebase }) {
+function Todos() {
   const firebase = useFirebase()
 
   return (

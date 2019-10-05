@@ -73,13 +73,15 @@ const rrfProps = {
 }
 
 // Setup react-redux so that connect HOC can be used
-const App = () => (
-  <Provider store={store}>
-    <ReactReduxFirebaseProvider {...rrfProps}>
-      <Todos />
-    </ReactReduxFirebaseProvider>
-  </Provider>
-);
+function App() {
+  return (
+    <Provider store={store}>
+      <ReactReduxFirebaseProvider {...rrfProps}>
+        <Todos />
+      </ReactReduxFirebaseProvider>
+    </Provider>
+  );
+}
 
 render(<App/>, document.getElementById('root'));
 ```
