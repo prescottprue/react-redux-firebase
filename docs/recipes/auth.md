@@ -39,6 +39,28 @@ function LoginPage () {
 export default LoginPage
 ```
 
+## List of Online Users (Presence)
+
+Presence keeps a list of which users are currently online as well as a history of all user sessions.
+
+The logic that runs this is partially based on:
+* [blog post by Firebase](https://firebase.googleblog.com/2013/06/how-to-build-presence-system.html)
+* [Firebase's Sample Presence App](https://firebase.google.com/docs/database/web/offline-capabilities#section-sample)
+
+Include the `presense` parameter your rrfConfig:
+
+```js	
+const rrfConfig = {
+  userProfile: 'users', // where profiles are stored in database
+  presence: 'presence', // where list of online users is stored in database
+  sessions: 'sessions' // where list of user sessions is stored in database (presence must be enabled)
+}
+```
+
+Now when logging in through `login` method, user will be listed as online until they logout or end the session (close the tab or window).	
+
+**NOTE:** Currently this is not triggered on logout, but that is a [planned feature for the upcoming v3.0.0 version](https://github.com/prescottprue/react-redux-firebase/wiki/v3.0.0-Roadmap). Currently, the presense status will only change when the user becomes disconnected from the Database (i.e. closes the tab).
+
 ## Firebase UI React
 
 Here is an example of a component that shows a usage of [Firebase UI](https://firebase.google.com/docs/auth/web/firebaseui), especially their [react component](https://github.com/firebase/firebaseui-web-react) and integrate the flow with this library:
