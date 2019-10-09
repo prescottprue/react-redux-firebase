@@ -63,7 +63,9 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       }
     }
 
-    componentWillReceiveProps(np) {
+    /* eslint-disable camelcase */
+    UNSAFE_componentWillReceiveProps(np) {
+      /* eslint-enable camelcase */
       const { firestore } = this.store
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.store)
