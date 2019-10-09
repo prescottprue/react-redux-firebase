@@ -1,6 +1,7 @@
 # Upload
 
 ## File Drag/Drop Upload with Delete
+
 This example component uses `react-dropzone` to allow for drag/drop uploading directly to Firebase storage. `props.uploadFiles()` provides the capability to update Firebase database with Files metadata, which is perfect for showing your upload results cleaning in the same component.
 
 **NOTE:** The third argument provided to the `uploadFiles` and `deleteFiles` calls below is the database path where File Metadata will be written/deleted from. This is out of convenience only, simply remove the third argument if you don't want metadata written/deleted to/from database.
@@ -14,7 +15,7 @@ import { useFirebase, useFirebaseConnect } from 'react-redux-firebase';
 import Dropzone from 'react-dropzone';
 
 // Path within Database for metadata (also used for file Storage path)
-const filesPath = 'uploadedFiles';
+const filesPath = 'uploadedFiles'
 
 export default function Uploader({ uploadedFiles, onFileDelete, onFilesDrop }) {
   const firebase = useFirebase()
@@ -48,11 +49,27 @@ export default function Uploader({ uploadedFiles, onFileDelete, onFilesDrop }) {
 }
 ```
 
-### Change File Metadata
+### Include File Metata Data
+
+As described in [the upload file section of the Firebase docs](https://firebase.google.com/docs/storage/web/upload-files#add_file_metadata), it is possible to include file metadata while uploading. To do so, include the `metadata` property in the options object:
+
+```js
+const storagePath = 'avatars'
+const dbPath = 'avatarFilesInfo'
+const fileMetadata = { contentType: 'image/jpeg' }
+
+firebase
+  .uploadFile(storagePath, file, dbPath, { metadata: fileMetadata })
+  .then(() => {
+    console.log('File uploaded successfully')
+  })
+```
+
+### Change Info Stored In Database
+
 When uploading files as in the above example, you can modify how the file's meta data is written to the database.
 
 ```js
-
 // within your createStore.js or store.js file include the following config
 const config = {
   fileMetadataFactory: (uploadRes, firebase, metadata, downloadURL) => {

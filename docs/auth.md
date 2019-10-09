@@ -160,6 +160,18 @@ props.firebase.login({
   profile: { email: 'rick@sanchez.com' }
 })
 ```
+  
+  *Expo/react-native Facebook Login*
+```js
+async function loginWithFacebook() {
+  const data = await Expo.Facebook.logInWithReadPermissionsAsync('FB_ID', { permissions: ['public_profile', 'email'] })
+
+  if (data.type === 'success') {
+    const credential = props.firebase.auth.FacebookAuthProvider.credential(data.token)
+    await props.firebase.login({ credential })
+  }
+}
+```
 
 After logging in, profile and auth are available in redux state:
 

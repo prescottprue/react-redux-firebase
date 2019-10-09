@@ -907,6 +907,82 @@ export const linkWithCredential = (dispatch, firebase, credential) => {
     })
 }
 
+function linkWithAuthDispatch(promiseFunc, args, dispatch, firebase) {
+  dispatch({ type: actionTypes.AUTH_LINK_START })
+
+  // reject and dispatch error if not logged in
+  if (!firebase.auth().currentUser) {
+    const error = new Error('User must be logged in to link with credential.')
+    dispatch({ type: actionTypes.AUTH_LINK_ERROR, error })
+    return Promise.reject(error)
+  }
+
+  return promiseFunc(...args)
+    .then(auth => {
+      dispatch({ type: actionTypes.AUTH_LINK_SUCCESS, payload: auth })
+      return auth
+    })
+    .catch(error => {
+      dispatch({ type: actionTypes.AUTH_LINK_ERROR, error })
+      return Promise.reject(error)
+    })
+}
+
+/**
+ * @description Links the user account with the given credentials. Internally
+ * calls `firebase.auth().currentUser.linkAndRetrieveDataWithCredential`.
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} credential - Credential with which to link user account
+ * @return {Promise} Resolves with auth
+ */
+export function linkAndRetrieveDataWithCredential(
+  dispatch,
+  firebase,
+  credential
+) {
+  return linkWithAuthDispatch(
+    firebase.auth().currentUser.linkAndRetrieveDataWithCredential,
+    [credential],
+    dispatch,
+    firebase
+  )
+}
+
+/**
+ * @description Links the user account with the given credentials. Internally
+ * calls `firebase.auth().currentUser.linkWithPopup`.
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} credential - Credential with which to link user account
+ * @return {Promise} Resolves with auth
+ */
+export function linkWithPopup(dispatch, firebase, credential) {
+  return linkWithAuthDispatch(
+    firebase.auth().currentUser.linkWithPopup,
+    [credential],
+    dispatch,
+    firebase
+  )
+}
+
+/**
+ * @description Links the user account with the given credentials. Internally
+ * calls `firebase.auth().currentUser.linkWithRedirect`.
+ * @param {Function} dispatch - Action dispatch function
+ * @param {Object} firebase - Internal firebase object
+ * @param {Object} credential - Credential with which to link user account
+ * @return {Promise} Resolves with auth
+ */
+export function linkWithRedirect(dispatch, firebase, provider) {
+  return linkWithAuthDispatch(
+    firebase.auth().currentUser.linkWithRedirect,
+    [provider],
+    dispatch,
+    firebase
+  )
+}
+
 /**
  * Asynchronously signs in using a phone number and create's
  * user profile. This method sends a code via SMS to the given phone number,
