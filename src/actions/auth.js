@@ -277,7 +277,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
   if (typeof config.profileFactory === 'function') {
     // catch errors in user provided profileFactory function
     try {
-      profile = config.profileFactory(userData, profile) // eslint-disable-line no-param-reassign
+      profile = config.profileFactory(userData, profile, firebase) // eslint-disable-line no-param-reassign
     } catch (err) {
       /* eslint-disable no-console */
       console.error(
