@@ -120,7 +120,7 @@
     "react-redux": "^6.0.0",
     "recompose": "^0.30.0",
     "redux": "4.0.0",
-    "redux-firestore": "next",
+    "redux-firestore": "0.5.7",
     "rimraf": "^3.0.0",
     "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0",
