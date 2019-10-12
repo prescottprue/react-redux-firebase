@@ -2,18 +2,9 @@
 
 ### Table of Contents
 
--   [firebaseReducer](#firebasereducer)
+-   [reducer](#reducer)
 
-## firebaseReducer
-
-Main reducer for react-redux-firebase. This function is called
-automatically by redux every time an action is fired. Based on which action
-is called and its payload, the reducer will update redux state with relevant
-changes. `firebaseReducer` is made up of multiple "slice reducers"
-([outlined in reducers docs](/docs/recipes/reducers.md)) combined using
-[`combineReducers`](https://redux.js.org/docs/api/combineReducers.html)
-following the patterns outlined in
-[the redux docs](https://redux.js.org/docs/recipes/StructuringReducers.html).
+## reducer
 
 **Parameters**
 

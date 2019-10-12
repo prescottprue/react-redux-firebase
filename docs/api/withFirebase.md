@@ -7,6 +7,8 @@
 
 ## withFirebase
 
+-   **See: <http://react-redux-firebase.com/api/withFirebase.html>**
+
 **Parameters**
 
 -   `WrappedComponent` **React.Component** React component to wrap

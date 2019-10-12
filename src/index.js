@@ -18,11 +18,9 @@ import * as helpers from './helpers'
 
 export default {
   ReactReduxFirebaseProvider,
-  ReactReduxFirebaseConsumer: ReactReduxFirebaseContext.Consumer,
   ReactReduxFirebaseContext,
   ReduxFirestoreContext,
   ReduxFirestoreProvider,
-  ReduxFirestoreConsumer: ReduxFirestoreContext.Consumer,
   createFirebaseInstance,
   firebaseConnect,
   firestoreConnect,
@@ -34,7 +32,6 @@ export default {
   useFirestoreConnect,
   reducer,
   firebaseReducer: reducer,
-  firebaseStateReducer: reducer,
   constants,
   actionTypes,
   getFirebase,

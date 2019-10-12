@@ -77,6 +77,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @returns {Promise} Containing reference snapshot
    * @example <caption>Basic</caption>
+   * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#set
    * import React, { Component } from 'react'
    * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'

@@ -6,6 +6,8 @@
 
 ## ReduxFirestoreProvider
 
+-   **See: <http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReduxFirestoreProvider.html>**
+
 Provider for context containing extended firestore instance created
 by react-redux-firebase
 

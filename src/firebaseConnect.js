@@ -8,8 +8,9 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
  * @augments React.Component
- * @description Higher Order Component that automatically listens/unListens
- * to provided firebase paths using React's Lifecycle hooks.
+ * React Higher Order Component that automatically listens/unListens to
+ * Firebase Real Time Database on mount/unmount of the component. This uses
+ * React's Component Lifecycle hooks.
  * @param {Array|Function} queriesConfig - Array of objects or strings for paths to sync
  * from Firebase. Can also be a function that returns the array. The function
  * is passed the current props and the firebase object.

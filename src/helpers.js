@@ -7,7 +7,6 @@ import {
   mapValues,
   reduce,
   defaultsDeep,
-  compact,
   some
 } from 'lodash'
 import { topLevelPaths } from './constants'
@@ -290,7 +289,7 @@ function populateChild(state, child, p) {
  * export default enhance(SomeComponent)
  */
 export function populate(state, path, populates, notSetValue) {
-  const splitPath = compact(path.split('/'))
+  const splitPath = path.split('/').filter(Boolean) // Drop falsey values (compact)
   // append 'data' prefix to path if it is not a top level path
   const pathArr =
     topLevelPaths.indexOf(splitPath[0]) === -1

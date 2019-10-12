@@ -6,6 +6,8 @@
 
 ## useFirestoreConnect
 
+-   **See: <http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html>**
+
 React hook that automatically listens/unListens
 to provided Cloud Firestore paths. Make sure you have required/imported
 Cloud Firestore, including it's reducer, before attempting to use.

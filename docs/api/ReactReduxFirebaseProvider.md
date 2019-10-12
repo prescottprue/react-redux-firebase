@@ -6,6 +6,8 @@
 
 ## ReactReduxFirebaseProvider
 
+-   **See: <http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html>**
+
 Provider for context containing extended firebase instance created
 by react-redux-firebase
 

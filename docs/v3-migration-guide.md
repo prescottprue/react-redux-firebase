@@ -14,6 +14,8 @@
   * `createFirebaseConnect` and `createFirestoreConnect` (see [below](#remove-createFirebaseConnect-and-createFirestoreConnect))
   * `signIn` option from `createUser` (new user is automatically signed in through Firebase SDK) - #513
 * `componentDidMount` used in place of `componentWillMount` for data loading in `firebaseConnect` and `firestoreConnect`
+* `helpers` is no longer exported in top level API - import helpers directly instead
+* `firebaseStateReducer` is no longer exported in top level API - import `reducer` or `firebaseReducer`
 
 ### Change Snippets
 

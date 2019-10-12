@@ -6,7 +6,7 @@
 
 ## useFirebaseConnect
 
--   **See: <http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestore.html>**
+-   **See: <http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebaseConnect.html>**
 
 Hook that automatically listens/unListens to provided firebase paths
 using React's useEffect hook.
