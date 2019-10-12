@@ -8,7 +8,7 @@
 
 ## useFirestoreConnect
 
--   **See: [http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html][4]**
+-   **See: [https://react-redux-firebase.com/api/useFirestoreConnect.html][4]**
 
 React hook that automatically listens/unListens
 to provided Cloud Firestore paths. Make sure you have required/imported
@@ -76,7 +76,7 @@ export default compose(
 
 [3]: #examples
 
-[4]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html
+[4]: https://react-redux-firebase.com/api/useFirestoreConnect.html
 
 [5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 

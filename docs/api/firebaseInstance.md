@@ -83,7 +83,7 @@ Returns **[object][66]** Extended Firebase instance
 
 ## set
 
--   **See: [http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#set][68]
+-   **See: [https://react-redux-firebase.com/api/firebaseInstance.html#set][68]
     import React, { Component } from 'react'
     import PropTypes from 'prop-types'
     import { firebaseConnect } from 'react-redux-firebase'
@@ -740,9 +740,9 @@ Returns **[object][66]** Firebase instance with methods which dispatch redux act
 
 [67]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[68]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#set
+[68]: https://react-redux-firebase.com/api/firebaseInstance.html#set
 
-[69]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#set
+[69]: https://react-redux-firebase.com/api/props-firebase.html#set
 
 [70]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
@@ -752,29 +752,29 @@ Returns **[object][66]** Firebase instance with methods which dispatch redux act
 
 [73]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[74]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#update
+[74]: https://react-redux-firebase.com/api/props-firebase.html#update
 
-[75]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#push
+[75]: https://react-redux-firebase.com/api/props-firebase.html#push
 
-[76]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#pushWithMeta
+[76]: https://react-redux-firebase.com/api/props-firebase.html#pushWithMeta
 
-[77]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#updateWithMeta
+[77]: https://react-redux-firebase.com/api/props-firebase.html#updateWithMeta
 
-[78]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#remove
+[78]: https://react-redux-firebase.com/api/props-firebase.html#remove
 
-[79]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uniqueSet
+[79]: https://react-redux-firebase.com/api/props-firebase.html#uniqueSet
 
-[80]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uploadFile
+[80]: https://react-redux-firebase.com/api/props-firebase.html#uploadFile
 
-[81]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uploadFiles
+[81]: https://react-redux-firebase.com/api/props-firebase.html#uploadFiles
 
 [82]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[83]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#deleteFile
+[83]: https://react-redux-firebase.com/api/props-firebase.html#deleteFile
 
-[84]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#watchEvent
+[84]: https://react-redux-firebase.com/api/props-firebase.html#watchEvent
 
-[85]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#unwatchevent
+[85]: https://react-redux-firebase.com/api/props-firebase.html#unwatchevent
 
 [86]: /docs/auth.md
 

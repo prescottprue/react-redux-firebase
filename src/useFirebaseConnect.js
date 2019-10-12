@@ -11,7 +11,7 @@ import useFirebase from './useFirebase'
  * array contains object or string for path to sync from Firebase or null if
  * hook doesn't need to sync. Can also be a function that returns an object,
  * a path string, or array of an object or a path string.
- * @see https://react-redux-firebase.com/api/useFirebaseConnect.html
+ * @see https://react-redux-firebase.com/docs/api/useFirebaseConnect.html
  * @example <caption>Ordered Data</caption>
  * import { useSelector } from 'react-redux'
  * import { useFirebaseConnect } from 'react-redux-firebase'

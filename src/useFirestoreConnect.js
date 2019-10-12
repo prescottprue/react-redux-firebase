@@ -11,7 +11,7 @@ import useFirestore from './useFirestore'
  * @param {object|string|Array|Function} queriesConfigs - An object, string,
  * or array of object or string for paths to sync from firestore. Can also be
  * a function that returns the object, string, or array of object or string.
- * @see https://react-redux-firebase.com/api/useFirestoreConnect.html
+ * @see https://react-redux-firebase.com/docs/api/useFirestoreConnect.html
  * @example <caption>Basic</caption>
  * import React from 'react'
  * import { map } from 'lodash'

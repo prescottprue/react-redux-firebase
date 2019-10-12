@@ -15,7 +15,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * from Firebase. Can also be a function that returns the array. The function
  * is passed the current props and the firebase object.
  * @returns {Function} - that accepts a component to wrap and returns the wrapped component
- * @see http://react-redux-firebase.com/api/firebaseConnect.html
+ * @see https://react-redux-firebase.com/docs/api/firebaseConnect.html
  * @example <caption>Basic</caption>
  * // props.firebase set on App component as firebase object with helpers
  * import { firebaseConnect } from 'react-redux-firebase'

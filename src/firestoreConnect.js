@@ -17,7 +17,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * is passed the current props and the firebase object.
  * @returns {Function} - Function which accepts a component to wrap and returns the
  * wrapped component
- * @see http://react-redux-firebase.com/api/firestoreConnect.html
+ * @see https://react-redux-firebase.com/docs/api/firestoreConnect.html
  * @example <caption>Basic</caption>
  * // props.firebase set on App component as firebase object with helpers
  * import { firestoreConnect } from 'react-redux-firebase'

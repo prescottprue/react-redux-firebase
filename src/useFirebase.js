@@ -10,7 +10,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * and functionality which give it it's capabilities such as dispatching
  * actions.
  * @returns {object} - Extended Firebase instance
- * @see https://react-redux-firebase.com/api/useFirebase.html
+ * @see https://react-redux-firebase.com/docs/api/useFirebase.html
  * @example <caption>Basic</caption>
  * import { useFirebase } from 'react-redux-firebase'
  *

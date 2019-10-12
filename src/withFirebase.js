@@ -15,7 +15,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * @param {React.Component} WrappedComponent - React component to wrap
  * @returns {Function} - Which accepts a component to wrap and returns the
  * wrapped component
- * @see http://react-redux-firebase.com/api/withFirebase.html
+ * @see http://react-redux-firebase.com/docs/api/withFirebase.html
  * @example <caption>Basic</caption>
  * import React from 'react'
  * import { withFirebase } from 'react-redux-firebase'

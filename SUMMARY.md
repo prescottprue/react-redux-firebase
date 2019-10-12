@@ -31,6 +31,7 @@
     * [useFirebase](/docs/api/useFirebase.md)
     * [useFirebaseConnect](/docs/api/useFirebaseConnect.md)
     * [useFirestore](/docs/api/useFirestore.md)
+    * [useFirestoreConnect](/docs/api/useFirebaseConnect.md)
   * HOCs
     * [firebaseConnect](/docs/api/firebaseConnect.md)
     * [withFirebase](/docs/api/withFirebase.md)

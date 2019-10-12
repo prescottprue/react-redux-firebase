@@ -8,7 +8,7 @@
 
 ## useFirebaseConnect
 
--   **See: [http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebaseConnect.html][4]**
+-   **See: [https://react-redux-firebase.com/api/useFirebaseConnect.html][4]**
 
 Hook that automatically listens/unListens to provided firebase paths
 using React's useEffect hook.
@@ -89,7 +89,7 @@ export default Post
 
 [3]: #examples
 
-[4]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebaseConnect.html
+[4]: https://react-redux-firebase.com/api/useFirebaseConnect.html
 
 [5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
