@@ -2,19 +2,22 @@
 
 ### Table of Contents
 
--   [firestoreConnect](#firestoreconnect)
+-   [firestoreConnect][1]
+    -   [Parameters][2]
+    -   [Examples][3]
+    -   [Parameters][4]
 
 ## firestoreConnect
 
--   **See: <http://react-redux-firebase.com/api/firestoreConnect.html>**
+-   **See: [http://react-redux-firebase.com/api/firestoreConnect.html][5]**
 
-**Parameters**
+### Parameters
 
--   `queriesConfig` **([Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** Array of objects or strings for paths to sync
+-   `queriesConfig` **([Array][6] \| [Function][7])** Array of objects or strings for paths to sync
     from Firebase. Can also be a function that returns the array. The function
     is passed the current props and the firebase object. (optional, default `[]`)
 
-**Examples**
+### Examples
 
 _Basic_
 
@@ -39,15 +42,31 @@ export default compose(
 )(SomeComponent)
 ```
 
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Function which accepts a component to wrap and returns the
+Returns **[Function][7]** Function which accepts a component to wrap and returns the
 wrapped component
 
 ## 
 
 Render component wrapped in context
 
-**Parameters**
+### Parameters
 
--   `props` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Component props
+-   `props` **[object][8]** Component props
 
 Returns **React.Component** Component wrapped in context
+
+[1]: #firestoreconnect
+
+[2]: #parameters
+
+[3]: #examples
+
+[4]: #parameters-1
+
+[5]: http://react-redux-firebase.com/api/firestoreConnect.html
+
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object

@@ -35,7 +35,6 @@ function generateDocForFile(file) {
 function getFileNames() {
   return new Promise((resolve, reject) => {
     fs.readdir(SRC_FOLDER, (err, files) => {
-      console.log('files:', files)
       if (err) {
         return reject(err)
       }
@@ -44,9 +43,8 @@ function getFileNames() {
       )
       const mappedFileNames = cleanedFileNames.map(fileName => {
         const newName = fileRenames[fileName] || fileName
-        return { src: newName, dest: `${newName.replace('.js', '')}.md` }
+        return { src: fileName, dest: `${newName.replace('.js', '')}.md` }
       })
-      console.log('mapped file names', mappedFileNames)
       resolve(mappedFileNames)
     })
   })

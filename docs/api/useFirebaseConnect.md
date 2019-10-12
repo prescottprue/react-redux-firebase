@@ -2,23 +2,25 @@
 
 ### Table of Contents
 
--   [useFirebaseConnect](#usefirebaseconnect)
+-   [useFirebaseConnect][1]
+    -   [Parameters][2]
+    -   [Examples][3]
 
 ## useFirebaseConnect
 
--   **See: <http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebaseConnect.html>**
+-   **See: [http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebaseConnect.html][4]**
 
 Hook that automatically listens/unListens to provided firebase paths
 using React's useEffect hook.
 
-**Parameters**
+### Parameters
 
--   `queriesConfig` **([object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array))** Object, string, or
+-   `queriesConfig` **([object][5] \| [string][6] \| [Function][7] \| [Array][8])** Object, string, or
     array contains object or string for path to sync from Firebase or null if
     hook doesn't need to sync. Can also be a function that returns an object,
     a path string, or array of an object or a path string.
 
-**Examples**
+### Examples
 
 _Ordered Data_
 
@@ -80,3 +82,19 @@ function Post({ post, postId }) {
 
 export default Post
 ```
+
+[1]: #usefirebaseconnect
+
+[2]: #parameters
+
+[3]: #examples
+
+[4]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebaseConnect.html
+
+[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array

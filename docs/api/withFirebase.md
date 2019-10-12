@@ -2,18 +2,21 @@
 
 ### Table of Contents
 
--   [withFirebase](#withfirebase)
--   [WithFirebase](#withfirebase-1)
+-   [withFirebase][1]
+    -   [Parameters][2]
+    -   [Examples][3]
+-   [WithFirebase][4]
+    -   [Parameters][5]
 
 ## withFirebase
 
--   **See: <http://react-redux-firebase.com/api/withFirebase.html>**
+-   **See: [http://react-redux-firebase.com/api/withFirebase.html][6]**
 
-**Parameters**
+### Parameters
 
 -   `WrappedComponent` **React.Component** React component to wrap
 
-**Examples**
+### Examples
 
 _Basic_
 
@@ -66,15 +69,31 @@ const enhance = compose(
 export default enhance(AddTodo)
 ```
 
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Which accepts a component to wrap and returns the
+Returns **[Function][7]** Which accepts a component to wrap and returns the
 wrapped component
 
 ## WithFirebase
 
 WithFirebase wrapper component
 
-**Parameters**
+### Parameters
 
--   `props` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Component props
+-   `props` **[object][8]** Component props
 
 Returns **React.Component** WrappedComponent wrapped with firebase context
+
+[1]: #withfirebase
+
+[2]: #parameters
+
+[3]: #examples
+
+[4]: #withfirebase-1
+
+[5]: #parameters-1
+
+[6]: http://react-redux-firebase.com/api/withFirebase.html
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object

@@ -2,24 +2,22 @@
 
 ### Table of Contents
 
--   [firebaseConnect](#firebaseconnect)
+-   [firebaseConnect][1]
+    -   [Parameters][2]
+    -   [Examples][3]
+    -   [Parameters][4]
 
 ## firebaseConnect
 
-**Extends React.Component**
+-   **See: [http://react-redux-firebase.com/api/firebaseConnect.html][5]**
 
--   **See: <http://react-redux-firebase.com/api/firebaseConnect.html>**
+### Parameters
 
-Higher Order Component that automatically listens/unListens
-to provided firebase paths using React's Lifecycle hooks.
-
-**Parameters**
-
--   `queriesConfig` **([Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** Array of objects or strings for paths to sync
+-   `queriesConfig` **([Array][6] \| [Function][7])** Array of objects or strings for paths to sync
     from Firebase. Can also be a function that returns the array. The function
     is passed the current props and the firebase object. (optional, default `[]`)
 
-**Examples**
+### Examples
 
 _Basic_
 
@@ -86,14 +84,30 @@ function Post({ post }) {
 export default enhance(Post)
 ```
 
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the wrapped component
+Returns **[Function][7]** that accepts a component to wrap and returns the wrapped component
 
 ## 
 
 Render component wrapped in context
 
-**Parameters**
+### Parameters
 
--   `props` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Component props
+-   `props` **[object][8]** Component props
 
 Returns **React.Component** Component wrapped in context
+
+[1]: #firebaseconnect
+
+[2]: #parameters
+
+[3]: #examples
+
+[4]: #parameters-1
+
+[5]: http://react-redux-firebase.com/api/firebaseConnect.html
+
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object

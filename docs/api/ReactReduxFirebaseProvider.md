@@ -2,23 +2,36 @@
 
 ### Table of Contents
 
--   [ReactReduxFirebaseProvider](#reactreduxfirebaseprovider)
+-   [ReactReduxFirebaseProvider][1]
+    -   [Parameters][2]
 
 ## ReactReduxFirebaseProvider
 
--   **See: <http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html>**
+-   **See: [http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html][3]**
 
 Provider for context containing extended firebase instance created
 by react-redux-firebase
 
-**Parameters**
+### Parameters
 
--   `props` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Component props (optional, default `{}`)
-    -   `props.config` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** react-redux-firebase config
-    -   `props.dispatch` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Redux's dispatch function
-    -   `props.firebase` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase library
-    -   `props.initializeAuth` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to initialize auth
-    -   `props.createFirestoreInstance` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Function for creating
+-   `props` **[object][4]** Component props (optional, default `{}`)
+    -   `props.config` **[object][4]** react-redux-firebase config
+    -   `props.dispatch` **[Function][5]** Redux's dispatch function
+    -   `props.firebase` **[object][4]** Firebase library
+    -   `props.initializeAuth` **[boolean][6]** Whether or not to initialize auth
+    -   `props.createFirestoreInstance` **[Function][5]** Function for creating
         extended firestore instance
 
 Returns **React.Context.Provider** Provider for react-redux-firebase context
+
+[1]: #reactreduxfirebaseprovider
+
+[2]: #parameters
+
+[3]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html
+
+[4]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
