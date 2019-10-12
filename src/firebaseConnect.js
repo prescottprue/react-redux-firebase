@@ -64,7 +64,9 @@ export const createFirebaseConnect = (storeKey = 'store') => (
       unWatchEvents(firebase, dispatch, this._firebaseEvents)
     }
 
-    componentWillReceiveProps(np) {
+    /* eslint-disable camelcase */
+    UNSAFE_componentWillReceiveProps(np) {
+      /* eslint-enable camelcase */
       const { firebase, dispatch } = this.store
       const inputAsFunc = createCallable(dataOrFn)
       const data = inputAsFunc(np, this.store)
