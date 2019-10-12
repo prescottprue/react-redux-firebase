@@ -15,7 +15,7 @@ import ReduxFirestoreProvider from './ReduxFirestoreProvider'
  * @param {Function} props.createFirestoreInstance - Function for creating
  * extended firestore instance
  * @returns {React.Context.Provider} Provider for react-redux-firebase context
- * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html
+ * @see https://react-redux-firebase.com/api/ReactReduxFirebaseProvider.html
  */
 function ReactReduxFirebaseProvider(props = {}) {
   const {

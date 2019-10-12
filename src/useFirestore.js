@@ -8,7 +8,7 @@ import ReduxFirestoreContext from './ReduxFirestoreContext'
  * to store by the store enhancer (`reduxFirestore`) during setup of
  * [`redux-firestore`](https://github.com/prescottprue/redux-firestore)
  * @returns {object} - Extended Firestore instance
- * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestore.html
+ * @see https://react-redux-firebase.com/api/useFirestore.html
  * @example <caption>Basic</caption>
  * import React from 'react'
  * import { useFirestore } from 'react-redux-firebase'

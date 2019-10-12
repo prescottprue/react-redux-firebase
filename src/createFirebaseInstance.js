@@ -71,13 +71,13 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 
   /**
    * Sets data to Firebase. More info available in
-   * [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#set).
+   * [the docs](https://react-redux-firebase.com/api/props-firebase.html#set).
    * @param {string} path - Path to location on Firebase which to set
    * @param {object|string|boolean|number} value - Value to write to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @returns {Promise} Containing reference snapshot
    * @example <caption>Basic</caption>
-   * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#set
+   * @see https://react-redux-firebase.com/api/firebaseInstance.html#set
    * import React, { Component } from 'react'
    * import PropTypes from 'prop-types'
    * import { firebaseConnect } from 'react-redux-firebase'
@@ -100,7 +100,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * Sets data to Firebase along with meta data. Currently,
    * this includes createdAt and createdBy. *Warning* using this function
    * may have unintented consequences (setting createdAt even if data already
-   * exists). More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#update).
+   * exists). More info available in [the docs](https://react-redux-firebase.com/api/props-firebase.html#update).
    * @param {string} path - Path to location on Firebase which to set
    * @param {object|string|boolean|number} value - Value to write to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -111,7 +111,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 
   /**
    * Pushes data to Firebase. More info
-   * available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#push).
+   * available in [the docs](https://react-redux-firebase.com/api/props-firebase.html#push).
    * @param {string} path - Path to location on Firebase which to push
    * @param {object|string|boolean|number} value - Value to push to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -139,7 +139,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
   /**
    * Pushes data to Firebase along with meta data. Currently,
    * this includes createdAt and createdBy. More info
-   * available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#pushWithMeta).
+   * available in [the docs](https://react-redux-firebase.com/api/props-firebase.html#pushWithMeta).
    * @param {string} path - Path to location on Firebase which to set
    * @param {object|string|boolean|number} value - Value to write to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -150,7 +150,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 
   /**
    * Updates data on Firebase and sends new data. More info
-   * available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#update).
+   * available in [the docs](https://react-redux-firebase.com/api/props-firebase.html#update).
    * @param {string} path - Path to location on Firebase which to update
    * @param {object|string|boolean|number} value - Value to update to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -183,7 +183,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * Updates data on Firebase along with meta. *Warning*
    * using this function may have unintented consequences (setting
    * createdAt even if data already exists). More info available
-   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#updateWithMeta).
+   * in [the docs](https://react-redux-firebase.com/api/props-firebase.html#updateWithMeta).
    * @param {string} path - Path to location on Firebase which to update
    * @param {object|string|boolean|number} value - Value to update to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -197,7 +197,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * seperate action is not dispatched unless `dispatchRemoveAction: true` is
    * provided to config on store creation. That means that a listener must
    * be attached in order for state to be updated when calling remove.
-   * More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#remove).
+   * More info available in [the docs](https://react-redux-firebase.com/api/props-firebase.html#remove).
    * @param {string} path - Path to location on Firebase which to remove
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @param {Function} options - Options object
@@ -226,7 +226,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * Sets data to Firebase only if the path does not already
    * exist, otherwise it rejects. Internally uses a Firebase transaction to
    * prevent a race condition between seperate clients calling uniqueSet.
-   * More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uniqueSet).
+   * More info available in [the docs](https://react-redux-firebase.com/api/props-firebase.html#uniqueSet).
    * @param {string} path - Path to location on Firebase which to set
    * @param {object|string|boolean|number} value - Value to write to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -263,7 +263,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
   /**
    * Upload a file to Firebase Storage with the option to store
    * its metadata in Firebase Database. More info available
-   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uploadFile).
+   * in [the docs](https://react-redux-firebase.com/api/props-firebase.html#uploadFile).
    * @param {string} path - Path to location on Firebase which to set
    * @param {File} file - File object to upload (usually first element from
    * array output of select-file or a drag/drop `onDrop`)
@@ -285,7 +285,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
   /**
    * Upload multiple files to Firebase Storage with the option
    * to store their metadata in Firebase Database. More info available
-   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uploadFiles).
+   * in [the docs](https://react-redux-firebase.com/api/props-firebase.html#uploadFiles).
    * @param {string} path - Path to location on Firebase which to set
    * @param {Array} files - Array of File objects to upload (usually from
    * a select-file or a drag/drop `onDrop`)
@@ -305,7 +305,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
   /**
    * Delete a file from Firebase Storage with the option to
    * remove its metadata in Firebase Database. More info available
-   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#deleteFile).
+   * in [the docs](https://react-redux-firebase.com/api/props-firebase.html#deleteFile).
    * @param {string} path - Path to location on Firebase which to set
    * @param {string} dbPath - Database path to place uploaded file metadata
    * @returns {Promise} Containing the File object
@@ -316,7 +316,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
   /**
    * Watch event. **Note:** this method is used internally
    * so examples have not yet been created, and it may not work as expected.
-   * More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#watchEvent).
+   * More info available in [the docs](https://react-redux-firebase.com/api/props-firebase.html#watchEvent).
    * @param {string} type - Type of watch event
    * @param {string} path - Path to location on Firebase which to set listener
    * @param {string} storeAs - Name of listener results within redux store
@@ -336,7 +336,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
   /**
    * Unset a listener watch event. **Note:** this method is used
    * internally so examples have not yet been created, and it may not work
-   * as expected. More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#unwatchevent).
+   * as expected. More info available in [the docs](https://react-redux-firebase.com/api/props-firebase.html#unwatchevent).
    * @param {string} type - Type of watch event
    * @param {string} path - Path to location on Firebase which to unset listener
    * @param {string} queryId - Id of the listener

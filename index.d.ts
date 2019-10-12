@@ -130,7 +130,7 @@ interface RemoveOptions {
 /**
  * Firestore instance extended with methods which dispatch
  * redux actions.
- * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html
+ * @see https://react-redux-firebase.com/api/firebaseInstance.html
  */
 interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
   initializeAuth: VoidFunction
@@ -145,7 +145,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param value - Value to write to Firebase
    * @param onComplete - Function to run on complete (`not required`)
    * @returns Containing reference snapshot
-   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#set
+   * @see https://react-redux-firebase.com/api/firebaseInstance.html#set
    */
   set: (
     path: string,
@@ -161,7 +161,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param path - Path to location on Firebase which to set
    * @param value - Value to write to Firebase
    * @param onComplete - Function to run on complete (`not required`)
-   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#setWithMeta
+   * @see https://react-redux-firebase.com/api/firebaseInstance.html#setWithMeta
    */
   setWithMeta: (
     path: string,
@@ -174,7 +174,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param path - Path to location on Firebase which to push
    * @param value - Value to push to Firebase
    * @param onComplete - Function to run on complete
-   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#push
+   * @see https://react-redux-firebase.com/api/firebaseInstance.html#push
    */
   push: (
     path: string,
@@ -188,7 +188,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param path - Path to location on Firebase which to set
    * @param value - Value to write to Firebase
    * @param onComplete - Function to run on complete
-   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#pushWithMeta
+   * @see https://react-redux-firebase.com/api/firebaseInstance.html#pushWithMeta
    */
   pushWithMeta: (
     path: string,
@@ -218,7 +218,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param path - Path to location on Firebase which to update
    * @param value - Value to update to Firebase
    * @param onComplete - Function to run on complete (`not required`)
-   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#update
+   * @see https://react-redux-firebase.com/api/firebaseInstance.html#update
    */
   update: (
     path: string,
@@ -233,7 +233,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param path - Path to location on Firebase which to update
    * @param value - Value to update to Firebase
    * @param onComplete - Function to run on complete
-   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#updateWithMeta
+   * @see https://react-redux-firebase.com/api/firebaseInstance.html#updateWithMeta
    */
   updateWithMeta: (
     path: string,
@@ -250,7 +250,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param onComplete - Function to run on complete
    * @param options - Configuration for removal
    * @param [options.dispatchAction=true] - Whether or not to dispatch REMOVE action
-   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#remove
+   * @see https://react-redux-firebase.com/api/firebaseInstance.html#remove
    */
   remove: (
     path: string,
@@ -265,7 +265,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param path - Path to location on Firebase which to set
    * @param value - Value to write to Firebase
    * @param onComplete - Function to run on complete (`not required`)
-   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#uniqueset
+   * @see https://react-redux-firebase.com/api/firebaseInstance.html#uniqueset
    */
   uniqueSet: (
     path: string,
@@ -279,7 +279,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param path - Path to watch with watcher
    * @param storeAs - Location within redux to store value
    * @param options - List of parameters for the query
-   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#watchevent
+   * @see https://react-redux-firebase.com/api/firebaseInstance.html#watchevent
    */
   watchEvent: (
     type: string,
@@ -296,7 +296,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param path - Path to location on Firebase which to unset listener
    * @param queryId - Id of the listener
    * @param options - Event options object
-   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#watchevent
+   * @see https://react-redux-firebase.com/api/firebaseInstance.html#watchevent
    */
   unWatchEvent: (
     type: string,
@@ -312,7 +312,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
  * @param firebase - Firebase instance which to extend
  * @param configs - Configuration object
  * @param dispatch - Action dispatch function
- * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html
+ * @see https://react-redux-firebase.com/api/firebaseInstance.html
  */
 export function createFirebaseInstance(
   firebase: any,
@@ -333,7 +333,7 @@ export type QueryParamOptions = QueryParamOption | string[]
 
 /**
  * Options which can be passed to firebase query through react-redux-firebase
- * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/queries.html
+ * @see https://react-redux-firebase.com/queries.html
  */
 export interface ReactReduxFirebaseQuerySetting {
   path: string
@@ -539,7 +539,7 @@ interface UserProfile {
 
 /**
  * Firebase JS SDK Auth instance extended with methods which dispatch redux actions.
- * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html
+ * @see https://react-redux-firebase.com/auth.html
  */
 interface ExtendedAuthInstance {
   auth: () => AuthTypes.FirebaseAuth
@@ -553,7 +553,7 @@ interface ExtendedAuthInstance {
    * (popup | redirect) (only used with provider)
    * @param credentials.email - Credentials for authenticating
    * @param credentials.password - Credentials for authenticating (only used with email)
-   * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#logincredentials
+   * @see https://react-redux-firebase.com/auth.html#logincredentials
    */
   login: (credentials: Credentials) => Promise<AuthTypes.UserCredential>
 
@@ -563,7 +563,7 @@ interface ExtendedAuthInstance {
    * location.
    * @param credentials - Credentials for authenticating
    * @param profile - Data to include within new user profile
-   * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#createusercredentials-profile
+   * @see https://react-redux-firebase.com/auth.html#createusercredentials-profile
    */
   createUser: (
     credentials: CreateUserCredentials,
@@ -573,14 +573,14 @@ interface ExtendedAuthInstance {
   /**
    * Logs user out of Firebase and empties firebase state from
    * redux store.
-   * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#logout
+   * @see https://react-redux-firebase.com/auth.html#logout
    */
   logout: () => Promise<void>
 
   /**
    * Sends password reset email.
    * @param credentials - Credentials for authenticating
-   * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#resetpasswordcredentials
+   * @see https://react-redux-firebase.com/auth.html#resetpasswordcredentials
    */
   resetPassword: (
     credentials: AuthTypes.UserCredential,
@@ -589,16 +589,16 @@ interface ExtendedAuthInstance {
 
   /**
    * Confirm that a user's password has been reset. More info available
-   * [in the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#confirmpasswordresetcode-newpassword).
+   * [in the docs](https://react-redux-firebase.com/auth.html#confirmpasswordresetcode-newpassword).
    * @param code - Password reset code to verify
    * @param password - New Password to confirm reset to
    */
   confirmPasswordReset: AuthTypes.FirebaseAuth['confirmPasswordReset']
 
-  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#verifypasswordresetcodecode
+  // https://react-redux-firebase.com/auth.html#verifypasswordresetcodecode
   verifyPasswordResetCode: AuthTypes.FirebaseAuth['verifyPasswordResetCode']
 
-  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#signinwithphonenumbercode
+  // https://react-redux-firebase.com/auth.html#signinwithphonenumbercode
   signInWithPhoneNumber: AuthTypes.FirebaseAuth['signInWithPhoneNumber']
   
   /**
@@ -642,7 +642,7 @@ interface ExtendedAuthInstance {
    * Firestore (if `useFirestoreForProfile: true` config passed to
    * reactReduxFirebase). Real Time Database update uses `update` method
    * internally while updating profile on Firestore uses `set` with merge.
-   * More info available [in the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html#update-profile).
+   * More info available [in the docs](https://react-redux-firebase.com/recipes/profile.html#update-profile).
    * @param profileUpdate - Profile data to place in new profile
    * @param options - Options object (used to change how profile
    * update occurs)
@@ -657,7 +657,7 @@ interface ExtendedAuthInstance {
 
 /**
  * Instance of Firebase Storage with methods that dispatch redux actions.
- * More info available [in the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html)
+ * More info available [in the docs](https://react-redux-firebase.com/storage.html)
  */
 interface ExtendedStorageInstance {
   storage: () => StorageTypes.FirebaseStorage
@@ -665,7 +665,7 @@ interface ExtendedStorageInstance {
   /**
    * Delete a file from Firebase Storage with the option to
    * remove its metadata in Firebase Database. More info available
-   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/storage.html#deletefile).
+   * in [the docs](https://react-redux-firebase.com/api/storage.html#deletefile).
    * @param path - Path to location on Firebase which to set
    * @param dbPath - Database path to place uploaded file metadata
    */
@@ -677,7 +677,7 @@ interface ExtendedStorageInstance {
   /**
    * Upload a file to Firebase Storage with the option to store
    * its metadata in Firebase Database. More info available
-   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#uploadFile).
+   * in [the docs](https://react-redux-firebase.com/api/firebaseInstance.html#uploadFile).
    * @param path - Path to location on Firebase which to set
    * @param file - File object to upload (usually first element from
    * array output of select-file or a drag/drop `onDrop`)
@@ -703,7 +703,7 @@ interface ExtendedStorageInstance {
   /**
    * Upload multiple files to Firebase Storage with the option
    * to store their metadata in Firebase Database. More info available
-   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#uploadFiles).
+   * in [the docs](https://react-redux-firebase.com/api/firebaseInstance.html#uploadFiles).
    * @param path - Path to location on Firebase which to set
    * @param files - Array of File objects to upload (usually from
    * a select-file or a drag/drop `onDrop`)
@@ -844,7 +844,7 @@ export function isLoaded(...args: any[]): boolean
 /**
  * React hook that provides `firebase` object. Extended Firebase
  * instance is gathered from `ReactReduxFirebaseContext`.
- * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebase.html
+ * @see https://react-redux-firebase.com/api/useFirebase.html
  */
 export function useFirebase(): ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
 
@@ -856,7 +856,7 @@ export function useFirebase(): ExtendedFirebaseInstance & ExtendedAuthInstance &
  * from firestore. Can also be a function that returns the object or string.
  * @param deps - Dependency for memoizing query object. It's recommend
  * to include deps if using object, array or function as a query.
- * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html
+ * @see https://react-redux-firebase.com/api/useFirestoreConnect.html
  */
 export function useFirebaseConnect(
   querySettings?: ReactReduxFirebaseQueries | ReactReduxFirebaseQueriesFunction
@@ -867,7 +867,7 @@ export function useFirebaseConnect(
  * Firestore instance is gathered from `store.firestore`, which is attached
  * to store by the store enhancer (`reduxFirestore`) during setup of
  * [`redux-firestore`](https://github.com/prescottprue/redux-firestore)
- * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestore.html
+ * @see https://react-redux-firebase.com/api/useFirestore.html
  */
 export function useFirestore(): ExtendedFirestoreInstance
 
@@ -907,7 +907,7 @@ export function populate(
 /**
  * React Context provider for Firebase instance (with methods wrapped in dispatch).
  * Needed to use HOCs like firebaseConnect and withFirebase.
- * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html
+ * @see https://react-redux-firebase.com/api/ReactReduxFirebaseProvider.html
  */
 export function ReactReduxFirebaseProvider(
   props: ReactReduxFirebaseProviderProps
@@ -915,7 +915,7 @@ export function ReactReduxFirebaseProvider(
 
 /**
  * Props passed to ReactReduxFirebaseContext component
- * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html
+ * @see https://react-redux-firebase.com/api/ReactReduxFirebaseProvider.html
  */
 export interface ReactReduxFirebaseProviderProps {
   firebase: any
@@ -996,7 +996,7 @@ export interface ReduxFirestoreConfig {
 
 /**
  * Props passed to ReactReduFirebaseProvider
- * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html
+ * @see https://react-redux-firebase.com/api/ReactReduxFirebaseProvider.html
  */
 export interface ReduxFirestoreProviderProps {
   firebase: any
@@ -1014,13 +1014,13 @@ export interface ReduxFirestoreProviderProps {
 /**
  * React Context provider for Firestore instance (with methods wrapped in dispatch). Needed to use HOCs
  * like firestoreConnect and withFirestore.
- * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html
+ * @see https://react-redux-firebase.com/api/ReactReduxFirebaseProvider.html
  */
 export function ReduxFirestoreProvider(props: ReduxFirestoreProviderProps): any
 
 /**
  * React Higher Order Component that passes firebase as a prop (comes from context.store.firebase).
- * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/withFirebase.html
+ * @see https://react-redux-firebase.com/api/withFirebase.html
  */
 export function withFirebase<P extends object>(
   componentToWrap: React.ComponentType<P>
@@ -1028,7 +1028,7 @@ export function withFirebase<P extends object>(
 
 /**
  * React Higher Order Component that passes firestore as a prop (comes from context.store.firestore)
- * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/withFirestore.html
+ * @see https://react-redux-firebase.com/api/withFirestore.html
  */
 export function withFirestore<P extends object>(
   componentToWrap: React.ComponentType<P>
@@ -1043,7 +1043,7 @@ export namespace createFirebaseConnect {
 }
 
 // Your Firebase/Firestore user profile object type
-// http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html
+// https://react-redux-firebase.com/recipes/profile.html
 export type ProfileType = {}
 
 export interface Listeners {
