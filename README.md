@@ -23,7 +23,7 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 
 * Out of the box support for authentication (with auto load user profile)
 * Full Firebase Platform Support Including Real Time Database, Firestore, and Storage
-* Automatic binding/unbinding of listeners through React Higher Order Components (`firebaseConnect` and `firestoreConnect`)
+* Automatic binding/unbinding of listeners through React Hooks (`useFirebaseConnect`, `useFirestoreConnect`) or Higher Order Components (`firebaseConnect` and `firestoreConnect`)
 * [Population capability](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
 * Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed` )
 * Multiple queries types supported including `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo`
@@ -33,8 +33,6 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 
 ## Installation
 
-Interested in support for [`react-redux@^6`](https://github.com/reduxjs/react-redux) or the [new react context API](https://reactjs.org/docs/context.html)? Checkout [the `next` branch which contains the next upcoming major version](https://github.com/prescottprue/react-redux-firebase/tree/next) (installed through `npm i --save react-redux-firebase@next`).
-
 ```bash
 npm install --save react-redux-firebase
 ```
@@ -42,6 +40,10 @@ npm install --save react-redux-firebase
 This assumes you are using [npm](https://www.npmjs.com/) as your package manager.
 
 If you're not, you can access the library on [unpkg](https://unpkg.com/redux-firestore@latest/dist/redux-firestore.min.js), download it, or point your package manager to it. Theres more on this in the [Builds section below](#builds).
+
+### Older Versions
+
+Interested in support for versions of [`react-redux`](https://github.com/reduxjs/react-redux) before v6 or the [new react context API](https://reactjs.org/docs/context.html)? Checkout the `v2.*.*` versions (installed through `npm i --save react-redux-firebase^@2.5.0`).
 
 ## Use
 
