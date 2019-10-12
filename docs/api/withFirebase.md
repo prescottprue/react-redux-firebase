@@ -3,18 +3,13 @@
 ### Table of Contents
 
 -   [withFirebase](#withfirebase)
+-   [WithFirebase](#withfirebase-1)
 
 ## withFirebase
 
-**Extends React.Component**
+**Parameters**
 
-Higher Order Component that provides `firebase` and
-`dispatch` as a props to React Components. Firebase is gathered from
-`store.firebase`, which is attached to store by the store enhancer
-(`reactReduxFirebase`) during setup.
-**NOTE**: This version of the Firebase library has extra methods, config,
-and functionality which give it it's capabilities such as dispatching
-actions.
+-   `WrappedComponent` **React.Component** React component to wrap
 
 **Examples**
 
@@ -71,3 +66,13 @@ export default enhance(AddTodo)
 
 Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Which accepts a component to wrap and returns the
 wrapped component
+
+## WithFirebase
+
+WithFirebase wrapper component
+
+**Parameters**
+
+-   `props` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Component props
+
+Returns **React.Component** WrappedComponent wrapped with firebase context

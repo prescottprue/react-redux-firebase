@@ -19,8 +19,8 @@ const project = 'docs.react-redux-firebase.com'
 
 /**
  * Run shell command with error handling.
- * @param  {String} cmd - Command to run
- * @return {Promise} Resolves with stdout of running command
+ * @param  {string} cmd - Command to run
+ * @returns {Promise} Resolves with stdout of running command
  * @private
  */
 function runCommand(cmd) {
@@ -36,8 +36,8 @@ function runCommand(cmd) {
 /**
  * Upload file or folder to cloud storage. gsutil is used instead of
  * google-cloud/storage module so that folders can be uploaded.
- * @param  {String} entityPath - Local path for entity (file/folder) to upload
- * @return {Promise} Resolve with an object containing stdout and uploadPath
+ * @param  {string} entityPath - Local path for entity (file/folder) to upload
+ * @returns {Promise} Resolve with an object containing stdout and uploadPath
  * @private
  */
 function upload(entityPath) {
@@ -55,7 +55,7 @@ function upload(entityPath) {
 /**
  * Upload list of files or folders to Google Cloud Storage
  * @param  {Array} files - List of files/folders to upload
- * @return {Promise} Resolves with an array of upload results
+ * @returns {Promise} Resolves with an array of upload results
  * @private
  */
 function uploadList(files) {

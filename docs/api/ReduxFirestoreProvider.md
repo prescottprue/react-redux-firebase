@@ -11,10 +11,12 @@ by react-redux-firebase
 
 **Parameters**
 
--   `props` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)**  (optional, default `{}`)
-    -   `props.config` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** react-redux-firebase config
+-   `props` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Component props (optional, default `{}`)
+    -   `props.config` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** react-redux-firebase config
     -   `props.dispatch` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Redux's dispatch function
-    -   `props.firebase` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase library
-    -   `props.initializeAuth` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to initialize auth
+    -   `props.firebase` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase library
+    -   `props.initializeAuth` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not to initialize auth
     -   `props.createFirestoreInstance` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Function for creating
         extended firestore instance
+
+Returns **React.Context.Provider** Provider for redux-firestore context

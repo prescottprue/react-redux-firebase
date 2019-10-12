@@ -3,7 +3,10 @@ import { some, isMatch, filter } from 'lodash'
 import { createContainer, sleep } from '../utils'
 import useFirestoreConnect from '../../src/useFirestoreConnect'
 
-/* eslint-disable react/prop-types */
+/* eslint-disable react/prop-types, jsdoc/require-returns */
+/**
+ *
+ */
 function TestComponent({ dynamicProp }) {
   useFirestoreConnect(
     dynamicProp === null

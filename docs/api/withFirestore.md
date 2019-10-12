@@ -3,16 +3,13 @@
 ### Table of Contents
 
 -   [withFirestore](#withfirestore)
+-   [WithFirestore](#withfirestore-1)
 
 ## withFirestore
 
-**Extends React.Component**
+**Parameters**
 
-Higher Order Component that attaches `firestore`, `firebase`
-and `dispatch` as props to React Components. Firebase instance is gathered
-from `store.firestore`, which is attached to store by the store enhancer
-(`reduxFirestore`) during setup of
-[`redux-firestore`](https://github.com/prescottprue/redux-firestore)
+-   `WrappedComponent` **React.Component** React component to wrap
 
 **Examples**
 
@@ -68,3 +65,13 @@ export default enhance(AddTodo)
 
 Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Which accepts a component to wrap and returns the
 wrapped component
+
+## WithFirestore
+
+WithFirebase wrapper component
+
+**Parameters**
+
+-   `props` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Component props
+
+Returns **React.Component** WrappedComponent wrapped with firebase context

@@ -17,10 +17,10 @@ following the patterns outlined in
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current Firebase Redux State (state.firebase)
--   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Action which will modify state
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of Action being called
-    -   `action.path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
-    -   `action.data` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Data associated with action
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current Firebase Redux State (state.firebase)
+-   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Action which will modify state
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of Action being called
+    -   `action.path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
+    -   `action.data` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Data associated with action
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase redux state
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase redux state

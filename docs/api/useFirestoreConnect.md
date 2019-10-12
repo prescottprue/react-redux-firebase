@@ -13,7 +13,7 @@ Cloud Firestore, including it's reducer, before attempting to use.
 
 **Parameters**
 
--   `queriesConfig` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** An object, string,
+-   `queriesConfigs` **([object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** An object, string,
     or array of object or string for paths to sync from firestore. Can also be
     a function that returns the object, string, or array of object or string.
 

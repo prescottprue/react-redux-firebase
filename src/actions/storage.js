@@ -20,15 +20,15 @@ const {
  * Upload file to Firebase Storage with option to store
  * file metadata within Firebase Database
  * @param {Function} dispatch - Action dispatch function
- * @param {Object} firebase - Internal firebase object
- * @param {Object} config - Config object
- * @param {String} config.path - Location within Firebase Stroage at which to upload files.
+ * @param {object} firebase - Internal firebase object
+ * @param {object} config - Config object
+ * @param {string} config.path - Location within Firebase Stroage at which to upload files.
  * @param {Blob} config.file - File Blob to be uploaded
- * @param {String} config.dbPath - Datbase path to write file meta data to
- * @param {Object} config.options - Options
- * @param {String|Function} config.options.name - Name of file. If a function
+ * @param {string} config.dbPath - Datbase path to write file meta data to
+ * @param {object} config.options - Options
+ * @param {string|Function} config.options.name - Name of file. If a function
  * is provided it recieves (fileObject, internalFirebase, config) as arguments.
- * @param {Object} config.options.metdata - Metadata for file to be passed along
+ * @param {object} config.options.metdata - Metadata for file to be passed along
  * to storage.put calls
  * @returns {Promise} Resolves with meta object
  * @private
@@ -115,11 +115,11 @@ export function uploadFile(dispatch, firebase, config) {
  * Upload multiple files to Firebase Storage with option to store
  * file's metadata within Firebase Database
  * @param {Function} dispatch - Action dispatch function
- * @param {Object} firebase - Internal firebase object
- * @param {Object} opts - Options object
- * @param {String} opts.path - Storage path to write files to
+ * @param {object} firebase - Internal firebase object
+ * @param {object} opts - Options object
+ * @param {string} opts.path - Storage path to write files to
  * @param {Array} opts.files - List of files to be uploaded
- * @param {String} opts.dbPath - Datbase path to write file meta data to
+ * @param {string} opts.dbPath - Datbase path to write file meta data to
  * @returns {Promise} Resolves with array of meta objects
  * @private
  */
@@ -132,10 +132,10 @@ export function uploadFiles(dispatch, firebase, { files, ...other }) {
 /**
  * Delete File from Firebase Storage with option to remove meta
  * @param {Function} dispatch - Action dispatch function
- * @param {Object} firebase - Internal firebase object
- * @param {Object} opts - Options object
- * @param {String} opts.path - Storage path to write files to
- * @param {String} opts.dbPath - Datbase path to write file meta data to
+ * @param {object} firebase - Internal firebase object
+ * @param {object} opts - Options object
+ * @param {string} opts.path - Storage path to write files to
+ * @param {string} opts.dbPath - Datbase path to write file meta data to
  * @returns {Promise} Resolves with results of deleting a file from storage
  * @private
  */

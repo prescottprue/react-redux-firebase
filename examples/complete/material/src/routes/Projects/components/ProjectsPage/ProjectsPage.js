@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty, isLoaded } from 'react-redux-firebase/lib/helpers'
+import { isEmpty, isLoaded } from 'react-redux-firebase'
 import { Route, Switch } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'

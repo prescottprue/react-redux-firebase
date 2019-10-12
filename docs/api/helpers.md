@@ -15,9 +15,9 @@ migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
 
 **Parameters**
 
--   `firebase` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase instance (state.firebase)
--   `path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
--   `notSetValue` **Any** Value to return if value is not
+-   `firebase` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase instance (state.firebase)
+-   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
+-   `notSetValue` **any** Value to return if value is not
     found in redux. This will cause `isLoaded` to always return true (since
     value is set from the start).
 
@@ -77,7 +77,7 @@ const enhance = compose(
 export default enhance(SomeComponent)
 ```
 
-Returns **Any** Data located at path within firebase.
+Returns **any** Data located at path within firebase.
 
 ## isLoaded
 
@@ -85,8 +85,7 @@ Detect whether data from redux state is loaded yet or not
 
 **Parameters**
 
--   `args` **...any** 
--   `item` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma separated
+-   `args` **...[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Items to check loaded status of. A comma separated
     list is also acceptable.
 
 **Examples**
@@ -127,7 +126,7 @@ Todos.propTypes = {
 export default enhance(Todos)
 ```
 
-Returns **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not item is loaded
+Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not item is loaded
 
 ## isEmpty
 
@@ -135,8 +134,7 @@ Detect whether items are empty or not
 
 **Parameters**
 
--   `args` **...any** 
--   `item` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma seperated list
+-   `args` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Item to check loaded status of. A comma seperated list
     is also acceptable.
 
 **Examples**
@@ -176,7 +174,7 @@ Todos.propTypes = {
 export default enhance(Todos)
 ```
 
-Returns **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not item is empty
+Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not item is empty
 
 ## populate
 
@@ -184,10 +182,10 @@ Populate with data from multiple locations of redux state.
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase state object (state.firebase in redux store)
--   `path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase state object (state.firebase in redux store)
+-   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of parameter to load
 -   `populates` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of populate config objects
--   `notSetValue` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to return if value is not found
+-   `notSetValue` **([object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean))** Value to return if value is not found
 
 **Examples**
 
@@ -214,4 +212,4 @@ const enhance = compose(
 export default enhance(SomeComponent)
 ```
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Object
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data located at path within Immutable Object

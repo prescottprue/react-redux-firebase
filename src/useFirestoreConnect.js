@@ -4,14 +4,14 @@ import { invokeArrayQuery, getChanges } from './utils'
 import useFirestore from './useFirestore'
 
 /**
- * @name useFirestoreConnect
- * @description React hook that automatically listens/unListens
+ * React hook that automatically listens/unListens
  * to provided Cloud Firestore paths. Make sure you have required/imported
  * Cloud Firestore, including it's reducer, before attempting to use.
  * **Note** Populate is not yet supported.
- * @param {Object|String|Array|Function} queriesConfig - An object, string,
+ * @param {object|string|Array|Function} queriesConfigs - An object, string,
  * or array of object or string for paths to sync from firestore. Can also be
  * a function that returns the object, string, or array of object or string.
+ * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html
  * @example <caption>Basic</caption>
  * import React from 'react'
  * import { map } from 'lodash'
@@ -52,12 +52,12 @@ import useFirestore from './useFirestore'
  *   })
  * )(TodoItem)
  */
-export default function useFirestoreConnect(querySettings) {
+export default function useFirestoreConnect(queriesConfigs) {
   const firestore = useFirestore()
   const firestoreIsEnabled = !!firestore
   const queryRef = useRef()
 
-  const data = useMemo(() => invokeArrayQuery(querySettings), [querySettings])
+  const data = useMemo(() => invokeArrayQuery(queriesConfigs), [queriesConfigs])
 
   useEffect(
     () => {

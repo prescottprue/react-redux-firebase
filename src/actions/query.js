@@ -11,15 +11,16 @@ import {
 
 /**
  * Watch a path in Firebase Real Time Database
- * @param {Object} firebase - Internal firebase object
+ * @param {object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
- * @param {Object} options - Event options object
- * @param {String} options.type - Type of event to watch for (defaults to value)
- * @param {String} options.path - Path to watch with watcher
+ * @param {object} options - Event options object
+ * @param {string} options.type - Type of event to watch for (defaults to value)
+ * @param {string} options.path - Path to watch with watcher
  * @param {Array} options.queryParams - List of parameters for the query
- * @param {String} options.queryId - id of the query
- * @param {Boolean} options.isQuery - id of the query
- * @param {String} options.storeAs - Location within redux to store value
+ * @param {string} options.queryId - id of the query
+ * @param {boolean} options.isQuery - id of the query
+ * @param {string} options.storeAs - Location within redux to store value
+ * @returns {Promise|void} Returns promise if query is a promise
  */
 export function watchEvent(firebase, dispatch, options) {
   if (!firebase.database || typeof firebase.database !== 'function') {
@@ -177,15 +178,15 @@ export function watchEvent(firebase, dispatch, options) {
 
 /**
  * Remove watcher from an event
- * @param {Object} firebase - Internal firebase object
+ * @param {object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
- * @param {Object} config - Config object
- * @param {String} config.type - Type for which to remove the watcher (
+ * @param {object} config - Config object
+ * @param {string} config.type - Type for which to remove the watcher (
  * value, once, first_child etc.)
- * @param {String} config.path - Path of watcher to remove
- * @param {String} config.storeAs - Path which to store results within in
+ * @param {string} config.path - Path of watcher to remove
+ * @param {string} config.storeAs - Path which to store results within in
  * redux store
- * @param {String} config.queryId - Id of the query (used for idendifying)
+ * @param {string} config.queryId - Id of the query (used for idendifying)
  * in internal watchers list
  */
 export function unWatchEvent(
@@ -199,9 +200,10 @@ export function unWatchEvent(
 
 /**
  * Add watchers to a list of events
- * @param {Object} firebase - Internal firebase object
+ * @param {object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
  * @param {Array} events - List of events for which to add watchers
+ * @returns {Array} ARray of watchEvent results
  */
 export function watchEvents(firebase, dispatch, events) {
   if (!Array.isArray(events)) {
@@ -212,7 +214,7 @@ export function watchEvents(firebase, dispatch, events) {
 
 /**
  * Remove watchers from a list of events
- * @param {Object} firebase - Internal firebase object
+ * @param {object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
  * @param {Array} events - List of events for which to remove watchers
  */
@@ -222,13 +224,13 @@ export function unWatchEvents(firebase, dispatch, events) {
 
 /**
  * Add watchers to a list of events
- * @param {Object} firebase - Internal firebase object
+ * @param {object} firebase - Internal firebase object
  * @param {Function} dispatch - Action dispatch function
- * @param {String} path - Path of ref to be removed
- * @param {Object} [options={}] - Configuration for removal
- * @param {Boolean} [options.dispatchAction=true] - Whether or not to dispatch
+ * @param {string} path - Path of ref to be removed
+ * @param {object} [options={}] - Configuration for removal
+ * @param {boolean} [options.dispatchAction=true] - Whether or not to dispatch
  * REMOVE action
- * @return {Promise} Resolves with path
+ * @returns {Promise} Resolves with path
  */
 export function remove(firebase, dispatch, path, options = {}) {
   const { dispatchAction = true } = options

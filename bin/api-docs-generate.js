@@ -8,6 +8,10 @@ const fileRenames = {
   'createFirebaseInstance.js': 'firebaseInstance'
 }
 
+/**
+ * @param {object} file - File object for which to generate docs
+ * @returns {Promise} Resolves after running docs generation
+ */
 function generateDocForFile(file) {
   return exec(
     `$(npm bin)/documentation build ${SRC_FOLDER}/${
@@ -24,6 +28,10 @@ function generateDocForFile(file) {
     })
 }
 
+/**
+ * Get a list of file names
+ * @returns {Promise} Resolves with a list of file names
+ */
 function getFileNames() {
   return new Promise((resolve, reject) => {
     fs.readdir(SRC_FOLDER, (err, files) => {

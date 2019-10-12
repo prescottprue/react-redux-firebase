@@ -4,8 +4,8 @@ import { getQueryIdFromPath } from './query'
 
 /**
  * @description Convert path string to object with queryParams, path, and populates
- * @param {String} path - Path that can contain query parameters and populates
- * @return {Object} watchEvents - Array of watch events
+ * @param {string} path - Path that can contain query parameters and populates
+ * @returns {object} watchEvents - Array of watch events
  */
 export function pathStrToObj(path) {
   let pathObj = { path, type: 'value', isQuery: false }
@@ -34,7 +34,7 @@ export function pathStrToObj(path) {
 /**
  * @description Convert watch path definition array to watch events
  * @param {Array} paths - Array of path strings, objects, and arrays to watch
- * @return {Array} watchEvents - Array of watch events
+ * @returns {Array} watchEvents - Array of watch events
  */
 export function getEventsFromInput(paths) {
   return flatMap(paths, path => {

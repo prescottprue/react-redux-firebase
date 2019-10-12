@@ -6,12 +6,12 @@
 -   [requestingReducer](#requestingreducer)
 -   [requestedReducer](#requestedreducer)
 -   [timestampsReducer](#timestampsreducer)
+-   [dataReducer](#datareducer)
 -   [authReducer](#authreducer)
 -   [authErrorReducer](#autherrorreducer)
 -   [profileReducer](#profilereducer)
 -   [errorsReducer](#errorsreducer)
 -   [listenersReducer](#listenersreducer)
--   [dataReducer](#datareducer)
 -   [orderedReducer](#orderedreducer)
 
 ## isInitializingReducer
@@ -21,11 +21,11 @@ and `AUTHENTICATION_INIT_FINISHED` actions.
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current isInitializing redux state (optional, default `false`)
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current isInitializing redux state (optional, default `false`)
 -   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
 
 ## requestingReducer
 
@@ -33,12 +33,12 @@ Reducer for requesting state.Changed by `START`, `NO_VALUE`, and `SET` actions.
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current requesting redux state (optional, default `{}`)
--   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
-    -   `action.path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current requesting redux state (optional, default `{}`)
+-   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+    -   `action.path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
 
 ## requestedReducer
 
@@ -46,12 +46,12 @@ Reducer for requested state. Changed by `START`, `NO_VALUE`, and `SET` actions.
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current requested redux state (optional, default `{}`)
--   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
-    -   `action.path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current requested redux state (optional, default `{}`)
+-   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+    -   `action.path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
 
 ## timestampsReducer
 
@@ -59,78 +59,12 @@ Reducer for timestamps state. Changed by `START`, `NO_VALUE`, and `SET` actions.
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current timestamps redux state (optional, default `{}`)
--   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
-    -   `action.path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
-
-## authReducer
-
-Reducer for auth state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR` actions.
-
-**Parameters**
-
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current auth redux state (optional, default `{isLoaded:false}`)
--   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
-
-## authErrorReducer
-
-Reducer for authError state. Changed by `LOGIN`, `LOGOUT`, `LOGIN_ERROR`, and
-`UNAUTHORIZED_ERROR` actions.
-
-**Parameters**
-
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current authError redux state (optional, default `{}`)
--   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** authError state after reduction
-
-## profileReducer
-
-Reducer for profile state. Changed by `SET_PROFILE`, `LOGOUT`, and
-`LOGIN_ERROR` actions.
-
-**Parameters**
-
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current profile redux state (optional, default `{isLoaded:false}`)
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current timestamps redux state (optional, default `{}`)
 -   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+    -   `action.path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
-
-## errorsReducer
-
-Reducer for errors state. Changed by `UNAUTHORIZED_ERROR`, `CLEAR_ERRORS`,
-and `LOGOUT` actions.
-
-**Parameters**
-
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current errors redux state (optional, default `[]`)
--   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
-    -   `action.preserve` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** `not required` Filter function for
-        preserving errors
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
-
-## listenersReducer
-
-Reducer for listeners state. Changed by `UNAUTHORIZED_ERROR`
-and `LOGOUT` actions.
-
-**Parameters**
-
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current listeners redux state (optional, default `[]`)
--   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
 
 ## dataReducer
 
@@ -139,12 +73,78 @@ Reducer for data state. Changed by `SET`, `SET_ORDERED`,`NO_VALUE`, and
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current data redux state (optional, default `{}`)
--   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
-    -   `action.path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current data redux state (optional, default `{}`)
+-   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+    -   `action.path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data state after reduction
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data state after reduction
+
+## authReducer
+
+Reducer for auth state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR` actions.
+
+**Parameters**
+
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current auth redux state (optional, default `{isLoaded:false}`)
+-   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
+
+## authErrorReducer
+
+Reducer for authError state. Changed by `LOGIN`, `LOGOUT`, `LOGIN_ERROR`, and
+`UNAUTHORIZED_ERROR` actions.
+
+**Parameters**
+
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current authError redux state (optional, default `{}`)
+-   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** authError state after reduction
+
+## profileReducer
+
+Reducer for profile state. Changed by `SET_PROFILE`, `LOGOUT`, and
+`LOGIN_ERROR` actions.
+
+**Parameters**
+
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current profile redux state (optional, default `{isLoaded:false}`)
+-   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
+
+## errorsReducer
+
+Reducer for errors state. Changed by `UNAUTHORIZED_ERROR`, `CLEAR_ERRORS`,
+and `LOGOUT` actions.
+
+**Parameters**
+
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current errors redux state (optional, default `[]`)
+-   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+    -   `action.preserve` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** `not required` Filter function for
+        preserving errors
+
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
+
+## listenersReducer
+
+Reducer for listeners state. Changed by `UNAUTHORIZED_ERROR`
+and `LOGOUT` actions.
+
+**Parameters**
+
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current listeners redux state (optional, default `[]`)
+-   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Profile state after reduction
 
 ## orderedReducer
 
@@ -153,9 +153,9 @@ Reducer for ordered state. Changed by `SET`, `SET_ORDERED`,`NO_VALUE`, and
 
 **Parameters**
 
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current data redux state (optional, default `{}`)
--   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
-    -   `action.path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
+-   `state` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current data redux state (optional, default `{}`)
+-   `action` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Object containing the action that was dispatched
+    -   `action.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of action that was dispatched
+    -   `action.path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data state after reduction
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Data state after reduction

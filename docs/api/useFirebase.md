@@ -6,12 +6,7 @@
 
 ## useFirebase
 
-React hook that provides `firebase` object.
-Firebase is gathered from `store.firebase`, which is attached to store
-by the store enhancer (`reactReduxFirebase`) during setup.
-**NOTE**: This version of the Firebase library has extra methods, config,
-and functionality which give it it's capabilities such as dispatching
-actions.
+-   **See: <http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebase.html>**
 
 **Examples**
 
@@ -38,4 +33,4 @@ function AddData() {
 }
 ```
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Extended Firebase instance
+Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Extended Firebase instance
