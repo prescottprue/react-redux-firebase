@@ -2,53 +2,21 @@
 
 ### Table of Contents
 
--   [createWithFirebase](#createwithfirebase)
--   [withFirebase](#withfirebase)
-
-## createWithFirebase
-
-Function that creates a Higher Order Component that
-which provides `firebase` and `dispatch` as a props to React Components.
-
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-
-**Parameters**
-
--   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
-    Firebase state (`state.firebase`) (optional, default `'store'`)
-
-**Examples**
-
-_Basic_
-
-```javascript
-// props.firebase set on App component as firebase object with helpers
-import { createWithFirebase } from 'react-redux-firebase'
-
-// create withFirebase that uses another redux store
-const withFirebase = createWithFirebase('anotherStore')
-
-// use the withFirebase to wrap a component
-export default withFirebase(SomeComponent)
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Higher Order Component which accepts an array of
-watchers config and wraps a React Component
+-   [withFirebase][1]
+    -   [Parameters][2]
+    -   [Examples][3]
+-   [WithFirebase][4]
+    -   [Parameters][5]
 
 ## withFirebase
 
-**Extends React.Component**
+-   **See: [http://react-redux-firebase.com/api/withFirebase.html][6]**
 
-Higher Order Component that provides `firebase` and
-`dispatch` as a props to React Components. Firebase is gathered from
-`store.firebase`, which is attached to store by the store enhancer
-(`reactReduxFirebase`) during setup.
-**NOTE**: This version of the Firebase library has extra methods, config,
-and functionality which give it it's capabilities such as dispatching
-actions.
+### Parameters
 
-**Examples**
+-   `WrappedComponent` **React.Component** React component to wrap
+
+### Examples
 
 _Basic_
 
@@ -63,7 +31,7 @@ function AddTodo({ firebase: { push } }) {
         Add Sample Todo
       </button>
     </div>
-   )
+  )
 }
 
 export default withFirebase(AddTodo)
@@ -87,8 +55,8 @@ function AddTodo({ addTodo }) {
   )
 }
 
-export default compose(
-  withFirebase(AddTodo),
+const enhance = compose(
+  withFirebase,
   withHandlers({
     addTodo: props => () =>
        props.firestore.add(
@@ -97,7 +65,35 @@ export default compose(
        )
   })
 )
+
+export default enhance(AddTodo)
 ```
 
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Which accepts a component to wrap and returns the
+Returns **[Function][7]** Which accepts a component to wrap and returns the
 wrapped component
+
+## WithFirebase
+
+WithFirebase wrapper component
+
+### Parameters
+
+-   `props` **[object][8]** Component props
+
+Returns **React.Component** WrappedComponent wrapped with firebase context
+
+[1]: #withfirebase
+
+[2]: #parameters
+
+[3]: #examples
+
+[4]: #withfirebase-1
+
+[5]: #parameters-1
+
+[6]: http://react-redux-firebase.com/api/withFirebase.html
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object

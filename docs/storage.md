@@ -8,7 +8,7 @@ For Examples of how to use these methods, please visit the [recipes section](/do
 
 Upload an array of files to a location on Firebase storage. This includes the option to also write meta data for the object to Firebase database.
 
-Available on `props.firebase` if using `firebaseConnect` HOC or using `getFirebase`.
+Available on `props.firebase` if using `firebaseConnect` HOC.
 
 #### Parameters
 -   `path` [**String**][string-url] - Path within Firebase Storage at which to upload File.
@@ -24,7 +24,7 @@ Available on `props.firebase` if using `firebaseConnect` HOC or using `getFireba
 
 Upload a single file to a location.
 
-Available on `props.firebase` if using `firebaseConnect` HOC or using `getFirebase`.
+Available on `props.firebase` if using `firebaseConnect` HOC.
 
 #### Parameters
 -   `path` [**String**][string-url] - Path within Firebase Storage at which to upload File.
@@ -44,7 +44,7 @@ Available on `props.firebase` if using `firebaseConnect` HOC or using `getFireba
 
 Delete a file from Firebase storage with the option to remove metadata from real time database.
 
-Available on `props.firebase` if using `firebaseConnect` HOC or using `getFirebase`.
+Available on `props.firebase` if using `firebaseConnect` HOC.
 
 #### Parameters
 -   `path` [**String**][string-url] - Path within Firebase Storage of File to delete.
@@ -59,23 +59,27 @@ Available on `props.firebase` if using `firebaseConnect` HOC or using `getFireba
 import React from 'react'
 import PropTypes from 'prop-types'
 import { firebaseConnect } from 'react-redux-firebase'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { useFirebase } from 'react-redux-firebase'
 
-const Uploader = ({ firebase }) =>
-  <div>
-    <h1>Example File Delete</h1>
-    <span>Deletes `index.txt` from storage</span>
-    <button onClick={() => firebase.deleteFile('index.txt')}>
-      Delete
-    </button>
-  </div>
+export default function Uploader() {
+  const firebase = useFirebase()
 
-Uploader.propTypes = {
-  firebase: PropTypes.shape({ // comes from firebaseConnect
-    deleteFile: PropTypes.func.isRequired
-  })
+  function deleteTestFile() {
+    return firebase.deleteFile('index.txt')
+  }
+
+  return (
+    <div>
+      <h1>Example File Delete</h1>
+      <span>Deletes `index.txt` from storage</span>
+      <button onClick={deleteTestFile}>
+        Delete
+      </button>
+    </div>
+  )
 }
-
-export default firebaseConnect()(Uploader)
 ```
 
 ### Other Storage Methods
@@ -87,37 +91,30 @@ Access to Firebase's `storage` is available. This is useful for calling methods 
 ##### File String Upload
 
 ```javascript
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { firebaseConnect } from 'react-redux-firebase'
+import { useFirebase } from 'react-redux-firebase'
 
-class Uploader extends Component {
-  static propTypes = {
-    firebase: PropTypes.object
-  }
+export default function Uploader() {
+  const firebase = useFirebase()
 
-  addTestFile = () => {
-    const { firebase: { storage } } = this.props;
-    const storageRef = storage().ref()
+  function addTestFile() {
+    const storageRef = firebase.storage().ref()
     const fileRef = storageRef.child('test.txt')
     return fileRef.putString('Some File Contents')
       .then(snap => console.log('upload successful', snap))
       .catch(err => console.error('error uploading file', err))
   }
 
-  render() {
-    return (
-      <div>
-        <h1>Example Upload</h1>
-        <button onClick={this.addTestFile}>
-          Upload Example File
-        </button>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <h1>Example Upload</h1>
+      <button onClick={addTestFile}>
+        Upload Example File
+      </button>
+    </div>
+  )
 }
-
-export default firebaseConnect()(Uploader)
 ```
 
 [promise-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise

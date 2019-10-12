@@ -1,72 +1,21 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 import hoistStatics from 'hoist-non-react-statics'
 import { wrapDisplayName } from './utils'
-import { v3ErrorMessage } from './constants'
+import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
- * @name createWithFirebase
- * @description Function that creates a Higher Order Component that
- * which provides `firebase` and `dispatch` as a props to React Components.
- *
- * **WARNING!!** This is an advanced feature, and should only be used when
- * needing to access a firebase instance created under a different store key.
- * @param {String} [storeKey='store'] - Name of redux store which contains
- * Firebase state (`state.firebase`)
- * @return {Function} - Higher Order Component which accepts an array of
- * watchers config and wraps a React Component
- * @example <caption>Basic</caption>
- * // props.firebase set on App component as firebase object with helpers
- * import { createWithFirebase } from 'react-redux-firebase'
- *
- * // create withFirebase that uses another redux store
- * const withFirebase = createWithFirebase('anotherStore')
- *
- * // use the withFirebase to wrap a component
- * export default withFirebase(SomeComponent)
- */
-export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
-  class withFirebase extends Component {
-    static wrappedComponent = WrappedComponent
-    static displayName = wrapDisplayName(WrappedComponent, 'withFirebase')
-    static contextTypes = {
-      [storeKey]: PropTypes.object.isRequired
-    }
-
-    store = this.context[storeKey]
-
-    render() {
-      // Throw if using with react-redux@^6
-      if (!this.context || !this.context[storeKey]) {
-        // Use react-redux-firebase@^3 for react-redux@^6 support. More info available in the migration guide: http://bit.ly/2SRNdiO'
-        throw new Error(v3ErrorMessage)
-      }
-      return (
-        <WrappedComponent
-          {...this.props}
-          {...this.state}
-          dispatch={this.store.dispatch}
-          firebase={this.store.firebase}
-        />
-      )
-    }
-  }
-
-  return hoistStatics(withFirebase, WrappedComponent)
-}
-
-/**
- * @name withFirebase
- * @extends React.Component
- * @description Higher Order Component that provides `firebase` and
+ * @augments React.Component
+ * Higher Order Component that provides `firebase` and
  * `dispatch` as a props to React Components. Firebase is gathered from
  * `store.firebase`, which is attached to store by the store enhancer
  * (`reactReduxFirebase`) during setup.
  * **NOTE**: This version of the Firebase library has extra methods, config,
  * and functionality which give it it's capabilities such as dispatching
  * actions.
- * @return {Function} - Which accepts a component to wrap and returns the
+ * @param {React.Component} WrappedComponent - React component to wrap
+ * @returns {Function} - Which accepts a component to wrap and returns the
  * wrapped component
+ * @see http://react-redux-firebase.com/api/withFirebase.html
  * @example <caption>Basic</caption>
  * import React from 'react'
  * import { withFirebase } from 'react-redux-firebase'
@@ -78,7 +27,7 @@ export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
  *         Add Sample Todo
  *       </button>
  *     </div>
- *    )
+ *   )
  * }
  *
  * export default withFirebase(AddTodo)
@@ -98,8 +47,8 @@ export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
  *   )
  * }
  *
- * export default compose(
- *   withFirebase(AddTodo),
+ * const enhance = compose(
+ *   withFirebase,
  *   withHandlers({
  *     addTodo: props => () =>
  *        props.firestore.add(
@@ -108,5 +57,31 @@ export const createWithFirebase = (storeKey = 'store') => WrappedComponent => {
  *        )
  *   })
  * )
+ *
+ * export default enhance(AddTodo)
  */
-export default createWithFirebase()
+export default function withFirebase(WrappedComponent) {
+  /**
+   * WithFirebase wrapper component
+   * @param {object} props - Component props
+   * @returns {React.Component} WrappedComponent wrapped with firebase context
+   */
+  function WithFirebase(props) {
+    return (
+      <ReactReduxFirebaseContext.Consumer>
+        {firebase => (
+          <WrappedComponent
+            firebase={firebase}
+            dispatch={firebase && firebase.dispatch}
+            {...props}
+          />
+        )}
+      </ReactReduxFirebaseContext.Consumer>
+    )
+  }
+
+  WithFirebase.displayName = wrapDisplayName(WrappedComponent, 'withFirebase')
+  WithFirebase.wrappedComponent = WrappedComponent
+
+  return hoistStatics(WithFirebase, WrappedComponent)
+}

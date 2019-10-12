@@ -9,19 +9,19 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "firebase": "^6.2.4",
+    "firebase": "^7.1.0",
     "prop-types": "^15.7.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "^16.10.0",
+    "react-dom": "^16.10.0",
     "react-google-button": "*",
-    "react-redux": "^5.0.0",
-    "react-redux-firebase": "latest",
+    "react-redux": "^7.1.1",
+    "react-redux-firebase": "next",
     "recompose": "^0.30.0",
     "redux": "^4.0.0",
     "redux-firestore": "latest"
   },
   "devDependencies": {
-    "react-scripts": "3.0.1"
+    "react-scripts": "2.1.3"
   },
   "eslintConfig": {
     "extends": "./node_modules/react-scripts/config/eslint.js"

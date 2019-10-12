@@ -11,13 +11,16 @@ Firebase actions can be accessed within a component by using either the [`withFi
 ```js
 import React from 'react'
 import PropTypes from 'prop-types'
-import { firebaseConnect, withFirebase } from 'react-redux-firebase'
+import { useFirebase } from 'react-redux-firebase'
 
-const SimpleComponent = (props) => (
-  <button onClick={() => props.firebase.push('todos', { some: 'data' })}>
-    Test Push
-  </button>
-)
+function SimpleComponent(props) {
+  const firebase = useFirebase()
+  return (
+    <button onClick={() => firebase.push('todos', { some: 'data' })}>
+      Test Push
+    </button>
+  )
+}
 
 SimpleComponent.propTypes = {
   firebase: PropTypes.shape({
@@ -25,9 +28,7 @@ SimpleComponent.propTypes = {
   })
 }
 
-export default withFirebase(SimpleComponent)
-// firebaseConnect can also be used (helpful for creating listeners at the same time)
-// export default firebaseConnect()(SimpleComponent)
+export default SimpleComponent
 ```
 
 When using functional components, [recompose](https://github.com/acdlite/recompose/blob/master/docs/API.md) is a nice utility (think of it like lodash for Functional React Components):
@@ -36,30 +37,23 @@ When using functional components, [recompose](https://github.com/acdlite/recompo
 import React from 'react'
 import PropTypes from 'prop-types'
 import { compose } from 'recompose'
-import { withFirebase } from 'react-redux-firebase'
+import { useFirebase } from 'react-redux-firebase'
 
-const SimpleComponent = ({ createTodo }) => (
-  <button onClick={createTodo}>
-    Test Push
-  </button>
-)
+function SimpleComponent() {
+  const firebase = useFirebase()
 
-SimpleComponent.propTypes = {
-  firebase: PropTypes.shape({
-    push: PropTypes.func.isRequired
-  })
+  function createTodo() {
+    return firebase.push('todos', { some: 'data' })
+  }
+
+  return (
+    <button onClick={createTodo}>
+      Test Push
+    </button>
+  )
 }
 
-export default compose(
-  withFirebase,
-  withHandlers({
-    createTodo: props => event => {
-      return props.firebase.push('todos', { some: 'data' })
-    }
-  })
-)(SimpleComponent)
-// firebaseConnect can also be used (helpful for creating listeners at the same time)
-// export default firebaseConnect()(SimpleComponent)
+export default SimpleComponent
 ```
 
 #### Stateful Components
@@ -154,55 +148,30 @@ export default class SimpleComponent extends Component {
 **Functional Stateful**
 
 ```js
-import React from 'react'
-import PropTypes from 'prop-types'
-import { compose, withStateHandlers, withHandlers } from 'recompose'
-import { withFirebase } from 'react-redux-firebase'
+import React, { useState } from 'react'
+import { useFirebase } from 'react-redux-firebase'
 
-const SimpleComponent = ({ createTodo, wasSent }) => (
-  <div>
-    <span>Was sent: {wasSent}</span>
-    <button onClick={createTodo}>
-      Test Push
-    </button>
-  </div>
-)
+export default function SimpleComponent() {
+  const [wasSent, updateSentState] = useState(false)
+  const firebase = useFirebase()
 
-SimpleComponent.propTypes = {
-  firebase: PropTypes.shape({
-    push: PropTypes.func.isRequired
-  }),
-  createTodo: PropTypes.func, // from enhancer (withHandlers)
-  wasSent: PropTypes.bool, // from enhancer (withStateHandlers)
-}
-
-const enhance = compose(
-  withFirebase,
-  withStateHandlers(
-    ({ initialWasSent = false }) => ({
-      wasSent: initialWasSent,
-    }),
-    {
-      toggleSent: ({ wasSent }) => () => ({
-        wasSent: !wasSent
-      })
-    }
-  }),
-  withHandlers({
-    createTodo: ({ wasSent, toggleSent }) => event => {
-      return props.firebase
+  function createTodo() {
+    return firebase
         .push('todos', { some: 'data' })
         .then(() => {
-          toggleSent()
+          updateSentState(true)
         })
-    }
-  })
-)
+  }
 
-// Export enhanced component
-export default enhance(SimpleComponent)
-// firebaseConnect can also be used (helpful for creating listeners at the same time)
-// export default firebaseConnect()(SimpleComponent)
+  return (
+    <div>
+      <span>Was sent: {wasSent}</span>
+      <button onClick={createTodo}>
+        Test Push
+      </button>
+    </div>
+  )
+}
 ```
 
 Fun Fact: This is actually what happens internally with both `withFirebase` and `firebaseConnect`.

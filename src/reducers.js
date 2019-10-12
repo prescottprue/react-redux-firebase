@@ -1,4 +1,4 @@
-import { pick, omit, get, isArray, isObject } from 'lodash'
+import { pick, omit, get, isObject } from 'lodash'
 import { setWith, assign } from 'lodash/fp'
 import { actionTypes } from './constants'
 import {
@@ -35,12 +35,12 @@ const {
 /**
  * Reducer for isInitializing state. Changed by `AUTHENTICATION_INIT_STARTED`
  * and `AUTHENTICATION_INIT_FINISHED` actions.
- * @param  {Object} [state=false] - Current isInitializing redux state
+ * @param  {object} [state=false] - Current isInitializing redux state
  * @param  {object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @return {Object} Profile state after reduction
+ * @param  {string} action.type - Type of action that was dispatched
+ * @returns {object} Profile state after reduction
  */
-export const isInitializingReducer = (state = false, action) => {
+export function isInitializingReducer(state = false, action) {
   switch (action.type) {
     case AUTHENTICATION_INIT_STARTED:
       return true
@@ -53,13 +53,13 @@ export const isInitializingReducer = (state = false, action) => {
 
 /**
  * Reducer for requesting state.Changed by `START`, `NO_VALUE`, and `SET` actions.
- * @param  {Object} [state={}] - Current requesting redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @param  {String} action.path - Path of action that was dispatched
- * @return {Object} Profile state after reduction
+ * @param  {object} [state={}] - Current requesting redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
+ * @param  {string} action.path - Path of action that was dispatched
+ * @returns {object} Profile state after reduction
  */
-export const requestingReducer = (state = {}, { type, path }) => {
+export function requestingReducer(state = {}, { type, path }) {
   switch (type) {
     case START:
       return {
@@ -79,13 +79,13 @@ export const requestingReducer = (state = {}, { type, path }) => {
 
 /**
  * Reducer for requested state. Changed by `START`, `NO_VALUE`, and `SET` actions.
- * @param  {Object} [state={}] - Current requested redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @param  {String} action.path - Path of action that was dispatched
- * @return {Object} Profile state after reduction
+ * @param  {object} [state={}] - Current requested redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
+ * @param  {string} action.path - Path of action that was dispatched
+ * @returns {object} Profile state after reduction
  */
-export const requestedReducer = (state = {}, { type, path }) => {
+export function requestedReducer(state = {}, { type, path }) {
   switch (type) {
     case START:
       return {
@@ -105,13 +105,13 @@ export const requestedReducer = (state = {}, { type, path }) => {
 
 /**
  * Reducer for timestamps state. Changed by `START`, `NO_VALUE`, and `SET` actions.
- * @param  {Object} [state={}] - Current timestamps redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @param  {String} action.path - Path of action that was dispatched
- * @return {Object} Profile state after reduction
+ * @param  {object} [state={}] - Current timestamps redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
+ * @param  {string} action.path - Path of action that was dispatched
+ * @returns {object} Profile state after reduction
  */
-export const timestampsReducer = (state = {}, { type, path }) => {
+export function timestampsReducer(state = {}, { type, path }) {
   switch (type) {
     case START:
     case NO_VALUE:
@@ -129,64 +129,74 @@ export const timestampsReducer = (state = {}, { type, path }) => {
  * Creates reducer for data state. Used to create data and ordered reducers.
  * Changed by `SET` or `SET_ORDERED` (if actionKey === 'ordered'), `MERGE`,
  * `NO_VALUE`, and `LOGOUT` actions.
- * @param  {Object} [state={}] - Current data redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @param  {String} action.path - Path of action that was dispatched
- * @return {Object} Data state after reduction
+ * @param {string} actionKey - Key of state for which to make reducer (data or ordered)
+ * @returns {Function} Data reducer
  * @private
  */
-const createDataReducer = (actionKey = 'data') => (state = {}, action) => {
-  switch (action.type) {
-    case SET:
-      return setWith(
-        Object,
-        getDotStrPath(action.path),
-        action[actionKey],
-        state
-      )
-    case MERGE:
-      const previousData = get(state, getDotStrPath(action.path), {})
-      const mergedData = assign(previousData, action[actionKey])
-      return setWith(Object, getDotStrPath(action.path), mergedData, state)
-    case NO_VALUE:
-      return setWith(Object, getDotStrPath(action.path), null, state)
-    case REMOVE:
-      if (actionKey === 'data') {
-        return recursiveUnset(getDotStrPath(action.path), state)
-      }
-      return state
-    case LOGOUT:
-      // support keeping data when logging out - #125
-      if (action.preserve) {
-        if (isArray(action.preserve)) {
-          return pick(state, action.preserve) // pick returns a new object
-        } else if (isObject(action.preserve)) {
-          return action.preserve[actionKey]
-            ? preserveValuesFromState(state, action.preserve[actionKey], {})
-            : {}
-        }
-        throw new Error(
-          'Invalid preserve parameter. It must be an Object or an Array'
+function createDataReducer(actionKey = 'data') {
+  /**
+   * Creates reducer for data state. Used to create data and ordered reducers.
+   * Changed by `SET` or `SET_ORDERED` (if actionKey === 'ordered'), `MERGE`,
+   * `NO_VALUE`, and `LOGOUT` actions.
+   * @param {object} [state={}] - Current data redux state
+   * @param {object} action - Object containing the action that was dispatched
+   * @param {string} action.type - Type of action that was dispatched
+   * @param {string} action.path - Path of action that was dispatched
+   * @returns {object} Data state after reduction
+   * @private
+   */
+  return function dataReducer(state = {}, action) {
+    switch (action.type) {
+      case SET:
+        return setWith(
+          Object,
+          getDotStrPath(action.path),
+          action[actionKey],
+          state
         )
-      }
-      return {}
-    default:
-      return state
+      case MERGE:
+        const previousData = get(state, getDotStrPath(action.path), {})
+        const mergedData = assign(previousData, action[actionKey])
+        return setWith(Object, getDotStrPath(action.path), mergedData, state)
+      case NO_VALUE:
+        return setWith(Object, getDotStrPath(action.path), null, state)
+      case REMOVE:
+        if (actionKey === 'data') {
+          return recursiveUnset(getDotStrPath(action.path), state)
+        }
+        return state
+      case LOGOUT:
+        // support keeping data when logging out - #125
+        if (action.preserve) {
+          if (Array.isArray(action.preserve)) {
+            return pick(state, action.preserve) // pick returns a new object
+          } else if (isObject(action.preserve)) {
+            return action.preserve[actionKey]
+              ? preserveValuesFromState(state, action.preserve[actionKey], {})
+              : {}
+          }
+          throw new Error(
+            'Invalid preserve parameter. It must be an Object or an Array'
+          )
+        }
+        return {}
+      default:
+        return state
+    }
   }
 }
 
 /**
  * Reducer for auth state. Changed by `LOGIN`, `LOGOUT`, and `LOGIN_ERROR` actions.
- * @param  {Object} [state={isLoaded: false}] - Current auth redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @return {Object} Profile state after reduction
+ * @param  {object} [state={isLoaded: false}] - Current auth redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
+ * @returns {object} Profile state after reduction
  */
-export const authReducer = (
+export function authReducer(
   state = { isLoaded: false, isEmpty: true },
   action
-) => {
+) {
   switch (action.type) {
     case LOGIN:
     case AUTH_UPDATE_SUCCESS:
@@ -238,12 +248,12 @@ export const authReducer = (
 /**
  * Reducer for authError state. Changed by `LOGIN`, `LOGOUT`, `LOGIN_ERROR`, and
  * `UNAUTHORIZED_ERROR` actions.
- * @param  {Object} [state={}] - Current authError redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @return {Object} authError state after reduction
+ * @param  {object} [state={}] - Current authError redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
+ * @returns {object} authError state after reduction
  */
-export const authErrorReducer = (state = null, action) => {
+export function authErrorReducer(state = null, action) {
   switch (action.type) {
     case LOGIN:
     case LOGOUT:
@@ -259,15 +269,15 @@ export const authErrorReducer = (state = null, action) => {
 /**
  * Reducer for profile state. Changed by `SET_PROFILE`, `LOGOUT`, and
  * `LOGIN_ERROR` actions.
- * @param  {Object} [state={isLoaded: false}] - Current profile redux state
+ * @param  {object} [state={isLoaded: false}] - Current profile redux state
  * @param  {object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @return {Object} Profile state after reduction
+ * @param  {string} action.type - Type of action that was dispatched
+ * @returns {object} Profile state after reduction
  */
-export const profileReducer = (
+export function profileReducer(
   state = { isLoaded: false, isEmpty: true },
   action
-) => {
+) {
   switch (action.type) {
     case SET_PROFILE:
       if (!action.profile) {
@@ -314,18 +324,18 @@ export const profileReducer = (
 /**
  * Reducer for errors state. Changed by `UNAUTHORIZED_ERROR`, `CLEAR_ERRORS`,
  * and `LOGOUT` actions.
- * @param  {Object} [state=[]] - Current errors redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
+ * @param  {object} [state=[]] - Current errors redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
  * @param  {Function} action.preserve - `not required` Filter function for
  * preserving errors
- * @return {Object} Profile state after reduction
+ * @returns {object} Profile state after reduction
  */
-export const errorsReducer = (state = [], action) => {
+export function errorsReducer(state = [], action) {
   switch (action.type) {
     case LOGIN_ERROR:
     case UNAUTHORIZED_ERROR:
-      if (!isArray(state)) {
+      if (!Array.isArray(state)) {
         throw new Error('Errors state must be an array')
       }
       return [...state, action.authError]
@@ -349,13 +359,13 @@ export const errorsReducer = (state = [], action) => {
 /**
  * Reducer for listeners ids. Changed by `SET_LISTENER` and `UNSET_LISTENER`
  * actions.
- * @param  {Object} [state={}] - Current listenersById redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @return {Object} listenersById state after reduction (used in listeners)
+ * @param  {object} [state={}] - Current listenersById redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
+ * @returns {object} listenersById state after reduction (used in listeners)
  * @private
  */
-const listenersById = (state = {}, { type, path, payload }) => {
+function listenersById(state = {}, { type, path, payload }) {
   switch (type) {
     case SET_LISTENER:
       return {
@@ -375,13 +385,13 @@ const listenersById = (state = {}, { type, path, payload }) => {
 /**
  * Reducer for listeners state. Changed by `UNAUTHORIZED_ERROR`
  * and `LOGOUT` actions.
- * @param  {Object} [state=[]] - Current allListeners redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @return {Object} allListeners state after reduction (used in listeners)
+ * @param  {object} [state=[]] - Current allListeners redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
+ * @returns {object} allListeners state after reduction (used in listeners)
  * @private
  */
-const allListeners = (state = [], { type, path, payload }) => {
+function allListeners(state = [], { type, path, payload }) {
   switch (type) {
     case SET_LISTENER:
       return [...state, payload.id]
@@ -395,10 +405,10 @@ const allListeners = (state = [], { type, path, payload }) => {
 /**
  * Reducer for listeners state. Changed by `UNAUTHORIZED_ERROR`
  * and `LOGOUT` actions.
- * @param  {Object} [state=[]] - Current listeners redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @return {Object} Profile state after reduction
+ * @param  {object} [state=[]] - Current listeners redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
+ * @returns {object} Profile state after reduction
  */
 export const listenersReducer = combineReducers({
   byId: listenersById,
@@ -408,21 +418,21 @@ export const listenersReducer = combineReducers({
 /**
  * Reducer for data state. Changed by `SET`, `SET_ORDERED`,`NO_VALUE`, and
  * `LOGOUT` actions.
- * @param  {Object} [state={}] - Current data redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @param  {String} action.path - Path of action that was dispatched
- * @return {Object} Data state after reduction
+ * @param  {object} [state={}] - Current data redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
+ * @param  {string} action.path - Path of action that was dispatched
+ * @returns {object} Data state after reduction
  */
 export const dataReducer = createDataReducer()
 
 /**
  * Reducer for ordered state. Changed by `SET`, `SET_ORDERED`,`NO_VALUE`, and
  * `LOGOUT` actions.
- * @param  {Object} [state={}] - Current data redux state
- * @param  {Object} action - Object containing the action that was dispatched
- * @param  {String} action.type - Type of action that was dispatched
- * @param  {String} action.path - Path of action that was dispatched
- * @return {Object} Data state after reduction
+ * @param  {object} [state={}] - Current data redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
+ * @param  {string} action.path - Path of action that was dispatched
+ * @returns {object} Data state after reduction
  */
 export const orderedReducer = createDataReducer('ordered')

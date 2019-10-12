@@ -694,7 +694,7 @@ describe('Actions: Auth -', () => {
         // all dispatch calls (one for start, one for error)
         expect(dispatch).to.have.been.called.exactly(4)
         // stubbed updateProfile function was called
-        expect(err.message).to.equal('profileRef.update is not a function')
+        expect(err.message).to.contain('.update is not a function')
       }
     })
 
@@ -762,7 +762,7 @@ describe('Actions: Auth -', () => {
         // internal updateEmail function is called
         expect(updateEmailSpy).to.have.been.calledOnce
         // stubbed updateProfile function was called
-        expect(err.message).to.equal('profileRef.update is not a function')
+        expect(err.message).to.contain('.update is not a function')
       }
     })
   })

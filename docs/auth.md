@@ -16,7 +16,7 @@ const enhance = connect(
 enhance(SomeComponent)
 ```
 
-If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()`.
+If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()`
 
 #### NOTE
 All examples below assume you have passed `firebase` from `context` to props. Wrapping your component with with the `withFirebase` or `firebaseConnect` Higher Order Components will make `props.firebase` available within your component:
@@ -49,8 +49,6 @@ class SomeComponent extends Component {
 export default firebaseConnect()(SomeComponent) // or withFirebase(SomeComponent)
 ```
 
-For examples of how to use this API, checkout the [auth recipes section](/docs/recipes/auth.html).
-
 #### Custom Claims
 
  Firebase has a secure way of identifying and making claims about users with [custom claims](https://firebase.google.com/docs/auth/admin/custom-claims). This is a good way to provide roles for users.
@@ -58,6 +56,8 @@ For examples of how to use this API, checkout the [auth recipes section](/docs/r
  If `enableClaims` config option is used along with `userProfile` you will find custom claims in `state.firebase.profile.token.claims`. 
 
  **Note**: If a claim is added to a user who is already logged in those changes will not necessarily be propagated to the client. In order to assure the change is observed, use a `refreshToken` property in your `userProfile` collection and update it's value after the custom claim has been added. Because `react-redux-firebase` watches for profile changes, the custom claim will be fetched along with the `refreshToken` update.
+
+For examples of how to use this API, checkout the [auth recipes section](/docs/recipes/auth.html).
 
 ## login(credentials)
 
@@ -197,7 +197,6 @@ Similar to Firebase's `ref.createUser(credentials)` but with support for automat
 * `credentials` [**Object**][object-url]
   * `credentials.email` [**String**][string-url] - User's email
   * `credentials.password` [**String**][string-url] - User's password
-  * `credentials.signIn` [**String**][string-url] - Whether or not to sign in when user is signing up (defaults to `true`)
 
 * `profile` [**Object**][object-url]
   * `profile.username` [**String**][string-url]
@@ -225,8 +224,7 @@ createNewUser({
 ## logout()
 Logout from Firebase and delete all data from the store (`state.firebase.data` and `state.firebase.auth` are set to `null`).
 
-
-Looking to preserve data on logout? [`v2.0.0` supports the `preserve` config option](http://docs.react-redux-firebase.com/history/v2.0.0/docs/api/enhancer.html), which preserves data under the specified keys in state on logout.
+Looking to preserve data on logout? [checkout the `preserve` config option](/docs/api/contants), which preserves data under the specified keys in state on logout.
 
 ##### Examples
 
@@ -310,18 +308,18 @@ const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', 
   'size': 'invisible',
 });
 firebase.signInWithPhoneNumber(phoneNumber, appVerifier)
-    .then((confirmationResult) => {
-      // SMS sent. Prompt user to type the code from the message, then sign the
-      // user in with confirmationResult.confirm(code).
-      const verificationCode = window.prompt('Please enter the verification ' +
-          'code that was sent to your mobile device.');
-      return confirmationResult.confirm(verificationCode);
-    })
-    .catch((error) => {
-      // Error; SMS not sent
-      // Handle Errors Here
-      return Promise.reject(error)
-    });
+  .then((confirmationResult) => {
+    // SMS sent. Prompt user to type the code from the message, then sign the
+    // user in with confirmationResult.confirm(code).
+    const verificationCode = window.prompt('Please enter the verification ' +
+        'code that was sent to your mobile device.');
+    return confirmationResult.confirm(verificationCode);
+  })
+  .catch((error) => {
+    // Error; SMS not sent
+    // Handle Errors Here
+    return Promise.reject(error)
+  });
 ```
 
 ##### Parameters

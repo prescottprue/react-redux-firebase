@@ -1,8 +1,9 @@
 /**
  * Returns error message if value does not exist, otherwise returns
  * undefined
- * @param {String} value - Email to validate
- * @example Required Field
+ * @param {string} value - Email to validate
+ * @returns {string|undefined} Required string if value is undefined
+ * @example <caption>Required Field</caption>
  * <Field
  *   name="password"
  *   component={TextField}
@@ -18,8 +19,9 @@ export function required(value) {
 /**
  * Returns error message if value is not a valid email, otherwise returns
  * undefined
- * @param {String} value - Email to validate
- * @example Basic
+ * @param {string} value - Email to validate
+ * @returns {string|undefined} Required string if value is undefined
+ * @example <caption>Basic</caption>
  * <Field
  *   name="email"
  *   component={TextField}

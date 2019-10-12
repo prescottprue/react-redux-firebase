@@ -2,21 +2,26 @@ import src from '../../src'
 
 describe('module', () => {
   describe('exports', () => {
-    it('firebase', () => {
-      expect(src).to.respondTo('firebase')
+    it('ReactReduxFirebaseContext', () => {
+      expect(src).to.have.property('ReactReduxFirebaseContext')
     })
-    it('firebaseStateReducer', () => {
-      expect(src).to.respondTo('firebaseStateReducer')
+    it('ReactReduxFirebaseProvider', () => {
+      expect(src).to.respondTo('ReactReduxFirebaseProvider')
     })
-    it('reduxReactFirebase', () => {
-      expect(src).to.respondTo('reduxReactFirebase')
+    it('ReduxFirestoreContext', () => {
+      expect(src).to.have.property('ReduxFirestoreContext')
     })
-    it('reduxFirebase', () => {
-      expect(src).to.respondTo('reduxFirebase')
+    it('ReduxFirestoreProvider', () => {
+      expect(src).to.respondTo('ReduxFirestoreProvider')
     })
-    it('helpers', () => {
-      expect(src).to.have.property('helpers')
-      expect(src.helpers).to.be.an.object
+    it('withFirestore', () => {
+      expect(src).to.respondTo('withFirestore')
+    })
+    it('withFirebase', () => {
+      expect(src).to.respondTo('withFirebase')
+    })
+    it('firebaseReducer', () => {
+      expect(src).to.respondTo('firebaseReducer')
     })
   })
 })

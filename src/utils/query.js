@@ -1,15 +1,16 @@
 import { actionTypes } from '../constants'
 import { promisesForPopulate } from './populate'
-import { isNaN, forEach, size, isString } from 'lodash'
+import { isNaN, forEach } from 'lodash'
+import { isString } from './index'
 
 /**
  * @private
  * Try to parse passed input to a number. If it is not a number return itself.
- * @param  {String|Number} value - Item to attempt to parse to a number
- * @return {Number|Any} Number if parse to number was successful, otherwise,
+ * @param {string|number} value - Item to attempt to parse to a number
+ * @returns {any} Number if parse to number was successful, otherwise,
  * original value
  */
-const tryParseToNumber = value => {
+function tryParseToNumber(value) {
   const result = Number(value)
   if (isNaN(result)) {
     return value
@@ -19,12 +20,12 @@ const tryParseToNumber = value => {
 
 /**
  * @private
- * @description Get path to watch provided event type and path.
- * @param {String} event - Type of event to watch for
- * @param {String} path - Path to watch with watcher
- * @return {String} watchPath
+ * Get path to watch provided event type and path.
+ * @param {string} event - Type of event to watch for
+ * @param {string} path - Path to watch with watcher
+ * @returns {string} watchPath
  */
-export const getWatchPath = (event, path) => {
+export function getWatchPath(event, path) {
   if (!event || event === '' || !path) {
     throw new Error('Event and path are required')
   }
@@ -33,12 +34,13 @@ export const getWatchPath = (event, path) => {
 
 /**
  * @private
- * @description Get query id from query path. queryId paramter is
+ * Get query id from query path. queryId paramter is
  * later used to add/remove listeners from internal firebase instance.
- * @param {String} path - Path from which to get query id
- * @param {String} event - Type of query event
+ * @param {string} path - Path from which to get query id
+ * @param {string} event - Type of query event
+ * @returns {string} Query id
  */
-export const getQueryIdFromPath = (path, event) => {
+export function getQueryIdFromPath(path, event) {
   if (!isString(path)) {
     throw new Error('Query path must be a string')
   }
@@ -66,14 +68,15 @@ export const getQueryIdFromPath = (path, event) => {
 
 /**
  * @private
- * @description Update the number of watchers for a query
- * @param {Object} firebase - Internal firebase object
- * @param {String} event - Type of event to watch for
- * @param {String} path - Path to watch with watcher
- * @param {String} queryId - Id of query
- * @return {Integer} watcherCount - count
+ * Update the number of watchers for a query
+ * @param {object} firebase - Internal firebase object
+ * @param {Function} dispatch - Redux dispatch function
+ * @param {string} event - Type of event to watch for
+ * @param {string} path - Path to watch with watcher
+ * @param {string} queryId - Id of query
+ * @returns {number} watcherCount - count
  */
-export const setWatcher = (firebase, dispatch, event, path, queryId) => {
+export function setWatcher(firebase, dispatch, event, path, queryId) {
   const id =
     queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
 
@@ -90,14 +93,14 @@ export const setWatcher = (firebase, dispatch, event, path, queryId) => {
 
 /**
  * @private
- * @description Get count of currently attached watchers
- * @param {Object} firebase - Internal firebase object
- * @param {String} event - Type of event to watch for
- * @param {String} path - Path to watch with watcher
- * @param {String} queryId - Id of query
- * @return {Number} watcherCount
+ * Get count of currently attached watchers
+ * @param {object} firebase - Internal firebase object
+ * @param {string} event - Type of event to watch for
+ * @param {string} path - Path to watch with watcher
+ * @param {string} queryId - Id of query
+ * @returns {number} watcherCount
  */
-export const getWatcherCount = (firebase, event, path, queryId) => {
+export function getWatcherCount(firebase, event, path, queryId) {
   const id =
     queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   return firebase._.watchers[id]
@@ -105,14 +108,14 @@ export const getWatcherCount = (firebase, event, path, queryId) => {
 
 /**
  * @private
- * @description Remove/Unset a watcher
- * @param {Object} firebase - Internal firebase object
+ * Remove/Unset a watcher
+ * @param {object} firebase - Internal firebase object
  * @param {Function} dispatch - Redux's dispatch function
- * @param {String} event - Type of event to watch for
- * @param {String} path - Path to watch with watcher
- * @param {String} queryId - Id of query
+ * @param {string} event - Type of event to watch for
+ * @param {string} path - Path to watch with watcher
+ * @param {string} queryId - Id of query
  */
-export const unsetWatcher = (firebase, dispatch, event, path, queryId) => {
+export function unsetWatcher(firebase, dispatch, event, path, queryId) {
   let id =
     queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   path = path.split('#')[0]
@@ -134,13 +137,13 @@ export const unsetWatcher = (firebase, dispatch, event, path, queryId) => {
 }
 
 /**
- * @description Modify query to include methods based on query parameters (such
+ * Modify query to include methods based on query parameters (such
  * as orderByChild).
  * @param {Array} queryParams - Array of query parameters to apply to query
- * @param {Object} query - Query object on which to apply query parameters
- * @return {FirebaseQuery}
+ * @param {object} query - Query object on which to apply query parameters
+ * @returns {firebase.database.Query} Query with query params applied
  */
-export const applyParamsToQuery = (queryParams, query) => {
+export function applyParamsToQuery(queryParams, query) {
   let doNotParse = false
   if (queryParams) {
     queryParams.forEach(param => {
@@ -212,11 +215,11 @@ export const applyParamsToQuery = (queryParams, query) => {
 
 /**
  * Get ordered array from snapshot
- * @param  {firebase.database.DataSnapshot} snapshot - Data for which to create
+ * @param {firebase.database.DataSnapshot} snap - Data for which to create
  * an ordered array.
- * @return {Array|Null} Ordered list of children from snapshot or null
+ * @returns {Array|null} Ordered list of children from snapshot or null
  */
-export const orderedFromSnapshot = snap => {
+export function orderedFromSnapshot(snap) {
   if (snap.hasChildren && !snap.hasChildren()) {
     return null
   }
@@ -226,23 +229,25 @@ export const orderedFromSnapshot = snap => {
       ordered.push({ key: child.key, value: child.val() })
     })
   }
-  return size(ordered) ? ordered : null
+  return ordered.length ? ordered : null
 }
 
 /**
  * Get data associated with populate settings, and dispatch
- * @param {Object} firebase - Internal firebase object
- * @param  {Function} dispatch - Redux's dispatch function
- * @param  {Any} config.data - Original query data result
- * @param  {Array} config.populates - List of populate settings
- * @param  {String} config.path - Base query path
- * @param  {String} config.storeAs - Location within redux in which to
+ *
+ * @param {object} firebase - Internal firebase object
+ * @param {Function} dispatch - Redux's dispatch function
+ * @param {object} config - Config object
+ * @param {any} config.data - Original query data result
+ * @param {Array} config.populates - List of populate settings
+ * @param {string} config.path - Base query path
+ * @param {string} config.storeAs - Location within redux in which to
  * query results will be stored (path is used as default if not provided).
- * @return {Promise} Promise that resolves after data for populates has been
+ * @returns {Promise} Promise that resolves after data for populates has been
  * loaded and associated actions have been dispatched
  * @private
  */
-export const populateAndDispatch = (firebase, dispatch, config) => {
+export function populateAndDispatch(firebase, dispatch, config) {
   const { data, populates, snapshot, path, storeAs } = config
   // TODO: Allow setting of unpopulated data before starting population through config
   return promisesForPopulate(firebase, snapshot.key, data, populates)
