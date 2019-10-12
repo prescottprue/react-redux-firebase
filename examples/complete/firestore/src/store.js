@@ -1,29 +1,16 @@
-import { createStore, compose } from 'redux'
+import { applyMiddleware, createStore, compose } from 'redux'
+import thunk from 'redux-thunk'
 import rootReducer from './reducer'
-import { firebase as fbConfig } from './config'
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/database'
-import 'firebase/firestore' // make sure you add this for firestore
-import { reactReduxFirebase } from 'react-redux-firebase'
-import { reduxFirestore } from 'redux-firestore'
+import { getFirebase } from 'react-redux-firebase'
 
 export default function configureStore (initialState, history) {
-  // Initialize Firebase instance
-  firebase.initializeApp(fbConfig)
-
+  const middleware = [
+    thunk.withExtraArgument({ getFirebase })
+  ]
   const createStoreWithMiddleware = compose(
-    reactReduxFirebase(firebase,
-      {
-        userProfile: 'users',
-        useFirestoreForProfile: true, // Store in Firestore instead of Real Time DB
-        enableLogging: false
-      }
-    ),
-    reduxFirestore(firebase),
-    window.__REDUX_DEVTOOLS_EXTENSION__ || f => f
+    applyMiddleware(...middleware),
+    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? () => window.__REDUX_DEVTOOLS_EXTENSION__ : f => f
   )(createStore)
-
   const store = createStoreWithMiddleware(rootReducer)
 
   if (module.hot) {

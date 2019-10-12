@@ -2,25 +2,25 @@
 
 ### Table of Contents
 
--   [firebaseReducer](#firebasereducer)
+-   [reducer][1]
+    -   [Parameters][2]
 
-## firebaseReducer
+## reducer
 
-Main reducer for react-redux-firebase. This function is called
-automatically by redux every time an action is fired. Based on which action
-is called and its payload, the reducer will update redux state with relevant
-changes. `firebaseReducer` is made up of multiple "slice reducers"
-([outlined in reducers docs](/docs/recipes/reducers.md)) combined using
-[`combineReducers`](https://redux.js.org/docs/api/combineReducers.html)
-following the patterns outlined in
-[the redux docs](https://redux.js.org/docs/recipes/StructuringReducers.html).
+### Parameters
 
-**Parameters**
+-   `state` **[object][3]** Current Firebase Redux State (state.firebase)
+-   `action` **[object][3]** Action which will modify state
+    -   `action.type` **[string][4]** Type of Action being called
+    -   `action.path` **[string][4]** Path of action that was dispatched
+    -   `action.data` **[string][4]** Data associated with action
 
--   `state` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Current Firebase Redux State (state.firebase)
--   `action` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Action which will modify state
-    -   `action.type` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Type of Action being called
-    -   `action.path` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Path of action that was dispatched
-    -   `action.data` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Data associated with action
+Returns **[object][3]** Firebase redux state
 
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Firebase redux state
+[1]: #reducer
+
+[2]: #parameters
+
+[3]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[4]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String

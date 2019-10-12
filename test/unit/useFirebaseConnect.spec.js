@@ -3,7 +3,10 @@ import { createContainer, sleep } from '../utils'
 import { some, isMatch, filter } from 'lodash'
 import useFirebaseConnect from '../../src/useFirebaseConnect'
 
-/* eslint-disable react/prop-types */
+/* eslint-disable react/prop-types, jsdoc/require-returns */
+/**
+ *
+ */
 function TestComponent({ dynamicProp }) {
   useFirebaseConnect(dynamicProp || `test/start`, [dynamicProp])
   return <div />

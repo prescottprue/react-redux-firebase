@@ -7,15 +7,17 @@ import ReduxFirestoreContext from './ReduxFirestoreContext'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
- * @extends React.Component
- * @description Higher Order Component that automatically listens/unListens
+ * @augments React.Component
+ * Higher Order Component that automatically listens/unListens
  * to provided Cloud Firestore paths using React's Lifecycle hooks. Make sure you
  * have required/imported Cloud Firestore, including it's reducer, before
  * attempting to use. **Note** Populate is not yet supported.
- * @param {Array} queriesConfig - Array of objects or strings for paths to sync
+ * @param {Array|Function} queriesConfig - Array of objects or strings for paths to sync
  * from Firebase. Can also be a function that returns the array. The function
  * is passed the current props and the firebase object.
- * @return {Function} - that accepts a component to wrap and returns the wrapped component
+ * @returns {Function} - Function which accepts a component to wrap and returns the
+ * wrapped component
+ * @see http://react-redux-firebase.com/api/firestoreConnect.html
  * @example <caption>Basic</caption>
  * // props.firebase set on App component as firebase object with helpers
  * import { firestoreConnect } from 'react-redux-firebase'
@@ -32,7 +34,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  *   })
  * )(SomeComponent)
  */
-export default function firestoreConnect(dataOrFn = []) {
+export default function firestoreConnect(queriesConfig = []) {
   return WrappedComponent => {
     class FirestoreConnectWrapped extends Component {
       static wrappedComponent = WrappedComponent
@@ -50,7 +52,7 @@ export default function firestoreConnect(dataOrFn = []) {
       componentDidMount() {
         if (this.firestoreIsEnabled) {
           // Listener configs as object (handling function being passed)
-          const inputAsFunc = createCallable(dataOrFn)
+          const inputAsFunc = createCallable(queriesConfig)
           this.prevData = inputAsFunc(this.props, this.props)
           // Attach listeners based on listener config
           this.props.firestore.setListeners(this.prevData)
@@ -67,7 +69,7 @@ export default function firestoreConnect(dataOrFn = []) {
       UNSAFE_componentWillReceiveProps(np) {
         /* eslint-enable camelcase */
         const { firestore } = this.props
-        const inputAsFunc = createCallable(dataOrFn)
+        const inputAsFunc = createCallable(queriesConfig)
         const data = inputAsFunc(np, this.props)
 
         // Check for changes in the listener configs
@@ -95,6 +97,11 @@ export default function firestoreConnect(dataOrFn = []) {
       firestore: PropTypes.object
     }
 
+    /**
+     * Render component wrapped in context
+     * @param {object} props - Component props
+     * @returns {React.Component} Component wrapped in context
+     */
     function FirestoreConnectWithContext(props) {
       return (
         <ReactReduxFirebaseContext.Consumer>

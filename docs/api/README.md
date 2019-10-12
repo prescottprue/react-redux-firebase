@@ -4,13 +4,14 @@ Just like [redux](http://redux.js.org/docs/api/index.html), the react-redux-fire
 
 ## Top-Level Exports
 * [firebaseConnect](/docs/api/firebaseConnect.md#firebaseconnect)
-* [createFirebaseConnect](/docs/api/firebaseConnect.md#createfirebaseconnect)
-* [withFirebase](/docs/api/withFirebase.md)
 * [firestoreConnect](/docs/api/firestoreConnect.md#firebaseconnect)
-* [createFirestoreConnect](/docs/api/firestoreConnect.md#createfirestoreconnect)
+* [withFirebase](/docs/api/withFirebase.md)
 * [withFirestore](/docs/api/withFirestore.md)
+* [useFirebase](/docs/api/useFirebase.md#usefirebase)
+* [useFirebaseConnect](/docs/api/useFirebaseConnect.md#usefirebaseconnect)
+* [useFirestore](/docs/api/useFirestore.md#usefirestore)
+* [useFirestoreConnect](/docs/api/useFirestoreConnect.md#usefirebaseconnect)
 * [reducer](/docs/api/reducer.md) (also exported as `firebaseReducer`)
-* [reactReduxFirebase](/docs/api/enhancer.md)
 * [constants](/docs/api/constants.md)
 * [actionTypes](/docs/api/constants.md)
 * [helpers](/docs/api/helpers.md)

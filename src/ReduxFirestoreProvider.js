@@ -6,13 +6,15 @@ import createFirebaseInstance from './createFirebaseInstance'
 /**
  * Provider for context containing extended firestore instance created
  * by react-redux-firebase
- * @param {Object} props
- * @param {Object} props.config - react-redux-firebase config
+ * @param {object} props - Component props
+ * @param {object} props.config - react-redux-firebase config
  * @param {Function} props.dispatch - Redux's dispatch function
- * @param {Object} props.firebase - Firebase library
- * @param {Boolean} props.initializeAuth - Whether or not to initialize auth
+ * @param {object} props.firebase - Firebase library
+ * @param {boolean} props.initializeAuth - Whether or not to initialize auth
  * @param {Function} props.createFirestoreInstance - Function for creating
  * extended firestore instance
+ * @returns {React.Context.Provider} Provider for redux-firestore context
+ * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReduxFirestoreProvider.html
  */
 function ReduxFirestoreProvider(props = {}) {
   const {

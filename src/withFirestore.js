@@ -5,15 +5,16 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 import ReduxFirestoreContext from './ReduxFirestoreContext'
 
 /**
- * @name withFirestore
- * @extends React.Component
- * @description Higher Order Component that attaches `firestore`, `firebase`
+ * @augments React.Component
+ * Higher Order Component that attaches `firestore`, `firebase`
  * and `dispatch` as props to React Components. Firebase instance is gathered
  * from `store.firestore`, which is attached to store by the store enhancer
  * (`reduxFirestore`) during setup of
  * [`redux-firestore`](https://github.com/prescottprue/redux-firestore)
- * @return {Function} - Which accepts a component to wrap and returns the
+ * @param {React.Component} WrappedComponent - React component to wrap
+ * @returns {Function} - Which accepts a component to wrap and returns the
  * wrapped component
+ * @see http://react-redux-firebase.com/api/withFirestore.html
  * @example <caption>Basic</caption>
  * import React from 'react'
  * import { withFirestore } from 'react-redux-firebase'
@@ -58,6 +59,11 @@ import ReduxFirestoreContext from './ReduxFirestoreContext'
  * export default enhance(AddTodo)
  */
 export default function withFirestore(WrappedComponent) {
+  /**
+   * WithFirebase wrapper component
+   * @param {object} props - Component props
+   * @returns {React.Component} WrappedComponent wrapped with firebase context
+   */
   function WithFirestore(props) {
     return (
       <ReactReduxFirebaseContext.Consumer>

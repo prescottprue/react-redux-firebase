@@ -8,6 +8,10 @@ const fileRenames = {
   'createFirebaseInstance.js': 'firebaseInstance'
 }
 
+/**
+ * @param {object} file - File object for which to generate docs
+ * @returns {Promise} Resolves after running docs generation
+ */
 function generateDocForFile(file) {
   return exec(
     `$(npm bin)/documentation build ${SRC_FOLDER}/${
@@ -24,10 +28,13 @@ function generateDocForFile(file) {
     })
 }
 
+/**
+ * Get a list of file names
+ * @returns {Promise} Resolves with a list of file names
+ */
 function getFileNames() {
   return new Promise((resolve, reject) => {
     fs.readdir(SRC_FOLDER, (err, files) => {
-      console.log('files:', files)
       if (err) {
         return reject(err)
       }
@@ -36,9 +43,8 @@ function getFileNames() {
       )
       const mappedFileNames = cleanedFileNames.map(fileName => {
         const newName = fileRenames[fileName] || fileName
-        return { src: newName, dest: `${newName.replace('.js', '')}.md` }
+        return { src: fileName, dest: `${newName.replace('.js', '')}.md` }
       })
-      console.log('mapped file names', mappedFileNames)
       resolve(mappedFileNames)
     })
   })

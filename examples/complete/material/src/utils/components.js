@@ -1,5 +1,5 @@
 import { get, pick } from 'lodash'
-import { isLoaded, isEmpty } from 'react-redux-firebase/lib/helpers'
+import { isLoaded, isEmpty } from 'react-redux-firebase'
 import LoadableComponent from 'react-loadable'
 import { mapProps, branch, renderComponent } from 'recompose'
 import LoadingSpinner from 'components/LoadingSpinner'
@@ -25,7 +25,7 @@ export function spinnerWhile(condition) {
  * @example <caption>Spinner While Data Loading</caption>
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
- * import firebaseConnect from 'react-redux-firebase/lib/firebaseConnect'
+ * import { firebaseConnect } from 'react-redux-firebase'
  *
  * const enhance = compose(
  *   firebaseConnect(() => ['projects']),

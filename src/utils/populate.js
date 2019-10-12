@@ -3,8 +3,9 @@ import { isString } from './index'
 
 /**
  * @private
- * @description Create standardized populate object from strings or objects
- * @param {String|Object} str - String or Object to standardize into populate object
+ * Create standardized populate object from strings or objects
+ * @param {string|object} str - String or Object to standardize into populate object
+ * @returns {object} Populate object
  */
 export function getPopulateObj(str) {
   if (!isString(str)) {
@@ -17,8 +18,9 @@ export function getPopulateObj(str) {
 
 /**
  * @private
- * @description Determine the structure of the child parameter to populate onto
- * @param {String|Object} child - Value at child parameter
+ * Determine the structure of the child parameter to populate onto
+ * @param {string|object} child - Value at child parameter
+ * @returns {string} Type of child
  */
 export function getChildType(child) {
   if (isString(child)) {
@@ -35,8 +37,9 @@ export function getChildType(child) {
 
 /**
  * @private
- * @description Create standardized populate object from strings or objects
- * @param {String|Object} str - String or Object to standardize into populate object
+ * Create standardized populate object from strings or objects
+ * @param {string|object} arr - String or Object to standardize into populate object
+ * @returns {Array} List of populate objects
  */
 export function getPopulateObjs(arr) {
   if (!Array.isArray(arr)) {
@@ -47,12 +50,13 @@ export function getPopulateObjs(arr) {
 
 /**
  * @private
- * @description Get array of populates from list of query params
+ * Get array of populates from list of query params
  * @param {Array} queryParams - Query parameters from which to get populates
+ * @returns {Array} Array of populate settings
  */
-export function getPopulates(params) {
+export function getPopulates(queryParams) {
   const populates = filter(
-    params,
+    queryParams,
     param =>
       param.indexOf('populate') !== -1 || (isObject(param) && param.populates)
   ).map(p => p.split('=')[1])
@@ -65,11 +69,12 @@ export function getPopulates(params) {
 
 /**
  * @private
- * @description Create an array of promises for population of an object or list
- * @param {Object} firebase - Internal firebase object
- * @param {Object} populate - Object containing root to be populate
- * @param {Object} populate.root - Firebase root path from which to load populate item
- * @param {String} id - String id
+ * Create an array of promises for population of an object or list
+ * @param {object} firebase - Internal firebase object
+ * @param {object} populate - Object containing root to be populate
+ * @param {object} populate.root - Firebase root path from which to load populate item
+ * @param {string} id - String id
+ * @returns {Promise} Resolves with populate child
  */
 export function getPopulateChild(firebase, populate, id) {
   return firebase
@@ -85,11 +90,12 @@ export function getPopulateChild(firebase, populate, id) {
 
 /**
  * @private
- * @description Populate list of data
- * @param {Object} firebase - Internal firebase object
- * @param {Object} originalObj - Object to have parameter populated
- * @param {Object} populate - Object containing populate information
- * @param {Object} results - Object containing results of population from other populates
+ * Populate list of data
+ * @param {object} firebase - Internal firebase object
+ * @param {object} list - Object to have parameter populated
+ * @param {object} p - Object containing populate information
+ * @param {object} results - Object containing results of population from other populates
+ * @returns {Promise} Resovles with populated list
  */
 export function populateList(firebase, list, p, results) {
   // Handle root not being defined
@@ -113,11 +119,12 @@ export function populateList(firebase, list, p, results) {
 
 /**
  * @private
- * @description Create an array of promises for population of an object or list
- * @param {Object} firebase - Internal firebase object
+ * Create an array of promises for population of an object or list
+ * @param {object} firebase - Internal firebase object
  * @param {string} dataKey - Object to have parameter populated
- * @param {Object} originalData - Data before population
- * @param {Function|Object} populatesIn - Populate configs or function returning configs
+ * @param {object} originalData - Data before population
+ * @param {Function|object} populatesIn - Populate configs or function returning configs
+ * @returns {Promise} Promise which resolves after populate data is loaded
  */
 export function promisesForPopulate(
   firebase,

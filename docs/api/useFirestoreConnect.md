@@ -2,22 +2,26 @@
 
 ### Table of Contents
 
--   [useFirestoreConnect](#usefirestoreconnect)
+-   [useFirestoreConnect][1]
+    -   [Parameters][2]
+    -   [Examples][3]
 
 ## useFirestoreConnect
+
+-   **See: [http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html][4]**
 
 React hook that automatically listens/unListens
 to provided Cloud Firestore paths. Make sure you have required/imported
 Cloud Firestore, including it's reducer, before attempting to use.
 **Note** Populate is not yet supported.
 
-**Parameters**
+### Parameters
 
--   `queriesConfig` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** An object, string,
+-   `queriesConfigs` **([object][5] \| [string][6] \| [Array][7] \| [Function][8])** An object, string,
     or array of object or string for paths to sync from firestore. Can also be
     a function that returns the object, string, or array of object or string.
 
-**Examples**
+### Examples
 
 _Basic_
 
@@ -65,3 +69,19 @@ export default compose(
   })
 )(TodoItem)
 ```
+
+[1]: #usefirestoreconnect
+
+[2]: #parameters
+
+[3]: #examples
+
+[4]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html
+
+[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function

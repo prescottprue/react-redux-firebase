@@ -3,10 +3,10 @@ import { supportedAuthProviders, actionTypes } from '../constants'
 
 /**
  * @description Get correct login method and params order based on provided credentials
- * @param {Object} firebase - Internal firebase object
- * @param {String} providerName - Name of Auth Provider (i.e. google, github, facebook, twitter)
- * @param {Array|String} scopes - List of scopes to add to auth provider
- * @return {firebase.auth.AuthCredential} provider - Auth Provider
+ * @param {object} firebase - Internal firebase object
+ * @param {string} providerName - Name of Auth Provider (i.e. google, github, facebook, twitter)
+ * @param {Array|string} scopes - List of scopes to add to auth provider
+ * @returns {firebase.auth.AuthCredential} provider - Auth Provider
  * @private
  */
 function createAuthProvider(firebase, providerName, scopes) {
@@ -57,26 +57,27 @@ function createAuthProvider(firebase, providerName, scopes) {
 }
 
 /**
- * @description Get correct login method and params order based on provided
+ * Get correct login method and params order based on provided
  * credentials
- * @param {Object} firebase - Internal firebase object
- * @param {Object} credentials - Login credentials
- * @param {String} credentials.email - Email to login with (only needed for
+ * @param {object} firebase - Internal firebase object
+ * @param {object} credentials - Login credentials
+ * @param {string} credentials.email - Email to login with (only needed for
  * email login)
- * @param {String} credentials.password - Password to login with (only needed
+ * @param {string} credentials.password - Password to login with (only needed
  * for email login)
- * @param {String} credentials.provider - Provider name such as google, twitter
+ * @param {string} credentials.provider - Provider name such as google, twitter
  * (only needed for 3rd party provider login)
- * @param {String} credentials.type - Popup or redirect (only needed for 3rd
+ * @param {string} credentials.type - Popup or redirect (only needed for 3rd
  * party provider login)
- * @param {String} credentials.token - Custom or provider token
+ * @param {string} credentials.token - Custom or provider token
  * @param {firebase.auth.AuthCredential} credentials.credential - Custom or
  * provider token
- * @param {Array|String} credentials.scopes - Scopes to add to provider
+ * @param {Array|string} credentials.scopes - Scopes to add to provider
  * (i.e. email)
+ * @returns {object} Method and params for calling login
  * @private
  */
-export function getLoginMethodAndParams(firebase, creds) {
+export function getLoginMethodAndParams(firebase, credentials) {
   const {
     email,
     password,
@@ -87,7 +88,7 @@ export function getLoginMethodAndParams(firebase, creds) {
     phoneNumber,
     applicationVerifier,
     credential
-  } = creds
+  } = credentials
   // Credential Auth
   if (credential) {
     // Attempt to use signInAndRetrieveDataWithCredential if it exists (see #467 for more info)
@@ -161,13 +162,13 @@ export function getLoginMethodAndParams(firebase, creds) {
 /**
  * Returns a promise that completes when Firebase Auth is ready in the given
  * store using react-redux-firebase.
- * @param {Object} store - The Redux store on which we want to detect if
+ * @param {object} store - The Redux store on which we want to detect if
  * Firebase auth is ready.
  * @param {string} [stateName='firebase'] - The attribute name of the
  * react-redux-firebase reducer when using multiple combined reducers.
  * 'firebase' by default. Set this to `null` to indicate that the
  * react-redux-firebase reducer is not in a combined reducer.
- * @return {Promise} Resolves when Firebase auth is ready in the store.
+ * @returns {Promise} Resolves when Firebase auth is ready in the store.
  */
 function isAuthReady(store, stateName) {
   const state = store.getState()
@@ -186,13 +187,13 @@ function isAuthReady(store, stateName) {
 /**
  * Returns a promise that completes when Firebase Auth is ready in the given
  * store using react-redux-firebase.
- * @param {Object} store - The Redux store on which we want to detect if
+ * @param {object} store - The Redux store on which we want to detect if
  * Firebase auth is ready.
  * @param {string} [stateName='firebase'] - The attribute name of the react-redux-firebase
  * reducer when using multiple combined reducers. 'firebase' by default. Set
  * this to `null` to indicate that the react-redux-firebase reducer is not in a
  * combined reducer.
- * @return {Promise} Resolve when Firebase auth is ready in the store.
+ * @returns {Promise} Resolve when Firebase auth is ready in the store.
  */
 export function authIsReady(store, stateName = 'firebase') {
   return new Promise(resolve => {
@@ -211,12 +212,12 @@ export function authIsReady(store, stateName = 'firebase') {
 
 /**
  * Function that creates and authIsReady promise
- * @param {Object} store - The Redux store on which we want to detect if
+ * @param {object} store - The Redux store on which we want to detect if
  * Firebase auth is ready.
- * @param {Object} config - Config options for authIsReady
+ * @param {object} config - Config options for authIsReady
  * @param {string} config.authIsReady - Config options for authIsReady
  * @param {string} config.firebaseStateName - Config options for authIsReady
- * @return {Promise} Resolves when Firebase auth is ready in the store.
+ * @returns {Promise} Resolves when Firebase auth is ready in the store.
  */
 export function createAuthIsReady(store, config) {
   return typeof config.authIsReady === 'function'
@@ -226,9 +227,9 @@ export function createAuthIsReady(store, config) {
 
 /**
  * Update profile data on Firebase Real Time Database
- * @param  {Object} firebase - internal firebase object
- * @param  {Object} profileUpdate - Updates to profile object
- * @return {Promise} Resolves with results of profile get
+ * @param {object} firebase - internal firebase object
+ * @param {object} profileUpdate - Updates to profile object
+ * @returns {Promise} Resolves with results of profile get
  */
 export function updateProfileOnRTDB(firebase, profileUpdate) {
   const { database, _: { config, authUid } } = firebase
@@ -239,16 +240,16 @@ export function updateProfileOnRTDB(firebase, profileUpdate) {
 /**
  * Update profile data on Firestore by calling set (with merge: true) on
  * the profile.
- * @param  {Object} firebase - internal firebase object
- * @param  {Object} profileUpdate - Updates to profile object
- * @param  {Object} options - Options object for configuring how profile
+ * @param {object} firebase - internal firebase object
+ * @param {object} profileUpdate - Updates to profile object
+ * @param {object} options - Options object for configuring how profile
  * update occurs
- * @param  {Boolean} [options.useSet=true] - Use set with merge instead of
+ * @param {boolean} [options.useSet=true] - Use set with merge instead of
  * update. Setting to `false` uses update (can cause issue of profile document
  * does not exist).
- * @param  {Boolean} [options.merge=true] - Whether or not to use merge when
+ * @param {boolean} [options.merge=true] - Whether or not to use merge when
  * setting profile
- * @return {Promise} Resolves with results of profile get
+ * @returns {Promise} Resolves with results of profile get
  */
 export function updateProfileOnFirestore(
   firebase,
@@ -267,13 +268,12 @@ export function updateProfileOnFirestore(
 }
 
 /**
- * @description Start presence management for a specificed user uid.
+ * Start presence management for a specificed user uid.
  * Presence collection contains a list of users that are online currently.
  * Sessions collection contains a record of all user sessions.
  * This function is called within login functions if enablePresence: true.
  * @param {Function} dispatch - Action dispatch function
- * @param {Object} firebase - Internal firebase object
- * @return {Promise}
+ * @param {object} firebase - Internal firebase object
  * @private
  */
 export function setupPresence(dispatch, firebase) {

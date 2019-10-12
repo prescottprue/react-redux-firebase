@@ -7,13 +7,15 @@ import { getEventsFromInput, createCallable, wrapDisplayName } from './utils'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
- * @extends React.Component
- * @description Higher Order Component that automatically listens/unListens
- * to provided firebase paths using React's Lifecycle hooks.
- * @param {Array} watchArray - Array of objects or strings for paths to sync
+ * @augments React.Component
+ * React Higher Order Component that automatically listens/unListens to
+ * Firebase Real Time Database on mount/unmount of the component. This uses
+ * React's Component Lifecycle hooks.
+ * @param {Array|Function} queriesConfig - Array of objects or strings for paths to sync
  * from Firebase. Can also be a function that returns the array. The function
  * is passed the current props and the firebase object.
- * @return {Function} - that accepts a component to wrap and returns the wrapped component
+ * @returns {Function} - that accepts a component to wrap and returns the wrapped component
+ * @see http://react-redux-firebase.com/api/firebaseConnect.html
  * @example <caption>Basic</caption>
  * // props.firebase set on App component as firebase object with helpers
  * import { firebaseConnect } from 'react-redux-firebase'
@@ -61,14 +63,14 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * function Post({ post }) {
  *   return (
  *     <div>
- *       {JSON.stringify(post, null, 2)}
+ *      {JSON.stringify(post, null, 2)}
  *     </div>
  *   )
  * }
  *
  * export default enhance(Post)
  */
-export default function firebaseConnect(dataOrFn = []) {
+export default function firebaseConnect(queriesConfig = []) {
   return WrappedComponent => {
     class FirebaseConnectWrapped extends Component {
       static displayName = wrapDisplayName(
@@ -85,7 +87,7 @@ export default function firebaseConnect(dataOrFn = []) {
         const { firebase, dispatch } = this.props
 
         // Allow function to be passed
-        const inputAsFunc = createCallable(dataOrFn)
+        const inputAsFunc = createCallable(queriesConfig)
         this.prevData = inputAsFunc(this.props, this.props)
 
         const { ref, helpers, storage, database, auth } = firebase
@@ -105,7 +107,7 @@ export default function firebaseConnect(dataOrFn = []) {
       UNSAFE_componentWillReceiveProps(np) {
         /* eslint-enable camelcase */
         const { firebase, dispatch } = this.props
-        const inputAsFunc = createCallable(dataOrFn)
+        const inputAsFunc = createCallable(queriesConfig)
         const data = inputAsFunc(np, this.store)
 
         // Handle a data parameter having changed
@@ -142,6 +144,11 @@ export default function firebaseConnect(dataOrFn = []) {
       firebase: PropTypes.object.isRequired
     }
 
+    /**
+     * Render component wrapped in context
+     * @param {object} props - Component props
+     * @returns {React.Component} Component wrapped in context
+     */
     function FirebaseConnectWithContext(props) {
       return (
         <ReactReduxFirebaseContext.Consumer>
