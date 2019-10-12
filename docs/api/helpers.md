@@ -9,7 +9,10 @@
 
 ## getVal
 
-Get a value from firebase using slash notation.  This enables an easy
+**Deprecated** - This helper will be removed in future versions. Please
+use object destructuring or utilities from other libraries such as
+[lodash's get](https://lodash.com/docs/4.17.15#get).
+Get a value from firebase using slash notation. This enables an easy
 migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
 **NOTE:** Setting a default value will cause `isLoaded` to always return true
 
@@ -35,7 +38,7 @@ const enhance = compose(
   connect(({ firebase }) => ({
     // this.props.todos loaded from state.firebase.data.todos
     todos: getVal(firebase, 'data/todos/user1')
-  })
+  }))
 )
 export default enhance(SomeComponent)
 ```
@@ -107,12 +110,12 @@ const enhance = compose(
 
 function Todos({ todos }) {
   // Message for if todos are loading
-  if(!isLoaded(todos)) {
+  if (!isLoaded(todos)) {
     return <span>Loading...</span>
   }
 
   // Message if todos are empty
-  if(isEmpty(todos)) {
+  if (isEmpty(todos)) {
     return <span>No Todos Found</span>
   }
 
@@ -155,12 +158,12 @@ const enhance = compose(
 
 function Todos({ todos }) {
   // Message for if todos are loading
-  if(!isLoaded(todos)) {
+  if (!isLoaded(todos)) {
     return <span>Loading...</span>
   }
 
   // Message if todos are empty
-  if(isEmpty(todos)) {
+  if (isEmpty(todos)) {
     return <span>No Todos Found</span>
   }
 
