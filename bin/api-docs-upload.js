@@ -10,7 +10,7 @@ const first = [
   '_book/index.html',
   '_book/search_index.json',
   '_book/gitbook/gitbook.js',
-  '_book/docs/README.md'
+  '_book/docs/GLOSSARY.md'
 ]
 
 const second = ['_book/gitbook/**', '_book/docs/**']
