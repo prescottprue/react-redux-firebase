@@ -43,7 +43,7 @@ If you're not, you can access the library on [unpkg](https://unpkg.com/redux-fir
 
 ### Older Versions
 
-Interested in support for versions of [`react-redux`](https://github.com/reduxjs/react-redux) before v6 or the [new react context API](https://reactjs.org/docs/context.html)? Checkout the `v2.*.*` versions (installed through `npm i --save react-redux-firebase^@2.5.0`).
+Interested in support for versions of [`react-redux`](https://github.com/reduxjs/react-redux) before v6 or the [new react context API](https://reactjs.org/docs/context.html)? Checkout [the `v2.*.*` versions](https://github.com/prescottprue/react-redux-firebase/tree/v2) (installed through `npm i --save react-redux-firebase^@2.5.0`).
 
 ## Use
 

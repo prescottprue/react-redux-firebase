@@ -4,21 +4,21 @@ import { invokeArrayQuery, getChanges } from './utils'
 import useFirestore from './useFirestore'
 
 /**
- * React hook that automatically listens/unListens
+ * @description React hook that automatically listens/unListens
  * to provided Cloud Firestore paths. Make sure you have required/imported
  * Cloud Firestore, including it's reducer, before attempting to use.
  * **Note** Populate is not yet supported.
  * @param {object|string|Array|Function} queriesConfigs - An object, string,
  * or array of object or string for paths to sync from firestore. Can also be
  * a function that returns the object, string, or array of object or string.
- * @see https://react-redux-firebase.com/api/useFirestoreConnect.html
+ * @see https://react-redux-firebase.com/docs/api/useFirestoreConnect.html
  * @example <caption>Basic</caption>
  * import React from 'react'
  * import { map } from 'lodash'
  * import { useSelector } from 'react-redux'
  * import { useFirebaseConnect } from 'react-redux-firebase'
  *
- * function TodosList() {
+ * export default function TodosList() {
  *   useFirebaseConnect('todos') // sync todos collection from Firestore into redux
  *   const todos = useSelector(state => state.firebase.data.todos)
  *   return (
@@ -29,28 +29,21 @@ import useFirestore from './useFirestore'
  *    </ul>
  *   )
  * }
- * export default TodosList
  * @example <caption>Object as query</caption>
  * import React, { useMemo } from 'react'
  * import { get } from 'lodash'
  * import { connect } from 'react-redux'
  * import { useFirebaseConnect } from 'react-redux-firebase'
  *
- * function TodoItem({ todoId, todoData }) {
+ * export default function TodoItem({ todoId }) {
  *   useFirebaseConnect(() => ({
  *     collection: 'todos',
  *     doc: todoId
- *   }), [todoId]) // include dependency in the hook
+ *   }))
+ *   const todo = useSelector(({ firebase: { data } }) => data.todos && data.todos[todoId])
  *
  *   return <div>{JSON.stringify(todoData)}</div>
  * }
- *
- * // pass todo data from redux as props.todosList
- * export default compose(
- *   connect((state) => ({
- *     todoData: get(state, ['firestore', 'data', 'todos', todoId])
- *   })
- * )(TodoItem)
  */
 export default function useFirestoreConnect(queriesConfigs) {
   const firestore = useFirestore()

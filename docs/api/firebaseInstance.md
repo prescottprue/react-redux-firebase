@@ -83,7 +83,6 @@ Returns **[object][66]** Extended Firebase instance
 
 ## set
 
--   **See: [http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#set][68]
     import React, { Component } from 'react'
     import PropTypes from 'prop-types'
     import { firebaseConnect } from 'react-redux-firebase'
@@ -96,41 +95,41 @@ Returns **[object][66]** Extended Firebase instance
     }
     export default firebaseConnect()(Example)**
 
-Sets data to Firebase. More info available in
-[the docs][69].
+Sets data to Firebase.
 
 ### Parameters
 
--   `path` **[string][70]** Path to location on Firebase which to set
--   `value` **([object][66] \| [string][70] \| [boolean][71] \| [number][72])** Value to write to Firebase
+-   `path` **[string][69]** Path to location on Firebase which to set
+-   `value` **([object][66] \| [string][69] \| [boolean][70] \| [number][71])** Value to write to Firebase
 -   `onComplete` **[Function][67]** Function to run on complete (`not required`)
 
-Returns **[Promise][73]** Containing reference snapshot
+Returns **[Promise][72]** Containing reference snapshot
 
 ## setWithMeta
+
 
 Sets data to Firebase along with meta data. Currently,
 this includes createdAt and createdBy. _Warning_ using this function
 may have unintented consequences (setting createdAt even if data already
-exists). More info available in [the docs][74].
+exists).
 
 ### Parameters
 
--   `path` **[string][70]** Path to location on Firebase which to set
--   `value` **([object][66] \| [string][70] \| [boolean][71] \| [number][72])** Value to write to Firebase
+-   `path` **[string][69]** Path to location on Firebase which to set
+-   `value` **([object][66] \| [string][69] \| [boolean][70] \| [number][71])** Value to write to Firebase
 -   `onComplete` **[Function][67]** Function to run on complete (`not required`)
 
-Returns **[Promise][73]** Containing reference snapshot
+Returns **[Promise][72]** Containing reference snapshot
 
 ## push
 
-Pushes data to Firebase. More info
-available in [the docs][75].
+
+Pushes data to Firebase.
 
 ### Parameters
 
--   `path` **[string][70]** Path to location on Firebase which to push
--   `value` **([object][66] \| [string][70] \| [boolean][71] \| [number][72])** Value to push to Firebase
+-   `path` **[string][69]** Path to location on Firebase which to push
+-   `value` **([object][66] \| [string][69] \| [boolean][70] \| [number][71])** Value to push to Firebase
 -   `onComplete` **[Function][67]** Function to run on complete (`not required`)
 
 ### Examples
@@ -152,31 +151,31 @@ function Example({ firebase: { push } }) {
 export default firebaseConnect()(Example)
 ```
 
-Returns **[Promise][73]** Containing reference snapshot
+Returns **[Promise][72]** Containing reference snapshot
 
 ## pushWithMeta
 
+
 Pushes data to Firebase along with meta data. Currently,
-this includes createdAt and createdBy. More info
-available in [the docs][76].
+this includes createdAt and createdBy.
 
 ### Parameters
 
--   `path` **[string][70]** Path to location on Firebase which to set
--   `value` **([object][66] \| [string][70] \| [boolean][71] \| [number][72])** Value to write to Firebase
+-   `path` **[string][69]** Path to location on Firebase which to set
+-   `value` **([object][66] \| [string][69] \| [boolean][70] \| [number][71])** Value to write to Firebase
 -   `onComplete` **[Function][67]** Function to run on complete (`not required`)
 
-Returns **[Promise][73]** Containing reference snapshot
+Returns **[Promise][72]** Containing reference snapshot
 
 ## update
 
 Updates data on Firebase and sends new data. More info
-available in [the docs][74].
+available in [the docs][73].
 
 ### Parameters
 
--   `path` **[string][70]** Path to location on Firebase which to update
--   `value` **([object][66] \| [string][70] \| [boolean][71] \| [number][72])** Value to update to Firebase
+-   `path` **[string][69]** Path to location on Firebase which to update
+-   `value` **([object][66] \| [string][69] \| [boolean][70] \| [number][71])** Value to update to Firebase
 -   `onComplete` **[Function][67]** Function to run on complete (`not required`)
 
 ### Examples
@@ -202,34 +201,34 @@ function Example({ firebase: { update } }) {
 export default firebaseConnect()(Example)
 ```
 
-Returns **[Promise][73]** Containing reference snapshot
+Returns **[Promise][72]** Containing reference snapshot
 
 ## updateWithMeta
 
+
 Updates data on Firebase along with meta. _Warning_
 using this function may have unintented consequences (setting
-createdAt even if data already exists). More info available
-in [the docs][77].
+createdAt even if data already exists).
 
 ### Parameters
 
--   `path` **[string][70]** Path to location on Firebase which to update
--   `value` **([object][66] \| [string][70] \| [boolean][71] \| [number][72])** Value to update to Firebase
+-   `path` **[string][69]** Path to location on Firebase which to update
+-   `value` **([object][66] \| [string][69] \| [boolean][70] \| [number][71])** Value to update to Firebase
 -   `onComplete` **[Function][67]** Function to run on complete (`not required`)
 
-Returns **[Promise][73]** Containing reference snapshot
+Returns **[Promise][72]** Containing reference snapshot
 
 ## remove
+
 
 Removes data from Firebase at a given path. **NOTE** A
 seperate action is not dispatched unless `dispatchRemoveAction: true` is
 provided to config on store creation. That means that a listener must
 be attached in order for state to be updated when calling remove.
-More info available in [the docs][78].
 
 ### Parameters
 
--   `path` **[string][70]** Path to location on Firebase which to remove
+-   `path` **[string][69]** Path to location on Firebase which to remove
 -   `onComplete` **[Function][67]** Function to run on complete (`not required`)
 -   `options` **[Function][67]** Options object
 
@@ -252,19 +251,19 @@ function Example({ firebase: { remove } }) {
 export default firebaseConnect()(Example)
 ```
 
-Returns **[Promise][73]** Containing reference snapshot
+Returns **[Promise][72]** Containing reference snapshot
 
 ## uniqueSet
+
 
 Sets data to Firebase only if the path does not already
 exist, otherwise it rejects. Internally uses a Firebase transaction to
 prevent a race condition between seperate clients calling uniqueSet.
-More info available in [the docs][79].
 
 ### Parameters
 
--   `path` **[string][70]** Path to location on Firebase which to set
--   `value` **([object][66] \| [string][70] \| [boolean][71] \| [number][72])** Value to write to Firebase
+-   `path` **[string][69]** Path to location on Firebase which to set
+-   `value` **([object][66] \| [string][69] \| [boolean][70] \| [number][71])** Value to write to Firebase
 -   `onComplete` **[Function][67]** Function to run on complete (`not required`)
 
 ### Examples
@@ -286,9 +285,10 @@ function Example({ firebase: { uniqueSet } }) {
 export default firebaseConnect()(Example)
 ```
 
-Returns **[Promise][73]** Containing reference snapshot
+Returns **[Promise][72]** Containing reference snapshot
 
 ## uploadFile
+
 
 Upload a file to Firebase Storage with the option to store
 its metadata in Firebase Database. More info available
@@ -296,75 +296,76 @@ in [the docs][80].
 
 ### Parameters
 
--   `path` **[string][70]** Path to location on Firebase which to set
+-   `path` **[string][69]** Path to location on Firebase which to set
 -   `file` **File** File object to upload (usually first element from
     array output of select-file or a drag/drop `onDrop`)
--   `dbPath` **[string][70]** Database path to place uploaded file metadata
+-   `dbPath` **[string][69]** Database path to place uploaded file metadata
 -   `options` **[object][66]** Options
-    -   `options.name` **[string][70]** Name of the file
+    -   `options.name` **[string][69]** Name of the file
     -   `options.metdata` **[object][66]** Metadata for the file (passed as second
         argument to storage.put calls)
 
-Returns **[Promise][73]** Containing the File object
+Returns **[Promise][72]** Containing the File object
 
 ## uploadFiles
 
+
 Upload multiple files to Firebase Storage with the option
-to store their metadata in Firebase Database. More info available
-in [the docs][81].
+to store their metadata in Firebase Database.
 
 ### Parameters
 
--   `path` **[string][70]** Path to location on Firebase which to set
+-   `path` **[string][69]** Path to location on Firebase which to set
 -   `files` **[Array][82]** Array of File objects to upload (usually from
     a select-file or a drag/drop `onDrop`)
--   `dbPath` **[string][70]** Database path to place uploaded files metadata.
+-   `dbPath` **[string][69]** Database path to place uploaded files metadata.
 -   `options` **[object][66]** Options
-    -   `options.name` **[string][70]** Name of the file
+    -   `options.name` **[string][69]** Name of the file
 
-Returns **[Promise][73]** Containing an array of File objects
+Returns **[Promise][72]** Containing an array of File objects
 
 ## deleteFile
 
+
 Delete a file from Firebase Storage with the option to
-remove its metadata in Firebase Database. More info available
-in [the docs][83].
+remove its metadata in Firebase Database.
 
 ### Parameters
 
--   `path` **[string][70]** Path to location on Firebase which to set
--   `dbPath` **[string][70]** Database path to place uploaded file metadata
+-   `path` **[string][69]** Path to location on Firebase which to set
+-   `dbPath` **[string][69]** Database path to place uploaded file metadata
 
-Returns **[Promise][73]** Containing the File object
+Returns **[Promise][72]** Containing the File object
 
 ## watchEvent
 
+
 Watch event. **Note:** this method is used internally
 so examples have not yet been created, and it may not work as expected.
-More info available in [the docs][84].
 
 ### Parameters
 
--   `type` **[string][70]** Type of watch event
--   `path` **[string][70]** Path to location on Firebase which to set listener
--   `storeAs` **[string][70]** Name of listener results within redux store
+-   `type` **[string][69]** Type of watch event
+-   `path` **[string][69]** Path to location on Firebase which to set listener
+-   `storeAs` **[string][69]** Name of listener results within redux store
 -   `options` **[object][66]** Event options object (optional, default `{}`)
     -   `options.queryParams` **[Array][82]** List of parameters for the query
-    -   `options.queryId` **[string][70]** id of the query
+    -   `options.queryId` **[string][69]** id of the query
 
-Returns **([Promise][73] | void)** Results of calling watch event
+Returns **([Promise][72] | void)** Results of calling watch event
 
 ## unWatchEvent
 
+
 Unset a listener watch event. **Note:** this method is used
 internally so examples have not yet been created, and it may not work
-as expected. More info available in [the docs][85].
+as expected.
 
 ### Parameters
 
--   `type` **[string][70]** Type of watch event
--   `path` **[string][70]** Path to location on Firebase which to unset listener
--   `queryId` **[string][70]** Id of the listener
+-   `type` **[string][69]** Type of watch event
+-   `path` **[string][69]** Path to location on Firebase which to unset listener
+-   `queryId` **[string][69]** Id of the listener
 -   `options` **[object][66]** Event options object (optional, default `{}`)
 
 Returns **void** 
@@ -385,44 +386,48 @@ return a Promise.
 -   `options` **[object][66]** The options object that you would like to pass to
     your watchArray generating function.
 
-Returns **[Promise][73]** Resolves with an array of watchEvent results
+Returns **[Promise][72]** Resolves with an array of watchEvent results
 
 ## login
 
+
 Logs user into Firebase. For examples, visit the
-[auth section of the docs][86]
+[auth section of the docs][88] or the
+[auth recipes section][89].
 
 ### Parameters
 
 -   `credentials` **[object][66]** Credentials for authenticating
-    -   `credentials.provider` **[string][70]** External provider (google |
+    -   `credentials.provider` **[string][69]** External provider (google |
         facebook | twitter)
-    -   `credentials.type` **[string][70]** Type of external authentication
+    -   `credentials.type` **[string][69]** Type of external authentication
         (popup | redirect) (only used with provider)
-    -   `credentials.email` **[string][70]** Credentials for authenticating
-    -   `credentials.password` **[string][70]** Credentials for authenticating (only used with email)
+    -   `credentials.email` **[string][69]** Credentials for authenticating
+    -   `credentials.password` **[string][69]** Credentials for authenticating (only used with email)
 
-Returns **[Promise][73]** Containing user's auth data
+Returns **[Promise][72]** Containing user's auth data
 
 ## handleRedirectResult
 
 Logs user into Firebase using external. For examples, visit the
-[auth section][87]
+[auth section][90]
 
 ### Parameters
 
 -   `authData` **[object][66]** Auth data from Firebase's getRedirectResult
 
-Returns **[Promise][73]** Containing user's profile
+Returns **[Promise][72]** Containing user's profile
 
 ## logout
+
 
 Logs user out of Firebase and empties firebase state from
 redux store
 
-Returns **[Promise][73]** Resolves after logout is complete
+Returns **[Promise][72]** Resolves after logout is complete
 
 ## createUser
+
 
 Creates a new user in Firebase authentication. If
 `userProfile` config option is set, user profiles will be set to this
@@ -431,46 +436,50 @@ location.
 ### Parameters
 
 -   `credentials` **[object][66]** Credentials for authenticating
-    -   `credentials.email` **[string][70]** Credentials for authenticating
-    -   `credentials.password` **[string][70]** Credentials for authenticating (only used with email)
+    -   `credentials.email` **[string][69]** Credentials for authenticating
+    -   `credentials.password` **[string][69]** Credentials for authenticating (only used with email)
 -   `profile` **[object][66]** Data to include within new user profile
 
-Returns **[Promise][73]** Containing user's auth data
+Returns **[Promise][72]** Containing user's auth data
 
 ## resetPassword
+
 
 Sends password reset email
 
 ### Parameters
 
 -   `credentials` **[object][66]** Credentials for authenticating
-    -   `credentials.email` **[string][70]** Credentials for authenticating
+    -   `credentials.email` **[string][69]** Credentials for authenticating
 
-Returns **[Promise][73]** Resolves after password reset email is sent
+Returns **[Promise][72]** Resolves after password reset email is sent
 
 ## confirmPasswordReset
+
 
 Confirm that a user's password has been reset
 
 ### Parameters
 
--   `code` **[string][70]** Password reset code to verify
--   `password` **[string][70]** New Password to confirm reset to
+-   `code` **[string][69]** Password reset code to verify
+-   `password` **[string][69]** New Password to confirm reset to
 
-Returns **[Promise][73]** Resolves after password reset is confirmed
+Returns **[Promise][72]** Resolves after password reset is confirmed
 
 ## verifyPasswordResetCode
+
 
 Verify that a password reset code from a password reset
 email is valid
 
 ### Parameters
 
--   `code` **[string][70]** Password reset code to verify
+-   `code` **[string][69]** Password reset code to verify
 
-Returns **[Promise][73]** Containing user auth info
+Returns **[Promise][72]** Containing user auth info
 
 ## updateProfile
+
 
 Update user profile on Firebase Real Time Database or
 Firestore (if `useFirestoreForProfile: true` config passed to
@@ -482,43 +491,47 @@ internally while updating profile on Firestore uses `set` with
 -   `profileUpdate` **[object][66]** Profile data to place in new profile
 -   `options` **[object][66]** Options object (used to change how profile
     update occurs)
-    -   `options.useSet` **[boolean][71]** Use set with merge instead of
+    -   `options.useSet` **[boolean][70]** Use set with merge instead of
         update. Setting to `false` uses update (can cause issue of profile document
         does not exist). Note: Only used when updating profile on Firestore (optional, default `true`)
-    -   `options.merge` **[boolean][71]** Whether or not to use merge when
+    -   `options.merge` **[boolean][70]** Whether or not to use merge when
         setting profile. Note: Only used when updating profile on Firestore (optional, default `true`)
 
-Returns **[Promise][73]** Returns after updating profile within database
+Returns **[Promise][72]** Returns after updating profile within database
 
 ## updateAuth
+
 
 Update Auth profile object
 
 ### Parameters
 
 -   `authUpdate` **[object][66]** Update to be auth object
--   `updateInProfile` **[boolean][71]** Update in profile
+-   `updateInProfile` **[boolean][70]** Update in profile
 
-Returns **[Promise][73]** Returns after updating auth profile
+Returns **[Promise][72]** Returns after updating auth profile
 
 ## updateEmail
+
 
 Update user's email
 
 ### Parameters
 
--   `newEmail` **[string][70]** Update to be auth object
--   `updateInProfile` **[boolean][71]** Update in profile
+-   `newEmail` **[string][69]** Update to be auth object
+-   `updateInProfile` **[boolean][70]** Update in profile
 
-Returns **[Promise][73]** Resolves after email is updated in user's auth
+Returns **[Promise][72]** Resolves after email is updated in user's auth
 
 ## reloadAuth
 
+
 Reload user's auth object. Must be authenticated.
 
-Returns **[Promise][73]** Resolves after reloading firebase auth
+Returns **[Promise][72]** Resolves after reloading firebase auth
 
 ## linkWithCredential
+
 
 Links the user account with the given credentials.
 
@@ -526,15 +539,16 @@ Links the user account with the given credentials.
 
 -   `credential` **firebase.auth.AuthCredential** The auth credential
 
-Returns **[Promise][73]** Resolves after linking auth with a credential
+Returns **[Promise][72]** Resolves after linking auth with a credential
 
 ## actionCreators
+
 
 ### Parameters
 
 -   `credential` **firebase.auth.ConfirmationResult** The auth credential
 
-Returns **[Promise][73]** 
+Returns **[Promise][72]** 
 
 ## actionCreators
 
@@ -564,7 +578,6 @@ Returns **firebase.database.Auth**
 
 ## getFirebase
 
--   **See: [http://react-redux-firebase.com/api/getFirebase.html][88]**
 
 Get internal Firebase instance with methods which are wrapped with action dispatches. Useful for
 integrations into external libraries such as redux-thunk and redux-observable.
@@ -740,44 +753,72 @@ Returns **[object][66]** Firebase instance with methods which dispatch redux act
 
 [67]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[68]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#set
+[68]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#set
 
-[69]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#set
+[69]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[70]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[70]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[71]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[71]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[72]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[72]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[73]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[73]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#update
 
-[74]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#update
+[74]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#push
 
-[75]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#push
+[75]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#pushwithmeta
 
-[76]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#pushWithMeta
+[76]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#updatewithmeta
 
-[77]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#updateWithMeta
+[77]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#remove
 
-[78]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#remove
+[78]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#uniqueset
 
-[79]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uniqueSet
+[79]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#uploadfile
 
-[80]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uploadFile
+[80]: <>
 
-[81]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uploadFiles
+[81]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#uploadfiles
 
 [82]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[83]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#deleteFile
+[83]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#deletefile
 
-[84]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#watchEvent
+[84]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#watchevent
 
-[85]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#unwatchevent
+[85]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#unwatchevent
 
-[86]: /docs/auth.md
+[86]: https://react-redux-firebase.com/docs/auth.html#logincredentials
 
-[87]: /docs/recipes/auth.md
+[87]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#login
 
-[88]: http://react-redux-firebase.com/api/getFirebase.html
+[88]: https://react-redux-firebase.com/docs/auth.html
+
+[89]: https://react-redux-firebase.com/docs/recipes/auth.html
+
+[90]: /docs/recipes/auth.md
+
+[91]: https://react-redux-firebase.com/docs/auth.html#logout
+
+[92]: https://react-redux-firebase.com/docs/auth.html#createuser
+
+[93]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#resetpassword
+
+[94]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#confirmpasswordreset
+
+[95]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#verifypasswordreset
+
+[96]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateprofile
+
+[97]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateauth
+
+[98]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateemail
+
+[99]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#reloadauth
+
+[100]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#linkwithcredential
+
+[101]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#signinwithphonenumber
+
+[102]: http://react-redux-firebase.com/api/getFirebase.html

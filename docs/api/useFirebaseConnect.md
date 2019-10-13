@@ -8,7 +8,6 @@
 
 ## useFirebaseConnect
 
--   **See: [http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebaseConnect.html][4]**
 
 Hook that automatically listens/unListens to provided firebase paths
 using React's useEffect hook.
@@ -25,6 +24,7 @@ using React's useEffect hook.
 _Ordered Data_
 
 ```javascript
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { useFirebaseConnect } from 'react-redux-firebase'
 
@@ -44,31 +44,31 @@ export default function Todos() {
 _Data that depends on props_
 
 ```javascript
+import React from 'react'
 import { compose } from 'redux'
 import { useSelector } from 'react-redux'
 import { useFirebaseConnect } from 'react-redux-firebase'
 
-function Post({ postId }) {
+export default function Post({ postId }) {
   useFirebaseConnect(`posts/${postId}`) // sync /posts/postId from firebase into redux
-  const post = useSelector(({ firebase }) => state.firebase.ordered.posts && state.firebase.ordered.posts[postId])
+  const post = useSelector(({ firebase: { ordered: { posts } } }) => posts && posts[postId])
   return (
     <div>
       {JSON.stringify(post, null, 2)}
     </div>
   )
 }
-
-export default enhance(Post)
 ```
 
 _Data that depends on props, an array as a query_
 
 ```javascript
+import React from 'react'
 import { compose } from 'redux'
 import { useSelector } from 'react-redux'
 import { useFirebaseConnect, getVal } from 'react-redux-firebase'
 
-function Post({ post, postId }) {
+export default function Post({ postId }) {
   useFirebaseConnect([`posts/${postId}`], [postId]) // sync /posts/postId from firebase into redux
   const post = useSelector(state => {
     return state.firebase.ordered.posts && state.firebase.ordered.posts[postId]
@@ -79,8 +79,6 @@ function Post({ post, postId }) {
     </div>
   )
 }
-
-export default Post
 ```
 
 [1]: #usefirebaseconnect
@@ -89,7 +87,7 @@ export default Post
 
 [3]: #examples
 
-[4]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebaseConnect.html
+[4]: https://react-redux-firebase.com/docs/api/useFirebaseConnect.html
 
 [5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
