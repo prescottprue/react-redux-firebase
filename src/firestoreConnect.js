@@ -8,7 +8,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
  * @augments React.Component
- * Higher Order Component that automatically listens/unListens
+ * @description Higher Order Component that automatically listens/unListens
  * to provided Cloud Firestore paths using React's Lifecycle hooks. Make sure you
  * have required/imported Cloud Firestore, including it's reducer, before
  * attempting to use. **Note** Populate is not yet supported.

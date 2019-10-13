@@ -9,7 +9,13 @@
 
 ## firestoreConnect
 
--   **See: [http://react-redux-firebase.com/api/firestoreConnect.html][5]**
+**Extends React.Component**
+
+
+Higher Order Component that automatically listens/unListens
+to provided Cloud Firestore paths using React's Lifecycle hooks. Make sure you
+have required/imported Cloud Firestore, including it's reducer, before
+attempting to use. **Note** Populate is not yet supported.
 
 ### Parameters
 
@@ -63,7 +69,7 @@ Returns **React.Component** Component wrapped in context
 
 [4]: #parameters-1
 
-[5]: http://react-redux-firebase.com/api/firestoreConnect.html
+[5]: https://react-redux-firebase.com/docs/api/firestoreConnect.html
 
 [6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 

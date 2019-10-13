@@ -70,8 +70,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
   }
 
   /**
-   * Sets data to Firebase. More info available in
-   * [the docs](https://react-redux-firebase.com/docs/api/props-firebase.html#set).
+   * Sets data to Firebase.
    * @param {string} path - Path to location on Firebase which to set
    * @param {object|string|boolean|number} value - Value to write to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
@@ -139,12 +138,12 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 
   /**
    * Pushes data to Firebase along with meta data. Currently,
-   * this includes createdAt and createdBy. More info
-   * available in [the docs](https://react-redux-firebase.com/docs/api/props-firebase.html#pushWithMeta).
+   * this includes createdAt and createdBy.
    * @param {string} path - Path to location on Firebase which to set
    * @param {object|string|boolean|number} value - Value to write to Firebase
    * @param {Function} onComplete - Function to run on complete (`not required`)
    * @returns {Promise} Containing reference snapshot
+   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#pushwithmeta
    */
   const pushWithMeta = (path, value, onComplete) =>
     withMeta('push', path, value, onComplete)

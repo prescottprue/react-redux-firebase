@@ -4,7 +4,7 @@ import ReduxFirestoreContext from './ReduxFirestoreContext'
 import createFirebaseInstance from './createFirebaseInstance'
 
 /**
- * Provider for context containing extended firestore instance created
+ * @description Provider for context containing extended firestore instance created
  * by react-redux-firebase
  * @param {object} props - Component props
  * @param {object} props.config - react-redux-firebase config

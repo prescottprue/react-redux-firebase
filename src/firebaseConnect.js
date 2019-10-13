@@ -8,7 +8,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
  * @augments React.Component
- * React Higher Order Component that automatically listens/unListens to
+ * @description React Higher Order Component that automatically listens/unListens to
  * Firebase Real Time Database on mount/unmount of the component. This uses
  * React's Component Lifecycle hooks.
  * @param {Array|Function} queriesConfig - Array of objects or strings for paths to sync
