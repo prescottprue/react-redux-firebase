@@ -170,7 +170,7 @@ Returns **[Promise][72]** Containing reference snapshot
 ## update
 
 Updates data on Firebase and sends new data. More info
-available in [the docs][76].
+available in [the docs][73].
 
 ### Parameters
 
@@ -205,10 +205,10 @@ Returns **[Promise][72]** Containing reference snapshot
 
 ## updateWithMeta
 
+
 Updates data on Firebase along with meta. _Warning_
 using this function may have unintented consequences (setting
-createdAt even if data already exists). More info available
-in [the docs][77].
+createdAt even if data already exists).
 
 ### Parameters
 
@@ -220,11 +220,11 @@ Returns **[Promise][72]** Containing reference snapshot
 
 ## remove
 
+
 Removes data from Firebase at a given path. **NOTE** A
 seperate action is not dispatched unless `dispatchRemoveAction: true` is
 provided to config on store creation. That means that a listener must
 be attached in order for state to be updated when calling remove.
-More info available in [the docs][78].
 
 ### Parameters
 
@@ -255,10 +255,10 @@ Returns **[Promise][72]** Containing reference snapshot
 
 ## uniqueSet
 
+
 Sets data to Firebase only if the path does not already
 exist, otherwise it rejects. Internally uses a Firebase transaction to
 prevent a race condition between seperate clients calling uniqueSet.
-More info available in [the docs][79].
 
 ### Parameters
 
@@ -289,6 +289,7 @@ Returns **[Promise][72]** Containing reference snapshot
 
 ## uploadFile
 
+
 Upload a file to Firebase Storage with the option to store
 its metadata in Firebase Database. More info available
 in [the docs][80].
@@ -308,9 +309,9 @@ Returns **[Promise][72]** Containing the File object
 
 ## uploadFiles
 
+
 Upload multiple files to Firebase Storage with the option
-to store their metadata in Firebase Database. More info available
-in [the docs][81].
+to store their metadata in Firebase Database.
 
 ### Parameters
 
@@ -325,9 +326,9 @@ Returns **[Promise][72]** Containing an array of File objects
 
 ## deleteFile
 
+
 Delete a file from Firebase Storage with the option to
-remove its metadata in Firebase Database. More info available
-in [the docs][83].
+remove its metadata in Firebase Database.
 
 ### Parameters
 
@@ -338,9 +339,9 @@ Returns **[Promise][72]** Containing the File object
 
 ## watchEvent
 
+
 Watch event. **Note:** this method is used internally
 so examples have not yet been created, and it may not work as expected.
-More info available in [the docs][84].
 
 ### Parameters
 
@@ -355,9 +356,10 @@ Returns **([Promise][72] | void)** Results of calling watch event
 
 ## unWatchEvent
 
+
 Unset a listener watch event. **Note:** this method is used
 internally so examples have not yet been created, and it may not work
-as expected. More info available in [the docs][85].
+as expected.
 
 ### Parameters
 
@@ -388,8 +390,10 @@ Returns **[Promise][72]** Resolves with an array of watchEvent results
 
 ## login
 
+
 Logs user into Firebase. For examples, visit the
-[auth section of the docs][86]
+[auth section of the docs][88] or the
+[auth recipes section][89].
 
 ### Parameters
 
@@ -406,7 +410,7 @@ Returns **[Promise][72]** Containing user's auth data
 ## handleRedirectResult
 
 Logs user into Firebase using external. For examples, visit the
-[auth section][87]
+[auth section][90]
 
 ### Parameters
 
@@ -416,12 +420,14 @@ Returns **[Promise][72]** Containing user's profile
 
 ## logout
 
+
 Logs user out of Firebase and empties firebase state from
 redux store
 
 Returns **[Promise][72]** Resolves after logout is complete
 
 ## createUser
+
 
 Creates a new user in Firebase authentication. If
 `userProfile` config option is set, user profiles will be set to this
@@ -438,6 +444,7 @@ Returns **[Promise][72]** Containing user's auth data
 
 ## resetPassword
 
+
 Sends password reset email
 
 ### Parameters
@@ -448,6 +455,7 @@ Sends password reset email
 Returns **[Promise][72]** Resolves after password reset email is sent
 
 ## confirmPasswordReset
+
 
 Confirm that a user's password has been reset
 
@@ -460,6 +468,7 @@ Returns **[Promise][72]** Resolves after password reset is confirmed
 
 ## verifyPasswordResetCode
 
+
 Verify that a password reset code from a password reset
 email is valid
 
@@ -470,6 +479,7 @@ email is valid
 Returns **[Promise][72]** Containing user auth info
 
 ## updateProfile
+
 
 Update user profile on Firebase Real Time Database or
 Firestore (if `useFirestoreForProfile: true` config passed to
@@ -491,6 +501,7 @@ Returns **[Promise][72]** Returns after updating profile within database
 
 ## updateAuth
 
+
 Update Auth profile object
 
 ### Parameters
@@ -501,6 +512,7 @@ Update Auth profile object
 Returns **[Promise][72]** Returns after updating auth profile
 
 ## updateEmail
+
 
 Update user's email
 
@@ -513,11 +525,13 @@ Returns **[Promise][72]** Resolves after email is updated in user's auth
 
 ## reloadAuth
 
+
 Reload user's auth object. Must be authenticated.
 
 Returns **[Promise][72]** Resolves after reloading firebase auth
 
 ## linkWithCredential
+
 
 Links the user account with the given credentials.
 
@@ -528,6 +542,7 @@ Links the user account with the given credentials.
 Returns **[Promise][72]** Resolves after linking auth with a credential
 
 ## actionCreators
+
 
 ### Parameters
 
@@ -754,28 +769,56 @@ Returns **[object][66]** Firebase instance with methods which dispatch redux act
 
 [75]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#pushwithmeta
 
-[76]: https://react-redux-firebase.com/docs/api/props-firebase.html#update
+[76]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#updatewithmeta
 
-[77]: https://react-redux-firebase.com/docs/api/props-firebase.html#updateWithMeta
+[77]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#remove
 
-[78]: https://react-redux-firebase.com/docs/api/props-firebase.html#remove
+[78]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#uniqueset
 
-[79]: https://react-redux-firebase.com/docs/api/props-firebase.html#uniqueSet
+[79]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#uploadfile
 
-[80]: https://react-redux-firebase.com/docs/api/props-firebase.html#uploadFile
+[80]: <>
 
-[81]: https://react-redux-firebase.com/docs/api/props-firebase.html#uploadFiles
+[81]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#uploadfiles
 
 [82]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[83]: https://react-redux-firebase.com/docs/api/props-firebase.html#deleteFile
+[83]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#deletefile
 
-[84]: https://react-redux-firebase.com/docs/api/props-firebase.html#watchEvent
+[84]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#watchevent
 
-[85]: https://react-redux-firebase.com/docs/api/props-firebase.html#unwatchevent
+[85]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#unwatchevent
 
-[86]: /docs/auth.md
+[86]: https://react-redux-firebase.com/docs/auth.html#logincredentials
 
-[87]: /docs/recipes/auth.md
+[87]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#login
 
-[88]: http://react-redux-firebase.com/api/getFirebase.html
+[88]: https://react-redux-firebase.com/docs/auth.html
+
+[89]: https://react-redux-firebase.com/docs/recipes/auth.html
+
+[90]: /docs/recipes/auth.md
+
+[91]: https://react-redux-firebase.com/docs/auth.html#logout
+
+[92]: https://react-redux-firebase.com/docs/auth.html#createuser
+
+[93]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#resetpassword
+
+[94]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#confirmpasswordreset
+
+[95]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#verifypasswordreset
+
+[96]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateprofile
+
+[97]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateauth
+
+[98]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateemail
+
+[99]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#reloadauth
+
+[100]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#linkwithcredential
+
+[101]: https://react-redux-firebase.com/docs/api/firebaseInstance.html#signinwithphonenumber
+
+[102]: http://react-redux-firebase.com/api/getFirebase.html
