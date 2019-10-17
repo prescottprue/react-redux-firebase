@@ -104,8 +104,10 @@ export function createSuccessStub(some) {
 
 /**
  * Create a Sinon stub that returns with a rejected Promise Object
- * constaining an Error object with the message "test"
+constaining an Error object with the message "test"
+ *
  * @returns {Sinon.stub}
+ * @param some
  */
 export function createFailureStub(some) {
   return sinon.stub().returns(Promise.reject(new Error('test')))
@@ -115,7 +117,7 @@ export function createFailureStub(some) {
  * Create an object representing a "profileReference" (a Firebase
  * RTDB Reference at the Profile path) which contains Sinon stubs
  * in place of Firebase JS SDK methods (such as update and once)
- * @returns {Object}
+ * @returns {object}
  */
 function createRtdbProfileRefStub() {
   let profileUpdate = {}
@@ -140,7 +142,7 @@ function createRtdbProfileRefStub() {
  * Firestore Reference for the current user's profile document) which
  * contains Sinon stubs in place of Firebase JS SDK methods (such as
  * update and get)
- * @returns {Object}
+ * @returns {object}
  */
 function createFirestoreProfileRefStub() {
   let profileUpdate = {}
@@ -185,14 +187,20 @@ function createFirestoreStub() {
 
 /**
  * Create a Sinon stub for Firebase Real Time Database (RTDB)
+ *
  * @returns {Sinon.stub}
+ * @param refExtension
  */
-function createRtdbStub() {
+function createRtdbStub(refExtension) {
+  let refReturn = {
+    push: sinon.stub().returns({ set: createSuccessStub() }),
+    ...createRtdbProfileRefStub()
+  }
+  if (refExtension) {
+    refReturn = { ...refReturn, ...refExtension }
+  }
   const stubbedRtdb = sinon.stub().returns({
-    ref: sinon.stub().returns({
-      push: sinon.stub().returns({ set: createSuccessStub() }),
-      ...createRtdbProfileRefStub()
-    })
+    ref: sinon.stub().returns(refReturn)
   })
   stubbedRtdb.ServerValue = { TIMESTAMP: 'test' }
   return stubbedRtdb
@@ -223,11 +231,13 @@ function createStorageStub() {
 }
 
 /**
- * @param {Object} otherConfig - Config to be spread onto _.config object
- * @returns {Object} Stubbed version of Firebase JS SDK extended with
+ * @param extensions
+ * @param {object} otherConfig - Config to be spread onto _.config object
+ * @param rtdbRefExtension
+ * @returns {object} Stubbed version of Firebase JS SDK extended with
  * react-redux-firebase config
  */
-export function createFirebaseStub(otherConfig = {}) {
+export function createFirebaseStub(otherConfig = {}, extensions) {
   return {
     _: {
       uid,
@@ -237,7 +247,7 @@ export function createFirebaseStub(otherConfig = {}) {
       }
     },
     auth: createAuthStub(),
-    database: createRtdbStub(),
+    database: createRtdbStub(extensions && extensions.database),
     firestore: createFirestoreStub(),
     storage: createStorageStub()
   }
@@ -428,6 +438,11 @@ export const createContainer = ({
   }
 }
 
+/**
+ * Sleep/wait for a set amount of time
+ * @param {number} ms - Amount of time to sleep
+ * @returns {Promise} Resolves after timeout
+ */
 export function sleep(ms = 0) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
