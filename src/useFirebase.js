@@ -3,14 +3,14 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
  * @name useFirebase
- * React hook that provides `firebase` object.
+ * @description React hook that provides `firebase` object.
  * Firebase is gathered from `store.firebase`, which is attached to store
  * by the store enhancer (`reactReduxFirebase`) during setup.
  * **NOTE**: This version of the Firebase library has extra methods, config,
  * and functionality which give it it's capabilities such as dispatching
  * actions.
  * @returns {object} - Extended Firebase instance
- * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebase.html
+ * @see https://react-redux-firebase.com/docs/api/useFirebase.html
  * @example <caption>Basic</caption>
  * import { useFirebase } from 'react-redux-firebase'
  *

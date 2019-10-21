@@ -9,7 +9,12 @@
 
 ## firebaseConnect
 
--   **See: [http://react-redux-firebase.com/api/firebaseConnect.html][5]**
+**Extends React.Component**
+
+
+React Higher Order Component that automatically listens/unListens to
+Firebase Real Time Database on mount/unmount of the component. This uses
+React's Component Lifecycle hooks.
 
 ### Parameters
 
@@ -104,7 +109,7 @@ Returns **React.Component** Component wrapped in context
 
 [4]: #parameters-1
 
-[5]: http://react-redux-firebase.com/api/firebaseConnect.html
+[5]: https://react-redux-firebase.com/docs/api/firebaseConnect.html
 
 [6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 

@@ -10,7 +10,16 @@
 
 ## withFirebase
 
--   **See: [http://react-redux-firebase.com/api/withFirebase.html][6]**
+**Extends React.Component**
+
+
+Higher Order Component that provides `firebase` and
+`dispatch` as a props to React Components. Firebase is gathered from
+`store.firebase`, which is attached to store by the store enhancer
+(`reactReduxFirebase`) during setup.
+**NOTE**: This version of the Firebase library has extra methods, config,
+and functionality which give it it's capabilities such as dispatching
+actions.
 
 ### Parameters
 
@@ -92,7 +101,7 @@ Returns **React.Component** WrappedComponent wrapped with firebase context
 
 [5]: #parameters-1
 
-[6]: http://react-redux-firebase.com/api/withFirebase.html
+[6]: http://react-redux-firebase.com/docs/api/withFirebase.html
 
 [7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 

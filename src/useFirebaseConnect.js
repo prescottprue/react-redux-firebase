@@ -5,14 +5,15 @@ import { getEventsFromInput, invokeArrayQuery } from './utils'
 import useFirebase from './useFirebase'
 
 /**
- * Hook that automatically listens/unListens to provided firebase paths
+ * @description Hook that automatically listens/unListens to provided firebase paths
  * using React's useEffect hook.
  * @param {object|string|Function|Array} queriesConfig - Object, string, or
  * array contains object or string for path to sync from Firebase or null if
  * hook doesn't need to sync. Can also be a function that returns an object,
  * a path string, or array of an object or a path string.
- * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebaseConnect.html
+ * @see https://react-redux-firebase.com/docs/api/useFirebaseConnect.html
  * @example <caption>Ordered Data</caption>
+ * import React from 'react'
  * import { useSelector } from 'react-redux'
  * import { useFirebaseConnect } from 'react-redux-firebase'
  *
@@ -28,27 +29,27 @@ import useFirebase from './useFirebase'
  *   )
  * }
  * @example <caption>Data that depends on props</caption>
+ * import React from 'react'
  * import { compose } from 'redux'
  * import { useSelector } from 'react-redux'
  * import { useFirebaseConnect } from 'react-redux-firebase'
  *
- * function Post({ postId }) {
+ * export default function Post({ postId }) {
  *   useFirebaseConnect(`posts/${postId}`) // sync /posts/postId from firebase into redux
- *   const post = useSelector(({ firebase }) => state.firebase.ordered.posts && state.firebase.ordered.posts[postId])
+ *   const post = useSelector(({ firebase: { ordered: { posts } } }) => posts && posts[postId])
  *   return (
  *     <div>
  *       {JSON.stringify(post, null, 2)}
  *     </div>
  *   )
  * }
- *
- * export default enhance(Post)
  * @example <caption>Data that depends on props, an array as a query</caption>
+ * import React from 'react'
  * import { compose } from 'redux'
  * import { useSelector } from 'react-redux'
  * import { useFirebaseConnect, getVal } from 'react-redux-firebase'
  *
- * function Post({ post, postId }) {
+ * export default function Post({ postId }) {
  *   useFirebaseConnect([`posts/${postId}`], [postId]) // sync /posts/postId from firebase into redux
  *   const post = useSelector(state => {
  *     return state.firebase.ordered.posts && state.firebase.ordered.posts[postId]
@@ -59,8 +60,6 @@ import useFirebase from './useFirebase'
  *     </div>
  *   )
  * }
- *
- * export default Post
  */
 export default function useFirebaseConnect(queriesConfig) {
   const firebase = useFirebase()

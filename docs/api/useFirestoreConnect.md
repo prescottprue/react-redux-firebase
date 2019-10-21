@@ -8,7 +8,6 @@
 
 ## useFirestoreConnect
 
--   **See: [http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html][4]**
 
 React hook that automatically listens/unListens
 to provided Cloud Firestore paths. Make sure you have required/imported
@@ -31,7 +30,7 @@ import { map } from 'lodash'
 import { useSelector } from 'react-redux'
 import { useFirebaseConnect } from 'react-redux-firebase'
 
-function TodosList() {
+export default function TodosList() {
   useFirebaseConnect('todos') // sync todos collection from Firestore into redux
   const todos = useSelector(state => state.firebase.data.todos)
   return (
@@ -42,7 +41,6 @@ function TodosList() {
    </ul>
   )
 }
-export default TodosList
 ```
 
 _Object as query_
@@ -53,21 +51,15 @@ import { get } from 'lodash'
 import { connect } from 'react-redux'
 import { useFirebaseConnect } from 'react-redux-firebase'
 
-function TodoItem({ todoId, todoData }) {
+export default function TodoItem({ todoId }) {
   useFirebaseConnect(() => ({
     collection: 'todos',
     doc: todoId
-  }), [todoId]) // include dependency in the hook
+  }))
+  const todo = useSelector(({ firebase: { data } }) => data.todos && data.todos[todoId])
 
   return <div>{JSON.stringify(todoData)}</div>
 }
-
-// pass todo data from redux as props.todosList
-export default compose(
-  connect((state) => ({
-    todoData: get(state, ['firestore', 'data', 'todos', todoId])
-  })
-)(TodoItem)
 ```
 
 [1]: #usefirestoreconnect
@@ -76,7 +68,7 @@ export default compose(
 
 [3]: #examples
 
-[4]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html
+[4]: https://react-redux-firebase.com/docs/api/useFirestoreConnect.html
 
 [5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 

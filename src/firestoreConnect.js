@@ -8,7 +8,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 
 /**
  * @augments React.Component
- * Higher Order Component that automatically listens/unListens
+ * @description Higher Order Component that automatically listens/unListens
  * to provided Cloud Firestore paths using React's Lifecycle hooks. Make sure you
  * have required/imported Cloud Firestore, including it's reducer, before
  * attempting to use. **Note** Populate is not yet supported.
@@ -17,7 +17,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * is passed the current props and the firebase object.
  * @returns {Function} - Function which accepts a component to wrap and returns the
  * wrapped component
- * @see http://react-redux-firebase.com/api/firestoreConnect.html
+ * @see https://react-redux-firebase.com/docs/api/firestoreConnect.html
  * @example <caption>Basic</caption>
  * // props.firebase set on App component as firebase object with helpers
  * import { firestoreConnect } from 'react-redux-firebase'

@@ -7,10 +7,9 @@
 
 ## ReactReduxFirebaseProvider
 
--   **See: [http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html][3]**
 
-Provider for context containing extended firebase instance created
-by react-redux-firebase
+Provider for context containing extended firebase
+instance created by react-redux-firebase.
 
 ### Parameters
 
@@ -28,7 +27,7 @@ Returns **React.Context.Provider** Provider for react-redux-firebase context
 
 [2]: #parameters
 
-[3]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html
+[3]: https://react-redux-firebase.com/api/docs/ReactReduxFirebaseProvider.html
 
 [4]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 

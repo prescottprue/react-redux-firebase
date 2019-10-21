@@ -217,7 +217,7 @@ const enhance = compose(
     // each todo has child 'owner' populated from matching uid in 'users' root
     // for loading un-populated todos use state.firebase.data.todos
     todos: populate(state.firebase, 'todos', populates),
-  })
+  }))
 )
 
 export default enhance(SomeComponent)
