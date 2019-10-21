@@ -433,7 +433,9 @@ export type ReduxFirestoreQueries =
  * Function that recieves component props and returns
  * a list of query configuration objects for redux-firestore
  */
-export type ReduxFirestoreQueriesFunction = (props?: any) => ReduxFirestoreQueries
+export type ReduxFirestoreQueriesFunction = (
+  props?: any
+) => ReduxFirestoreQueries
 
 /**
  * Firestore instance extended with methods which dispatch redux actions.
@@ -477,7 +479,7 @@ interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
    * Delete a document within firestore.
    * @see https://github.com/prescottprue/redux-firestore#delete
    */
-  delete: (docPath: string | ReduxFirestoreQuerySetting) => void
+  delete: (docPath: string | ReduxFirestoreQuerySetting) => Promise<void>
 
   /**
    * Executes the given updateFunction and then attempts to commit the changes applied within the
@@ -541,7 +543,9 @@ export interface WithFirestoreProps {
   firestore: FirestoreTypes.FirebaseFirestore &
     ExtendedFirestoreInstance &
     FirestoreStatics
-  firebase: ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
+  firebase: ExtendedFirebaseInstance &
+    ExtendedAuthInstance &
+    ExtendedStorageInstance
   dispatch: Dispatch
 }
 
@@ -642,7 +646,7 @@ interface ExtendedAuthInstance {
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#signinwithphonenumber
    */
   signInWithPhoneNumber: AuthTypes.FirebaseAuth['signInWithPhoneNumber']
-  
+
   /**
    * Update user's email
    * @param newEmail - Update to be auth object
@@ -775,7 +779,9 @@ interface ExtendedStorageInstance {
 }
 
 export interface WithFirebaseProps<ProfileType> {
-  firebase: ExtendedAuthInstance & ExtendedStorageInstance & ExtendedFirebaseInstance
+  firebase: ExtendedAuthInstance &
+    ExtendedStorageInstance &
+    ExtendedFirebaseInstance
 }
 
 /**
@@ -843,7 +849,9 @@ export function fixPath(path: string): string
  * integrations into external libraries such as redux-thunk and redux-observable.
  * @see https://react-redux-firebase.com/docs/api/getFirebase.html
  */
-export function getFirebase(): ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
+export function getFirebase(): ExtendedFirebaseInstance &
+  ExtendedAuthInstance &
+  ExtendedStorageInstance
 
 /**
  * Get a value from firebase using slash notation.  This enables an easy
@@ -882,7 +890,9 @@ export function isLoaded(...args: any[]): boolean
  * instance is gathered from `ReactReduxFirebaseContext`.
  * @see https://react-redux-firebase.com/docs/api/useFirebase.html
  */
-export function useFirebase(): ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
+export function useFirebase(): ExtendedFirebaseInstance &
+  ExtendedAuthInstance &
+  ExtendedStorageInstance
 
 /**
  * React hook that automatically listens/unListens
@@ -924,7 +934,6 @@ export function useFirestoreConnect<TInner>(
     | ReduxFirestoreQuerySetting
     | string
 ): void
-
 
 /**
  * Populate with data from multiple paths within redux.
