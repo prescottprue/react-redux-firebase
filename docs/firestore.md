@@ -55,13 +55,15 @@ const rrfProps = {
 }
 
 // Setup react-redux so that connect HOC can be used
-const App = () => (
-  <Provider store={store}>
-    <ReactReduxFirebaseProvider {...rrfProps}>
-      <Todos />
-    </ReactReduxFirebaseProvider>
-  </Provider>
-);
+function App() {
+  return (
+    <Provider store={store}>
+      <ReactReduxFirebaseProvider {...rrfProps}>
+        <Todos />
+      </ReactReduxFirebaseProvider>
+    </Provider>
+  );
+}
 
 render(<App/>, document.getElementById('root'));
 ```
@@ -83,10 +85,46 @@ const rrfConfig = {
 
 Firestore queries can be created in two ways:
 
-* [Automatically](#firestoreConnect) - Using `firestoreConnect` HOC (manages mounting/unmounting)
+* [Automatically with Hook](#useFirestoreConnect) - Using `useFirestoreConnect` hook (manages mounting/unmounting)
+* [Automatically with HOC](#firestoreConnect) - Using `firestoreConnect` HOC (manages mounting/unmounting)
 * [Manually](#manual) - Using `get`, or by setting listeners with `setListeners`/`setListener` (requires managing of listeners)
 
-### Automatic {#firestoreConnect}
+### Automatically with Hook {#useFirestoreConnect}
+
+`useFirestoreConnect` is a React hook that manages attaching and detaching listeners for you as the component mounts and unmounts.
+
+#### Examples
+1. Basic query that will attach/detach as the component passed mounts/unmounts. In this case we are setting a listener for the `'todos'` collection:
+
+  ```js
+  import React from 'react'
+  import { useSelector } from 'react-redux'
+  import { useFirestoreConnect } from 'react-redux-firebase'
+
+  export default function SomeComponent() {
+    useFirestoreConnect([
+      { collection: 'todos' } // or 'todos'
+    ])
+    const todos = useSelector(state => state.firestore.ordered.todos)
+  }
+  ```
+
+2. Props can be used as part of queries. In this case we will get a specific todo:
+
+  ```js
+  import React from 'react'
+  import { useSelector } from 'react-redux'
+  import { useFirestoreConnect } from 'react-redux-firebase'
+
+  export default function SomeComponent({ todoId }) {
+    useFirestoreConnect(() => [
+      { collection: 'todos', doc: todoId } // or `todos/${props.todoId}`
+    ])
+    const todos = useSelector(({ firestore: { ordered } }) => ordered.todos && ordered.todos[todoId])
+  }
+  ```
+
+### Automatically with HOC {#firestoreConnect}
 
 `firestoreConnect` is a React Higher Order component that manages attaching and detaching listeners for you as the component mounts and unmounts. It is possible to roll a similar solution yourself, but can get complex when dealing with advanced situations (queries based on props, props changing, etc.)
 

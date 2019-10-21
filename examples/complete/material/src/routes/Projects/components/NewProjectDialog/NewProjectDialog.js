@@ -5,11 +5,17 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
+import { makeStyles } from '@material-ui/core/styles'
 import { Field } from 'redux-form'
 import TextField from 'components/FormTextField'
 import { required } from 'utils/form'
+import styles from './NewProjectDialog.styles'
 
-function NewProjectDialog({ classes, handleSubmit, open, onRequestClose }) {
+const useStyles = makeStyles(styles)
+
+function NewProjectDialog({ handleSubmit, open, onRequestClose }) {
+  const classes = useStyles()
+
   return (
     <Dialog open={open} onClose={onRequestClose}>
       <DialogTitle id="new-project-dialog-title">New Project</DialogTitle>
@@ -36,7 +42,6 @@ function NewProjectDialog({ classes, handleSubmit, open, onRequestClose }) {
 }
 
 NewProjectDialog.propTypes = {
-  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
   handleSubmit: PropTypes.func.isRequired, // from enhancer (reduxForm)
   open: PropTypes.bool.isRequired,
   onRequestClose: PropTypes.func.isRequired

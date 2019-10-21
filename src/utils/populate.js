@@ -1,21 +1,11 @@
-import {
-  filter,
-  isString,
-  isArray,
-  isFunction,
-  isObject,
-  map,
-  get,
-  forEach,
-  set,
-  has,
-  some
-} from 'lodash'
+import { filter, isObject, map, get, forEach, set, has, some } from 'lodash'
+import { isString } from './index'
 
 /**
  * @private
- * @description Create standardized populate object from strings or objects
- * @param {String|Object} str - String or Object to standardize into populate object
+ * Create standardized populate object from strings or objects
+ * @param {string|object} str - String or Object to standardize into populate object
+ * @returns {object} Populate object
  */
 export function getPopulateObj(str) {
   if (!isString(str)) {
@@ -28,14 +18,15 @@ export function getPopulateObj(str) {
 
 /**
  * @private
- * @description Determine the structure of the child parameter to populate onto
- * @param {String|Object} child - Value at child parameter
+ * Determine the structure of the child parameter to populate onto
+ * @param {string|object} child - Value at child parameter
+ * @returns {string} Type of child
  */
 export function getChildType(child) {
   if (isString(child)) {
     return 'string'
   }
-  if (isArray(child)) {
+  if (Array.isArray(child)) {
     return 'array'
   }
   if (isObject(child)) {
@@ -46,11 +37,12 @@ export function getChildType(child) {
 
 /**
  * @private
- * @description Create standardized populate object from strings or objects
- * @param {String|Object} str - String or Object to standardize into populate object
+ * Create standardized populate object from strings or objects
+ * @param {string|object} arr - String or Object to standardize into populate object
+ * @returns {Array} List of populate objects
  */
 export function getPopulateObjs(arr) {
-  if (!isArray(arr)) {
+  if (!Array.isArray(arr)) {
     return arr
   }
   return arr.map(o => (isObject(o) ? o : getPopulateObj(o)))
@@ -58,12 +50,13 @@ export function getPopulateObjs(arr) {
 
 /**
  * @private
- * @description Get array of populates from list of query params
+ * Get array of populates from list of query params
  * @param {Array} queryParams - Query parameters from which to get populates
+ * @returns {Array} Array of populate settings
  */
-export function getPopulates(params) {
+export function getPopulates(queryParams) {
   const populates = filter(
-    params,
+    queryParams,
     param =>
       param.indexOf('populate') !== -1 || (isObject(param) && param.populates)
   ).map(p => p.split('=')[1])
@@ -76,11 +69,12 @@ export function getPopulates(params) {
 
 /**
  * @private
- * @description Create an array of promises for population of an object or list
- * @param {Object} firebase - Internal firebase object
- * @param {Object} populate - Object containing root to be populate
- * @param {Object} populate.root - Firebase root path from which to load populate item
- * @param {String} id - String id
+ * Create an array of promises for population of an object or list
+ * @param {object} firebase - Internal firebase object
+ * @param {object} populate - Object containing root to be populate
+ * @param {object} populate.root - Firebase root path from which to load populate item
+ * @param {string} id - String id
+ * @returns {Promise} Resolves with populate child
  */
 export function getPopulateChild(firebase, populate, id) {
   return firebase
@@ -96,11 +90,12 @@ export function getPopulateChild(firebase, populate, id) {
 
 /**
  * @private
- * @description Populate list of data
- * @param {Object} firebase - Internal firebase object
- * @param {Object} originalObj - Object to have parameter populated
- * @param {Object} populate - Object containing populate information
- * @param {Object} results - Object containing results of population from other populates
+ * Populate list of data
+ * @param {object} firebase - Internal firebase object
+ * @param {object} list - Object to have parameter populated
+ * @param {object} p - Object containing populate information
+ * @param {object} results - Object containing results of population from other populates
+ * @returns {Promise} Resovles with populated list
  */
 export function populateList(firebase, list, p, results) {
   // Handle root not being defined
@@ -124,10 +119,12 @@ export function populateList(firebase, list, p, results) {
 
 /**
  * @private
- * @description Create an array of promises for population of an object or list
- * @param {Object} firebase - Internal firebase object
- * @param {Object} originalObj - Object to have parameter populated
- * @param {Object} populateString - String containg population data
+ * Create an array of promises for population of an object or list
+ * @param {object} firebase - Internal firebase object
+ * @param {string} dataKey - Object to have parameter populated
+ * @param {object} originalData - Data before population
+ * @param {Function|object} populatesIn - Populate configs or function returning configs
+ * @returns {Promise} Promise which resolves after populate data is loaded
  */
 export function promisesForPopulate(
   firebase,
@@ -141,7 +138,9 @@ export function promisesForPopulate(
 
   // test if data is a single object, try generating populates and looking for the child
   const populatesForData = getPopulateObjs(
-    isFunction(populatesIn) ? populatesIn(dataKey, originalData) : populatesIn
+    typeof populatesIn === 'function'
+      ? populatesIn(dataKey, originalData)
+      : populatesIn
   )
 
   const dataHasPopulateChilds = some(populatesForData, populate =>
@@ -173,7 +172,7 @@ export function promisesForPopulate(
     forEach(originalData, (d, key) => {
       // generate populates for this data item if a fn was passed
       const populatesForDataItem = getPopulateObj(
-        isFunction(populatesIn) ? populatesIn(key, d) : populatesIn
+        typeof populatesIn === 'function' ? populatesIn(key, d) : populatesIn
       )
 
       // resolve each populate for this data item
@@ -200,7 +199,7 @@ export function promisesForPopulate(
         }
 
         // Parameter of each list item is a list of ids
-        if (isArray(idOrList) || isObject(idOrList)) {
+        if (Array.isArray(idOrList) || isObject(idOrList)) {
           // Create single promise that includes a promise for each child
           return promisesArray.push(
             populateList(firebase, idOrList, p, results)

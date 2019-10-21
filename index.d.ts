@@ -8,14 +8,14 @@ import { Dispatch } from 'redux'
 
 /**
  * Diff / Omit taken from https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
- */ 
+ */
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 /**
  * Injects props and removes them from the prop requirements.
  * Will not pass through the injected props if they are passed in during
  * render. Also adds new prop requirements from TNeedsProps.
- */ 
+ */
 export interface InferableComponentEnhancerWithProps<
   TInjectedProps,
   TNeedsProps
@@ -121,7 +121,7 @@ export const constants: {
 /**
  * Promise which resolves when auth state has loaded.
  */
-export function authIsReady(store: object, ...args: any[]): any
+export function authIsReady(store: any, ...args: any[]): any
 
 interface RemoveOptions {
   dispatchAction: boolean
@@ -129,8 +129,8 @@ interface RemoveOptions {
 
 /**
  * Firestore instance extended with methods which dispatch
- * redux actions. More info available in
- * [firebaseInstance section of the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html).
+ * redux actions.
+ * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html
  */
 interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
   initializeAuth: VoidFunction
@@ -140,11 +140,12 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
   dispatch: Dispatch
 
   /**
-   * Sets data to Firebase. More info available [in the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#set).
+   * Sets data to Firebase.
    * @param path - Path to location on Firebase which to set
    * @param value - Value to write to Firebase
    * @param onComplete - Function to run on complete (`not required`)
-   * @return Containing reference snapshot
+   * @returns Containing reference snapshot
+   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#set
    */
   set: (
     path: string,
@@ -160,6 +161,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param path - Path to location on Firebase which to set
    * @param value - Value to write to Firebase
    * @param onComplete - Function to run on complete (`not required`)
+   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#setWithMeta
    */
   setWithMeta: (
     path: string,
@@ -168,11 +170,11 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
   ) => Promise<DatabaseTypes.DataSnapshot>
 
   /**
-   * Pushes data to Firebase. More info available
-   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#push).
+   * Pushes data to Firebase.
    * @param path - Path to location on Firebase which to push
    * @param value - Value to push to Firebase
    * @param onComplete - Function to run on complete
+   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#push
    */
   push: (
     path: string,
@@ -186,6 +188,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param path - Path to location on Firebase which to set
    * @param value - Value to write to Firebase
    * @param onComplete - Function to run on complete
+   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#pushWithMeta
    */
   pushWithMeta: (
     path: string,
@@ -211,11 +214,11 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
   ) => Promise<any>
 
   /**
-   * Updates data on Firebase and sends new data. More info available
-   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#update).
+   * Updates data on Firebase and sends new data.
    * @param path - Path to location on Firebase which to update
    * @param value - Value to update to Firebase
    * @param onComplete - Function to run on complete (`not required`)
+   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#update
    */
   update: (
     path: string,
@@ -230,6 +233,7 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * @param path - Path to location on Firebase which to update
    * @param value - Value to update to Firebase
    * @param onComplete - Function to run on complete
+   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#updateWithMeta
    */
   updateWithMeta: (
     path: string,
@@ -241,12 +245,12 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
    * Removes data from Firebase at a given path. **NOTE** A
    * seperate action is not dispatched unless `dispatchRemoveAction: true` is
    * provided to config on store creation. That means that a listener must
-   * be attached in order for state to be updated when calling remove. More info
-   * available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#remove).
+   * be attached in order for state to be updated when calling remove.
    * @param path - Path to location on Firebase which to remove
    * @param onComplete - Function to run on complete
    * @param options - Configuration for removal
    * @param [options.dispatchAction=true] - Whether or not to dispatch REMOVE action
+   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#remove
    */
   remove: (
     path: string,
@@ -257,11 +261,11 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
   /**
    * Sets data to Firebase only if the path does not already
    * exist, otherwise it rejects. Internally uses a Firebase transaction to
-   * prevent a race condition between seperate clients calling uniqueSet. More
-   * info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#uniqueset).
+   * prevent a race condition between seperate clients calling uniqueSet.
    * @param path - Path to location on Firebase which to set
    * @param value - Value to write to Firebase
    * @param onComplete - Function to run on complete (`not required`)
+   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#uniqueset
    */
   uniqueSet: (
     path: string,
@@ -270,12 +274,12 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
   ) => Promise<DatabaseTypes.DataSnapshot>
 
   /**
-   * Watch a path in Firebase Real Time Database. More info
-   * available in the [docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#watchevent).
+   * Watch a path in Firebase Real Time Database.
    * @param type - Type of event to watch for (defaults to value)
    * @param path - Path to watch with watcher
    * @param storeAs - Location within redux to store value
    * @param options - List of parameters for the query
+   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#watchevent
    */
   watchEvent: (
     type: string,
@@ -287,11 +291,12 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
   /**
    * Unset a listener watch event. **Note:** this method is used
    * internally so examples have not yet been created, and it may not work
-   * as expected. More info available in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/props-firebase.html#unwatchevent).
+   * as expected.
    * @param type - Type of watch event
    * @param path - Path to location on Firebase which to unset listener
    * @param queryId - Id of the listener
    * @param options - Event options object
+   * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#watchevent
    */
   unWatchEvent: (
     type: string,
@@ -307,40 +312,13 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
  * @param firebase - Firebase instance which to extend
  * @param configs - Configuration object
  * @param dispatch - Action dispatch function
+ * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html
  */
 export function createFirebaseInstance(
   firebase: any,
   configs: Partial<ReduxFirestoreConfig>,
   dispatch: Dispatch
-): ExtendedFirebaseInstance & Auth & Storage
-
-/**
- * Function that creates a Higher Order Component which
- * automatically listens/unListens to provided firebase paths using
- * React's Lifecycle hooks.
- * **WARNING!!** This is an advanced feature, and should only be used when
- * needing to access a firebase instance created under a different store key.
- * @param [storeKey='store'] - Name of redux store which contains
- * Firebase state (state.firebase)
- */
-export function createFirebaseConnect(storeKey: string): typeof firebaseConnect
-
-/**
- * Function that creates a Higher Order Component which
- * automatically listens/unListens to provided firebase paths using
- * React's Lifecycle hooks.
- * **WARNING!!** This is an advanced feature, and should only be used when
- * needing to access a firebase instance created under a different store key.
- * @param {String} [storeKey='store'] - Name of redux store which contains
- * Firebase state (state.firebase)
- */
-export function createFirestoreConnect(
-  storeKey: string
-): typeof firestoreConnect
-
-export function createWithFirebase(storeKey: string): typeof withFirebase
-
-export function createWithFirestore(storeKey: string): typeof withFirestore
+): ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
 
 export type QueryParamOption =
   | 'orderByKey'
@@ -355,6 +333,7 @@ export type QueryParamOptions = QueryParamOption | string[]
 
 /**
  * Options which can be passed to firebase query through react-redux-firebase
+ * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/queries.html
  */
 export interface ReactReduxFirebaseQuerySetting {
   path: string
@@ -369,29 +348,52 @@ export interface ReactReduxFirebaseQuerySetting {
   storeAs?: string
 }
 
+/**
+ * List of query configuration objects for react-redux-firebase
+ */
 export type ReactReduxFirebaseQueries =
-  (ReactReduxFirebaseQuerySetting | string)[]
+  | (ReactReduxFirebaseQuerySetting | string)[]
   | (ReactReduxFirebaseQuerySetting | string)
 
-export type ReactReduxFirebaseQueriesFunction =
-  (props?) => ReactReduxFirebaseQueries
+/**
+ * Function that recieves component props and returns
+ * a list of query configuration objects for react-redux-firebase
+ */
+export type ReactReduxFirebaseQueriesFunction = (
+  props?: any
+) => ReactReduxFirebaseQueries
 
-// https://github.com/prescottprue/redux-firestore#query-options
+/**
+ * @see https://github.com/prescottprue/redux-firestore#query-options
+ */
 type WhereOptions = [string, FirestoreTypes.WhereFilterOp, any]
 type OrderByOptions = [string, FirestoreTypes.OrderByDirection]
 
 /**
  * Options which can be passed to firestore query through
- * redux-firestore or react-redux-firebase
+ * redux-firestore or react-redux-firebase.
+ * @see https://github.com/prescottprue/redux-firestore#query-options
  */
 export interface ReduxFirestoreQuerySetting {
-  // https://github.com/prescottprue/redux-firestore#collection
+  /**
+   * Collection name
+   * @see https://github.com/prescottprue/redux-firestore#collection
+   */
   collection: string
-  // https://github.com/prescottprue/redux-firestore#document
+  /**
+   * Document id
+   * @see https://github.com/prescottprue/redux-firestore#document
+   */
   doc?: string
-  // https://github.com/prescottprue/redux-firestore#sub-collections
+  /**
+   * Subcollection path settings
+   * @see https://github.com/prescottprue/redux-firestore#sub-collections
+   */
   subcollections?: ReduxFirestoreQuerySetting[]
-  // https://github.com/prescottprue/redux-firestore#where
+  /**
+   * Where settings
+   * @see https://github.com/prescottprue/redux-firestore#where
+   */
   where?: WhereOptions | WhereOptions[]
   // https://github.com/prescottprue/redux-firestore#orderby
   orderBy?: OrderByOptions | OrderByOptions[]
@@ -409,43 +411,64 @@ export interface ReduxFirestoreQuerySetting {
   endBefore?: FirestoreTypes.DocumentSnapshot | any | any[]
 }
 
+/**
+ * List of query configuration objects for redux-firestore
+ */
 export type ReduxFirestoreQueries =
-  (ReduxFirestoreQuerySetting | string)[]
+  | (ReduxFirestoreQuerySetting | string)[]
   | (ReduxFirestoreQuerySetting | string)
 
-export type ReduxFirestoreQueriesFunction = (props?) => ReduxFirestoreQueries 
+/**
+ * Function that recieves component props and returns
+ * a list of query configuration objects for redux-firestore
+ */
+export type ReduxFirestoreQueriesFunction = (props?: any) => ReduxFirestoreQueries
 
 /**
  * Firestore instance extended with methods which dispatch redux actions.
- * More info available in the [API section of the redux-firestore docs](https://github.com/prescottprue/redux-firestore#api).
+ * @see https://github.com/prescottprue/redux-firestore#api
  */
 interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
-  // Get data from firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#get).
+  /**
+   * Get data from firestore.
+   * @see https://github.com/prescottprue/redux-firestore#get
+   */
   get: (docPath: string | ReduxFirestoreQuerySetting) => Promise<void>
 
-  // Set data to firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#set).
+  /**
+   * Set data to firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#set).
+   */
   set: (
     docPath: string | ReduxFirestoreQuerySetting,
     data: Object
   ) => Promise<void>
 
-  // https://github.com/prescottprue/redux-firestore#add
+  /**
+   * Add document to firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#add).
+   */
   add: (
     collectionPath: string | ReduxFirestoreQuerySetting,
     data: Object
   ) => Promise<{ id: string }>
 
-  // https://github.com/prescottprue/redux-firestore#update
+  /**
+   * Update document within firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#update).
+   */
   update: (
     docPath: string | ReduxFirestoreQuerySetting,
     data: Object
   ) => Promise<void>
 
-  // https://github.com/prescottprue/redux-firestore#delete
+  /**
+   * Delete a document within firestore. More info available [in the docs](https://github.com/prescottprue/redux-firestore#delete).
+   */
   delete: (docPath: string | ReduxFirestoreQuerySetting) => void
 
-  // https://github.com/prescottprue/redux-firestore#runtransaction
-  // runTransaction: (transaction: WithFirestoreProps['firestore']) => Promise<any>
+  /**
+   * Executes the given updateFunction and then attempts to commit the changes applied within the
+   * transaction. More info available [in the docs](https://github.com/prescottprue/redux-firestore#runtransaction).
+   */
+  runTransaction: typeof firebase.firestore.Firestore.runTransaction
 
   // https://github.com/prescottprue/redux-firestore#onsnapshotsetlistener
   onSnapshot: (options: ReduxFirestoreQuerySetting) => Promise<void>
@@ -481,7 +504,7 @@ export interface WithFirestoreProps {
   firestore: FirestoreTypes.FirebaseFirestore &
     ExtendedFirestoreInstance &
     FirestoreStatics
-  firebase: ExtendedFirebaseInstance & Auth & Storage
+  firebase: ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
   dispatch: Dispatch
 }
 
@@ -514,29 +537,62 @@ interface UserProfile {
   [a: string]: any
 }
 
-// http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html
-interface Auth {
+/**
+ * Firebase JS SDK Auth instance extended with methods which dispatch redux actions.
+ * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html
+ */
+interface ExtendedAuthInstance {
   auth: () => AuthTypes.FirebaseAuth
 
-  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#logincredentials
+  /**
+   * Logs user into Firebase.
+   * @param credentials - Credentials for authenticating
+   * @param credentials.provider - External provider (google |
+   * facebook | twitter)
+   * @param credentials.type - Type of external authentication
+   * (popup | redirect) (only used with provider)
+   * @param credentials.email - Credentials for authenticating
+   * @param credentials.password - Credentials for authenticating (only used with email)
+   * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#logincredentials
+   */
   login: (credentials: Credentials) => Promise<AuthTypes.UserCredential>
 
-  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#createusercredentials-profile
+  /**
+   * Creates a new user in Firebase authentication. If
+   * `userProfile` config option is set, user profiles will be set to this
+   * location.
+   * @param credentials - Credentials for authenticating
+   * @param profile - Data to include within new user profile
+   * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#createusercredentials-profile
+   */
   createUser: (
     credentials: CreateUserCredentials,
-    profile: UserProfile
+    profile?: UserProfile
   ) => Promise<AuthTypes.UserInfo>
 
-  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#logout
+  /**
+   * Logs user out of Firebase and empties firebase state from
+   * redux store.
+   * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#logout
+   */
   logout: () => Promise<void>
 
-  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#resetpasswordcredentials
+  /**
+   * Sends password reset email.
+   * @param credentials - Credentials for authenticating
+   * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#resetpasswordcredentials
+   */
   resetPassword: (
     credentials: AuthTypes.UserCredential,
     profile: UserProfile
   ) => Promise<any>
 
-  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#confirmpasswordresetcode-newpassword
+  /**
+   * Confirm that a user's password has been reset. More info available
+   * [in the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#confirmpasswordresetcode-newpassword).
+   * @param code - Password reset code to verify
+   * @param password - New Password to confirm reset to
+   */
   confirmPasswordReset: AuthTypes.FirebaseAuth['confirmPasswordReset']
 
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#verifypasswordresetcodecode
@@ -544,40 +600,94 @@ interface Auth {
 
   // http://docs.react-redux-firebase.com/history/v3.0.0/docs/auth.html#signinwithphonenumbercode
   signInWithPhoneNumber: AuthTypes.FirebaseAuth['signInWithPhoneNumber']
+  
+  /**
+   * Update user's email
+   * @param newEmail - Update to be auth object
+   * @param updateInProfile - Update in profile
+   */
+  updateEmail: (newEmail: string, updateInProfile?: boolean) => Promise<void>
 
-  updateEmail: (newEmail: string, updateInProfile: boolean) => Promise<void>
-  reloadAuth: () => Promise<void>
+  /**
+   * Links the user account with the given credentials. Internally
+   * calls `firebase.auth().currentUser.reload`.
+   * @param credential - The auth credential
+   */
+  reloadAuth: (credential?: firebase.auth.AuthCredential | any) => Promise<void>
+
+  /**
+   * Links the user account with the given credentials. Internally
+   * calls `firebase.auth().currentUser.linkWithCredential`.
+   * @param credential - Credential with which to link user account
+   */
   linkWithCredential: (
     credential: AuthTypes.AuthCredential
   ) => Promise<AuthTypes.User>
 
+  /**
+   * Update Auth Object
+   * @param authUpdate - Update to be auth object
+   * @param updateInProfile - Update in profile
+   */
   updateAuth: (
     authUpdate: {
       displayName: string | null
       photoURL: string | null
     },
-    updateInProfile: boolean
+    updateInProfile?: boolean
   ) => Promise<void>
 
-  //http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html
-  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html#update-profile
-  updateProfile: (profile: Partial<ProfileType>, options: Object) => void
+  /**
+   * Update user profile on Firebase Real Time Database or
+   * Firestore (if `useFirestoreForProfile: true` config passed to
+   * reactReduxFirebase). Real Time Database update uses `update` method
+   * internally while updating profile on Firestore uses `set` with merge.
+   * More info available [in the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/recipes/profile.html#update-profile).
+   * @param profileUpdate - Profile data to place in new profile
+   * @param options - Options object (used to change how profile
+   * update occurs)
+   * @param [options.useSet=true] - Use set with merge instead of
+   * update. Setting to `false` uses update (can cause issue of profile document
+   * does not exist). Note: Only used when updating profile on Firestore
+   * @param [options.merge=true] - Whether or not to use merge when
+   * setting profile. Note: Only used when updating profile on Firestore
+   */
+  updateProfile: (profile: Partial<ProfileType>, options?: Object) => void
 }
 
-//http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html
-interface Storage {
+/**
+ * Instance of Firebase Storage with methods that dispatch redux actions.
+ * More info available [in the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html)
+ */
+interface ExtendedStorageInstance {
   storage: () => StorageTypes.FirebaseStorage
 
-  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html#deletefile
+  /**
+   * Delete a file from Firebase Storage with the option to
+   * remove its metadata in Firebase Database. More info available
+   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/storage.html#deletefile).
+   * @param path - Path to location on Firebase which to set
+   * @param dbPath - Database path to place uploaded file metadata
+   */
   deleteFile: (
     path: string,
     dbPath?: string
   ) => Promise<{ path: string; dbPath: string }>
 
-  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html#uploadfile
+  /**
+   * Upload a file to Firebase Storage with the option to store
+   * its metadata in Firebase Database. More info available
+   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#uploadFile).
+   * @param path - Path to location on Firebase which to set
+   * @param file - File object to upload (usually first element from
+   * array output of select-file or a drag/drop `onDrop`)
+   * @param dbPath - Database path to place uploaded file metadata
+   * @param options - Options
+   * @param options.name - Name of the file
+   */
   uploadFile: (
     path: string,
-    files: File,
+    file: File,
     dbPath?: string,
     options?: {
       name:
@@ -588,9 +698,19 @@ interface Storage {
             uploadConfig: object
           ) => string)
     }
-  ) => Promise<StorageTypes.UploadTaskSnapshot>
+  ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }>
 
-  // http://docs.react-redux-firebase.com/history/v3.0.0/docs/storage.html#uploadfiles
+  /**
+   * Upload multiple files to Firebase Storage with the option
+   * to store their metadata in Firebase Database. More info available
+   * in [the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/firebaseInstance.html#uploadFiles).
+   * @param path - Path to location on Firebase which to set
+   * @param files - Array of File objects to upload (usually from
+   * a select-file or a drag/drop `onDrop`)
+   * @param dbPath - Database path to place uploaded files metadata.
+   * @param options - Options
+   * @param options.name - Name of the file
+   */
   uploadFiles: (
     path: string,
     files: File[],
@@ -608,14 +728,17 @@ interface Storage {
 }
 
 export interface WithFirebaseProps<ProfileType> {
-  firebase: Auth & Storage & ExtendedFirebaseInstance
+  firebase: ExtendedAuthInstance & ExtendedStorageInstance & ExtendedFirebaseInstance
 }
 
 /**
- * React HOC that attaches/detaches Firebase Real Time Database listeners on mount/unmount
+ * React Higher Order Component that automatically listens/unListens to
+ * Firebase Real Time Database on mount/unmount of the component. This uses
+ * React's Component Lifecycle hooks.
+ * @see https://react-redux-firebase.com/api/firebaseConnect.html
  */
 export function firebaseConnect<ProfileType, TInner = {}>(
-  connect?:
+  queriesConfig?:
     | mapper<TInner, ReactReduxFirebaseQueries>
     | ReactReduxFirebaseQueries
 ): InferableComponentEnhancerWithProps<
@@ -625,15 +748,30 @@ export function firebaseConnect<ProfileType, TInner = {}>(
 
 /**
  * Reducer for Firebase state
+ * @param state - Current Firebase Redux State (state.firebase)
+ * @param action - Action which will modify state
+ * @param action.type - Type of Action being called
+ * @param action.path - Path of action that was dispatched
+ * @param action.data - Data associated with action
+ * @see https://react-redux-firebase.com/api/reducer.html
  */
 export function firebaseReducer<UserType>(
-  ...args: any[]
+  state: any,
+  action: any
 ): FirebaseReducer.Reducer<UserType>
 
 /**
  * Reducer for Firebase state
+ * @param state - Current Firebase Redux State (state.firebase)
+ * @param action - Action which will modify state
+ * @param action.type - Type of Action being called
+ * @param  action.path - Path of action that was dispatched
+ * @param action.data - Data associated with action
  */
-export function firebaseStateReducer(...args: any[]): FirestoreReducer.Reducer
+export function firebaseStateReducer(
+  state: any,
+  action: any
+): FirestoreReducer.Reducer
 
 /**
  * React HOC that attaches/detaches Cloud Firestore listeners on mount/unmount
@@ -647,29 +785,68 @@ export function firestoreConnect<TInner = {}>(
 
 /**
  * Reducer for Firestore state
+ * @param state - Current Firebase Redux State (state.firestore)
+ * @param action - Action which will modify state
+ * @param action.type - Type of Action being called
+ * @param action.path - Path of action that was dispatched
+ * @param action.data - Data associated with action
+ * @see https://react-redux-firebase.com/api/reducer.html
  */
-export function firestoreReducer(...args: any[]): FirestoreReducer.Reducer
-
-export function fixPath(path: string): string
-
-export function getVal(firebase: object, path: string, notSetValue?: any): any
+export function firestoreReducer(
+  state: any,
+  action: any
+): FirestoreReducer.Reducer
 
 /**
- * Detect whether data from redux state is loaded yet or not
+ * Fix path by adding "/" to path if needed
+ * @param path - Path string to fix
+ */
+export function fixPath(path: string): string
+
+/**
+ * Get internal Firebase instance with methods which are wrapped with action dispatches. Useful for
+ * integrations into external libraries such as redux-thunk and redux-observable.
+ */
+export function getFirebase(): ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
+
+/**
+ * Get a value from firebase using slash notation.  This enables an easy
+ * migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
+ * **NOTE:** Setting a default value will cause `isLoaded` to always return true
+ * @param firebase - Firebase instance (state.firebase)
+ * @param path - Path of parameter to load
+ * @param notSetValue - Value to return if value is not
+ * found in redux. This will cause `isLoaded` to always return true (since
+ * value is set from the start).
+ * @returns Data located at path within firebase.
+ * @see https://react-redux-firebase.com/api/helpers.html#getval
+ */
+export function getVal(firebase: any, path: string, notSetValue?: any): any
+
+/**
+ * Detect whether items are empty or not
+ * @param item - Item to check loaded status of. A comma seperated list
+ * is also acceptable.
+ * @returns Whether or not item is empty
+ * @see https://react-redux-firebase.com/api/helpers.html#isempty
  */
 export function isEmpty(...args: any[]): boolean
 
 /**
  * Detect whether data from redux state is loaded yet or not
+ * @param item - Item to check loaded status of. A comma separated
+ * list is also acceptable.
+ * @returns Whether or not item is loaded
+ * @see https://react-redux-firebase.com/api/helpers.html#isloaded
  */
 export function isLoaded(...args: any[]): boolean
 
 /**
- * React hook that provides `firebase` object.
- * Firebase is gathered from `store.firebase`, which is attached to store
- * by the store enhancer (`reactReduxFirebase`) during setup.
+ * React hook that provides `firebase` object. Extended Firebase
+ * instance is gathered from `ReactReduxFirebaseContext`.
+ * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebase.html
  */
-export function useFirebase(): ExtendedFirebaseInstance & Auth & Storage
+export function useFirebase(): ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
 
 /**
  * React hook that automatically listens/unListens
@@ -678,10 +855,11 @@ export function useFirebase(): ExtendedFirebaseInstance & Auth & Storage
  * @param queriesConfig - An object or string for paths to sync
  * from firestore. Can also be a function that returns the object or string.
  * @param deps - Dependency for memoizing query object. It's recommend
- * to include deps if using object, array or function as a query. 
+ * to include deps if using object, array or function as a query.
+ * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html
  */
 export function useFirebaseConnect(
-  connect?: ReactReduxFirebaseQueries | ReactReduxFirebaseQueriesFunction,
+  querySettings?: ReactReduxFirebaseQueries | ReactReduxFirebaseQueriesFunction
 ): void
 
 /**
@@ -689,6 +867,7 @@ export function useFirebaseConnect(
  * Firestore instance is gathered from `store.firestore`, which is attached
  * to store by the store enhancer (`reduxFirestore`) during setup of
  * [`redux-firestore`](https://github.com/prescottprue/redux-firestore)
+ * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestore.html
  */
 export function useFirestore(): ExtendedFirestoreInstance
 
@@ -698,29 +877,37 @@ export function useFirestore(): ExtendedFirestoreInstance
  * Cloud Firestore, including it's reducer, before attempting to use.
  * @param queriesConfig - An object or string for paths to sync
  * from firestore. Can also be a function that returns the object or string.
- * @param deps - Dependency for memoizing query object. It's recommend
- * to include deps if using object, array or function as a query. 
  */
 export function useFirestoreConnect<TInner>(
-  connect?:
+  queriesConfig?:
     | mapper<TInner, (string | ReduxFirestoreQuerySetting)[]>
     | ReduxFirestoreQuerySetting[]
     | string[]
-    | mapper<TInner, (string | ReduxFirestoreQuerySetting)>
+    | mapper<TInner, string | ReduxFirestoreQuerySetting>
     | ReduxFirestoreQuerySetting
-    | string,
+    | string
 ): void
 
+
+/**
+ * Populate with data from multiple paths within redux.
+ * @param state - Firebase state object (state.firebase in redux store)
+ * @param path - Path of parameter to load
+ * @param populates - Array of populate config objects
+ * @param notSetValue - Value to return if value is not found
+ * @see https://react-redux-firebase.com/populate.html
+ */
 export function populate(
   state: object,
   path: string,
-  populates: any,
+  populates: any[],
   notSetValue?: any
 ): any
 
 /**
  * React Context provider for Firebase instance (with methods wrapped in dispatch).
  * Needed to use HOCs like firebaseConnect and withFirebase.
+ * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html
  */
 export function ReactReduxFirebaseProvider(
   props: ReactReduxFirebaseProviderProps
@@ -728,6 +915,7 @@ export function ReactReduxFirebaseProvider(
 
 /**
  * Props passed to ReactReduxFirebaseContext component
+ * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html
  */
 export interface ReactReduxFirebaseProviderProps {
   firebase: any
@@ -807,14 +995,15 @@ export interface ReduxFirestoreConfig {
 }
 
 /**
- * Props passed to ReactReduFirebaseContext component
+ * Props passed to ReactReduFirebaseProvider
+ * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html
  */
 export interface ReduxFirestoreProviderProps {
-  firebase: typeof Firebase
+  firebase: any
   config: Partial<ReactReduxFirebaseConfig>
   dispatch: (action: object) => void
   createFirestoreInstance: (
-    firebase: typeof Firebase,
+    firebase: any,
     configs: Partial<ReduxFirestoreConfig>,
     dispatch: Dispatch
   ) => object
@@ -825,12 +1014,13 @@ export interface ReduxFirestoreProviderProps {
 /**
  * React Context provider for Firestore instance (with methods wrapped in dispatch). Needed to use HOCs
  * like firestoreConnect and withFirestore.
+ * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/ReactReduxFirebaseProvider.html
  */
 export function ReduxFirestoreProvider(props: ReduxFirestoreProviderProps): any
 
 /**
- * React Higher Order Component that passes firebase as a prop (comes from context.store.firebase)
- * More info available in the [withFirebase section of the docs](http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/withFirebase.html).
+ * React Higher Order Component that passes firebase as a prop (comes from context.store.firebase).
+ * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/withFirebase.html
  */
 export function withFirebase<P extends object>(
   componentToWrap: React.ComponentType<P>
@@ -838,7 +1028,7 @@ export function withFirebase<P extends object>(
 
 /**
  * React Higher Order Component that passes firestore as a prop (comes from context.store.firestore)
- * http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/withFirestore.html
+ * @see https://docs.react-redux-firebase.com/history/v3.0.0/docs/api/withFirestore.html
  */
 export function withFirestore<P extends object>(
   componentToWrap: React.ComponentType<P>
@@ -952,43 +1142,6 @@ export namespace fixPath {
 
 export namespace getVal {
   const prototype: {}
-}
-
-export namespace helpers {
-  function fixPath(path: any): any
-
-  function getVal(firebase: any, path: any, notSetValue?: any): any
-
-  function isEmpty(...args: any[]): any
-
-  function isLoaded(...args: any[]): any
-
-  function populate(
-    state: any,
-    path: any,
-    populates: any,
-    notSetValue?: any
-  ): any
-
-  namespace fixPath {
-    const prototype: {}
-  }
-
-  namespace getVal {
-    const prototype: {}
-  }
-
-  namespace isEmpty {
-    const prototype: {}
-  }
-
-  namespace isLoaded {
-    const prototype: {}
-  }
-
-  namespace populate {
-    const prototype: {}
-  }
 }
 
 export namespace isEmpty {

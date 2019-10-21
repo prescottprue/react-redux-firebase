@@ -1,11 +1,12 @@
 import React from 'react'
 import { some, isMatch, filter } from 'lodash'
 import { createContainer, sleep } from '../utils'
-import useFirestoreConnect, {
-  createUseFirestoreConnect
-} from '../../src/useFirestoreConnect'
+import useFirestoreConnect from '../../src/useFirestoreConnect'
 
-/* eslint-disable react/prop-types */
+/* eslint-disable react/prop-types, jsdoc/require-returns */
+/**
+ *
+ */
 function TestComponent({ dynamicProp }) {
   useFirestoreConnect(
     dynamicProp === null
@@ -129,11 +130,5 @@ describe('useFirestoreConnect', () => {
         })
       )
     ).to.have.lengthOf(1)
-  })
-})
-
-describe('createUseFirestoreConnect', () => {
-  it('creates a function', () => {
-    expect(createUseFirestoreConnect('store2')).to.be.a.function
   })
 })

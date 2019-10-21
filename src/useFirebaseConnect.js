@@ -5,25 +5,69 @@ import { getEventsFromInput, invokeArrayQuery } from './utils'
 import useFirebase from './useFirebase'
 
 /**
- * @name createUseFirebaseConnect
- * @description Function that creates a hook that
- * automatically listens/unListens to provided firebase paths using
- * React's useEffect hooks.
- * **WARNING!!** This is an advanced feature, and should only be used when
- * needing to access a firebase instance created under a different store key.
- * @return {Function} - HOC that accepts a watchArray and wraps a component
- * @example <caption>Basic</caption>
- * // this.props.firebase set on App component as firebase object with helpers
- * import { createUseFirebaseConnect } from 'react-redux-firebase'
- * // create firebase connect that uses another redux store
- * const useFirebaseConnect = createUseFirebaseConnect()
+ * Hook that automatically listens/unListens to provided firebase paths
+ * using React's useEffect hook.
+ * @param {object|string|Function|Array} queriesConfig - Object, string, or
+ * array contains object or string for path to sync from Firebase or null if
+ * hook doesn't need to sync. Can also be a function that returns an object,
+ * a path string, or array of an object or a path string.
+ * @see http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirebaseConnect.html
+ * @example <caption>Ordered Data</caption>
+ * import { useSelector } from 'react-redux'
+ * import { useFirebaseConnect } from 'react-redux-firebase'
+ *
+ * export default function Todos() {
+ *   // sync /todos from firebase into redux
+ *   useFirebaseConnect('todos')
+ *   // Connect to redux state using selector hook
+ *   const todos = useSelector(state => state.firebase.data.todos)
+ *   return (
+ *     <div>
+ *       {JSON.stringify(todos, null, 2)}
+ *     </div>
+ *   )
+ * }
+ * @example <caption>Data that depends on props</caption>
+ * import { compose } from 'redux'
+ * import { useSelector } from 'react-redux'
+ * import { useFirebaseConnect } from 'react-redux-firebase'
+ *
+ * function Post({ postId }) {
+ *   useFirebaseConnect(`posts/${postId}`) // sync /posts/postId from firebase into redux
+ *   const post = useSelector(({ firebase }) => state.firebase.ordered.posts && state.firebase.ordered.posts[postId])
+ *   return (
+ *     <div>
+ *       {JSON.stringify(post, null, 2)}
+ *     </div>
+ *   )
+ * }
+ *
+ * export default enhance(Post)
+ * @example <caption>Data that depends on props, an array as a query</caption>
+ * import { compose } from 'redux'
+ * import { useSelector } from 'react-redux'
+ * import { useFirebaseConnect, getVal } from 'react-redux-firebase'
+ *
+ * function Post({ post, postId }) {
+ *   useFirebaseConnect([`posts/${postId}`], [postId]) // sync /posts/postId from firebase into redux
+ *   const post = useSelector(state => {
+ *     return state.firebase.ordered.posts && state.firebase.ordered.posts[postId]
+ *   })
+ *   return (
+ *     <div>
+ *       {JSON.stringify(post, null, 2)}
+ *     </div>
+ *   )
+ * }
+ *
+ * export default Post
  */
-export const createUseFirebaseConnect = () => dataOrFn => {
+export default function useFirebaseConnect(queriesConfig) {
   const firebase = useFirebase()
   const eventRef = useRef()
   const dataRef = useRef()
 
-  const data = useMemo(() => invokeArrayQuery(dataOrFn), [dataOrFn])
+  const data = useMemo(() => invokeArrayQuery(queriesConfig), [queriesConfig])
 
   useEffect(
     () => {
@@ -63,79 +107,3 @@ export const createUseFirebaseConnect = () => dataOrFn => {
     }
   }, [])
 }
-
-/**
-/**
- * @name useFirebaseConnect
- * @description Hook that automatically listens/unListens
- * to provided firebase paths using React's useEffect hook.
- * @param {Object|String|Function|Array} queriesConfigs - Object, string, or
- * array contains object or string for path to sync from Firebase or null if
- * hook doesn't need to sync. Can also be a function that returns an object,
- * a path string, or array of an object or a path string.
- * @example <caption>Ordered Data</caption>
- * import { compose } from 'redux'
- * import { connect } from 'react-redux'
- * import { firebaseUseConnect } from 'react-redux-firebase'
- *
- * const enhance = compose(
- *   connect((state) => ({
- *     todos: state.firebase.ordered.todos
- *   }))
- * )
- * 
- * // use enhnace to pass todos list as props.todos
- * function Todos({ todos })) {
- *   useFirebaseConnect('todos') // sync /todos from firebase into redux
- *   return (
- *     <div>
- *       {JSON.stringify(todos, null, 2)}
- *     </div>
- *   )
- * }
- * 
- * export default enhance(Todos)
- * @example <caption>Data that depends on props</caption>
- * import { compose } from 'redux'
- * import { connect } from 'react-redux'
- * import { firebaseUseConnect, getVal } from 'react-redux-firebase'
- *
- * const enhance = compose(
- *   connect((state, props) => ({
- *     post: getVal(state.firebase.data, `posts/${props.postId}`),
- *   }))
- * )
- *
- * function Post({ post, postId }) {
- *   useFirebaseConnect(`posts/${postId}`) // sync /posts/postId from firebase into redux
- *   return (
- *     <div>
- *       {JSON.stringify(post, null, 2)}
- *     </div>
- *   )
- * }
- * 
- * export default enhance(Post)
- * @example <caption>Data that depends on props, an array as a query</caption>
- * import { compose } from 'redux'
- * import { connect } from 'react-redux'
- * import { firebaseUseConnect, getVal } from 'react-redux-firebase'
- *
- * const enhance = compose(
- *   connect((state, props) => ({
- *     post: getVal(state.firebase.data, `posts/${props.postId}`),
- *   }))
- * )
- *
- * function Post({ post, postId }) {
- *   useFirebaseConnect([`posts/${postId}`], [postId]) // sync /posts/postId from firebase into redux
- *   return (
- *     <div>
- *       {JSON.stringify(post, null, 2)}
- *     </div>
- *   )
- * }
- *
- * export default enhance(Post)
- */
-export default createUseFirebaseConnect()

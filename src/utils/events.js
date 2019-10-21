@@ -1,11 +1,11 @@
-import { flatMap, isArray, isObject, isString, remove } from 'lodash'
+import { flatMap, isObject, remove } from 'lodash'
 import { getPopulates } from './populate'
 import { getQueryIdFromPath } from './query'
 
 /**
  * @description Convert path string to object with queryParams, path, and populates
- * @param {String} path - Path that can contain query parameters and populates
- * @return {Object} watchEvents - Array of watch events
+ * @param {string} path - Path that can contain query parameters and populates
+ * @returns {object} watchEvents - Array of watch events
  */
 export function pathStrToObj(path) {
   let pathObj = { path, type: 'value', isQuery: false }
@@ -34,15 +34,16 @@ export function pathStrToObj(path) {
 /**
  * @description Convert watch path definition array to watch events
  * @param {Array} paths - Array of path strings, objects, and arrays to watch
- * @return {Array} watchEvents - Array of watch events
+ * @returns {Array} watchEvents - Array of watch events
  */
 export function getEventsFromInput(paths) {
   return flatMap(paths, path => {
-    if (isString(path)) {
+    // If path is a string - convert to obj and place within new array
+    if (typeof path === 'string' || path instanceof String) {
       return [pathStrToObj(path)]
     }
 
-    if (isArray(path)) {
+    if (Array.isArray(path)) {
       // TODO: Handle input other than array with string
       // TODO: Handle populates within array
       return [

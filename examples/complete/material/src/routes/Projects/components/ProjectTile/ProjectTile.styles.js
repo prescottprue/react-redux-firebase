@@ -21,10 +21,10 @@ export default theme => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    ':hover': {
+    '&:hover': {
       color: ''
     },
-    ':visited': {
+    '&:visited': {
       textDecoration: 'none'
     }
   }

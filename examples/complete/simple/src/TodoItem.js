@@ -1,37 +1,29 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { compose } from 'redux'
-import { withHandlers } from 'recompose'
-import { withFirebase } from 'react-redux-firebase'
-
+import { useSelector } from 'react-redux'
+import { useFirebase } from 'react-redux-firebase'
 import './Todo.css'
 
-// Create enhancer to wrap component below. It does the following
-// 1. Adds props.firebase (used in handlers)
-// 2. Adds toggleDone and deleteTodo handlers (which use props.firebase)
-const enhance = compose(
-  // Add props.firebase
-  withFirebase,
-  // Handlers as props
-  withHandlers({
-    toggleDone: ({ firebase, done, id }) => () =>
-      firebase.update(`todos/${id}`, { done: !done }),
-    deleteTodo: ({ firebase, todo, id }) => () =>
-      firebase.remove(`todos/${id}`)
-  })
-)
+function TodoItem({ id }) {
+  const todo = useSelector(state => state.firebase.data.todos[id])
+  const firebase = useFirebase()
 
-function TodoItem(props) {
-  const { deleteTodo, toggleDone, text, name, done } = props
+  function toggleDone() {
+    firebase.update(`todos/${id}`, { done: !todo.done })
+  }
+  function deleteTodo() {
+    return firebase.remove(`todos/${id}`)
+  }
+
   return (
     <li className="Todo">
       <input
         className="Todo-Input"
         type="checkbox"
-        checked={done}
+        checked={todo.done}
         onChange={toggleDone}
       />
-      {text || name}
+      {todo.text || todo.name}
       <button className="Todo-Button" onClick={deleteTodo}>
         Delete
       </button>
@@ -40,16 +32,7 @@ function TodoItem(props) {
 }
 
 TodoItem.propTypes = {
-  todo: PropTypes.shape({
-    text: PropTypes.string,
-    id: PropTypes.string
-  }),
-  firebase: PropTypes.shape({ // from enhnace (withfirebase)
-    update: PropTypes.func.isRequired,
-    remove: PropTypes.func.isRequired
-  }),
-  toggleDone: PropTypes.func, // from enhance (withHandlers)
-  deleteTodo: PropTypes.func, // from enhance (withHandlers)
+  id: PropTypes.string.isRequired
 }
 
-export default enhance(TodoItem)
+export default TodoItem

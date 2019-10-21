@@ -23,9 +23,5 @@ describe('module', () => {
     it('firebaseReducer', () => {
       expect(src).to.respondTo('firebaseReducer')
     })
-    it('helpers', () => {
-      expect(src).to.have.property('helpers')
-      expect(src.helpers).to.be.an.object
-    })
   })
 })

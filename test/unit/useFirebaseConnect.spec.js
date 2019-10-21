@@ -1,11 +1,12 @@
 import React from 'react'
 import { createContainer, sleep } from '../utils'
 import { some, isMatch, filter } from 'lodash'
-import useFirebaseConnect, {
-  createUseFirebaseConnect
-} from '../../src/useFirebaseConnect'
+import useFirebaseConnect from '../../src/useFirebaseConnect'
 
-/* eslint-disable react/prop-types */
+/* eslint-disable react/prop-types, jsdoc/require-returns */
+/**
+ *
+ */
 function TestComponent({ dynamicProp }) {
   useFirebaseConnect(dynamicProp || `test/start`, [dynamicProp])
   return <div />
@@ -118,11 +119,5 @@ describe('useFirebaseConnect', () => {
         })
       )
     ).to.have.lengthOf(1)
-  })
-})
-
-describe('createUseFirebaseConnect', () => {
-  it('accepts a different store key', () => {
-    createUseFirebaseConnect('store2')
   })
 })

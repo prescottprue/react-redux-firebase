@@ -2,67 +2,47 @@
 
 ### Table of Contents
 
--   [createUseFirestoreConnect](#createusefirestoreconnect)
--   [useFirestoreConnect](#usefirestoreconnect)
-
-## createUseFirestoreConnect
-
-React hook that automatically listens/unListens to provided
-firestore paths.
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-Firebase state (state.firestore)
-
-**Examples**
-
-_Basic_
-
-```javascript
-// props.firestore set on App component as firestore object with helpers
-import { createUseFirestoreConnect } from 'react-redux-firebase'
-
-const firestoreConnect = createUseFirestoreConnect()
-
-export default useFirestoreConnect()
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** React hook that accepts watch query
+-   [useFirestoreConnect][1]
+    -   [Parameters][2]
+    -   [Examples][3]
 
 ## useFirestoreConnect
+
+-   **See: [http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html][4]**
 
 React hook that automatically listens/unListens
 to provided Cloud Firestore paths. Make sure you have required/imported
 Cloud Firestore, including it's reducer, before attempting to use.
 **Note** Populate is not yet supported.
 
-**Parameters**
+### Parameters
 
--   `queriesConfig` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** An object, string,
+-   `queriesConfigs` **([object][5] \| [string][6] \| [Array][7] \| [Function][8])** An object, string,
     or array of object or string for paths to sync from firestore. Can also be
     a function that returns the object, string, or array of object or string.
 
-**Examples**
+### Examples
 
 _Basic_
 
 ```javascript
 import React from 'react'
 import { map } from 'lodash'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useFirebaseConnect } from 'react-redux-firebase'
 
-function TodosList({ todosList }) {
+function TodosList() {
   useFirebaseConnect('todos') // sync todos collection from Firestore into redux
-
-  return <ul>{_.map(todosList, todo => <li>{todo}</li>)}</ul>
+  const todos = useSelector(state => state.firebase.data.todos)
+  return (
+    <ul>
+      {map(todos, (todo, todoId) => (
+       <li>id: {todoId} todo: {JSON.stringify(todo)}</li>
+      ))}
+   </ul>
+  )
 }
-
-// pass todos list from redux as props.todosList
-export default compose(
-  connect((state) => ({
-    todosList: state.firestore.data.todos
-  })
-)(TodosList)
+export default TodosList
 ```
 
 _Object as query_
@@ -89,3 +69,19 @@ export default compose(
   })
 )(TodoItem)
 ```
+
+[1]: #usefirestoreconnect
+
+[2]: #parameters
+
+[3]: #examples
+
+[4]: http://docs.react-redux-firebase.com/history/v3.0.0/docs/api/useFirestoreConnect.html
+
+[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function

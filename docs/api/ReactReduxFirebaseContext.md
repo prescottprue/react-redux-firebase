@@ -2,9 +2,11 @@
 
 ### Table of Contents
 
--   [ReactReduxFirebaseContext](#reactreduxfirebasecontext)
+-   [ReactReduxFirebaseContext][1]
 
 ## ReactReduxFirebaseContext
 
 Context for extended firebase instance created
 by react-redux-firebase
+
+[1]: #reactreduxfirebasecontext

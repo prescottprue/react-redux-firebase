@@ -18,6 +18,7 @@ examples/**/node_modules
 _book/**
 _site/**
 coverage
+.nyc_output
 dist
 es
 lib

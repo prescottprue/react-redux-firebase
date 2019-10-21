@@ -160,6 +160,18 @@ props.firebase.login({
   profile: { email: 'rick@sanchez.com' }
 })
 ```
+  
+  *Expo/react-native Facebook Login*
+```js
+async function loginWithFacebook() {
+  const data = await Expo.Facebook.logInWithReadPermissionsAsync('FB_ID', { permissions: ['public_profile', 'email'] })
+
+  if (data.type === 'success') {
+    const credential = props.firebase.auth.FacebookAuthProvider.credential(data.token)
+    await props.firebase.login({ credential })
+  }
+}
+```
 
 After logging in, profile and auth are available in redux state:
 
@@ -185,7 +197,6 @@ Similar to Firebase's `ref.createUser(credentials)` but with support for automat
 * `credentials` [**Object**][object-url]
   * `credentials.email` [**String**][string-url] - User's email
   * `credentials.password` [**String**][string-url] - User's password
-  * `credentials.signIn` [**String**][string-url] - Whether or not to sign in when user is signing up (defaults to `true`)
 
 * `profile` [**Object**][object-url]
   * `profile.username` [**String**][string-url]
@@ -297,18 +308,18 @@ const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', 
   'size': 'invisible',
 });
 firebase.signInWithPhoneNumber(phoneNumber, appVerifier)
-    .then((confirmationResult) => {
-      // SMS sent. Prompt user to type the code from the message, then sign the
-      // user in with confirmationResult.confirm(code).
-      const verificationCode = window.prompt('Please enter the verification ' +
-          'code that was sent to your mobile device.');
-      return confirmationResult.confirm(verificationCode);
-    })
-    .catch((error) => {
-      // Error; SMS not sent
-      // Handle Errors Here
-      return Promise.reject(error)
-    });
+  .then((confirmationResult) => {
+    // SMS sent. Prompt user to type the code from the message, then sign the
+    // user in with confirmationResult.confirm(code).
+    const verificationCode = window.prompt('Please enter the verification ' +
+        'code that was sent to your mobile device.');
+    return confirmationResult.confirm(verificationCode);
+  })
+  .catch((error) => {
+    // Error; SMS not sent
+    // Handle Errors Here
+    return Promise.reject(error)
+  });
 ```
 
 ##### Parameters

@@ -1,17 +1,19 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
+import styles from './NotFoundPage.styles'
 
-function NotFoundPage({ classes }) {
+const useStyles = makeStyles(styles)
+
+function NotFoundPage() {
+  const classes = useStyles()
+
   return (
     <div className={classes.root}>
-      <h1>Whoops! 404!</h1>
+      <Typography variant="h2">Whoops! 404!</Typography>
       <p>This page was not found.</p>
     </div>
   )
-}
-
-NotFoundPage.propTypes = {
-  classes: PropTypes.object // from enhancer (withStyles)
 }
 
 export default NotFoundPage

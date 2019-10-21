@@ -2,51 +2,22 @@
 
 ### Table of Contents
 
--   [createFirebaseConnect](#createfirebaseconnect)
--   [firebaseConnect](#firebaseconnect)
-
-## createFirebaseConnect
-
-Function that creates a Higher Order Component which
-automatically listens/unListens to provided firebase paths using
-React's Lifecycle hooks.
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-
-**Parameters**
-
--   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
-    Firebase state (state.firebase) (optional, default `'store'`)
-
-**Examples**
-
-_Basic_
-
-```javascript
-// props.firebase set on App component as firebase object with helpers
-import { createFirebaseConnect } from 'react-redux-firebase'
-// create firebase connect that uses another redux store
-const firebaseConnect = createFirebaseConnect('anotherStore')
-// use the firebaseConnect to wrap a component
-export default firebaseConnect()(SomeComponent)
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** HOC that accepts a watchArray and wraps a component
+-   [firebaseConnect][1]
+    -   [Parameters][2]
+    -   [Examples][3]
+    -   [Parameters][4]
 
 ## firebaseConnect
 
-**Extends React.Component**
+-   **See: [http://react-redux-firebase.com/api/firebaseConnect.html][5]**
 
-Higher Order Component that automatically listens/unListens
-to provided firebase paths using React's Lifecycle hooks.
+### Parameters
 
-**Parameters**
-
--   `watchArray` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
+-   `queriesConfig` **([Array][6] \| [Function][7])** Array of objects or strings for paths to sync
     from Firebase. Can also be a function that returns the array. The function
-    is passed the current props and the firebase object.
+    is passed the current props and the firebase object. (optional, default `[]`)
 
-**Examples**
+### Examples
 
 _Basic_
 
@@ -99,13 +70,13 @@ const enhance = compose(
   ])),
   connect((state, props) => ({
     post: get(state.firebase.data, `posts.${props.postId}`),
-  })
+  }))
 )
 
 function Post({ post }) {
   return (
     <div>
-      {JSON.stringify(post, null, 2)}
+     {JSON.stringify(post, null, 2)}
     </div>
   )
 }
@@ -113,4 +84,30 @@ function Post({ post }) {
 export default enhance(Post)
 ```
 
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the wrapped component
+Returns **[Function][7]** that accepts a component to wrap and returns the wrapped component
+
+## 
+
+Render component wrapped in context
+
+### Parameters
+
+-   `props` **[object][8]** Component props
+
+Returns **React.Component** Component wrapped in context
+
+[1]: #firebaseconnect
+
+[2]: #parameters
+
+[3]: #examples
+
+[4]: #parameters-1
+
+[5]: http://react-redux-firebase.com/api/firebaseConnect.html
+
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object

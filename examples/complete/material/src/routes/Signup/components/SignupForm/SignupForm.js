@@ -1,11 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Field } from 'redux-form'
-import TextField from 'components/FormTextField'
+import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
+import TextField from 'components/FormTextField'
 import { required, validateEmail } from 'utils/form'
+import styles from './SignupForm.styles'
 
-function SignupForm({ pristine, submitting, handleSubmit, classes }) {
+const useStyles = makeStyles(styles)
+
+function SignupForm({ pristine, submitting, handleSubmit }) {
+  const classes = useStyles()
+
   return (
     <form className={classes.root} onSubmit={handleSubmit}>
       <Field
@@ -44,7 +50,6 @@ function SignupForm({ pristine, submitting, handleSubmit, classes }) {
 }
 
 SignupForm.propTypes = {
-  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
   pristine: PropTypes.bool.isRequired, // from enhancer (reduxForm)
   submitting: PropTypes.bool.isRequired, // from enhancer (reduxForm)
   handleSubmit: PropTypes.func.isRequired // from enhancer (reduxForm - calls onSubmit)

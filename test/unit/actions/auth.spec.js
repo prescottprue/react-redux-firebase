@@ -10,6 +10,9 @@ import {
   updateProfile,
   reloadAuth,
   linkWithCredential,
+  linkWithPopup,
+  linkAndRetrieveDataWithCredential,
+  linkWithRedirect,
   signInWithPhoneNumber,
   updateAuth,
   updateEmail,
@@ -850,6 +853,197 @@ describe('Actions: Auth -', () => {
         // both dispatch calls (one for start, one for error)
         expect(dispatch).to.have.been.calledTwice
         expect(linkWithCredentialSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
+    })
+  })
+
+  describe('linkWithPopup', () => {
+    it.skip('rejects if not logged in', async () => {
+      try {
+        res = await linkWithPopup(dispatch, firebase, '1234567891', {})
+      } catch (err) {
+        expect(err).to.have.property(
+          'message',
+          'User must be logged in to link with credential.'
+        )
+      }
+    })
+
+    it('calls firebase linkWithPopup method', async () => {
+      const linkWithPopupSpy = createSuccessStub(() => Promise.resolve())
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithPopup',
+        linkWithPopupSpy
+      )
+      await linkWithPopup(dispatch, newFakeFirebase, '1234567891', {})
+      expect(linkWithPopupSpy).to.have.been.calledOnce
+    })
+
+    it('attaches confirm method on successful resolve', async () => {
+      const linkWithPopupSpy = createSuccessStub({
+        confirm: () => Promise.resolve({})
+      })
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithPopup',
+        linkWithPopupSpy
+      )
+      const res = await linkWithPopup(
+        dispatch,
+        newFakeFirebase,
+        '1234567891',
+        {}
+      )
+      expect(linkWithPopupSpy).to.have.been.calledOnce
+      expect(res).to.respondTo('confirm')
+      res.confirm()
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const linkWithPopupSpy = createFailureStub()
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithPopup',
+        linkWithPopupSpy
+      )
+      try {
+        await linkWithPopup(dispatch, newFakeFirebase, '1234567891', {})
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(linkWithPopupSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
+    })
+  })
+
+  describe('linkAndRetrieveDataWithCredential', () => {
+    it.skip('rejects if not logged in', async () => {
+      try {
+        res = await linkAndRetrieveDataWithCredential(
+          dispatch,
+          firebase,
+          '1234567891',
+          {}
+        )
+      } catch (err) {
+        expect(err).to.have.property(
+          'message',
+          'User must be logged in to link with credential.'
+        )
+      }
+    })
+
+    it('calls firebase linkAndRetrieveDataWithCredential method', async () => {
+      const linkAndRetrieveDataWithCredentialSpy = createSuccessStub(() =>
+        Promise.resolve()
+      )
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkAndRetrieveDataWithCredential',
+        linkAndRetrieveDataWithCredentialSpy
+      )
+      await linkAndRetrieveDataWithCredential(
+        dispatch,
+        newFakeFirebase,
+        '1234567891',
+        {}
+      )
+      expect(linkAndRetrieveDataWithCredentialSpy).to.have.been.calledOnce
+    })
+
+    it('attaches confirm method on successful resolve', async () => {
+      const linkAndRetrieveDataWithCredentialSpy = createSuccessStub({
+        confirm: () => Promise.resolve({})
+      })
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkAndRetrieveDataWithCredential',
+        linkAndRetrieveDataWithCredentialSpy
+      )
+      const res = await linkAndRetrieveDataWithCredential(
+        dispatch,
+        newFakeFirebase,
+        '1234567891',
+        {}
+      )
+      expect(linkAndRetrieveDataWithCredentialSpy).to.have.been.calledOnce
+      expect(res).to.respondTo('confirm')
+      res.confirm()
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const linkAndRetrieveDataWithCredentialSpy = createFailureStub()
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkAndRetrieveDataWithCredential',
+        linkAndRetrieveDataWithCredentialSpy
+      )
+      try {
+        await linkAndRetrieveDataWithCredential(
+          dispatch,
+          newFakeFirebase,
+          '1234567891',
+          {}
+        )
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(linkAndRetrieveDataWithCredentialSpy).to.have.been.calledOnce
+        expect(err.message).to.equal('test')
+      }
+    })
+  })
+
+  describe('linkWithRedirect', () => {
+    it.skip('rejects if not logged in', async () => {
+      try {
+        res = await linkWithRedirect(dispatch, firebase, '1234567891', {})
+      } catch (err) {
+        expect(err).to.have.property(
+          'message',
+          'User must be logged in to link with credential.'
+        )
+      }
+    })
+
+    it('calls firebase linkWithRedirect method', async () => {
+      const linkWithRedirectSpy = createSuccessStub(() => Promise.resolve())
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithRedirect',
+        linkWithRedirectSpy
+      )
+      await linkWithRedirect(dispatch, newFakeFirebase, '1234567891', {})
+      expect(linkWithRedirectSpy).to.have.been.calledOnce
+    })
+
+    it('attaches confirm method on successful resolve', async () => {
+      const linkWithRedirectSpy = createSuccessStub({
+        confirm: () => Promise.resolve({})
+      })
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithRedirect',
+        linkWithRedirectSpy
+      )
+      const res = await linkWithRedirect(
+        dispatch,
+        newFakeFirebase,
+        '1234567891',
+        {}
+      )
+      expect(linkWithRedirectSpy).to.have.been.calledOnce
+      expect(res).to.respondTo('confirm')
+      res.confirm()
+    })
+
+    it('rejects and dispatches on failure', async () => {
+      const linkWithRedirectSpy = createFailureStub()
+      const newFakeFirebase = addSpyToCurrentUser(
+        'linkWithRedirect',
+        linkWithRedirectSpy
+      )
+      try {
+        await linkWithRedirect(dispatch, newFakeFirebase, '1234567891', {})
+      } catch (err) {
+        // both dispatch calls (one for start, one for error)
+        expect(dispatch).to.have.been.calledTwice
+        expect(linkWithRedirectSpy).to.have.been.calledOnce
         expect(err.message).to.equal('test')
       }
     })

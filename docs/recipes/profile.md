@@ -84,7 +84,7 @@ The way user profiles are written to the database can be modified by passing the
 // within your createStore.js or store.js file include the following config
 const config = {
   userProfile: 'users', // where profiles are stored in database
-  profileFactory: (userData, profileData) => { // how profiles are stored in database
+  profileFactory: (userData, profileData, firebase) => { // how profiles are stored in database
     const { user } = userData
     return {
       email: user.email

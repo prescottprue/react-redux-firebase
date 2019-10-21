@@ -3,32 +3,29 @@ import {
   set,
   get,
   has,
-  last,
   map,
   mapValues,
-  every,
   reduce,
   defaultsDeep,
-  isString,
-  compact,
-  some,
-  isArray,
-  isFunction
+  some
 } from 'lodash'
 import { topLevelPaths } from './constants'
 import { getPopulateObjs } from './utils/populate'
 import { getDotStrPath } from './utils/reducers'
 
 /**
- * @description Get a value from firebase using slash notation.  This enables an easy
+ * **Deprecated** - This helper will be removed in future versions. Please
+ * use object destructuring or utilities from other libraries such as
+ * [lodash's get](https://lodash.com/docs/4.17.15#get).
+ * Get a value from firebase using slash notation. This enables an easy
  * migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
  * **NOTE:** Setting a default value will cause `isLoaded` to always return true
- * @param {Object} firebase - Firebase instance (state.firebase)
- * @param {String} path - Path of parameter to load
- * @param {Any} notSetValue - Value to return if value is not
+ * @param {object} firebase - Firebase instance (state.firebase)
+ * @param {string} path - Path of parameter to load
+ * @param {any} notSetValue - Value to return if value is not
  * found in redux. This will cause `isLoaded` to always return true (since
  * value is set from the start).
- * @return {Any} Data located at path within firebase.
+ * @returns {any} Data located at path within firebase.
  * @example <caption>Basic</caption>
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
@@ -39,7 +36,7 @@ import { getDotStrPath } from './utils/reducers'
  *   connect(({ firebase }) => ({
  *     // this.props.todos loaded from state.firebase.data.todos
  *     todos: getVal(firebase, 'data/todos/user1')
- *   })
+ *   }))
  * )
  * export default enhance(SomeComponent)
  * @example <caption>Base Paths</caption>
@@ -67,7 +64,7 @@ import { getDotStrPath } from './utils/reducers'
  *   connect(({ firebase }) => ({
  *     // this.props.todos loaded from state.firebase.data.todos
  *     todos: getVal(firebase, 'data/todos/user1', defaultValue)
- *   })
+ *   }))
  * )
  *
  * export default enhance(SomeComponent)
@@ -84,10 +81,10 @@ export function getVal(firebase, path, notSetValue) {
 }
 
 /**
- * @description Detect whether data from redux state is loaded yet or not
- * @param {Object} item - Item to check loaded status of. A comma separated
+ * Detect whether data from redux state is loaded yet or not
+ * @param {...object} args - Items to check loaded status of. A comma separated
  * list is also acceptable.
- * @return {Boolean} Whether or not item is loaded
+ * @returns {boolean} Whether or not item is loaded
  * @example
  * import React from 'react'
  * import PropTypes from 'prop-types'
@@ -105,12 +102,12 @@ export function getVal(firebase, path, notSetValue) {
  *
  * function Todos({ todos }) {
  *   // Message for if todos are loading
- *   if(!isLoaded(todos)) {
+ *   if (!isLoaded(todos)) {
  *     return <span>Loading...</span>
  *   }
  *
  *   // Message if todos are empty
- *   if(isEmpty(todos)) {
+ *   if (isEmpty(todos)) {
  *     return <span>No Todos Found</span>
  *   }
  *
@@ -126,14 +123,14 @@ export function getVal(firebase, path, notSetValue) {
 export function isLoaded(...args) {
   return !args || !args.length
     ? true
-    : every(args, arg => arg !== undefined && get(arg, 'isLoaded') !== false)
+    : args.every(arg => arg !== undefined && get(arg, 'isLoaded') !== false)
 }
 
 /**
- * @description Detect whether items are empty or not
- * @param {Object} item - Item to check loaded status of. A comma seperated list
+ * Detect whether items are empty or not
+ * @param {object} args - Item to check loaded status of. A comma seperated list
  * is also acceptable.
- * @return {Boolean} Whether or not item is empty
+ * @returns {boolean} Whether or not item is empty
  * @example
  * import React from 'react'
  * import PropTypes from 'prop-types'
@@ -150,12 +147,12 @@ export function isLoaded(...args) {
  *
  * function Todos({ todos }) {
  *   // Message for if todos are loading
- *   if(!isLoaded(todos)) {
+ *   if (!isLoaded(todos)) {
  *     return <span>Loading...</span>
  *   }
  *
  *   // Message if todos are empty
- *   if(isEmpty(todos)) {
+ *   if (isEmpty(todos)) {
  *     return <span>No Todos Found</span>
  *   }
  *
@@ -169,13 +166,15 @@ export function isLoaded(...args) {
  * export default enhance(Todos)
  */
 export function isEmpty(...args) {
-  return some(args, arg => !(arg && size(arg)) || arg.isEmpty === true)
+  return !args || !args.length
+    ? true
+    : args.some(arg => !(arg && size(arg)) || arg.isEmpty === true)
 }
 
 /**
  * @description Fix path by adding "/" to path if needed
- * @param {String} path - Path string to fix
- * @return {String} - Fixed path
+ * @param {string} path - Path string to fix
+ * @returns {string} - Fixed path
  * @private
  */
 export function fixPath(path) {
@@ -184,20 +183,21 @@ export function fixPath(path) {
 
 /**
  * @private
- * @description Build child list based on populate config
- * @param {Object} data - Firebase state object
- * @param {Object} list - Path of parameter to load
- * @param {Object} populateSettings - Object with population settings
+ * Build child list based on populate config
+ * @param {object} state - Firebase state object
+ * @param {object} list - Path of parameter to load
+ * @param {object} p - Object with population settings
+ * @returns {object} List of child objects
  */
-const buildChildList = (state, list, p) =>
-  mapValues(list, (val, key) => {
+function buildChildList(state, list, p) {
+  return mapValues(list, (val, key) => {
     let getKey = val
     // Handle key: true lists
     if (val === true || p.populateByKey) {
       getKey = key
     }
     // Allow for aliasing populated data see #126 for more details
-    const dotRoot = compact(p.root.split('/')).join('.')
+    const dotRoot = getDotStrPath(p.root)
     const pathArr = [dotRoot, getKey]
 
     // Handle child param
@@ -216,14 +216,16 @@ const buildChildList = (state, list, p) =>
     // Populate child does not exist
     return val === true || p.populateByKey ? val : getKey
   })
+}
 
 /**
  * @private
- * @description Populate a child based on config. Handles list population
+ * Populate a child based on config. Handles list population
  * by making use of buildChildList.
- * @param {Object} state - Firebase state object
- * @param {Object} child - Path of parameter to load
- * @param {Object} populateSettings - Object with population settings
+ * @param {object} state - Firebase state object
+ * @param {object} child - Path of parameter to load
+ * @param {object} p - Object with population settings
+ * @returns {object} Populated child object
  */
 function populateChild(state, child, p) {
   // no matching child parameter
@@ -232,9 +234,12 @@ function populateChild(state, child, p) {
     return null
   }
   // populate child is key
-  if (isString(childVal)) {
+  if (typeof childVal === 'string' || childVal instanceof String) {
     // attach child paramter if it exists
-    const dotRoot = compact(p.root.split('/')).join('.')
+    const dotRoot = p.root
+      .split('/')
+      .filter(Boolean) // Drop falsey values (compact)
+      .join('.')
     const pathArr = [dotRoot, childVal]
 
     // Handle child param
@@ -260,12 +265,12 @@ function populateChild(state, child, p) {
 }
 
 /**
- * @description Populate with data from redux.
- * @param {Object} state - Firebase state object (state.firebase in redux store)
- * @param {String} path - Path of parameter to load
+ * Populate with data from multiple locations of redux state.
+ * @param {object} state - Firebase state object (state.firebase in redux store)
+ * @param {string} path - Path of parameter to load
  * @param {Array} populates - Array of populate config objects
- * @param {Object|String|Boolean} notSetValue - Value to return if value is not found
- * @return {Object} Data located at path within Immutable Object
+ * @param {object|string|boolean} notSetValue - Value to return if value is not found
+ * @returns {object} Data located at path within Immutable Object
  * @example <caption>Basic</caption>
  * import { compose } from 'redux'
  * import { connect } from 'react-redux'
@@ -287,7 +292,7 @@ function populateChild(state, child, p) {
  * export default enhance(SomeComponent)
  */
 export function populate(state, path, populates, notSetValue) {
-  const splitPath = compact(path.split('/'))
+  const splitPath = path.split('/').filter(Boolean) // Drop falsey values (compact)
   // append 'data' prefix to path if it is not a top level path
   const pathArr =
     topLevelPaths.indexOf(splitPath[0]) === -1
@@ -308,10 +313,12 @@ export function populate(state, path, populates, notSetValue) {
 
   // check for if data is single object or a list of objects
   const populatesForData = getPopulateObjs(
-    isFunction(populates) ? populates(last(pathArr), data) : populates
+    typeof populates === 'function'
+      ? populates(pathArr.slice(-1)[0], data) // pass last slice in path
+      : populates
   )
 
-  if (isArray(data)) {
+  if (Array.isArray(data)) {
     // When using a path in ordered, data will be an array instead of an object
     // and data is located at the `value` prop
     const someArrayItemHasKey = array => key =>
@@ -362,7 +369,7 @@ export function populate(state, path, populates, notSetValue) {
     const key = pathArr[0] === 'ordered' ? child.key : childKey
     // get populate settings on item level (passes child if populates is a function)
     const populatesForDataItem = getPopulateObjs(
-      isFunction(populates) ? populates(key, child) : populates
+      typeof populates === 'function' ? populates(key, child) : populates
     )
     // confirm at least one populate value exists on child
     const dataHasPopulateChilds = some(populatesForDataItem, p =>

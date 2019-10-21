@@ -7,15 +7,18 @@ Here is an example of a component that shows a Google login button if the user i
 ```js
 import React from 'react'
 import PropTypes from 'prop-types'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { withFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
+import { useSelector } from 'react-redux'
+import { useFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
 // import GoogleButton from 'react-google-button' // optional
 
-function LoginPage ({ firebase, auth }) {
+function LoginPage () {
+  const firebase = useFirebase()
+  const auth = useSelector(state => state.firebase.auth)
+
   function loginWithGoogle() {
     return firebase.login({ provider: 'google', type: 'popup' })
   }
+
   return (
     <div className={classes.container}>
       <div>
@@ -33,18 +36,30 @@ function LoginPage ({ firebase, auth }) {
   )
 }
 
-LoginPage.propTypes = {
-  firebase: PropTypes.shape({
-    login: PropTypes.func.isRequired
-  }),
-  auth: PropTypes.object
-}
-
-export default compose(
-  withFirebase,
-  connect(({ firebase: { auth } }) => ({ auth }))
-)(LoginPage)
+export default LoginPage
 ```
+
+## List of Online Users (Presence)
+
+Presence keeps a list of which users are currently online as well as a history of all user sessions.
+
+The logic that runs this is partially based on:
+* [blog post by Firebase](https://firebase.googleblog.com/2013/06/how-to-build-presence-system.html)
+* [Firebase's Sample Presence App](https://firebase.google.com/docs/database/web/offline-capabilities#section-sample)
+
+Include the `presense` parameter your rrfConfig:
+
+```js	
+const rrfConfig = {
+  userProfile: 'users', // where profiles are stored in database
+  presence: 'presence', // where list of online users is stored in database
+  sessions: 'sessions' // where list of user sessions is stored in database (presence must be enabled)
+}
+```
+
+Now when logging in through `login` method, user will be listed as online until they logout or end the session (close the tab or window).	
+
+**NOTE:** Currently this is not triggered on logout, but that is a [planned feature for the upcoming v3.0.0 version](https://github.com/prescottprue/react-redux-firebase/wiki/v3.0.0-Roadmap). Currently, the presense status will only change when the user becomes disconnected from the Database (i.e. closes the tab).
 
 ## Firebase UI React
 
@@ -52,25 +67,23 @@ Here is an example of a component that shows a usage of [Firebase UI](https://fi
 
 ```js
 import React from 'react'
-import PropTypes from 'prop-types'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { useSelector } from 'react-redux'
+import { useFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-// import { withRouter } from 'react-router-dom'; // if you use react-router
+// import { useHistory } from 'react-router-dom'; // if you use react-router
 // import GoogleButton from 'react-google-button' // optional
 
-export const LoginPage = ({
-  firebase,
-  auth,
-  //history if you use react-router
-  }) => (
+function LoginPage() {
+  const firebase = useFirebase()
+  const auth = useSelector(state => state.firebase.auth)
+
+  return (
   <div className={classes.container}>
     <StyledFirebaseAuth
       uiConfig={{
         signInFlow: 'popup',
         signInSuccessUrl: '/signedIn',
-        signInOptions: [this.props.firebase.auth.GoogleAuthProvider.PROVIDER_ID],
+        signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
         callbacks: {
           signInSuccessWithAuthResult: (authResult, redirectUrl) => {
             firebase.handleRedirectResult(authResult).then(() => {
@@ -92,19 +105,8 @@ export const LoginPage = ({
           : <pre>{JSON.stringify(auth, null, 2)}</pre>
       }
     </div>
-  </div>
-)
-
-LoginPage.propTypes = {
-  firebase: PropTypes.shape({
-    handleRedirectResult: PropTypes.func.isRequired
-  }),
-  auth: PropTypes.object
+  )
 }
 
-export default compose(
-  //withRouter, if you use react router to redirect
-  firebaseConnect(), // withFirebase can also be used
-  connect(({ firebase: { auth } }) => ({ auth }))
-)(LoginPage)
+export default LoginPage
 ```

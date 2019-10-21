@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import AddTodo from "./AddTodo";
 import "./App.css";
 import logo from "./logo.svg";

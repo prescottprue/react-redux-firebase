@@ -1,18 +1,10 @@
-import {
-  get,
-  replace,
-  size,
-  isFunction,
-  isBoolean,
-  pick,
-  isArray
-} from 'lodash'
+import { get, size, pick } from 'lodash'
 import { unset } from 'lodash/fp'
 
 /**
  * Create a path array from path string
- * @param  {String} path - Path seperated with slashes
- * @return {Array} Path as Array
+ * @param {string} path - Path seperated with slashes
+ * @returns {Array} Path as Array
  * @private
  */
 export function pathToArr(path) {
@@ -21,8 +13,8 @@ export function pathToArr(path) {
 
 /**
  * Trim leading slash from path for use with state
- * @param  {String} path - Path seperated with slashes
- * @return {String} Path seperated with slashes
+ * @param {string} path - Path seperated with slashes
+ * @returns {string} Path seperated with slashes
  * @private
  */
 export function getSlashStrPath(path) {
@@ -31,8 +23,8 @@ export function getSlashStrPath(path) {
 
 /**
  * Convert path with slashes to dot seperated path (for use with lodash get/set)
- * @param  {String} path - Path seperated with slashes
- * @return {String} Path seperated with dots
+ * @param {string} path - Path seperated with slashes
+ * @returns {string} Path seperated with dots
  * @private
  */
 export function getDotStrPath(path) {
@@ -43,7 +35,7 @@ export function getDotStrPath(path) {
  * Combine reducers utility (abreveated version of redux's combineReducer).
  * Turns an object whose values are different reducer functions, into a single
  * reducer function.
- * @param {Object} reducers An object whose values correspond to different
+ * @param {object} reducers An object whose values correspond to different
  * reducer functions that need to be combined into one.
  * @returns {Function} A reducer function that invokes every reducer inside the
  * passed object, and builds a state object with the same shape.
@@ -62,17 +54,26 @@ export function combineReducers(reducers) {
   }
 }
 
+/**
+ * Preserve values from redux state change
+ * @param {object} state - Redux state
+ * @param {Function|boolean|Array} preserveSetting - Setting for which values to preserve
+ * from redux state
+ * @param {object} nextState - Next redux state
+ * @returns {object} State with values preserved
+ */
 export function preserveValuesFromState(state, preserveSetting, nextState) {
   // Return result of function if preserve is a function
-  if (isFunction(preserveSetting)) {
+  if (typeof preserveSetting === 'function') {
     return preserveSetting(state, nextState)
   }
+
   // Return original state if preserve is true
-  if (isBoolean(preserveSetting) && preserveSetting) {
+  if (preserveSetting === true) {
     return nextState ? { ...state, ...nextState } : state
   }
 
-  if (isArray(preserveSetting)) {
+  if (Array.isArray(preserveSetting)) {
     return pick(state, preserveSetting) // pick returns a new object
   }
 
@@ -84,10 +85,11 @@ export function preserveValuesFromState(state, preserveSetting, nextState) {
 /**
  * Recursively unset a property starting at the deep path, and unsetting the parent
  * property if there are no other enumerable properties at that level.
- * @param  {String} path - Deep dot path of the property to unset
- * @param {Boolean} [isRecursiveCall=false] - Used internally to ensure that
+ * @param {string} path - Deep dot path of the property to unset
+ * @param {object} obj - Object from which path should be recursivley unset
+ * @param {boolean} [isRecursiveCall=false] - Used internally to ensure that
  * the object size check is only performed after one iteration.
- * @return {Object} The object with the property deeply unset
+ * @returns {object} The object with the property deeply unset
  * @private
  */
 export function recursiveUnset(path, obj, isRecursiveCall = false) {
@@ -101,6 +103,6 @@ export function recursiveUnset(path, obj, isRecursiveCall = false) {
   // The object does not have any other properties at this level.  Remove the
   // property.
   const objectWithRemovedKey = unset(path, obj)
-  const newPath = path.match(/\./) ? replace(path, /\.[^.]*$/, '') : ''
+  const newPath = path.match(/\./) ? path.replace(/\.[^.]*$/, '') : ''
   return recursiveUnset(newPath, objectWithRemovedKey, true)
 }
