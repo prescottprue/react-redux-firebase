@@ -281,7 +281,7 @@ export const createUserProfile = async (
 ) => {
   const { _: { config } } = firebase
   if (!config.userProfile || (!firebase.database && !firebase.firestore)) {
-    return Promise.resolve(userData)
+    return userData
   }
   // use profileFactory if it exists in config
   if (typeof config.profileFactory === 'function') {
@@ -295,7 +295,7 @@ export const createUserProfile = async (
         err.message || err
       )
       /* eslint-enable no-console */
-      return Promise.reject(err)
+      throw err
     }
   }
 
