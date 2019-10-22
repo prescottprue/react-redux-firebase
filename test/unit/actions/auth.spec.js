@@ -28,7 +28,8 @@ import {
   createSuccessStub,
   onAuthStateChangedSpy,
   firebaseWithConfig,
-  createFailureStub
+  createFailureStub,
+  sleep
 } from '../../utils'
 // import { promisesForPopulate } from 'utils/populate'
 
@@ -262,7 +263,7 @@ describe('Actions: Auth -', () => {
       expect(profile).to.equal(userData)
     })
 
-    it('creates profile using profileFactory if it exists', async () => {
+    it('creates profile using profileFactory sync function if it exists', async () => {
       const userData = {
         uid: '123',
         email: 'test@test.com',
@@ -270,6 +271,28 @@ describe('Actions: Auth -', () => {
       }
       const profileObj = { some: 'asdf' }
       const profileFactory = sinon.spy(() => profileObj)
+      const profile = await createUserProfile(
+        dispatch,
+        firebaseWithConfig({ profileFactory }),
+        userData
+      )
+      expect(profile).to.have.property('some', profileObj.some)
+      expect(profileFactory).to.have.been.calledOnce
+    })
+
+    it('creates profile using profileFactory promise function if it exists', async () => {
+      const userData = {
+        uid: '123',
+        email: 'test@test.com',
+        providerData: [{}]
+      }
+      const profileObj = { some: 'asdf' }
+      /* eslint-disable jsdoc/require-jsdoc */
+      async function profileFactoryPromise() {
+        await sleep(500)
+        return profileObj
+      }
+      const profileFactory = sinon.spy(profileFactoryPromise)
       const profile = await createUserProfile(
         dispatch,
         firebaseWithConfig({ profileFactory }),
