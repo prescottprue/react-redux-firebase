@@ -273,12 +273,7 @@ export const watchUserProfile = (dispatch, firebase) => {
  * @returns {Promise} Resolves after creating user profile
  * @private
  */
-export const createUserProfile = async (
-  dispatch,
-  firebase,
-  userData,
-  profile
-) => {
+export const createUserProfile = (dispatch, firebase, userData, profile) => {
   const { _: { config } } = firebase
   if (!config.userProfile || (!firebase.database && !firebase.firestore)) {
     return userData
@@ -287,7 +282,7 @@ export const createUserProfile = async (
   if (typeof config.profileFactory === 'function') {
     // catch errors in user provided profileFactory function
     try {
-      profile = await config.profileFactory(userData, profile, firebase) // eslint-disable-line no-param-reassign
+      profile = config.profileFactory(userData, profile, firebase) // eslint-disable-line no-param-reassign
     } catch (err) {
       /* eslint-disable no-console */
       console.error(
