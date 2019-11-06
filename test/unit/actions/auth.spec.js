@@ -257,9 +257,13 @@ describe('Actions: Auth -', () => {
         providerData: [{}]
       }
       const fb = firebaseWithConfig({ userProfile: null })
-      const profile = await createUserProfile(dispatch, fb, userData, {
+      const createPromise = createUserProfile(dispatch, fb, userData, {
         some: 'asdf'
       })
+      // Confirm a promise is returned
+      expect(createPromise.then).to.be.a('function')
+      profile = await createPromise
+      // Confirm profile is set
       expect(profile).to.equal(userData)
     })
 
@@ -306,13 +310,16 @@ describe('Actions: Auth -', () => {
       const profileFactory = () => {
         throw new Error('test')
       }
+      const createPromise = createUserProfile(
+        dispatch,
+        firebaseWithConfig({ profileFactory }),
+        {},
+        {}
+      )
+      // Confirm a promise is returned
+      expect(createPromise.catch).to.be.a('function')
       try {
-        await createUserProfile(
-          dispatch,
-          firebaseWithConfig({ profileFactory }),
-          {},
-          {}
-        )
+        await createPromise
       } catch (err) {
         expect(err).to.have.property('message', 'test')
       }
