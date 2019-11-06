@@ -276,7 +276,7 @@ export const watchUserProfile = (dispatch, firebase) => {
 export const createUserProfile = (dispatch, firebase, userData, profile) => {
   const { _: { config } } = firebase
   if (!config.userProfile || (!firebase.database && !firebase.firestore)) {
-    return userData
+    return Promise.resolve(userData)
   }
   // use profileFactory if it exists in config
   if (typeof config.profileFactory === 'function') {
@@ -286,11 +286,11 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
     } catch (err) {
       /* eslint-disable no-console */
       console.error(
-        'Error occured within profileFactory function:',
+        'Error occurred within profileFactory function:',
         err.message || err
       )
       /* eslint-enable no-console */
-      throw err
+      return Promise.reject(err)
     }
   }
 
