@@ -18,37 +18,6 @@ enhance(SomeComponent)
 
 If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()`
 
-#### NOTE
-All examples below assume you have passed `firebase` from `context` to props. Wrapping your component with with the `withFirebase` or `firebaseConnect` Higher Order Components will make `props.firebase` available within your component:
-
-```js
-import React from 'react'
-import { withFirebase } from 'react-redux-firebase'
-
-function SomeComponent (props) {
-  return (
-    // use props.firebase
-  )
-}
-
-export default withFirebase(SomeComponent) // or firebaseConnect()(SomeComponent)
-```
-
-Works same with class components (make sure you import `Component` from react):
-
-```js
-import React, { Component } from 'react'
-import { firebaseConnect } from 'react-redux-firebase'
-
-class SomeComponent extends Component {
-  render() {
-    // use this.props.firebase
-  }
-}
-
-export default firebaseConnect()(SomeComponent) // or withFirebase(SomeComponent)
-```
-
 #### Custom Claims
 
  Firebase has a secure way of identifying and making claims about users with [custom claims](https://firebase.google.com/docs/auth/admin/custom-claims). This is a good way to provide roles for users.
@@ -110,6 +79,7 @@ For examples of how to use this API, checkout the [auth recipes section](/docs/r
         ```
 
 ##### Returns
+
 [**Promise**][promise-url] that resolves with the response from firebase's login method (an [**Object**][object-url]). `credential` property is also included if using oAuth provider.
 
 **NOTE**: For email authentication in `v1.4.*` and earlier - The user's UID (a [**String**][string-url]) is returned instead of an object. This has been changed in `v1.5.0` for consistency across all auth types.
@@ -118,7 +88,7 @@ For examples of how to use this API, checkout the [auth recipes section](/docs/r
 
   *Email*
 ```js
-props.firebase.login({
+firebase.login({
   email: 'test@test.com',
   password: 'testest1'
 })
@@ -126,7 +96,7 @@ props.firebase.login({
 
   *OAuth Provider Redirect*
 ```js
-props.firebase.login({
+firebase.login({
   provider: 'google',
   type: 'redirect'
 })
@@ -134,7 +104,7 @@ props.firebase.login({
 
   *OAuth Provider Popup*
 ```js
-props.firebase.login({
+firebase.login({
   provider: 'google',
   type: 'popup',
   // scopes: ['email'] // not required
@@ -144,18 +114,18 @@ props.firebase.login({
   *Credential*
 ```js
 // `googleUser` from the onsuccess Google Sign In callback
-props.firebase.login({
+firebase.login({
   credential: firebase.auth.GoogleAuthProvider.credential(googleUser.getAuthResponse().id_token)
 })
 // or using an accessToken
-props.firebase.login({
+firebase.login({
   credential: firebase.auth.GoogleAuthProvider.credential(null, 'some access token')
 })
 ```
 
   *Token*
 ```js
-props.firebase.login({
+firebase.login({
   token: 'someJWTAuthToken',
   profile: { email: 'rick@sanchez.com' }
 })
@@ -167,8 +137,8 @@ async function loginWithFacebook() {
   const data = await Expo.Facebook.logInWithReadPermissionsAsync('FB_ID', { permissions: ['public_profile', 'email'] })
 
   if (data.type === 'success') {
-    const credential = props.firebase.auth.FacebookAuthProvider.credential(data.token)
-    await props.firebase.login({ credential })
+    const credential = firebase.auth.FacebookAuthProvider.credential(data.token)
+    await firebase.login({ credential })
   }
 }
 ```
@@ -219,6 +189,7 @@ createNewUser({
 ```
 
 ##### Returns
+
 [**Promise**][promise-url] with `userData`
 
 ## logout()
