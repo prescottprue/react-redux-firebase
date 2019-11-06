@@ -92,6 +92,7 @@ If you want to assign a role by default when users sign up, you can add a profil
     if (user.providerData && user.providerData.length) {
       profile.providerData = user.providerData
     }
+    return profile
   }
 }
 ```
