@@ -58,7 +58,7 @@ import createHistory from 'history/createBrowserHistory'
 import LoadingScreen from 'components/LoadingScreen'; // change it to your custom component
 
 const locationHelper = locationHelperBuilder({});
-const history = createHistory()
+const browserHistory = createHistory()
 
 export const UserIsAuthenticated = connectedRouterRedirect({
   wrapperDisplayName: 'UserIsAuthenticated',
