@@ -482,9 +482,9 @@ Returns **[Promise][72]** Containing user auth info
 
 
 Update user profile on Firebase Real Time Database or
-Firestore (if `useFirestoreForProfile: true` config passed to
-reactReduxFirebase). Real Time Database update uses `update` method
-internally while updating profile on Firestore uses `set` with
+Firestore (if `useFirestoreForProfile: true` config included).
+Real Time Database update uses `update` method internally while
+updating profile on Firestore uses `set`.
 
 ### Parameters
 

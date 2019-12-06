@@ -1,5 +1,94 @@
 # Auth Recipes
 
+## Wait For Auth To Load {#loading}
+
+It is common for applications to want to display a loading/splash screen while auth is loaded. This can be done by making a wrapper component like so:
+
+```js
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { isLoaded } from 'react-redux-firebase'
+
+function AuthIsLoaded({ children }) {
+  const auth = useSelector(state => state.firebase.auth)
+  if (!isLoaded(auth)) return <div>splash screen...</div>;
+  return children
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <ReactReduxFirebaseProvider {...rrfProps}>
+        <BrowserRouter>
+          <AuthIsLoaded>
+            <div>Auth is Loaded</div> { /* Rest of App Components */}
+          </AuthIsLoaded>
+        </BrowserRouter>
+      </ReactReduxFirebaseProvider>
+    </Provider>
+  );
+}
+```
+
+## Private Route
+
+```js
+import React from 'react'
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  Redirect
+} from 'react-router-dom';
+import { useSelector } from 'react-redux'
+import { isLoaded, isEmpty } from 'react-redux-firebase'
+
+// A wrapper for <Route> that redirects to the login
+// screen if you're not yet authenticated or if auth is not
+// yet loaded
+function PrivateRoute({ children, ...rest }) {
+  const auth = useSelector(state => state.firebase.auth)
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        isLoaded(auth) && !isEmpty(auth) ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <ReactReduxFirebaseProvider {...rrfProps}>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/login">
+              {/* Component containing a login which redirects
+              to /protected. NOTE: Not included in example */}
+              <LoginPage />
+            </Route>
+            <PrivateRoute path="/protected">
+              <div>Protected content</div>
+            </PrivateRoute>
+          </Switch>
+        </BrowserRouter>
+      </ReactReduxFirebaseProvider>
+    </Provider>
+  );
+}
+```
+
 ## Google Login
 
 Here is an example of a component that shows a Google login button if the user is not logged in, and a welcome message if they are. The initial loading state is handled with a simple "Loading..." message:

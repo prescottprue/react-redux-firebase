@@ -9,8 +9,8 @@
 
 
 React hook that provides `firebase` object.
-Firebase is gathered from `store.firebase`, which is attached to store
-by the store enhancer (`reactReduxFirebase`) during setup.
+Firebase is gathered from ReactReduxFirebaseContext, which is
+set by createFirebaseInstance during setup.
 **NOTE**: This version of the Firebase library has extra methods, config,
 and functionality which give it it's capabilities such as dispatching
 actions.

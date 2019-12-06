@@ -22,39 +22,59 @@ Setup and use `react-redux-firebase` as normal (described in the [use section of
 Passing in an instance also allows for libraries with similar APIs (such as [`react-native-firebase`](https://github.com/invertase/react-native-firebase)) to be used instead:
 
 1. Follow [use instructions in README](https://github.com/prescottprue/react-redux-firebase#use)
-1. When creating redux store pass `react-native-firebase` App instance into `reactReduxFirebase` when creating store:
+1. When creating redux store pass `react-native-firebase` App instance into `ReactReduxFirebaseProvider` like so:
 
-  **createStore.js**
-  ```js
-  import { compose, createStore } from 'redux';
+  ```jsx
+  import React from 'react'
+  import { render } from 'react-dom'
+  import { Provider } from 'react-redux'
   import RNFirebase from 'react-native-firebase';
-  import { reactReduxFirebase } from 'react-redux-firebase';
-  import thunk from 'redux-thunk';
-  import makeRootReducer from './reducers';
+  import { createStore, combineReducers, compose } from 'redux'
+  import { ReactReduxFirebaseProvider, firebaseReducer } from 'react-redux-firebase'
+  // import { createFirestoreInstance, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
 
-  const reactNativeFirebaseConfig = {
-    debug: true
-  };
+  const fbConfig = {}
 
-  const reduxFirebaseConfig = {
-    userProfile: 'users', // save users profiles to 'users' collection
-  };
+  // react-redux-firebase config
+  const rrfConfig = {
+    userProfile: 'users'
+    // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
+  }
 
-  export default (initialState = { firebase: {} }) => {
-    // initialize firebase
-    const firebase = RNFirebase.initializeApp(reactNativeFirebaseConfig);
+  // Initialize firebase instance
+  firebase.initializeApp(fbConfig)
 
-    const store = createStore(
-      makeRootReducer(),
-      initialState,
-      compose(
-       reactReduxFirebase(firebase, reduxFirebaseConfig), // pass initialized react-native-firebase app instance
-       // applyMiddleware can be placed here
-      )
+  // Initialize other services on firebase instance
+  // firebase.firestore() // <- needed if using firestore
+  // firebase.functions() // <- needed if using httpsCallable
+
+  // Add firebase to reducers
+  const rootReducer = combineReducers({
+    firebase: firebaseReducer
+    // firestore: firestoreReducer // <- needed if using firestore
+  })
+
+  // Create store with reducers and initial state
+  const initialState = {}
+  const store = createStore(rootReducer, initialState)
+
+  const rrfProps = {
+    firebase: RNFirebase,
+    config: rrfConfig,
+    dispatch: store.dispatch,
+    // createFirestoreInstance // <- needed if using firestore
+  }
+
+  // Setup react-redux so that connect HOC can be used
+  function App() {
+    return (
+      <Provider store={store}>
+        <ReactReduxFirebaseProvider {...rrfProps}>
+          <Todos />
+        </ReactReduxFirebaseProvider>
+      </Provider>
     );
-
-    return store;
-  };
+  }
   ```
 
 Full `react-native-firebase` example app source with styling available [in the react-native-firebase complete example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/react-native-firebase).

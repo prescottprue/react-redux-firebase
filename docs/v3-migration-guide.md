@@ -16,6 +16,7 @@
 * `componentDidMount` used in place of `componentWillMount` for data loading in `firebaseConnect` and `firestoreConnect`
 * `helpers` is no longer exported in top level API - import helpers directly instead
 * `firebaseStateReducer` is no longer exported in top level API - import `reducer` or `firebaseReducer`
+* `authIsReady` should only be used for SSR - if you are waiting for auth to be ready, state should be used. For an example see the [wait for auth to load recipe](/recipes/auth#loading).
 
 ### Change Snippets
 
