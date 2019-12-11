@@ -232,8 +232,8 @@ export function createAuthIsReady(store, config) {
  * @returns {Promise} Resolves with results of profile get
  */
 export function updateProfileOnRTDB(firebase, profileUpdate) {
-  const { database, _: { config, authUid } } = firebase
-  const profileRef = database().ref(`${config.userProfile}/${authUid}`)
+  const { _: { config, authUid } } = firebase
+  const profileRef = firebase.database().ref(`${config.userProfile}/${authUid}`)
   return profileRef.update(profileUpdate).then(() => profileRef.once('value'))
 }
 
