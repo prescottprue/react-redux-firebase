@@ -620,13 +620,10 @@ interface ExtendedAuthInstance {
 
   /**
    * Sends password reset email.
-   * @param credentials - Credentials for authenticating
+   * @param email - Email to send recovery email to
    * @see https://react-redux-firebase.com/docs/auth.html#resetpasswordcredentials
    */
-  resetPassword: (
-    credentials: AuthTypes.UserCredential,
-    profile: UserProfile
-  ) => Promise<any>
+  resetPassword: (email: string) => Promise<any>
 
   /**
    * Confirm that a user's password has been reset.

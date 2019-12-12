@@ -204,22 +204,17 @@ Looking to preserve data on logout? [checkout the `preserve` config option](/doc
 props.firebase.logout()
 ```
 
-## resetPassword(credentials)
+## resetPassword(email)
 Calls Firebase's `firebase.auth().resetPassword()`. If there is an error, it is added into redux state under `state.firebase.authError`.
 
 ##### Examples
 
 ```js
-props.firebase.resetPassword({
-  email: 'test@test.com',
-  password: 'testest1',
-  username: 'tester'
-})
+props.firebase.resetPassword('test@test.com')
 ```
 
 ##### Parameters
-  * `credentials` [**Object**][object-url] - Credentials same as described in firebase docs
-  * `profile` [**Object**][object-url] - if initialized with userProfile support then profile will be saved into `${userProfile}/${auth.uid}`
+  * `email` [**String**][string-url] - Email to send recovery email to
 
 ##### Returns
   [**Promise**][promise-url] with user's UID in case of success or the error otherwise.

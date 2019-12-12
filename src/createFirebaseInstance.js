@@ -429,13 +429,12 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 
   /**
    * Sends password reset email
-   * @param {object} credentials - Credentials for authenticating
-   * @param {string} credentials.email - Credentials for authenticating
+   * @param {string} email - Email to send recovery email to
    * @returns {Promise} Resolves after password reset email is sent
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#resetpassword
    */
-  const resetPassword = credentials =>
-    authActions.resetPassword(dispatch, firebase, credentials)
+  const resetPassword = email =>
+    authActions.resetPassword(dispatch, firebase, email)
 
   /**
    * Confirm that a user's password has been reset
