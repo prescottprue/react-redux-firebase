@@ -607,7 +607,7 @@ export const reauthenticate = (dispatch, firebase, credentials) => {
 
   return firebase
     .auth()
-    [method](...params)
+    .currentUser[method](...params)
     .then(userData => {
       // Handle null response from getRedirectResult before redirect has happened
       if (!userData) return Promise.resolve(null)
