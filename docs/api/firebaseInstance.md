@@ -449,8 +449,7 @@ Sends password reset email
 
 ### Parameters
 
--   `credentials` **[object][66]** Credentials for authenticating
-    -   `credentials.email` **[string][69]** Credentials for authenticating
+-   `email` **[string][69]** Email to send recovery email to
 
 Returns **[Promise][72]** Resolves after password reset email is sent
 
