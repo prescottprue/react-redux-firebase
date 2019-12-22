@@ -1000,6 +1000,7 @@ interface ReactReduxFirebaseConfig {
   userProfile: string | null
   // Use Firestore for Profile instead of Realtime DB
   useFirestoreForProfile?: boolean
+  enableClaims?: boolean
 }
 
 /**
