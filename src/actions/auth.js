@@ -13,14 +13,17 @@ import { promisesForPopulate, getPopulateObjs } from '../utils/populate'
 
 /**
  * Dispatch login error action
+ *
  * @param {Function} dispatch - Action dispatch function
  * @param {object} authError - Error object
+ * @param {object} params - Supplement action params
  * @returns {any} Return of action dispatch
  * @private
  */
-function dispatchLoginError(dispatch, authError) {
+function dispatchLoginError(dispatch, authError, params = {}) {
   return dispatch({
     type: actionTypes.LOGIN_ERROR,
+    ...params,
     authError
   })
 }
@@ -596,10 +599,6 @@ export const login = (dispatch, firebase, credentials) => {
  * @private
  */
 export const reauthenticate = (dispatch, firebase, credentials) => {
-  if (firebase._.config.resetBeforeLogin) {
-    dispatchLoginError(dispatch, null)
-  }
-
   const { method, params } = getReauthenticateMethodAndParams(
     firebase,
     credentials
@@ -643,7 +642,7 @@ export const reauthenticate = (dispatch, firebase, credentials) => {
       ).then(profile => ({ profile, ...userData }))
     })
     .catch(err => {
-      dispatchLoginError(dispatch, err)
+      dispatchLoginError(dispatch, err, { reauthenticate: true })
       return Promise.reject(err)
     })
 }
