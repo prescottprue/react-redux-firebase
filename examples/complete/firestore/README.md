@@ -1,4 +1,18 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), the docs for that are in the Create React App Docs section below
+
+## React Redux Firebase Docs
+
+### FAQ
+
+1. Where is data being loaded from?:
+    The `todos` collection within firestore
+
+1. What is the format of a todo created in this example? :
+    `{ text: 'sample', done: false }`
+
+  New todos can be created from the home screen  
+
+## Create React App Docs
 
 ## Available Scripts
 

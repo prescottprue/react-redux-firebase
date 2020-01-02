@@ -19,7 +19,7 @@ function NewTodo() {
   }
 
   return (
-    <div>
+    <div style={{ marginBottom: '2rem' }}>
       <h4>New Todo</h4>
       <input value={inputVal} onChange={onInputChange} />
       <button onClick={addTodo}>Add</button>
