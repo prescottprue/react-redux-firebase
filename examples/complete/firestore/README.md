@@ -2,6 +2,20 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## React Redux Firebase Docs
 
+### Run With Example Data
+
+1. Run `yarn install` to install dependencies
+1. Run `yarn start`
+1. Visit `localhost:3000` to view and add todos (note the todos are shared among everyone)
+
+### Run Your Own
+
+1. Make sure you have Firestore setup within your Firebase console - data will be added/loaded from the `todos` collection
+1. Run `yarn install` to install dependencies
+1. Change the config in `src/config/config.js` to match your Firebase instance (from Firebase console)
+1. Run `yarn start`
+1. Visit `localhost:3000` to view and add todos to your own `todos` collection of Firestore
+
 ### FAQ
 
 1. Where is data being loaded from?:

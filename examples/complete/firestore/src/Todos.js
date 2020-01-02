@@ -4,8 +4,8 @@ import { useFirestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import TodoItem from './TodoItem'
 
 const todosQuery = {
-  collection: 'todos'
-  // limitTo: 10 // may require adding an index
+  collection: 'todos',
+  limitTo: 10
 }
 
 function Todos() {
@@ -25,10 +25,9 @@ function Todos() {
     return 'Todo list is empty'
   }
 
-  return todos
-    .map(({ id, ...todo }, ind) => (
-      <TodoItem key={`${id}-${ind}`} id={id} {...todo} />
-    ))
+  return todos.map(({ id, ...todo }, ind) => (
+    <TodoItem key={`${id}-${ind}`} id={id} {...todo} />
+  ))
 }
 
 export default Todos
