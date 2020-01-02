@@ -4,7 +4,7 @@ import { firestoreReducer } from 'redux-firestore'
 
 const rootReducer = combineReducers({
   firebase: firebaseReducer,
-  firestore: firestoreReducer,
+  firestore: firestoreReducer
 })
 
 export default rootReducer

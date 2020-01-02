@@ -5,14 +5,17 @@ import { useFirestore } from 'react-redux-firebase'
 import './Todo.css'
 
 function TodoItem({ id }) {
-  const todo = useSelector(({ firestore: { data } }) => data.todos && data.todos[id])
+  const todo = useSelector(
+    ({ firestore: { data } }) => data.todos && data.todos[id]
+  )
   const firestore = useFirestore()
 
   function toggleDone() {
     firestore.update(`todos/${id}`, { done: !todo.done })
   }
+
   function deleteTodo() {
-    return firestore.remove(`todos/${id}`)
+    return firestore.delete(`todos/${id}`)
   }
 
   return (
