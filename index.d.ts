@@ -486,7 +486,7 @@ interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
    * transaction.
    * @see https://github.com/prescottprue/redux-firestore#runtransaction
    */
-  runTransaction: typeof firebase.firestore.Firestore.runTransaction
+  runTransaction: typeof FirestoreTypes.FirebaseFirestore.prototype.runTransaction
 
   /**
    * Sets a listener within redux-firestore
@@ -678,8 +678,8 @@ interface ExtendedAuthInstance {
    */
   updateAuth: (
     authUpdate: {
-      displayName: string | null
-      photoURL: string | null
+      displayName?: string | null
+      photoURL?: string | null
     },
     updateInProfile?: boolean
   ) => Promise<void>
