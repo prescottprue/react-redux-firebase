@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { useFirebase } from 'react-redux-firebase'
+import { useFirestore } from 'react-redux-firebase'
 
 function NewTodo() {
   const [inputVal, changeInput] = useState('')
-  const firebase = useFirebase()
+  const firestore = useFirestore()
 
   function resetInput() {
     changeInput('')
@@ -11,8 +11,11 @@ function NewTodo() {
   function onInputChange(e) {
     return changeInput(e && e.target && e.target.value)
   }
+
   function addTodo() {
-    return firebase.push('todos', { text: inputVal || 'sample', done: false })
+    return firestore
+      .collection('todos')
+      .add({ text: inputVal || 'sample', done: false })
   }
 
   return (
