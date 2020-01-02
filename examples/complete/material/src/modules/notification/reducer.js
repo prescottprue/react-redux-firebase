@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 import { without, omit } from 'lodash'
 import { NOTIFICATION_SHOW, NOTIFICATION_DISMISS } from './actionTypes'
 
-const notification = (state = {}, action) => {
+function notification(state = {}, action) {
   switch (action.type) {
     case NOTIFICATION_SHOW:
       return action.payload
@@ -13,7 +13,7 @@ const notification = (state = {}, action) => {
   }
 }
 
-const allIds = (state = [], action) => {
+function allIds(state = [], action) {
   switch (action.type) {
     case NOTIFICATION_SHOW:
       return [...state, action.payload.id]
@@ -24,7 +24,7 @@ const allIds = (state = [], action) => {
   }
 }
 
-const byId = (state = {}, action) => {
+function byId(state = {}, action) {
   switch (action.type) {
     case NOTIFICATION_SHOW:
       return {

@@ -2,53 +2,28 @@
 
 ### Table of Contents
 
--   [createFirestoreConnect](#createfirestoreconnect)
--   [firestoreConnect](#firestoreconnect)
-
-## createFirestoreConnect
-
-Function that creates a Higher Order Component that
-automatically listens/unListens to provided firebase paths using
-React's Lifecycle hooks.
-**WARNING!!** This is an advanced feature, and should only be used when
-needing to access a firebase instance created under a different store key.
-
-**Parameters**
-
--   `storeKey` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Name of redux store which contains
-    Firebase state (state.firebase) (optional, default `'store'`)
-
-**Examples**
-
-_Basic_
-
-```javascript
-// props.firebase set on App component as firebase object with helpers
-import { createFirestoreConnect } from 'react-redux-firebase'
-// create firebase connect that uses another redux store
-const firestoreConnect = createFirestoreConnect('anotherStore')
-// use the firebaseConnect to wrap a component
-export default firestoreConnect()(SomeComponent)
-```
-
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** HOC that accepts a watchArray and wraps a component
+-   [firestoreConnect][1]
+    -   [Parameters][2]
+    -   [Examples][3]
+    -   [Parameters][4]
 
 ## firestoreConnect
 
 **Extends React.Component**
+
 
 Higher Order Component that automatically listens/unListens
 to provided Cloud Firestore paths using React's Lifecycle hooks. Make sure you
 have required/imported Cloud Firestore, including it's reducer, before
 attempting to use. **Note** Populate is not yet supported.
 
-**Parameters**
+### Parameters
 
--   `queriesConfig` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** Array of objects or strings for paths to sync
+-   `queriesConfig` **([Array][6] \| [Function][7])** Array of objects or strings for paths to sync
     from Firebase. Can also be a function that returns the array. The function
-    is passed the current props and the firebase object.
+    is passed the current props and the firebase object. (optional, default `[]`)
 
-**Examples**
+### Examples
 
 _Basic_
 
@@ -66,13 +41,38 @@ import { firestoreConnect } from 'react-redux-firebase'
 
 // pass todos list from redux as props.todosList
 export default compose(
-  firestoreConnect(['todos']), // sync todos collection from Firestore into redux
+  firestoreConnect(() => ['todos']), // sync todos collection from Firestore into redux
   connect((state) => ({
-    todosList: state.firestore.data.todos,
-    profile: state.firestore.profile, // pass profile data as props.profile
-    auth: state.firestore.auth // pass auth data as props.auth
+    todosList: state.firestore.data.todos
   })
 )(SomeComponent)
 ```
 
-Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** that accepts a component to wrap and returns the wrapped component
+Returns **[Function][7]** Function which accepts a component to wrap and returns the
+wrapped component
+
+## 
+
+Render component wrapped in context
+
+### Parameters
+
+-   `props` **[object][8]** Component props
+
+Returns **React.Component** Component wrapped in context
+
+[1]: #firestoreconnect
+
+[2]: #parameters
+
+[3]: #examples
+
+[4]: #parameters-1
+
+[5]: https://react-redux-firebase.com/docs/api/firestoreConnect.html
+
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object

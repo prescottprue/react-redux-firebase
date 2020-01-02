@@ -1,7 +1,7 @@
 export default theme => ({
   root: {
     ...theme.flexColumnCenter,
-    paddingTop: theme.spacing.unit * 4,
+    paddingTop: theme.spacing(4),
     flexGrow: '2',
     boxSizing: 'border-box',
     overflowY: 'scroll'

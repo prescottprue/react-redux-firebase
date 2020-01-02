@@ -58,7 +58,7 @@ import createHistory from 'history/createBrowserHistory'
 import LoadingScreen from 'components/LoadingScreen'; // change it to your custom component
 
 const locationHelper = locationHelperBuilder({});
-const history = createHistory()
+const browserHistory = createHistory()
 
 export const UserIsAuthenticated = connectedRouterRedirect({
   wrapperDisplayName: 'UserIsAuthenticated',
@@ -186,21 +186,21 @@ Can then be used on a Login route component:
 
 ```javascript
 import React from 'react'
-import { compose } from 'redux'
-import { withFirebase } from 'react-redux-firebase'
+import { useFirebase } from 'react-redux-firebase'
 
-const Login = ({ firebase }) => (
-  <div>
-    <button onClick={() => firebase.login({ provider: 'google' })}>
-      Google Login
-    </button>
-  </div>
-)
+function Login() {
+  const firebase = useFirebase()
+  return (
+    <div>
+      <button onClick={() => firebase.login({ provider: 'google' })}>
+        Google Login
+      </button>
+    </div>
+  )
+}
 
-export default compose(
-  UserIsNotAuthenticated, // redirects to '/' if user is logged in
-  withFirebase // adds this.props.firebase
-)
+// redirects to '/' if user is logged in
+export default UserIsNotAuthenticated
 ```
 
 **react-router v3 and earlier + redux-auth-wrapper v1**

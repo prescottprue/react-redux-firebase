@@ -3,9 +3,9 @@ sudo: false
 language: node_js
 
 node_js:
-  - 6 # Maintenance
-  - 8 # Active
-  - 10
+  - 8 # Maintenance LTS
+  - 10 # Active LTS
+  - 12 # Current Release
 
 notifications:
   email:

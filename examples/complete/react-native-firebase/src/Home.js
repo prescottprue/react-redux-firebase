@@ -1,8 +1,14 @@
 import React from 'react'
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { isLoaded, isEmpty, firebaseConnect } from 'react-redux-firebase';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { isLoaded, isEmpty, firebaseConnect } from 'react-redux-firebase'
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity
+} from 'react-native'
 import NewTodo from './NewTodo'
 import TodosList from './TodosList'
 
@@ -10,14 +16,11 @@ const enhnace = compose(
   connect(({ firebase: { auth } }) => ({
     uid: auth.uid
   })),
-  withStateHandlers(
-    ({ initialText = '' }) => ({ newTodoText: initialText }),
-    {
-      onEmailChange: () => email => ({ email }),
-      onPasswordChange: () => password => ({ password }),
-      onNewTodoChange: () => newTodoText => ({ newTodoText })
-    }
-  ),
+  withStateHandlers(({ initialText = '' }) => ({ newTodoText: initialText }), {
+    onEmailChange: () => email => ({ email }),
+    onPasswordChange: () => password => ({ password }),
+    onNewTodoChange: () => newTodoText => ({ newTodoText })
+  }),
   withHandlers({
     addTodo: props => () => {
       const newTodo = { text: newTodoText || 'Sample Text', owner: props.uid }
@@ -38,7 +41,7 @@ const Home = ({ todos, addTodo, onNewTodoChange, newTodoText }) => (
   </View>
 )
 
-export default enhance(Home);
+export default enhance(Home)
 
 const styles = StyleSheet.create({
   container: {
@@ -50,4 +53,4 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 50
   }
-});
+})

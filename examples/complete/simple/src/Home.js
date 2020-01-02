@@ -1,18 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import {
-  firebaseConnect,
-  isLoaded,
-  isEmpty
-} from 'react-redux-firebase'
-import logo from './logo.svg'
-import TodoItem from './TodoItem'
+import Todos from './Todos'
 import NewTodo from './NewTodo'
+import logo from './logo.svg'
 import './App.css'
 
-function Home({ todos }) {
+function Home() {
   return (
     <div className='App'>
       <div className='App-header'>
@@ -29,41 +21,11 @@ function Home({ todos }) {
           </span>
         </h4>
         <h4>Todos List</h4>
-        {
-          !isLoaded(todos)
-            ? 'Loading'
-            : isEmpty(todos)
-              ? 'Todo list is empty'
-              : todos.reverse().map((todo, ind) => (
-                <TodoItem
-                  key={`${todo.key}-${ind}`}
-                  id={todo.key}
-                  todo={todo.value}
-                />
-              ))
-        }
+        <Todos />
         <NewTodo />
       </div>
     </div>
   )
 }
 
-Home.propTypes = {
-  todos: PropTypes.array
-}
-
-const enhance = compose(
-  firebaseConnect(() => [
-    {
-      path: 'todos',
-      queryParams: ['limitToLast=10']
-    }
-  ]),
-  connect(
-    ({ firebase }) => ({
-      todos: firebase.ordered.todos,
-    })
-  )
-)
-
-export default enhance(Home)
+export default Home

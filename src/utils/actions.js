@@ -1,18 +1,19 @@
 import { isObject, mapValues } from 'lodash'
 
 /**
- * @description Wrap method call in dispatched actions
+ * Wrap method call in dispatched actions
  * @param {Function} dispatch - Action dispatch function
- * @param {Object} opts - Options object
+ * @param {object} opts - Options object
  * @param {Function} opts.method - Method to call
  * @param {Array} opts.args - Arguments to call method with
  * @param {Array} opts.types - Action types array ([BEFORE, SUCCESS, FAILURE])
+ * @returns {Promise} Resolves after method is called and success action is dispatched
  * @private
  */
-export const wrapInDispatch = (
+export function wrapInDispatch(
   dispatch,
   { ref, meta, method, args = [], types }
-) => {
+) {
   const [requestingType, successType, errorType] = types
   dispatch({
     type: isObject(requestingType) ? requestingType.type : requestingType,
@@ -39,50 +40,49 @@ export const wrapInDispatch = (
 }
 
 /**
- * Function that builds a factory that passes firebase and dispatch as
- * first two arguments.
- * @param  {Object} firebase - Internal firebase instance
- * @param  {Function} dispatch - Redux's dispatch function
- * @return {Function} A wrapper that accepts a function to wrap with firebase
+ * Function that builds a factory that passes firebase and
+ * dispatch as first two arguments.
+ * @param {object} firebase - Internal firebase instance
+ * @param {Function} dispatch - Redux's dispatch function
+ * @param {boolean} dispatchFirst - Whether or not to have dispatch argument first
+ * @returns {Function} A wrapper that accepts a function to wrap with firebase
  * and dispatch.
  */
-const createWithFirebaseAndDispatch = (
-  firebase,
-  dispatch,
-  dispatchFirst
-) => func => (...args) =>
-  func.apply(
-    firebase,
-    dispatchFirst
-      ? [dispatch, firebase, ...args]
-      : [firebase, dispatch, ...args]
-  )
+function createWithFirebaseAndDispatch(firebase, dispatch, dispatchFirst) {
+  return func => (...args) =>
+    func.apply(
+      firebase,
+      dispatchFirst
+        ? [dispatch, firebase, ...args]
+        : [firebase, dispatch, ...args]
+    )
+}
 
 /**
  * Map each action with Firebase and Dispatch. Includes aliasing of actions.
- * @param  {Object} firebase - Internal firebase instance
- * @param  {Function} dispatch - Redux's dispatch function
- * @param  {Object} actions - Action functions to map with firebase and dispatch
- * @return {Object} Actions mapped with firebase and dispatch
+ * @param {object} firebase - Internal firebase instance
+ * @param {Function} dispatch - Redux's dispatch function
+ * @param {object} actions - Action functions to map with firebase and dispatch
+ * @param {object} reverseActions - Action functions to map with dispatch and firebase (i.e. reverse arg order)
+ * @returns {object} Actions mapped with firebase and dispatch
  */
-export const mapWithFirebaseAndDispatch = (
+export function mapWithFirebaseAndDispatch(
   firebase,
   dispatch,
   actions,
-  aliases = []
-) => {
+  reverseActions
+) {
   const withFirebaseAndDispatch = createWithFirebaseAndDispatch(
     firebase,
     dispatch
   )
+  const withDispatchAndFirebase = createWithFirebaseAndDispatch(
+    firebase,
+    dispatch,
+    true
+  )
   return {
     ...mapValues(actions, withFirebaseAndDispatch),
-    ...aliases.reduce(
-      (acc, { action, name }) => ({
-        ...acc,
-        [name]: withFirebaseAndDispatch(action)
-      }),
-      {}
-    )
+    ...mapValues(reverseActions, withDispatchAndFirebase)
   }
 }

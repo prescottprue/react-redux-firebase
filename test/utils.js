@@ -1,26 +1,21 @@
 import React, { Children, Component, cloneElement } from 'react'
 import PropTypes from 'prop-types'
 import { createSink } from 'recompose'
-import { isObject } from 'lodash'
-import { createStore, compose, combineReducers } from 'redux'
-import { reduxFirestore, reducer as firestoreReducer } from 'redux-firestore'
-import reactReduxFirebase from '../src/enhancer'
+import { isObject, identity } from 'lodash'
+import { createStore, combineReducers } from 'redux'
+import {
+  reducer as firestoreReducer,
+  createFirestoreInstance
+} from 'redux-firestore'
+import { mount } from 'enzyme'
+import ReactReduxFirebaseProvider from '../src/ReactReduxFirebaseProvider'
 
 export const storeWithFirebase = () => {
-  const createStoreWithMiddleware = compose(
-    reactReduxFirebase(Firebase, { userProfile: 'users' })
-  )(createStore)
-  return createStoreWithMiddleware(
-    combineReducers({ test: (state = {}) => state })
-  )
+  return createStore(combineReducers({ test: (state = {}) => state }))
 }
 
 export const storeWithFirestore = () => {
-  const createStoreWithMiddleware = compose(
-    reactReduxFirebase(Firebase, { userProfile: 'users' }),
-    reduxFirestore(Firebase) // mock for reduxFirestore from redux-firestore
-  )(createStore)
-  return createStoreWithMiddleware(
+  return createStore(
     combineReducers({
       test: (state = {}) => state,
       firestore: firestoreReducer
@@ -29,7 +24,36 @@ export const storeWithFirestore = () => {
 }
 
 export const TestContainer = () => createSink()
-export const Container = () => <div />
+export class Container extends Component {
+  render() {
+    return <div />
+  }
+}
+
+export class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true, error }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>
+    }
+
+    return this.props.children
+  }
+}
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.node.isRequired
+}
 
 export class ProviderMock extends Component {
   getChildContext() {
@@ -80,8 +104,10 @@ export function createSuccessStub(some) {
 
 /**
  * Create a Sinon stub that returns with a rejected Promise Object
- * constaining an Error object with the message "test"
+constaining an Error object with the message "test"
+ *
  * @returns {Sinon.stub}
+ * @param some
  */
 export function createFailureStub(some) {
   return sinon.stub().returns(Promise.reject(new Error('test')))
@@ -91,7 +117,7 @@ export function createFailureStub(some) {
  * Create an object representing a "profileReference" (a Firebase
  * RTDB Reference at the Profile path) which contains Sinon stubs
  * in place of Firebase JS SDK methods (such as update and once)
- * @returns {Object}
+ * @returns {object}
  */
 function createRtdbProfileRefStub() {
   let profileUpdate = {}
@@ -116,7 +142,7 @@ function createRtdbProfileRefStub() {
  * Firestore Reference for the current user's profile document) which
  * contains Sinon stubs in place of Firebase JS SDK methods (such as
  * update and get)
- * @returns {Object}
+ * @returns {object}
  */
 function createFirestoreProfileRefStub() {
   let profileUpdate = {}
@@ -161,14 +187,20 @@ function createFirestoreStub() {
 
 /**
  * Create a Sinon stub for Firebase Real Time Database (RTDB)
+ *
  * @returns {Sinon.stub}
+ * @param refExtension
  */
-function createRtdbStub() {
+function createRtdbStub(refExtension) {
+  let refReturn = {
+    push: sinon.stub().returns({ set: createSuccessStub() }),
+    ...createRtdbProfileRefStub()
+  }
+  if (refExtension) {
+    refReturn = { ...refReturn, ...refExtension }
+  }
   const stubbedRtdb = sinon.stub().returns({
-    ref: sinon.stub().returns({
-      push: sinon.stub().returns({ set: createSuccessStub() }),
-      ...createRtdbProfileRefStub()
-    })
+    ref: sinon.stub().returns(refReturn)
   })
   stubbedRtdb.ServerValue = { TIMESTAMP: 'test' }
   return stubbedRtdb
@@ -199,11 +231,13 @@ function createStorageStub() {
 }
 
 /**
- * @param {Object} otherConfig - Config to be spread onto _.config object
- * @returns {Object} Stubbed version of Firebase JS SDK extended with
+ * @param extensions
+ * @param {object} otherConfig - Config to be spread onto _.config object
+ * @param rtdbRefExtension
+ * @returns {object} Stubbed version of Firebase JS SDK extended with
  * react-redux-firebase config
  */
-export function createFirebaseStub(otherConfig = {}) {
+export function createFirebaseStub(otherConfig = {}, extensions) {
   return {
     _: {
       uid,
@@ -213,7 +247,7 @@ export function createFirebaseStub(otherConfig = {}) {
       }
     },
     auth: createAuthStub(),
-    database: createRtdbStub(),
+    database: createRtdbStub(extensions && extensions.database),
     firestore: createFirestoreStub(),
     storage: createStorageStub()
   }
@@ -340,4 +374,75 @@ export const fakeFirebase = {
       delete: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
     })
   })
+}
+
+export const TestLeaf = () => <div id="leaf" />
+
+export const createContainer = ({
+  additionalComponentProps,
+  listeners,
+  withFirestore = true,
+  withFirebase = true,
+  withErrorBoundary = false,
+  hoc = identity,
+  component = TestLeaf
+} = {}) => {
+  const firebase = firebaseWithConfig()
+  const store = storeWithFirestore()
+  sinon.spy(store, 'dispatch')
+
+  const WrappedComponent = hoc(component)
+
+  class Container extends Component {
+    state = { test: 'testing', dynamic: '' }
+
+    constructor(props) {
+      super(props)
+      // eslint-disable-next-line react/prop-types
+      this.state.dynamic = props.dynamic
+      // remove rrf specific setting initialization
+      delete firebase._
+    }
+
+    render() {
+      let children = (
+        <WrappedComponent
+          {...this.props}
+          dynamicProp={this.state.dynamic}
+          testProp={this.state.test}
+        />
+      )
+      if (withErrorBoundary) {
+        children = <ErrorBoundary>{children}</ErrorBoundary>
+      }
+      return (
+        <ReactReduxFirebaseProvider
+          dispatch={store.dispatch}
+          firebase={firebase}
+          {...(withFirestore ? { createFirestoreInstance } : {})}
+          config={{}}>
+          {children}
+        </ReactReduxFirebaseProvider>
+      )
+    }
+  }
+  const wrapper = mount(<Container {...additionalComponentProps} />)
+
+  return {
+    wrapper,
+    leaf: wrapper.find(component),
+    component: wrapper.find(WrappedComponent),
+    dispatch: store.dispatch,
+    firebase,
+    store
+  }
+}
+
+/**
+ * Sleep/wait for a set amount of time
+ * @param {number} ms - Amount of time to sleep
+ * @returns {Promise} Resolves after timeout
+ */
+export function sleep(ms = 0) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }

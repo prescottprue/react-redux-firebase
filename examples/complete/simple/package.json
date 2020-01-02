@@ -10,16 +10,16 @@
   },
   "dependencies": {
     "prop-types": "^15.7.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-redux": "^5.1.0",
-    "react-redux-firebase": "^2.2.1",
-    "recompose": "^0.30.0",
-    "redux": "^4.0.1",
-    "redux-firestore": "^0.5.8"
+    "react": "16.10.0",
+    "react-dom": "16.10.0",
+    "react-redux": "^7.1.0",
+    "react-redux-firebase": "next",
+    "redux": "^4.0.4",
+    "redux-firestore": "^0.9.0",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.1.0"
   },
   "eslintConfig": {
     "extends": "react-app"

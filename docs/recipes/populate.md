@@ -33,7 +33,7 @@ export default enhance(SomeComponent)
 
 ### Populate Profile Parameters
 
-To Populate parameters within profile/user object, include the `profileParamsToPopulate` parameter when [calling `reactReduxFirebase` in your compose function](/api/compose) as well as using `populate`.
+To Populate parameters within profile/user object, include the `profileParamsToPopulate` parameter within your configuration as well as using `populate`.
 
 **NOTE** Using `profileParamsToPopulate` no longer automatically populates profile, you must use `populate`. Un-populated profile lives within state under `state.firebase.profile`.
 

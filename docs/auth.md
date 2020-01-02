@@ -16,38 +16,15 @@ const enhance = connect(
 enhance(SomeComponent)
 ```
 
-If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()`.
+If you need access to methods that are not available at the top level, you can access Firebase's Full Auth API using `props.firebase.auth()`
 
-#### NOTE
-All examples below assume you have passed `firebase` from `context` to props. Wrapping your component with with the `withFirebase` or `firebaseConnect` Higher Order Components will make `props.firebase` available within your component:
+#### Custom Claims
 
-```js
-import React from 'react'
-import { withFirebase } from 'react-redux-firebase'
+ Firebase has a secure way of identifying and making claims about users with [custom claims](https://firebase.google.com/docs/auth/admin/custom-claims). This is a good way to provide roles for users.
 
-function SomeComponent (props) {
-  return (
-    // use props.firebase
-  )
-}
+ If `enableClaims` config option is used along with `userProfile` you will find custom claims in `state.firebase.profile.token.claims`. 
 
-export default withFirebase(SomeComponent) // or firebaseConnect()(SomeComponent)
-```
-
-Works same with class components (make sure you import `Component` from react):
-
-```js
-import React, { Component } from 'react'
-import { firebaseConnect } from 'react-redux-firebase'
-
-class SomeComponent extends Component {
-  render() {
-    // use this.props.firebase
-  }
-}
-
-export default firebaseConnect()(SomeComponent) // or withFirebase(SomeComponent)
-```
+ **Note**: If a claim is added to a user who is already logged in those changes will not necessarily be propagated to the client. In order to assure the change is observed, use a `refreshToken` property in your `userProfile` collection and update it's value after the custom claim has been added. Because `react-redux-firebase` watches for profile changes, the custom claim will be fetched along with the `refreshToken` update.
 
 For examples of how to use this API, checkout the [auth recipes section](/docs/recipes/auth.html).
 
@@ -102,6 +79,7 @@ For examples of how to use this API, checkout the [auth recipes section](/docs/r
         ```
 
 ##### Returns
+
 [**Promise**][promise-url] that resolves with the response from firebase's login method (an [**Object**][object-url]). `credential` property is also included if using oAuth provider.
 
 **NOTE**: For email authentication in `v1.4.*` and earlier - The user's UID (a [**String**][string-url]) is returned instead of an object. This has been changed in `v1.5.0` for consistency across all auth types.
@@ -110,7 +88,7 @@ For examples of how to use this API, checkout the [auth recipes section](/docs/r
 
   *Email*
 ```js
-props.firebase.login({
+firebase.login({
   email: 'test@test.com',
   password: 'testest1'
 })
@@ -118,7 +96,7 @@ props.firebase.login({
 
   *OAuth Provider Redirect*
 ```js
-props.firebase.login({
+firebase.login({
   provider: 'google',
   type: 'redirect'
 })
@@ -126,7 +104,7 @@ props.firebase.login({
 
   *OAuth Provider Popup*
 ```js
-props.firebase.login({
+firebase.login({
   provider: 'google',
   type: 'popup',
   // scopes: ['email'] // not required
@@ -136,21 +114,33 @@ props.firebase.login({
   *Credential*
 ```js
 // `googleUser` from the onsuccess Google Sign In callback
-props.firebase.login({
+firebase.login({
   credential: firebase.auth.GoogleAuthProvider.credential(googleUser.getAuthResponse().id_token)
 })
 // or using an accessToken
-props.firebase.login({
+firebase.login({
   credential: firebase.auth.GoogleAuthProvider.credential(null, 'some access token')
 })
 ```
 
   *Token*
 ```js
-props.firebase.login({
+firebase.login({
   token: 'someJWTAuthToken',
   profile: { email: 'rick@sanchez.com' }
 })
+```
+  
+  *Expo/react-native Facebook Login*
+```js
+async function loginWithFacebook() {
+  const data = await Expo.Facebook.logInWithReadPermissionsAsync('FB_ID', { permissions: ['public_profile', 'email'] })
+
+  if (data.type === 'success') {
+    const credential = firebase.auth.FacebookAuthProvider.credential(data.token)
+    await firebase.login({ credential })
+  }
+}
 ```
 
 After logging in, profile and auth are available in redux state:
@@ -177,7 +167,6 @@ Similar to Firebase's `ref.createUser(credentials)` but with support for automat
 * `credentials` [**Object**][object-url]
   * `credentials.email` [**String**][string-url] - User's email
   * `credentials.password` [**String**][string-url] - User's password
-  * `credentials.signIn` [**String**][string-url] - Whether or not to sign in when user is signing up (defaults to `true`)
 
 * `profile` [**Object**][object-url]
   * `profile.username` [**String**][string-url]
@@ -200,13 +189,13 @@ createNewUser({
 ```
 
 ##### Returns
+
 [**Promise**][promise-url] with `userData`
 
 ## logout()
 Logout from Firebase and delete all data from the store (`state.firebase.data` and `state.firebase.auth` are set to `null`).
 
-
-Looking to preserve data on logout? [`v2.0.0` supports the `preserve` config option](http://docs.react-redux-firebase.com/history/v2.0.0/docs/api/enhancer.html), which preserves data under the specified keys in state on logout.
+Looking to preserve data on logout? [checkout the `preserve` config option](/docs/api/contants), which preserves data under the specified keys in state on logout.
 
 ##### Examples
 
@@ -215,22 +204,17 @@ Looking to preserve data on logout? [`v2.0.0` supports the `preserve` config opt
 props.firebase.logout()
 ```
 
-## resetPassword(credentials)
+## resetPassword(email)
 Calls Firebase's `firebase.auth().resetPassword()`. If there is an error, it is added into redux state under `state.firebase.authError`.
 
 ##### Examples
 
 ```js
-props.firebase.resetPassword({
-  email: 'test@test.com',
-  password: 'testest1',
-  username: 'tester'
-})
+props.firebase.resetPassword('test@test.com')
 ```
 
 ##### Parameters
-  * `credentials` [**Object**][object-url] - Credentials same as described in firebase docs
-  * `profile` [**Object**][object-url] - if initialized with userProfile support then profile will be saved into `${userProfile}/${auth.uid}`
+  * `email` [**String**][string-url] - Email to send recovery email to
 
 ##### Returns
   [**Promise**][promise-url] with user's UID in case of success or the error otherwise.
@@ -290,18 +274,18 @@ const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', 
   'size': 'invisible',
 });
 firebase.signInWithPhoneNumber(phoneNumber, appVerifier)
-    .then((confirmationResult) => {
-      // SMS sent. Prompt user to type the code from the message, then sign the
-      // user in with confirmationResult.confirm(code).
-      const verificationCode = window.prompt('Please enter the verification ' +
-          'code that was sent to your mobile device.');
-      return confirmationResult.confirm(verificationCode);
-    })
-    .catch((error) => {
-      // Error; SMS not sent
-      // Handle Errors Here
-      return Promise.reject(error)
-    });
+  .then((confirmationResult) => {
+    // SMS sent. Prompt user to type the code from the message, then sign the
+    // user in with confirmationResult.confirm(code).
+    const verificationCode = window.prompt('Please enter the verification ' +
+        'code that was sent to your mobile device.');
+    return confirmationResult.confirm(verificationCode);
+  })
+  .catch((error) => {
+    // Error; SMS not sent
+    // Handle Errors Here
+    return Promise.reject(error)
+  });
 ```
 
 ##### Parameters

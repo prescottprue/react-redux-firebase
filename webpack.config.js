@@ -3,9 +3,10 @@
 const webpack = require('webpack')
 const pkg = require('./package.json')
 const env = process.env.NODE_ENV
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const config = {
   module: {
@@ -37,35 +38,18 @@ const config = {
       root: 'PropTypes'
     }
   },
-  plugins: [
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    new LodashModuleReplacementPlugin()
-  ]
+  plugins: [new LodashModuleReplacementPlugin()]
+}
+
+if (process.env.SIZE) {
+  config.plugins.push(new BundleAnalyzerPlugin())
 }
 
 if (env === 'production') {
-  config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      comments: false,
-      compressor: {
-        pure_getters: true,
-        unsafe: true,
-        unsafe_comps: true,
-        warnings: false,
-        screw_ie8: false
-      }
-    })
-  )
-
-  if (process.env.SIZE) {
-    config.plugins.push(new BundleAnalyzerPlugin())
-  }
+  config.plugins.push(new UglifyJsPlugin())
 }
 
 config.plugins.push(
-  new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify(env)
-  }),
   new webpack.BannerPlugin({
     banner: `${pkg.name}${env === 'production' ? '.min' : ''}.js v${
       pkg.version

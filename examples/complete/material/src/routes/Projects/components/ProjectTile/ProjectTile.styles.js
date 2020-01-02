@@ -5,8 +5,8 @@ export default theme => ({
     alignItems: 'flex-start',
     height: '200px',
     width: '300px',
-    margin: theme.spacing.unit * 0.5,
-    padding: theme.spacing.unit * 1.3
+    margin: theme.spacing(0.5),
+    padding: theme.spacing(1.3)
   },
   top: {
     display: 'flex',
@@ -21,10 +21,10 @@ export default theme => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    ':hover': {
+    '&:hover': {
       color: ''
     },
-    ':visited': {
+    '&:visited': {
       textDecoration: 'none'
     }
   }

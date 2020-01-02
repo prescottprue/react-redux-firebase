@@ -12,6 +12,10 @@ const Firebase = require('firebase')
 require('firebase/firestore')
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 const WebSocket = require('ws')
+const Enzyme = require('enzyme')
+const Adapter = require('enzyme-adapter-react-16')
+
+Enzyme.configure({ adapter: new Adapter() })
 
 // Firebase Instance Setup (fake instance connected to firebase-server)
 const fbConfig = {

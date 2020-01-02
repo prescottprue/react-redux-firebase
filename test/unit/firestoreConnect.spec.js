@@ -1,63 +1,75 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-dom/test-utils'
-import {
-  storeWithFirestore,
-  Container,
-  ProviderMock,
-  TestContainer
-} from '../utils'
-import firestoreConnect, { createFirestoreConnect } from 'firestoreConnect'
+import { some, isMatch, filter } from 'lodash'
+import { sleep, createContainer, TestLeaf } from '../utils'
+import firestoreConnect from 'firestoreConnect'
 
-const createContainer = () => {
-  const store = storeWithFirestore()
-  const WrappedContainer = firestoreConnect(props => [
-    props.dynamicProp ? `test/${props.dynamicProp}` : 'test'
-  ])(Container)
-
-  const tree = TestUtils.renderIntoDocument(
-    <ProviderMock store={store}>
-      <WrappedContainer pass="through" />
-    </ProviderMock>
-  )
-
-  return {
-    container: TestUtils.findRenderedComponentWithType(tree, WrappedContainer),
-    parent: TestUtils.findRenderedComponentWithType(tree, ProviderMock),
-    store
-  }
-}
+/* eslint-disable react/prop-types */
+const withFirestoreConnect = firestoreConnect(props => [
+  props.dynamicProp ? `test/${props.dynamicProp}` : 'test'
+])
+/* eslint-enable react/prop-types */
 
 describe('firestoreConnect', () => {
   it('should render if Firestore does not exist', () => {
-    const { container } = createContainer()
-    // TODO: Pass a fake store through context
-    expect(container).to.exist
-  })
-  it('should receive the store in the context', () => {
-    const { container, store } = createContainer()
-    expect(container.context.store).to.equal(store)
+    const { component } = createContainer({
+      withFirestore: false,
+      hoc: withFirestoreConnect
+    })
+    expect(component).to.have.lengthOf(1)
   })
 
-  it('disables watchers on unmount', () => {
-    const { container, store } = createContainer()
-    ReactDOM.unmountComponentAtNode(ReactDOM.findDOMNode(container).parentNode)
-    expect(container.context.store).to.equal(store)
+  // it('disables watchers on unmount', () => {
+  // TODO: write logic to confirm that watchers on signleton are updated
+  // })
+
+  it('dispatches "@@reduxFirestore/UNSET_LISTENER" action when listeners are detached on unmount', () => {
+    const { wrapper, dispatch } = createContainer({ hoc: withFirestoreConnect })
+    wrapper.unmount()
+    expect(
+      some(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reduxFirestore/UNSET_LISTENER',
+          meta: { collection: 'test' },
+          payload: { name: 'test' }
+        })
+      )
+    ).to.be.true
   })
 
-  it('does not change watchers with props changes that do not change listener paths', () => {
-    const { parent, container } = createContainer()
-    const data = container.prevData
-    parent.setState({ test: 'somethingElse' })
-    expect(container.prevData).to.equal(data)
+  it('does not dispatch new actions for props changes which do not impact listener paths', async () => {
+    const { wrapper, dispatch } = createContainer({ hoc: withFirestoreConnect })
+    wrapper.setState({ test: 'somethingElse' })
+    expect(
+      filter(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reduxFirestore/SET_LISTENER'
+        })
+      )
+    ).to.have.lengthOf(1)
   })
 
-  it('reapplies watchers when props change', () => {
-    const { parent, container } = createContainer()
-    const data = container.prevData
-    parent.setState({ dynamic: 'somethingElse' })
-    expect(container.prevData).to.have.property(0, 'test/somethingElse')
-    expect(container.prevData).to.not.equal(data)
+  it('reapplies watchers when props change', async () => {
+    const { wrapper, dispatch } = createContainer({ hoc: withFirestoreConnect })
+    wrapper.setState({ dynamic: 'somethingElse' })
+    await sleep()
+    expect(
+      filter(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reduxFirestore/UNSET_LISTENER',
+          meta: { collection: 'test' },
+          payload: { name: 'test' }
+        })
+      )
+    ).to.have.lengthOf(1)
+    expect(
+      filter(dispatch.args, arg =>
+        isMatch(arg[0], {
+          type: '@@reduxFirestore/SET_LISTENER',
+          meta: { collection: 'test', doc: 'somethingElse' },
+          payload: { name: 'test/somethingElse' }
+        })
+      )
+    ).to.have.lengthOf(1)
   })
 
   describe('sets displayName static as ', () => {
@@ -65,9 +77,9 @@ describe('firestoreConnect', () => {
     describe('FirestoreConnect(${WrappedComponentName}) for', () => {
       /* eslint-enable no-template-curly-in-string */
       it('standard components', () => {
-        const containerPrime = firestoreConnect()(TestContainer)
+        const containerPrime = firestoreConnect()(TestLeaf)
         expect(containerPrime.displayName).to.equal(
-          `FirestoreConnect(TestContainer)`
+          `FirestoreConnect(TestLeaf)`
         )
       })
 
@@ -85,13 +97,7 @@ describe('firestoreConnect', () => {
   })
 
   it('sets WrappedComponent static as component which was wrapped', () => {
-    const containerPrime = firestoreConnect()(TestContainer)
-    expect(containerPrime.wrappedComponent).to.equal(TestContainer)
-  })
-})
-
-describe('createFirestoreConnect', () => {
-  it('creates a function', () => {
-    expect(createFirestoreConnect('store2')).to.be.a.function
+    const containerPrime = firestoreConnect()(TestLeaf)
+    expect(containerPrime.wrappedComponent).to.equal(TestLeaf)
   })
 })

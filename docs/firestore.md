@@ -7,19 +7,23 @@ To begin using Firestore with `react-redux-firebase`, make sure you have the fol
 * Install `redux-firestore` in your project using `npm i --save redux-firestore@latest`
 * `firestore` imported with `import 'firebase/firestore'`
 * `firestore` initialize with `firebase.firestore()`
-* `reduxFirestore` enhancer added to store creator
+* `ReactReduxFirebaseProvider` or `ReduxFirestoreProvider` used to make instance available to HOCs
 * `firestoreReducer` added to your reducers
 
 Should look something similar to:
 
 ```js
-import { createStore, combineReducers, compose } from 'redux'
+import React from 'react'
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import 'firebase/database'
-import 'firebase/firestore' // make sure you add this for firestore
-import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
-import { reduxFirestore, firestoreReducer } from 'redux-firestore'
+import 'firebase/firestore' // <- needed if using firestore
+import { createStore, combineReducers, compose } from 'redux'
+import { ReactReduxFirebaseProvider, firebaseReducer } from 'react-redux-firebase'
+import { createFirestoreInstance, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
+
+const firebaseConfig = {}
 
 // react-redux-firebase config
 const rrfConfig = {
@@ -27,29 +31,41 @@ const rrfConfig = {
   // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
 }
 
-// initialize firebase instance with config from console
-const firebaseConfig = {
-  // your firebase config here
-}
-
+// Initialize firebase instance
 firebase.initializeApp(firebaseConfig)
 
+// Initialize other services on firebase instance
+firebase.firestore() // <- needed if using firestore
 
-// Add BOTH store enhancers when making store creator
-const createStoreWithFirebase = compose(
-  reduxFirestore(firebase),
-  reactReduxFirebase(firebase, rrfConfig)
-)(createStore)
-
-// Add firebase and firestore to reducers
+// Add firebase to reducers
 const rootReducer = combineReducers({
   firebase: firebaseReducer,
-  firestore: firestoreReducer
+  firestore: firestoreReducer // <- needed if using firestore
 })
 
 // Create store with reducers and initial state
 const initialState = {}
-const store = createStoreWithFirebase(rootReducer, initialState)
+const store = createStore(rootReducer, initialState)
+
+const rrfProps = {
+  firebase,
+  config: rrfConfig,
+  dispatch: store.dispatch,
+  createFirestoreInstance // <- needed if using firestore
+}
+
+// Setup react-redux so that connect HOC can be used
+function App() {
+  return (
+    <Provider store={store}>
+      <ReactReduxFirebaseProvider {...rrfProps}>
+        <Todos />
+      </ReactReduxFirebaseProvider>
+    </Provider>
+  );
+}
+
+render(<App/>, document.getElementById('root'));
 ```
 
 ## Profile
@@ -69,10 +85,46 @@ const rrfConfig = {
 
 Firestore queries can be created in two ways:
 
-* [Automatically](#firestoreConnect) - Using `firestoreConnect` HOC (manages mounting/unmounting)
+* [Automatically with Hook](#useFirestoreConnect) - Using `useFirestoreConnect` hook (manages mounting/unmounting)
+* [Automatically with HOC](#firestoreConnect) - Using `firestoreConnect` HOC (manages mounting/unmounting)
 * [Manually](#manual) - Using `get`, or by setting listeners with `setListeners`/`setListener` (requires managing of listeners)
 
-### Automatic {#firestoreConnect}
+### Automatically with Hook {#useFirestoreConnect}
+
+`useFirestoreConnect` is a React hook that manages attaching and detaching listeners for you as the component mounts and unmounts.
+
+#### Examples
+1. Basic query that will attach/detach as the component passed mounts/unmounts. In this case we are setting a listener for the `'todos'` collection:
+
+  ```js
+  import React from 'react'
+  import { useSelector } from 'react-redux'
+  import { useFirestoreConnect } from 'react-redux-firebase'
+
+  export default function SomeComponent() {
+    useFirestoreConnect([
+      { collection: 'todos' } // or 'todos'
+    ])
+    const todos = useSelector(state => state.firestore.ordered.todos)
+  }
+  ```
+
+2. Props can be used as part of queries. In this case we will get a specific todo:
+
+  ```js
+  import React from 'react'
+  import { useSelector } from 'react-redux'
+  import { useFirestoreConnect } from 'react-redux-firebase'
+
+  export default function SomeComponent({ todoId }) {
+    useFirestoreConnect(() => [
+      { collection: 'todos', doc: todoId } // or `todos/${props.todoId}`
+    ])
+    const todos = useSelector(({ firestore: { ordered } }) => ordered.todos && ordered.todos[todoId])
+  }
+  ```
+
+### Automatically with HOC {#firestoreConnect}
 
 `firestoreConnect` is a React Higher Order component that manages attaching and detaching listeners for you as the component mounts and unmounts. It is possible to roll a similar solution yourself, but can get complex when dealing with advanced situations (queries based on props, props changing, etc.)
 
@@ -85,7 +137,7 @@ Firestore queries can be created in two ways:
   import { firestoreConnect } from 'react-redux-firebase'
 
   export default compose(
-    firestoreConnect(['todos']), // or { collection: 'todos' }
+    firestoreConnect(() => ['todos']), // or { collection: 'todos' }
     connect((state, props) => ({
       todos: state.firestore.ordered.todos
     }))
@@ -131,7 +183,7 @@ class Todos extends Component {
     // firebase.setListener({ collection: 'todos' }) // or object notation
   }
 
-  componentWillUnmount() {
+  componentDidUnmount() {
     const { firebase } = this.context.store
     firebase.unsetListener('todos')
     // firebase.unsetListener({ collection: 'todos' }) // or object notation

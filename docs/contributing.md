@@ -84,3 +84,25 @@ It is often convenient to run a local version of `react-redux-firebase` within a
   **What Happened?**
 
   This error most often appears due to Webpack config. A common pattern is to provide `exclude: [/node_modules/]` setting to [babel-loader](https://github.com/babel/babel-loader), which keeps the loader from transforming code within the `node_modules` folder. Now that we have used `npm link`, your project points to your local version of `react-redux-firebase` instead of the one in your `node_modules` folder, so we have to tell the loader to also exclude transforming `react-redux-firebase`.
+
+* `Invalid hook call. Hooks can only be called inside of the body of a function component`:
+
+  **Common Solution**
+
+  Add `react` as an alias in Webpack:
+  
+  **Webpack**
+  
+  ```js
+  {
+    resolve: {  
+      alias: {  
+        react: path.resolve('./node_modules/react')
+      }
+    }
+  }
+  ```
+    
+  **What Happened?**
+  
+  This error often occurs when you have multiple instances of React loading after using `npm link`. The easiest fix is by setting React as an alias in Webpack.

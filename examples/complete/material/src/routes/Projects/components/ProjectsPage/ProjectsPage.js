@@ -1,76 +1,120 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'react-redux-firebase'
+import { isEmpty, isLoaded } from 'react-redux-firebase'
 import { Route, Switch } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles'
+import { useSelector } from 'react-redux'
+import { useFirebase, useFirebaseConnect } from 'react-redux-firebase'
 import ProjectRoute from 'routes/Projects/routes/Project'
+import { useNotifications } from 'modules/notification'
+import { renderChildren } from 'utils/router'
+import LoadingSpinner from 'components/LoadingSpinner'
 import ProjectTile from '../ProjectTile'
 import NewProjectTile from '../NewProjectTile'
 import NewProjectDialog from '../NewProjectDialog'
+import styles from './ProjectsPage.styles'
 
-const renderChildren = (routes, match, parentProps) =>
-  routes.map(route => (
-    <Route
-      key={`${match.url}-${route.path}`}
-      path={`${match.url}/${route.path}`}
-      render={props => <route.component {...parentProps} {...props} />}
-    />
-  ))
+const useStyles = makeStyles(styles)
 
-export const ProjectsPage = ({
-  projects,
-  collabProjects,
-  auth,
-  newDialogOpen,
-  toggleDialog,
-  deleteProject,
-  addProject,
-  classes,
-  match,
-  goToProject
-}) => (
-  <Switch>
-    {/* Child routes */}
-    {renderChildren([ProjectRoute], match, { auth })}
-    {/* Main Route */}
-    <Route
-      exact
-      path={match.path}
-      render={() => (
-        <div className={classes.root}>
-          <NewProjectDialog
-            onSubmit={addProject}
-            open={newDialogOpen}
-            onRequestClose={toggleDialog}
-          />
-          <div className={classes.tiles}>
-            <NewProjectTile onClick={toggleDialog} />
-            {!isEmpty(projects) &&
-              projects.map((project, ind) => (
-                <ProjectTile
-                  key={`Project-${project.id}-${ind}`}
-                  name={project.name}
-                  onSelect={() => goToProject(project.id)}
-                  onDelete={() => deleteProject(project.id)}
-                />
-              ))}
+function useProjects() {
+  const { showSuccess, showError } = useNotifications()
+  const firebase = useFirebase()
+  // Get auth from redux state
+  const auth = useSelector(state => state.firebase.auth)
+
+  // Attach todos listener
+  useFirebaseConnect(() => [
+    {
+      path: 'projects',
+      queryParams: ['limitToLast=10']
+      // queryParams: ['orderByChild=createdBy', `equalTo=${auth.uid}`]
+    }
+  ])
+
+  // Get projects from redux state
+  const projects = useSelector(state => state.firebase.ordered.projects)
+  
+  // New dialog
+  const [newDialogOpen, changeDialogState] = useState(false)
+  const toggleDialog = () => changeDialogState(!newDialogOpen)
+
+  function addProject(newInstance) {
+    if (!auth.uid) {
+      return showError('You must be logged in to create a project')
+    }
+    return firebase
+      .push('projects', {
+        ...newInstance,
+        createdBy: auth.uid,
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+      })
+      .then(() => {
+        toggleDialog()
+        showSuccess('Project added successfully')
+      })
+      .catch(err => {
+        console.error('Error:', err) // eslint-disable-line no-console
+        showError(err.message || 'Could not add project')
+        return Promise.reject(err)
+      })
+  }
+
+  return { auth, projects, addProject, newDialogOpen, toggleDialog }
+}
+
+function ProjectsPage({ match }) {
+  const classes = useStyles()
+  const {
+    auth,
+    projects,
+    addProject,
+    newDialogOpen,
+    toggleDialog
+  } = useProjects()
+
+
+  // Show spinner while projects are loading
+  if (!isLoaded(projects)) {
+    return <LoadingSpinner />
+  }
+
+  return (
+    <Switch>
+      {/* Child routes */}
+      {renderChildren([ProjectRoute], match, { auth })}
+      {/* Main Route */}
+      <Route
+        exact
+        path={match.path}
+        render={() => (
+          <div className={classes.root}>
+            <NewProjectDialog
+              onSubmit={addProject}
+              open={newDialogOpen}
+              onRequestClose={toggleDialog}
+            />
+            <div className={classes.tiles}>
+              <NewProjectTile onClick={toggleDialog} />
+              {!isEmpty(projects) &&
+                projects.map((project, ind) => {
+                  return (
+                    <ProjectTile
+                      key={`Project-${project.key}-${ind}`}
+                      name={project.value.name}
+                      projectId={project.key}
+                    />
+                  )
+                })}
+            </div>
           </div>
-        </div>
-      )}
-    />
-  </Switch>
-)
+        )}
+      />
+    </Switch>
+  )
+}
 
 ProjectsPage.propTypes = {
-  classes: PropTypes.object.isRequired, // from enhancer (withStyles)
   match: PropTypes.object.isRequired, // from enhancer (withRouter)
-  auth: PropTypes.object, // from enhancer (connect + firebaseConnect - firebase)
-  projects: PropTypes.array, // from enhancer (connect + firebaseConnect - firebase)
-  newDialogOpen: PropTypes.bool, // from enhancer (withStateHandlers)
-  toggleDialog: PropTypes.func.isRequired, // from enhancer (withStateHandlers)
-  deleteProject: PropTypes.func.isRequired, // from enhancer (withHandlers - firebase)
-  collabProjects: PropTypes.object, // from enhancer (withHandlers - firebase)
-  addProject: PropTypes.func.isRequired, // from enhancer (withHandlers - firebase)
-  goToProject: PropTypes.func.isRequired // from enhancer (withHandlers - router)
 }
 
 export default ProjectsPage
