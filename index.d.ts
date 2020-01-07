@@ -1132,7 +1132,9 @@ export namespace FirebaseReducer {
     profile: Profile<ProfileType>
     authError: any
     data: { [T in keyof Schema]: Record<string, Schema[T]> }
-    ordered: Ordered<any>
+    ordered: {
+      [T in keyof Schema]: Array<{ key: string; value: Schema[T] }>
+    }
     errors: any[]
     isInitializing: boolean
     listeners: Listeners
