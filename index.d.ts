@@ -805,10 +805,15 @@ export function firebaseConnect<ProfileType, TInner = {}>(
  * @param action.data - Data associated with action
  * @see https://react-redux-firebase.com/docs/api/reducer.html
  */
-export function firebaseReducer<UserType>(
-  state: any,
-  action: any
-): FirebaseReducer.Reducer<UserType>
+export function firebaseReducer<
+  Schema extends Record<string, Record<string | number, string | number>>,
+  UserType
+>(state: any, action: any): FirebaseReducer.Reducer<Schema, UserType>
+
+export function makeFirebaseReducer<
+  Schema extends Record<string, Record<string | number, string | number>>,
+  UserType = {}
+>(): (state: any, action: any) => FirebaseReducer.Reducer<Schema, UserType>
 
 /**
  * React HOC that attaches/detaches Cloud Firestore listeners on mount/unmount
@@ -1119,11 +1124,14 @@ export interface Data<T extends FirestoreTypes.DocumentData> {
 }
 
 export namespace FirebaseReducer {
-  export interface Reducer<ProfileType = {}> {
+  export interface Reducer<
+    Schema extends Record<string, Record<string | number, string | number>>,
+    ProfileType = {}
+  > {
     auth: AuthState
     profile: Profile<ProfileType>
     authError: any
-    data: Data<any | Dictionary<any>>
+    data: { [T in keyof Schema]: Record<string, Schema[T]> }
     ordered: Ordered<any>
     errors: any[]
     isInitializing: boolean
