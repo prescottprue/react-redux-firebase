@@ -23,7 +23,7 @@ describe('Should test the Todos Component', () => {
   })
 
   it('show empty text when the todo list is empty', () => {
-    let todos = []
+    const todos = []
     useSelector.mockReturnValue(todos)
 
     act(() => {
@@ -35,7 +35,7 @@ describe('Should test the Todos Component', () => {
   })
 
   it('should have one TodoItem in the list', () => {
-    let todos = [
+    const todos = [
       {
         id: 'todoId',
         name: 'Sample todo',
