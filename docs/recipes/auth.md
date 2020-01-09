@@ -185,15 +185,16 @@ function LoginPage() {
       firebaseAuth={firebase.auth()}
         />
     <div>
-      <h2>Auth</h2>
-      {
-        !isLoaded(auth)
-        ? <span>Loading...</span>
-        : isEmpty(auth)
-          ? <span>Not Authed</span>
-          : <pre>{JSON.stringify(auth, null, 2)}</pre>
-      }
+        <h2>Auth</h2>
+        {
+          !isLoaded(auth)
+          ? <span>Loading...</span>
+          : isEmpty(auth)
+            ? <span>Not Authed</span>
+            : <pre>{JSON.stringify(auth, null, 2)}</pre>
+        }
     </div>
+  </div>
   )
 }
 
