@@ -61,7 +61,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { useSelector } from 'react-redux'
-import { withFirebase, isLoaded } from 'react-redux-firebase'
+import { useFirebase, isLoaded } from 'react-redux-firebase'
 
 export default function UpdateProfilePage() {
   const firebase = useFirebase()
