@@ -387,6 +387,8 @@ const handleAuthStateChange = (dispatch, firebase, authData) => {
       type: actionTypes.AUTH_EMPTY_CHANGE,
       preserve: config.preserveOnEmptyAuthChange
     })
+
+    unWatchUserProfile(firebase)
   } else {
     firebase._.authUid = authData.uid // eslint-disable-line no-param-reassign
 
