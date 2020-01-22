@@ -79,6 +79,7 @@ describe('Actions: Auth -', () => {
       const { auth, ...authlessFirebase } = fakeFirebase
       expect(() => init(dispatch, authlessFirebase)).to.throw()
     })
+  })
 
   describe('unWatchUserProfile -', () => {
     it('calls profile unwatch', () => {
