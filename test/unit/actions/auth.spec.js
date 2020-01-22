@@ -73,9 +73,12 @@ describe('Actions: Auth -', () => {
       expect(onAuthStateChangedSpy).to.have.been.calledOnce
     })
     it('Errors if Firebase instance is not passed', () => {
-      expect(init(dispatch, {})).to.Throw
+      expect(() => init(dispatch, {})).to.throw()
     })
-  })
+    it("Error if 'auth' doesn't exist in firebase", () => {
+      const { auth, ...authlessFirebase } = fakeFirebase
+      expect(() => init(dispatch, authlessFirebase)).to.throw()
+    })
 
   describe('unWatchUserProfile -', () => {
     it('calls profile unwatch', () => {

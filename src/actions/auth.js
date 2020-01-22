@@ -454,7 +454,9 @@ export const handleRedirectResult = (dispatch, firebase, authData) => {
 export const init = (dispatch, firebase) => {
   // exit if auth does not exist
   if (!firebase.auth) {
-    return
+    throw new Error(
+      '"firebase/auth" must be imported to enable authentication'
+    )
   }
   dispatch({ type: actionTypes.AUTHENTICATION_INIT_STARTED })
   // Set Auth State listener
