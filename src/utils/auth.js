@@ -160,6 +160,69 @@ export function getLoginMethodAndParams(firebase, credentials) {
 }
 
 /**
+ * Get correct reauthenticate method and params order based on provided
+ * credentials
+ * @param {object} firebase - Internal firebase object
+ * @param {object} credentials - Login credentials
+ * @param {string} credentials.provider - Provider name such as google, twitter
+ * (only needed for 3rd party provider login)
+ * @param {string} credentials.type - Popup or redirect (only needed for 3rd
+ * party provider login)
+ * @param {firebase.auth.AuthCredential} credentials.credential - Custom or
+ * provider token
+ * @param {Array|string} credentials.scopes - Scopes to add to provider
+ * (i.e. email)
+ * @returns {object} Method and params for calling login
+ * @private
+ */
+export function getReauthenticateMethodAndParams(firebase, credentials) {
+  const {
+    provider,
+    type,
+    scopes,
+    phoneNumber,
+    applicationVerifier,
+    credential
+  } = credentials
+  // Credential Auth
+  if (credential) {
+    // Attempt to use signInAndRetrieveDataWithCredential if it exists (see #467 for more info)
+    const credentialAuth = firebase.auth()
+      .reauthenticateAndRetrieveDataWithCredential
+
+    if (credentialAuth) {
+      return {
+        method: 'reauthenticateAndRetrieveDataWithCredential',
+        params: [credential]
+      }
+    }
+    return { method: 'reauthenticateWithCredential', params: [credential] }
+  }
+
+  // Provider Auth
+  if (provider) {
+    // Verify providerName is valid
+    if (supportedAuthProviders.indexOf(provider.toLowerCase()) === -1) {
+      throw new Error(`${provider} is not a valid Auth Provider`)
+    }
+    const authProvider = createAuthProvider(firebase, provider, scopes)
+    if (type === 'popup') {
+      return { method: 'reauthenticateWithPopup', params: [authProvider] }
+    }
+    return { method: 'reauthenticateWithRedirect', params: [authProvider] }
+  }
+
+  // Phone Number Auth
+  if (!applicationVerifier) {
+    throw new Error('Application verifier is required for phone authentication')
+  }
+  return {
+    method: 'reauthenticateWithPhoneNumber',
+    params: [phoneNumber, applicationVerifier]
+  }
+}
+
+/**
  * Returns a promise that completes when Firebase Auth is ready in the given
  * store using react-redux-firebase.
  * @param {object} store - The Redux store on which we want to detect if

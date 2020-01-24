@@ -383,6 +383,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * [auth section of the docs](https://react-redux-firebase.com/docs/auth.html) or the
    * [auth recipes section](https://react-redux-firebase.com/docs/recipes/auth.html).
    * @param {object} credentials - Credentials for authenticating
+   * @param {object} credential - Credential object for authenticating
    * @param {string} credentials.provider - External provider (google |
    * facebook | twitter)
    * @param {string} credentials.type - Type of external authentication
@@ -395,6 +396,23 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    */
   const login = credentials =>
     authActions.login(dispatch, firebase, credentials)
+
+  /**
+   * Reauthenticate user into Firebase. For examples, visit the
+   * [auth section of the docs](https://react-redux-firebase.com/docs/auth.html) or the
+   * [auth recipes section](https://react-redux-firebase.com/docs/recipes/auth.html).
+   * @param {object} credentials - Credentials for authenticating
+   * @param {object} credential - Credential object for authenticating
+   * @param {string} credentials.provider - External provider (google |
+   * facebook | twitter)
+   * @param {string} credentials.type - Type of external authentication
+   * (popup | redirect) (only used with provider)
+   * @returns {Promise} Containing user's auth data
+   * @see https://react-redux-firebase.com/docs/auth.html#logincredentials
+   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#login
+   */
+  const reauthenticate = credentials =>
+    authActions.reauthenticate(dispatch, firebase, credentials)
 
   /**
    * Logs user into Firebase using external. For examples, visit the
@@ -571,6 +589,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     update,
     updateWithMeta,
     login,
+    reauthenticate,
     handleRedirectResult,
     logout,
     updateAuth,

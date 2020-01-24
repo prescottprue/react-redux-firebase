@@ -4,6 +4,7 @@ import { populate } from '../helpers'
 import { isString } from '../utils'
 import {
   getLoginMethodAndParams,
+  getReauthenticateMethodAndParams,
   updateProfileOnRTDB,
   updateProfileOnFirestore,
   setupPresence
@@ -12,14 +13,17 @@ import { promisesForPopulate, getPopulateObjs } from '../utils/populate'
 
 /**
  * Dispatch login error action
+ *
  * @param {Function} dispatch - Action dispatch function
  * @param {object} authError - Error object
+ * @param {object} params - Supplement action params
  * @returns {any} Return of action dispatch
  * @private
  */
-function dispatchLoginError(dispatch, authError) {
+function dispatchLoginError(dispatch, authError, params = {}) {
   return dispatch({
     type: actionTypes.LOGIN_ERROR,
+    ...params,
     authError
   })
 }
@@ -387,6 +391,8 @@ const handleAuthStateChange = (dispatch, firebase, authData) => {
       type: actionTypes.AUTH_EMPTY_CHANGE,
       preserve: config.preserveOnEmptyAuthChange
     })
+
+    unWatchUserProfile(firebase)
   } else {
     firebase._.authUid = authData.uid // eslint-disable-line no-param-reassign
 
@@ -578,6 +584,67 @@ export const login = (dispatch, firebase, credentials) => {
     })
     .catch(err => {
       dispatchLoginError(dispatch, err)
+      return Promise.reject(err)
+    })
+}
+
+/**
+ * Reauthenticate with errors dispatched
+ * @param {Function} dispatch - Action dispatch function
+ * @param {object} firebase - Internal firebase object
+ * @param {object} credentials - Login credentials
+ * @param {object} credentials.provider - Provider name such as google, twitter (only needed for 3rd party provider login)
+ * @param {object} credentials.type - Popup or redirect (only needed for 3rd party provider login)
+ * @param {firebase.auth.AuthCredential} credentials.credential - Custom or provider token
+ * @param {Array|string} credentials.scopes - Scopes to add to provider (i.e. email)
+ * @returns {Promise} Resolves after user is logged in
+ * @private
+ */
+export const reauthenticate = (dispatch, firebase, credentials) => {
+  const { method, params } = getReauthenticateMethodAndParams(
+    firebase,
+    credentials
+  )
+
+  return firebase
+    .auth()
+    .currentUser[method](...params)
+    .then(userData => {
+      // Handle null response from getRedirectResult before redirect has happened
+      if (!userData) return Promise.resolve(null)
+
+      if (method === 'reauthenticateWithPhoneNumber') {
+        // Modify confirm method to include profile creation
+        return {
+          ...userData,
+          confirm: code =>
+            // Call original confirm
+            userData.confirm(code).then(({ user, additionalUserInfo }) =>
+              createUserProfile(dispatch, firebase, user, {
+                phoneNumber: user.providerData[0].phoneNumber,
+                providerData: user.providerData
+              }).then(profile => ({ profile, user, additionalUserInfo }))
+            )
+        }
+      }
+
+      // Create profile when logging in with external provider
+      const user = userData.user || userData
+
+      return createUserProfile(
+        dispatch,
+        firebase,
+        user,
+        credentials.profile || {
+          email: user.email,
+          displayName: user.providerData[0].displayName || user.email,
+          avatarUrl: user.providerData[0].photoURL,
+          providerData: user.providerData
+        }
+      ).then(profile => ({ profile, ...userData }))
+    })
+    .catch(err => {
+      dispatchLoginError(dispatch, err, { reauthenticate: true })
       return Promise.reject(err)
     })
 }

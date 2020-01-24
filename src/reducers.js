@@ -232,6 +232,10 @@ export function authReducer(
     case LOGIN_ERROR:
     case AUTH_EMPTY_CHANGE:
     case LOGOUT:
+      // If it's reauthenticate keep user datas
+      if (action.reauthenticate) {
+        return preserveValuesFromState(state, true, {})
+      }
       // Support keeping data when logging out
       if (action.preserve && action.preserve.auth) {
         return preserveValuesFromState(state, action.preserve.auth, {
