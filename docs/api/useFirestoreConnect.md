@@ -17,8 +17,8 @@ Cloud Firestore, including it's reducer, before attempting to use.
 ### Parameters
 
 -   `queriesConfigs` **([object][5] \| [string][6] \| [Array][7] \| [Function][8])** An object, string,
-  or array of object or string for paths to sync from firestore. Can also be
-  a function that returns the object, string, or array of object or string.
+    or array of object or string for paths to sync from firestore. Can also be
+    a function that returns the object, string, or array of object or string.
 
 ### Examples
 
