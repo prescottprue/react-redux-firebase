@@ -383,7 +383,6 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * [auth section of the docs](https://react-redux-firebase.com/docs/auth.html) or the
    * [auth recipes section](https://react-redux-firebase.com/docs/recipes/auth.html).
    * @param {object} credentials - Credentials for authenticating
-   * @param {object} credential - Credential object for authenticating
    * @param {string} credentials.provider - External provider (google |
    * facebook | twitter)
    * @param {string} credentials.type - Type of external authentication
@@ -402,7 +401,6 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * [auth section of the docs](https://react-redux-firebase.com/docs/auth.html) or the
    * [auth recipes section](https://react-redux-firebase.com/docs/recipes/auth.html).
    * @param {object} credentials - Credentials for authenticating
-   * @param {object} credential - Credential object for authenticating
    * @param {string} credentials.provider - External provider (google |
    * facebook | twitter)
    * @param {string} credentials.type - Type of external authentication
