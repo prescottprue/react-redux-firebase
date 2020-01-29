@@ -14,7 +14,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * @example <caption>Basic</caption>
  * import { useFirebase } from 'react-redux-firebase'
  *
- * function AddData() {
+ * export default function AddData() {
  *   const firebase = useFirebase()
  *
  *   function addTodo() {

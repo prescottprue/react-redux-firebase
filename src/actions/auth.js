@@ -13,7 +13,6 @@ import { promisesForPopulate, getPopulateObjs } from '../utils/populate'
 
 /**
  * Dispatch login error action
- *
  * @param {Function} dispatch - Action dispatch function
  * @param {object} authError - Error object
  * @param {object} params - Supplement action params
@@ -74,7 +73,7 @@ function getProfileFromSnap(snap) {
  * and Cloud Firestore.
  * @param {Function} dispatch - Action dispatch function
  * @param {object} firebase - Internal firebase object
- * @param {firebase.database.Snapshot|firebase.firestore.DocumentSnapshot} userProfileSnap Snapshot from profile watcher
+ * @param {firebase.database.Snapshot|firebase.firestore.DocumentSnapshot} userProfileSnap - Snapshot from profile watcher
  * @param {string} token - Token to pass along in action dispatch
  * @private
  */
