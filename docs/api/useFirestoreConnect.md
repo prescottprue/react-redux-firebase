@@ -17,8 +17,8 @@ Cloud Firestore, including it's reducer, before attempting to use.
 ### Parameters
 
 -   `queriesConfigs` **([object][5] \| [string][6] \| [Array][7] \| [Function][8])** An object, string,
-    or array of object or string for paths to sync from firestore. Can also be
-    a function that returns the object, string, or array of object or string.
+  or array of object or string for paths to sync from firestore. Can also be
+  a function that returns the object, string, or array of object or string.
 
 ### Examples
 
@@ -26,39 +26,42 @@ _Basic_
 
 ```javascript
 import React from 'react'
-import { map } from 'lodash'
 import { useSelector } from 'react-redux'
-import { useFirebaseConnect } from 'react-redux-firebase'
+import { useFirestoreConnect } from 'react-redux-firebase'
 
 export default function TodosList() {
-  useFirebaseConnect('todos') // sync todos collection from Firestore into redux
-  const todos = useSelector(state => state.firebase.data.todos)
+  useFirestoreConnect('todos') // sync todos collection from Firestore into redux
+  const todos = useSelector(state => state.firestore.data['todos'])
   return (
     <ul>
-      {map(todos, (todo, todoId) => (
-       <li>id: {todoId} todo: {JSON.stringify(todo)}</li>
-      ))}
-   </ul>
-  )
+      {todos &&
+        todos.map(todo => (
+          <li>
+            id: {todo.id} todo: {todo.description}
+          </li>
+        ))}
+    </ul>
+  );
 }
 ```
 
 _Object as query_
 
 ```javascript
-import React, { useMemo } from 'react'
-import { get } from 'lodash'
-import { connect } from 'react-redux'
-import { useFirebaseConnect } from 'react-redux-firebase'
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { useFirestoreConnect } from 'react-redux-firebase'
 
 export default function TodoItem({ todoId }) {
-  useFirebaseConnect(() => ({
+  useFirestoreConnect(() => ({
     collection: 'todos',
     doc: todoId
   }))
-  const todo = useSelector(({ firebase: { data } }) => data.todos && data.todos[todoId])
+  const todo = useSelector(
+    ({ firestore: { data } }) => data.todos && data.todos[todoId]
+  )
 
-  return <div>{JSON.stringify(todoData)}</div>
+  return <li>{todo.description}</li>
 }
 ```
 
