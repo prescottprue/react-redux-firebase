@@ -18,7 +18,7 @@ _Basic_
 import React from 'react'
 import { useFirestore } from 'react-redux-firebase'
 
-export default function AddData({ firebase: { add } }) {
+export default function AddData() {
   const firestore = useFirestore()
 
   function addTodo() {

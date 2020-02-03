@@ -486,7 +486,7 @@ interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
    * transaction.
    * @see https://github.com/prescottprue/redux-firestore#runtransaction
    */
-  runTransaction: typeof firebase.firestore.Firestore.runTransaction
+  runTransaction: typeof FirestoreTypes.FirebaseFirestore.prototype.runTransaction
 
   /**
    * Sets a listener within redux-firestore
@@ -678,8 +678,8 @@ interface ExtendedAuthInstance {
    */
   updateAuth: (
     authUpdate: {
-      displayName: string | null
-      photoURL: string | null
+      displayName?: string | null
+      photoURL?: string | null
     },
     updateInProfile?: boolean
   ) => Promise<void>
@@ -805,10 +805,15 @@ export function firebaseConnect<ProfileType, TInner = {}>(
  * @param action.data - Data associated with action
  * @see https://react-redux-firebase.com/docs/api/reducer.html
  */
-export function firebaseReducer<UserType>(
-  state: any,
-  action: any
-): FirebaseReducer.Reducer<UserType>
+export function firebaseReducer<
+  Schema extends Record<string, Record<string | number, string | number>>,
+  UserType
+>(state: any, action: any): FirebaseReducer.Reducer<Schema, UserType>
+
+export function makeFirebaseReducer<
+  Schema extends Record<string, Record<string | number, string | number>>,
+  UserType = {}
+>(): (state: any, action: any) => FirebaseReducer.Reducer<Schema, UserType>
 
 /**
  * React HOC that attaches/detaches Cloud Firestore listeners on mount/unmount
@@ -1000,6 +1005,7 @@ interface ReactReduxFirebaseConfig {
   userProfile: string | null
   // Use Firestore for Profile instead of Realtime DB
   useFirestoreForProfile?: boolean
+  enableClaims?: boolean
 }
 
 /**
@@ -1119,12 +1125,17 @@ export interface Data<T extends FirestoreTypes.DocumentData> {
 }
 
 export namespace FirebaseReducer {
-  export interface Reducer<ProfileType = {}> {
+  export interface Reducer<
+    Schema extends Record<string, Record<string | number, string | number>>,
+    ProfileType = {}
+  > {
     auth: AuthState
     profile: Profile<ProfileType>
     authError: any
-    data: Data<any | Dictionary<any>>
-    ordered: Ordered<any>
+    data: { [T in keyof Schema]: Record<string, Schema[T]> }
+    ordered: {
+      [T in keyof Schema]: Array<{ key: string; value: Schema[T] }>
+    }
     errors: any[]
     isInitializing: boolean
     listeners: Listeners

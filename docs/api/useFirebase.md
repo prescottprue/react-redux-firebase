@@ -22,7 +22,7 @@ _Basic_
 ```javascript
 import { useFirebase } from 'react-redux-firebase'
 
-function AddData() {
+export default function AddData() {
   const firebase = useFirebase()
 
   function addTodo() {

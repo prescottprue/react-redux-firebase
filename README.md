@@ -332,6 +332,10 @@ View docs for recipes on integrations with:
 
 [generator-react-firebase](https://github.com/prescottprue/generator-react-firebase) is a yeoman generator uses react-redux-firebase when opting to include redux.
 
+### CRA Template
+
+[cra-template-rrf](https://github.com/prescottprue/cra-template-rrf) is a create-react-app template with react-redux-firebase included
+
 ### Complete Examples
 
 The [examples folder](/examples) contains full applications that can be copied/adapted and used as a new project.
