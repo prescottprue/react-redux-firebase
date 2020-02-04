@@ -390,7 +390,12 @@ export interface ReduxFirestoreQuerySetting {
    * Collection name
    * @see https://github.com/prescottprue/redux-firestore#collection
    */
-  collection: string
+  collection?: string
+  /**
+   * Collection Group name
+   * @see https://github.com/prescottprue/redux-firestore#collection-group
+   */
+  collectionGroup?: string
   /**
    * Document id
    * @see https://github.com/prescottprue/redux-firestore#document
