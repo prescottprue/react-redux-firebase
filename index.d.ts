@@ -531,11 +531,7 @@ type Credentials =
       applicationVerifier: AuthTypes.ApplicationVerifier
     }
 
-interface UserProfile {
-  email: string
-  username: string
-  [a: string]: any
-}
+type UserProfile<P extends object = {}> = P
 
 /**
  * Firebase JS SDK Auth instance extended with methods which dispatch redux actions.
@@ -947,6 +943,7 @@ interface ReactReduxFirebaseConfig {
   enableRedirectHandling: boolean
   firebaseStateName: string
   logErrors: boolean
+  onAuthStateChanged: (user: AuthTypes.User | null) => void
   presence: any
   preserveOnEmptyAuthChange: any
   preserveOnLogout: any
