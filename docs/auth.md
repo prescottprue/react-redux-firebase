@@ -28,13 +28,13 @@ If you need access to methods that are not available at the top level, you can a
 
 For examples of how to use this API, checkout the [auth recipes section](/docs/recipes/auth.html).
 
-## login(credentials)
+## login(credentials) and reauthenticate(credentials)
 
-##### Parameters
+##### Parameters for login
 
   * `credentials` ([**Object**][object-url])
     * [**Object**][object-url] - cases:
-      * email and password (runs `ref.authWithPassword(credentials)`) :
+      * - email and password (runs `ref.authWithPassword(credentials)`) :
         ```js
         {
           email: String,
@@ -71,6 +71,33 @@ For examples of how to use this API, checkout the [auth recipes section](/docs/r
         }
         ```
       * phone number (runs `ref.signInWithPhoneNumber(phoneNumber, applicationVerifier)`). Automatic profile creation is enabled by default if you are using the `userProfile` config option. `updateProfileOnLogin` config option can be set to `false` in order to prevent this behavior.
+        ```js
+        {
+          phoneNumber: String,
+          applicationVerifier: firebase.auth.ApplicationVerifier
+        }
+        ```
+
+##### Parameters for reauthenticate
+
+  * `credentials` ([**Object**][object-url])
+    * [**Object**][object-url] - cases:
+      * provider (runs `ref.reauthenticateWithPopup(provider)` or `ref.reauthenticateWithRedirect(provider)`) :
+        ```js
+        {
+          provider: "facebook | google | twitter",
+          type: "popup | redirect", // popup is default
+          scopes: Array // email is default
+        }
+        ```
+      * credential (runs `ref.reauthenticateWithCredential(credential)`) :
+        ```js
+        {
+          credential: firebase.auth.AuthCredential // created using specific provider
+        }
+        ```
+        The credential parameter is a firebase.auth.AuthCredential specific to the provider (i.e. `firebase.auth.GoogleAuthProvider.credential(null)`). For more details [please view the Firebase API reference](https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider#methods)
+      * phone number (runs `ref.reauthenticateWithPhoneNumber(phoneNumber, applicationVerifier)`). Automatic profile creation is enabled by default if you are using the `userProfile` config option. `updateProfileOnLogin` config option can be set to `false` in order to prevent this behavior.
         ```js
         {
           phoneNumber: String,
@@ -119,6 +146,10 @@ firebase.login({
 })
 // or using an accessToken
 firebase.login({
+  credential: firebase.auth.GoogleAuthProvider.credential(null, 'some access token')
+})
+// or using reauthenticate
+firebase.reauthenticate({
   credential: firebase.auth.GoogleAuthProvider.credential(null, 'some access token')
 })
 ```
@@ -204,22 +235,17 @@ Looking to preserve data on logout? [checkout the `preserve` config option](/doc
 props.firebase.logout()
 ```
 
-## resetPassword(credentials)
+## resetPassword(email)
 Calls Firebase's `firebase.auth().resetPassword()`. If there is an error, it is added into redux state under `state.firebase.authError`.
 
 ##### Examples
 
 ```js
-props.firebase.resetPassword({
-  email: 'test@test.com',
-  password: 'testest1',
-  username: 'tester'
-})
+props.firebase.resetPassword('test@test.com')
 ```
 
 ##### Parameters
-  * `credentials` [**Object**][object-url] - Credentials same as described in firebase docs
-  * `profile` [**Object**][object-url] - if initialized with userProfile support then profile will be saved into `${userProfile}/${auth.uid}`
+  * `email` [**String**][string-url] - Email to send recovery email to
 
 ##### Returns
   [**Promise**][promise-url] with user's UID in case of success or the error otherwise.

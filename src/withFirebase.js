@@ -6,9 +6,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 /**
  * @augments React.Component
  * @description Higher Order Component that provides `firebase` and
- * `dispatch` as a props to React Components. Firebase is gathered from
- * `store.firebase`, which is attached to store by the store enhancer
- * (`reactReduxFirebase`) during setup.
+ * `dispatch` as a props to React Components.
  * **NOTE**: This version of the Firebase library has extra methods, config,
  * and functionality which give it it's capabilities such as dispatching
  * actions.

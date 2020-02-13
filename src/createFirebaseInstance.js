@@ -397,6 +397,22 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.login(dispatch, firebase, credentials)
 
   /**
+   * Reauthenticate user into Firebase. For examples, visit the
+   * [auth section of the docs](https://react-redux-firebase.com/docs/auth.html) or the
+   * [auth recipes section](https://react-redux-firebase.com/docs/recipes/auth.html).
+   * @param {object} credentials - Credentials for authenticating
+   * @param {string} credentials.provider - External provider (google |
+   * facebook | twitter)
+   * @param {string} credentials.type - Type of external authentication
+   * (popup | redirect) (only used with provider)
+   * @returns {Promise} Containing user's auth data
+   * @see https://react-redux-firebase.com/docs/auth.html#logincredentials
+   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#login
+   */
+  const reauthenticate = credentials =>
+    authActions.reauthenticate(dispatch, firebase, credentials)
+
+  /**
    * Logs user into Firebase using external. For examples, visit the
    * [auth section](/docs/recipes/auth.md)
    * @param {object} authData - Auth data from Firebase's getRedirectResult
@@ -429,13 +445,12 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 
   /**
    * Sends password reset email
-   * @param {object} credentials - Credentials for authenticating
-   * @param {string} credentials.email - Credentials for authenticating
+   * @param {string} email - Email to send recovery email to
    * @returns {Promise} Resolves after password reset email is sent
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#resetpassword
    */
-  const resetPassword = credentials =>
-    authActions.resetPassword(dispatch, firebase, credentials)
+  const resetPassword = email =>
+    authActions.resetPassword(dispatch, firebase, email)
 
   /**
    * Confirm that a user's password has been reset
@@ -459,9 +474,9 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 
   /**
    * Update user profile on Firebase Real Time Database or
-   * Firestore (if `useFirestoreForProfile: true` config passed to
-   * reactReduxFirebase). Real Time Database update uses `update` method
-   * internally while updating profile on Firestore uses `set` with
+   * Firestore (if `useFirestoreForProfile: true` config included).
+   * Real Time Database update uses `update` method internally while
+   * updating profile on Firestore uses `set`.
    * @param {object} profileUpdate - Profile data to place in new profile
    * @param {object} options - Options object (used to change how profile
    * update occurs)

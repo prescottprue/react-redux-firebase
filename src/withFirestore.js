@@ -7,10 +7,7 @@ import ReduxFirestoreContext from './ReduxFirestoreContext'
 /**
  * @augments React.Component
  * @description Higher Order Component that attaches `firestore`, `firebase`
- * and `dispatch` as props to React Components. Firebase instance is gathered
- * from `store.firestore`, which is attached to store by the store enhancer
- * (`reduxFirestore`) during setup of
- * [`redux-firestore`](https://github.com/prescottprue/redux-firestore)
+ * and `dispatch` as props to React Components.
  * @param {React.Component} WrappedComponent - React component to wrap
  * @returns {Function} - Which accepts a component to wrap and returns the
  * wrapped component

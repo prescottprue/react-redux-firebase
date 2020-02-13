@@ -1,77 +1,96 @@
-# Firestore Complete Example
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), the docs for that are in the Create React App Docs section below
 
-A complete app example showing adding/updating/removing data from Firestore
+## React Redux Firebase Docs
 
-## How was it Started?
+### Run With Example Data
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+1. Run `yarn install` to install dependencies
+1. Run `yarn start`
+1. Visit `localhost:3000` to view and add todos (note the todos are shared among everyone)
 
-Below you will find some information on how to perform common tasks.  
-You can find the most recent version of this guide [here](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md).
+### Run Your Own
 
-## Folder Structure
+1. Make sure you have Firestore setup within your Firebase console - data will be added/loaded from the `todos` collection
+1. Run `yarn install` to install dependencies
+1. Change the config in `src/config/config.js` to match your Firebase instance (from Firebase console)
+1. Run `yarn start`
+1. Visit `localhost:3000` to view and add todos to your own `todos` collection of Firestore
 
-After creation, your project should look like this:
+### FAQ
 
-```
-my-app/
-  README.md
-  index.html
-  favicon.ico
-  node_modules/
-  package.json
-  src/
-    App.css
-    App.js
-    App.test.js
-    index.css
-    index.js
-    logo.svg
-```
+1. Where is data being loaded from?:
+    The `todos` collection within firestore
 
-For the project to build, **these files must exist with exact filenames**:
+1. What is the format of a todo created in this example? :
+    `{ text: 'sample', done: false }`
 
-* `index.html` is the page template;
-* `favicon.ico` is the icon you see in the browser tab;
-* `src/index.js` is the JavaScript entry point.
+  New todos can be created from the home screen  
 
-You can delete or rename the other files.
-
-You may create subdirectories inside `src`. For faster rebuilds, only files inside `src` are processed by Webpack.  
-You need to **put any JS and CSS files inside `src`**, or Webpack won’t see them.
-
-You can, however, create more top-level directories.  
-They will not be included in the production build so you can use them for things like documentation.
+## Create React App Docs
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `yarn start`
 
-Runs the app in the development mode.<br>
+Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br>
+The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
-### `npm run build`
+### `yarn test`
 
-Builds the app for production to the `build` folder.<br>
+Launches the test runner in the interactive watch mode.<br />
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `yarn build`
+
+Builds the app for production to the `build` folder.<br />
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br>
+The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### Integrating Auth
+### `yarn eject`
 
-Checkout [the auth recipes](../../../docs/recipes/auth.md) for some simple examples of how to integrate auth.
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-**Warning**: You need to handle the loading state of auth! The recipes go over this, [but as mentioned in this issue here](https://github.com/prescottprue/react-redux-firebase/issues/93), it can seem unclear initially.
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-### Why Is Recompose Used
+Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-There are plenty of reasons to use [recompose](https://github.com/acdlite/recompose) (a utility belt for react components) which are not worth getting into here. The main reason it is used in this example it to keep the focus on the Firestore specific logic.
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-Another main reason Recompose is popular is that is can easily lead to patterns which greatly improve performance
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+
+### Analyzing the Bundle Size
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+
+### Making a Progressive Web App
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+
+### Advanced Configuration
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+
+### Deployment
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+
+### `yarn build` fails to minify
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify

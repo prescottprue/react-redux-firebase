@@ -243,11 +243,12 @@ ASDF123: {
 ```
 
 ## Profile Parameters
-To Populate parameters within profile/user object, include the `profileParamsToPopulate` parameter when [calling `reactReduxFirebase` in your compose function](/api/compose).
+To Populate parameters within profile/user object, include the `profileParamsToPopulate` parameter within your react-redux-firebase config.
 
 ### Parameter
 
 ##### Example Config
+
 Populating username with username from usernames ref.
 
 ```javascript

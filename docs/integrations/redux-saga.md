@@ -5,7 +5,6 @@
 ```javascript
 import { applyMiddleware, compose, createStore } from 'redux'
 import { browserHistory } from 'react-router'
-import { reactReduxFirebase } from 'react-redux-firebase'
 import makeRootReducer from './reducers'
 import createSagaMiddleware from 'redux-saga'
 import firebase from 'firebase/app';
@@ -37,7 +36,6 @@ export default (initialState = {}, history) => {
     makeRootReducer(),
     {}, // initial state
     compose(
-      reactReduxFirebase(firebase, reduxConfig),
       applyMiddleware(...middleware)
     )
   )

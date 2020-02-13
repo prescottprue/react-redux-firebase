@@ -8,7 +8,6 @@ Usage with [redux-persist](https://github.com/rt2zz/redux-persist) depends on wh
 
 ```js
 import { createStore, compose } from 'redux'
-import { reactReduxFirebase } from 'react-redux-firebase'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
@@ -16,10 +15,6 @@ import { persistStore, persistReducer } from 'redux-persist'
 import localStorage from 'redux-persist/lib/storage' // defaults to localStorage for web and AsyncStorage for react-native
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
-import {
-  firebase as firebaseConfig, // firebase config
-  reduxFirebase as reduxConfig // redux-persist config
-} from '../config'
 
 const persistConfig = {
   key: 'root',
@@ -27,17 +22,11 @@ const persistConfig = {
 }
 
 export default (initialState = {}, history) => {
-  // Initialize firebase instance
-  firebase.initializeApp(firebaseConfig)
-
   const persistedReducer = persistReducer(persistConfig, makeRootReducer())
 
   const store = createStore(
     persistedReducer,
-    initialState,
-    compose(
-      reactReduxFirebase(firebase, reduxConfig)
-    )
+    initialState
   )
 
   const persistor = persistStore(store)
