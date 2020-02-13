@@ -37,7 +37,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authUid: null
   }
 
-  firebase._ = merge(defaultInternals, firebase._) // eslint-disable-line no-param-reassign
+  firebase.extendApp({ _: defaultInternals })
 
   /**
    * @private
@@ -575,40 +575,44 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @description Firebase auth service instance including all Firebase auth methods
    * @returns {firebase.database.Auth}
    */
-  firebaseInstance = Object.assign(firebase, {
-    _reactReduxFirebaseExtended: true,
-    ref: path => firebase.database().ref(path),
-    set,
-    setWithMeta,
-    uniqueSet,
-    push,
-    pushWithMeta,
-    remove,
-    update,
-    updateWithMeta,
-    login,
-    reauthenticate,
-    handleRedirectResult,
-    logout,
-    updateAuth,
-    updateEmail,
-    updateProfile,
-    uploadFile,
-    uploadFiles,
-    deleteFile,
-    createUser,
-    resetPassword,
-    confirmPasswordReset,
-    verifyPasswordResetCode,
-    watchEvent,
-    unWatchEvent,
-    reloadAuth,
-    linkWithCredential,
-    promiseEvents,
-    dispatch,
-    ...actionCreators
-  })
-  return firebaseInstance
+  const helpers = {
+      _reactReduxFirebaseExtended: true,
+      ref: path => firebase.database().ref(path),
+      set,
+      setWithMeta,
+      uniqueSet,
+      push,
+      pushWithMeta,
+      remove,
+      update,
+      updateWithMeta,
+      login,
+      handleRedirectResult,
+      logout,
+      updateAuth,
+      updateEmail,
+      updateProfile,
+      uploadFile,
+      uploadFiles,
+      deleteFile,
+      createUser,
+      resetPassword,
+      confirmPasswordReset,
+      verifyPasswordResetCode,
+      watchEvent,
+      unWatchEvent,
+      reloadAuth,
+      linkWithCredential,
+      promiseEvents,
+      dispatch,
+      ...actionCreators
+  }
+
+  firebase.extendApp(helpers)
+  firebase.extendApp({ helpers })
+
+  firebaseInstance = firebase
+  return firebase
 }
 
 /**
