@@ -25,7 +25,8 @@ attempting to use. **Note** Populate is not yet supported.
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 // props.firebase set on App component as firebase object with helpers
@@ -33,7 +34,8 @@ import { firestoreConnect } from 'react-redux-firebase'
 export default firestoreConnect()(SomeComponent)
 ```
 
-_Basic_
+Basic
+
 
 ```javascript
 import { connect } from 'react-redux'

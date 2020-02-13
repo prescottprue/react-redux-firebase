@@ -21,7 +21,8 @@ using React's useEffect hook.
 
 ### Examples
 
-_Ordered Data_
+Ordered Data
+
 
 ```javascript
 import React from 'react'
@@ -41,7 +42,8 @@ export default function Todos() {
 }
 ```
 
-_Data that depends on props_
+Data that depends on props
+
 
 ```javascript
 import React from 'react'
@@ -60,7 +62,8 @@ export default function Post({ postId }) {
 }
 ```
 
-_Data that depends on props, an array as a query_
+Data that depends on props, an array as a query
+
 
 ```javascript
 import React from 'react'

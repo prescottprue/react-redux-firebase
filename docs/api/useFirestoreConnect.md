@@ -22,7 +22,8 @@ Cloud Firestore, including it's reducer, before attempting to use.
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 import React from 'react'
@@ -43,7 +44,8 @@ export default function TodosList() {
 }
 ```
 
-_Object as query_
+Object as query
+
 
 ```javascript
 import React from 'react'

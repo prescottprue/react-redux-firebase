@@ -1,4 +1,4 @@
-import createFirebaseInstance, { getFirebase } from './createFirebaseInstance'
+import createFirebaseInstance from './createFirebaseInstance'
 import ReactReduxFirebaseProvider from './ReactReduxFirebaseProvider'
 import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
 import ReduxFirestoreProvider from './ReduxFirestoreProvider'
@@ -34,7 +34,6 @@ export default {
   firebaseReducer: reducer,
   constants,
   actionTypes,
-  getFirebase,
   authIsReady,
   ...helpers
 }

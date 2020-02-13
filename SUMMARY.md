@@ -57,6 +57,7 @@
   * [ReduxFirestoreProvider](/docs/api/ReduxFirestoreProvider.md)
   * [helpers](/docs/api/helpers.md)
 * Migration Guides
+  * [v4 Migration Guide](/docs/v4-migration-guide.md)
   * [v3 Migration Guide](/docs/v3-migration-guide.md)
   * [v2 Migration Guide](/docs/v2-migration-guide.md)
 * [FAQ](/docs/FAQ.md)

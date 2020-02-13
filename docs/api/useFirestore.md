@@ -12,7 +12,8 @@ React hook that return firestore object.
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 import React from 'react'

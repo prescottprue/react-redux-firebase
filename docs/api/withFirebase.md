@@ -25,7 +25,8 @@ actions.
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 import React from 'react'
@@ -44,7 +45,8 @@ function AddTodo({ firebase: { push } }) {
 export default withFirebase(AddTodo)
 ```
 
-_Within HOC Composition_
+Within HOC Composition
+
 
 ```javascript
 import React from 'react'

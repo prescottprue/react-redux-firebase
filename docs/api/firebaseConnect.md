@@ -24,7 +24,8 @@ React's Component Lifecycle hooks.
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 // props.firebase set on App component as firebase object with helpers
@@ -32,7 +33,8 @@ import { firebaseConnect } from 'react-redux-firebase'
 export default firebaseConnect()(App)
 ```
 
-_Ordered Data_
+Ordered Data
+
 
 ```javascript
 import React from 'react'
@@ -60,7 +62,8 @@ function Todos({ todos }) {
 export default enhance(Todos)
 ```
 
-_Data that depends on props_
+Data that depends on props
+
 
 ```javascript
 import React from 'react'

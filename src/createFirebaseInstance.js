@@ -1,5 +1,4 @@
 import { isObject } from 'lodash'
-import { merge } from 'lodash/fp'
 import { getEventsFromInput, createCallable } from './utils'
 import { mapWithFirebaseAndDispatch } from './utils/actions'
 import * as authActions from './actions/auth'
@@ -17,16 +16,6 @@ let firebaseInstance
  * @returns {object} Extended Firebase instance
  */
 export default function createFirebaseInstance(firebase, configs, dispatch) {
-  /* istanbul ignore next: Logging is external */
-  // Enable Logging based on config (handling instances without i.e RNFirebase)
-  if (
-    configs.enableLogging &&
-    firebase.database &&
-    typeof firebase.database.enableLogging === 'function'
-  ) {
-    firebase.database.enableLogging(configs.enableLogging)
-  }
-
   // Add internal variables to firebase instance
   const defaultInternals = {
     watchers: {},
@@ -575,44 +564,41 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @description Firebase auth service instance including all Firebase auth methods
    * @returns {firebase.database.Auth}
    */
-  const helpers = {
-      _reactReduxFirebaseExtended: true,
-      ref: path => firebase.database().ref(path),
-      set,
-      setWithMeta,
-      uniqueSet,
-      push,
-      pushWithMeta,
-      remove,
-      update,
-      updateWithMeta,
-      login,
-      handleRedirectResult,
-      logout,
-      updateAuth,
-      updateEmail,
-      updateProfile,
-      uploadFile,
-      uploadFiles,
-      deleteFile,
-      createUser,
-      resetPassword,
-      confirmPasswordReset,
-      verifyPasswordResetCode,
-      watchEvent,
-      unWatchEvent,
-      reloadAuth,
-      linkWithCredential,
-      promiseEvents,
-      dispatch,
-      ...actionCreators
-  }
+  firebaseInstance = Object.assign({}, firebase, {
+    _reactReduxFirebaseExtended: true,
+    ref: path => firebase.database().ref(path),
+    set,
+    setWithMeta,
+    uniqueSet,
+    push,
+    pushWithMeta,
+    remove,
+    update,
+    updateWithMeta,
+    login,
+    handleRedirectResult,
+    logout,
+    updateAuth,
+    updateEmail,
+    updateProfile,
+    uploadFile,
+    uploadFiles,
+    deleteFile,
+    createUser,
+    resetPassword,
+    confirmPasswordReset,
+    verifyPasswordResetCode,
+    watchEvent,
+    unWatchEvent,
+    reloadAuth,
+    linkWithCredential,
+    promiseEvents,
+    dispatch,
+    reauthenticate,
+    ...actionCreators
+  })
 
-  firebase.extendApp(helpers)
-  firebase.extendApp({ helpers })
-
-  firebaseInstance = firebase
-  return firebase
+  return firebaseInstance
 }
 
 /**

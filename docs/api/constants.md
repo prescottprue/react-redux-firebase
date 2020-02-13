@@ -97,9 +97,6 @@ Type: [object][9]
 -   `sessions` **([string][8] \| [Function][10])** `sessions` Location on Firebase where user
     sessions are stored (only if presense is set). Often set to `'sessions'` or
     `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
--   `enableLogging` **[boolean][11]** `false` Whether or not firebase
-    database logging is enabled. Providing `true` turns on error logging
-    (enabled by itself through `logErrors`).
 -   `logErrors` **[boolean][11]** `true` Whether or not to log internal
     Firebase errors (i.e. error querying or writing data) to the javascript
     console .

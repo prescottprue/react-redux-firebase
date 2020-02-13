@@ -90,7 +90,15 @@ export const firebaseWithConfig = (config = {}) => ({
   _: {
     ...Firebase._,
     config: { ...Firebase._.config, ...config }
-  }
+  },
+  extendApp: helpers => ({
+    ...helpers,
+    ...Firebase,
+    _: {
+      ...Firebase._,
+      config: { ...Firebase._.config, ...config }
+    }
+  })
 })
 
 /**
@@ -231,9 +239,8 @@ function createStorageStub() {
 }
 
 /**
- * @param extensions
  * @param {object} otherConfig - Config to be spread onto _.config object
- * @param rtdbRefExtension
+ * @param extensions
  * @returns {object} Stubbed version of Firebase JS SDK extended with
  * react-redux-firebase config
  */
@@ -249,11 +256,29 @@ export function createFirebaseStub(otherConfig = {}, extensions) {
     auth: createAuthStub(),
     database: createRtdbStub(extensions && extensions.database),
     firestore: createFirestoreStub(),
-    storage: createStorageStub()
+    storage: createStorageStub(),
+    extendApp: helpers => ({
+      _: {
+        uid,
+        config: {
+          userProfile: 'users',
+          ...otherConfig
+        }
+      },
+      auth: createAuthStub(),
+      database: createRtdbStub(extensions && extensions.database),
+      firestore: createFirestoreStub(),
+      storage: createStorageStub(),
+      ...helpers
+    })
   }
 }
 
 export const fakeFirebase = {
+  extendApp: helpers => ({
+    ...fakeFirebase,
+    ...helpers
+  }),
   _: {
     authUid: '123',
     config: {

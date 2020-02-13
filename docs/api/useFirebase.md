@@ -17,7 +17,8 @@ actions.
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 import { useFirebase } from 'react-redux-firebase'

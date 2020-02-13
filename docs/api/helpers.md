@@ -34,7 +34,8 @@ migration from v1's dataToJS/pathToJS/populatedDataToJS functions to v2 syntax
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 import { compose } from 'redux'
@@ -51,7 +52,8 @@ const enhance = compose(
 export default enhance(SomeComponent)
 ```
 
-_Base Paths_
+Base Paths
+
 
 ```javascript
 import { connect } from 'react-redux'
@@ -64,7 +66,8 @@ export default connect(({ firebase }) => ({
 })(SomeComponent)
 ```
 
-_Default Value_
+Default Value
+
 
 ```javascript
 import { compose } from 'redux'
@@ -200,7 +203,8 @@ Populate with data from multiple locations of redux state.
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 import { compose } from 'redux'

@@ -22,7 +22,8 @@ and `dispatch` as props to React Components.
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 import React from 'react'
@@ -41,7 +42,8 @@ function AddTodo({ firestore: { add } }) {
 export default withFirestore(AddTodo)
 ```
 
-_Within HOC Composition_
+Within HOC Composition
+
 
 ```javascript
 import React from 'react'

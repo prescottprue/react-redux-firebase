@@ -136,7 +136,8 @@ Pushes data to Firebase.
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 import React from 'react'
@@ -182,7 +183,8 @@ available in [the docs][75].
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 import React from 'react'
@@ -236,7 +238,8 @@ be attached in order for state to be updated when calling remove.
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 import React from 'react'
@@ -270,7 +273,8 @@ prevent a race condition between seperate clients calling uniqueSet.
 
 ### Examples
 
-_Basic_
+Basic
+
 
 ```javascript
 import React, { Component } from 'react'
@@ -602,7 +606,8 @@ integrations into external libraries such as redux-thunk and redux-observable.
 
 ### Examples
 
-_redux-thunk integration_
+redux-thunk integration
+
 
 ```javascript
 import { applyMiddleware, compose, createStore } from 'redux';
