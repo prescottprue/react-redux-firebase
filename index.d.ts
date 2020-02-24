@@ -1040,7 +1040,7 @@ export interface ReduxFirestoreConfig {
   preserveOnListenerError: null | object
 
   // https://github.com/prescottprue/redux-firestore#onattemptcollectiondelete
-  onAttemptCollectionDelete: null | ((queryOption, dispatch, firebase) => void)
+  onAttemptCollectionDelete: null | ((queryOption: any, dispatch: any, firebase: any) => void)
 
   // https://github.com/prescottprue/redux-firestore#mergeordered
   mergeOrdered: boolean
