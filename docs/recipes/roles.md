@@ -107,12 +107,16 @@ Having cloud function contain logic about which users get assigned certain roles
 const adminEmails = ['your@email.com'] // list of emails to automatically assign admin role to
 
 async function assignUserRole(user) {
-  const { uid, email, displayName } = user; // The email of the user.
+  const { uid, email, displayName } = user // The email of the user.
   const newRole = adminEmails.includes(email) ? 'admin' : 'user'
-  await admin.firestore().collection('users').doc(uid).set({ role: 'user' }, { merge: true })
+  await admin
+    .firestore()
+    .collection('users')
+    .doc(uid)
+    .set({ role: 'user' }, { merge: true })
 }
 
-exports.assignUserRole = functions.auth.user().onCreate(assignUserRole);
+exports.assignUserRole = functions.auth.user().onCreate(assignUserRole)
 ```
 
 More info is available about doing this in the [extend auth with functions section of the firebase docs](https://firebase.google.com/docs/auth/extend-with-functions).
@@ -122,6 +126,8 @@ More info is available about doing this in the [extend auth with functions secti
 Using redux-auth-wrapper you can create higher order components that will make it easy to verify a user has a specific role or permission before rendering a page or component.
 
 Here is an example of an HOC that checks to make sure the user is an admin:
+
+**redux-auth-wrapper v1**
 
 ```js
 import { get } from 'lodash';
@@ -149,6 +155,34 @@ export const UserIsAdmin = UserAuthWrapper({ // eslint-disable-line new-cap
   predicate: auth => get(auth, `profile.role.name`) === 'admin',
   LoadingComponent: <CircularProgress mode="indeterminate" size={80} />,
 });
+```
+
+**react-router v4 + redux-auth-wrapper v2**
+
+```js
+import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper'
+import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect'
+import createHistory from 'history/createBrowserHistory'
+import LoadingScreen from '../components/LoadingScreen' // change to your custom component
+
+const locationHelper = locationHelperBuilder({})
+const browserHistory = createHistory()
+
+export const UserIsAdmin = connectedRouterRedirect({
+  wrapperDisplayName: 'UserIsAuthenticated',
+  LoadingComponent: LoadingScreen,
+  allowRedirectBack: false,
+  redirectPath: (state, ownProps) =>
+    locationHelper.getRedirectQueryParam(ownProps) || '/',
+  authenticatingSelector: ({ firebase: { auth, profile, isInitializing } }) =>
+    !auth.isLoaded || !profile.isLoaded || isInitializing === true,
+  authenticatedSelector: ({ firebase: { profile } }) =>
+    profile.role.name === 'admin',
+  redirectAction: newLoc => dispatch => {
+    browserHistory.replace(newLoc)
+    dispatch({ type: UNAUTHED_REDIRECT })
+  }
+})
 ```
 
 Here is an example of a UserHasPermission HOC that allows us to pass in a string permission (such as todos):
@@ -188,29 +222,30 @@ export const UserHasPermission = permission => UserAuthWrapper({
 **react-router v4 + redux-auth-wrapper v2**
 
 ```javascript
-import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
-import { browserHistory } from 'react-router';
-import LoadingScreen from '../components/LoadingScreen'; // change it to your custom component
+import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper'
+import { browserHistory } from 'react-router'
+import LoadingScreen from '../components/LoadingScreen' // change it to your custom component
+import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect'
 
-const locationHelper = locationHelperBuilder({});
+const locationHelper = locationHelperBuilder({})
 
-export const UserHasPermission = permission => UserAuthWrapper({
-  wrapperDisplayName: 'UserHasPermission',
-  AuthenticatingComponent: LoadingScreen,
-  allowRedirectBack: false,
-  redirectPath: (state, ownProps) =>
-    locationHelper.getRedirectQueryParam(ownProps) || '/login',
-  authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
-    !auth.isLoaded || !profile.isLoaded || isInitializing === true,
-  authenticatedSelector: ({ firebase: { auth } }) =>
-    auth.isLoaded && !auth.isEmpty,
-  redirectAction: newLoc => (dispatch) => {
-    browserHistory.replace(newLoc); // or routerActions.replace
-    dispatch({ type: UNAUTHED_REDIRECT });
-  }
-});
+export const UserHasPermission = permission =>
+  connectedRouterRedirect({
+    wrapperDisplayName: 'UserHasPermission',
+    AuthenticatingComponent: LoadingScreen,
+    allowRedirectBack: false,
+    redirectPath: (state, ownProps) =>
+      locationHelper.getRedirectQueryParam(ownProps) || '/login',
+    authenticatingSelector: ({ firebase: { auth, isInitializing } }) =>
+      !auth.isLoaded || !profile.isLoaded || isInitializing === true,
+    authenticatedSelector: ({ firebase: { auth } }) =>
+      auth.isLoaded && !auth.isEmpty,
+    redirectAction: newLoc => dispatch => {
+      browserHistory.replace(newLoc) // or routerActions.replace
+      dispatch({ type: UNAUTHED_REDIRECT })
+    }
+  })
 ```
-
 
 ## Checking for roles on pages/components
 
