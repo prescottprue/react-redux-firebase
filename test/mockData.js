@@ -11,7 +11,8 @@ export const exampleData = {
         collaborators: {
           ABC: true,
           abc: true
-        }
+        },
+        userRank: ['user2', 'ABC']
       },
       GHI: {
         owner: 'ABC',
@@ -59,6 +60,9 @@ export const exampleData = {
     users: {
       ABC: {
         displayName: 'scott'
+      },
+      user2: {
+        displayName: 'User2Name'
       }
     },
     categories: {

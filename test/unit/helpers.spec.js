@@ -153,13 +153,24 @@ describe('Helpers:', () => {
           rootName = 'users'
         })
 
-        it('populates values', () => {
+        it('populates values by rtdb or firestore Map type', () => {
           path = 'projects/OKF'
           populates = [{ child: 'collaborators', root: rootName }]
           const populatedData = helpers.populate(exampleData, path, populates)
           expect(populatedData).to.have.deep.property(
             `collaborators.ABC.displayName`,
             exampleData.data[rootName].ABC.displayName
+          )
+        })
+
+        it('populates values by firestore List type', () => {
+          path = 'projects/CDF'
+          populates = [{ child: 'userRank', root: rootName }]
+          const populatedData = helpers.populate(exampleData, path, populates)
+          expect(populatedData.userRank).to.be.instanceof(Array)
+          expect(populatedData).to.have.deep.property(
+            `userRank.0.displayName`,
+            exampleData.data[rootName].user2.displayName
           )
         })
       })
