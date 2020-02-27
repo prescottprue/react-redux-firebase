@@ -190,7 +190,8 @@ export function fixPath(path) {
  * @returns {object} List of child objects
  */
 function buildChildList(state, list, p) {
-  return mapValues(list, (val, key) => {
+  const mapFn = Array.isArray(list) ? map : mapValues
+  return mapFn(list, (val, key) => {
     let getKey = val
     // Handle key: true lists
     if (val === true || p.populateByKey) {
