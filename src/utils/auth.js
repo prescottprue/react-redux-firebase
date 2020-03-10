@@ -12,6 +12,12 @@ import { supportedAuthProviders, actionTypes } from '../constants'
 function createAuthProvider(firebase, providerName, scopes) {
   // TODO: Verify scopes are valid before adding
   // TODO: Validate parameter inputs
+
+  if (providerName.toLowerCase() === 'microsoft.com') {
+    const provider = new firebase.auth.OAuthProvider('microsoft.com')
+    return provider
+  }
+
   const capitalProviderName = `${capitalize(providerName)}AuthProvider`
 
   // Throw if auth provider does not exist on Firebase instance
