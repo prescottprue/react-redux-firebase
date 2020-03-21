@@ -230,7 +230,8 @@ export const supportedAuthProviders = [
   'google',
   'github',
   'twitter',
-  'facebook'
+  'facebook',
+  'microsoft.com'
 ]
 
 /**

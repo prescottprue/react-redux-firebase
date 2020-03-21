@@ -13,6 +13,11 @@ describe('Utils: Auth', () => {
         getLoginMethodAndParams(firebase, { provider: 'google' })
       ).to.include.keys('method')
     })
+    it('microsoft.com provider', () => {
+      expect(
+        getLoginMethodAndParams(firebase, { provider: 'microsoft.com' })
+      ).to.include.keys('method')
+    })
 
     it('twitter provider', () => {
       // TODO: Confirm that addScope
