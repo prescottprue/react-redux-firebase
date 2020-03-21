@@ -6,8 +6,7 @@
 [![Code Coverage][coverage-image]][coverage-url]
 [![Code Style][code-style-image]][code-style-url]
 [![License][license-image]][license-url]
-[![Build Status][travis-image]][travis-url]
-[![Dependency Status][daviddm-image]][daviddm-url]
+[![Build Status][build-status-image]][build-status-url]
 
 [![Gitter][gitter-image]][gitter-url]
 
@@ -21,7 +20,7 @@ The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree
 
 ## Features
 
-* Out of the box support for authentication (with auto load user profile)
+* Out of the box support for authentication (with auto loading user profile from database/firestore)
 * Full Firebase Platform Support Including Real Time Database, Firestore, and Storage
 * Automatic binding/unbinding of listeners through React Hooks (`useFirebaseConnect`, `useFirestoreConnect`) or Higher Order Components (`firebaseConnect` and `firestoreConnect`)
 * [Population capability](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
@@ -58,7 +57,10 @@ import 'firebase/auth'
 // import 'firebase/firestore' // <- needed if using firestore
 // import 'firebase/functions' // <- needed if using httpsCallable
 import { createStore, combineReducers, compose } from 'redux'
-import { ReactReduxFirebaseProvider, firebaseReducer } from 'react-redux-firebase'
+import {
+  ReactReduxFirebaseProvider,
+  firebaseReducer
+} from 'react-redux-firebase'
 // import { createFirestoreInstance, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
 
 const fbConfig = {}
@@ -89,7 +91,7 @@ const store = createStore(rootReducer, initialState)
 const rrfProps = {
   firebase,
   config: rrfConfig,
-  dispatch: store.dispatch,
+  dispatch: store.dispatch
   // createFirestoreInstance // <- needed if using firestore
 }
 
@@ -101,7 +103,7 @@ function App() {
         <Todos />
       </ReactReduxFirebaseProvider>
     </Provider>
-  );
+  )
 }
 
 render(<App />, document.getElementById('root'))
@@ -126,9 +128,7 @@ export default function Todos() {
   return (
     <div>
       <h1>New Sample Todo</h1>
-      <button onClick={addSampleTodo}>
-        Add
-      </button>
+      <button onClick={addSampleTodo}>Add</button>
     </div>
   )
 }
@@ -146,7 +146,7 @@ export default function Todos() {
   useFirebaseConnect([
     'todos' // { path: '/todos' } // object notation
   ])
-  
+
   const todos = useSelector(state => state.firebase.ordered.todos)
 
   if (!isLoaded(todos)) {
@@ -160,13 +160,9 @@ export default function Todos() {
   return (
     <div>
       <ul>
-        {
-          Object.keys(todos).map(
-            (key, id) => (
-              <TodoItem key={key} id={id} todo={todos[key]}/>
-            )
-          )
-        }
+        {Object.keys(todos).map((key, id) => (
+          <TodoItem key={key} id={id} todo={todos[key]} />
+        ))}
       </ul>
     </div>
   )
@@ -192,8 +188,10 @@ export default function Todo() {
     { path: `todos/${todoId}` } // create todo listener
     // `todos/${props.params.todoId}` // equivalent string notation
   ])
-  
-  const todo = useSelector(({ firebase: { data } }) => data.todos && data.todos[todoId])
+
+  const todo = useSelector(
+    ({ firebase: { data } }) => data.todos && data.todos[todoId]
+  )
 
   function updateTodo() {
     return firebase.update(`todos/${params.todoId}`, { done: !todo.isDone })
@@ -233,11 +231,9 @@ function TodosList() {
 
   return (
     <ul>
-      {
-        Object.keys(todos).map((key, id) =>
-          <TodoItem key={key} id={id} todo={todos[key]}/>
-        )
-      }
+      {Object.keys(todos).map((key, id) => (
+        <TodoItem key={key} id={id} todo={todos[key]} />
+      ))}
     </ul>
   )
 }
@@ -381,10 +377,8 @@ Thank you to all our backers! 🙏
 [quality-url]: https://packagequality.com/#?package=react-redux-firebase
 [backers]: https://opencollective.com/react-redux-firebase/backers/badge.svg?style=flat-square&color=blue
 [become-a-backer]: https://opencollective.com/react-redux-firebase#backer
-[travis-image]: https://img.shields.io/travis/prescottprue/react-redux-firebase/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/prescottprue/react-redux-firebase
-[daviddm-image]: https://img.shields.io/david/prescottprue/react-redux-firebase.svg?style=flat-square
-[daviddm-url]: https://david-dm.org/prescottprue/react-redux-firebase
+[build-status-image]: https://img.shields.io/github/workflow/status/prescottprue/react-redux-firebase/NPM%20Package%20Publish?style=flat-square
+[build-status-url]: https://github.com/prescottprue/react-redux-firebase/actions
 [climate-image]: https://img.shields.io/codeclimate/github/prescottprue/react-redux-firebase.svg?style=flat-square
 [climate-url]: https://codeclimate.com/github/prescottprue/react-redux-firebase
 [coverage-image]: https://img.shields.io/codecov/c/github/prescottprue/react-redux-firebase.svg?style=flat-square
