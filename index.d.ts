@@ -809,12 +809,12 @@ export function firebaseConnect<ProfileType, TInner = {}>(
 export function firebaseReducer<
   UserType,
   Schema extends Record<string, Record<string | number, string | number>>
->(state: any, action: any): FirebaseReducer.Reducer<UserType, Schema>
+>(state: any, action: any): FirebaseReducer.Reducer<Schema, UserType>
 
 export function makeFirebaseReducer<
   Schema extends Record<string, Record<string | number, string | number>>,
   UserType = {}
->(): (state: any, action: any) => FirebaseReducer.Reducer<UserType, Schema>
+>(): (state: any, action: any) => FirebaseReducer.Reducer<Schema, UserType>
 
 /**
  * React HOC that attaches/detaches Cloud Firestore listeners on mount/unmount
@@ -1128,8 +1128,8 @@ export interface Data<T extends FirestoreTypes.DocumentData> {
 
 export namespace FirebaseReducer {
   export interface Reducer<
-    ProfileType = {},
-    Schema extends Record<string, Record<string | number, string | number>>
+    Schema extends Record<string, Record<string | number, string | number>>,
+    ProfileType = {}
   > {
     auth: AuthState
     profile: Profile<ProfileType>
