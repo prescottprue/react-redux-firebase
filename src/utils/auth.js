@@ -49,7 +49,7 @@ function createAuthProvider(firebase, providerName, scopes) {
 
   if (scopes) {
     if (Array.isArray(scopes)) {
-      scopes.forEach(scope => {
+      scopes.forEach((scope) => {
         provider.addScope(scope)
       })
     }
@@ -265,7 +265,7 @@ function isAuthReady(store, stateName) {
  * @returns {Promise} Resolve when Firebase auth is ready in the store.
  */
 export function authIsReady(store, stateName = 'firebase') {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     if (isAuthReady(store, stateName)) {
       resolve()
     } else {
@@ -301,7 +301,9 @@ export function createAuthIsReady(store, config) {
  * @returns {Promise} Resolves with results of profile get
  */
 export function updateProfileOnRTDB(firebase, profileUpdate) {
-  const { _: { config, authUid } } = firebase
+  const {
+    _: { config, authUid }
+  } = firebase
   const profileRef = firebase.database().ref(`${config.userProfile}/${authUid}`)
   return profileRef.update(profileUpdate).then(() => profileRef.once('value'))
 }
@@ -326,7 +328,10 @@ export function updateProfileOnFirestore(
   options = {}
 ) {
   const { useSet = true, merge = true } = options
-  const { firestore, _: { config, authUid } } = firebase
+  const {
+    firestore,
+    _: { config, authUid }
+  } = firebase
   const profileRef = firestore().doc(`${config.userProfile}/${authUid}`)
   // Use set with merge (to prevent "No document to update") unless otherwise
   // specificed through options
@@ -351,7 +356,10 @@ export function setupPresence(dispatch, firebase) {
     return
   }
   const ref = firebase.database().ref()
-  const { config: { presence, sessions }, authUid } = firebase._
+  const {
+    config: { presence, sessions },
+    authUid
+  } = firebase._
   const amOnline = ref.child('.info/connected')
   const onlineRef = ref
     .child(
@@ -367,7 +375,7 @@ export function setupPresence(dispatch, firebase) {
   if (sessionsRef) {
     sessionsRef = ref.child(sessions)
   }
-  amOnline.on('value', snapShot => {
+  amOnline.on('value', (snapShot) => {
     if (!snapShot.val()) return
     // user is online
     if (sessionsRef) {

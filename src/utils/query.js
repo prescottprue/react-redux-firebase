@@ -5,7 +5,6 @@ import { isString } from './index'
 
 /**
  * @private
- * Try to parse passed input to a number. If it is not a number return itself.
  * @param {string|number} value - Item to attempt to parse to a number
  * @returns {any} Number if parse to number was successful, otherwise,
  * original value
@@ -20,7 +19,6 @@ function tryParseToNumber(value) {
 
 /**
  * @private
- * Get path to watch provided event type and path.
  * @param {string} event - Type of event to watch for
  * @param {string} path - Path to watch with watcher
  * @returns {string} watchPath
@@ -34,8 +32,6 @@ export function getWatchPath(event, path) {
 
 /**
  * @private
- * Get query id from query path. queryId paramter is
- * later used to add/remove listeners from internal firebase instance.
  * @param {string} path - Path from which to get query id
  * @param {string} event - Type of query event
  * @returns {string} Query id
@@ -45,30 +41,33 @@ export function getQueryIdFromPath(path, event) {
     throw new Error('Query path must be a string')
   }
   const origPath = path
-  let pathSplitted = path.split('#')
+  const pathSplitted = path.split('#')
   path = pathSplitted[0]
 
   const isQuery = pathSplitted.length > 1
   const queryParams = isQuery ? pathSplitted[1].split('&') : []
   const queryId = isQuery
     ? queryParams
-        .map(param => {
-          let splittedParam = param.split('=')
+        .map((param) => {
+          const splittedParam = param.split('=')
           // Handle query id in path
           if (splittedParam[0] === 'queryId') {
             return splittedParam[1]
           }
         })
-        .filter(q => q)
+        .filter((q) => q)
     : undefined
   return queryId && queryId.length > 0
-    ? event ? `${event}:/${queryId}` : queryId[0]
-    : isQuery ? origPath : undefined
+    ? event
+      ? `${event}:/${queryId}`
+      : queryId[0]
+    : isQuery
+    ? origPath
+    : undefined
 }
 
 /**
  * @private
- * Update the number of watchers for a query
  * @param {object} firebase - Internal firebase object
  * @param {Function} dispatch - Redux dispatch function
  * @param {string} event - Type of event to watch for
@@ -93,7 +92,6 @@ export function setWatcher(firebase, dispatch, event, path, queryId) {
 
 /**
  * @private
- * Get count of currently attached watchers
  * @param {object} firebase - Internal firebase object
  * @param {string} event - Type of event to watch for
  * @param {string} path - Path to watch with watcher
@@ -108,7 +106,6 @@ export function getWatcherCount(firebase, event, path, queryId) {
 
 /**
  * @private
- * Remove/Unset a watcher
  * @param {object} firebase - Internal firebase object
  * @param {Function} dispatch - Redux's dispatch function
  * @param {string} event - Type of event to watch for
@@ -116,18 +113,14 @@ export function getWatcherCount(firebase, event, path, queryId) {
  * @param {string} queryId - Id of query
  */
 export function unsetWatcher(firebase, dispatch, event, path, queryId) {
-  let id =
+  const id =
     queryId || getQueryIdFromPath(path, event) || getWatchPath(event, path)
   path = path.split('#')[0]
   const { watchers } = firebase._
   if (watchers[id] <= 1) {
     delete watchers[id]
     if (event !== 'first_child' && event !== 'once') {
-      firebase
-        .database()
-        .ref()
-        .child(path)
-        .off(event)
+      firebase.database().ref().child(path).off(event)
     }
   } else if (watchers[id]) {
     watchers[id]--
@@ -146,7 +139,7 @@ export function unsetWatcher(firebase, dispatch, event, path, queryId) {
 export function applyParamsToQuery(queryParams, query) {
   let doNotParse = false
   if (queryParams) {
-    queryParams.forEach(param => {
+    queryParams.forEach((param) => {
       param = param.split('=')
       switch (param[0]) {
         case 'orderByValue':
@@ -181,7 +174,7 @@ export function applyParamsToQuery(queryParams, query) {
           doNotParse = false
           break
         case 'equalTo':
-          let equalToParam = !doNotParse ? tryParseToNumber(param[1]) : param[1]
+          let equalToParam = !doNotParse ? tryParseToNumber(param[1]) : param[1] // eslint-disable-line no-case-declarations
           equalToParam = equalToParam === 'null' ? null : equalToParam
           equalToParam = equalToParam === 'false' ? false : equalToParam
           equalToParam = equalToParam === 'true' ? true : equalToParam
@@ -191,7 +184,7 @@ export function applyParamsToQuery(queryParams, query) {
               : query.equalTo(equalToParam)
           break
         case 'startAt':
-          let startAtParam = !doNotParse ? tryParseToNumber(param[1]) : param[1]
+          let startAtParam = !doNotParse ? tryParseToNumber(param[1]) : param[1] // eslint-disable-line no-case-declarations
           startAtParam = startAtParam === 'null' ? null : startAtParam
           query =
             param.length === 3
@@ -199,7 +192,7 @@ export function applyParamsToQuery(queryParams, query) {
               : query.startAt(startAtParam)
           break
         case 'endAt':
-          let endAtParam = !doNotParse ? tryParseToNumber(param[1]) : param[1]
+          let endAtParam = !doNotParse ? tryParseToNumber(param[1]) : param[1] // eslint-disable-line no-case-declarations
           endAtParam = endAtParam === 'null' ? null : endAtParam
           query =
             param.length === 3
@@ -225,7 +218,7 @@ export function orderedFromSnapshot(snap) {
   }
   const ordered = []
   if (snap.forEach) {
-    snap.forEach(child => {
+    snap.forEach((child) => {
       ordered.push({ key: child.key, value: child.val() })
     })
   }
@@ -251,7 +244,7 @@ export function populateAndDispatch(firebase, dispatch, config) {
   const { data, populates, snapshot, path, storeAs } = config
   // TODO: Allow setting of unpopulated data before starting population through config
   return promisesForPopulate(firebase, snapshot.key, data, populates)
-    .then(results => {
+    .then((results) => {
       // dispatch child sets first so isLoaded is only set to true for
       // populatedDataToJS after all data is in redux (Issue #121)
       // TODO: Allow config to toggle Combining into one SET action
@@ -271,7 +264,7 @@ export function populateAndDispatch(firebase, dispatch, config) {
       })
       return results
     })
-    .catch(err => {
+    .catch((err) => {
       dispatch({
         type: actionTypes.ERROR,
         payload: err

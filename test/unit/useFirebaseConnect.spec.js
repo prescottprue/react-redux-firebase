@@ -19,7 +19,7 @@ describe('useFirebaseConnect', () => {
     await sleep(3)
 
     expect(
-      some(dispatch.args, arg =>
+      some(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reactReduxFirebase/SET_LISTENER',
           path: 'test/start'
@@ -37,7 +37,7 @@ describe('useFirebaseConnect', () => {
     })
     await sleep()
     expect(
-      some(dispatch.args, arg =>
+      some(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reactReduxFirebase/SET_LISTENER',
           path: 'test1'
@@ -45,7 +45,7 @@ describe('useFirebaseConnect', () => {
       )
     ).to.be.true
     expect(
-      some(dispatch.args, arg =>
+      some(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reactReduxFirebase/SET_LISTENER',
           path: 'test2'
@@ -60,7 +60,7 @@ describe('useFirebaseConnect', () => {
     wrapper.unmount()
     await sleep()
     expect(
-      some(dispatch.args, arg =>
+      some(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reactReduxFirebase/UNSET_LISTENER',
           path: 'test/start'
@@ -75,7 +75,7 @@ describe('useFirebaseConnect', () => {
     wrapper.setState({ dynamic: null })
     await sleep()
     expect(
-      filter(dispatch.args, arg =>
+      filter(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reactReduxFirebase/SET_LISTENER'
         })
@@ -89,7 +89,7 @@ describe('useFirebaseConnect', () => {
     wrapper.setState({ test: 'somethingElse' })
     await sleep()
     expect(
-      filter(dispatch.args, arg =>
+      filter(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reactReduxFirebase/SET_LISTENER'
         })
@@ -104,7 +104,7 @@ describe('useFirebaseConnect', () => {
     await sleep()
 
     expect(
-      filter(dispatch.args, arg =>
+      filter(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reactReduxFirebase/UNSET_LISTENER',
           path: 'test/start'
@@ -112,7 +112,7 @@ describe('useFirebaseConnect', () => {
       )
     ).to.have.lengthOf(1)
     expect(
-      filter(dispatch.args, arg =>
+      filter(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reactReduxFirebase/SET_LISTENER',
           path: 'test/somethingElse'

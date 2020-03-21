@@ -35,7 +35,7 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * )(SomeComponent)
  */
 export default function firestoreConnect(queriesConfig = []) {
-  return WrappedComponent => {
+  return (WrappedComponent) => {
     class FirestoreConnectWrapped extends Component {
       static wrappedComponent = WrappedComponent
       static displayName = wrapDisplayName(
@@ -105,9 +105,9 @@ export default function firestoreConnect(queriesConfig = []) {
     function FirestoreConnectWithContext(props) {
       return (
         <ReactReduxFirebaseContext.Consumer>
-          {_internalFirebase => (
+          {(_internalFirebase) => (
             <ReduxFirestoreContext.Consumer>
-              {_internalFirestore => (
+              {(_internalFirestore) => (
                 <FirestoreConnectWrapped
                   {...props}
                   dispatch={_internalFirebase.dispatch}

@@ -64,9 +64,9 @@ export default function withFirestore(WrappedComponent) {
   function WithFirestore(props) {
     return (
       <ReactReduxFirebaseContext.Consumer>
-        {firebase => (
+        {(firebase) => (
           <ReduxFirestoreContext.Consumer>
-            {firestore => (
+            {(firestore) => (
               <WrappedComponent
                 firestore={firestore}
                 firebase={firebase}

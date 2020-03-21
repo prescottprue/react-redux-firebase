@@ -53,22 +53,19 @@ export default function useFirestoreConnect(queriesConfigs) {
 
   const data = useMemo(() => invokeArrayQuery(queriesConfigs), [queriesConfigs])
 
-  useEffect(
-    () => {
-      if (firestoreIsEnabled && !isEqual(data, queryRef.current)) {
-        const changes = getChanges(data, queryRef.current)
+  useEffect(() => {
+    if (firestoreIsEnabled && !isEqual(data, queryRef.current)) {
+      const changes = getChanges(data, queryRef.current)
 
-        queryRef.current = data
+      queryRef.current = data
 
-        // Remove listeners for inactive subscriptions
-        firestore.unsetListeners(changes.removed)
+      // Remove listeners for inactive subscriptions
+      firestore.unsetListeners(changes.removed)
 
-        // Add listeners for new subscriptions
-        firestore.setListeners(changes.added)
-      }
-    },
-    [data]
-  )
+      // Add listeners for new subscriptions
+      firestore.setListeners(changes.added)
+    }
+  }, [data])
 
   // Emulate componentWillUnmount
   useEffect(() => {
