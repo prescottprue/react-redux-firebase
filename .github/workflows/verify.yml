@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Use Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
@@ -29,9 +29,6 @@ jobs:
           CI: true
         run: npm ci
 
-      - name: Run Build
-        run: npm run build
-
       - name: Check For Lint
         env:
           CI: true
@@ -40,6 +37,9 @@ jobs:
       - name: Run Unit Tests + Coverage
         if: success()
         run: npm run test:cov
+
+      - name: Run Build
+        run: npm run build
 
       - name: Upload Coverage
         if: success()
