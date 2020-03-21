@@ -44,7 +44,7 @@ For examples of how to use this API, checkout the [auth recipes section](/docs/r
       * provider (runs `ref.authWithOAuthPopup(provider)` or `ref.authWithOAuthRedirect(provider)`) :
         ```js
         {
-          provider: "facebook | google | twitter",
+          provider: "facebook | google | twitter | microsoft.com",
           type: "popup | redirect", // popup is default
           scopes: Array // email is default
         }
@@ -59,7 +59,7 @@ For examples of how to use this API, checkout the [auth recipes section](/docs/r
       * provider and token (runs `ref.authWithOAuthToken(provider, token)`) **NOTE**: *Deprecated as of v1.5.0* :
         ```js
         {
-          provider: "facebook | google | twitter",
+          provider: "facebook | google | twitter | microsoft.com",
           token : String
         }
         ```
@@ -85,7 +85,7 @@ For examples of how to use this API, checkout the [auth recipes section](/docs/r
       * provider (runs `ref.reauthenticateWithPopup(provider)` or `ref.reauthenticateWithRedirect(provider)`) :
         ```js
         {
-          provider: "facebook | google | twitter",
+          provider: "facebook | google | twitter | microsoft.com",
           type: "popup | redirect", // popup is default
           scopes: Array // email is default
         }
