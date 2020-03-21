@@ -363,6 +363,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
   }
 
   /**
+   * @name login
    * Logs user into Firebase. For examples, visit the
    * [auth section of the docs](https://react-redux-firebase.com/docs/auth.html) or the
    * [auth recipes section](https://react-redux-firebase.com/docs/recipes/auth.html).
@@ -377,10 +378,9 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @see https://react-redux-firebase.com/docs/auth.html#logincredentials
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#login
    */
-  const login = (credentials) =>
-    authActions.login(dispatch, firebase, credentials)
 
   /**
+   * @name reauthenticate
    * Reauthenticate user into Firebase. For examples, visit the
    * [auth section of the docs](https://react-redux-firebase.com/docs/auth.html) or the
    * [auth recipes section](https://react-redux-firebase.com/docs/recipes/auth.html).
@@ -393,27 +393,25 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @see https://react-redux-firebase.com/docs/auth.html#logincredentials
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#login
    */
-  const reauthenticate = (credentials) =>
-    authActions.reauthenticate(dispatch, firebase, credentials)
 
   /**
+   * @name handleRedirectResult
    * Logs user into Firebase using external. For examples, visit the
    * [auth section](/docs/recipes/auth.md)
    * @param {object} authData - Auth data from Firebase's getRedirectResult
    * @returns {Promise} Containing user's profile
    */
-  const handleRedirectResult = (authData) =>
-    authActions.handleRedirectResult(dispatch, firebase, authData)
 
   /**
+   * @name logout
    * Logs user out of Firebase and empties firebase state from
    * redux store
    * @returns {Promise} Resolves after logout is complete
    * @see https://react-redux-firebase.com/docs/auth.html#logout
    */
-  const logout = () => authActions.logout(dispatch, firebase)
 
   /**
+   * @name createUser
    * Creates a new user in Firebase authentication. If
    * `userProfile` config option is set, user profiles will be set to this
    * location.
@@ -424,39 +422,35 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @returns {Promise} Containing user's auth data
    * @see https://react-redux-firebase.com/docs/auth.html#createuser
    */
-  const createUser = (credentials, profile) =>
-    authActions.createUser(dispatch, firebase, credentials, profile)
 
   /**
+   * @name resetPassword
    * Sends password reset email
    * @param {string} email - Email to send recovery email to
    * @returns {Promise} Resolves after password reset email is sent
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#resetpassword
    */
-  const resetPassword = (email) =>
-    authActions.resetPassword(dispatch, firebase, email)
 
   /**
+   * @name confirmPasswordReset
    * Confirm that a user's password has been reset
    * @param {string} code - Password reset code to verify
    * @param {string} password - New Password to confirm reset to
    * @returns {Promise} Resolves after password reset is confirmed
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#confirmpasswordreset
    */
-  const confirmPasswordReset = (code, password) =>
-    authActions.confirmPasswordReset(dispatch, firebase, code, password)
 
   /**
+   * @name verifyPasswordResetCode
    * Verify that a password reset code from a password reset
    * email is valid
    * @param {string} code - Password reset code to verify
    * @returns {Promise} Containing user auth info
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#verifypasswordreset
    */
-  const verifyPasswordResetCode = (code) =>
-    authActions.verifyPasswordResetCode(dispatch, firebase, code)
 
   /**
+   * @name updateProfile
    * Update user profile on Firebase Real Time Database or
    * Firestore (if `useFirestoreForProfile: true` config included).
    * Real Time Database update uses `update` method internally while
@@ -472,44 +466,6 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @returns {Promise} Returns after updating profile within database
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateprofile
    */
-  const updateProfile = (profileUpdate, options) =>
-    authActions.updateProfile(dispatch, firebase, profileUpdate, options)
-
-  /**
-   * Update Auth profile object
-   * @param {object} authUpdate - Update to be auth object
-   * @param {boolean} updateInProfile - Update in profile
-   * @returns {Promise} Returns after updating auth profile
-   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateauth
-   */
-  const updateAuth = (authUpdate, updateInProfile) =>
-    authActions.updateAuth(dispatch, firebase, authUpdate, updateInProfile)
-
-  /**
-   * Update user's email
-   * @param {string} newEmail - Update to be auth object
-   * @param {boolean} updateInProfile - Update in profile
-   * @returns {Promise} Resolves after email is updated in user's auth
-   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateemail
-   */
-  const updateEmail = (newEmail, updateInProfile) =>
-    authActions.updateEmail(dispatch, firebase, newEmail, updateInProfile)
-
-  /**
-   * Reload user's auth object. Must be authenticated.
-   * @returns {Promise} Resolves after reloading firebase auth
-   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#reloadauth
-   */
-  const reloadAuth = () => authActions.reloadAuth(dispatch, firebase)
-
-  /**
-   * Links the user account with the given credentials.
-   * @param {firebase.auth.AuthCredential} credential - The auth credential
-   * @returns {Promise} Resolves after linking auth with a credential
-   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#linkwithcredential
-   */
-  const linkWithCredential = (credential) =>
-    authActions.linkWithCredential(dispatch, firebase, credential)
 
   /**
    * @name signInWithPhoneNumber
@@ -526,6 +482,39 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @name initializeAuth
    * Initialize auth to work with build in profile support
    */
+
+  /**
+   * @name linkWithCredential
+   * Links the user account with the given credentials.
+   * @param {firebase.auth.AuthCredential} credential - The auth credential
+   * @returns {Promise} Resolves after linking auth with a credential
+   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#linkwithcredential
+   */
+
+  /**
+   * @name reloadAuth
+   * Reload user's auth object. Must be authenticated.
+   * @returns {Promise} Resolves after reloading firebase auth
+   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#reloadauth
+   */
+
+  /**
+   * @name updateEmail
+   * Update user's email
+   * @param {string} newEmail - Update to be auth object
+   * @param {boolean} updateInProfile - Update in profile
+   * @returns {Promise} Resolves after email is updated in user's auth
+   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateemail
+   */
+
+  /**
+   * @name updateAuth
+   * Update Auth profile object
+   * @param {object} authUpdate - Update to be auth object
+   * @param {boolean} updateInProfile - Update in profile
+   * @returns {Promise} Returns after updating auth profile
+   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateauth
+   */
   const actionCreators = mapWithFirebaseAndDispatch(
     firebase,
     dispatch,
@@ -535,7 +524,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     },
     // Actions with arg order (dispatch, firebase)
     {
-      initializeAuth: authActions.init
+      ...authActions
     }
   )
 
@@ -570,24 +559,11 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     remove,
     update,
     updateWithMeta,
-    login,
-    reauthenticate,
-    handleRedirectResult,
-    logout,
-    updateAuth,
-    updateEmail,
-    updateProfile,
     uploadFile,
     uploadFiles,
     deleteFile,
-    createUser,
-    resetPassword,
-    confirmPasswordReset,
-    verifyPasswordResetCode,
     watchEvent,
     unWatchEvent,
-    reloadAuth,
-    linkWithCredential,
     promiseEvents,
     dispatch,
     ...actionCreators
