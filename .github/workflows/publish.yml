@@ -1,0 +1,74 @@
+name: NPM Package Publish
+
+on:
+  push:
+    branches:
+      - master
+      - next
+      - alpha
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check package version
+        uses: technote-space/package-version-check-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Setup Node 10
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+          registry-url: https://registry.npmjs.org/
+
+      # Setup dependency caching
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Dependencies
+        env:
+          CI: true
+        run: npm ci
+
+      - name: Check For Lint
+        env:
+          CI: true
+        run: npm run lint
+
+      - name: Run Unit Tests + Coverage
+        env:
+          CI: true
+          CODE_CLIMATE: ${{ secrets.CODE_CLIMATE }}
+        run: npm run test:cov
+
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_REF: ${{ github.ref }}
+        run: |
+          export GIT_BRANCH=${GITHUB_REF##*/}
+          export PUBLISH_FLAG=$(if [ "$GITHUB_REF" != 'refs/heads/master' ]; then eval echo '--tag $GIT_BRANCH'; else echo ''; fi;)
+          npm publish $PUBLISH_FLAG
+
+      - name: Archive Build Artifact
+        uses: actions/upload-artifact@master
+        if: success()
+        with:
+          name: build
+          path: lib
+
+      - name: Upload Coverage
+        if: success()
+        env:
+          CI: true
+          CODE_COV: ${{ secrets.CODE_COV }}
+        # Upload to Code Cover. Curl used in place of codecov/codecov-action
+        # due to long build time. See https://github.com/codecov/codecov-action/issues/21
+        run: curl -s https://codecov.io/bash | bash -s -- -t $CODE_COV
+

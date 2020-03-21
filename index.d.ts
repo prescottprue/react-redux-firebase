@@ -390,7 +390,12 @@ export interface ReduxFirestoreQuerySetting {
    * Collection name
    * @see https://github.com/prescottprue/redux-firestore#collection
    */
-  collection: string
+  collection?: string
+  /**
+   * Collection Group name
+   * @see https://github.com/prescottprue/redux-firestore#collection-group
+   */
+  collectionGroup?: string
   /**
    * Document id
    * @see https://github.com/prescottprue/redux-firestore#document
@@ -572,11 +577,7 @@ type Credentials =
       applicationVerifier: AuthTypes.ApplicationVerifier
     }
 
-interface UserProfile {
-  email: string
-  username: string
-  [a: string]: any
-}
+type UserProfile<P extends object = {}> = P
 
 /**
  * Firebase JS SDK Auth instance extended with methods which dispatch redux actions.
@@ -806,8 +807,8 @@ export function firebaseConnect<ProfileType, TInner = {}>(
  * @see https://react-redux-firebase.com/docs/api/reducer.html
  */
 export function firebaseReducer<
-  Schema extends Record<string, Record<string | number, string | number>>,
-  UserType
+  UserType,
+  Schema extends Record<string, Record<string | number, string | number>>
 >(state: any, action: any): FirebaseReducer.Reducer<Schema, UserType>
 
 export function makeFirebaseReducer<
@@ -995,6 +996,7 @@ interface ReactReduxFirebaseConfig {
   enableRedirectHandling: boolean
   firebaseStateName: string
   logErrors: boolean
+  onAuthStateChanged: (user: AuthTypes.User | null) => void
   presence: any
   preserveOnEmptyAuthChange: any
   preserveOnLogout: any
@@ -1035,7 +1037,7 @@ export interface ReduxFirestoreConfig {
   preserveOnListenerError: null | object
 
   // https://github.com/prescottprue/redux-firestore#onattemptcollectiondelete
-  onAttemptCollectionDelete: null | ((queryOption, dispatch, firebase) => void)
+  onAttemptCollectionDelete: null | ((queryOption: any, dispatch: any, firebase: any) => void)
 
   // https://github.com/prescottprue/redux-firestore#mergeordered
   mergeOrdered: boolean

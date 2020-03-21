@@ -62,8 +62,14 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
+## Emulator
 
-### Integrating Auth
+The database emulators provided by Firebase allow you to run the full application on a database the is emulated locally. This means that the data will be cleared each time you start the emulator. To use the emulator run the following:
+
+1. Start the emulators: `yarn emulate`
+1. Start the app: `yarn dev`
+
+## Integrating Auth
 
 Checkout [the auth recipes](../../../docs/recipes/auth.md) for some simple examples of how to integrate auth.
 

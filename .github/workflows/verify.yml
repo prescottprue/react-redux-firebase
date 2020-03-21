@@ -1,0 +1,51 @@
+name: Verify
+
+on: [pull_request]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Setup dependency caching
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Dependencies
+        env:
+          CI: true
+        run: npm ci
+
+      - name: Check For Lint
+        env:
+          CI: true
+        run: npm run lint
+
+      - name: Run Unit Tests + Coverage
+        if: success()
+        run: npm run test:cov
+
+      - name: Run Build
+        run: npm run build
+
+      - name: Upload Coverage
+        if: matrix.node-version == '10.x' && success()
+        env:
+          CI: true
+          CODE_COV: ${{ secrets.CODE_COV }}
+        # Upload to codecov.io. Curl used in place of codecov/codecov-action
+        # due to long build time. See https://github.com/codecov/codecov-action/issues/21
+        run: curl -s https://codecov.io/bash | bash -s -- -t $CODE_COV
