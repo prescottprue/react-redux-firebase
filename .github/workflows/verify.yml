@@ -42,7 +42,7 @@ jobs:
         run: npm run build
 
       - name: Upload Coverage
-        if: success()
+        if: matrix.node-version == '10.x' && success()
         env:
           CI: true
           CODE_COV: ${{ secrets.CODE_COV }}
