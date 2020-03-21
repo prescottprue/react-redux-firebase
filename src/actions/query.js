@@ -35,7 +35,9 @@ export function watchEvent(firebase, dispatch, options) {
     isQuery,
     storeAs
   } = options
-  const { config: { logErrors } } = firebase._
+  const {
+    config: { logErrors }
+  } = firebase._
 
   const watchPath = !storeAs ? path : `${path}@${storeAs}`
   const id = queryId || getQueryIdFromPath(path)
@@ -57,7 +59,7 @@ export function watchEvent(firebase, dispatch, options) {
       .orderByKey()
       .limitToFirst(1)
       .once('value')
-      .then(snapshot => {
+      .then((snapshot) => {
         if (snapshot.val() === null) {
           dispatch({
             type: actionTypes.NO_VALUE,
@@ -66,7 +68,7 @@ export function watchEvent(firebase, dispatch, options) {
         }
         return snapshot
       })
-      .catch(err => {
+      .catch((err) => {
         dispatch({
           type: actionTypes.ERROR,
           path: storeAs || path,
@@ -76,10 +78,7 @@ export function watchEvent(firebase, dispatch, options) {
       })
   }
 
-  let query = firebase
-    .database()
-    .ref()
-    .child(path)
+  let query = firebase.database().ref().child(path)
 
   if (isQuery) {
     query = applyParamsToQuery(queryParams, query)
@@ -91,7 +90,7 @@ export function watchEvent(firebase, dispatch, options) {
   if (type === 'once') {
     return query
       .once('value')
-      .then(snapshot => {
+      .then((snapshot) => {
         if (snapshot.val() === null) {
           return dispatch({
             type: actionTypes.NO_VALUE,
@@ -117,7 +116,7 @@ export function watchEvent(firebase, dispatch, options) {
           populates
         })
       })
-      .catch(err => {
+      .catch((err) => {
         dispatch({
           type: actionTypes.UNAUTHORIZED_ERROR,
           payload: err
@@ -130,8 +129,8 @@ export function watchEvent(firebase, dispatch, options) {
   /* istanbul ignore next: is run by tests but doesn't show in coverage */
   query.on(
     type,
-    snapshot => {
-      let data = type === 'child_removed' ? undefined : snapshot.val()
+    (snapshot) => {
+      const data = type === 'child_removed' ? undefined : snapshot.val()
       const resultPath =
         storeAs || type === 'value' ? path : `${path}/${snapshot.key}`
 
@@ -158,7 +157,7 @@ export function watchEvent(firebase, dispatch, options) {
         populates
       })
     },
-    err => {
+    (err) => {
       if (logErrors) {
         // eslint-disable-next-line no-console
         console.log(
@@ -209,7 +208,7 @@ export function watchEvents(firebase, dispatch, events) {
   if (!Array.isArray(events)) {
     throw new Error('Events config must be an Array')
   }
-  return events.map(event => watchEvent(firebase, dispatch, event))
+  return events.map((event) => watchEvent(firebase, dispatch, event))
 }
 
 /**
@@ -219,7 +218,7 @@ export function watchEvents(firebase, dispatch, events) {
  * @param {Array} events - List of events for which to remove watchers
  */
 export function unWatchEvents(firebase, dispatch, events) {
-  events.forEach(event => unWatchEvent(firebase, dispatch, event))
+  events.forEach((event) => unWatchEvent(firebase, dispatch, event))
 }
 
 /**
@@ -245,7 +244,7 @@ export function remove(firebase, dispatch, path, options = {}) {
       }
       return path
     })
-    .catch(err => {
+    .catch((err) => {
       dispatch({ type: actionTypes.ERROR, payload: err })
       return Promise.reject(err)
     })

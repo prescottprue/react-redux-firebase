@@ -71,12 +71,13 @@ import ReactReduxFirebaseContext from './ReactReduxFirebaseContext'
  * export default enhance(Post)
  */
 export default function firebaseConnect(queriesConfig = []) {
-  return WrappedComponent => {
+  return (WrappedComponent) => {
     class FirebaseConnectWrapped extends Component {
       static displayName = wrapDisplayName(
         WrappedComponent,
         'FirebaseConnectWrapped'
       )
+
       static wrappedComponent = WrappedComponent
 
       firebaseEvents = []
@@ -152,7 +153,7 @@ export default function firebaseConnect(queriesConfig = []) {
     function FirebaseConnectWithContext(props) {
       return (
         <ReactReduxFirebaseContext.Consumer>
-          {_internalFirebase => (
+          {(_internalFirebase) => (
             <FirebaseConnectWrapped
               {...props}
               dispatch={_internalFirebase.dispatch}

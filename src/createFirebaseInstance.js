@@ -41,7 +41,6 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
 
   /**
    * @private
-   * Calls a method and attaches meta to value object
    * @param {string} method - Method to run with meta attached
    * @param {string} path - Path to location on Firebase which to set
    * @param {object|string|boolean|number} value - Value to write to Firebase
@@ -58,15 +57,9 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
       if (firebase.auth().currentUser) {
         dataWithMeta[`${prefix}By`] = firebase.auth().currentUser.uid
       }
-      return firebase
-        .database()
-        .ref(path)
-        [method](dataWithMeta, onComplete)
+      return firebase.database().ref(path)[method](dataWithMeta, onComplete)
     }
-    return firebase
-      .database()
-      .ref(path)
-      [method](value, onComplete)
+    return firebase.database().ref(path)[method](value, onComplete)
   }
 
   /**
@@ -90,10 +83,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * export default firebaseConnect()(Example)
    */
   const set = (path, value, onComplete) =>
-    firebase
-      .database()
-      .ref(path)
-      .set(value, onComplete)
+    firebase.database().ref(path).set(value, onComplete)
 
   /**
    * Sets data to Firebase along with meta data. Currently,
@@ -131,10 +121,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * export default firebaseConnect()(Example)
    */
   const push = (path, value, onComplete) =>
-    firebase
-      .database()
-      .ref(path)
-      .push(value, onComplete)
+    firebase.database().ref(path).push(value, onComplete)
 
   /**
    * Pushes data to Firebase along with meta data. Currently,
@@ -174,10 +161,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * export default firebaseConnect()(Example)
    */
   const update = (path, value, onComplete) =>
-    firebase
-      .database()
-      .ref(path)
-      .update(value, onComplete)
+    firebase.database().ref(path).update(value, onComplete)
 
   /**
    * Updates data on Firebase along with meta. *Warning*
@@ -249,7 +233,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     firebase
       .database()
       .ref(path)
-      .transaction(d => (d === null ? value : undefined))
+      .transaction((d) => (d === null ? value : undefined))
       .then(({ committed, snapshot }) => {
         if (!committed) {
           const newError = new Error('Path already exists.')
@@ -372,7 +356,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     const queryConfigs = getEventsFromInput(prevData)
     // TODO: Handle calling with non promise queries (must be once or first_child)
     return Promise.all(
-      queryConfigs.map(queryConfig =>
+      queryConfigs.map((queryConfig) =>
         queryActions.watchEvent(firebase, dispatch, queryConfig)
       )
     )
@@ -393,7 +377,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @see https://react-redux-firebase.com/docs/auth.html#logincredentials
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#login
    */
-  const login = credentials =>
+  const login = (credentials) =>
     authActions.login(dispatch, firebase, credentials)
 
   /**
@@ -409,7 +393,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @see https://react-redux-firebase.com/docs/auth.html#logincredentials
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#login
    */
-  const reauthenticate = credentials =>
+  const reauthenticate = (credentials) =>
     authActions.reauthenticate(dispatch, firebase, credentials)
 
   /**
@@ -418,7 +402,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @param {object} authData - Auth data from Firebase's getRedirectResult
    * @returns {Promise} Containing user's profile
    */
-  const handleRedirectResult = authData =>
+  const handleRedirectResult = (authData) =>
     authActions.handleRedirectResult(dispatch, firebase, authData)
 
   /**
@@ -449,7 +433,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @returns {Promise} Resolves after password reset email is sent
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#resetpassword
    */
-  const resetPassword = email =>
+  const resetPassword = (email) =>
     authActions.resetPassword(dispatch, firebase, email)
 
   /**
@@ -469,7 +453,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @returns {Promise} Containing user auth info
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#verifypasswordreset
    */
-  const verifyPasswordResetCode = code =>
+  const verifyPasswordResetCode = (code) =>
     authActions.verifyPasswordResetCode(dispatch, firebase, code)
 
   /**
@@ -524,7 +508,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * @returns {Promise} Resolves after linking auth with a credential
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#linkwithcredential
    */
-  const linkWithCredential = credential =>
+  const linkWithCredential = (credential) =>
     authActions.linkWithCredential(dispatch, firebase, credential)
 
   /**
@@ -577,7 +561,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    */
   firebaseInstance = Object.assign(firebase, {
     _reactReduxFirebaseExtended: true,
-    ref: path => firebase.database().ref(path),
+    ref: (path) => firebase.database().ref(path),
     set,
     setWithMeta,
     uniqueSet,

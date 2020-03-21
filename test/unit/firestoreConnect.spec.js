@@ -4,7 +4,7 @@ import { sleep, createContainer, TestLeaf } from '../utils'
 import firestoreConnect from 'firestoreConnect'
 
 /* eslint-disable react/prop-types */
-const withFirestoreConnect = firestoreConnect(props => [
+const withFirestoreConnect = firestoreConnect((props) => [
   props.dynamicProp ? `test/${props.dynamicProp}` : 'test'
 ])
 /* eslint-enable react/prop-types */
@@ -26,7 +26,7 @@ describe('firestoreConnect', () => {
     const { wrapper, dispatch } = createContainer({ hoc: withFirestoreConnect })
     wrapper.unmount()
     expect(
-      some(dispatch.args, arg =>
+      some(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/UNSET_LISTENER',
           meta: { collection: 'test' },
@@ -40,7 +40,7 @@ describe('firestoreConnect', () => {
     const { wrapper, dispatch } = createContainer({ hoc: withFirestoreConnect })
     wrapper.setState({ test: 'somethingElse' })
     expect(
-      filter(dispatch.args, arg =>
+      filter(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/SET_LISTENER'
         })
@@ -53,7 +53,7 @@ describe('firestoreConnect', () => {
     wrapper.setState({ dynamic: 'somethingElse' })
     await sleep()
     expect(
-      filter(dispatch.args, arg =>
+      filter(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/UNSET_LISTENER',
           meta: { collection: 'test' },
@@ -62,7 +62,7 @@ describe('firestoreConnect', () => {
       )
     ).to.have.lengthOf(1)
     expect(
-      filter(dispatch.args, arg =>
+      filter(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/SET_LISTENER',
           meta: { collection: 'test', doc: 'somethingElse' },

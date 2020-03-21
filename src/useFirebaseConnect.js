@@ -68,36 +68,29 @@ export default function useFirebaseConnect(queriesConfig) {
 
   const data = useMemo(() => invokeArrayQuery(queriesConfig), [queriesConfig])
 
-  useEffect(
-    () => {
-      if (data !== null && !isEqual(data, dataRef.current)) {
-        const itemsToSubscribe = differenceWith(data, dataRef.current, isEqual)
-        const itemsToUnsubscribe = differenceWith(
-          dataRef.current,
-          data,
-          isEqual
-        )
+  useEffect(() => {
+    if (data !== null && !isEqual(data, dataRef.current)) {
+      const itemsToSubscribe = differenceWith(data, dataRef.current, isEqual)
+      const itemsToUnsubscribe = differenceWith(dataRef.current, data, isEqual)
 
-        dataRef.current = data
-        // UnWatch all current events
-        unWatchEvents(
-          firebase,
-          firebase.dispatch,
-          getEventsFromInput(itemsToUnsubscribe)
-        )
-        // Get watch events from new data
-        eventRef.current = getEventsFromInput(data)
+      dataRef.current = data
+      // UnWatch all current events
+      unWatchEvents(
+        firebase,
+        firebase.dispatch,
+        getEventsFromInput(itemsToUnsubscribe)
+      )
+      // Get watch events from new data
+      eventRef.current = getEventsFromInput(data)
 
-        // Watch new events
-        watchEvents(
-          firebase,
-          firebase.dispatch,
-          getEventsFromInput(itemsToSubscribe)
-        )
-      }
-    },
-    [data]
-  )
+      // Watch new events
+      watchEvents(
+        firebase,
+        firebase.dispatch,
+        getEventsFromInput(itemsToSubscribe)
+      )
+    }
+  }, [data])
 
   // Emulate componentWillUnmount
   useEffect(() => {

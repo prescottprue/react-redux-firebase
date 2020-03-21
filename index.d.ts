@@ -809,12 +809,12 @@ export function firebaseConnect<ProfileType, TInner = {}>(
 export function firebaseReducer<
   UserType,
   Schema extends Record<string, Record<string | number, string | number>>
->(state: any, action: any): FirebaseReducer.Reducer<Schema, UserType>
+>(state: any, action: any): FirebaseReducer.Reducer<UserType, Schema>
 
 export function makeFirebaseReducer<
-  Schema extends Record<string, Record<string | number, string | number>>,
-  UserType = {}
->(): (state: any, action: any) => FirebaseReducer.Reducer<Schema, UserType>
+  UserType = {},
+  Schema extends Record<string, Record<string | number, string | number>> = {}
+>(): (state: any, action: any) => FirebaseReducer.Reducer<UserType, Schema>
 
 /**
  * React HOC that attaches/detaches Cloud Firestore listeners on mount/unmount
@@ -1037,7 +1037,9 @@ export interface ReduxFirestoreConfig {
   preserveOnListenerError: null | object
 
   // https://github.com/prescottprue/redux-firestore#onattemptcollectiondelete
-  onAttemptCollectionDelete: null | ((queryOption: any, dispatch: any, firebase: any) => void)
+  onAttemptCollectionDelete:
+    | null
+    | ((queryOption: any, dispatch: any, firebase: any) => void)
 
   // https://github.com/prescottprue/redux-firestore#mergeordered
   mergeOrdered: boolean
@@ -1128,8 +1130,8 @@ export interface Data<T extends FirestoreTypes.DocumentData> {
 
 export namespace FirebaseReducer {
   export interface Reducer<
-    Schema extends Record<string, Record<string | number, string | number>>,
-    ProfileType = {}
+    ProfileType = {},
+    Schema extends Record<string, Record<string | number, string | number>> = {}
   > {
     auth: AuthState
     profile: Profile<ProfileType>

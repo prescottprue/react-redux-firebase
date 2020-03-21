@@ -21,7 +21,7 @@ export function wrapInDispatch(
     payload: isObject(requestingType) ? requestingType.payload : { args }
   })
   return method(...args)
-    .then(payload => {
+    .then((payload) => {
       dispatch({
         type: isObject(successType) ? successType.type : successType,
         meta,
@@ -29,7 +29,7 @@ export function wrapInDispatch(
       })
       return payload
     })
-    .catch(err => {
+    .catch((err) => {
       dispatch({
         type: errorType,
         meta,
@@ -49,7 +49,7 @@ export function wrapInDispatch(
  * and dispatch.
  */
 function createWithFirebaseAndDispatch(firebase, dispatch, dispatchFirst) {
-  return func => (...args) =>
+  return (func) => (...args) =>
     func.apply(
       firebase,
       dispatchFirst
