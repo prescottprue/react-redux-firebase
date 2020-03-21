@@ -7,7 +7,7 @@ checks:
   file-lines:
     enabled: true
     config:
-      threshold: 700
+      threshold: 740
   return-statements:
     enabled: true
     config:
