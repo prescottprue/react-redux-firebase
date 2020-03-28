@@ -1,6 +1,6 @@
 # Firestore
 
-The Firestore integration is build on [`redux-firestore`](https://github.com/prescottprue/redux-firestore). Auth, Storage, and RTDB interactions still go on within `react-redux-firebase`, while `redux-firestore` handles attaching listeners and updating state for Firestore.
+The Firestore integration is built on [`redux-firestore`](https://github.com/prescottprue/redux-firestore). Auth, Storage, and RTDB interactions still occur within `react-redux-firebase`, while `redux-firestore` handles attaching listeners and updating state for Firestore.
 
 To begin using Firestore with `react-redux-firebase`, make sure you have the following:
 * `v2.0.0` or higher of `react-redux-firebase`
