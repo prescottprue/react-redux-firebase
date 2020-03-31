@@ -303,6 +303,30 @@ compose(
 )
 ```
 
+2. Set `useFirestoreConnect` for subcollections documents
+For example, in Firestore cloud you have such message structure:
+`chatMessages (collection) / chatID (document) / messages (collection) / messageID (document)`
+
+You can't write the path in `useFirestoreConnect` like:
+```useFirestoreConnect(`chatMessages/${chatID}/messages`)```
+
+You will have error:
+
+`Queries with subcollections must use "storeAs" to prevent invalid store updates. This closley matches the upcoming major release (v1), which stores subcollections at the top level by default.`
+
+Solution:
+Use `subcollections` for 'messages' and `storeAs`.
+```import { useFirestoreConnect } from 'react-redux-firebase'
+  useFirestoreConnect([
+    {
+      collection: 'chatMessages',
+      doc: chatID,
+      subcollections: [{ collection: 'messages' }],
+      storeAs: 'myMessages'
+    }
+  ])```
+
+
 ## Populate {#populate}
 
 Populate is not yet supported for the Firestore integration, but will be coming soon. Progress can be tracked [within issue #48](https://github.com/prescottprue/redux-firestore/issues/48).
