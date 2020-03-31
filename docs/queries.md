@@ -286,7 +286,7 @@ Query parameters can be passed through the `queryParams` parameter if using obje
 #### orderByChild
 To order the query by a child within each object, use orderByChild.
 
-**Internally Uses Firebase Method**: [ `orderByChild`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByChild)
+**Internally Uses Firebase Method**: [ `orderByChild`](https://firebase.google.com/docs/reference/js/firebase.database.Query#order-bychild)
 
 ##### Example
 Ordering a list of todos by the text parameter of the todo item (placing them in alphabetical order).
