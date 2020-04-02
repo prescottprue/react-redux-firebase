@@ -120,7 +120,7 @@ Firestore queries can be created in two ways:
     useFirestoreConnect(() => [
       { collection: 'todos', doc: todoId } // or `todos/${props.todoId}`
     ])
-    const todo = useSelector(({ firestore: { ordered } }) => ordered.todos && ordered.todos[0])
+    const todo = useSelector(({ firestore: { data } }) => data.todos && data.todos[todoId])
   }
   ```
 
