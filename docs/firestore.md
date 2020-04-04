@@ -329,4 +329,4 @@ Use `subcollections` for 'messages' and `storeAs`.
 
 ## Populate {#populate}
 
-Populate is not yet supported for the Firestore integration, but will be coming soon. Progress can be tracked [within issue #48](https://github.com/prescottprue/redux-firestore/issues/48).
+Populate is supported for Firestore as of v0.6.0. It was added [with issue #48](https://github.com/prescottprue/redux-firestore/issues/48).
