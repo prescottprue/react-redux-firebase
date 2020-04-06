@@ -63,7 +63,7 @@ interface RootState {
 
 // with only Profile type
 interface RootState {
-  firebase: FirebaseReducer.Reducer<{Profile>
+  firebase: FirebaseReducer.Reducer<Profile>
 }
 
 // with only Schema type
