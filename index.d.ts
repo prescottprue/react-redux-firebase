@@ -807,14 +807,14 @@ export function firebaseConnect<ProfileType, TInner = {}>(
  * @see https://react-redux-firebase.com/docs/getting_started.html#add-reducer
  */
 export function firebaseReducer<
-  UserType extends Record<string, any> = {},
+  ProfileType extends Record<string, any> = {},
   Schema extends Record<string, any> = {}
->(state: any, action: any): FirebaseReducer.Reducer<UserType, Schema>
+>(state: any, action: any): FirebaseReducer.Reducer<ProfileType, Schema>
 
 export function makeFirebaseReducer<
-  UserType extends Record<string, any> = {},
+  ProfileType extends Record<string, any> = {},
   Schema extends Record<string, any> = {}
->(): (state: any, action: any) => FirebaseReducer.Reducer<UserType, Schema>
+>(): (state: any, action: any) => FirebaseReducer.Reducer<ProfileType, Schema>
 
 /**
  * React HOC that attaches/detaches Cloud Firestore listeners on mount/unmount
