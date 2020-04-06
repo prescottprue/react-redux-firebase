@@ -804,7 +804,7 @@ export function firebaseConnect<ProfileType, TInner = {}>(
  * @param action.type - Type of Action being called
  * @param action.path - Path of action that was dispatched
  * @param action.data - Data associated with action
- * @see https://react-redux-firebase.com/docs/api/reducer.html
+ * @see https://react-redux-firebase.com/docs/getting_started.html#add-reducer
  */
 export function firebaseReducer<
   UserType extends Record<string, any> = {},
