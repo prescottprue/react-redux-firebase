@@ -123,7 +123,7 @@ export function getVal(firebase, path, notSetValue) {
 export function isLoaded(...args) {
   return !args || !args.length
     ? true
-    : args.every(arg => arg !== undefined && get(arg, 'isLoaded') !== false)
+    : args.every((arg) => arg !== undefined && get(arg, 'isLoaded') !== false)
 }
 
 /**
@@ -168,7 +168,7 @@ export function isLoaded(...args) {
 export function isEmpty(...args) {
   return !args || !args.length
     ? true
-    : args.some(arg => !(arg && size(arg)) || arg.isEmpty === true)
+    : args.some((arg) => !(arg && size(arg)) || arg.isEmpty === true)
 }
 
 /**
@@ -183,7 +183,6 @@ export function fixPath(path) {
 
 /**
  * @private
- * Build child list based on populate config
  * @param {object} state - Firebase state object
  * @param {object} list - Path of parameter to load
  * @param {object} p - Object with population settings
@@ -221,8 +220,6 @@ function buildChildList(state, list, p) {
 
 /**
  * @private
- * Populate a child based on config. Handles list population
- * by making use of buildChildList.
  * @param {object} state - Firebase state object
  * @param {object} child - Path of parameter to load
  * @param {object} p - Object with population settings
@@ -322,11 +319,11 @@ export function populate(state, path, populates, notSetValue) {
   if (Array.isArray(data)) {
     // When using a path in ordered, data will be an array instead of an object
     // and data is located at the `value` prop
-    const someArrayItemHasKey = array => key =>
-      some(array, item => has(item, key))
+    const someArrayItemHasKey = (array) => (key) =>
+      some(array, (item) => has(item, key))
 
     // Check items within the list to see if value exists for some populate parameters
-    const dataHasPopulateChilds = some(populatesForData, populate =>
+    const dataHasPopulateChilds = some(populatesForData, (populate) =>
       someArrayItemHasKey(data)(['value', populate.child])
     )
 
@@ -334,7 +331,7 @@ export function populate(state, path, populates, notSetValue) {
     if (dataHasPopulateChilds) {
       return data.map(({ key, value: dataValue }) => {
         const populatedValue = populatesForData
-          .map(p => populateChild(state, dataValue, p))
+          .map((p) => populateChild(state, dataValue, p))
           .reduce((acc, v) => defaultsDeep(v, acc), dataValue)
 
         return {
@@ -349,12 +346,14 @@ export function populate(state, path, populates, notSetValue) {
   }
 
   // check each populate child parameter for existence
-  const dataHasPopulateChilds = some(populatesForData, p => has(data, p.child))
+  const dataHasPopulateChilds = some(populatesForData, (p) =>
+    has(data, p.child)
+  )
 
   // Single object that contains at least one child parameter
   if (dataHasPopulateChilds) {
     return populatesForData
-      .map(p => populateChild(state, data, p))
+      .map((p) => populateChild(state, data, p))
       .reduce((acc, v) => defaultsDeep(v, acc), data)
   }
 
@@ -373,7 +372,7 @@ export function populate(state, path, populates, notSetValue) {
       typeof populates === 'function' ? populates(key, child) : populates
     )
     // confirm at least one populate value exists on child
-    const dataHasPopulateChilds = some(populatesForDataItem, p =>
+    const dataHasPopulateChilds = some(populatesForDataItem, (p) =>
       has(child, p.child)
     )
     // return unmodified child if no populate params exist on child
@@ -382,7 +381,7 @@ export function populate(state, path, populates, notSetValue) {
     }
     // combine data from all populates to one object starting with original data
     return reduce(
-      map(populatesForDataItem, p => populateChild(state, child, p)),
+      map(populatesForDataItem, (p) => populateChild(state, child, p)),
       (obj, v) => defaultsDeep(v, obj),
       child
     )

@@ -43,4 +43,4 @@
   * Post Issues
   * Create Pull Requests
 
-[gitter-url]: gitter.im/redux-firebase/Lobby
+[gitter-url]: https://gitter.im/redux-firebase/Lobby

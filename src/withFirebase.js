@@ -67,7 +67,7 @@ export default function withFirebase(WrappedComponent) {
   function WithFirebase(props) {
     return (
       <ReactReduxFirebaseContext.Consumer>
-        {firebase => (
+        {(firebase) => (
           <WrappedComponent
             firebase={firebase}
             dispatch={firebase && firebase.dispatch}

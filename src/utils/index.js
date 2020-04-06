@@ -12,7 +12,6 @@ export function isString(varToCheck) {
 
 /**
  * @private
- * Create a function if not already one
  * @param {Function|object|Array|string} f function or value of return for new function
  * @returns {any} Callable
  */
@@ -75,7 +74,7 @@ export function wrapDisplayName(BaseComponent, hocName) {
  */
 export function getChanges(data = [], prevData = []) {
   const result = {}
-  result.added = filter(data, d => !some(prevData, p => isEqual(d, p)))
-  result.removed = filter(prevData, p => !some(data, d => isEqual(p, d)))
+  result.added = filter(data, (d) => !some(prevData, (p) => isEqual(d, p)))
+  result.removed = filter(prevData, (p) => !some(data, (d) => isEqual(p, d)))
   return result
 }

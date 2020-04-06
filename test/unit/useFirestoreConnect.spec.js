@@ -23,7 +23,7 @@ describe('useFirestoreConnect', () => {
     const { dispatch } = createContainer({ component: TestComponent })
     await sleep()
     expect(
-      some(dispatch.args, arg =>
+      some(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/SET_LISTENER',
           meta: { collection: 'test' },
@@ -45,7 +45,7 @@ describe('useFirestoreConnect', () => {
     })
     await sleep()
     expect(
-      some(dispatch.args, arg =>
+      some(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/SET_LISTENER',
           meta: { collection: 'test1' }
@@ -53,7 +53,7 @@ describe('useFirestoreConnect', () => {
       )
     ).to.be.true
     expect(
-      some(dispatch.args, arg =>
+      some(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/SET_LISTENER',
           meta: { collection: 'test2' }
@@ -68,7 +68,7 @@ describe('useFirestoreConnect', () => {
     wrapper.unmount()
     await sleep()
     expect(
-      some(dispatch.args, arg =>
+      some(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/UNSET_LISTENER',
           meta: { collection: 'test' },
@@ -84,7 +84,7 @@ describe('useFirestoreConnect', () => {
     wrapper.setState({ dynamic: null })
     await sleep()
     expect(
-      filter(dispatch.args, arg =>
+      filter(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/SET_LISTENER'
         })
@@ -98,7 +98,7 @@ describe('useFirestoreConnect', () => {
     wrapper.setState({ test: 'somethingElse' })
     await sleep()
     expect(
-      filter(dispatch.args, arg =>
+      filter(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/SET_LISTENER'
         })
@@ -113,7 +113,7 @@ describe('useFirestoreConnect', () => {
     await sleep()
 
     expect(
-      filter(dispatch.args, arg =>
+      filter(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/UNSET_LISTENER',
           meta: { collection: 'test' },
@@ -122,7 +122,7 @@ describe('useFirestoreConnect', () => {
       )
     ).to.have.lengthOf(1)
     expect(
-      filter(dispatch.args, arg =>
+      filter(dispatch.args, (arg) =>
         isMatch(arg[0], {
           type: '@@reduxFirestore/SET_LISTENER',
           meta: { collection: 'test', doc: 'somethingElse' },

@@ -23,7 +23,7 @@ export function pathStrToObj(path) {
       pathObj.populates = getPopulates(pathArray[1].split('&'))
       pathObj.queryParams = remove(
         pathArray[1].split('&'),
-        p => p.indexOf('populate') === -1
+        (p) => p.indexOf('populate') === -1
       )
     }
   }
@@ -37,7 +37,7 @@ export function pathStrToObj(path) {
  * @returns {Array} watchEvents - Array of watch events
  */
 export function getEventsFromInput(paths) {
-  return flatMap(paths, path => {
+  return flatMap(paths, (path) => {
     // If path is a string - convert to obj and place within new array
     if (typeof path === 'string' || path instanceof String) {
       return [pathStrToObj(path)]

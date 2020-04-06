@@ -25,25 +25,22 @@ function ReduxFirestoreProvider(props = {}) {
     createFirestoreInstance,
     initializeAuth
   } = props
-  const extendedFirestoreInstance = React.useMemo(
-    () => {
-      const extendedFirebaseInstance = firebase._reactReduxFirebaseExtended
-        ? firebase
-        : createFirebaseInstance(firebase, config, dispatch)
-      const extendedFirestoreInstance = createFirestoreInstance(
-        firebase,
-        config,
-        dispatch
-      )
-      // Initialize auth if not disabled
-      if (initializeAuth) {
-        extendedFirebaseInstance.initializeAuth()
-      }
+  const extendedFirestoreInstance = React.useMemo(() => {
+    const extendedFirebaseInstance = firebase._reactReduxFirebaseExtended
+      ? firebase
+      : createFirebaseInstance(firebase, config, dispatch)
+    const extendedFirestoreInstance = createFirestoreInstance(
+      firebase,
+      config,
+      dispatch
+    )
+    // Initialize auth if not disabled
+    if (initializeAuth) {
+      extendedFirebaseInstance.initializeAuth()
+    }
 
-      return extendedFirestoreInstance
-    },
-    [firebase, config, dispatch, createFirestoreInstance, initializeAuth]
-  )
+    return extendedFirestoreInstance
+  }, [firebase, config, dispatch, createFirestoreInstance, initializeAuth])
   return (
     <ReduxFirestoreContext.Provider value={extendedFirestoreInstance}>
       {children}

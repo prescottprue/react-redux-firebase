@@ -155,8 +155,8 @@ function createDataReducer(actionKey = 'data') {
           state
         )
       case MERGE:
-        const previousData = get(state, getDotStrPath(action.path), {})
-        const mergedData = assign(previousData, action[actionKey])
+        const previousData = get(state, getDotStrPath(action.path), {}) // eslint-disable-line no-case-declarations
+        const mergedData = assign(previousData, action[actionKey]) // eslint-disable-line no-case-declarations
         return setWith(Object, getDotStrPath(action.path), mergedData, state)
       case NO_VALUE:
         return setWith(Object, getDotStrPath(action.path), null, state)
@@ -206,7 +206,7 @@ export function authReducer(
           isLoaded: true
         }
       }
-      const auth = action.auth.toJSON ? action.auth.toJSON() : action.auth
+      const auth = action.auth.toJSON ? action.auth.toJSON() : action.auth // eslint-disable-line no-case-declarations
       // Support keeping data
       if (action.preserve && action.preserve.auth) {
         return preserveValuesFromState(state, action.preserve.auth, {
@@ -400,7 +400,7 @@ function allListeners(state = [], { type, path, payload }) {
     case SET_LISTENER:
       return [...state, payload.id]
     case UNSET_LISTENER:
-      return state.filter(lId => lId !== payload.id)
+      return state.filter((lId) => lId !== payload.id)
     default:
       return state
   }
