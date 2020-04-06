@@ -807,13 +807,13 @@ export function firebaseConnect<ProfileType, TInner = {}>(
  * @see https://react-redux-firebase.com/docs/api/reducer.html
  */
 export function firebaseReducer<
-  UserType,
-  Schema extends Record<string, Record<string | number, string | number>>
+  UserType extends Record<string, any> = {},
+  Schema extends Record<string, any> = {}
 >(state: any, action: any): FirebaseReducer.Reducer<UserType, Schema>
 
 export function makeFirebaseReducer<
-  UserType = {},
-  Schema extends Record<string, Record<string | number, string | number>> = {}
+  UserType extends Record<string, any> = {},
+  Schema extends Record<string, any> = {}
 >(): (state: any, action: any) => FirebaseReducer.Reducer<UserType, Schema>
 
 /**
