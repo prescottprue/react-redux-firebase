@@ -1130,8 +1130,8 @@ export interface Data<T extends FirestoreTypes.DocumentData> {
 
 export namespace FirebaseReducer {
   export interface Reducer<
-    ProfileType = {},
-    Schema extends Record<string, Record<string | number, string | number>> = {}
+    ProfileType extends Record<string, any> = {},
+    Schema extends Record<string, any> = {}
   > {
     auth: AuthState
     profile: Profile<ProfileType>
