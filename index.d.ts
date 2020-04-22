@@ -804,17 +804,17 @@ export function firebaseConnect<ProfileType, TInner = {}>(
  * @param action.type - Type of Action being called
  * @param action.path - Path of action that was dispatched
  * @param action.data - Data associated with action
- * @see https://react-redux-firebase.com/docs/api/reducer.html
+ * @see https://react-redux-firebase.com/docs/getting_started.html#add-reducer
  */
 export function firebaseReducer<
-  UserType,
-  Schema extends Record<string, Record<string | number, string | number>>
->(state: any, action: any): FirebaseReducer.Reducer<UserType, Schema>
+  ProfileType extends Record<string, any> = {},
+  Schema extends Record<string, any> = {}
+>(state: any, action: any): FirebaseReducer.Reducer<ProfileType, Schema>
 
 export function makeFirebaseReducer<
-  UserType = {},
-  Schema extends Record<string, Record<string | number, string | number>> = {}
->(): (state: any, action: any) => FirebaseReducer.Reducer<UserType, Schema>
+  ProfileType extends Record<string, any> = {},
+  Schema extends Record<string, any> = {}
+>(): (state: any, action: any) => FirebaseReducer.Reducer<ProfileType, Schema>
 
 /**
  * React HOC that attaches/detaches Cloud Firestore listeners on mount/unmount
@@ -1134,8 +1134,8 @@ export interface Data<T extends FirestoreTypes.DocumentData> {
 
 export namespace FirebaseReducer {
   export interface Reducer<
-    ProfileType = {},
-    Schema extends Record<string, Record<string | number, string | number>> = {}
+    ProfileType extends Record<string, any> = {},
+    Schema extends Record<string, any> = {}
   > {
     auth: AuthState
     profile: Profile<ProfileType>
