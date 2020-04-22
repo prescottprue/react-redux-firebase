@@ -1008,6 +1008,10 @@ interface ReactReduxFirebaseConfig {
   // Use Firestore for Profile instead of Realtime DB
   useFirestoreForProfile?: boolean
   enableClaims?: boolean
+  /**
+   * Function for changing how profile is written to database (both RTDB and Firestore).
+   */
+  profileFactory?: (userData?: AuthTypes.User, profileData?: any, firebase?: any) => Promise<any> | any
 }
 
 /**
@@ -1052,7 +1056,7 @@ export interface ReduxFirestoreConfig {
 }
 
 /**
- * Props passed to ReactReduFirebaseProvider
+ * Props passed to ReactReduxFirebaseProvider
  * @see https://react-redux-firebase.com/docs/api/ReactReduxFirebaseProvider.html
  */
 export interface ReduxFirestoreProviderProps {
