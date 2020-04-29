@@ -83,11 +83,11 @@ const rrfConfig = {
 
 ## Queries
 
-Firestore queries can be created in two ways:
+Firestore queries can be created in the following ways:
 
-* [Automatically with Hook](#useFirestoreConnect) - Using `useFirestoreConnect` hook (manages mounting/unmounting)
-* [Automatically with HOC](#firestoreConnect) - Using `firestoreConnect` HOC (manages mounting/unmounting)
-* [Manually](#manual) - Using `get`, or by setting listeners with `setListeners`/`setListener` (requires managing of listeners)
+1. [Automatically with Hook](#useFirestoreConnect) - Using `useFirestoreConnect` hook (manages mounting/unmounting)
+1. [Automatically with HOC](#firestoreConnect) - Using `firestoreConnect` HOC (manages mounting/unmounting)
+1. [Manually](#manual) - Using `get`, or by setting listeners with `setListeners`/`setListener` (requires managing of listeners)
 
 ### Automatically with Hook {#useFirestoreConnect}
 
