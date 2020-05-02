@@ -3,7 +3,6 @@ import * as FirestoreTypes from '@firebase/firestore-types'
 import * as DatabaseTypes from '@firebase/database-types'
 import * as StorageTypes from '@firebase/storage-types'
 import * as AuthTypes from '@firebase/auth-types'
-import * as AppTypes from '@firebase/app-types'
 import { Dispatch } from 'redux'
 
 /**
