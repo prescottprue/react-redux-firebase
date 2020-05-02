@@ -14,12 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Check package version
-        uses: technote-space/package-version-check-action@v1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Check if version has been updated
+        id: check
+        uses: EndBug/version-check@v1
 
       - name: Setup Node 10
+        if: steps.check.outputs.changed == 'true'
         uses: actions/setup-node@v1
         with:
           node-version: 10
@@ -27,27 +27,32 @@ jobs:
 
       # Setup dependency caching
       - uses: actions/cache@v1
+        if: steps.check.outputs.changed == 'true'
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
 
       - name: Install Dependencies
+        if: steps.check.outputs.changed == 'true'
         env:
           CI: true
         run: npm ci
 
       - name: Check For Lint
+        if: steps.check.outputs.changed == 'true'
         env:
           CI: true
         run: npm run lint
 
       - name: Run Unit Tests + Coverage
+        if: steps.check.outputs.changed == 'true'
         env:
           CI: true
           CODE_CLIMATE: ${{ secrets.CODE_CLIMATE }}
         run: npm run test:cov
 
       - name: Publish
+        if: steps.check.outputs.changed == 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_REF: ${{ github.ref }}
@@ -57,18 +62,17 @@ jobs:
           npm publish $PUBLISH_FLAG
 
       - name: Archive Build Artifact
+        if: steps.check.outputs.changed == 'true'
         uses: actions/upload-artifact@master
-        if: success()
         with:
           name: build
           path: lib
 
       - name: Upload Coverage
-        if: success()
+        if: steps.check.outputs.changed == 'true'
         env:
           CI: true
           CODE_COV: ${{ secrets.CODE_COV }}
         # Upload to Code Cover. Curl used in place of codecov/codecov-action
         # due to long build time. See https://github.com/codecov/codecov-action/issues/21
         run: curl -s https://codecov.io/bash | bash -s -- -t $CODE_COV
-

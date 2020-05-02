@@ -1,9 +1,8 @@
-import React from 'react'
+import * as React from 'react'
 import * as FirestoreTypes from '@firebase/firestore-types'
 import * as DatabaseTypes from '@firebase/database-types'
 import * as StorageTypes from '@firebase/storage-types'
 import * as AuthTypes from '@firebase/auth-types'
-import * as AppTypes from '@firebase/app-types'
 import { Dispatch } from 'redux'
 
 /**
@@ -451,40 +450,43 @@ interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
    * Get data from firestore.
    * @see https://github.com/prescottprue/redux-firestore#get
    */
-  get: (docPath: string | ReduxFirestoreQuerySetting) => Promise<void>
+  get: <T>(
+    docPath: string | ReduxFirestoreQuerySetting
+  ) => Promise<FirestoreTypes.DocumentSnapshot<Partial<T>>>
 
   /**
    * Set data to firestore.
    * @see https://github.com/prescottprue/redux-firestore#set
    */
-  set: (
+  set: <T>(
     docPath: string | ReduxFirestoreQuerySetting,
-    data: Object
-  ) => Promise<void>
+    data: Partial<T>,
+    options?: FirestoreTypes.SetOptions
+  ) => Promise<FirestoreTypes.DocumentSnapshot<Partial<T>>>
 
   /**
    * Add document to firestore.
    * @see https://github.com/prescottprue/redux-firestore#add
    */
-  add: (
+  add: <T>(
     collectionPath: string | ReduxFirestoreQuerySetting,
-    data: Object
+    data: Partial<T>
   ) => Promise<{ id: string }>
 
   /**
    * Update document within firestore.
    * @see https://github.com/prescottprue/redux-firestore#update
    */
-  update: (
+  update: <T>(
     docPath: string | ReduxFirestoreQuerySetting,
-    data: Object
-  ) => Promise<void>
+    data: Partial<T>
+  ) => Promise<FirestoreTypes.DocumentSnapshot<Partial<T>>>
 
   /**
    * Delete a document within firestore.
    * @see https://github.com/prescottprue/redux-firestore#delete
    */
-  delete: (docPath: string | ReduxFirestoreQuerySetting) => Promise<void>
+  delete: <T>(docPath: string | ReduxFirestoreQuerySetting) => Promise<T>
 
   /**
    * Executes the given updateFunction and then attempts to commit the changes applied within the
