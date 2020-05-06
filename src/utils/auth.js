@@ -316,7 +316,7 @@ export function updateProfileOnRTDB(firebase, profileUpdate) {
  * @param {object} options - Options object for configuring how profile
  * update occurs
  * @param {boolean} [options.useSet=true] - Use set with merge instead of
- * update. Setting to `false` uses update (can cause issue of profile document
+ * update. Setting to `false` uses update (can cause issue if profile document
  * does not exist).
  * @param {boolean} [options.merge=true] - Whether or not to use merge when
  * setting profile
