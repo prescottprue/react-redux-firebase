@@ -501,7 +501,7 @@ firebaseConnect([
 
 #### parsed {#parsed}
 
-Internally parse following query params. Useful when attempting to parse
+Internally parse following query params. Useful when attempting to parse query parameters into the actual value or particular data type ( e.g. null, number, boolean) instead of the string containing the value.
 
 **NOTE**: `orderByChild`, `orderByPriority`, and `orderByValue` will cause this to be enabled by default. Parsing will remain enabled for the rest of the query params until `notParsed` is called.
 
