@@ -748,6 +748,13 @@ interface ExtendedStorageInstance {
             internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
             uploadConfig: object
           ) => string)
+      documentId?:
+        | string
+        | ((
+            file: File,
+            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
+            uploadConfig: object
+          ) => string)
     }
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }>
 
@@ -774,6 +781,13 @@ interface ExtendedStorageInstance {
             internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
             uploadConfig: object
           ) => string)
+      documentId?:
+        | string
+        | ((
+            file: File,
+            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
+            uploadConfig: object
+              ) => string)
     }
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }[]>
 }
@@ -1009,6 +1023,7 @@ interface ReactReduxFirebaseConfig {
   userProfile: string | null
   // Use Firestore for Profile instead of Realtime DB
   useFirestoreForProfile?: boolean
+  useFirestoreForStorageMeta?: boolean
   enableClaims?: boolean
   /**
    * Function for changing how profile is written to database (both RTDB and Firestore).
