@@ -120,7 +120,7 @@ export function writeMetadataToDb({
 }) {
   // Support metadata factories from both global config and options
   const { fileMetadataFactory, useFirestoreForStorageMeta } = firebase._.config
-  const { metadataFactory } = options
+  const { metadataFactory, documentId } = options
   const metaFactoryFunction = metadataFactory || fileMetadataFactory
   // Get download URL for use in metadata write
   return getDownloadURLFromUploadTaskSnapshot(uploadTaskSnapshot).then(
@@ -129,11 +129,11 @@ export function writeMetadataToDb({
       const fileData =
         typeof metaFactoryFunction === 'function'
           ? metaFactoryFunction(
-              uploadTaskSnapshot,
-              firebase,
-              uploadTaskSnapshot.metadata,
-              downloadURL
-            )
+            uploadTaskSnapshot,
+            firebase,
+            uploadTaskSnapshot.metadata,
+            downloadURL
+          )
           : omitBy(uploadTaskSnapshot.metadata, isUndefined)
 
       // Create the snapshot handler function
@@ -145,12 +145,22 @@ export function writeMetadataToDb({
       })
 
       // Function for creating promise for writing file metadata (handles writing to RTDB or Firestore)
+      const documentIdFromOptions =
+        typeof options.documentId === 'function'
+          ? options.documentId(file, firebase, config)
+          : options.documentId
       const metaSetPromise = (fileData) => {
         if (useFirestoreForStorageMeta) {
-          return firebase // Write metadata to Firestore
-            .firestore()
-            .collection(dbPath)
-            .add(fileData)
+          return documentIdFromOptions
+            ? firebase // Write metadata to Firestore
+              .firestore()
+              .collection(dbPath)
+              .doc(documentIdFromOptions)
+              .set(fileData)
+            : firebase
+              .firestore()
+              .collection(dbPath)
+              .add(fileData)
         }
         // Create new reference for metadata
         const newMetaRef = firebase.database().ref(dbPath).push()
