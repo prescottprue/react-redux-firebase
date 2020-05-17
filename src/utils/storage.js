@@ -146,21 +146,31 @@ export function writeMetadataToDb({
 
       // Function for creating promise for writing file metadata (handles writing to RTDB or Firestore)
       const documentIdFromOptions =
-        typeof options.documentId === 'function'
-          ? options.documentId(file, firebase, config)
-          : options.documentId
+        typeof documentId === 'function'
+          ? documentId(uploadTaskSnapshot, firebase, uploadTaskSnapshot.metadata, downloadURL)
+          : documentId
       const metaSetPromise = (fileData) => {
         if (useFirestoreForStorageMeta) {
-          return documentIdFromOptions
-            ? firebase // Write metadata to Firestore
+          if (documentIdFromOptions) {
+            const docRef = firebase // Write metadata to Firestore
               .firestore()
               .collection(dbPath)
               .doc(documentIdFromOptions)
-              .set(fileData)
-            : firebase
+            return docRef.set(fileData).then(() => docRef);
+
+          }
+          // return documentIdFromOptions
+          //   ? firebase // Write metadata to Firestore
+          //     .firestore()
+          //     .collection(dbPath)
+          //     .doc(documentIdFromOptions)
+          //     .set(fileData)
+          else {
+            return firebase
               .firestore()
               .collection(dbPath)
               .add(fileData)
+          }
         }
         // Create new reference for metadata
         const newMetaRef = firebase.database().ref(dbPath).push()
