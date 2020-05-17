@@ -1029,6 +1029,7 @@ interface ReactReduxFirebaseConfig {
    * Function for changing how profile is written to database (both RTDB and Firestore).
    */
   profileFactory?: (userData?: AuthTypes.User, profileData?: any, firebase?: any) => Promise<any> | any
+  fileMetadataFactory?: (uploadRes, firebase: ExtendedFirebaseInstance | ExtendedAuthInstance | ExtendedStorageInstance, metadata, downloadURL: string) => { [key: string]: any }
 }
 
 /**
