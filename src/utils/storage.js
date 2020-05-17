@@ -156,15 +156,8 @@ export function writeMetadataToDb({
               .firestore()
               .collection(dbPath)
               .doc(documentIdFromOptions)
-            return docRef.set(fileData).then(() => docRef);
-
+            return docRef.update(fileData).then(() => docRef);
           }
-          // return documentIdFromOptions
-          //   ? firebase // Write metadata to Firestore
-          //     .firestore()
-          //     .collection(dbPath)
-          //     .doc(documentIdFromOptions)
-          //     .set(fileData)
           else {
             return firebase
               .firestore()
