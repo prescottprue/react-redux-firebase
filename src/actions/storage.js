@@ -30,6 +30,7 @@ const {
  * is provided it recieves (fileObject, internalFirebase, config) as arguments.
  * @param {object} config.options.metdata - Metadata for file to be passed along
  * to storage.put calls
+ * @param {object} config.options.documentId - Id of document to update with metadata if using Firestore
  * @returns {Promise} Resolves with meta object
  * @private
  */

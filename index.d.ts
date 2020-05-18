@@ -734,28 +734,15 @@ interface ExtendedStorageInstance {
    * @param dbPath - Database path to place uploaded file metadata
    * @param options - Options
    * @param options.name - Name of the file
+   * @param options.metadata - Metadata associated with the file to upload to storage
+   * @param options.documentId - Id of document to update with metadata if using Firestore
    * @see https://react-redux-firebase.com/docs/api/storage.html#uploadFile
    */
   uploadFile: (
     path: string,
-    file: File,
+    file: File | Blob,
     dbPath?: string,
-    options?: {
-      name:
-        | string
-        | ((
-            file: File,
-            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
-            uploadConfig: object
-          ) => string)
-      documentId?:
-        | string
-        | ((
-            file: File,
-            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
-            uploadConfig: object
-          ) => string)
-    }
+    options?: UploadFileOptions
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }>
 
   /**
@@ -767,28 +754,15 @@ interface ExtendedStorageInstance {
    * @param dbPath - Database path to place uploaded files metadata.
    * @param options - Options
    * @param options.name - Name of the file
+   * @param options.metadata - Metadata associated with the file to upload to storage
+   * @param options.documentId - Id of document to update with metadata if using Firestore
    * @see https://react-redux-firebase.com/docs/api/storage.html#uploadFiles
    */
   uploadFiles: (
     path: string,
-    files: File[],
+    files: File[] | Blob[],
     dbPath?: string,
-    options?: {
-      name:
-        | string
-        | ((
-            file: File,
-            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
-            uploadConfig: object
-          ) => string)
-      documentId?:
-        | string
-        | ((
-            file: File,
-            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
-            uploadConfig: object
-              ) => string)
-    }
+    options?: UploadFileOptions
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }[]>
 }
 
@@ -1028,8 +1002,11 @@ interface ReactReduxFirebaseConfig {
   /**
    * Function for changing how profile is written to database (both RTDB and Firestore).
    */
-  profileFactory?: (userData?: AuthTypes.User, profileData?: any, firebase?: any) => Promise<any> | any
-  fileMetadataFactory?: (uploadRes, firebase: ExtendedFirebaseInstance | ExtendedAuthInstance | ExtendedStorageInstance, metadata, downloadURL: string) => { [key: string]: any }
+  profileFactory?: (userData?: AuthTypes.User, profileData?: any, firebase?: WithFirebaseProps<ProfileType>['firebase']) => Promise<any> | any
+  /**
+   * Function that returns that meta data object stored after a file is uploaded (both RTDB and Firestore).
+   */
+  fileMetadataFactory?: (uploadRes: StorageTypes.UploadTaskSnapshot, firebase: WithFirebaseProps<ProfileType>['firebase'], metadata: StorageTypes.UploadTaskSnapshot.metadata, downloadURL: string) => Record<K, T>
 }
 
 /**
@@ -1088,6 +1065,29 @@ export interface ReduxFirestoreProviderProps {
   ) => object
   children?: React.ReactNode
   initializeAuth?: boolean
+}
+
+/**
+ * Configuration object passed to uploadFile and uploadFiles functions
+ */
+export interface UploadFileOptions {
+  name?: string | ((
+    file: File | Blob,
+    internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
+    uploadConfig: {
+      path: string,
+      file: File | Blob,
+      dbPath?: string,
+      options?: UploadFileOptions
+    }
+  ) => string)
+  documentId?: string | ((
+    uploadRes: StorageTypes.UploadTaskSnapshot,
+    firebase: WithFirebaseProps<ProfileType>['firebase'],
+    metadata: StorageTypes.UploadTaskSnapshot['metadata'],
+    downloadURL: string
+  ) => string)
+  metadata?: StorageTypes.UploadMetadata
 }
 
 /**
