@@ -129,11 +129,11 @@ export function writeMetadataToDb({
       const fileData =
         typeof metaFactoryFunction === 'function'
           ? metaFactoryFunction(
-            uploadTaskSnapshot,
-            firebase,
-            uploadTaskSnapshot.metadata,
-            downloadURL
-          )
+              uploadTaskSnapshot,
+              firebase,
+              uploadTaskSnapshot.metadata,
+              downloadURL
+            )
           : omitBy(uploadTaskSnapshot.metadata, isUndefined)
 
       // Create the snapshot handler function
@@ -147,7 +147,12 @@ export function writeMetadataToDb({
       // Function for creating promise for writing file metadata (handles writing to RTDB or Firestore)
       const documentIdFromOptions =
         typeof documentId === 'function'
-          ? documentId(uploadTaskSnapshot, firebase, uploadTaskSnapshot.metadata, downloadURL)
+          ? documentId(
+              uploadTaskSnapshot,
+              firebase,
+              uploadTaskSnapshot.metadata,
+              downloadURL
+            )
           : documentId
       const metaSetPromise = (fileData) => {
         if (useFirestoreForStorageMeta) {
@@ -156,13 +161,9 @@ export function writeMetadataToDb({
               .firestore()
               .collection(dbPath)
               .doc(documentIdFromOptions)
-            return docRef.update(fileData).then(() => docRef);
-          }
-          else {
-            return firebase
-              .firestore()
-              .collection(dbPath)
-              .add(fileData)
+            return docRef.update(fileData).then(() => docRef)
+          } else {
+            return firebase.firestore().collection(dbPath).add(fileData)
           }
         }
         // Create new reference for metadata
