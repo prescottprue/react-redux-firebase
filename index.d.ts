@@ -766,6 +766,35 @@ interface ExtendedStorageInstance {
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }[]>
 }
 
+/**
+ * Configuration object passed to uploadFile and uploadFiles functions
+ */
+export interface UploadFileOptions {
+  name?: string | ((
+    file: File | Blob,
+    internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
+    uploadConfig: {
+      path: string,
+      file: File | Blob,
+      dbPath?: string,
+      options?: UploadFileOptions
+    }
+  ) => string)
+  documentId?: string | ((
+    uploadRes: StorageTypes.UploadTaskSnapshot,
+    firebase: WithFirebaseProps<ProfileType>['firebase'],
+    metadata: StorageTypes.UploadTaskSnapshot['metadata'],
+    downloadURL: string
+  ) => string)
+  metadata?: StorageTypes.UploadMetadata
+  metadataFactory? : ((
+    uploadRes: StorageTypes.UploadTaskSnapshot,
+    firebase: WithFirebaseProps<ProfileType>['firebase'],
+    metadata: StorageTypes.UploadTaskSnapshot['metadata'],
+    downloadURL: string
+  ) => object)
+}
+
 export interface WithFirebaseProps<ProfileType> {
   firebase: ExtendedAuthInstance &
     ExtendedStorageInstance &
@@ -1006,7 +1035,7 @@ interface ReactReduxFirebaseConfig {
   /**
    * Function that returns that meta data object stored after a file is uploaded (both RTDB and Firestore).
    */
-  fileMetadataFactory?: (uploadRes: StorageTypes.UploadTaskSnapshot, firebase: WithFirebaseProps<ProfileType>['firebase'], metadata: StorageTypes.UploadTaskSnapshot.metadata, downloadURL: string) => Record<K, T>
+  fileMetadataFactory?: (uploadRes: StorageTypes.UploadTaskSnapshot, firebase: WithFirebaseProps<ProfileType>['firebase'], metadata: StorageTypes.UploadTaskSnapshot.metadata, downloadURL: string) => object
 }
 
 /**
@@ -1065,29 +1094,6 @@ export interface ReduxFirestoreProviderProps {
   ) => object
   children?: React.ReactNode
   initializeAuth?: boolean
-}
-
-/**
- * Configuration object passed to uploadFile and uploadFiles functions
- */
-export interface UploadFileOptions {
-  name?: string | ((
-    file: File | Blob,
-    internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
-    uploadConfig: {
-      path: string,
-      file: File | Blob,
-      dbPath?: string,
-      options?: UploadFileOptions
-    }
-  ) => string)
-  documentId?: string | ((
-    uploadRes: StorageTypes.UploadTaskSnapshot,
-    firebase: WithFirebaseProps<ProfileType>['firebase'],
-    metadata: StorageTypes.UploadTaskSnapshot['metadata'],
-    downloadURL: string
-  ) => string)
-  metadata?: StorageTypes.UploadMetadata
 }
 
 /**
