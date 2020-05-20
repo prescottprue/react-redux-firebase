@@ -161,10 +161,9 @@ export function writeMetadataToDb({
               .firestore()
               .collection(dbPath)
               .doc(documentIdFromOptions)
-            return docRef.update(fileData).then(() => docRef)
-          } else {
-            return firebase.firestore().collection(dbPath).add(fileData)
+            return docRef.set(fileData, { merge: true }).then(() => docRef)
           }
+          return firebase.firestore().collection(dbPath).add(fileData)
         }
         // Create new reference for metadata
         const newMetaRef = firebase.database().ref(dbPath).push()
