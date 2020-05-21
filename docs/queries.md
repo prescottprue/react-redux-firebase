@@ -368,7 +368,7 @@ Limit query results to the first n number of results.
 
   ```javascript
   firebaseConnect([
-    { path: '/todos', queryParams: [ 'orderByChild=createdBy', 'equalTo=123' ] }
+    { path: '/todos', queryParams: [ 'limitToFirst=10'] }
     // '/todos#limitToFirst=10' // string notation
   ])
   ```
