@@ -786,6 +786,7 @@ export interface UploadFileOptions {
     metadata: StorageTypes.UploadTaskSnapshot['metadata'],
     downloadURL: string
   ) => string)
+  useSetForMetadata: boolean
   metadata?: StorageTypes.UploadMetadata
   metadataFactory? : ((
     uploadRes: StorageTypes.UploadTaskSnapshot,
