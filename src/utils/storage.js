@@ -120,7 +120,7 @@ export function writeMetadataToDb({
 }) {
   // Support metadata factories from both global config and options
   const { fileMetadataFactory, useFirestoreForStorageMeta } = firebase._.config
-  const { metadataFactory, documentId } = options
+  const { metadataFactory, documentId, useSetForMetadata } = options
   const metaFactoryFunction = metadataFactory || fileMetadataFactory
   // Get download URL for use in metadata write
   return getDownloadURLFromUploadTaskSnapshot(uploadTaskSnapshot).then(
@@ -161,7 +161,9 @@ export function writeMetadataToDb({
               .firestore()
               .collection(dbPath)
               .doc(documentIdFromOptions)
-            return docRef.set(fileData, { merge: true }).then(() => docRef)
+            return useSetForMetadata === false
+              ? docRef.update(fileData).then(() => docRef)
+              : docRef.set(fileData, { merge: true }).then(() => docRef)
           }
           return firebase.firestore().collection(dbPath).add(fileData)
         }
