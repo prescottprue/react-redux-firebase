@@ -1,35 +1,4 @@
 # react-redux-firebase
-
-[![NPM version][npm-image]][npm-url]
-[![NPM downloads][npm-downloads-image]][npm-url]
-[![Quality][quality-image]][quality-url]
-[![Code Coverage][coverage-image]][coverage-url]
-[![Code Style][code-style-image]][code-style-url]
-[![License][license-image]][license-url]
-[![Build Status][build-status-image]][build-status-url]
-
-[![Gitter][gitter-image]][gitter-url]
-
-> Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
-
-## [Simple Example](https://codesandbox.io/s/zrr0n5m2zp)
-
-[![Edit Simple Example](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/zrr0n5m2zp)
-
-The [Material Example](https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/material) is deployed to [demo.react-redux-firebase.com](https://demo.react-redux-firebase.com).
-
-## Features
-
-* Out of the box support for authentication (with auto loading user profile from database/firestore)
-* Full Firebase Platform Support Including Real Time Database, Firestore, and Storage
-* Automatic binding/unbinding of listeners through React Hooks (`useFirebaseConnect`, `useFirestoreConnect`) or Higher Order Components (`firebaseConnect` and `firestoreConnect`)
-* [Population capability](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
-* Support small data ( using `value` ) or large datasets ( using `child_added`, `child_removed`, `child_changed` )
-* Multiple queries types supported including `orderByChild`, `orderByKey`, `orderByValue`, `orderByPriority`, `limitToLast`, `limitToFirst`, `startAt`, `endAt`, `equalTo`
-* Tons of examples of integrations including [`redux-thunk`](https://github.com/gaearon/redux-thunk) and [`redux-observable`](https://redux-observable.js.org/)
-* Server Side Rendering Support
-* [`react-native` support](http://react-redux-firebase.com/docs/integrations/react-native.html) using [native modules](http://react-redux-firebase.com/docs/integrations/react-native.html#native-modules) or [web sdk](http://react-redux-firebase.com/docs/integrations/react-native.html#jsweb)
-
 ## Installation
 
 ```bash
