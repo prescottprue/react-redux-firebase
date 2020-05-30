@@ -34,20 +34,15 @@ jobs:
 
       - name: Install Dependencies
         if: steps.check.outputs.changed == 'true'
-        env:
-          CI: true
         run: npm ci
 
       - name: Check For Lint
         if: steps.check.outputs.changed == 'true'
-        env:
-          CI: true
         run: npm run lint
 
       - name: Run Unit Tests + Coverage
         if: steps.check.outputs.changed == 'true'
         env:
-          CI: true
           CODE_CLIMATE: ${{ secrets.CODE_CLIMATE }}
         run: npm run test:cov
 
@@ -57,22 +52,27 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_REF: ${{ github.ref }}
         run: |
-          export GIT_BRANCH=${GITHUB_REF##*/}
-          export PUBLISH_FLAG=$(if [ "$GITHUB_REF" != 'refs/heads/master' ]; then eval echo '--tag $GIT_BRANCH'; else echo ''; fi;)
-          npm publish $PUBLISH_FLAG
-
-      - name: Archive Build Artifact
-        if: steps.check.outputs.changed == 'true'
-        uses: actions/upload-artifact@master
-        with:
-          name: build
-          path: lib
+          gitBranch=${GITHUB_REF##*/}
+          publishFlag=$(if [ "$GITHUB_REF" != 'refs/heads/master' ]; then eval echo '--tag $gitBranch'; else echo ''; fi;)
+          echo "::set-env name=PACKAGE_VERSION::$(cat package.json | jq -r '.version')"
+          npm publish $publishFlag
 
       - name: Upload Coverage
         if: steps.check.outputs.changed == 'true'
         env:
-          CI: true
           CODE_COV: ${{ secrets.CODE_COV }}
         # Upload to Code Cover. Curl used in place of codecov/codecov-action
         # due to long build time. See https://github.com/codecov/codecov-action/issues/21
         run: curl -s https://codecov.io/bash | bash -s -- -t $CODE_COV
+      
+      - name: Create Release
+        if: github.ref == 'refs/heads/master' && steps.check.outputs.changed == 'true'
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tag_name: v${{ env.PACKAGE_VERSION }}
+          release_name: v${{ env.PACKAGE_VERSION }}
+          draft: false
+          prerelease: false
