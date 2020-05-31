@@ -24,7 +24,7 @@ const project = 'docs.react-redux-firebase.com'
  * @private
  */
 function runCommand(cmd) {
-  return exec(cmd).catch(err =>
+  return exec(cmd).catch((err) =>
     Promise.reject(
       err.message && err.message.indexOf('not found') !== -1
         ? new Error(`${cmd.split(' ')[0]} must be installed to upload`)
@@ -46,9 +46,8 @@ function upload(entityPath) {
     .replace('_book/', '')
     .replace('/**', '')}`
   const command = `gsutil -m cp -r -a public-read ${entityPath} gs://${uploadPath}`
-  return runCommand(command).then(
-    ({ stdout, stderr }) =>
-      stdout ? Promise.reject(stdout) : { output: stderr, uploadPath }
+  return runCommand(command).then(({ stdout, stderr }) =>
+    stdout ? Promise.reject(stdout) : { output: stderr, uploadPath }
   )
 }
 
@@ -60,13 +59,13 @@ function upload(entityPath) {
  */
 function uploadList(files) {
   return Promise.all(
-    files.map(file =>
+    files.map((file) =>
       upload(file)
         .then(({ uploadPath, output }) => {
           console.log(`Successfully uploaded: ${uploadPath}`) // eslint-disable-line no-console
           return output
         })
-        .catch(err => {
+        .catch((err) => {
           console.log('Error uploading:', err.message || err) // eslint-disable-line no-console
           return Promise.reject(err)
         })
@@ -74,7 +73,7 @@ function uploadList(files) {
   )
 }
 
-;(function() {
+;(function () {
   runCommand('gsutil') // check for existence of gsutil
     .then(() => uploadList(first))
     .then(() => uploadList(second))
@@ -82,7 +81,7 @@ function uploadList(files) {
       console.log('Docs uploaded successfully') // eslint-disable-line no-console
       process.exit(0)
     })
-    .catch(err => {
+    .catch((err) => {
       console.log('Error uploading docs:', err.message) // eslint-disable-line no-console
       process.exit(1)
     })

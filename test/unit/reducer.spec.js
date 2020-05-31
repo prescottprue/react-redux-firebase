@@ -379,7 +379,7 @@ describe('reducer', () => {
           initialData = { data: { [preservePath]: todos } }
           action = {
             type: actionTypes.LOGOUT,
-            preserve: { data: state => state }
+            preserve: { data: (state) => state }
           }
           // load todos into state and confirm they are kept on logout
           expect(firebaseReducer(initialData, action)).to.have.deep.property(
@@ -411,7 +411,7 @@ describe('reducer', () => {
           initialData = { ordered: { todos } }
           action = {
             type: actionTypes.LOGOUT,
-            preserve: { ordered: state => state }
+            preserve: { ordered: (state) => state }
           }
           // load todos into state and confirm they are kept on logout
           expect(firebaseReducer(initialData, action)).to.have.deep.property(

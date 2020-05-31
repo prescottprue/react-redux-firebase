@@ -188,7 +188,6 @@ const populates = [
 const enhance = compose(
   firebaseConnect([
    { path: '/todos', populates }
-   // '/todos#populate=owner:users:email' // equivalent string notation
   ]),
   connect(
     ({ firebase }) => ({
@@ -205,6 +204,7 @@ ASDF123: {
   text: 'Some Todo Item',
   owner: "Iq5b0qK2NtgggT6U3bU6iZRGyma2",
   ownerObj: {
+    displayName: "Morty Smith",
     email: 'mortysmith@gmail.com',
   }
 }

@@ -30,6 +30,7 @@ const {
  * is provided it recieves (fileObject, internalFirebase, config) as arguments.
  * @param {object} config.options.metdata - Metadata for file to be passed along
  * to storage.put calls
+ * @param {object} config.options.documentId - Id of document to update with metadata if using Firestore
  * @returns {Promise} Resolves with meta object
  * @private
  */
@@ -62,13 +63,10 @@ export function uploadFile(dispatch, firebase, config) {
           meta,
           fileMetadata
         })
-      : firebase
-          .storage()
-          .ref(`${path}/${filename}`)
-          .put(file, fileMetadata)
+      : firebase.storage().ref(`${path}/${filename}`).put(file, fileMetadata)
 
   return uploadPromise()
-    .then(uploadTaskSnapshot => {
+    .then((uploadTaskSnapshot) => {
       if (!dbPath || (!firebase.database && !firebase.firestore)) {
         dispatch({
           type: FILE_UPLOAD_COMPLETE,
@@ -90,7 +88,7 @@ export function uploadFile(dispatch, firebase, config) {
         uploadTaskSnapshot,
         dbPath,
         options
-      }).then(payload => {
+      }).then((payload) => {
         dispatch({
           type: FILE_UPLOAD_COMPLETE,
           meta: { ...config, filename },
@@ -99,7 +97,7 @@ export function uploadFile(dispatch, firebase, config) {
         return payload
       })
     })
-    .catch(err => {
+    .catch((err) => {
       if (logErrors) {
         /* eslint-disable no-console */
         console.error &&
@@ -125,7 +123,7 @@ export function uploadFile(dispatch, firebase, config) {
  */
 export function uploadFiles(dispatch, firebase, { files, ...other }) {
   return Promise.all(
-    map(files, file => uploadFile(dispatch, firebase, { file, ...other }))
+    map(files, (file) => uploadFile(dispatch, firebase, { file, ...other }))
   )
 }
 

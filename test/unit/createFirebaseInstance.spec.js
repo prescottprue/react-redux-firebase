@@ -265,7 +265,7 @@ describe('createFirebaseInstance', () => {
     it('calls firebase transaction at provided path', async () => {
       const dispatchSpy = sinon.spy(() => {})
       const snapshot = {}
-      const transactionSpy = sinon.spy(passedArg => {
+      const transactionSpy = sinon.spy((passedArg) => {
         if (typeof passedArg === 'function') {
           passedArg()
         }

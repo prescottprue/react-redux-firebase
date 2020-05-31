@@ -309,7 +309,7 @@ describe('Helpers:', () => {
             path = 'projects'
             rootName = 'users'
             valName = 'OKF'
-            let child = 'nonKeyTrue'
+            const child = 'nonKeyTrue'
             populates = [
               {
                 child,
@@ -442,7 +442,7 @@ describe('Helpers:', () => {
           helpers.populate(exampleData, `/${path}`, populates)
         ).to.have.deep.property(
           `${valName}.owner.displayName`,
-          exampleData.data.users['ABC'].displayName
+          exampleData.data.users.ABC.displayName
         )
       })
 

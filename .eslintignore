@@ -6,3 +6,4 @@ lib/**
 _book/**
 _site/**
 docs/**
+index.d.ts

@@ -25,26 +25,20 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
 
       - name: Install Dependencies
-        env:
-          CI: true
         run: npm ci
 
       - name: Check For Lint
-        env:
-          CI: true
         run: npm run lint
 
       - name: Run Unit Tests + Coverage
-        if: success()
         run: npm run test:cov
 
       - name: Run Build
         run: npm run build
 
       - name: Upload Coverage
-        if: matrix.node-version == '10.x' && success()
+        if: matrix.node-version == '10.x'
         env:
-          CI: true
           CODE_COV: ${{ secrets.CODE_COV }}
         # Upload to codecov.io. Curl used in place of codecov/codecov-action
         # due to long build time. See https://github.com/codecov/codecov-action/issues/21

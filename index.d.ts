@@ -1,9 +1,8 @@
-import React from 'react'
+import * as React from 'react'
 import * as FirestoreTypes from '@firebase/firestore-types'
 import * as DatabaseTypes from '@firebase/database-types'
 import * as StorageTypes from '@firebase/storage-types'
 import * as AuthTypes from '@firebase/auth-types'
-import * as AppTypes from '@firebase/app-types'
 import { Dispatch } from 'redux'
 
 /**
@@ -451,40 +450,43 @@ interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
    * Get data from firestore.
    * @see https://github.com/prescottprue/redux-firestore#get
    */
-  get: (docPath: string | ReduxFirestoreQuerySetting) => Promise<void>
+  get: <T>(
+    docPath: string | ReduxFirestoreQuerySetting
+  ) => Promise<FirestoreTypes.DocumentSnapshot<Partial<T>>>
 
   /**
    * Set data to firestore.
    * @see https://github.com/prescottprue/redux-firestore#set
    */
-  set: (
+  set: <T>(
     docPath: string | ReduxFirestoreQuerySetting,
-    data: Object
-  ) => Promise<void>
+    data: Partial<T>,
+    options?: FirestoreTypes.SetOptions
+  ) => Promise<FirestoreTypes.DocumentSnapshot<Partial<T>>>
 
   /**
    * Add document to firestore.
    * @see https://github.com/prescottprue/redux-firestore#add
    */
-  add: (
+  add: <T>(
     collectionPath: string | ReduxFirestoreQuerySetting,
-    data: Object
+    data: Partial<T>
   ) => Promise<{ id: string }>
 
   /**
    * Update document within firestore.
    * @see https://github.com/prescottprue/redux-firestore#update
    */
-  update: (
+  update: <T>(
     docPath: string | ReduxFirestoreQuerySetting,
-    data: Object
-  ) => Promise<void>
+    data: Partial<T>
+  ) => Promise<FirestoreTypes.DocumentSnapshot<Partial<T>>>
 
   /**
    * Delete a document within firestore.
    * @see https://github.com/prescottprue/redux-firestore#delete
    */
-  delete: (docPath: string | ReduxFirestoreQuerySetting) => Promise<void>
+  delete: <T>(docPath: string | ReduxFirestoreQuerySetting) => Promise<T>
 
   /**
    * Executes the given updateFunction and then attempts to commit the changes applied within the
@@ -732,21 +734,15 @@ interface ExtendedStorageInstance {
    * @param dbPath - Database path to place uploaded file metadata
    * @param options - Options
    * @param options.name - Name of the file
+   * @param options.metadata - Metadata associated with the file to upload to storage
+   * @param options.documentId - Id of document to update with metadata if using Firestore
    * @see https://react-redux-firebase.com/docs/api/storage.html#uploadFile
    */
   uploadFile: (
     path: string,
-    file: File,
+    file: File | Blob,
     dbPath?: string,
-    options?: {
-      name:
-        | string
-        | ((
-            file: File,
-            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
-            uploadConfig: object
-          ) => string)
-    }
+    options?: UploadFileOptions
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }>
 
   /**
@@ -758,22 +754,46 @@ interface ExtendedStorageInstance {
    * @param dbPath - Database path to place uploaded files metadata.
    * @param options - Options
    * @param options.name - Name of the file
+   * @param options.metadata - Metadata associated with the file to upload to storage
+   * @param options.documentId - Id of document to update with metadata if using Firestore
    * @see https://react-redux-firebase.com/docs/api/storage.html#uploadFiles
    */
   uploadFiles: (
     path: string,
-    files: File[],
+    files: File[] | Blob[],
     dbPath?: string,
-    options?: {
-      name:
-        | string
-        | ((
-            file: File,
-            internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
-            uploadConfig: object
-          ) => string)
-    }
+    options?: UploadFileOptions
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }[]>
+}
+
+/**
+ * Configuration object passed to uploadFile and uploadFiles functions
+ */
+export interface UploadFileOptions {
+  name?: string | ((
+    file: File | Blob,
+    internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
+    uploadConfig: {
+      path: string,
+      file: File | Blob,
+      dbPath?: string,
+      options?: UploadFileOptions
+    }
+  ) => string)
+  documentId?: string | ((
+    uploadRes: StorageTypes.UploadTaskSnapshot,
+    firebase: WithFirebaseProps<ProfileType>['firebase'],
+    metadata: StorageTypes.UploadTaskSnapshot['metadata'],
+    downloadURL: string
+  ) => string)
+  useSetForMetadata?: boolean
+  metadata?: StorageTypes.UploadMetadata
+  metadataFactory? : ((
+    uploadRes: StorageTypes.UploadTaskSnapshot,
+    firebase: WithFirebaseProps<ProfileType>['firebase'],
+    metadata: StorageTypes.UploadTaskSnapshot['metadata'],
+    downloadURL: string
+  ) => object)
 }
 
 export interface WithFirebaseProps<ProfileType> {
@@ -804,17 +824,17 @@ export function firebaseConnect<ProfileType, TInner = {}>(
  * @param action.type - Type of Action being called
  * @param action.path - Path of action that was dispatched
  * @param action.data - Data associated with action
- * @see https://react-redux-firebase.com/docs/api/reducer.html
+ * @see https://react-redux-firebase.com/docs/getting_started.html#add-reducer
  */
 export function firebaseReducer<
-  UserType,
-  Schema extends Record<string, Record<string | number, string | number>>
->(state: any, action: any): FirebaseReducer.Reducer<Schema, UserType>
+  ProfileType extends Record<string, any> = {},
+  Schema extends Record<string, any> = {}
+>(state: any, action: any): FirebaseReducer.Reducer<ProfileType, Schema>
 
 export function makeFirebaseReducer<
-  Schema extends Record<string, Record<string | number, string | number>>,
-  UserType = {}
->(): (state: any, action: any) => FirebaseReducer.Reducer<Schema, UserType>
+  ProfileType extends Record<string, any> = {},
+  Schema extends Record<string, any> = {}
+>(): (state: any, action: any) => FirebaseReducer.Reducer<ProfileType, Schema>
 
 /**
  * React HOC that attaches/detaches Cloud Firestore listeners on mount/unmount
@@ -1007,7 +1027,16 @@ interface ReactReduxFirebaseConfig {
   userProfile: string | null
   // Use Firestore for Profile instead of Realtime DB
   useFirestoreForProfile?: boolean
+  useFirestoreForStorageMeta?: boolean
   enableClaims?: boolean
+  /**
+   * Function for changing how profile is written to database (both RTDB and Firestore).
+   */
+  profileFactory?: (userData?: AuthTypes.User, profileData?: any, firebase?: WithFirebaseProps<ProfileType>['firebase']) => Promise<any> | any
+  /**
+   * Function that returns that meta data object stored after a file is uploaded (both RTDB and Firestore).
+   */
+  fileMetadataFactory?: (uploadRes: StorageTypes.UploadTaskSnapshot, firebase: WithFirebaseProps<ProfileType>['firebase'], metadata: StorageTypes.UploadTaskSnapshot.metadata, downloadURL: string) => object
 }
 
 /**
@@ -1037,7 +1066,9 @@ export interface ReduxFirestoreConfig {
   preserveOnListenerError: null | object
 
   // https://github.com/prescottprue/redux-firestore#onattemptcollectiondelete
-  onAttemptCollectionDelete: null | ((queryOption: any, dispatch: any, firebase: any) => void)
+  onAttemptCollectionDelete:
+    | null
+    | ((queryOption: any, dispatch: any, firebase: any) => void)
 
   // https://github.com/prescottprue/redux-firestore#mergeordered
   mergeOrdered: boolean
@@ -1050,7 +1081,7 @@ export interface ReduxFirestoreConfig {
 }
 
 /**
- * Props passed to ReactReduFirebaseProvider
+ * Props passed to ReactReduxFirebaseProvider
  * @see https://react-redux-firebase.com/docs/api/ReactReduxFirebaseProvider.html
  */
 export interface ReduxFirestoreProviderProps {
@@ -1128,8 +1159,8 @@ export interface Data<T extends FirestoreTypes.DocumentData> {
 
 export namespace FirebaseReducer {
   export interface Reducer<
-    Schema extends Record<string, Record<string | number, string | number>>,
-    ProfileType = {}
+    ProfileType extends Record<string, any> = {},
+    Schema extends Record<string, any> = {}
   > {
     auth: AuthState
     profile: Profile<ProfileType>

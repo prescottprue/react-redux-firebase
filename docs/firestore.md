@@ -1,6 +1,6 @@
 # Firestore
 
-The Firestore integration is build on [`redux-firestore`](https://github.com/prescottprue/redux-firestore). Auth, Storage, and RTDB interactions still go on within `react-redux-firebase`, while `redux-firestore` handles attaching listeners and updating state for Firestore.
+The Firestore integration is built on [`redux-firestore`](https://github.com/prescottprue/redux-firestore). Auth, Storage, and RTDB interactions still occur within `react-redux-firebase`, while `redux-firestore` handles attaching listeners and updating state for Firestore.
 
 To begin using Firestore with `react-redux-firebase`, make sure you have the following:
 * `v2.0.0` or higher of `react-redux-firebase`
@@ -83,11 +83,11 @@ const rrfConfig = {
 
 ## Queries
 
-Firestore queries can be created in two ways:
+Firestore queries can be created in the following ways:
 
-* [Automatically with Hook](#useFirestoreConnect) - Using `useFirestoreConnect` hook (manages mounting/unmounting)
-* [Automatically with HOC](#firestoreConnect) - Using `firestoreConnect` HOC (manages mounting/unmounting)
-* [Manually](#manual) - Using `get`, or by setting listeners with `setListeners`/`setListener` (requires managing of listeners)
+1. [Automatically with Hook](#useFirestoreConnect) - Using `useFirestoreConnect` hook (manages mounting/unmounting)
+1. [Automatically with HOC](#firestoreConnect) - Using `firestoreConnect` HOC (manages mounting/unmounting)
+1. [Manually](#manual) - Using `get`, or by setting listeners with `setListeners`/`setListener` (requires managing of listeners)
 
 ### Automatically with Hook {#useFirestoreConnect}
 
@@ -120,7 +120,7 @@ Firestore queries can be created in two ways:
     useFirestoreConnect(() => [
       { collection: 'todos', doc: todoId } // or `todos/${props.todoId}`
     ])
-    const todos = useSelector(({ firestore: { ordered } }) => ordered.todos && ordered.todos[todoId])
+    const todo = useSelector(({ firestore: { data } }) => data.todos && data.todos[todoId])
   }
   ```
 
@@ -303,6 +303,30 @@ compose(
 )
 ```
 
+2. Set `useFirestoreConnect` for subcollections documents
+For example, in Firestore cloud you have such message structure:
+`chatMessages (collection) / chatID (document) / messages (collection) / messageID (document)`
+
+You can't write the path in `useFirestoreConnect` like:
+```useFirestoreConnect(`chatMessages/${chatID}/messages`)```
+
+You will have error:
+
+`Queries with subcollections must use "storeAs" to prevent invalid store updates. This closley matches the upcoming major release (v1), which stores subcollections at the top level by default.`
+
+Solution:
+Use `subcollections` for 'messages' and `storeAs`.
+```import { useFirestoreConnect } from 'react-redux-firebase'
+  useFirestoreConnect([
+    {
+      collection: 'chatMessages',
+      doc: chatID,
+      subcollections: [{ collection: 'messages' }],
+      storeAs: 'myMessages'
+    }
+  ])```
+
+
 ## Populate {#populate}
 
-Populate is not yet supported for the Firestore integration, but will be coming soon. Progress can be tracked [within issue #48](https://github.com/prescottprue/redux-firestore/issues/48).
+Populate is supported for Firestore as of v0.6.0. It was added [with issue #48](https://github.com/prescottprue/redux-firestore/issues/48).

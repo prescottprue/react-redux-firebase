@@ -286,7 +286,7 @@ Query parameters can be passed through the `queryParams` parameter if using obje
 #### orderByChild
 To order the query by a child within each object, use orderByChild.
 
-**Internally Uses Firebase Method**: [ `orderByChild`](https://firebase.google.com/docs/reference/js/firebase.database.Query#orderByChild)
+**Internally Uses Firebase Method**: [ `orderByChild`](https://firebase.google.com/docs/reference/js/firebase.database.Query#order-bychild)
 
 ##### Example
 Ordering a list of todos by the text parameter of the todo item (placing them in alphabetical order).
@@ -368,7 +368,7 @@ Limit query results to the first n number of results.
 
   ```javascript
   firebaseConnect([
-    { path: '/todos', queryParams: [ 'orderByChild=createdBy', 'equalTo=123' ] }
+    { path: '/todos', queryParams: [ 'limitToFirst=10'] }
     // '/todos#limitToFirst=10' // string notation
   ])
   ```
@@ -501,7 +501,7 @@ firebaseConnect([
 
 #### parsed {#parsed}
 
-Internally parse following query params. Useful when attempting to parse
+Internally parse following query params. Useful when attempting to parse query parameters into the actual value or particular data type ( e.g. null, number, boolean) instead of the string containing the value.
 
 **NOTE**: `orderByChild`, `orderByPriority`, and `orderByValue` will cause this to be enabled by default. Parsing will remain enabled for the rest of the query params until `notParsed` is called.
 

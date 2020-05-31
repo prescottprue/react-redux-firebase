@@ -8,7 +8,7 @@ import { unset } from 'lodash/fp'
  * @private
  */
 export function pathToArr(path) {
-  return path ? path.split(/\//).filter(p => !!p) : []
+  return path ? path.split(/\//).filter((p) => !!p) : []
 }
 
 /**
