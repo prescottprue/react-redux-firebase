@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "description": "Redux integration for Firebase. Comes with a Higher Order Components for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -9,7 +9,7 @@
   "unpkg": "dist/react-redux-firebase.min.js",
   "scripts": {
     "clean": "rimraf es lib dist coverage",
-    "lint": "eslint ./src/** ./bin/** ./test/**/*.js",
+    "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\"",
     "test": "mocha -R spec ./test/unit/**",

@@ -87,7 +87,7 @@ describe('Actions: Auth -', () => {
 
     it('calls profile watch then sets to null when useFirestoreForProfile: true', () => {
       let profileCalled
-      let currentFake = cloneDeep(fakeFirebase)
+      const currentFake = cloneDeep(fakeFirebase)
       currentFake._.profileWatch = () => {
         profileCalled = true
       }
@@ -175,7 +175,7 @@ describe('Actions: Auth -', () => {
       })
 
       it('Any when useFirestoreForProfile: true - calls console.warn', () => {
-        let currentFake = cloneDeep(fakeFirebase)
+        const currentFake = cloneDeep(fakeFirebase)
         currentFake._.profileWatch = () => {}
         currentFake._.config.useFirestoreForProfile = true
         currentFake._.config.profileParamsToPopulate = ['some']
@@ -326,7 +326,7 @@ describe('Actions: Auth -', () => {
     })
   })
 
-  describe('login', function() {
+  describe('login', function () {
     // Extend default timeout to prevent test fail on slow connection
     this.timeout(8000)
 
@@ -489,7 +489,7 @@ describe('Actions: Auth -', () => {
   describe('confirmPasswordReset', () => {
     it('resets password for real user', () => {
       return confirmPasswordReset(dispatch, fakeFirebase, 'test', 'test').then(
-        err => {
+        (err) => {
           expect(err).to.be.undefined
         }
       )
@@ -658,10 +658,9 @@ describe('Actions: Auth -', () => {
         config: { userProfile: 'users', useFirestoreForProfile: true }
       }
       res = await updateProfile(dispatch, newStubbed, profileUpdate)
-      expect(firebaseStub.firestore().doc().set).to.have.been.calledWith(
-        profileUpdate,
-        { merge: true }
-      )
+      expect(
+        firebaseStub.firestore().doc().set
+      ).to.have.been.calledWith(profileUpdate, { merge: true })
     })
 
     it('rejects if profile update fails', async () => {
