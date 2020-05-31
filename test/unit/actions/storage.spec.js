@@ -4,11 +4,7 @@ import {
   uploadFiles,
   deleteFile
 } from 'actions/storage'
-import {
-  fakeFirebase,
-  createFirebaseStub,
-  createSuccessStub
-} from '../../utils'
+import { fakeFirebase, createFirebaseStub } from '../../utils'
 
 let spy
 let firebaseStub
@@ -36,7 +32,7 @@ describe('Actions: Storage', () => {
       uploadFileWithProgress(dispatch, fakeFirebase, {
         path: 'projects',
         file: { name: 'test.png' }
-      }).then(snap => {
+      }).then((snap) => {
         expect(spy).to.have.been.calledOnce
         expect(snap).to.be.an.object
       }))
@@ -138,10 +134,7 @@ describe('Actions: Storage', () => {
         dbPath: 'storageTest'
       })
       // Confirm metadata factory was called with result of storage put
-      const putResult = await newFirebaseStub
-        .storage()
-        .ref()
-        .put()
+      const putResult = await newFirebaseStub.storage().ref().put()
       expect(metadataFactorySpy).to.have.been.calledWith(putResult)
       // firebase.storage() ref is in correct location
       expect(newFirebaseStub.database().ref).to.have.been.calledWith(
@@ -245,10 +238,7 @@ describe('Actions: Storage', () => {
           options: { metadataFactory: metadataFactorySpy }
         })
         // Confirm metadata factory was called with result of storage put
-        const putResult = await firebaseStub
-          .storage()
-          .ref()
-          .put()
+        const putResult = await firebaseStub.storage().ref().put()
         expect(metadataFactorySpy).to.have.been.calledWith(putResult)
         // firebase.storage() ref is in correct location
         expect(firebaseStub.database().ref).to.have.been.calledWith(
@@ -256,10 +246,7 @@ describe('Actions: Storage', () => {
         )
         const pushSpy = firebaseStub.database().ref().push
         expect(pushSpy).to.have.been.calledOnce
-        const setSpy = firebaseStub
-          .database()
-          .ref()
-          .push().set
+        const setSpy = firebaseStub.database().ref().push().set
         const metaArg = setSpy.getCall(0).args[0]
         // firebase.database() push method is called with file metadata (provided by factory)
         expect(metaArg).to.have.property('asdf', fileMetadata.asdf)
@@ -276,7 +263,7 @@ describe('Actions: Storage', () => {
       uploadFiles(dispatch, fakeFirebase, {
         path: 'projects',
         file: { name: 'test.png' }
-      }).then(snap => {
+      }).then((snap) => {
         expect(snap).to.be.an.object
       }))
   })

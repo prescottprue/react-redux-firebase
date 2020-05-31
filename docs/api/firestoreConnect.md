@@ -14,7 +14,7 @@
 
 Higher Order Component that automatically listens/unListens
 to provided Cloud Firestore paths using React's Lifecycle hooks. Make sure you
-have required/imported Cloud Firestore, including it's reducer, before
+have required/imported Cloud Firestore, including its reducer, before
 attempting to use. **Note** Populate is not yet supported.
 
 ### Parameters

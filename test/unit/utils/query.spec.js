@@ -10,7 +10,7 @@ import {
 } from 'utils/query'
 import { fakeFirebase } from '../../utils'
 
-let createQueryFromParams = queryParams =>
+const createQueryFromParams = (queryParams) =>
   applyParamsToQuery(queryParams, fakeFirebase.database().ref())
 
 const dispatch = () => {}
@@ -231,7 +231,7 @@ describe('Utils: Query', () => {
 
     it('adds children to ordered if they exist', () => {
       const child = { key: 'some', val: () => ({}) }
-      const forEachSpy = sinon.spy(childFunc => childFunc(child))
+      const forEachSpy = sinon.spy((childFunc) => childFunc(child))
       const res = orderedFromSnapshot({ forEach: forEachSpy })
       expect(res).to.be.an('array')
       expect(forEachSpy).to.have.been.calledOnce

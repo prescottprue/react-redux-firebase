@@ -219,7 +219,7 @@ describe('reducer', () => {
       expect(firebaseReducer({}, action)).to.deep.equal(initialState)
     })
 
-    it('merge data to empty state under path', () => {
+    it('merges data to empty state under path', () => {
       action = { type: actionTypes.MERGE, path, data: exampleData }
       expect(firebaseReducer({}, action).data).to.deep.equal({
         ...initialState.data,
@@ -227,7 +227,7 @@ describe('reducer', () => {
       })
     })
 
-    it('merge data to empty state under paths that end in a number', () => {
+    it('merges data to empty state under paths that end in a number', () => {
       action = { type: actionTypes.MERGE, path: 'test/123', data: exampleData }
       expect(firebaseReducer({}, action).data).to.deep.equal({
         ...initialState.data,
@@ -273,7 +273,7 @@ describe('reducer', () => {
       })
     })
 
-    it('merge data to path with already existing value of null', () => {
+    it('merges data to path with already existing value of null', () => {
       initialData = { data: { test: { [childKey]: null } } }
       action = { type: actionTypes.MERGE, path: childPath, data: newData }
       expect(firebaseReducer(initialData, action).data).to.deep.equal(
@@ -281,7 +281,7 @@ describe('reducer', () => {
       )
     })
 
-    it('merge data to path with already existing parent of null', () => {
+    it('merges data to path with already existing parent of null', () => {
       initialData = { data: { test: null } }
       action = { type: actionTypes.MERGE, path: childPath, data: exampleData }
       expect(firebaseReducer(initialData, action).data).to.deep.equal(

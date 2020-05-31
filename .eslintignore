@@ -7,3 +7,5 @@ _book/**
 _site/**
 docs/**
 index.d.ts
+examples/**
+test/utils.js

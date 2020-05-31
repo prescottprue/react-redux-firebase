@@ -81,7 +81,7 @@ ProviderMock.propTypes = {
   children: PropTypes.node
 }
 
-export const onAuthStateChangedSpy = sinon.spy(f => {
+export const onAuthStateChangedSpy = sinon.spy((f) => {
   f({ uid: 'asdfasdf' })
 })
 
@@ -95,6 +95,7 @@ export const firebaseWithConfig = (config = {}) => ({
 
 /**
  * Create a Sinon stub that returns with a resolved Promise Object
+ *
  * @param {Any} some
  * @returns {Sinon.stub}
  */
@@ -117,12 +118,13 @@ export function createFailureStub(some) {
  * Create an object representing a "profileReference" (a Firebase
  * RTDB Reference at the Profile path) which contains Sinon stubs
  * in place of Firebase JS SDK methods (such as update and once)
+ *
  * @returns {object}
  */
 function createRtdbProfileRefStub() {
   let profileUpdate = {}
   return {
-    update: sinon.spy(setData => {
+    update: sinon.spy((setData) => {
       // Fail automatically for intentionally rejected promise
       // (used in testing that rejecting set promise is handled)
       if (setData === 'fail') {
@@ -142,13 +144,14 @@ function createRtdbProfileRefStub() {
  * Firestore Reference for the current user's profile document) which
  * contains Sinon stubs in place of Firebase JS SDK methods (such as
  * update and get)
+ *
  * @returns {object}
  */
 function createFirestoreProfileRefStub() {
   let profileUpdate = {}
   return {
     update: createSuccessStub(),
-    set: sinon.spy(setData => {
+    set: sinon.spy((setData) => {
       // Fail automatically for intentionally rejected promise
       // (used in testing that rejecting set promise is handled)
       if (setData === 'fail') {
@@ -173,6 +176,7 @@ function createFirestoreProfileRefStub() {
 
 /**
  * Create a Sinon stub for Firestore
+ *
  * @returns {Sinon.stub}
  */
 function createFirestoreStub() {
@@ -208,6 +212,7 @@ function createRtdbStub(refExtension) {
 
 /**
  * Create a Sinon stub for Firebase's Auth
+ *
  * @returns {Sinon.stub}
  */
 function createAuthStub() {
@@ -218,6 +223,7 @@ function createAuthStub() {
 
 /**
  * Create a Sinon stub for Firebase Storage
+ *
  * @returns {Sinon.stub}
  */
 function createStorageStub() {
@@ -276,11 +282,11 @@ export const fakeFirebase = {
         once: () => Promise.resolve({ val: () => ({ some: 'obj' }) })
       }),
       orderByPriority: () => ({
-        startAt: startParam => startParam,
+        startAt: (startParam) => startParam,
         toString: () => 'priority'
       }),
-      orderByChild: child => ({
-        equalTo: equalTo => ({
+      orderByChild: (child) => ({
+        equalTo: (equalTo) => ({
           child,
           equalTo
         }),
@@ -304,7 +310,7 @@ export const fakeFirebase = {
   }),
   auth: () => ({
     onAuthStateChanged: onAuthStateChangedSpy,
-    getRedirectResult: f => {
+    getRedirectResult: (f) => {
       return Promise.resolve({ uid: 'asdfasdf' })
     },
     signOut: () => Promise.resolve({}),
@@ -312,12 +318,12 @@ export const fakeFirebase = {
       email.indexOf('error') !== -1
         ? Promise.reject(new Error('auth/user-not-found'))
         : email === 'error'
-          ? Promise.reject(new Error('asdfasdf'))
-          : Promise.resolve({
-              uid: '123',
-              email: 'test@test.com',
-              providerData: [{}]
-            }),
+        ? Promise.reject(new Error('asdfasdf'))
+        : Promise.resolve({
+            uid: '123',
+            email: 'test@test.com',
+            providerData: [{}]
+          }),
     signInAndRetrieveDataWithCustomToken: () => {
       return Promise.resolve({
         toJSON: () => ({
@@ -333,23 +339,23 @@ export const fakeFirebase = {
       email.indexOf('error2') !== -1
         ? Promise.reject(new Error('asdfasdf'))
         : email === 'error3'
-          ? Promise.reject(new Error('auth/user-not-found'))
-          : Promise.resolve({
-              uid: '123',
-              email: 'test@test.com',
-              providerData: [{}]
-            }),
-    sendPasswordResetEmail: email =>
+        ? Promise.reject(new Error('auth/user-not-found'))
+        : Promise.resolve({
+            uid: '123',
+            email: 'test@test.com',
+            providerData: [{}]
+          }),
+    sendPasswordResetEmail: (email) =>
       email === 'error'
         ? Promise.reject({ code: 'auth/user-not-found' }) // eslint-disable-line prefer-promise-reject-errors
         : email === 'error2'
-          ? Promise.reject(new Error('asdfasdf'))
-          : Promise.resolve({ some: 'val' }),
+        ? Promise.reject(new Error('asdfasdf'))
+        : Promise.resolve({ some: 'val' }),
     confirmPasswordReset: (code, password) =>
       password === 'error'
         ? Promise.reject({ code: code }) // eslint-disable-line prefer-promise-reject-errors
         : Promise.resolve(),
-    verifyPasswordResetCode: code =>
+    verifyPasswordResetCode: (code) =>
       code === 'error'
         ? Promise.reject(new Error('some'))
           ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
@@ -440,9 +446,10 @@ export const createContainer = ({
 
 /**
  * Sleep/wait for a set amount of time
+ *
  * @param {number} ms - Amount of time to sleep
  * @returns {Promise} Resolves after timeout
  */
 export function sleep(ms = 0) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }

@@ -7,7 +7,8 @@ import useFirestore from './useFirestore'
  * @description React hook that automatically listens/unListens
  * to provided Cloud Firestore paths. Make sure you have required/imported
  * Cloud Firestore, including it's reducer, before attempting to use.
- * **Note** Populate is not yet supported.
+ * Populate is supported for Firestore as of v0.6.0 of redux-firestore (added
+ * [as part of issue #48](https://github.com/prescottprue/redux-firestore/issues/48)).
  * @param {object|string|Array|Function} queriesConfigs - An object, string,
  * or array of object or string for paths to sync from firestore. Can also be
  * a function that returns the object, string, or array of object or string.
@@ -18,7 +19,7 @@ import useFirestore from './useFirestore'
  * import { useFirestoreConnect } from 'react-redux-firebase'
  *
  * export default function TodosList() {
- *   useFirestoreConnect('todos') // sync todos collection from Firestore into redux
+ *   useFirestoreConnect(['todos']) // sync todos collection from Firestore into redux
  *   const todos = useSelector(state => state.firestore.data.todos)
  *   return (
  *     <ul>
