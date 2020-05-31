@@ -1,0 +1,1263 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>React Native · React Redux Firebase</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-versions-select/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="react-chrome-redux.html" />
+    
+    
+    <link rel="prev" href="redux-observable.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Read Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../getting_started.html">
+            
+                <a href="../getting_started.html">
+            
+                    
+                    Getting Started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../auth.html">
+            
+                <a href="../auth.html">
+            
+                    
+                    Auth
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../queries.html">
+            
+                <a href="../queries.html">
+            
+                    
+                    Queries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../firestore.html">
+            
+                <a href="../firestore.html">
+            
+                    
+                    Firestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../populate.html">
+            
+                <a href="../populate.html">
+            
+                    
+                    Populate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../storage.html">
+            
+                <a href="../storage.html">
+            
+                    
+                    Storage
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../recipes/">
+            
+                <a href="../recipes/">
+            
+                    
+                    Recipes
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../recipes/profile.html">
+            
+                <a href="../recipes/profile.html">
+            
+                    
+                    Profile
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="../recipes/auth.html">
+            
+                <a href="../recipes/auth.html">
+            
+                    
+                    Auth
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="../recipes/actions.html">
+            
+                <a href="../recipes/actions.html">
+            
+                    
+                    Actions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.4" data-path="../recipes/routing.html">
+            
+                <a href="../recipes/routing.html">
+            
+                    
+                    Routing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5" data-path="../recipes/roles.html">
+            
+                <a href="../recipes/roles.html">
+            
+                    
+                    Roles
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.6" data-path="../recipes/populate.html">
+            
+                <a href="../recipes/populate.html">
+            
+                    
+                    Populate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.7" data-path="../recipes/upload.html">
+            
+                <a href="../recipes/upload.html">
+            
+                    
+                    Upload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.8" data-path="../recipes/ssr.html">
+            
+                <a href="../recipes/ssr.html">
+            
+                    
+                    Server Side Rendering
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Integrations
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="thunks.html">
+            
+                <a href="thunks.html">
+            
+                    
+                    Redux Thunk
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="redux-form.html">
+            
+                <a href="redux-form.html">
+            
+                    
+                    Redux Form
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.3" data-path="reselect.html">
+            
+                <a href="reselect.html">
+            
+                    
+                    Reselect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4" data-path="redux-persist.html">
+            
+                <a href="redux-persist.html">
+            
+                    
+                    Redux Persist
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.5" data-path="redux-saga.html">
+            
+                <a href="redux-saga.html">
+            
+                    
+                    Redux Saga
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.6" data-path="redux-observable.html">
+            
+                <a href="redux-observable.html">
+            
+                    
+                    Redux Observable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.9.7" data-path="react-native.html">
+            
+                <a href="react-native.html">
+            
+                    
+                    React Native
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.8" data-path="react-chrome-redux.html">
+            
+                <a href="react-chrome-redux.html">
+            
+                    
+                    React Chrome Redux
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="../api/">
+            
+                <a href="../api/">
+            
+                    
+                    API Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="../api/constants.html">
+            
+                <a href="../api/constants.html">
+            
+                    
+                    constants
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" >
+            
+                <span>
+            
+                    
+                    Hooks
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.2.1" data-path="../api/useFirebase.html">
+            
+                <a href="../api/useFirebase.html">
+            
+                    
+                    useFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.2" data-path="../api/useFirebaseConnect.html">
+            
+                <a href="../api/useFirebaseConnect.html">
+            
+                    
+                    useFirebaseConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.3" data-path="../api/useFirestore.html">
+            
+                <a href="../api/useFirestore.html">
+            
+                    
+                    useFirestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.4" data-path="../api/useFirestoreConnect.html">
+            
+                <a href="../api/useFirestoreConnect.html">
+            
+                    
+                    useFirestoreConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" >
+            
+                <span>
+            
+                    
+                    HOCs
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.3.1" data-path="../api/firebaseConnect.html">
+            
+                <a href="../api/firebaseConnect.html">
+            
+                    
+                    firebaseConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.2" data-path="../api/withFirebase.html">
+            
+                <a href="../api/withFirebase.html">
+            
+                    
+                    withFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.3" data-path="../api/firestoreConnect.html">
+            
+                <a href="../api/firestoreConnect.html">
+            
+                    
+                    firestoreConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.4" data-path="../api/withFirestore.html">
+            
+                <a href="../api/withFirestore.html">
+            
+                    
+                    withFirestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../api/reducer.html">
+            
+                <a href="../api/reducer.html">
+            
+                    
+                    reducer
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.4.1" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#isinitializingreducer">
+            
+                    
+                    isInitializingReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.2" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#requestingreducer">
+            
+                    
+                    requestingReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.3" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#requestedreducer">
+            
+                    
+                    requestedReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.4" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#timestampsreducer">
+            
+                    
+                    timestampsReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.5" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#authreducer">
+            
+                    
+                    authReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.6" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#autherrorreducer">
+            
+                    
+                    authErrorReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.7" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#profilereducer">
+            
+                    
+                    profileReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.8" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#errorsreducer">
+            
+                    
+                    errorsReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.9" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#listenersreducer">
+            
+                    
+                    listenersReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.10" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#datareducer">
+            
+                    
+                    dataReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.11" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#orderedreducer">
+            
+                    
+                    orderedReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="../api/firebaseInstance.html">
+            
+                <a href="../api/firebaseInstance.html">
+            
+                    
+                    firebaseInstance
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" data-path="../api/getFirebase.html">
+            
+                <a href="../api/getFirebase.html">
+            
+                    
+                    getFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.7" data-path="../api/ReactReduxFirebaseContext.html">
+            
+                <a href="../api/ReactReduxFirebaseContext.html">
+            
+                    
+                    ReactReduxFirebaseContext
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.8" data-path="../api/ReactReduxFirebaseProvider.html">
+            
+                <a href="../api/ReactReduxFirebaseProvider.html">
+            
+                    
+                    ReactReduxFirebaseProvider
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.9" data-path="../api/ReduxFirestoreContext.html">
+            
+                <a href="../api/ReduxFirestoreContext.html">
+            
+                    
+                    ReduxFirestoreContext
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.10" data-path="../api/ReduxFirestoreProvider.html">
+            
+                <a href="../api/ReduxFirestoreProvider.html">
+            
+                    
+                    ReduxFirestoreProvider
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.11" data-path="../api/helpers.html">
+            
+                <a href="../api/helpers.html">
+            
+                    
+                    helpers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    Migration Guides
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="../v3-migration-guide.html">
+            
+                <a href="../v3-migration-guide.html">
+            
+                    
+                    v3 Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.2" data-path="../v2-migration-guide.html">
+            
+                <a href="../v2-migration-guide.html">
+            
+                    
+                    v2 Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="../FAQ.html">
+            
+                <a href="../FAQ.html">
+            
+                    
+                    FAQ
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="../roadmap.html">
+            
+                <a href="../roadmap.html">
+            
+                    
+                    Roadmap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="../contributing.html">
+            
+                <a href="../contributing.html">
+            
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >React Native</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="react-native">React Native</h1>
+<p>Connecting to Firebase through react-native can be done with the default Firebase javascript library, or through native modules. Libraries such as <a href="https://github.com/invertase/react-native-firebase" target="_blank">react-native-firebase</a> that preserve Firebase&apos;s web library syntax while providing access to native modules can be used with <code>react-redux-firebase</code>.</p>
+<p>Regardless of which path you want to take, initial setup is the same, so we will begin there. Below are separate sections for the two different setups (<a href="#native-modules">native</a> or <a href="#jsweb">web</a>).</p>
+<p><strong>NOTE:</strong> Make sure you include <code>enableRedirectHandling: false</code> when using react-native with <code>v2.0.0</code>. This is required to disable redirect handling (which uses http) since it is not supported in react-native. There has been discussion of a way to make this happen automatically, but for now it is required.</p>
+<h2 id="jsweb">JS/Web</h2>
+<p>Setup and use <code>react-redux-firebase</code> as normal (described in the <a href="https://github.com/prescottprue/react-redux-firebase#use" target="_blank">use section of the README</a>). Since Firebase is initialized outside of react-redux-firebase, the automatic handling of react-native done by Firebase works.</p>
+<p><a href="https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/react-native" target="_blank">react-native complete example app</a></p>
+<p><strong>NOTES</strong></p>
+<ul>
+<li>The web SDK is actually used directly, so this method is as close as it comes to web dev</li>
+<li>Slighly less performant than using native modules since the render thread is used for all JS</li>
+<li>Only works for versions <code>v2.0.0</code> and higher. For older versions please view the docs associated with previous version.</li>
+</ul>
+<h2 id="native-modules">Native Modules</h2>
+<p>Passing in an instance also allows for libraries with similar APIs (such as <a href="https://github.com/invertase/react-native-firebase" target="_blank"><code>react-native-firebase</code></a>) to be used instead:</p>
+<ol>
+<li>Follow <a href="https://github.com/prescottprue/react-redux-firebase#use" target="_blank">use instructions in README</a></li>
+<li><p>When creating redux store pass <code>react-native-firebase</code> App instance into <code>ReactReduxFirebaseProvider</code> like so:</p>
+<pre class="language-"><code class="lang-jsx"><span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">&apos;react&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> render <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-dom&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> Provider <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux&apos;</span>
+<span class="token keyword">import</span> RNFirebase <span class="token keyword">from</span> <span class="token string">&apos;react-native-firebase&apos;</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> createStore<span class="token punctuation">,</span> combineReducers<span class="token punctuation">,</span> compose <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;redux&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> ReactReduxFirebaseProvider<span class="token punctuation">,</span> firebaseReducer <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux-firebase&apos;</span>
+<span class="token comment">// import { createFirestoreInstance, firestoreReducer } from &apos;redux-firestore&apos; // &lt;- needed if using firestore</span>
+
+<span class="token keyword">const</span> fbConfig <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token comment">// react-redux-firebase config</span>
+<span class="token keyword">const</span> rrfConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+ userProfile<span class="token operator">:</span> <span class="token string">&apos;users&apos;</span>
+ <span class="token comment">// useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Initialize firebase instance</span>
+firebase<span class="token punctuation">.</span><span class="token function">initializeApp</span><span class="token punctuation">(</span>fbConfig<span class="token punctuation">)</span>
+
+<span class="token comment">// Initialize other services on firebase instance</span>
+<span class="token comment">// firebase.firestore() // &lt;- needed if using firestore</span>
+<span class="token comment">// firebase.functions() // &lt;- needed if using httpsCallable</span>
+
+<span class="token comment">// Add firebase to reducers</span>
+<span class="token keyword">const</span> rootReducer <span class="token operator">=</span> <span class="token function">combineReducers</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+ firebase<span class="token operator">:</span> firebaseReducer
+ <span class="token comment">// firestore: firestoreReducer // &lt;- needed if using firestore</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// Create store with reducers and initial state</span>
+<span class="token keyword">const</span> initialState <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token keyword">const</span> store <span class="token operator">=</span> <span class="token function">createStore</span><span class="token punctuation">(</span>rootReducer<span class="token punctuation">,</span> initialState<span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> rrfProps <span class="token operator">=</span> <span class="token punctuation">{</span>
+ firebase<span class="token operator">:</span> RNFirebase<span class="token punctuation">,</span>
+ config<span class="token operator">:</span> rrfConfig<span class="token punctuation">,</span>
+ dispatch<span class="token operator">:</span> store<span class="token punctuation">.</span>dispatch<span class="token punctuation">,</span>
+ <span class="token comment">// createFirestoreInstance // &lt;- needed if using firestore</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Setup react-redux so that connect HOC can be used</span>
+<span class="token keyword">function</span> <span class="token function">App</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ <span class="token keyword">return</span> <span class="token punctuation">(</span>
+   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">Provider</span></span> <span class="token attr-name">store</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>store<span class="token punctuation">}</span></span><span class="token punctuation">&gt;</span></span>
+     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">ReactReduxFirebaseProvider</span></span> <span class="token spread"><span class="token punctuation">{</span><span class="token punctuation">...</span><span class="token attr-value">rrfProps</span><span class="token punctuation">}</span></span><span class="token punctuation">&gt;</span></span>
+       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">Todos</span></span> <span class="token punctuation">/&gt;</span></span>
+     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">ReactReduxFirebaseProvider</span></span><span class="token punctuation">&gt;</span></span>
+   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">Provider</span></span><span class="token punctuation">&gt;</span></span>
+ <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
+</ol>
+<p>Full <code>react-native-firebase</code> example app source with styling available <a href="https://github.com/prescottprue/react-redux-firebase/tree/master/examples/complete/react-native-firebase" target="_blank">in the react-native-firebase complete example</a>.</p>
+<h2 id="creating-your-own">Creating Your Own</h2>
+<p>We are going to use the project name Devshare for example here. For your project, use your project name everywhere where Devshare is used.</p>
+<h3 id="start">Start</h3>
+<ol>
+<li>Make sure you have <a href="https://github.com/react-community/create-react-native-app" target="_blank"><code>create-react-native-app</code></a> installed, or install it using <code>npm install -g create-react-native-app</code>.</li>
+<li>Run <code>create-react-native-app Devshare</code> (again replace Devshare with the name of your project)</li>
+<li>After that is complete, eject using <code>yarn eject</code> or <code>npm run eject</code></li>
+</ol>
+<h3 id="setup">Setup</h3>
+<ol>
+<li>Click &quot;Add Firebase To iOS&quot;<!-- TODO: Confirm this and get a picture --></li>
+<li>Download <code>GoogleService-info.plist</code></li>
+<li>Place <code>GoogleService-info.plist</code> in the folder of whichever platform you are using (i.e. <code>/ios</code>)</li>
+<li>Copy your client id out of the <code>GoogleService-info.plist</code> file (should end in <code>.apps.googleusercontent.com</code>)</li>
+<li>Place the client id into <code>iosClientId</code> variable within the example</li>
+</ol>
+<h3 id="download-firebase-config">Download Firebase Config</h3>
+<ol>
+<li><p>Visit Overview page and click Add Firebase to iOS</p>
+<p><img src="../static/FirebaseOverview.png" alt="img"></p>
+</li>
+<li><p>Fill in application info in register modal and click register</p>
+<p><img src="../static/RegisterApp.png" alt="img"></p>
+</li>
+<li><p>Download the .plist file and place it in your <code>ios</code> folder</p>
+<p><img src="../static/PlistDownload.png" alt="img"></p>
+</li>
+</ol>
+<h3 id="add-react-native-google-signin">Add <code>react-native-google-signin</code></h3>
+<ol>
+<li><p>Add <a href="https://github.com/devfd/react-native-google-signin" target="_blank"><code>react-native-google-signin</code></a> to the project</p>
+<ol>
+<li>Run <code>npm i --save react-native-google-signin</code> to include it within JS dependencies</li>
+<li>Download the <a href="https://github.com/devfd/react-native-google-signin" target="_blank"><code>react-native-google-signin</code></a> zip, and unzip it</li>
+<li>Drag and drop the <code>ios/GoogleSdk</code> folder to your xcode project. (Make sure <code>Copy items if needed</code> <strong>IS</strong> ticked)</li>
+<li><p>Add RNGoogleSignin to project build phase</p>
+<ol>
+<li><p>Click Name in sidebar of Xcode</p>
+<p><img src="../static/BuildPhase.png" alt="img"></p>
+</li>
+<li><p>In your project build phase -&gt; <code>Link binary with libraries</code> step, add:</p>
+</li>
+<li><code>libRNGoogleSignin.a</code></li>
+<li><code>AddressBook.framework</code></li>
+<li><code>SafariServices.framework</code></li>
+<li><code>SystemConfiguration.framework</code></li>
+<li><code>libz.tbd</code></li>
+</ol>
+<p><strong>Note:</strong> (May take clicking &quot;Add Other&quot; button then selecting the <code>GoogleSdk</code> folder and <code>RNGoogleSignin</code> folder)</p>
+</li>
+</ol>
+</li>
+<li><p>Make sure all dependencies are correctly linked to your project:
+<a href="#config"><img src="https://github.com/apptailor/react-native-google-signin/raw/master/img/link-config.png" alt="link config"></a></p>
+</li>
+<li><p>Configure URL types in the <code>Info</code> panel of your xcode project</p>
+<ol>
+<li>add a URL with scheme set to your <code>REVERSED_CLIENT_ID</code> (found inside the plist)</li>
+<li>add a URL with scheme set to your <code>bundle id</code></li>
+</ol>
+<p><img src="../static/UrlTypes.png" alt="img"></p>
+</li>
+<li><p>Make sure you import <code>RNGoogleSignin.h</code> in your <code>AppDelegate.m</code> like so:</p>
+<pre class="language-"><code class="lang-objectivec"><span class="token comment">// add this line before @implementation AppDelegate</span>
+<span class="token macro property">#<span class="token directive keyword">import</span> &lt;RNGoogleSignin/RNGoogleSignin.h&gt;</span>
+
+<span class="token comment">// add this method before @end</span>
+<span class="token operator">-</span> <span class="token punctuation">(</span>BOOL<span class="token punctuation">)</span>application<span class="token punctuation">:</span><span class="token punctuation">(</span>UIApplication <span class="token operator">*</span><span class="token punctuation">)</span>application openURL<span class="token punctuation">:</span><span class="token punctuation">(</span>NSURL <span class="token operator">*</span><span class="token punctuation">)</span>url
+ sourceApplication<span class="token punctuation">:</span><span class="token punctuation">(</span>NSString <span class="token operator">*</span><span class="token punctuation">)</span>sourceApplication annotation<span class="token punctuation">:</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>annotation <span class="token punctuation">{</span>
+
+ <span class="token keyword">return</span> <span class="token punctuation">[</span>RNGoogleSignin application<span class="token punctuation">:</span>application openURL<span class="token punctuation">:</span>url sourceApplication<span class="token punctuation">:</span>sourceApplication annotation<span class="token punctuation">:</span>annotation<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
+</ol>
+<p>At the end of this step, your Xcode config should look similar to this:</p>
+<p><a href="#config"><img src="https://github.com/apptailor/react-native-google-signin/raw/master/img/url-config.png" alt="xcode config"></a></p>
+<h3 id="set-open-urls">Set Open URLs</h3>
+<p>Only one <code>openURL</code> method can be defined, so if you have multiple listeners which should be defined (for instance if you have both Google and Facebook OAuth), you must combine them into a single function like so:</p>
+<p><strong>AppDelegate.m:</strong></p>
+<pre class="language-"><code class="lang-objectivec"><span class="token operator">-</span> <span class="token punctuation">(</span>BOOL<span class="token punctuation">)</span>application<span class="token punctuation">:</span><span class="token punctuation">(</span>UIApplication <span class="token operator">*</span><span class="token punctuation">)</span>application openURL<span class="token punctuation">:</span><span class="token punctuation">(</span>NSURL <span class="token operator">*</span><span class="token punctuation">)</span>url
+  sourceApplication<span class="token punctuation">:</span><span class="token punctuation">(</span>NSString <span class="token operator">*</span><span class="token punctuation">)</span>sourceApplication annotation<span class="token punctuation">:</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>annotation <span class="token punctuation">{</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token punctuation">[</span>FBSDKApplicationDelegate sharedInstance<span class="token punctuation">]</span> application<span class="token punctuation">:</span>application
+                                                        openURL<span class="token punctuation">:</span>url
+                                              sourceApplication<span class="token punctuation">:</span>sourceApplication
+                                                     annotation<span class="token punctuation">:</span>annotation
+         <span class="token punctuation">]</span>
+         <span class="token operator">||</span> <span class="token punctuation">[</span>RNGoogleSignin application<span class="token punctuation">:</span>application
+                                openURL<span class="token punctuation">:</span>url
+                      sourceApplication<span class="token punctuation">:</span>sourceApplication
+                             annotation<span class="token punctuation">:</span>annotation
+            <span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="run-it">Run It</h3>
+<p>Now, if everything was done correctly you should be able to do the following:</p>
+<pre class="language-"><code class="lang-bash">react-native run-ios
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="redux-observable.html" class="navigation navigation-prev " aria-label="Previous page: Redux Observable">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="react-chrome-redux.html" class="navigation navigation-next " aria-label="Next page: React Chrome Redux">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"React Native","level":"1.9.7","depth":2,"next":{"title":"React Chrome Redux","level":"1.9.8","depth":2,"path":"docs/integrations/react-chrome-redux.md","ref":"docs/integrations/react-chrome-redux.md","articles":[]},"previous":{"title":"Redux Observable","level":"1.9.6","depth":2,"path":"docs/integrations/redux-observable.md","ref":"docs/integrations/redux-observable.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","prism","-highlight","github","anchorjs","versions-select","ga"],"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/prescottprue/react-redux-firebase/"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"versions-select":{"type":"branches"},"fontsettings":{"theme":"white","family":"sans","size":2},"ga":{"configuration":"auto","token":"UA-102355407-1"},"versions":{"gitbookConfigURL":"https://storage.googleapis.com/docs.react-redux-firebase.com/book.json","options":[{"value":"http://react-redux-firebase.com/","text":"Version 3.0.0","selected":true},{"value":"http://docs.react-redux-firebase.com/history/v2.0.0/","text":"Version 2.0.0"},{"value":"http://docs.react-redux-firebase.com/history/v1.5.0/","text":"Version 1.5.0"},{"value":"http://docs.react-redux-firebase.com/history/v1.4.0/","text":"Version 1.4.0"}]},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/prescottprue/react-redux-firebase/tree/master"},"theme-default":{"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchorjs":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"React Redux Firebase","gitbook":">=3.2.1"},"file":{"path":"docs/integrations/react-native.md","mtime":"2020-04-29T23:33:31.578Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-05-31T21:21:19.554Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-anchorjs/anchor.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-anchorjs/anchor-style.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-versions-select/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

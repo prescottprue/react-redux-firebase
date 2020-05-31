@@ -1,0 +1,1280 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Routing · React Redux Firebase</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-versions-select/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="roles.html" />
+    
+    
+    <link rel="prev" href="actions.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Read Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../getting_started.html">
+            
+                <a href="../getting_started.html">
+            
+                    
+                    Getting Started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../auth.html">
+            
+                <a href="../auth.html">
+            
+                    
+                    Auth
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../queries.html">
+            
+                <a href="../queries.html">
+            
+                    
+                    Queries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../firestore.html">
+            
+                <a href="../firestore.html">
+            
+                    
+                    Firestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../populate.html">
+            
+                <a href="../populate.html">
+            
+                    
+                    Populate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../storage.html">
+            
+                <a href="../storage.html">
+            
+                    
+                    Storage
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Recipes
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="profile.html">
+            
+                <a href="profile.html">
+            
+                    
+                    Profile
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="auth.html">
+            
+                <a href="auth.html">
+            
+                    
+                    Auth
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="actions.html">
+            
+                <a href="actions.html">
+            
+                    
+                    Actions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.8.4" data-path="routing.html">
+            
+                <a href="routing.html">
+            
+                    
+                    Routing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5" data-path="roles.html">
+            
+                <a href="roles.html">
+            
+                    
+                    Roles
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.6" data-path="populate.html">
+            
+                <a href="populate.html">
+            
+                    
+                    Populate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.7" data-path="upload.html">
+            
+                <a href="upload.html">
+            
+                    
+                    Upload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.8" data-path="ssr.html">
+            
+                <a href="ssr.html">
+            
+                    
+                    Server Side Rendering
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../integrations/">
+            
+                <a href="../integrations/">
+            
+                    
+                    Integrations
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="../integrations/thunks.html">
+            
+                <a href="../integrations/thunks.html">
+            
+                    
+                    Redux Thunk
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../integrations/redux-form.html">
+            
+                <a href="../integrations/redux-form.html">
+            
+                    
+                    Redux Form
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.3" data-path="../integrations/reselect.html">
+            
+                <a href="../integrations/reselect.html">
+            
+                    
+                    Reselect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4" data-path="../integrations/redux-persist.html">
+            
+                <a href="../integrations/redux-persist.html">
+            
+                    
+                    Redux Persist
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.5" data-path="../integrations/redux-saga.html">
+            
+                <a href="../integrations/redux-saga.html">
+            
+                    
+                    Redux Saga
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.6" data-path="../integrations/redux-observable.html">
+            
+                <a href="../integrations/redux-observable.html">
+            
+                    
+                    Redux Observable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.7" data-path="../integrations/react-native.html">
+            
+                <a href="../integrations/react-native.html">
+            
+                    
+                    React Native
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.8" data-path="../integrations/react-chrome-redux.html">
+            
+                <a href="../integrations/react-chrome-redux.html">
+            
+                    
+                    React Chrome Redux
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="../api/">
+            
+                <a href="../api/">
+            
+                    
+                    API Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="../api/constants.html">
+            
+                <a href="../api/constants.html">
+            
+                    
+                    constants
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" >
+            
+                <span>
+            
+                    
+                    Hooks
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.2.1" data-path="../api/useFirebase.html">
+            
+                <a href="../api/useFirebase.html">
+            
+                    
+                    useFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.2" data-path="../api/useFirebaseConnect.html">
+            
+                <a href="../api/useFirebaseConnect.html">
+            
+                    
+                    useFirebaseConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.3" data-path="../api/useFirestore.html">
+            
+                <a href="../api/useFirestore.html">
+            
+                    
+                    useFirestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.4" data-path="../api/useFirestoreConnect.html">
+            
+                <a href="../api/useFirestoreConnect.html">
+            
+                    
+                    useFirestoreConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" >
+            
+                <span>
+            
+                    
+                    HOCs
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.3.1" data-path="../api/firebaseConnect.html">
+            
+                <a href="../api/firebaseConnect.html">
+            
+                    
+                    firebaseConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.2" data-path="../api/withFirebase.html">
+            
+                <a href="../api/withFirebase.html">
+            
+                    
+                    withFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.3" data-path="../api/firestoreConnect.html">
+            
+                <a href="../api/firestoreConnect.html">
+            
+                    
+                    firestoreConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.4" data-path="../api/withFirestore.html">
+            
+                <a href="../api/withFirestore.html">
+            
+                    
+                    withFirestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../api/reducer.html">
+            
+                <a href="../api/reducer.html">
+            
+                    
+                    reducer
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.4.1" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#isinitializingreducer">
+            
+                    
+                    isInitializingReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.2" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#requestingreducer">
+            
+                    
+                    requestingReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.3" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#requestedreducer">
+            
+                    
+                    requestedReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.4" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#timestampsreducer">
+            
+                    
+                    timestampsReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.5" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#authreducer">
+            
+                    
+                    authReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.6" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#autherrorreducer">
+            
+                    
+                    authErrorReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.7" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#profilereducer">
+            
+                    
+                    profileReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.8" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#errorsreducer">
+            
+                    
+                    errorsReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.9" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#listenersreducer">
+            
+                    
+                    listenersReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.10" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#datareducer">
+            
+                    
+                    dataReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.11" data-path="../api/reducers.html">
+            
+                <a href="../api/reducers.html#orderedreducer">
+            
+                    
+                    orderedReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="../api/firebaseInstance.html">
+            
+                <a href="../api/firebaseInstance.html">
+            
+                    
+                    firebaseInstance
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" data-path="../api/getFirebase.html">
+            
+                <a href="../api/getFirebase.html">
+            
+                    
+                    getFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.7" data-path="../api/ReactReduxFirebaseContext.html">
+            
+                <a href="../api/ReactReduxFirebaseContext.html">
+            
+                    
+                    ReactReduxFirebaseContext
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.8" data-path="../api/ReactReduxFirebaseProvider.html">
+            
+                <a href="../api/ReactReduxFirebaseProvider.html">
+            
+                    
+                    ReactReduxFirebaseProvider
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.9" data-path="../api/ReduxFirestoreContext.html">
+            
+                <a href="../api/ReduxFirestoreContext.html">
+            
+                    
+                    ReduxFirestoreContext
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.10" data-path="../api/ReduxFirestoreProvider.html">
+            
+                <a href="../api/ReduxFirestoreProvider.html">
+            
+                    
+                    ReduxFirestoreProvider
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.11" data-path="../api/helpers.html">
+            
+                <a href="../api/helpers.html">
+            
+                    
+                    helpers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    Migration Guides
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="../v3-migration-guide.html">
+            
+                <a href="../v3-migration-guide.html">
+            
+                    
+                    v3 Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.2" data-path="../v2-migration-guide.html">
+            
+                <a href="../v2-migration-guide.html">
+            
+                    
+                    v2 Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="../FAQ.html">
+            
+                <a href="../FAQ.html">
+            
+                    
+                    FAQ
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="../roadmap.html">
+            
+                <a href="../roadmap.html">
+            
+                    
+                    Roadmap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="../contributing.html">
+            
+                <a href="../contributing.html">
+            
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Routing</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="routing-recipes">Routing Recipes</h1>
+<p>These recipes assume that you are using <a href="https://github.com/ReactTraining/react-router" target="_blank"><code>react-router</code></a>, but the principles should apply to any routing solution.</p>
+<h2 id="basic">Basic</h2>
+<p>Routing can be changed based on data by using react lifecycle hooks such as <code>componentWillMount</code>, and <code>componentWillReceiveProps</code> to route users. This can be particularly useful when doing things such as route protection (only allowing a user to view a route if they are logged in):</p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> React<span class="token punctuation">,</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react&apos;</span>
+<span class="token keyword">import</span> PropTypes <span class="token keyword">from</span> <span class="token string">&apos;prop-types&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> compose <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;redux&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> connect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> isLoaded<span class="token punctuation">,</span> isEmpty <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux-firebase&apos;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">ProtectedPage</span> <span class="token keyword">extends</span> <span class="token class-name">Component</span> <span class="token punctuation">{</span>
+  <span class="token keyword">static</span> propTypes <span class="token operator">=</span> <span class="token punctuation">{</span>
+    authExists<span class="token operator">:</span> PropTypes<span class="token punctuation">.</span>bool<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">componentWillReceiveProps</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> authExists <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>authExists<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>context<span class="token punctuation">.</span>router<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">&apos;/login&apos;</span><span class="token punctuation">)</span> <span class="token comment">// redirect to /login if not authed</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>
+      <span class="token operator">&lt;</span>div<span class="token operator">&gt;</span>
+        You are authed<span class="token operator">!</span>
+      <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">connect</span><span class="token punctuation">(</span>
+  <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span> authExists<span class="token operator">:</span> <span class="token operator">!</span><span class="token operator">!</span>auth <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token operator">!</span>auth<span class="token punctuation">.</span>uid <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">(</span>ProtectedPage<span class="token punctuation">)</span>
+</code></pre>
+<h2 id="advanced">Advanced</h2>
+<p>Using <a href="https://github.com/mjrussell/redux-auth-wrapper" target="_blank"><code>redux-auth-wrapper</code></a> you can easily create a Higher Order Component (wrapper) that can be used to redirect users based on Firebase state (including auth).</p>
+<h3 id="auth-required-route-protection">Auth Required (&quot;Route Protection&quot;)</h3>
+<p>In order to only allow authenticated users to view a page, a <code>UserIsAuthenticated</code> Higher Order Component can be created:</p>
+<p><strong>react-router v4 + redux-auth-wrapper v2</strong></p>
+<p>Make sure to install <code>history</code> using <code>npm i --save history</code></p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> locationHelperBuilder <span class="token keyword">from</span> <span class="token string">&apos;redux-auth-wrapper/history4/locationHelper&apos;</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> connectedRouterRedirect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;redux-auth-wrapper/history4/redirect&apos;</span>
+<span class="token keyword">import</span> createHistory <span class="token keyword">from</span> <span class="token string">&apos;history/createBrowserHistory&apos;</span>
+<span class="token keyword">import</span> LoadingScreen <span class="token keyword">from</span> <span class="token string">&apos;components/LoadingScreen&apos;</span><span class="token punctuation">;</span> <span class="token comment">// change it to your custom component</span>
+
+<span class="token keyword">const</span> locationHelper <span class="token operator">=</span> <span class="token function">locationHelperBuilder</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> browserHistory <span class="token operator">=</span> <span class="token function">createHistory</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">export</span> <span class="token keyword">const</span> UserIsAuthenticated <span class="token operator">=</span> <span class="token function">connectedRouterRedirect</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  wrapperDisplayName<span class="token operator">:</span> <span class="token string">&apos;UserIsAuthenticated&apos;</span><span class="token punctuation">,</span>
+  AuthenticatingComponent<span class="token operator">:</span> LoadingScreen<span class="token punctuation">,</span>
+  allowRedirectBack<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">redirectPath</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">state<span class="token punctuation">,</span> ownProps</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    locationHelper<span class="token punctuation">.</span><span class="token function">getRedirectQueryParam</span><span class="token punctuation">(</span>ownProps<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">&apos;/login&apos;</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">authenticatingSelector</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth<span class="token punctuation">,</span> profile<span class="token punctuation">,</span> isInitializing <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    <span class="token operator">!</span>auth<span class="token punctuation">.</span>isLoaded <span class="token operator">||</span> isInitializing <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">authenticatedSelector</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    auth<span class="token punctuation">.</span>isLoaded <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>auth<span class="token punctuation">.</span>isEmpty<span class="token punctuation">,</span>
+  <span class="token function-variable function">redirectAction</span><span class="token operator">:</span> <span class="token parameter">newLoc</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token parameter">dispatch</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    browserHistory<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span>newLoc<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// or routerActions.replace</span>
+    <span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">&apos;UNAUTHED_REDIRECT&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">const</span> UserIsNotAuthenticated <span class="token operator">=</span> <span class="token function">connectedRouterRedirect</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  wrapperDisplayName<span class="token operator">:</span> <span class="token string">&apos;UserIsNotAuthenticated&apos;</span><span class="token punctuation">,</span>
+  AuthenticatingComponent<span class="token operator">:</span> LoadingScreen<span class="token punctuation">,</span>
+  allowRedirectBack<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">redirectPath</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">state<span class="token punctuation">,</span> ownProps</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    locationHelper<span class="token punctuation">.</span><span class="token function">getRedirectQueryParam</span><span class="token punctuation">(</span>ownProps<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">&apos;/&apos;</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">authenticatingSelector</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth<span class="token punctuation">,</span> isInitializing <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    <span class="token operator">!</span>auth<span class="token punctuation">.</span>isLoaded <span class="token operator">||</span> isInitializing <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">authenticatedSelector</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    auth<span class="token punctuation">.</span>isLoaded <span class="token operator">&amp;&amp;</span> auth<span class="token punctuation">.</span>isEmpty<span class="token punctuation">,</span>
+  <span class="token function-variable function">redirectAction</span><span class="token operator">:</span> <span class="token parameter">newLoc</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token parameter">dispatch</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    browserHistory<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span>newLoc<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// or routerActions.replace</span>
+    <span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">&apos;UNAUTHED_REDIRECT&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Then it can be used as a Higher Order Component wrapper on a component:</p>
+<p><em>standard ES5/ES6</em></p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">UserIsAuthenticated</span><span class="token punctuation">(</span>ProtectedThing<span class="token punctuation">)</span>
+</code></pre>
+<p><em>es7 decorators</em></p>
+<pre class="language-"><code class="lang-javascript">@UserIsAuthenticated <span class="token comment">// redirects to &apos;/login&apos; if user not is logged in</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">class</span> <span class="token class-name">ProtectedThing</span> <span class="token keyword">extends</span> <span class="token class-name">Component</span> <span class="token punctuation">{</span>
+  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>
+      <span class="token operator">&lt;</span>div<span class="token operator">&gt;</span>
+        You are authed<span class="token operator">!</span>
+      <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Or it can be used at the route level:</p>
+<pre class="language-"><code class="lang-javascript"><span class="token operator">&lt;</span>Route path<span class="token operator">=</span><span class="token string">&quot;/&quot;</span> component<span class="token operator">=</span><span class="token punctuation">{</span>App<span class="token punctuation">}</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>Route path<span class="token operator">=</span><span class="token string">&quot;login&quot;</span> component<span class="token operator">=</span><span class="token punctuation">{</span>Login<span class="token punctuation">}</span><span class="token operator">/</span><span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>Route path<span class="token operator">=</span><span class="token string">&quot;foo&quot;</span> component<span class="token operator">=</span><span class="token punctuation">{</span><span class="token function">UserIsAuthenticated</span><span class="token punctuation">(</span>Foo<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token operator">/</span><span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>Route<span class="token operator">&gt;</span>
+</code></pre>
+<p><strong>redux-auth-wrapper v1</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> browserHistory <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-router&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> UserAuthWrapper <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;redux-auth-wrapper&apos;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">const</span> UserIsAuthenticated <span class="token operator">=</span> <span class="token function">UserAuthWrapper</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  wrapperDisplayName<span class="token operator">:</span> <span class="token string">&apos;UserIsAuthenticated&apos;</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">authSelector</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> auth<span class="token punctuation">,</span>
+  <span class="token function-variable function">authenticatingSelector</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth<span class="token punctuation">,</span> isInitializing <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    <span class="token operator">!</span>auth<span class="token punctuation">.</span>isLoaded <span class="token operator">||</span> isInitializing <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">predicate</span><span class="token operator">:</span> <span class="token parameter">auth</span> <span class="token operator">=&gt;</span> <span class="token operator">!</span>auth<span class="token punctuation">.</span>isEmpty<span class="token punctuation">,</span>
+  <span class="token function-variable function">redirectAction</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">newLoc</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token parameter">dispatch</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    browserHistory<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span>newLoc<span class="token punctuation">)</span>
+    <span class="token comment">// routerActions.replace // if using react-router-redux</span>
+    <span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      type<span class="token operator">:</span> <span class="token string">&apos;UNAUTHED_REDIRECT&apos;</span><span class="token punctuation">,</span>
+      payload<span class="token operator">:</span> <span class="token punctuation">{</span> message<span class="token operator">:</span> <span class="token string">&apos;You must be authenticated.&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="redirect-authenticated">Redirect Authenticated</h3>
+<p>Just as easily as creating a wrapper for redirect if a user is not logged in, we can create one that redirects if a user <em>IS</em> authenticated. This can be useful for pages that you do not want a logged in user to see, such as the login page.</p>
+<p><strong>react-router v4 + redux-auth-wrapper v2</strong></p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">import</span> locationHelperBuilder <span class="token keyword">from</span> <span class="token string">&apos;redux-auth-wrapper/history4/locationHelper&apos;</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> connectedRouterRedirect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;redux-auth-wrapper/history4/redirect&apos;</span>
+<span class="token keyword">import</span> createHistory <span class="token keyword">from</span> <span class="token string">&apos;history/createBrowserHistory&apos;</span>
+<span class="token keyword">import</span> LoadingScreen <span class="token keyword">from</span> <span class="token string">&apos;components/LoadingScreen&apos;</span><span class="token punctuation">;</span> <span class="token comment">// change it to your custom component</span>
+
+<span class="token keyword">const</span> locationHelper <span class="token operator">=</span> <span class="token function">locationHelperBuilder</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> history <span class="token operator">=</span> <span class="token function">createHistory</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">export</span> <span class="token keyword">const</span> UserIsNotAuthenticated <span class="token operator">=</span> <span class="token function">connectedRouterRedirect</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  wrapperDisplayName<span class="token operator">:</span> <span class="token string">&apos;UserIsNotAuthenticated&apos;</span><span class="token punctuation">,</span>
+  AuthenticatingComponent<span class="token operator">:</span> LoadingScreen<span class="token punctuation">,</span>
+  allowRedirectBack<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">redirectPath</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">state<span class="token punctuation">,</span> ownProps</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    locationHelper<span class="token punctuation">.</span><span class="token function">getRedirectQueryParam</span><span class="token punctuation">(</span>ownProps<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">&apos;/&apos;</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">authenticatingSelector</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth<span class="token punctuation">,</span> isInitializing <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    <span class="token operator">!</span>auth<span class="token punctuation">.</span>isLoaded <span class="token operator">||</span> isInitializing <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">authenticatedSelector</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    auth<span class="token punctuation">.</span>isLoaded <span class="token operator">&amp;&amp;</span> auth<span class="token punctuation">.</span>isEmpty<span class="token punctuation">,</span>
+  <span class="token function-variable function">redirectAction</span><span class="token operator">:</span> <span class="token parameter">newLoc</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token parameter">dispatch</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    history<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>newLoc<span class="token punctuation">)</span>
+    <span class="token comment">// routerActions.replace or other redirect</span>
+    <span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">&apos;UNAUTHED_REDIRECT&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Can then be used on a Login route component:</p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">&apos;react&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> useFirebase <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux-firebase&apos;</span>
+
+<span class="token keyword">function</span> <span class="token function">Login</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> firebase <span class="token operator">=</span> <span class="token function">useFirebase</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span>div<span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span>button onClick<span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> firebase<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">{</span> provider<span class="token operator">:</span> <span class="token string">&apos;google&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token operator">&gt;</span>
+        Google Login
+      <span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// redirects to &apos;/&apos; if user is logged in</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> UserIsNotAuthenticated
+</code></pre>
+<p><strong>react-router v3 and earlier + redux-auth-wrapper v1</strong></p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> browserHistory <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-router&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> UserAuthWrapper <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;redux-auth-wrapper&apos;</span>
+<span class="token keyword">import</span> LoadingScreen <span class="token keyword">from</span> <span class="token string">&apos;../components/LoadingScreen&apos;</span><span class="token punctuation">;</span> <span class="token comment">// change it to your custom component</span>
+
+<span class="token keyword">export</span> <span class="token keyword">const</span> UserIsNotAuthenticated <span class="token operator">=</span> <span class="token function">UserAuthWrapper</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  failureRedirectPath<span class="token operator">:</span> <span class="token string">&apos;/&apos;</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">authSelector</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> auth<span class="token punctuation">,</span>
+  <span class="token function-variable function">authenticatingSelector</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth<span class="token punctuation">,</span> isInitializing <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span>
+    <span class="token operator">!</span>auth<span class="token punctuation">.</span>isLoaded <span class="token operator">||</span> isInitializing <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">predicate</span><span class="token operator">:</span> <span class="token parameter">auth</span> <span class="token operator">=&gt;</span> auth<span class="token punctuation">.</span>isEmpty<span class="token punctuation">,</span>
+  <span class="token function-variable function">redirectAction</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">newLoc</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token parameter">dispatch</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    browserHistory<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span>newLoc<span class="token punctuation">)</span>
+    <span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      type<span class="token operator">:</span> <span class="token string">&apos;AUTHED_REDIRECT&apos;</span><span class="token punctuation">,</span>
+      payload<span class="token operator">:</span> <span class="token punctuation">{</span> message<span class="token operator">:</span> <span class="token string">&apos;User is authenticated. Redirecting home...&apos;</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="actions.html" class="navigation navigation-prev " aria-label="Previous page: Actions">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="roles.html" class="navigation navigation-next " aria-label="Next page: Roles">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Routing","level":"1.8.4","depth":2,"next":{"title":"Roles","level":"1.8.5","depth":2,"path":"docs/recipes/roles.md","ref":"docs/recipes/roles.md","articles":[]},"previous":{"title":"Actions","level":"1.8.3","depth":2,"path":"docs/recipes/actions.md","ref":"docs/recipes/actions.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","prism","-highlight","github","anchorjs","versions-select","ga"],"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/prescottprue/react-redux-firebase/"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"versions-select":{"type":"branches"},"fontsettings":{"theme":"white","family":"sans","size":2},"ga":{"configuration":"auto","token":"UA-102355407-1"},"versions":{"gitbookConfigURL":"https://storage.googleapis.com/docs.react-redux-firebase.com/book.json","options":[{"value":"http://react-redux-firebase.com/","text":"Version 3.0.0","selected":true},{"value":"http://docs.react-redux-firebase.com/history/v2.0.0/","text":"Version 2.0.0"},{"value":"http://docs.react-redux-firebase.com/history/v1.5.0/","text":"Version 1.5.0"},{"value":"http://docs.react-redux-firebase.com/history/v1.4.0/","text":"Version 1.4.0"}]},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/prescottprue/react-redux-firebase/tree/master"},"theme-default":{"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchorjs":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"React Redux Firebase","gitbook":">=3.2.1"},"file":{"path":"docs/recipes/routing.md","mtime":"2020-04-29T23:33:31.581Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-05-31T21:21:19.554Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-anchorjs/anchor.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-anchorjs/anchor-style.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-versions-select/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

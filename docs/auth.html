@@ -1,0 +1,1364 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Auth · React Redux Firebase</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-versions-select/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="queries.html" />
+    
+    
+    <link rel="prev" href="getting_started.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Read Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="getting_started.html">
+            
+                <a href="getting_started.html">
+            
+                    
+                    Getting Started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="auth.html">
+            
+                <a href="auth.html">
+            
+                    
+                    Auth
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="queries.html">
+            
+                <a href="queries.html">
+            
+                    
+                    Queries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="firestore.html">
+            
+                <a href="firestore.html">
+            
+                    
+                    Firestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="populate.html">
+            
+                <a href="populate.html">
+            
+                    
+                    Populate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="storage.html">
+            
+                <a href="storage.html">
+            
+                    
+                    Storage
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="recipes/">
+            
+                <a href="recipes/">
+            
+                    
+                    Recipes
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="recipes/profile.html">
+            
+                <a href="recipes/profile.html">
+            
+                    
+                    Profile
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="recipes/auth.html">
+            
+                <a href="recipes/auth.html">
+            
+                    
+                    Auth
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="recipes/actions.html">
+            
+                <a href="recipes/actions.html">
+            
+                    
+                    Actions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.4" data-path="recipes/routing.html">
+            
+                <a href="recipes/routing.html">
+            
+                    
+                    Routing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5" data-path="recipes/roles.html">
+            
+                <a href="recipes/roles.html">
+            
+                    
+                    Roles
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.6" data-path="recipes/populate.html">
+            
+                <a href="recipes/populate.html">
+            
+                    
+                    Populate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.7" data-path="recipes/upload.html">
+            
+                <a href="recipes/upload.html">
+            
+                    
+                    Upload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.8" data-path="recipes/ssr.html">
+            
+                <a href="recipes/ssr.html">
+            
+                    
+                    Server Side Rendering
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="integrations/">
+            
+                <a href="integrations/">
+            
+                    
+                    Integrations
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="integrations/thunks.html">
+            
+                <a href="integrations/thunks.html">
+            
+                    
+                    Redux Thunk
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="integrations/redux-form.html">
+            
+                <a href="integrations/redux-form.html">
+            
+                    
+                    Redux Form
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.3" data-path="integrations/reselect.html">
+            
+                <a href="integrations/reselect.html">
+            
+                    
+                    Reselect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4" data-path="integrations/redux-persist.html">
+            
+                <a href="integrations/redux-persist.html">
+            
+                    
+                    Redux Persist
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.5" data-path="integrations/redux-saga.html">
+            
+                <a href="integrations/redux-saga.html">
+            
+                    
+                    Redux Saga
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.6" data-path="integrations/redux-observable.html">
+            
+                <a href="integrations/redux-observable.html">
+            
+                    
+                    Redux Observable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.7" data-path="integrations/react-native.html">
+            
+                <a href="integrations/react-native.html">
+            
+                    
+                    React Native
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.8" data-path="integrations/react-chrome-redux.html">
+            
+                <a href="integrations/react-chrome-redux.html">
+            
+                    
+                    React Chrome Redux
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="api/">
+            
+                <a href="api/">
+            
+                    
+                    API Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="api/constants.html">
+            
+                <a href="api/constants.html">
+            
+                    
+                    constants
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" >
+            
+                <span>
+            
+                    
+                    Hooks
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.2.1" data-path="api/useFirebase.html">
+            
+                <a href="api/useFirebase.html">
+            
+                    
+                    useFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.2" data-path="api/useFirebaseConnect.html">
+            
+                <a href="api/useFirebaseConnect.html">
+            
+                    
+                    useFirebaseConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.3" data-path="api/useFirestore.html">
+            
+                <a href="api/useFirestore.html">
+            
+                    
+                    useFirestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.4" data-path="api/useFirestoreConnect.html">
+            
+                <a href="api/useFirestoreConnect.html">
+            
+                    
+                    useFirestoreConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" >
+            
+                <span>
+            
+                    
+                    HOCs
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.3.1" data-path="api/firebaseConnect.html">
+            
+                <a href="api/firebaseConnect.html">
+            
+                    
+                    firebaseConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.2" data-path="api/withFirebase.html">
+            
+                <a href="api/withFirebase.html">
+            
+                    
+                    withFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.3" data-path="api/firestoreConnect.html">
+            
+                <a href="api/firestoreConnect.html">
+            
+                    
+                    firestoreConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.4" data-path="api/withFirestore.html">
+            
+                <a href="api/withFirestore.html">
+            
+                    
+                    withFirestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="api/reducer.html">
+            
+                <a href="api/reducer.html">
+            
+                    
+                    reducer
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.4.1" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#isinitializingreducer">
+            
+                    
+                    isInitializingReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.2" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#requestingreducer">
+            
+                    
+                    requestingReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.3" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#requestedreducer">
+            
+                    
+                    requestedReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.4" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#timestampsreducer">
+            
+                    
+                    timestampsReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.5" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#authreducer">
+            
+                    
+                    authReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.6" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#autherrorreducer">
+            
+                    
+                    authErrorReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.7" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#profilereducer">
+            
+                    
+                    profileReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.8" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#errorsreducer">
+            
+                    
+                    errorsReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.9" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#listenersreducer">
+            
+                    
+                    listenersReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.10" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#datareducer">
+            
+                    
+                    dataReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.11" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#orderedreducer">
+            
+                    
+                    orderedReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="api/firebaseInstance.html">
+            
+                <a href="api/firebaseInstance.html">
+            
+                    
+                    firebaseInstance
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" data-path="api/getFirebase.html">
+            
+                <a href="api/getFirebase.html">
+            
+                    
+                    getFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.7" data-path="api/ReactReduxFirebaseContext.html">
+            
+                <a href="api/ReactReduxFirebaseContext.html">
+            
+                    
+                    ReactReduxFirebaseContext
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.8" data-path="api/ReactReduxFirebaseProvider.html">
+            
+                <a href="api/ReactReduxFirebaseProvider.html">
+            
+                    
+                    ReactReduxFirebaseProvider
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.9" data-path="api/ReduxFirestoreContext.html">
+            
+                <a href="api/ReduxFirestoreContext.html">
+            
+                    
+                    ReduxFirestoreContext
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.10" data-path="api/ReduxFirestoreProvider.html">
+            
+                <a href="api/ReduxFirestoreProvider.html">
+            
+                    
+                    ReduxFirestoreProvider
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.11" data-path="api/helpers.html">
+            
+                <a href="api/helpers.html">
+            
+                    
+                    helpers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    Migration Guides
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="v3-migration-guide.html">
+            
+                <a href="v3-migration-guide.html">
+            
+                    
+                    v3 Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.2" data-path="v2-migration-guide.html">
+            
+                <a href="v2-migration-guide.html">
+            
+                    
+                    v2 Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="FAQ.html">
+            
+                <a href="FAQ.html">
+            
+                    
+                    FAQ
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="roadmap.html">
+            
+                <a href="roadmap.html">
+            
+                    
+                    Roadmap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="contributing.html">
+            
+                <a href="contributing.html">
+            
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Auth</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="authentication-methods">Authentication Methods</h1>
+<p>Authentication data is attached to <code>state.firebase.auth</code>, profile is attached to <code>state.firebase.profile</code> if you provide a value to the <code>userProfile</code> config option. You can get them within components like so:</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> connect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux&apos;</span>
+
+<span class="token keyword">const</span> enhance <span class="token operator">=</span> <span class="token function">connect</span><span class="token punctuation">(</span>
+  <span class="token comment">// Map redux state to component props</span>
+  <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> auth<span class="token punctuation">,</span> profile <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+    auth<span class="token punctuation">,</span>
+    profile
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span>
+
+<span class="token function">enhance</span><span class="token punctuation">(</span>SomeComponent<span class="token punctuation">)</span>
+</code></pre>
+<p>If you need access to methods that are not available at the top level, you can access Firebase&apos;s Full Auth API using <code>props.firebase.auth()</code></p>
+<h4 id="custom-claims">Custom Claims</h4>
+<p> Firebase has a secure way of identifying and making claims about users with <a href="https://firebase.google.com/docs/auth/admin/custom-claims" target="_blank">custom claims</a>. This is a good way to provide roles for users.</p>
+<p> If <code>enableClaims</code> config option is used along with <code>userProfile</code> you will find custom claims in <code>state.firebase.profile.token.claims</code>. </p>
+<p> <strong>Note</strong>: If a claim is added to a user who is already logged in those changes will not necessarily be propagated to the client. In order to assure the change is observed, use a <code>refreshToken</code> property in your <code>userProfile</code> collection and update it&apos;s value after the custom claim has been added. Because <code>react-redux-firebase</code> watches for profile changes, the custom claim will be fetched along with the <code>refreshToken</code> update.</p>
+<p>For examples of how to use this API, checkout the <a href="recipes/auth.html">auth recipes section</a>.</p>
+<h2 id="logincredentials-and-reauthenticatecredentials">login(credentials) and reauthenticate(credentials)</h2>
+<h5 id="parameters-for-login">Parameters for login</h5>
+<ul>
+<li><code>credentials</code> (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank"><strong>Object</strong></a>)<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank"><strong>Object</strong></a> - cases:<ul>
+<li><ul>
+<li>email and password (runs <code>ref.authWithPassword(credentials)</code>) :<pre class="language-"><code class="lang-js"><span class="token punctuation">{</span>
+email<span class="token operator">:</span> String<span class="token punctuation">,</span>
+password<span class="token operator">:</span> String
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
+</ul>
+</li>
+<li>provider (runs <code>ref.authWithOAuthPopup(provider)</code> or <code>ref.authWithOAuthRedirect(provider)</code>) :<pre class="language-"><code class="lang-js"><span class="token punctuation">{</span>
+  provider<span class="token operator">:</span> <span class="token string">&quot;facebook | google | twitter | microsoft.com&quot;</span><span class="token punctuation">,</span>
+  type<span class="token operator">:</span> <span class="token string">&quot;popup | redirect&quot;</span><span class="token punctuation">,</span> <span class="token comment">// popup is default</span>
+  scopes<span class="token operator">:</span> Array <span class="token comment">// email is default</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
+<li>credential (runs <code>ref.signInWithCredential(credential)</code>) :<pre class="language-"><code class="lang-js"><span class="token punctuation">{</span>
+  credential<span class="token operator">:</span> firebase<span class="token punctuation">.</span>auth<span class="token punctuation">.</span>AuthCredential <span class="token comment">// created using specific provider</span>
+<span class="token punctuation">}</span>
+</code></pre>
+The credential parameter is a firebase.auth.AuthCredential specific to the provider (i.e. <code>firebase.auth.GoogleAuthProvider.credential(null, &apos;some accessToken&apos;)</code>). For more details <a href="https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider#methods" target="_blank">please view the Firebase API reference</a></li>
+<li>provider and token (runs <code>ref.authWithOAuthToken(provider, token)</code>) <strong>NOTE</strong>: <em>Deprecated as of v1.5.0</em> :<pre class="language-"><code class="lang-js"><span class="token punctuation">{</span>
+  provider<span class="token operator">:</span> <span class="token string">&quot;facebook | google | twitter | microsoft.com&quot;</span><span class="token punctuation">,</span>
+  token <span class="token operator">:</span> String
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
+<li>custom token (runs <code>ref.authWithCustomToken(credentials)</code>). <code>profile</code> is required if automatic profile creation is enabled (which it is by default if you are using <code>userProfile</code>). <code>config.updateProfileOnLogin</code> config option can be set to <code>false</code> in order to prevent this behavior.<pre class="language-"><code class="lang-js"><span class="token punctuation">{</span>
+  token <span class="token operator">:</span> String<span class="token punctuation">,</span>
+  profile<span class="token operator">:</span> Object <span class="token comment">// required (optional if updateProfileOnLogin: false config set)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
+<li>phone number (runs <code>ref.signInWithPhoneNumber(phoneNumber, applicationVerifier)</code>). Automatic profile creation is enabled by default if you are using the <code>userProfile</code> config option. <code>updateProfileOnLogin</code> config option can be set to <code>false</code> in order to prevent this behavior.<pre class="language-"><code class="lang-js"><span class="token punctuation">{</span>
+  phoneNumber<span class="token operator">:</span> String<span class="token punctuation">,</span>
+  applicationVerifier<span class="token operator">:</span> firebase<span class="token punctuation">.</span>auth<span class="token punctuation">.</span>ApplicationVerifier
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="parameters-for-reauthenticate">Parameters for reauthenticate</h5>
+<ul>
+<li><code>credentials</code> (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank"><strong>Object</strong></a>)<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank"><strong>Object</strong></a> - cases:<ul>
+<li>provider (runs <code>ref.reauthenticateWithPopup(provider)</code> or <code>ref.reauthenticateWithRedirect(provider)</code>) :<pre class="language-"><code class="lang-js"><span class="token punctuation">{</span>
+  provider<span class="token operator">:</span> <span class="token string">&quot;facebook | google | twitter | microsoft.com&quot;</span><span class="token punctuation">,</span>
+  type<span class="token operator">:</span> <span class="token string">&quot;popup | redirect&quot;</span><span class="token punctuation">,</span> <span class="token comment">// popup is default</span>
+  scopes<span class="token operator">:</span> Array <span class="token comment">// email is default</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
+<li>credential (runs <code>ref.reauthenticateWithCredential(credential)</code>) :<pre class="language-"><code class="lang-js"><span class="token punctuation">{</span>
+  credential<span class="token operator">:</span> firebase<span class="token punctuation">.</span>auth<span class="token punctuation">.</span>AuthCredential <span class="token comment">// created using specific provider</span>
+<span class="token punctuation">}</span>
+</code></pre>
+The credential parameter is a firebase.auth.AuthCredential specific to the provider (i.e. <code>firebase.auth.GoogleAuthProvider.credential(null)</code>). For more details <a href="https://firebase.google.com/docs/reference/js/firebase.auth.GoogleAuthProvider#methods" target="_blank">please view the Firebase API reference</a></li>
+<li>phone number (runs <code>ref.reauthenticateWithPhoneNumber(phoneNumber, applicationVerifier)</code>). Automatic profile creation is enabled by default if you are using the <code>userProfile</code> config option. <code>updateProfileOnLogin</code> config option can be set to <code>false</code> in order to prevent this behavior.<pre class="language-"><code class="lang-js"><span class="token punctuation">{</span>
+  phoneNumber<span class="token operator">:</span> String<span class="token punctuation">,</span>
+  applicationVerifier<span class="token operator">:</span> firebase<span class="token punctuation">.</span>auth<span class="token punctuation">.</span>ApplicationVerifier
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="returns">Returns</h5>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank"><strong>Promise</strong></a> that resolves with the response from firebase&apos;s login method (an <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank"><strong>Object</strong></a>). <code>credential</code> property is also included if using oAuth provider.</p>
+<p><strong>NOTE</strong>: For email authentication in <code>v1.4.*</code> and earlier - The user&apos;s UID (a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a>) is returned instead of an object. This has been changed in <code>v1.5.0</code> for consistency across all auth types.</p>
+<h5 id="examples">Examples</h5>
+<p>  <em>Email</em></p>
+<pre class="language-"><code class="lang-js">firebase<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  email<span class="token operator">:</span> <span class="token string">&apos;test@test.com&apos;</span><span class="token punctuation">,</span>
+  password<span class="token operator">:</span> <span class="token string">&apos;testest1&apos;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>  <em>OAuth Provider Redirect</em></p>
+<pre class="language-"><code class="lang-js">firebase<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  provider<span class="token operator">:</span> <span class="token string">&apos;google&apos;</span><span class="token punctuation">,</span>
+  type<span class="token operator">:</span> <span class="token string">&apos;redirect&apos;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>  <em>OAuth Provider Popup</em></p>
+<pre class="language-"><code class="lang-js">firebase<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  provider<span class="token operator">:</span> <span class="token string">&apos;google&apos;</span><span class="token punctuation">,</span>
+  type<span class="token operator">:</span> <span class="token string">&apos;popup&apos;</span><span class="token punctuation">,</span>
+  <span class="token comment">// scopes: [&apos;email&apos;] // not required</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>  <em>Credential</em></p>
+<pre class="language-"><code class="lang-js"><span class="token comment">// `googleUser` from the onsuccess Google Sign In callback</span>
+firebase<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  credential<span class="token operator">:</span> firebase<span class="token punctuation">.</span>auth<span class="token punctuation">.</span>GoogleAuthProvider<span class="token punctuation">.</span><span class="token function">credential</span><span class="token punctuation">(</span>googleUser<span class="token punctuation">.</span><span class="token function">getAuthResponse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>id_token<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token comment">// or using an accessToken</span>
+firebase<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  credential<span class="token operator">:</span> firebase<span class="token punctuation">.</span>auth<span class="token punctuation">.</span>GoogleAuthProvider<span class="token punctuation">.</span><span class="token function">credential</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token string">&apos;some access token&apos;</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token comment">// or using reauthenticate</span>
+firebase<span class="token punctuation">.</span><span class="token function">reauthenticate</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  credential<span class="token operator">:</span> firebase<span class="token punctuation">.</span>auth<span class="token punctuation">.</span>GoogleAuthProvider<span class="token punctuation">.</span><span class="token function">credential</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token string">&apos;some access token&apos;</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>  <em>Token</em></p>
+<pre class="language-"><code class="lang-js">firebase<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  token<span class="token operator">:</span> <span class="token string">&apos;someJWTAuthToken&apos;</span><span class="token punctuation">,</span>
+  profile<span class="token operator">:</span> <span class="token punctuation">{</span> email<span class="token operator">:</span> <span class="token string">&apos;rick@sanchez.com&apos;</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>  <em>Expo/react-native Facebook Login</em></p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">loginWithFacebook</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> data <span class="token operator">=</span> <span class="token keyword">await</span> Expo<span class="token punctuation">.</span>Facebook<span class="token punctuation">.</span><span class="token function">logInWithReadPermissionsAsync</span><span class="token punctuation">(</span><span class="token string">&apos;FB_ID&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> permissions<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">&apos;public_profile&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;email&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>data<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">&apos;success&apos;</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> credential <span class="token operator">=</span> firebase<span class="token punctuation">.</span>auth<span class="token punctuation">.</span>FacebookAuthProvider<span class="token punctuation">.</span><span class="token function">credential</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span>token<span class="token punctuation">)</span>
+    <span class="token keyword">await</span> firebase<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span><span class="token punctuation">{</span> credential <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>After logging in, profile and auth are available in redux state:</p>
+<pre class="language-"><code class="lang-js"><span class="token keyword">import</span> <span class="token punctuation">{</span> connect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux&apos;</span>
+
+<span class="token function">connect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">state</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+  auth<span class="token operator">:</span> state<span class="token punctuation">.</span>firebase<span class="token punctuation">.</span>auth<span class="token punctuation">,</span>
+  profile<span class="token operator">:</span> state<span class="token punctuation">.</span>firebase<span class="token punctuation">.</span>profile
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">(</span>SomeComponent<span class="token punctuation">)</span>
+</code></pre>
+<p>For more information on how best to use these methods, visit the <a href="recipes/auth.html">auth recipes</a></p>
+<h2 id="createusercredentials-profile">createUser(credentials, profile)</h2>
+<p>Similar to Firebase&apos;s <code>ref.createUser(credentials)</code> but with support for automatic profile setup (based on your userProfile config).</p>
+<p><strong>NOTE</strong> This does not need to be used when using external authentication providers (Firebase creates the user automatically), and is meant to be used with email authentication only.</p>
+<h5 id="parameters">Parameters</h5>
+<ul>
+<li><p><code>credentials</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank"><strong>Object</strong></a></p>
+<ul>
+<li><code>credentials.email</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - User&apos;s email</li>
+<li><code>credentials.password</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - User&apos;s password</li>
+</ul>
+</li>
+<li><p><code>profile</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank"><strong>Object</strong></a></p>
+<ul>
+<li><code>profile.username</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a></li>
+</ul>
+</li>
+</ul>
+<h5 id="examples">Examples</h5>
+<pre class="language-"><code class="lang-js"><span class="token keyword">const</span> <span class="token function-variable function">createNewUser</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> email<span class="token punctuation">,</span> password<span class="token punctuation">,</span> username <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  firebase<span class="token punctuation">.</span><span class="token function">createUser</span><span class="token punctuation">(</span>
+    <span class="token punctuation">{</span> email<span class="token punctuation">,</span> password <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> username<span class="token punctuation">,</span> email <span class="token punctuation">}</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Call with info</span>
+<span class="token function">createNewUser</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  email<span class="token operator">:</span> <span class="token string">&apos;test@test.com&apos;</span><span class="token punctuation">,</span>
+  password<span class="token operator">:</span> <span class="token string">&apos;testest1&apos;</span><span class="token punctuation">,</span>
+  username<span class="token operator">:</span> <span class="token string">&apos;tester&apos;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h5 id="returns">Returns</h5>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank"><strong>Promise</strong></a> with <code>userData</code></p>
+<h2 id="logout">logout()</h2>
+<p>Logout from Firebase and delete all data from the store (<code>state.firebase.data</code> and <code>state.firebase.auth</code> are set to <code>null</code>).</p>
+<p>Looking to preserve data on logout? <a href="api/contants">checkout the <code>preserve</code> config option</a>, which preserves data under the specified keys in state on logout.</p>
+<h5 id="examples">Examples</h5>
+<pre class="language-"><code class="lang-js"><span class="token comment">// logout and remove profile and auth from state</span>
+props<span class="token punctuation">.</span>firebase<span class="token punctuation">.</span><span class="token function">logout</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="resetpasswordemail">resetPassword(email)</h2>
+<p>Calls Firebase&apos;s <code>firebase.auth().resetPassword()</code>. If there is an error, it is added into redux state under <code>state.firebase.authError</code>.</p>
+<h5 id="examples">Examples</h5>
+<pre class="language-"><code class="lang-js">props<span class="token punctuation">.</span>firebase<span class="token punctuation">.</span><span class="token function">resetPassword</span><span class="token punctuation">(</span><span class="token string">&apos;test@test.com&apos;</span><span class="token punctuation">)</span>
+</code></pre>
+<h5 id="parameters">Parameters</h5>
+<ul>
+<li><code>email</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - Email to send recovery email to</li>
+</ul>
+<h5 id="returns">Returns</h5>
+<p>  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank"><strong>Promise</strong></a> with user&apos;s UID in case of success or the error otherwise.
+  Always authenticate the new user in case of success</p>
+<h2 id="confirmpasswordresetcode-newpassword">confirmPasswordReset(code, newPassword)</h2>
+<p>Calls Firebase&apos;s <code>firebase.auth().confirmPasswordReset()</code>. If there is an error, it is added into redux state under <code>state.firebase.authError</code>.</p>
+<h5 id="examples">Examples</h5>
+<pre class="language-"><code class="lang-js">props<span class="token punctuation">.</span>firebase<span class="token punctuation">.</span><span class="token function">confirmPasswordReset</span><span class="token punctuation">(</span><span class="token string">&apos;some reset code&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;myNewPassword&apos;</span><span class="token punctuation">)</span>
+</code></pre>
+<h5 id="parameters">Parameters</h5>
+<ul>
+<li><code>code</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - Password reset code</li>
+<li><code>newPassword</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - New password to set for user</li>
+</ul>
+<h5 id="returns">Returns</h5>
+<p>  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank"><strong>Promise</strong></a></p>
+<h2 id="verifypasswordresetcodecode">verifyPasswordResetCode(code)</h2>
+<p>Verify a password reset code from password reset email.</p>
+<p>Calls Firebase&apos;s <code>firebase.auth().verifyPasswordResetCode()</code>. If there is an error, it is added into redux state under <code>state.firebase.authError</code>.</p>
+<h5 id="examples">Examples</h5>
+<pre class="language-"><code class="lang-js">props<span class="token punctuation">.</span>firebase<span class="token punctuation">.</span><span class="token function">verifyPasswordResetCode</span><span class="token punctuation">(</span><span class="token string">&apos;some reset code&apos;</span><span class="token punctuation">)</span>
+</code></pre>
+<h5 id="parameters">Parameters</h5>
+<ul>
+<li><code>code</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - Password reset code</li>
+</ul>
+<h5 id="returns">Returns</h5>
+<p>  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank"><strong>Promise</strong></a> - Email associated with reset code</p>
+<h2 id="signinwithphonenumbercode">signInWithPhoneNumber(code)</h2>
+<p>Signs in using a phone number in an async pattern (i.e. requires calling a second method). Calls Firebase&apos;s <a href="https://firebase.google.com/docs/reference/js/firebase.auth.Auth#signInWithPhoneNumber" target="_blank"><code>firebase.auth().signInWithPhoneNumber()</code></a>. If there is an error, it is added into redux state under <code>state.firebase.authError</code>.</p>
+<p>From Firebase&apos;s docs:</p>
+<blockquote>
+<p>Asynchronously signs in using a phone number. This method sends a code via SMS to the given phone number, and returns a <a href="https://firebase.google.com/docs/reference/js/firebase.auth.ConfirmationResult.html" target="_blank">firebase.auth.ConfirmationResult</a>. After the user provides the code sent to their phone, call <a href="https://firebase.google.com/docs/reference/js/firebase.auth.ConfirmationResult.html#confirm" target="_blank">firebase.auth.ConfirmationResult#confirm</a> with the code to sign the user in.</p>
+</blockquote>
+<p>For more info, check out the following:</p>
+<ul>
+<li><a href="https://firebase.google.com/docs/auth/web/phone-auth" target="_blank">Firebase&apos;s phone-auth guide</a></li>
+<li><a href="https://firebase.google.com/docs/reference/js/firebase.auth.Auth#signInWithPhoneNumber" target="_blank">Firebase&apos;s auth docs reference for signInWithPhoneNumber</a></li>
+</ul>
+<h5 id="examples">Examples</h5>
+<pre class="language-"><code class="lang-js"><span class="token keyword">const</span> phoneNumber <span class="token operator">=</span> <span class="token string">&quot;+11234567899&quot;</span> <span class="token comment">// for US number (123) 456-7899</span>
+<span class="token keyword">const</span> recaptchaVerifier <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">firebase<span class="token punctuation">.</span>auth<span class="token punctuation">.</span>RecaptchaVerifier</span><span class="token punctuation">(</span><span class="token string">&apos;sign-in-button&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">&apos;size&apos;</span><span class="token operator">:</span> <span class="token string">&apos;invisible&apos;</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+firebase<span class="token punctuation">.</span><span class="token function">signInWithPhoneNumber</span><span class="token punctuation">(</span>phoneNumber<span class="token punctuation">,</span> appVerifier<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">confirmationResult</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token comment">// SMS sent. Prompt user to type the code from the message, then sign the</span>
+    <span class="token comment">// user in with confirmationResult.confirm(code).</span>
+    <span class="token keyword">const</span> verificationCode <span class="token operator">=</span> window<span class="token punctuation">.</span><span class="token function">prompt</span><span class="token punctuation">(</span><span class="token string">&apos;Please enter the verification &apos;</span> <span class="token operator">+</span>
+        <span class="token string">&apos;code that was sent to your mobile device.&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> confirmationResult<span class="token punctuation">.</span><span class="token function">confirm</span><span class="token punctuation">(</span>verificationCode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">error</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Error; SMS not sent</span>
+    <span class="token comment">// Handle Errors Here</span>
+    <span class="token keyword">return</span> Promise<span class="token punctuation">.</span><span class="token function">reject</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h5 id="parameters">Parameters</h5>
+<ul>
+<li><code>phoneNumber</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - The user&apos;s phone number in E.164 format (e.g. <code>+16505550101</code>).</li>
+<li><code>applicationVerifier</code> <a href="https://firebase.google.com/docs/reference/js/firebase.auth.ApplicationVerifier.html" target="_blank"><strong>firebase.auth.ApplicationVerifier</strong></a> <code>required</code> - App verifier made with Firebase&apos;s <code>RecaptchaVerifier</code></li>
+</ul>
+<h5 id="returns">Returns</h5>
+<p>  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank"><strong>Promise</strong></a> - Resolves with <a href="https://firebase.google.com/docs/reference/js/firebase.auth.ConfirmationResult.html" target="_blank">firebase.auth.ConfirmationResult</a></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="getting_started.html" class="navigation navigation-prev " aria-label="Previous page: Getting Started">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="queries.html" class="navigation navigation-next " aria-label="Next page: Queries">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Auth","level":"1.3","depth":1,"next":{"title":"Queries","level":"1.4","depth":1,"path":"docs/queries.md","ref":"docs/queries.md","articles":[]},"previous":{"title":"Getting Started","level":"1.2","depth":1,"path":"docs/getting_started.md","ref":"docs/getting_started.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","prism","-highlight","github","anchorjs","versions-select","ga"],"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/prescottprue/react-redux-firebase/"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"versions-select":{"type":"branches"},"fontsettings":{"theme":"white","family":"sans","size":2},"ga":{"configuration":"auto","token":"UA-102355407-1"},"versions":{"gitbookConfigURL":"https://storage.googleapis.com/docs.react-redux-firebase.com/book.json","options":[{"value":"http://react-redux-firebase.com/","text":"Version 3.0.0","selected":true},{"value":"http://docs.react-redux-firebase.com/history/v2.0.0/","text":"Version 2.0.0"},{"value":"http://docs.react-redux-firebase.com/history/v1.5.0/","text":"Version 1.5.0"},{"value":"http://docs.react-redux-firebase.com/history/v1.4.0/","text":"Version 1.4.0"}]},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/prescottprue/react-redux-firebase/tree/master"},"theme-default":{"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchorjs":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"React Redux Firebase","gitbook":">=3.2.1"},"file":{"path":"docs/auth.md","mtime":"2020-04-29T23:33:31.577Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-05-31T21:21:19.554Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-anchorjs/anchor.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-anchorjs/anchor-style.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-versions-select/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

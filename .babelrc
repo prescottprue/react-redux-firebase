@@ -1,0 +1,36 @@
+{
+  "presets": [
+    ["minify", {
+      "mangle": false
+    }],
+    "@babel/preset-react",
+    ["@babel/env", {
+      "targets": {
+        "chrome": 52,
+        "browsers": ["last 2 versions", "safari >= 7"]
+      }
+    }]
+  ],
+  "plugins": [
+    "lodash",
+    "add-module-exports",
+    "@babel/plugin-proposal-class-properties"
+  ],
+  "env": {
+    "es": {
+      "comments": false
+    },
+    "commonjs": {
+      "comments": false
+    },
+    "test": {
+      "plugins": [
+        "@babel/plugin-transform-runtime",
+        "@babel/transform-async-to-generator",
+        ["module-resolver", {
+         "root": ["./src"]
+       }]
+      ]
+    }
+  }
+}

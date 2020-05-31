@@ -1,0 +1,1193 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Storage · React Redux Firebase</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-versions-select/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="recipes/" />
+    
+    
+    <link rel="prev" href="populate.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Read Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="getting_started.html">
+            
+                <a href="getting_started.html">
+            
+                    
+                    Getting Started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="auth.html">
+            
+                <a href="auth.html">
+            
+                    
+                    Auth
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="queries.html">
+            
+                <a href="queries.html">
+            
+                    
+                    Queries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="firestore.html">
+            
+                <a href="firestore.html">
+            
+                    
+                    Firestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="populate.html">
+            
+                <a href="populate.html">
+            
+                    
+                    Populate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.7" data-path="storage.html">
+            
+                <a href="storage.html">
+            
+                    
+                    Storage
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="recipes/">
+            
+                <a href="recipes/">
+            
+                    
+                    Recipes
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="recipes/profile.html">
+            
+                <a href="recipes/profile.html">
+            
+                    
+                    Profile
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="recipes/auth.html">
+            
+                <a href="recipes/auth.html">
+            
+                    
+                    Auth
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="recipes/actions.html">
+            
+                <a href="recipes/actions.html">
+            
+                    
+                    Actions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.4" data-path="recipes/routing.html">
+            
+                <a href="recipes/routing.html">
+            
+                    
+                    Routing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5" data-path="recipes/roles.html">
+            
+                <a href="recipes/roles.html">
+            
+                    
+                    Roles
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.6" data-path="recipes/populate.html">
+            
+                <a href="recipes/populate.html">
+            
+                    
+                    Populate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.7" data-path="recipes/upload.html">
+            
+                <a href="recipes/upload.html">
+            
+                    
+                    Upload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.8" data-path="recipes/ssr.html">
+            
+                <a href="recipes/ssr.html">
+            
+                    
+                    Server Side Rendering
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="integrations/">
+            
+                <a href="integrations/">
+            
+                    
+                    Integrations
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="integrations/thunks.html">
+            
+                <a href="integrations/thunks.html">
+            
+                    
+                    Redux Thunk
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="integrations/redux-form.html">
+            
+                <a href="integrations/redux-form.html">
+            
+                    
+                    Redux Form
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.3" data-path="integrations/reselect.html">
+            
+                <a href="integrations/reselect.html">
+            
+                    
+                    Reselect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4" data-path="integrations/redux-persist.html">
+            
+                <a href="integrations/redux-persist.html">
+            
+                    
+                    Redux Persist
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.5" data-path="integrations/redux-saga.html">
+            
+                <a href="integrations/redux-saga.html">
+            
+                    
+                    Redux Saga
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.6" data-path="integrations/redux-observable.html">
+            
+                <a href="integrations/redux-observable.html">
+            
+                    
+                    Redux Observable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.7" data-path="integrations/react-native.html">
+            
+                <a href="integrations/react-native.html">
+            
+                    
+                    React Native
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.8" data-path="integrations/react-chrome-redux.html">
+            
+                <a href="integrations/react-chrome-redux.html">
+            
+                    
+                    React Chrome Redux
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="api/">
+            
+                <a href="api/">
+            
+                    
+                    API Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="api/constants.html">
+            
+                <a href="api/constants.html">
+            
+                    
+                    constants
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" >
+            
+                <span>
+            
+                    
+                    Hooks
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.2.1" data-path="api/useFirebase.html">
+            
+                <a href="api/useFirebase.html">
+            
+                    
+                    useFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.2" data-path="api/useFirebaseConnect.html">
+            
+                <a href="api/useFirebaseConnect.html">
+            
+                    
+                    useFirebaseConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.3" data-path="api/useFirestore.html">
+            
+                <a href="api/useFirestore.html">
+            
+                    
+                    useFirestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.4" data-path="api/useFirestoreConnect.html">
+            
+                <a href="api/useFirestoreConnect.html">
+            
+                    
+                    useFirestoreConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" >
+            
+                <span>
+            
+                    
+                    HOCs
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.3.1" data-path="api/firebaseConnect.html">
+            
+                <a href="api/firebaseConnect.html">
+            
+                    
+                    firebaseConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.2" data-path="api/withFirebase.html">
+            
+                <a href="api/withFirebase.html">
+            
+                    
+                    withFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.3" data-path="api/firestoreConnect.html">
+            
+                <a href="api/firestoreConnect.html">
+            
+                    
+                    firestoreConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.4" data-path="api/withFirestore.html">
+            
+                <a href="api/withFirestore.html">
+            
+                    
+                    withFirestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="api/reducer.html">
+            
+                <a href="api/reducer.html">
+            
+                    
+                    reducer
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.4.1" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#isinitializingreducer">
+            
+                    
+                    isInitializingReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.2" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#requestingreducer">
+            
+                    
+                    requestingReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.3" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#requestedreducer">
+            
+                    
+                    requestedReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.4" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#timestampsreducer">
+            
+                    
+                    timestampsReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.5" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#authreducer">
+            
+                    
+                    authReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.6" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#autherrorreducer">
+            
+                    
+                    authErrorReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.7" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#profilereducer">
+            
+                    
+                    profileReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.8" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#errorsreducer">
+            
+                    
+                    errorsReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.9" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#listenersreducer">
+            
+                    
+                    listenersReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.10" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#datareducer">
+            
+                    
+                    dataReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.11" data-path="api/reducers.html">
+            
+                <a href="api/reducers.html#orderedreducer">
+            
+                    
+                    orderedReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="api/firebaseInstance.html">
+            
+                <a href="api/firebaseInstance.html">
+            
+                    
+                    firebaseInstance
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" data-path="api/getFirebase.html">
+            
+                <a href="api/getFirebase.html">
+            
+                    
+                    getFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.7" data-path="api/ReactReduxFirebaseContext.html">
+            
+                <a href="api/ReactReduxFirebaseContext.html">
+            
+                    
+                    ReactReduxFirebaseContext
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.8" data-path="api/ReactReduxFirebaseProvider.html">
+            
+                <a href="api/ReactReduxFirebaseProvider.html">
+            
+                    
+                    ReactReduxFirebaseProvider
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.9" data-path="api/ReduxFirestoreContext.html">
+            
+                <a href="api/ReduxFirestoreContext.html">
+            
+                    
+                    ReduxFirestoreContext
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.10" data-path="api/ReduxFirestoreProvider.html">
+            
+                <a href="api/ReduxFirestoreProvider.html">
+            
+                    
+                    ReduxFirestoreProvider
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.11" data-path="api/helpers.html">
+            
+                <a href="api/helpers.html">
+            
+                    
+                    helpers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    Migration Guides
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="v3-migration-guide.html">
+            
+                <a href="v3-migration-guide.html">
+            
+                    
+                    v3 Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.2" data-path="v2-migration-guide.html">
+            
+                <a href="v2-migration-guide.html">
+            
+                    
+                    v2 Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="FAQ.html">
+            
+                <a href="FAQ.html">
+            
+                    
+                    FAQ
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="roadmap.html">
+            
+                <a href="roadmap.html">
+            
+                    
+                    Roadmap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="contributing.html">
+            
+                <a href="contributing.html">
+            
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Storage</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="storage">Storage</h1>
+<p>Firebase Storage is available within components by using <code>this.props.firebase.storage()</code>. This method is equivalent to Firebase&apos;s <code>firebase.storage()</code> method, meaning you can reference the <a href="https://firebase.google.com/docs/storage/web/upload-files" target="_blank">Firebase Storage Docs</a> for the full list of methods and examples.</p>
+<p>For Examples of how to use these methods, please visit the <a href="recipes">recipes section</a>.</p>
+<h3 id="uploadfiles">uploadFiles</h3>
+<p>Upload an array of files to a location on Firebase storage. This includes the option to also write meta data for the object to Firebase database.</p>
+<p>Available on <code>props.firebase</code> if using <code>firebaseConnect</code> HOC.</p>
+<h4 id="parameters">Parameters</h4>
+<ul>
+<li><code>path</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - Path within Firebase Storage at which to upload File.</li>
+<li><code>files</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" target="_blank"><strong>Array</strong></a> - Array of File Blobs to upload to Firebase Storage.</li>
+<li><code>databasePath</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - Path within Firebase Database at which to write files metadata.</li>
+<li><code>options</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank"><strong>Object</strong></a> - Options for upload</li>
+<li><code>options.name</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function" target="_blank"><strong>Function</strong></a> - Name of file or function that returns the name of the file. If a function is passed the argument syntax is <code>(file, internalFirebase, uploadConfig)</code> where <code>file</code> is the file object (<code>file.name</code> is used as default if no name option is passed).</li>
+<li><code>options.metadata</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank"><strong>Object</strong></a> - Sets the metadata associated with a file uploaded to firebase</li>
+<li><code>options.metadataFactory</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function" target="_blank"><strong>Function</strong></a> - A function that returns the object that will get stored in the database after a file is uploaded to storage. The argument syntax is <code>(uploadRes, firebase, metadata, downloadURL)</code> where <code>uploadRes</code> is firebase&apos;s response from the file upload and <code>metadata</code> is the metadata uploaded with the file. If no value is provided the <code>options.metadata</code> object will be used.</li>
+<li><code>options.documentId</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function" target="_blank"><strong>Function</strong></a> - If using firestore for your database you can specify the documentId of a document to update instead of creating a new one. If no document is found with the specified documentId a new document with that Id will be created and populated by the metadata object. You can specify either a string or a function that returns the documentId. If a function is passed the argument syntax is the same as the <code>options.metadataFactory</code> function. The corresponding document will be updated with the key value pairs returned by the metadata factory function. If no value is provided a new document will be created.</li>
+<li><code>options.useSetForMetadata</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank"><strong>Boolean</strong></a> - If using firestore as your database and you are also uploading to a specific document using the <code>documentId</code> property then this allows you to choose between a <code>set with merge</code> or an <code>upload</code> operation. <code>Set with merge</code> is the default and will create a new document if the supplied <code>documentId</code> is not found, <code>upload</code> will fail if the <code>documentId</code> is not found.</li>
+</ul>
+<h5 id="returns">Returns</h5>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank"><strong>Promise</strong></a> Resolves with an array of <a href="#uploadFile"><code>uploadFile</code> promises results (described below)</a>.</p>
+<h3 id="uploadfile">uploadFile</h3>
+<p>Upload a single file to a location.</p>
+<p>Available on <code>props.firebase</code> if using <code>firebaseConnect</code> HOC.</p>
+<h4 id="parameters">Parameters</h4>
+<ul>
+<li><code>path</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - Path within Firebase Storage at which to upload File.</li>
+<li><code>file</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Blob" target="_blank"><strong>Blob</strong></a> - File Blob to upload to Firebase Storage.</li>
+<li><code>databasePath</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - Path within Firebase Database at which to write file metadata.</li>
+<li><code>options</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank"><strong>Object</strong></a> - Options for upload</li>
+<li><code>options.name</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function" target="_blank"><strong>Function</strong></a> - Name of file or function that returns the name of the file. If a function is passed the argument syntax is <code>(file, internalFirebase, uploadConfig)</code> where <code>file</code> is the file object (<code>file.name</code> is used as default if no name option is passed).</li>
+<li><code>options.metadata</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank"><strong>Object</strong></a> - Sets the metadata associated with a file uploaded to firebase</li>
+<li><code>options.metadataFactory</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function" target="_blank"><strong>Function</strong></a> - A function that returns the object that will get stored in the database after a file is uploaded to storage. The argument syntax is <code>(uploadRes, firebase, metadata, downloadURL)</code> where <code>uploadRes</code> is firebase&apos;s response from the file upload and <code>metadata</code> is the metadata uploaded with the file. If no value is provided the <code>options.metadata</code> object will be used.</li>
+<li><code>options.documentId</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function" target="_blank"><strong>Function</strong></a> - If using firestore for your database you can specify the documentId of a document to update instead of creating a new one. If no document is found with the specified documentId a new document with that Id will be created and populated by the metadata object. You can specify either a string or a function that returns the documentId. If a function is passed the argument syntax is the same as the <code>options.metadataFactory</code> function. The corresponding document will be updated with the key value pairs returned by the metadata factory function. If no value is provided a new document will be created.</li>
+<li><code>options.useSetForMetadata</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank"><strong>Boolean</strong></a> - If using firestore as your database and you are also uploading to a specific document using the <code>documentId</code> property then this allows you to choose between a <code>set with merge</code> or an <code>upload</code> operation. <code>Set with merge</code> is the default and will create a new document if the supplied <code>documentId</code> is not found, <code>upload</code> will fail if the <code>documentId</code> is not found.</li>
+</ul>
+<h5 id="returns">Returns</h5>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank"><strong>Promise</strong></a> Resolves with an object containing <code>uploadTaskSnapshot</code> which is the <a href="https://firebase.google.com/docs/reference/js/firebase.storage.UploadTaskSnapshot" target="_blank"><strong>firebase.storage.UploadTaskSnapshot</strong></a> returned from the <code>storageRef.put</code> call which happens internally. If <code>databasePath</code> is provided <code>snapshot</code>, <code>key</code>, <code>File</code>, and <code>metaDataSnapshot</code> parameters are also included.</p>
+<h4 id="examples">Examples</h4>
+<h5 id="dropzone-file-uploaddelete"><a href="recipes/upload.html#file-dragdrop-upload-with-delete">Dropzone File Upload/Delete</a></h5>
+<h3 id="deletefile">deleteFile</h3>
+<p>Delete a file from Firebase storage with the option to remove metadata from real time database.</p>
+<p>Available on <code>props.firebase</code> if using <code>firebaseConnect</code> HOC.</p>
+<h4 id="parameters">Parameters</h4>
+<ul>
+<li><code>path</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - Path within Firebase Storage of File to delete.</li>
+<li><code>databasePath</code> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank"><strong>String</strong></a> - Path within Firebase Database from which to remove File metadata.</li>
+</ul>
+<h5 id="returns">Returns</h5>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank"><strong>Promise</strong></a></p>
+<h4 id="example">Example</h4>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">&apos;react&apos;</span>
+<span class="token keyword">import</span> PropTypes <span class="token keyword">from</span> <span class="token string">&apos;prop-types&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> firebaseConnect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux-firebase&apos;</span>
+<span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">&apos;react&apos;</span>
+<span class="token keyword">import</span> PropTypes <span class="token keyword">from</span> <span class="token string">&apos;prop-types&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> useFirebase <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux-firebase&apos;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">function</span> <span class="token function">Uploader</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> firebase <span class="token operator">=</span> <span class="token function">useFirebase</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">function</span> <span class="token function">deleteTestFile</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> firebase<span class="token punctuation">.</span><span class="token function">deleteFile</span><span class="token punctuation">(</span><span class="token string">&apos;index.txt&apos;</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span>div<span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span>h1<span class="token operator">&gt;</span>Example File Delete<span class="token operator">&lt;</span><span class="token operator">/</span>h1<span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span>span<span class="token operator">&gt;</span>Deletes <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">index.txt</span><span class="token template-punctuation string">`</span></span> <span class="token keyword">from</span> storage<span class="token operator">&lt;</span><span class="token operator">/</span>span<span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span>button onClick<span class="token operator">=</span><span class="token punctuation">{</span>deleteTestFile<span class="token punctuation">}</span><span class="token operator">&gt;</span>Delete<span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="other-storage-methods">Other Storage Methods</h3>
+<p>Access to Firebase&apos;s <code>storage</code> is available. This is useful for calling methods such as <code>putString</code>. Below is an example of Uploading a string as a File to Firebase Storage.</p>
+<h4 id="example">Example</h4>
+<h5 id="file-string-upload">File String Upload</h5>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">&apos;react&apos;</span>
+<span class="token keyword">import</span> PropTypes <span class="token keyword">from</span> <span class="token string">&apos;prop-types&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> useFirebase <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux-firebase&apos;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">function</span> <span class="token function">Uploader</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> firebase <span class="token operator">=</span> <span class="token function">useFirebase</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">function</span> <span class="token function">addTestFile</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> storageRef <span class="token operator">=</span> firebase<span class="token punctuation">.</span><span class="token function">storage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">ref</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">const</span> fileRef <span class="token operator">=</span> storageRef<span class="token punctuation">.</span><span class="token function">child</span><span class="token punctuation">(</span><span class="token string">&apos;test.txt&apos;</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> fileRef
+      <span class="token punctuation">.</span><span class="token function">putString</span><span class="token punctuation">(</span><span class="token string">&apos;Some File Contents&apos;</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">snap</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&apos;upload successful&apos;</span><span class="token punctuation">,</span> snap<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">&apos;error uploading file&apos;</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span>div<span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span>h1<span class="token operator">&gt;</span>Example Upload<span class="token operator">&lt;</span><span class="token operator">/</span>h1<span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span>button onClick<span class="token operator">=</span><span class="token punctuation">{</span>addTestFile<span class="token punctuation">}</span><span class="token operator">&gt;</span>Upload Example File<span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="populate.html" class="navigation navigation-prev " aria-label="Previous page: Populate">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="recipes/" class="navigation navigation-next " aria-label="Next page: Recipes">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Storage","level":"1.7","depth":1,"next":{"title":"Recipes","level":"1.8","depth":1,"path":"docs/recipes/README.md","ref":"docs/recipes/README.md","articles":[{"title":"Profile","level":"1.8.1","depth":2,"path":"docs/recipes/profile.md","ref":"docs/recipes/profile.md","articles":[]},{"title":"Auth","level":"1.8.2","depth":2,"path":"docs/recipes/auth.md","ref":"docs/recipes/auth.md","articles":[]},{"title":"Actions","level":"1.8.3","depth":2,"path":"docs/recipes/actions.md","ref":"docs/recipes/actions.md","articles":[]},{"title":"Routing","level":"1.8.4","depth":2,"path":"docs/recipes/routing.md","ref":"docs/recipes/routing.md","articles":[]},{"title":"Roles","level":"1.8.5","depth":2,"path":"docs/recipes/roles.md","ref":"docs/recipes/roles.md","articles":[]},{"title":"Populate","level":"1.8.6","depth":2,"path":"docs/recipes/populate.md","ref":"docs/recipes/populate.md","articles":[]},{"title":"Upload","level":"1.8.7","depth":2,"path":"docs/recipes/upload.md","ref":"docs/recipes/upload.md","articles":[]},{"title":"Server Side Rendering","level":"1.8.8","depth":2,"path":"docs/recipes/ssr.md","ref":"docs/recipes/ssr.md","articles":[]}]},"previous":{"title":"Populate","level":"1.6","depth":1,"path":"docs/populate.md","ref":"docs/populate.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","prism","-highlight","github","anchorjs","versions-select","ga"],"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/prescottprue/react-redux-firebase/"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"versions-select":{"type":"branches"},"fontsettings":{"theme":"white","family":"sans","size":2},"ga":{"configuration":"auto","token":"UA-102355407-1"},"versions":{"gitbookConfigURL":"https://storage.googleapis.com/docs.react-redux-firebase.com/book.json","options":[{"value":"http://react-redux-firebase.com/","text":"Version 3.0.0","selected":true},{"value":"http://docs.react-redux-firebase.com/history/v2.0.0/","text":"Version 2.0.0"},{"value":"http://docs.react-redux-firebase.com/history/v1.5.0/","text":"Version 1.5.0"},{"value":"http://docs.react-redux-firebase.com/history/v1.4.0/","text":"Version 1.4.0"}]},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/prescottprue/react-redux-firebase/tree/master"},"theme-default":{"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchorjs":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"React Redux Firebase","gitbook":">=3.2.1"},"file":{"path":"docs/storage.md","mtime":"2020-05-30T03:23:00.250Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-05-31T21:21:19.554Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-anchorjs/anchor.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-anchorjs/anchor-style.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-versions-select/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

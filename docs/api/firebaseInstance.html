@@ -1,0 +1,1652 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>firebaseInstance · React Redux Firebase</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-prism/prism.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-versions-select/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="getFirebase.html" />
+    
+    
+    <link rel="prev" href="reducers.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Read Me
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../getting_started.html">
+            
+                <a href="../getting_started.html">
+            
+                    
+                    Getting Started
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../auth.html">
+            
+                <a href="../auth.html">
+            
+                    
+                    Auth
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../queries.html">
+            
+                <a href="../queries.html">
+            
+                    
+                    Queries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../firestore.html">
+            
+                <a href="../firestore.html">
+            
+                    
+                    Firestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../populate.html">
+            
+                <a href="../populate.html">
+            
+                    
+                    Populate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../storage.html">
+            
+                <a href="../storage.html">
+            
+                    
+                    Storage
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../recipes/">
+            
+                <a href="../recipes/">
+            
+                    
+                    Recipes
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../recipes/profile.html">
+            
+                <a href="../recipes/profile.html">
+            
+                    
+                    Profile
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="../recipes/auth.html">
+            
+                <a href="../recipes/auth.html">
+            
+                    
+                    Auth
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="../recipes/actions.html">
+            
+                <a href="../recipes/actions.html">
+            
+                    
+                    Actions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.4" data-path="../recipes/routing.html">
+            
+                <a href="../recipes/routing.html">
+            
+                    
+                    Routing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5" data-path="../recipes/roles.html">
+            
+                <a href="../recipes/roles.html">
+            
+                    
+                    Roles
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.6" data-path="../recipes/populate.html">
+            
+                <a href="../recipes/populate.html">
+            
+                    
+                    Populate
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.7" data-path="../recipes/upload.html">
+            
+                <a href="../recipes/upload.html">
+            
+                    
+                    Upload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.8" data-path="../recipes/ssr.html">
+            
+                <a href="../recipes/ssr.html">
+            
+                    
+                    Server Side Rendering
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../integrations/">
+            
+                <a href="../integrations/">
+            
+                    
+                    Integrations
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="../integrations/thunks.html">
+            
+                <a href="../integrations/thunks.html">
+            
+                    
+                    Redux Thunk
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../integrations/redux-form.html">
+            
+                <a href="../integrations/redux-form.html">
+            
+                    
+                    Redux Form
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.3" data-path="../integrations/reselect.html">
+            
+                <a href="../integrations/reselect.html">
+            
+                    
+                    Reselect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4" data-path="../integrations/redux-persist.html">
+            
+                <a href="../integrations/redux-persist.html">
+            
+                    
+                    Redux Persist
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.5" data-path="../integrations/redux-saga.html">
+            
+                <a href="../integrations/redux-saga.html">
+            
+                    
+                    Redux Saga
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.6" data-path="../integrations/redux-observable.html">
+            
+                <a href="../integrations/redux-observable.html">
+            
+                    
+                    Redux Observable
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.7" data-path="../integrations/react-native.html">
+            
+                <a href="../integrations/react-native.html">
+            
+                    
+                    React Native
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.8" data-path="../integrations/react-chrome-redux.html">
+            
+                <a href="../integrations/react-chrome-redux.html">
+            
+                    
+                    React Chrome Redux
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    API Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="constants.html">
+            
+                <a href="constants.html">
+            
+                    
+                    constants
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" >
+            
+                <span>
+            
+                    
+                    Hooks
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.2.1" data-path="useFirebase.html">
+            
+                <a href="useFirebase.html">
+            
+                    
+                    useFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.2" data-path="useFirebaseConnect.html">
+            
+                <a href="useFirebaseConnect.html">
+            
+                    
+                    useFirebaseConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.3" data-path="useFirestore.html">
+            
+                <a href="useFirestore.html">
+            
+                    
+                    useFirestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2.4" data-path="useFirestoreConnect.html">
+            
+                <a href="useFirestoreConnect.html">
+            
+                    
+                    useFirestoreConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" >
+            
+                <span>
+            
+                    
+                    HOCs
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.3.1" data-path="firebaseConnect.html">
+            
+                <a href="firebaseConnect.html">
+            
+                    
+                    firebaseConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.2" data-path="withFirebase.html">
+            
+                <a href="withFirebase.html">
+            
+                    
+                    withFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.3" data-path="firestoreConnect.html">
+            
+                <a href="firestoreConnect.html">
+            
+                    
+                    firestoreConnect
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3.4" data-path="withFirestore.html">
+            
+                <a href="withFirestore.html">
+            
+                    
+                    withFirestore
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="reducer.html">
+            
+                <a href="reducer.html">
+            
+                    
+                    reducer
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.4.1" data-path="reducers.html">
+            
+                <a href="reducers.html#isinitializingreducer">
+            
+                    
+                    isInitializingReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.2" data-path="reducers.html">
+            
+                <a href="reducers.html#requestingreducer">
+            
+                    
+                    requestingReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.3" data-path="reducers.html">
+            
+                <a href="reducers.html#requestedreducer">
+            
+                    
+                    requestedReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.4" data-path="reducers.html">
+            
+                <a href="reducers.html#timestampsreducer">
+            
+                    
+                    timestampsReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.5" data-path="reducers.html">
+            
+                <a href="reducers.html#authreducer">
+            
+                    
+                    authReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.6" data-path="reducers.html">
+            
+                <a href="reducers.html#autherrorreducer">
+            
+                    
+                    authErrorReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.7" data-path="reducers.html">
+            
+                <a href="reducers.html#profilereducer">
+            
+                    
+                    profileReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.8" data-path="reducers.html">
+            
+                <a href="reducers.html#errorsreducer">
+            
+                    
+                    errorsReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.9" data-path="reducers.html">
+            
+                <a href="reducers.html#listenersreducer">
+            
+                    
+                    listenersReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.10" data-path="reducers.html">
+            
+                <a href="reducers.html#datareducer">
+            
+                    
+                    dataReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4.11" data-path="reducers.html">
+            
+                <a href="reducers.html#orderedreducer">
+            
+                    
+                    orderedReducer
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.10.5" data-path="firebaseInstance.html">
+            
+                <a href="firebaseInstance.html">
+            
+                    
+                    firebaseInstance
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" data-path="getFirebase.html">
+            
+                <a href="getFirebase.html">
+            
+                    
+                    getFirebase
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.7" data-path="ReactReduxFirebaseContext.html">
+            
+                <a href="ReactReduxFirebaseContext.html">
+            
+                    
+                    ReactReduxFirebaseContext
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.8" data-path="ReactReduxFirebaseProvider.html">
+            
+                <a href="ReactReduxFirebaseProvider.html">
+            
+                    
+                    ReactReduxFirebaseProvider
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.9" data-path="ReduxFirestoreContext.html">
+            
+                <a href="ReduxFirestoreContext.html">
+            
+                    
+                    ReduxFirestoreContext
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.10" data-path="ReduxFirestoreProvider.html">
+            
+                <a href="ReduxFirestoreProvider.html">
+            
+                    
+                    ReduxFirestoreProvider
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.11" data-path="helpers.html">
+            
+                <a href="helpers.html">
+            
+                    
+                    helpers
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" >
+            
+                <span>
+            
+                    
+                    Migration Guides
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="../v3-migration-guide.html">
+            
+                <a href="../v3-migration-guide.html">
+            
+                    
+                    v3 Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.2" data-path="../v2-migration-guide.html">
+            
+                <a href="../v2-migration-guide.html">
+            
+                    
+                    v2 Migration Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="../FAQ.html">
+            
+                <a href="../FAQ.html">
+            
+                    
+                    FAQ
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="../roadmap.html">
+            
+                <a href="../roadmap.html">
+            
+                    
+                    Roadmap
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="../contributing.html">
+            
+                <a href="../contributing.html">
+            
+                    
+                    Contributing
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >firebaseInstance</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <!-- Generated by documentation.js. Update this documentation by updating the source code. -->
+<h3 id="table-of-contents">Table of Contents</h3>
+<ul>
+<li><a href="#createfirebaseinstance">createFirebaseInstance</a><ul>
+<li><a href="#parameters">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#set">set</a><ul>
+<li><a href="#parameters-1">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#setwithmeta">setWithMeta</a><ul>
+<li><a href="#parameters-2">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#push">push</a><ul>
+<li><a href="#parameters-3">Parameters</a></li>
+<li><a href="#examples">Examples</a></li>
+</ul>
+</li>
+<li><a href="#pushwithmeta">pushWithMeta</a><ul>
+<li><a href="#parameters-4">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#update">update</a><ul>
+<li><a href="#parameters-5">Parameters</a></li>
+<li><a href="#examples-1">Examples</a></li>
+</ul>
+</li>
+<li><a href="#updatewithmeta">updateWithMeta</a><ul>
+<li><a href="#parameters-6">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#remove">remove</a><ul>
+<li><a href="#parameters-7">Parameters</a></li>
+<li><a href="#examples-2">Examples</a></li>
+</ul>
+</li>
+<li><a href="#uniqueset">uniqueSet</a><ul>
+<li><a href="#parameters-8">Parameters</a></li>
+<li><a href="#examples-3">Examples</a></li>
+</ul>
+</li>
+<li><a href="#uploadfile">uploadFile</a><ul>
+<li><a href="#parameters-9">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#uploadfiles">uploadFiles</a><ul>
+<li><a href="#parameters-10">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#deletefile">deleteFile</a><ul>
+<li><a href="#parameters-11">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#watchevent">watchEvent</a><ul>
+<li><a href="#parameters-12">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#unwatchevent">unWatchEvent</a><ul>
+<li><a href="#parameters-13">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#promiseevents">promiseEvents</a><ul>
+<li><a href="#parameters-14">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#login">login</a><ul>
+<li><a href="#parameters-15">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#reauthenticate">reauthenticate</a><ul>
+<li><a href="#parameters-16">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#handleredirectresult">handleRedirectResult</a><ul>
+<li><a href="#parameters-17">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#logout">logout</a></li>
+<li><a href="#createuser">createUser</a><ul>
+<li><a href="#parameters-18">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#resetpassword">resetPassword</a><ul>
+<li><a href="#parameters-19">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#confirmpasswordreset">confirmPasswordReset</a><ul>
+<li><a href="#parameters-20">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#verifypasswordresetcode">verifyPasswordResetCode</a><ul>
+<li><a href="#parameters-21">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#updateprofile">updateProfile</a><ul>
+<li><a href="#parameters-22">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#updateauth">updateAuth</a><ul>
+<li><a href="#parameters-23">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#updateemail">updateEmail</a><ul>
+<li><a href="#parameters-24">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#reloadauth">reloadAuth</a></li>
+<li><a href="#linkwithcredential">linkWithCredential</a><ul>
+<li><a href="#parameters-25">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#actioncreators">actionCreators</a><ul>
+<li><a href="#parameters-26">Parameters</a></li>
+</ul>
+</li>
+<li><a href="#actioncreators-1">actionCreators</a></li>
+<li><a href="#ref">ref</a></li>
+<li><a href="#database">database</a></li>
+<li><a href="#storage">storage</a></li>
+<li><a href="#auth">auth</a></li>
+<li><a href="#getfirebase">getFirebase</a><ul>
+<li><a href="#examples-4">Examples</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="createfirebaseinstance">createFirebaseInstance</h2>
+<p>Create an extended firebase instance that has methods attached
+which dispatch redux actions.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>firebase</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Firebase instance which to extend</li>
+<li><code>configs</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Configuration object</li>
+<li><code>dispatch</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function" target="_blank">Function</a></strong> Action dispatch function</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Extended Firebase instance</p>
+<h2 id="set">set</h2>
+<pre class="language-"><code>import React, { Component } from &apos;react&apos;
+import PropTypes from &apos;prop-types&apos;
+import { firebaseConnect } from &apos;react-redux-firebase&apos;
+function Example({ firebase: { set } }) {
+  return (
+    <span class="token entity" title="&lt;">&amp;lt;</span>button onClick={() =&gt; set(&apos;some/path&apos;, { here: &apos;is a value&apos; })}&gt;
+    Set To Firebase
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>
+  )
+}
+export default firebaseConnect()(Example)**
+</code></pre><p>Sets data to Firebase.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to set</li>
+<li><code>value</code> <strong>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank">boolean</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number" target="_blank">number</a>)</strong> Value to write to Firebase</li>
+<li><code>onComplete</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function" target="_blank">Function</a></strong> Function to run on complete (<code>not required</code>)</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing reference snapshot</p>
+<h2 id="setwithmeta">setWithMeta</h2>
+<p>Sets data to Firebase along with meta data. Currently,
+this includes createdAt and createdBy. <em>Warning</em> using this function
+may have unintented consequences (setting createdAt even if data already
+exists).</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to set</li>
+<li><code>value</code> <strong>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank">boolean</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number" target="_blank">number</a>)</strong> Value to write to Firebase</li>
+<li><code>onComplete</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function" target="_blank">Function</a></strong> Function to run on complete (<code>not required</code>)</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing reference snapshot</p>
+<h2 id="push">push</h2>
+<p>Pushes data to Firebase.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to push</li>
+<li><code>value</code> <strong>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank">boolean</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number" target="_blank">number</a>)</strong> Value to push to Firebase</li>
+<li><code>onComplete</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function" target="_blank">Function</a></strong> Function to run on complete (<code>not required</code>)</li>
+</ul>
+<h3 id="examples">Examples</h3>
+<p><em>Basic</em></p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">&apos;react&apos;</span>
+<span class="token keyword">import</span> PropTypes <span class="token keyword">from</span> <span class="token string">&apos;prop-types&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> firebaseConnect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux-firebase&apos;</span>
+
+<span class="token keyword">function</span> <span class="token function">Example</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> push <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span>button onClick<span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token function">push</span><span class="token punctuation">(</span><span class="token string">&apos;some/path&apos;</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token operator">&gt;</span>
+      Push To Firebase
+    <span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">firebaseConnect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">(</span>Example<span class="token punctuation">)</span>
+</code></pre>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing reference snapshot</p>
+<h2 id="pushwithmeta">pushWithMeta</h2>
+<p>Pushes data to Firebase along with meta data. Currently,
+this includes createdAt and createdBy.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to set</li>
+<li><code>value</code> <strong>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank">boolean</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number" target="_blank">number</a>)</strong> Value to write to Firebase</li>
+<li><code>onComplete</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function" target="_blank">Function</a></strong> Function to run on complete (<code>not required</code>)</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing reference snapshot</p>
+<h2 id="update">update</h2>
+<p>Updates data on Firebase and sends new data. More info
+available in <a href="https://react-redux-firebase.com/docs/api/firebaseInstance.html#update" target="_blank">the docs</a>.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to update</li>
+<li><code>value</code> <strong>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank">boolean</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number" target="_blank">number</a>)</strong> Value to update to Firebase</li>
+<li><code>onComplete</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function" target="_blank">Function</a></strong> Function to run on complete (<code>not required</code>)</li>
+</ul>
+<h3 id="examples">Examples</h3>
+<p><em>Basic</em></p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">&apos;react&apos;</span>
+<span class="token keyword">import</span> PropTypes <span class="token keyword">from</span> <span class="token string">&apos;prop-types&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> firebaseConnect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux-firebase&apos;</span>
+
+<span class="token keyword">function</span> <span class="token function">Example</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> update <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">function</span> <span class="token function">updateData</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">update</span><span class="token punctuation">(</span><span class="token string">&apos;some/path&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> here<span class="token operator">:</span> <span class="token string">&apos;is a value&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span>button onClick<span class="token operator">=</span><span class="token punctuation">{</span>updateData<span class="token punctuation">}</span><span class="token operator">&gt;</span>
+      Update To Firebase
+    <span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">firebaseConnect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">(</span>Example<span class="token punctuation">)</span>
+</code></pre>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing reference snapshot</p>
+<h2 id="updatewithmeta">updateWithMeta</h2>
+<p>Updates data on Firebase along with meta. <em>Warning</em>
+using this function may have unintented consequences (setting
+createdAt even if data already exists).</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to update</li>
+<li><code>value</code> <strong>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank">boolean</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number" target="_blank">number</a>)</strong> Value to update to Firebase</li>
+<li><code>onComplete</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function" target="_blank">Function</a></strong> Function to run on complete (<code>not required</code>)</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing reference snapshot</p>
+<h2 id="remove">remove</h2>
+<p>Removes data from Firebase at a given path. <strong>NOTE</strong> A
+seperate action is not dispatched unless <code>dispatchRemoveAction: true</code> is
+provided to config on store creation. That means that a listener must
+be attached in order for state to be updated when calling remove.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to remove</li>
+<li><code>onComplete</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function" target="_blank">Function</a></strong> Function to run on complete (<code>not required</code>)</li>
+<li><code>options</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function" target="_blank">Function</a></strong> Options object</li>
+</ul>
+<h3 id="examples">Examples</h3>
+<p><em>Basic</em></p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">&apos;react&apos;</span>
+<span class="token keyword">import</span> PropTypes <span class="token keyword">from</span> <span class="token string">&apos;prop-types&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> firebaseConnect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux-firebase&apos;</span>
+
+<span class="token keyword">function</span> <span class="token function">Example</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> remove <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span>button onClick<span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token function">remove</span><span class="token punctuation">(</span><span class="token string">&apos;some/path&apos;</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token operator">&gt;</span>
+      Remove From Firebase
+    <span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">firebaseConnect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">(</span>Example<span class="token punctuation">)</span>
+</code></pre>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing reference snapshot</p>
+<h2 id="uniqueset">uniqueSet</h2>
+<p>Sets data to Firebase only if the path does not already
+exist, otherwise it rejects. Internally uses a Firebase transaction to
+prevent a race condition between seperate clients calling uniqueSet.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to set</li>
+<li><code>value</code> <strong>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank">boolean</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number" target="_blank">number</a>)</strong> Value to write to Firebase</li>
+<li><code>onComplete</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function" target="_blank">Function</a></strong> Function to run on complete (<code>not required</code>)</li>
+</ul>
+<h3 id="examples">Examples</h3>
+<p><em>Basic</em></p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> React<span class="token punctuation">,</span> <span class="token punctuation">{</span> Component <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react&apos;</span>
+<span class="token keyword">import</span> PropTypes <span class="token keyword">from</span> <span class="token string">&apos;prop-types&apos;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> firebaseConnect <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux-firebase&apos;</span>
+
+<span class="token keyword">function</span> <span class="token function">Example</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> firebase<span class="token operator">:</span> <span class="token punctuation">{</span> uniqueSet <span class="token punctuation">}</span> <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span>button onClick<span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token function">uniqueSet</span><span class="token punctuation">(</span><span class="token string">&apos;some/unique/path&apos;</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token operator">&gt;</span>
+      Unique Set To Firebase
+    <span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">firebaseConnect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">(</span>Example<span class="token punctuation">)</span>
+</code></pre>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing reference snapshot</p>
+<h2 id="uploadfile">uploadFile</h2>
+<p>Upload a file to Firebase Storage with the option to store
+its metadata in Firebase Database. More info available
+in <a href="%3C">the docs</a>.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to set</li>
+<li><code>file</code> <strong>File</strong> File object to upload (usually first element from
+array output of select-file or a drag/drop <code>onDrop</code>)</li>
+<li><code>dbPath</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Database path to place uploaded file metadata</li>
+<li><code>options</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Options<ul>
+<li><code>options.name</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Name of the file</li>
+<li><code>options.metdata</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Metadata for the file (passed as second
+argument to storage.put calls)</li>
+</ul>
+</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing the File object</p>
+<h2 id="uploadfiles">uploadFiles</h2>
+<p>Upload multiple files to Firebase Storage with the option
+to store their metadata in Firebase Database.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to set</li>
+<li><code>files</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array" target="_blank">Array</a></strong> Array of File objects to upload (usually from
+a select-file or a drag/drop <code>onDrop</code>)</li>
+<li><code>dbPath</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Database path to place uploaded files metadata.</li>
+<li><code>options</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Options<ul>
+<li><code>options.name</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Name of the file</li>
+</ul>
+</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing an array of File objects</p>
+<h2 id="deletefile">deleteFile</h2>
+<p>Delete a file from Firebase Storage with the option to
+remove its metadata in Firebase Database.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to set</li>
+<li><code>dbPath</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Database path to place uploaded file metadata</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing the File object</p>
+<h2 id="watchevent">watchEvent</h2>
+<p>Watch event. <strong>Note:</strong> this method is used internally
+so examples have not yet been created, and it may not work as expected.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>type</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Type of watch event</li>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to set listener</li>
+<li><code>storeAs</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Name of listener results within redux store</li>
+<li><code>options</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Event options object (optional, default <code>{}</code>)<ul>
+<li><code>options.queryParams</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array" target="_blank">Array</a></strong> List of parameters for the query</li>
+<li><code>options.queryId</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> id of the query</li>
+</ul>
+</li>
+</ul>
+<p>Returns <strong>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a> | void)</strong> Results of calling watch event</p>
+<h2 id="unwatchevent">unWatchEvent</h2>
+<p>Unset a listener watch event. <strong>Note:</strong> this method is used
+internally so examples have not yet been created, and it may not work
+as expected.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>type</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Type of watch event</li>
+<li><code>path</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Path to location on Firebase which to unset listener</li>
+<li><code>queryId</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Id of the listener</li>
+<li><code>options</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Event options object (optional, default <code>{}</code>)</li>
+</ul>
+<p>Returns <strong>void</strong> </p>
+<h2 id="promiseevents">promiseEvents</h2>
+<p>Similar to the firebaseConnect Higher Order Component but
+presented as a function (not a React Component). Useful for populating
+your redux state without React, e.g., for server side rendering. Only
+<code>once</code> type should be used as other query types such as <code>value</code> do not
+return a Promise.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>watchArray</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array" target="_blank">Array</a></strong> Array of objects or strings for paths to sync
+from Firebase. Can also be a function that returns the array. The function
+is passed the props object specified as the next parameter.</li>
+<li><code>options</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> The options object that you would like to pass to
+your watchArray generating function.</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Resolves with an array of watchEvent results</p>
+<h2 id="login">login</h2>
+<p>Logs user into Firebase. For examples, visit the
+<a href="https://react-redux-firebase.com/docs/auth.html" target="_blank">auth section of the docs</a> or the
+<a href="https://react-redux-firebase.com/docs/recipes/auth.html" target="_blank">auth recipes section</a>.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>credentials</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Credentials for authenticating<ul>
+<li><code>credentials.provider</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> External provider (google |
+facebook | twitter)</li>
+<li><code>credentials.type</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Type of external authentication
+(popup | redirect) (only used with provider)</li>
+<li><code>credentials.email</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Credentials for authenticating</li>
+<li><code>credentials.password</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Credentials for authenticating (only used with email)</li>
+</ul>
+</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing user&apos;s auth data</p>
+<h2 id="reauthenticate">reauthenticate</h2>
+<p>Reauthenticate user into Firebase. For examples, visit the
+<a href="https://react-redux-firebase.com/docs/auth.html" target="_blank">auth section of the docs</a> or the
+<a href="https://react-redux-firebase.com/docs/recipes/auth.html" target="_blank">auth recipes section</a>.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>credentials</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Credentials for authenticating<ul>
+<li><code>credentials.provider</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> External provider (google |
+facebook | twitter)</li>
+<li><code>credentials.type</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Type of external authentication
+(popup | redirect) (only used with provider)</li>
+</ul>
+</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing user&apos;s auth data</p>
+<h2 id="handleredirectresult">handleRedirectResult</h2>
+<p>Logs user into Firebase using external. For examples, visit the
+<a href="../recipes/auth.html">auth section</a></p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>authData</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Auth data from Firebase&apos;s getRedirectResult</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing user&apos;s profile</p>
+<h2 id="logout">logout</h2>
+<p>Logs user out of Firebase and empties firebase state from
+redux store</p>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Resolves after logout is complete</p>
+<h2 id="createuser">createUser</h2>
+<p>Creates a new user in Firebase authentication. If
+<code>userProfile</code> config option is set, user profiles will be set to this
+location.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>credentials</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Credentials for authenticating<ul>
+<li><code>credentials.email</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Credentials for authenticating</li>
+<li><code>credentials.password</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Credentials for authenticating (only used with email)</li>
+</ul>
+</li>
+<li><code>profile</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Data to include within new user profile</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing user&apos;s auth data</p>
+<h2 id="resetpassword">resetPassword</h2>
+<p>Sends password reset email</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>email</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Email to send recovery email to</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Resolves after password reset email is sent</p>
+<h2 id="confirmpasswordreset">confirmPasswordReset</h2>
+<p>Confirm that a user&apos;s password has been reset</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>code</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Password reset code to verify</li>
+<li><code>password</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> New Password to confirm reset to</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Resolves after password reset is confirmed</p>
+<h2 id="verifypasswordresetcode">verifyPasswordResetCode</h2>
+<p>Verify that a password reset code from a password reset
+email is valid</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>code</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Password reset code to verify</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Containing user auth info</p>
+<h2 id="updateprofile">updateProfile</h2>
+<p>Update user profile on Firebase Real Time Database or
+Firestore (if <code>useFirestoreForProfile: true</code> config included).
+Real Time Database update uses <code>update</code> method internally while
+updating profile on Firestore uses <code>set</code>.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>profileUpdate</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Profile data to place in new profile</li>
+<li><code>options</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Options object (used to change how profile
+update occurs)<ul>
+<li><code>options.useSet</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank">boolean</a></strong> Use set with merge instead of
+update. Setting to <code>false</code> uses update (can cause issue of profile document
+does not exist). Note: Only used when updating profile on Firestore (optional, default <code>true</code>)</li>
+<li><code>options.merge</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank">boolean</a></strong> Whether or not to use merge when
+setting profile. Note: Only used when updating profile on Firestore (optional, default <code>true</code>)</li>
+</ul>
+</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Returns after updating profile within database</p>
+<h2 id="updateauth">updateAuth</h2>
+<p>Update Auth profile object</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>authUpdate</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Update to be auth object</li>
+<li><code>updateInProfile</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank">boolean</a></strong> Update in profile</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Returns after updating auth profile</p>
+<h2 id="updateemail">updateEmail</h2>
+<p>Update user&apos;s email</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>newEmail</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String" target="_blank">string</a></strong> Update to be auth object</li>
+<li><code>updateInProfile</code> <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean" target="_blank">boolean</a></strong> Update in profile</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Resolves after email is updated in user&apos;s auth</p>
+<h2 id="reloadauth">reloadAuth</h2>
+<p>Reload user&apos;s auth object. Must be authenticated.</p>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Resolves after reloading firebase auth</p>
+<h2 id="linkwithcredential">linkWithCredential</h2>
+<p>Links the user account with the given credentials.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>credential</code> <strong>firebase.auth.AuthCredential</strong> The auth credential</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> Resolves after linking auth with a credential</p>
+<h2 id="actioncreators">actionCreators</h2>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li><code>credential</code> <strong>firebase.auth.ConfirmationResult</strong> The auth credential</li>
+</ul>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank">Promise</a></strong> </p>
+<h2 id="actioncreators">actionCreators</h2>
+<h2 id="ref">ref</h2>
+<p>Firebase ref function</p>
+<p>Returns <strong>firebase.database.Reference</strong> </p>
+<h2 id="database">database</h2>
+<p>Firebase database service instance including all Firebase storage methods</p>
+<p>Returns <strong>firebase.database.Database</strong> Firebase database service</p>
+<h2 id="storage">storage</h2>
+<p>Firebase storage service instance including all Firebase storage methods</p>
+<p>Returns <strong>firebase.database.Storage</strong> Firebase storage service</p>
+<h2 id="auth">auth</h2>
+<p>Firebase auth service instance including all Firebase auth methods</p>
+<p>Returns <strong>firebase.database.Auth</strong> </p>
+<h2 id="getfirebase">getFirebase</h2>
+<p>Get internal Firebase instance with methods which are wrapped with action dispatches. Useful for
+integrations into external libraries such as redux-thunk and redux-observable.</p>
+<h3 id="examples">Examples</h3>
+<p><em>redux-thunk integration</em></p>
+<pre class="language-"><code class="lang-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> applyMiddleware<span class="token punctuation">,</span> compose<span class="token punctuation">,</span> createStore <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;redux&apos;</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> thunk <span class="token keyword">from</span> <span class="token string">&apos;redux-thunk&apos;</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> getFirebase <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&apos;react-redux-firebase&apos;</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> makeRootReducer <span class="token keyword">from</span> <span class="token string">&apos;./reducers&apos;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> fbConfig <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token comment">// your firebase config</span>
+
+<span class="token keyword">const</span> store <span class="token operator">=</span> <span class="token function">createStore</span><span class="token punctuation">(</span>
+  <span class="token function">makeRootReducer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  initialState<span class="token punctuation">,</span>
+  <span class="token function">compose</span><span class="token punctuation">(</span>
+    <span class="token function">applyMiddleware</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+      <span class="token comment">// Pass getFirebase function as extra argument</span>
+      thunk<span class="token punctuation">.</span><span class="token function">withExtraArgument</span><span class="token punctuation">(</span>getFirebase<span class="token punctuation">)</span>
+    <span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// then later</span>
+<span class="token keyword">export</span> <span class="token keyword">function</span> <span class="token function">addTodo</span><span class="token punctuation">(</span><span class="token parameter">newTodo</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token parameter">dispatch<span class="token punctuation">,</span> getState<span class="token punctuation">,</span> getFirebase</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> firebase <span class="token operator">=</span> <span class="token function">getFirebase</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    firebase
+      <span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token string">&apos;todos&apos;</span><span class="token punctuation">,</span> newTodo<span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+        <span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">&apos;SOME_ACTION&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Returns <strong><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">object</a></strong> Firebase instance with methods which dispatch redux actions</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="reducers.html#orderedreducer" class="navigation navigation-prev " aria-label="Previous page: orderedReducer">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="getFirebase.html" class="navigation navigation-next " aria-label="Next page: getFirebase">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"firebaseInstance","level":"1.10.5","depth":2,"next":{"title":"getFirebase","level":"1.10.6","depth":2,"path":"docs/api/getFirebase.md","ref":"docs/api/getFirebase.md","articles":[]},"previous":{"title":"orderedReducer","level":"1.10.4.11","depth":3,"anchor":"#orderedreducer","path":"docs/api/reducers.md","ref":"docs/api/reducers.md#orderedreducer","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","prism","-highlight","github","anchorjs","versions-select","ga"],"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"prism":{},"github":{"url":"https://github.com/prescottprue/react-redux-firebase/"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"versions-select":{"type":"branches"},"fontsettings":{"theme":"white","family":"sans","size":2},"ga":{"configuration":"auto","token":"UA-102355407-1"},"versions":{"gitbookConfigURL":"https://storage.googleapis.com/docs.react-redux-firebase.com/book.json","options":[{"value":"http://react-redux-firebase.com/","text":"Version 3.0.0","selected":true},{"value":"http://docs.react-redux-firebase.com/history/v2.0.0/","text":"Version 2.0.0"},{"value":"http://docs.react-redux-firebase.com/history/v1.5.0/","text":"Version 1.5.0"},{"value":"http://docs.react-redux-firebase.com/history/v1.4.0/","text":"Version 1.4.0"}]},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/prescottprue/react-redux-firebase/tree/master"},"theme-default":{"styles":{"website":"build/gitbook.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchorjs":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"React Redux Firebase","gitbook":">=3.2.1"},"file":{"path":"docs/api/firebaseInstance.md","mtime":"2020-05-31T20:59:34.923Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-05-31T21:21:19.554Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-anchorjs/anchor.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-anchorjs/anchor-style.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-versions-select/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

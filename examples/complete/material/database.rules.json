@@ -1,0 +1,14 @@
+{
+  "rules": {
+    ".read": "auth !== null",
+    ".write":"auth !== null",
+    "users": {
+      "$uid": {
+        ".write": "auth !== null && $uid === auth.uid"
+      }
+    },
+    "projects": {
+      ".indexOn": ["createdBy"]
+    }
+  }
+}
