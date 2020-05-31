@@ -10,6 +10,8 @@ import { Dispatch } from 'redux'
  */
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
+type FileOrBlob<T> = T extends File ? File : Blob
+
 /**
  * Injects props and removes them from the prop requirements.
  * Will not pass through the injected props if they are passed in during
@@ -738,11 +740,11 @@ interface ExtendedStorageInstance {
    * @param options.documentId - Id of document to update with metadata if using Firestore
    * @see https://react-redux-firebase.com/docs/api/storage.html#uploadFile
    */
-  uploadFile: (
+  uploadFile: <T extends File | Blob>(
     path: string,
-    file: File | Blob,
+    file: FileOrBlob<T>,
     dbPath?: string,
-    options?: UploadFileOptions
+    options?: UploadFileOptions<T>
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }>
 
   /**
@@ -758,42 +760,46 @@ interface ExtendedStorageInstance {
    * @param options.documentId - Id of document to update with metadata if using Firestore
    * @see https://react-redux-firebase.com/docs/api/storage.html#uploadFiles
    */
-  uploadFiles: (
+  uploadFiles: <T extends File | Blob>(
     path: string,
-    files: File[] | Blob[],
+    files: FileOrBlob<T>[],
     dbPath?: string,
-    options?: UploadFileOptions
+    options?: UploadFileOptions<T>
   ) => Promise<{ uploadTaskSnapshot: StorageTypes.UploadTaskSnapshot }[]>
 }
 
 /**
  * Configuration object passed to uploadFile and uploadFiles functions
  */
-export interface UploadFileOptions {
-  name?: string | ((
-    file: File | Blob,
-    internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
-    uploadConfig: {
-      path: string,
-      file: File | Blob,
-      dbPath?: string,
-      options?: UploadFileOptions
-    }
-  ) => string)
-  documentId?: string | ((
-    uploadRes: StorageTypes.UploadTaskSnapshot,
-    firebase: WithFirebaseProps<ProfileType>['firebase'],
-    metadata: StorageTypes.UploadTaskSnapshot['metadata'],
-    downloadURL: string
-  ) => string)
+export interface UploadFileOptions<T extends File | Blob> {
+  name?:
+    | string
+    | ((
+        file: FileOrBlob<T>,
+        internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
+        uploadConfig: {
+          path: string
+          file: FileOrBlob<T>
+          dbPath?: string
+          options?: UploadFileOptions<T>
+        }
+      ) => string)
+  documentId?:
+    | string
+    | ((
+        uploadRes: StorageTypes.UploadTaskSnapshot,
+        firebase: WithFirebaseProps<ProfileType>['firebase'],
+        metadata: StorageTypes.UploadTaskSnapshot['metadata'],
+        downloadURL: string
+      ) => string)
   useSetForMetadata?: boolean
   metadata?: StorageTypes.UploadMetadata
-  metadataFactory? : ((
+  metadataFactory?: (
     uploadRes: StorageTypes.UploadTaskSnapshot,
     firebase: WithFirebaseProps<ProfileType>['firebase'],
     metadata: StorageTypes.UploadTaskSnapshot['metadata'],
     downloadURL: string
-  ) => object)
+  ) => object
 }
 
 export interface WithFirebaseProps<ProfileType> {
@@ -1032,11 +1038,20 @@ interface ReactReduxFirebaseConfig {
   /**
    * Function for changing how profile is written to database (both RTDB and Firestore).
    */
-  profileFactory?: (userData?: AuthTypes.User, profileData?: any, firebase?: WithFirebaseProps<ProfileType>['firebase']) => Promise<any> | any
+  profileFactory?: (
+    userData?: AuthTypes.User,
+    profileData?: any,
+    firebase?: WithFirebaseProps<ProfileType>['firebase']
+  ) => Promise<any> | any
   /**
    * Function that returns that meta data object stored after a file is uploaded (both RTDB and Firestore).
    */
-  fileMetadataFactory?: (uploadRes: StorageTypes.UploadTaskSnapshot, firebase: WithFirebaseProps<ProfileType>['firebase'], metadata: StorageTypes.UploadTaskSnapshot.metadata, downloadURL: string) => object
+  fileMetadataFactory?: (
+    uploadRes: StorageTypes.UploadTaskSnapshot,
+    firebase: WithFirebaseProps<ProfileType>['firebase'],
+    metadata: StorageTypes.UploadTaskSnapshot.metadata,
+    downloadURL: string
+  ) => object
 }
 
 /**
