@@ -7,12 +7,12 @@ This example component uses `react-dropzone` to allow for drag/drop uploading di
 **NOTE:** The third argument provided to the `uploadFiles` and `deleteFiles` calls below is the database path where File Metadata will be written/deleted from. This is out of convenience only, simply remove the third argument if you don't want metadata written/deleted to/from database.
 
 ```js
-import React from 'react';
-import PropTypes from 'prop-types';
-import { map } from 'lodash';
-import { useSelector } from 'react-redux';
-import { useFirebase, useFirebaseConnect } from 'react-redux-firebase';
-import Dropzone from 'react-dropzone';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { map } from 'lodash'
+import { useSelector } from 'react-redux'
+import { useFirebase, useFirebaseConnect } from 'react-redux-firebase'
+import Dropzone from 'react-dropzone'
 
 // Path within Database for metadata (also used for file Storage path)
 const filesPath = 'uploadedFiles'
@@ -22,10 +22,10 @@ export default function Uploader({ uploadedFiles, onFileDelete, onFilesDrop }) {
   const uploadedFiles = useSelector(({ firebase: { data } }) => data[filesPath])
 
   function onFilesDrop(files) {
-    return firebase.uploadFiles(filesPath, files, filesPath);
+    return firebase.uploadFiles(filesPath, files, filesPath)
   }
   function onFileDelete(file, key) {
-    return firebase.deleteFile(file.fullPath, `${filesPath}/${key}`);
+    return firebase.deleteFile(file.fullPath, `${filesPath}/${key}`)
   }
 
   return (
@@ -39,13 +39,15 @@ export default function Uploader({ uploadedFiles, onFileDelete, onFilesDrop }) {
           {map(uploadedFiles, (file, key) => (
             <div key={file.name + key}>
               <span>{file.name}</span>
-              <button onClick={() => onFileDelete(file, key)}>Delete File</button>
+              <button onClick={() => onFileDelete(file, key)}>
+                Delete File
+              </button>
             </div>
           ))}
         </div>
       )}
     </div>
-  );
+  )
 }
 ```
 
@@ -74,7 +76,9 @@ When uploading files as in the above example, you can modify how the file's meta
 const config = {
   fileMetadataFactory: (uploadRes, firebase, metadata, downloadURL) => {
     // upload response from Firebase's storage upload
-    const { metadata: { name, fullPath } } = uploadRes
+    const {
+      metadata: { name, fullPath }
+    } = uploadRes
     // default factory includes name, fullPath, downloadURL
     return {
       name,
@@ -83,4 +87,24 @@ const config = {
     }
   }
 }
+```
+
+### Update Firestore Document
+
+If using Firestore for you database and you would like to update a specific document after a file has uploaded you can specify the `options.documentId` property. In this example the document with id `12345` in the `contacts` collection will have the `fileUrl` property updated with the file's download url. More details can be found in the [upload file](https://firebase.google.com/docs/storage/web/upload-files#add_file_metadata) section of the Firebase docs.
+
+```js
+const storagePath = 'contacts/sleepygary'
+const dbPath = 'contacts'
+
+firebase
+  .uploadFile(storagePath, file, dbPath, {
+    metadataFactory: (uploadRes, firebase, metadata, downloadURL) => {
+      return { fileUrl: downloadURL }
+    },
+    documentId: '12345'
+  })
+  .then(() => {
+    console.log('File uploaded successfully')
+  })
 ```

@@ -4,7 +4,7 @@ Control/management of access through setting and assigning user roles and permis
 
 Though there are many patterns, we are going to use the following terminology:
 
-**Role** - job function or title which defines authority level (i.e. admin or manager). A user has a role, a role as permissions.
+**Role** - job function or title which defines authority level (i.e. admin or manager). A user has a role, a role has permissions.
 
 **Permissions** - approval of a mode of access (i.e. todos) . Multiple permissions can be assigned to a single role.
 
