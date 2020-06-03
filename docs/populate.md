@@ -334,3 +334,26 @@ const config = {
   }
 }
 ```
+
+### Use with Firestore
+
+To use populate with Firestore, just replace firebaseConnect with firestoreConnect with the corresponding charaters.
+
+```javascript
+import { firestoreConnect, populate } from 'react-redux-firebase';
+
+const populates = [
+  { child: 'owner', root: 'users', childAlias: 'ownerObj' }
+]
+
+const enhance = compose(
+  firestoreConnect([
+    { collection: 'todos', populates }
+  ]),
+  connect(
+    ({ firebase }) => ({
+      todos: populate(firebase, 'todos', populates),
+    })
+  )
+)
+```
