@@ -140,11 +140,31 @@ interface RemoveOptions {
 }
 
 /**
+ * https://firebase.google.com/docs/reference/js/firebase.database
+ */
+
+interface FirebaseDatabaseService {
+  database: {
+    (app?: string): DatabaseTypes.FirebaseDatabase
+    Reference: DatabaseTypes.Reference
+    Query: DatabaseTypes.Query
+    DataSnapshot: DatabaseTypes.DataSnapshot
+    enableLogging: typeof DatabaseTypes.enableLogging
+    ServerValue: DatabaseTypes.ServerValue
+    Database: typeof DatabaseTypes.FirebaseDatabase
+  }
+}
+
+/**
  * Firestore instance extended with methods which dispatch
  * redux actions.
  * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html
  */
-interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
+interface ExtendedFirebaseInstance
+  extends DatabaseTypes.FirebaseDatabase,
+    FirebaseDatabaseService,
+    ExtendedAuthInstance,
+    ExtendedStorageInstance {
   initializeAuth: VoidFunction
 
   firestore: () => ExtendedFirestoreInstance
@@ -330,7 +350,7 @@ export function createFirebaseInstance(
   firebase: any,
   configs: Partial<ReduxFirestoreConfig>,
   dispatch: Dispatch
-): ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
+): ExtendedFirebaseInstance
 
 export type QueryParamOption =
   | 'orderByKey'
@@ -447,7 +467,9 @@ export type ReduxFirestoreQueriesFunction = (
  * Firestore instance extended with methods which dispatch redux actions.
  * @see https://github.com/prescottprue/redux-firestore#api
  */
-interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
+interface ExtendedFirestoreInstance
+  extends FirestoreTypes.FirebaseFirestore,
+    FirestoreStatics {
   /**
    * Get data from firestore.
    * @see https://github.com/prescottprue/redux-firestore#get
@@ -532,7 +554,7 @@ interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
  * @see https://github.com/prescottprue/redux-firestore#other-firebase-statics
  */
 interface FirestoreStatics {
-  FieldValue: FirestoreTypes.FieldValue
+  FieldValue: typeof FirestoreTypes.FieldValue
   FieldPath: FirestoreTypes.FieldPath
   setLogLevel: (logLevel: FirestoreTypes.LogLevel) => void
   Blob: FirestoreTypes.Blob
@@ -543,18 +565,14 @@ interface FirestoreStatics {
   Query: FirestoreTypes.Query
   QueryDocumentSnapshot: FirestoreTypes.QueryDocumentSnapshot
   QuerySnapshot: FirestoreTypes.QuerySnapshot
-  Timestamp: FirestoreTypes.FieldValue
+  Timestamp: typeof FirestoreTypes.FieldValue
   Transaction: FirestoreTypes.Transaction
   WriteBatch: FirestoreTypes.WriteBatch
 }
 
 export interface WithFirestoreProps {
-  firestore: FirestoreTypes.FirebaseFirestore &
-    ExtendedFirestoreInstance &
-    FirestoreStatics
-  firebase: ExtendedFirebaseInstance &
-    ExtendedAuthInstance &
-    ExtendedStorageInstance
+  firestore: ExtendedFirestoreInstance
+  firebase: ExtendedFirebaseInstance
   dispatch: Dispatch
 }
 
@@ -803,9 +821,7 @@ export interface UploadFileOptions<T extends File | Blob> {
 }
 
 export interface WithFirebaseProps<ProfileType> {
-  firebase: ExtendedAuthInstance &
-    ExtendedStorageInstance &
-    ExtendedFirebaseInstance
+  firebase: ExtendedFirebaseInstance
 }
 
 /**
@@ -878,9 +894,7 @@ export function fixPath(path: string): string
  * integrations into external libraries such as redux-thunk and redux-observable.
  * @see https://react-redux-firebase.com/docs/api/getFirebase.html
  */
-export function getFirebase(): ExtendedFirebaseInstance &
-  ExtendedAuthInstance &
-  ExtendedStorageInstance
+export function getFirebase(): ExtendedFirebaseInstance
 
 /**
  * Get a value from firebase using slash notation.  This enables an easy
@@ -919,9 +933,7 @@ export function isLoaded(...args: any[]): boolean
  * instance is gathered from `ReactReduxFirebaseContext`.
  * @see https://react-redux-firebase.com/docs/api/useFirebase.html
  */
-export function useFirebase(): ExtendedFirebaseInstance &
-  ExtendedAuthInstance &
-  ExtendedStorageInstance
+export function useFirebase(): ExtendedFirebaseInstance
 
 /**
  * React hook that automatically listens/unListens
