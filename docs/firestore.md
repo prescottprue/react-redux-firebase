@@ -98,38 +98,36 @@ Firestore queries can be created in the following ways:
 `useFirestoreConnect` is a React hook that manages attaching and detaching listeners for you as the component mounts and unmounts.
 
 #### Examples
-
 1. Basic query that will attach/detach as the component passed mounts/unmounts. In this case we are setting a listener for the `'todos'` collection:
-
-```js
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { useFirestoreConnect } from 'react-redux-firebase'
-
-export default function SomeComponent() {
-  useFirestoreConnect([
-    { collection: 'todos' } // or 'todos'
-  ])
-  const todos = useSelector((state) => state.firestore.ordered.todos)
-}
-```
+   ```js
+   import React from 'react'
+   import { useSelector } from 'react-redux'
+   import { useFirestoreConnect } from 'react-redux-firebase'
+   
+   export default function SomeComponent() {
+     useFirestoreConnect([
+       { collection: 'todos' } // or 'todos'
+     ])
+     const todos = useSelector((state) => state.firestore.ordered.todos)
+   }
+   ```
 
 2. Props can be used as part of queries. In this case we will get a specific todo:
 
-```js
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { useFirestoreConnect } from 'react-redux-firebase'
-
-export default function SomeComponent({ todoId }) {
-  useFirestoreConnect(() => [
-    { collection: 'todos', doc: todoId } // or `todos/${props.todoId}`
-  ])
-  const todo = useSelector(
-    ({ firestore: { data } }) => data.todos && data.todos[todoId]
-  )
-}
-```
+   ```js
+   import React from 'react'
+   import { useSelector } from 'react-redux'
+   import { useFirestoreConnect } from 'react-redux-firebase'
+   
+   export default function SomeComponent({ todoId }) {
+     useFirestoreConnect(() => [
+       { collection: 'todos', doc: todoId } // or `todos/${props.todoId}`
+     ])
+     const todo = useSelector(
+       ({ firestore: { data } }) => data.todos && data.todos[todoId]
+     )
+   }
+   ```
 
 ### Automatically with HOC {#firestoreConnect}
 
@@ -138,36 +136,35 @@ export default function SomeComponent({ todoId }) {
 #### Examples
 
 1. Basic query that will attach/detach as the component passed mounts/unmounts. In this case we are setting a listener for the `'todos'` collection:
-
-```js
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { firestoreConnect } from 'react-redux-firebase'
-
-export default compose(
-  firestoreConnect(() => ['todos']), // or { collection: 'todos' }
-  connect((state, props) => ({
-    todos: state.firestore.ordered.todos
-  }))
-)(SomeComponent)
-```
+   
+   ```js
+   import { compose } from 'redux'
+   import { connect } from 'react-redux'
+   import { firestoreConnect } from 'react-redux-firebase'
+   
+   export default compose(
+     firestoreConnect(() => ['todos']), // or { collection: 'todos' }
+     connect((state, props) => ({
+       todos: state.firestore.ordered.todos
+     }))
+   )(SomeComponent)
+   ```
 
 2. Create a query based on props by passing a function. In this case we will get a specific todo:
-
-```js
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { firestoreConnect } from 'react-redux-firebase'
-
-export default compose(
-  firestoreConnect((props) => [
-    { collection: 'todos', doc: props.todoId } // or `todos/${props.todoId}`
-  ]),
-  connect(({ firestore: { data } }, props) => ({
-    todos: data.todos && data.todos[todoId]
-  }))
-)(SomeComponent)
-```
+   ```js
+   import { compose } from 'redux'
+   import { connect } from 'react-redux'
+   import { firestoreConnect } from 'react-redux-firebase'
+   
+   export default compose(
+     firestoreConnect((props) => [
+       { collection: 'todos', doc: props.todoId } // or `todos/${props.todoId}`
+     ]),
+     connect(({ firestore: { data } }, props) => ({
+       todos: data.todos && data.todos[todoId]
+     }))
+   )(SomeComponent)
+   ```
 
 ## Manual {#manual}
 
@@ -281,58 +278,58 @@ By default the results of queries are stored in redux under the path of the quer
 #### Examples
 
 1. Querying the same path with different query parameters
+   ```js
+   import { compose } from 'redux'
+   import { connect } from 'react-redux'
+   import { firestoreConnect } from 'react-redux-firebase'
+   const myProjectsReduxName = 'myProjects'
+   
+   compose(
+     firestoreConnect((props) => [
+       { collection: 'projects' },
+       {
+         collection: 'projects',
+         where: ['uid', '==', '123'],
+         storeAs: myProjectsReduxName
+       }
+     ]),
+     connect((state, props) => ({
+       projects: state.firestore.data.projects,
+       myProjects: state.firestore.data[myProjectsReduxName] // use storeAs path to    gather from redux
+     }))
+   )
+   ```
 
-```js
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-import { firestoreConnect } from 'react-redux-firebase'
-const myProjectsReduxName = 'myProjects'
+2. Set `useFirestoreConnect` for subcollections documents. For example, in Cloud Firestore you might have a message structure such as:
+   
+    `chatMessages (collection) / chatID (document) / messages (collection) / messageID (document)`
 
-compose(
-  firestoreConnect((props) => [
-    { collection: 'projects' },
-    {
-      collection: 'projects',
-      where: [['uid', '==', '123']],
-      storeAs: myProjectsReduxName
-    }
-  ]),
-  connect((state, props) => ({
-    projects: state.firestore.data.projects,
-    myProjects: state.firestore.data[myProjectsReduxName] // use storeAs path to gather from redux
-  }))
-)
-```
+   You cannot write the path in `useFirestoreConnect` like:
 
-2. Set `useFirestoreConnect` for subcollections documents
-   For example, in Firestore cloud you have such message structure:
-   `chatMessages (collection) / chatID (document) / messages (collection) / messageID (document)`
+   ```js
+   useFirestoreConnect(`chatMessages/${chatID}/messages`)
+   ```
 
-You can't write the path in `useFirestoreConnect` like:
+   This will lead to the error:
 
-```js
-useFirestoreConnect(`chatMessages/${chatID}/messages`)
-```
+    `Queries with subcollections must use "storeAs" to prevent invalid store updates. This closley matches the upcoming major release (v1), which stores subcollections at the top level by default.`
 
-You will have error:
+   **Solution**:
 
-`Queries with subcollections must use "storeAs" to prevent invalid store updates. This closley matches the upcoming major release (v1), which stores subcollections at the top level by default.`
-
-Solution:
-Use `subcollections` for 'messages' and `storeAs`.
-
-````import { useFirestoreConnect } from 'react-redux-firebase'
-  useFirestoreConnect([
-    {
-      collection: 'chatMessages',
-      doc: chatID,
-      subcollections: [{ collection: 'messages' }],
-      storeAs: 'myMessages'
-    }
-  ])```
-
+   Use `subcollections` for `messages` and `storeAs`.
+   
+   ```js
+   import { useFirestoreConnect } from 'react-redux-firebase'
+     useFirestoreConnect([
+       {
+         collection: 'chatMessages',
+         doc: chatID,
+         subcollections: [{ collection: 'messages' }],
+         storeAs: 'myMessages'
+       }
+     ])
+   ```
 
 ## Populate {#populate}
 
 Populate is supported for Firestore as of [v0.6.0 of redux-firestore](https://github.com/prescottprue/redux-firestore/releases/tag/v0.6.0). It was added [as part of issue #48](https://github.com/prescottprue/redux-firestore/issues/48).
-````
