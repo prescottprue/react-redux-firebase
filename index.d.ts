@@ -344,7 +344,7 @@ interface BaseExtendedFirebaseInstance
  * Example: OptionalOverride<FirebaseNamespace, 'messaging', { messaging: ExtendedMessagingInstance }>
  */
 type OptionalOverride<T, b extends string, P> = b extends keyof T ? P : {};
-type OptionalPick<T, b extends string> = { [k in (b extends keyof T ? b : never)]: T[k] };
+type OptionalPick<T, b extends string> = Pick<T, b & keyof T>
 
 type ExtendedFirebaseInstance = BaseExtendedFirebaseInstance & OptionalPick<FirebaseNamespace, 'messaging' | 'performance' | 'functions' | 'analytics' | 'remoteConfig'>
   
