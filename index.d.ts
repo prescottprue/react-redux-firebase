@@ -357,24 +357,11 @@ type ExtendedFirebaseInstance = BaseExtendedFirebaseInstance & OptionalPick<Fire
  * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html
  */
 export function createFirebaseInstance(
-  firebase: FirebaseNamespace,
+  firebase: any,
   configs: Partial<ReduxFirestoreConfig>,
   dispatch: Dispatch
 ): ExtendedFirebaseInstance;
 
-/**
- * Create an extended firebase instance that has methods attached
- * which dispatch redux actions.
- * @param firebase - Firebase instance which to extend
- * @param configs - Configuration object
- * @param dispatch - Action dispatch function
- * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html
- */
-export function createFirebaseInstance(
-  firebase: any,
-  configs: Partial<ReduxFirestoreConfig>,
-  dispatch: Dispatch
-): ExtendedFirebaseInstance
 
 export type QueryParamOption =
   | 'orderByKey'
