@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { FirebaseNamespace } from "@firebase/app-types";
 import * as FirestoreTypes from '@firebase/firestore-types'
 import * as DatabaseTypes from '@firebase/database-types'
 import * as StorageTypes from '@firebase/storage-types'
@@ -160,7 +161,7 @@ interface FirebaseDatabaseService {
  * redux actions.
  * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html
  */
-interface ExtendedFirebaseInstance
+interface BaseExtendedFirebaseInstance
   extends DatabaseTypes.FirebaseDatabase,
     FirebaseDatabaseService,
     ExtendedAuthInstance,
@@ -337,6 +338,29 @@ interface ExtendedFirebaseInstance
     options?: string
   ) => Promise<any>
 }
+
+/**
+ * OptionalOverride is left here in the event that any of the optional properties below need to be extended in the future.
+ * Example: OptionalOverride<FirebaseNamespace, 'messaging', { messaging: ExtendedMessagingInstance }>
+ */
+type OptionalOverride<T, b extends string, P> = b extends keyof T ? P : {};
+type OptionalPick<T, b extends string> = { [k in (b extends keyof T ? b : never)]: T[k] };
+
+type ExtendedFirebaseInstance = BaseExtendedFirebaseInstance & OptionalPick<FirebaseNamespace, 'messaging' | 'performance' | 'functions' | 'analytics' | 'remoteConfig'>
+  
+/**
+ * Create an extended firebase instance that has methods attached
+ * which dispatch redux actions.
+ * @param firebase - Firebase instance which to extend
+ * @param configs - Configuration object
+ * @param dispatch - Action dispatch function
+ * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html
+ */
+export function createFirebaseInstance(
+  firebase: FirebaseNamespace,
+  configs: Partial<ReduxFirestoreConfig>,
+  dispatch: Dispatch
+): ExtendedFirebaseInstance;
 
 /**
  * Create an extended firebase instance that has methods attached
