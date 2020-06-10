@@ -889,10 +889,11 @@ export function firestoreConnect<TInner = {}>(
  * @param action.data - Data associated with action
  * @see https://react-redux-firebase.com/docs/api/reducer.html
  */
-export function firestoreReducer(
+export function firestoreReducer<Schema extends Record<string, any> = {}
+>(
   state: any,
   action: any
-): FirestoreReducer.Reducer
+): Reducer<FirestoreReducer.State<Schema>>
 
 /**
  * Fix path by adding "/" to path if needed
@@ -1246,16 +1247,35 @@ export namespace FirebaseReducer {
   }
 }
 
+
 export namespace FirestoreReducer {
-  export interface Reducer {
-    composite?: Data<any | Dictionary<any>>
-    data: Data<any | Dictionary<any>>
+  declare const entitySymbol: unique symbol
+
+  export type Entity<T> = T & {
+    [entitySymbol]: never
+  }
+  export type EntityWithId<T> = T & { id: string }
+  export type FirestoreData<Schema extends Record<string, any>> = {
+    [T in keyof Schema]: Record<
+      string,
+      Schema[T] extends Entity<infer V> ? V : FirestoreData<Schema[T]>
+    >
+  }
+
+  export type OrderedData<Schema extends Record<string, any>> = {
+    [T in keyof Schema]: Schema[T] extends Entity<infer V>
+      ? EntityWithId<V>[]
+      : OrderedData<EntityWithId<Schema[T]>>[]
+  }
+
+  export interface Reducer<Schema extends Record<string, any> = {}> {
     errors: {
       allIds: string[]
       byQuery: any[]
     }
     listeners: Listeners
-    ordered: Ordered<any>
+    data: FirestoreData<Schema>
+    ordered: OrderedData<Schema>
     queries: Data<ReduxFirestoreQuerySetting & (Dictionary<any> | any)>
     status: {
       requested: Dictionary<boolean>
