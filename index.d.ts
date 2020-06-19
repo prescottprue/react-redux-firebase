@@ -937,6 +937,7 @@ export function isEmpty(...args: any[]): boolean
  * @returns Whether or not item is loaded
  * @see https://react-redux-firebase.com/docs/api/helpers.html#isloaded
  */
+export function isLoaded<T>(arg: T | null | undefined): arg is T
 export function isLoaded(...args: any[]): boolean
 
 /**
