@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { FirebaseNamespace } from "@firebase/app-types";
 import * as FirestoreTypes from '@firebase/firestore-types'
 import * as DatabaseTypes from '@firebase/database-types'
 import * as StorageTypes from '@firebase/storage-types'
@@ -140,11 +141,31 @@ interface RemoveOptions {
 }
 
 /**
+ * https://firebase.google.com/docs/reference/js/firebase.database
+ */
+
+interface FirebaseDatabaseService {
+  database: {
+    (app?: string): DatabaseTypes.FirebaseDatabase
+    Reference: DatabaseTypes.Reference
+    Query: DatabaseTypes.Query
+    DataSnapshot: DatabaseTypes.DataSnapshot
+    enableLogging: typeof DatabaseTypes.enableLogging
+    ServerValue: DatabaseTypes.ServerValue
+    Database: typeof DatabaseTypes.FirebaseDatabase
+  }
+}
+
+/**
  * Firestore instance extended with methods which dispatch
  * redux actions.
  * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html
  */
-interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
+interface BaseExtendedFirebaseInstance
+  extends DatabaseTypes.FirebaseDatabase,
+    FirebaseDatabaseService,
+    ExtendedAuthInstance,
+    ExtendedStorageInstance {
   initializeAuth: VoidFunction
 
   firestore: () => ExtendedFirestoreInstance
@@ -319,6 +340,15 @@ interface ExtendedFirebaseInstance extends DatabaseTypes.FirebaseDatabase {
 }
 
 /**
+ * OptionalOverride is left here in the event that any of the optional properties below need to be extended in the future.
+ * Example: OptionalOverride<FirebaseNamespace, 'messaging', { messaging: ExtendedMessagingInstance }>
+ */
+type OptionalOverride<T, b extends string, P> = b extends keyof T ? P : {};
+type OptionalPick<T, b extends string> = Pick<T, b & keyof T>
+
+type ExtendedFirebaseInstance = BaseExtendedFirebaseInstance & OptionalPick<FirebaseNamespace, 'messaging' | 'performance' | 'functions' | 'analytics' | 'remoteConfig'>
+  
+/**
  * Create an extended firebase instance that has methods attached
  * which dispatch redux actions.
  * @param firebase - Firebase instance which to extend
@@ -330,7 +360,8 @@ export function createFirebaseInstance(
   firebase: any,
   configs: Partial<ReduxFirestoreConfig>,
   dispatch: Dispatch
-): ExtendedFirebaseInstance & ExtendedAuthInstance & ExtendedStorageInstance
+): ExtendedFirebaseInstance;
+
 
 export type QueryParamOption =
   | 'orderByKey'
@@ -447,7 +478,9 @@ export type ReduxFirestoreQueriesFunction = (
  * Firestore instance extended with methods which dispatch redux actions.
  * @see https://github.com/prescottprue/redux-firestore#api
  */
-interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
+interface ExtendedFirestoreInstance
+  extends FirestoreTypes.FirebaseFirestore,
+    FirestoreStatics {
   /**
    * Get data from firestore.
    * @see https://github.com/prescottprue/redux-firestore#get
@@ -532,7 +565,7 @@ interface ExtendedFirestoreInstance extends FirestoreTypes.FirebaseFirestore {
  * @see https://github.com/prescottprue/redux-firestore#other-firebase-statics
  */
 interface FirestoreStatics {
-  FieldValue: FirestoreTypes.FieldValue
+  FieldValue: typeof FirestoreTypes.FieldValue
   FieldPath: FirestoreTypes.FieldPath
   setLogLevel: (logLevel: FirestoreTypes.LogLevel) => void
   Blob: FirestoreTypes.Blob
@@ -543,18 +576,14 @@ interface FirestoreStatics {
   Query: FirestoreTypes.Query
   QueryDocumentSnapshot: FirestoreTypes.QueryDocumentSnapshot
   QuerySnapshot: FirestoreTypes.QuerySnapshot
-  Timestamp: FirestoreTypes.FieldValue
+  Timestamp: typeof FirestoreTypes.FieldValue
   Transaction: FirestoreTypes.Transaction
   WriteBatch: FirestoreTypes.WriteBatch
 }
 
 export interface WithFirestoreProps {
-  firestore: FirestoreTypes.FirebaseFirestore &
-    ExtendedFirestoreInstance &
-    FirestoreStatics
-  firebase: ExtendedFirebaseInstance &
-    ExtendedAuthInstance &
-    ExtendedStorageInstance
+  firestore: ExtendedFirestoreInstance
+  firebase: ExtendedFirebaseInstance
   dispatch: Dispatch
 }
 
@@ -803,9 +832,7 @@ export interface UploadFileOptions<T extends File | Blob> {
 }
 
 export interface WithFirebaseProps<ProfileType> {
-  firebase: ExtendedAuthInstance &
-    ExtendedStorageInstance &
-    ExtendedFirebaseInstance
+  firebase: ExtendedFirebaseInstance
 }
 
 /**
@@ -878,9 +905,7 @@ export function fixPath(path: string): string
  * integrations into external libraries such as redux-thunk and redux-observable.
  * @see https://react-redux-firebase.com/docs/api/getFirebase.html
  */
-export function getFirebase(): ExtendedFirebaseInstance &
-  ExtendedAuthInstance &
-  ExtendedStorageInstance
+export function getFirebase(): ExtendedFirebaseInstance
 
 /**
  * Get a value from firebase using slash notation.  This enables an easy
@@ -912,6 +937,7 @@ export function isEmpty(...args: any[]): boolean
  * @returns Whether or not item is loaded
  * @see https://react-redux-firebase.com/docs/api/helpers.html#isloaded
  */
+export function isLoaded<T>(arg: T | null | undefined): arg is T
 export function isLoaded(...args: any[]): boolean
 
 /**
@@ -919,9 +945,7 @@ export function isLoaded(...args: any[]): boolean
  * instance is gathered from `ReactReduxFirebaseContext`.
  * @see https://react-redux-firebase.com/docs/api/useFirebase.html
  */
-export function useFirebase(): ExtendedFirebaseInstance &
-  ExtendedAuthInstance &
-  ExtendedStorageInstance
+export function useFirebase(): ExtendedFirebaseInstance
 
 /**
  * React hook that automatically listens/unListens

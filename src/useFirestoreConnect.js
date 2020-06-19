@@ -9,7 +9,7 @@ import useFirestore from './useFirestore'
  * Cloud Firestore, including it's reducer, before attempting to use.
  * Populate is supported for Firestore as of v0.6.0 of redux-firestore (added
  * [as part of issue #48](https://github.com/prescottprue/redux-firestore/issues/48)).
- * @param {object|string|Array|Function} queriesConfigs - An object, string,
+ * @param {Array|Function} queriesConfigs - An object, string,
  * or array of object or string for paths to sync from firestore. Can also be
  * a function that returns the object, string, or array of object or string.
  * @see https://react-redux-firebase.com/docs/api/useFirestoreConnect.html

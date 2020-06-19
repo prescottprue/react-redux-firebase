@@ -14,7 +14,6 @@ const createQueryFromParams = (queryParams) =>
   applyParamsToQuery(queryParams, fakeFirebase.database().ref())
 
 const dispatch = () => {}
-let spy // eslint-disable-line
 
 describe('Utils: Query', () => {
   describe('getWatchPath', () => {
@@ -61,10 +60,6 @@ describe('Utils: Query', () => {
         'value:/todos': 1,
         'value:/todo': 2
       }
-      spy = sinon.spy(console, 'warn')
-    })
-    afterEach(() => {
-      console.warn.restore() // eslint-disable-line no-console
     })
 
     it('removes single watcher', () => {
