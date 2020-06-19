@@ -61,9 +61,6 @@ describe('Utils: Query', () => {
         'value:/todo': 2
       }
     })
-    afterEach(() => {
-      console.warn.restore() // eslint-disable-line no-console
-    })
 
     it('removes single watcher', () => {
       unsetWatcher(Firebase, dispatch, 'value', '/todos')
