@@ -2,26 +2,25 @@
 
 ### Table of Contents
 
--   [firestoreConnect][1]
-    -   [Parameters][2]
-    -   [Examples][3]
-    -   [Parameters][4]
+- [firestoreConnect][1]
+  - [Parameters][2]
+  - [Examples][3]
+  - [Parameters][4]
 
 ## firestoreConnect
 
 **Extends React.Component**
 
-
 Higher Order Component that automatically listens/unListens
 to provided Cloud Firestore paths using React's Lifecycle hooks. Make sure you
-have required/imported Cloud Firestore, including its reducer, before
+have required/imported Cloud Firestore, including it's reducer, before
 attempting to use. **Note** Populate is not yet supported.
 
 ### Parameters
 
--   `queriesConfig` **([Array][6] \| [Function][7])** Array of objects or strings for paths to sync
-    from Firebase. Can also be a function that returns the array. The function
-    is passed the current props and the firebase object. (optional, default `[]`)
+- `queriesConfig` **([Array][6] \| [Function][7])** Array of objects or strings for paths to sync
+  from Firebase. Can also be a function that returns the array. The function
+  is passed the current props and the firebase object. (optional, default `[]`)
 
 ### Examples
 
@@ -51,28 +50,21 @@ export default compose(
 Returns **[Function][7]** Function which accepts a component to wrap and returns the
 wrapped component
 
-## 
+##
 
 Render component wrapped in context
 
 ### Parameters
 
--   `props` **[object][8]** Component props
+- `props` **[object][8]** Component props
 
 Returns **React.Component** Component wrapped in context
 
 [1]: #firestoreconnect
-
 [2]: #parameters
-
 [3]: #examples
-
 [4]: #parameters-1
-
 [5]: https://react-redux-firebase.com/docs/api/firestoreConnect.html
-
 [6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
-
 [7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
-
 [8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object

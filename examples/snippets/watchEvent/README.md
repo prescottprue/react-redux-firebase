@@ -39,4 +39,4 @@ render () {
 }
 ```
 
-**NOTE**: This is simplified functionality of what is available through [`firebaseConnect`](https://react-redux-firebase.com/docs/api/firebaseConnect.html) and {`useFirebaseConnect`](https://react-redux-firebase.com/docs/api/useFirebaseConnect.html).
+**NOTE**: This is simplified functionality of what is available through [`firebaseConnect`](https://react-redux-firebase.com/docs/api/firebaseConnect.html) and [`useFirebaseConnect`](https://react-redux-firebase.com/docs/api/useFirebaseConnect.html).
