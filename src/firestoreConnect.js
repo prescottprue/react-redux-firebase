@@ -25,7 +25,7 @@ import { v3ErrorMessage } from './constants'
  */
 export const createFirestoreConnect = (storeKey = 'store') => (
   dataOrFn = []
-) => WrappedComponent => {
+) => (WrappedComponent) => {
   class FirestoreConnect extends Component {
     static wrappedComponent = WrappedComponent
     static displayName = wrapDisplayName(WrappedComponent, 'FirestoreConnect')
@@ -40,7 +40,9 @@ export const createFirestoreConnect = (storeKey = 'store') => (
       return !!this.store.firestore
     }
 
-    componentWillMount() {
+    /* eslint-disable camelcase */
+    UNSAFE_componentWillMount() {
+      /* eslint-enable camelcase */
       // Throw if using with react-redux@^6
       if (!this.context || !this.context[storeKey]) {
         // Use react-redux-firebase@^3 for react-redux@^6 support. More info available in the migration guide: http://bit.ly/2SRNdiO'
@@ -86,8 +88,11 @@ export const createFirestoreConnect = (storeKey = 'store') => (
 
     getChanges(data = [], prevData = []) {
       const result = {}
-      result.added = filter(data, d => !some(prevData, p => isEqual(d, p)))
-      result.removed = filter(prevData, p => !some(data, d => isEqual(p, d)))
+      result.added = filter(data, (d) => !some(prevData, (p) => isEqual(d, p)))
+      result.removed = filter(
+        prevData,
+        (p) => !some(data, (d) => isEqual(p, d))
+      )
       return result
     }
 
