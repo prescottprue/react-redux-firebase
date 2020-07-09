@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FirebaseNamespace } from "@firebase/app-types";
+import { FirebaseNamespace } from '@firebase/app-types'
 import * as FirestoreTypes from '@firebase/firestore-types'
 import * as DatabaseTypes from '@firebase/database-types'
 import * as StorageTypes from '@firebase/storage-types'
@@ -343,11 +343,15 @@ interface BaseExtendedFirebaseInstance
  * OptionalOverride is left here in the event that any of the optional properties below need to be extended in the future.
  * Example: OptionalOverride<FirebaseNamespace, 'messaging', { messaging: ExtendedMessagingInstance }>
  */
-type OptionalOverride<T, b extends string, P> = b extends keyof T ? P : {};
+type OptionalOverride<T, b extends string, P> = b extends keyof T ? P : {}
 type OptionalPick<T, b extends string> = Pick<T, b & keyof T>
 
-type ExtendedFirebaseInstance = BaseExtendedFirebaseInstance & OptionalPick<FirebaseNamespace, 'messaging' | 'performance' | 'functions' | 'analytics' | 'remoteConfig'>
-  
+type ExtendedFirebaseInstance = BaseExtendedFirebaseInstance &
+  OptionalPick<
+    FirebaseNamespace,
+    'messaging' | 'performance' | 'functions' | 'analytics' | 'remoteConfig'
+  >
+
 /**
  * Create an extended firebase instance that has methods attached
  * which dispatch redux actions.
@@ -360,8 +364,7 @@ export function createFirebaseInstance(
   firebase: any,
   configs: Partial<ReduxFirestoreConfig>,
   dispatch: Dispatch
-): ExtendedFirebaseInstance;
-
+): ExtendedFirebaseInstance
 
 export type QueryParamOption =
   | 'orderByKey'
@@ -1234,12 +1237,14 @@ export namespace FirebaseReducer {
       expirationTime: number
       refreshToken: string
     }
+    uid: string
   }
 
   // can be extended for optional properties from your database
   export type Profile<ProfileType> = {
     isLoaded: boolean
     isEmpty: boolean
+    uid: string
   } & ProfileType
 
   export namespace firebaseStateReducer {
