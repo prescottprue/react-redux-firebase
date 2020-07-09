@@ -63,7 +63,7 @@ function getProfileFromSnap(snap) {
   }
   // Firestore
   if (snap && snap.data && snap.exists) {
-    return snap.data()
+    return { ...snap.data(), uid: snap.id }
   }
   return null
 }
