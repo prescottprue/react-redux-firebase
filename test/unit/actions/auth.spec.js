@@ -124,7 +124,7 @@ describe('Actions: Auth -', () => {
         handleProfileWatchResponse(dispatchSpy, firebase, firestoreProfileSnap)
         expect(dispatchSpy).to.be.calledWith({
           type: actionTypes.SET_PROFILE,
-          profile
+          profile: { ...profile, uid: undefined }
         })
       })
 
