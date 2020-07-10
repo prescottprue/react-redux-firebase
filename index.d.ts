@@ -448,6 +448,8 @@ export interface ReduxFirestoreQuerySetting {
   where?: WhereOptions | WhereOptions[]
   // https://github.com/prescottprue/redux-firestore#orderby
   orderBy?: OrderByOptions | OrderByOptions[]
+  // https://github.com/prescottprue/redux-firestore#population
+  populates?: { child: string; root: string }[]
   // https://github.com/prescottprue/redux-firestore#limit
   limit?: number
   // https://github.com/prescottprue/redux-firestore#storeas
