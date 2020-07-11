@@ -93,6 +93,8 @@ Firestore queries can be created in the following ways:
 1. [Automatically with HOC](#firestoreConnect) - Using `firestoreConnect` HOC (manages mounting/unmounting)
 1. [Manually](#manual) - Using `get`, or by setting listeners with `setListeners`/`setListener` (requires managing of listeners)
 
+See the [redux-firestore API](https://github.com/prescottprue/redux-firestore#api) for an understanding of [query options](https://github.com/prescottprue/redux-firestore#query-options) such as [`where`](https://github.com/prescottprue/redux-firestore#where), [`orderBy`](https://github.com/prescottprue/redux-firestore#orderby) and [`limit`](https://github.com/prescottprue/redux-firestore#limit).
+
 ### Automatically with Hook {#useFirestoreConnect}
 
 `useFirestoreConnect` is a React hook that manages attaching and detaching listeners for you as the component mounts and unmounts.
