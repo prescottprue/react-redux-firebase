@@ -157,7 +157,7 @@ We are going to use the project name Devshare for example here. For your project
 
 At the end of this step, your Xcode config should look similar to this:
 
-[![xcode config](https://github.com/apptailor/react-native-google-signin/raw/master/img/url-config.png)](#config)
+[![xcode config](https://raw.githubusercontent.com/react-native-community/google-signin/1d20b15859fd221c0cc088d5dd47b7cfe1544ffe/img/url-config.png)](#config)
 
 ### Set Open URLs
 
