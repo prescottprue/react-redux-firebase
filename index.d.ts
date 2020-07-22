@@ -734,7 +734,7 @@ interface ExtendedAuthInstance {
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateprofile
    * @see https://react-redux-firebase.com/docs/recipes/profile.html#update-profile
    */
-  updateProfile: (profile: Partial<ProfileType>, options?: Object) => void
+  updateProfile: (profile: Partial<ProfileType>, options?: Object) => Promise<void>
 }
 
 /**
