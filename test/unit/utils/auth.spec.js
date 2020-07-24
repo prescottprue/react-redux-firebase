@@ -26,6 +26,12 @@ describe('Utils: Auth', () => {
       ).to.include.keys('method')
     })
 
+    it('apple.com provider', () => {
+      expect(
+        getLoginMethodAndParams(firebase, { provider: 'apple.com' })
+      ).to.include.keys('method')
+    })
+
     it('token', () => {
       expect(
         getLoginMethodAndParams(firebase, { token: 'asdf' })
