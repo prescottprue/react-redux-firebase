@@ -596,7 +596,7 @@ interface CreateUserCredentials {
 type Credentials =
   | CreateUserCredentials
   | {
-      provider: 'facebook' | 'google' | 'twitter'
+      provider: 'facebook' | 'google' | 'twitter' | 'github' | 'microsoft.com' | 'apple.com'
       type: 'popup' | 'redirect'
       scopes?: string[]
     }
