@@ -17,7 +17,8 @@ function createAuthProvider(firebase, providerName, scopes) {
 
   if (
     lowerCaseProviderName === 'microsoft.com' ||
-    lowerCaseProviderName === 'apple.com'
+    lowerCaseProviderName === 'apple.com' ||
+    lowerCaseProviderName === 'yahoo.com'
   ) {
     const provider = new firebase.auth.OAuthProvider(providerName)
     return provider

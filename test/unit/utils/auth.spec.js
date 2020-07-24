@@ -26,9 +26,9 @@ describe('Utils: Auth', () => {
       ).to.include.keys('method')
     })
 
-    it('apple.com provider', () => {
+    it('yahoo.com provider', () => {
       expect(
-        getLoginMethodAndParams(firebase, { provider: 'apple.com' })
+        getLoginMethodAndParams(firebase, { provider: 'yahoo.com' })
       ).to.include.keys('method')
     })
 
