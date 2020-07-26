@@ -234,7 +234,7 @@ function populateChild(state, child, p) {
   // populate child is key
   if (typeof childVal === 'string' || childVal instanceof String) {
     // attach child paramter if it exists
-    const dotRoot = p.root
+    const dotRoot = (p.storeAs ? p.storeAs : p.root)
       .split('/')
       .filter(Boolean) // Drop falsey values (compact)
       .join('.')

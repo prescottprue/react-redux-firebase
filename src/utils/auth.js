@@ -13,8 +13,14 @@ function createAuthProvider(firebase, providerName, scopes) {
   // TODO: Verify scopes are valid before adding
   // TODO: Validate parameter inputs
 
-  if (providerName.toLowerCase() === 'microsoft.com') {
-    const provider = new firebase.auth.OAuthProvider('microsoft.com')
+  const lowerCaseProviderName = providerName.toLowerCase()
+
+  if (
+    lowerCaseProviderName === 'microsoft.com' ||
+    lowerCaseProviderName === 'apple.com' ||
+    lowerCaseProviderName === 'yahoo.com'
+  ) {
+    const provider = new firebase.auth.OAuthProvider(providerName)
     return provider
   }
 
@@ -38,7 +44,7 @@ function createAuthProvider(firebase, providerName, scopes) {
 
   // Handle providers without scopes
   if (
-    providerName.toLowerCase() === 'twitter' ||
+    lowerCaseProviderName === 'twitter' ||
     typeof provider.addScope !== 'function'
   ) {
     return provider
