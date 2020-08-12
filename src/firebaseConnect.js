@@ -26,7 +26,7 @@ import { v3ErrorMessage } from './constants'
  */
 export const createFirebaseConnect = (storeKey = 'store') => (
   dataOrFn = []
-) => WrappedComponent => {
+) => (WrappedComponent) => {
   class FirebaseConnect extends Component {
     static displayName = `FirebaseConnect(${getDisplayName(WrappedComponent)})`
     static wrappedComponent = WrappedComponent
@@ -39,7 +39,9 @@ export const createFirebaseConnect = (storeKey = 'store') => (
     prevData = null
     store = this.context[storeKey]
 
-    componentWillMount() {
+    /* eslint-disable camelcase */
+    UNSAFE_componentWillMount() {
+      /* eslint-enable camelcase */
       // Throw if using with react-redux@^6
       if (!this.context || !this.context[storeKey]) {
         // Use react-redux-firebase@^3 for react-redux@^6 support. More info available in the migration guide: http://bit.ly/2SRNdiO'
