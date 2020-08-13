@@ -6,7 +6,7 @@ on:
       - master
       - next
       - alpha
-      - v2
+      - previous
 
 jobs:
   publish-npm:
