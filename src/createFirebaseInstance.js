@@ -457,6 +457,15 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     authActions.verifyPasswordResetCode(dispatch, firebase, code)
 
   /**
+   * Apply verification code
+   * @param {string} code - Verification code
+   * @returns {Promise} Resolves on success
+   * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#applyactioncode
+   */
+  const applyActionCode = (code) =>
+    authActions.applyActionCode(dispatch, firebase, code)
+
+  /**
    * Update user profile on Firebase Real Time Database or
    * Firestore (if `useFirestoreForProfile: true` config included).
    * Real Time Database update uses `update` method internally while
@@ -584,6 +593,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
     resetPassword,
     confirmPasswordReset,
     verifyPasswordResetCode,
+    applyActionCode,
     watchEvent,
     unWatchEvent,
     reloadAuth,

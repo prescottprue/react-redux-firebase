@@ -18,7 +18,8 @@ import {
   updateEmail,
   resetPassword,
   confirmPasswordReset,
-  verifyPasswordResetCode
+  verifyPasswordResetCode,
+  applyActionCode
 } from 'actions/auth'
 import { cloneDeep } from 'lodash'
 import { actionTypes } from 'constants' // eslint-disable-line node/no-deprecated-api
@@ -586,6 +587,22 @@ describe('Actions: Auth -', () => {
     it('throws for invalid reset code', async () => {
       try {
         res = await verifyPasswordResetCode(dispatch, fakeFirebase, 'error')
+      } catch (err) {
+        expect(err.code).to.be.a.string
+      }
+    })
+  })
+
+  describe('applyActionCode', () => {
+    it('resolves for valid code', async () => {
+      res = await applyActionCode(dispatch, fakeFirebase, 'test')
+      // "success" indicates successful pas through of stub function
+      expect(res).to.equal('success')
+    })
+
+    it('throws for invalid reset code', async () => {
+      try {
+        res = await applyActionCode(dispatch, fakeFirebase, 'error')
       } catch (err) {
         expect(err.code).to.be.a.string
       }

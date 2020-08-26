@@ -670,6 +670,9 @@ interface ExtendedAuthInstance {
   // https://react-redux-firebase.com/docs/auth.html#verifypasswordresetcodecode
   verifyPasswordResetCode: AuthTypes.FirebaseAuth['verifyPasswordResetCode']
 
+  // https://react-redux-firebase.com/docs/auth.html#applyactioncode
+  applyActionCode: AuthTypes.FirebaseAuth['applyActionCode']
+
   /**
    * Signs in using a phone number in an async pattern (i.e. requires calling a second method).
    * @param phoneNumber - Update to be auth object
