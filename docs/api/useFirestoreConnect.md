@@ -2,23 +2,23 @@
 
 ### Table of Contents
 
--   [useFirestoreConnect][1]
-    -   [Parameters][2]
-    -   [Examples][3]
+- [useFirestoreConnect][1]
+  - [Parameters][2]
+  - [Examples][3]
 
 ## useFirestoreConnect
-
 
 React hook that automatically listens/unListens
 to provided Cloud Firestore paths. Make sure you have required/imported
 Cloud Firestore, including it's reducer, before attempting to use.
-**Note** Populate is not yet supported.
+Populate is supported for Firestore as of v0.6.0 of redux-firestore (added
+[as part of issue #48][5]).
 
 ### Parameters
 
--   `queriesConfigs` **([object][5] \| [string][6] \| [Array][7] \| [Function][8])** An object, string,
-    or array of object or string for paths to sync from firestore. Can also be
-    a function that returns the object, string, or array of object or string.
+- `queriesConfigs` **([object][6] \| [string][7] \| [Array][8] \| [Function][9])** An object, string,
+  or array of object or string for paths to sync from firestore. Can also be
+  a function that returns the object, string, or array of object or string.
 
 ### Examples
 
@@ -30,15 +30,17 @@ import { useSelector } from 'react-redux'
 import { useFirestoreConnect } from 'react-redux-firebase'
 
 export default function TodosList() {
-  useFirestoreConnect('todos') // sync todos collection from Firestore into redux
-  const todos = useSelector(state => state.firestore.data.todos)
+  useFirestoreConnect(['todos']) // sync todos collection from Firestore into redux
+  const todos = useSelector((state) => state.firestore.data.todos)
   return (
     <ul>
       {todos &&
         todos.map((todo) => (
-          <li>id: {todo.id} todo: {todo.description}</li>
+          <li>
+            id: {todo.id} todo: {todo.description}
+          </li>
         ))}
-   </ul>
+    </ul>
   )
 }
 ```
@@ -51,10 +53,12 @@ import { useSelector } from 'react-redux'
 import { useFirestoreConnect } from 'react-redux-firebase'
 
 export default function TodoItem({ todoId }) {
-  useFirestoreConnect([{
-    collection: 'todos',
-    doc: todoId
-  }])
+  useFirestoreConnect([
+    {
+      collection: 'todos',
+      doc: todoId
+    }
+  ])
   const todo = useSelector(
     ({ firestore: { data } }) => data.todos && data.todos[todoId]
   )
@@ -64,17 +68,11 @@ export default function TodoItem({ todoId }) {
 ```
 
 [1]: #usefirestoreconnect
-
 [2]: #parameters
-
 [3]: #examples
-
 [4]: https://react-redux-firebase.com/docs/api/useFirestoreConnect.html
-
-[5]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
-
-[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
-
-[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
-
-[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[5]: https://github.com/prescottprue/redux-firestore/issues/48
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[9]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function

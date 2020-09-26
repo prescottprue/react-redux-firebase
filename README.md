@@ -178,15 +178,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { get } from 'lodash'
 import { useSelector } from 'react-redux'
-import { useFirebaseConnect } from 'react-redux-firebase'
+import { useFirebaseConnect, useFirebase } from 'react-redux-firebase'
 import { useParams } from 'react-router-dom'
 
 export default function Todo() {
   const { todoId } = useParams() // matches todos/:todoId in route
+  const firebase = useFirebase()
 
   useFirebaseConnect([
     { path: `todos/${todoId}` } // create todo listener
-    // `todos/${props.params.todoId}` // equivalent string notation
+    // `todos/${todoId}` // equivalent string notation
   ])
 
   const todo = useSelector(
@@ -238,7 +239,7 @@ function TodosList() {
   )
 }
 
-function Todos() {
+export default function Todos() {
   const firebase = useFirebase()
 
   return (
@@ -251,9 +252,6 @@ function Todos() {
     </div>
   )
 }
-
-// Export enhanced component
-export default Todos
 ```
 
 ## Firestore

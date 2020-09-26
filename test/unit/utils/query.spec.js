@@ -10,11 +10,10 @@ import {
 } from 'utils/query'
 import { fakeFirebase } from '../../utils'
 
-let createQueryFromParams = queryParams =>
+const createQueryFromParams = (queryParams) =>
   applyParamsToQuery(queryParams, fakeFirebase.database().ref())
 
 const dispatch = () => {}
-let spy // eslint-disable-line
 
 describe('Utils: Query', () => {
   describe('getWatchPath', () => {
@@ -61,10 +60,6 @@ describe('Utils: Query', () => {
         'value:/todos': 1,
         'value:/todo': 2
       }
-      spy = sinon.spy(console, 'warn')
-    })
-    afterEach(() => {
-      console.warn.restore() // eslint-disable-line no-console
     })
 
     it('removes single watcher', () => {
@@ -231,7 +226,7 @@ describe('Utils: Query', () => {
 
     it('adds children to ordered if they exist', () => {
       const child = { key: 'some', val: () => ({}) }
-      const forEachSpy = sinon.spy(childFunc => childFunc(child))
+      const forEachSpy = sinon.spy((childFunc) => childFunc(child))
       const res = orderedFromSnapshot({ forEach: forEachSpy })
       expect(res).to.be.an('array')
       expect(forEachSpy).to.have.been.calledOnce

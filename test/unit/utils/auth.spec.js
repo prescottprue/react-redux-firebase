@@ -26,6 +26,24 @@ describe('Utils: Auth', () => {
       ).to.include.keys('method')
     })
 
+    it('github provider', () => {
+      expect(
+        getLoginMethodAndParams(firebase, { provider: 'github' })
+      ).to.include.keys('method')
+    })
+
+    it('apple.com provider', () => {
+      expect(
+        getLoginMethodAndParams(firebase, { provider: 'apple.com' })
+      ).to.include.keys('method')
+    })
+
+    it('yahoo.com provider', () => {
+      expect(
+        getLoginMethodAndParams(firebase, { provider: 'yahoo.com' })
+      ).to.include.keys('method')
+    })
+
     it('token', () => {
       expect(
         getLoginMethodAndParams(firebase, { token: 'asdf' })
