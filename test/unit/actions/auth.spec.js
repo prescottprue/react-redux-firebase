@@ -204,7 +204,7 @@ describe('Actions: Auth -', () => {
     })
 
     it('for only the custom claims token', () => {
-      firebase._.config.config = { enableClaims: true }
+      firebase._.config = { enableClaims: true }
       watchUserProfile(dispatch, firebase)
       expect(firebase._.fetchToken).to.be.a.function
     })
