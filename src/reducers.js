@@ -13,6 +13,7 @@ const {
   START,
   SET,
   SET_PROFILE,
+  SET_TOKEN,
   MERGE,
   LOGIN,
   LOGOUT,
@@ -271,7 +272,7 @@ export function authErrorReducer(state = null, action) {
 }
 
 /**
- * Reducer for profile state. Changed by `SET_PROFILE`, `LOGOUT`, and
+ * Reducer for profile state. Changed by `SET_PROFILE`, `SET_TOKEN`, `LOGOUT`, and
  * `LOGIN_ERROR` actions.
  * @param  {object} [state={isLoaded: false}] - Current profile redux state
  * @param  {object} action - Object containing the action that was dispatched
@@ -293,6 +294,13 @@ export function profileReducer(
       }
       return {
         ...action.profile,
+        isEmpty: false,
+        isLoaded: true
+      }
+    case SET_TOKEN:
+      return {
+        ...state,
+        token: action.token,
         isEmpty: false,
         isLoaded: true
       }

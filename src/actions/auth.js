@@ -83,14 +83,6 @@ export function handleProfileWatchResponse(
   userProfileSnap,
   token
 ) {
-  if (!userProfileSnap && token) {
-    dispatch({
-      type: actionTypes.SET_PROFILE,
-      profile: { token }
-    })
-    return
-  }
-
   const {
     profileParamsToPopulate,
     autoPopulateProfile,
@@ -267,18 +259,21 @@ export const watchUserProfile = (dispatch, firebase) => {
           },
           createProfileWatchErrorHandler(dispatch, firebase)
         )
-    } else if (enableClaims) {
-      return firebase
-        .auth()
-        .currentUser.getIdTokenResult(true)
-        .then((token) =>
-          handleProfileWatchResponse(dispatch, firebase, null, token)
-        )
     } else {
       throw new Error(
         'Real Time Database or Firestore must be included to enable user profile'
       )
     }
+  } else if (enableClaims) {
+    return firebase
+      .auth()
+      .currentUser.getIdTokenResult(true)
+      .then((token) => {
+        dispatch({
+          type: actionTypes.SET_TOKEN,
+          token
+        })
+      })
   }
 }
 
