@@ -270,8 +270,8 @@ export const watchUserProfile = (dispatch, firebase) => {
       .currentUser.getIdTokenResult(true)
       .then((token) => {
         dispatch({
-          type: actionTypes.SET_TOKEN,
-          token
+          type: actionTypes.SET_PROFILE,
+          profile: { token }
         })
       })
   }

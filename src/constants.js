@@ -17,7 +17,6 @@ export const actionsPrefix = '@@reactReduxFirebase'
  * @property {string} REMOVE - `@@reactReduxFirebase/REMOVE`
  * @property {string} MERGE - `@@reactReduxFirebase/MERGE`
  * @property {string} SET_PROFILE - `@@reactReduxFirebase/SET_PROFILE`
- * @property {string} SET_TOKEN - `@@reactReduxFirebase/SET_TOKEN`
  * @property {string} LOGIN - `@@reactReduxFirebase/LOGIN`
  * @property {string} LOGOUT - `@@reactReduxFirebase/LOGOUT`
  * @property {string} LOGIN_ERROR - `@@reactReduxFirebase/LOGIN_ERROR`
@@ -63,7 +62,6 @@ export const actionTypes = {
   REMOVE: `${actionsPrefix}/REMOVE`,
   MERGE: `${actionsPrefix}/MERGE`,
   SET_PROFILE: `${actionsPrefix}/SET_PROFILE`,
-  SET_TOKEN: `${actionsPrefix}/SET_TOKEN`,
   LOGIN: `${actionsPrefix}/LOGIN`,
   LOGOUT: `${actionsPrefix}/LOGOUT`,
   LOGIN_ERROR: `${actionsPrefix}/LOGIN_ERROR`,
