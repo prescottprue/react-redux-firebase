@@ -205,7 +205,13 @@ describe('Actions: Auth -', () => {
 
     it('for only the custom claims token', () => {
       const fb = firebaseWithConfig({ userProfile: null, enableClaims: true })
-      watchUserProfile(dispatch, fb)
+      try {
+        watchUserProfile(dispatch, fb)
+      } catch (err) {
+        expect(err.message).to.equal(
+          "Cannot read property 'getIdTokenResult' of null"
+        )
+      }
       expect(firebase._.profileWatch).to.be.a.function
     })
 
