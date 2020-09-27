@@ -265,7 +265,7 @@ export const watchUserProfile = (dispatch, firebase) => {
       )
     }
   } else if (enableClaims) {
-    firebase._.fetchToken = firebase
+    firebase._.profileWatch = firebase
       .auth()
       .currentUser.getIdTokenResult(true)
       .then((token) => {

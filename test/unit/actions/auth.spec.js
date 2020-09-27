@@ -205,9 +205,10 @@ describe('Actions: Auth -', () => {
     })
 
     it('for only the custom claims token', () => {
-      firebase._.config = { enableClaims: true }
+      firebase._.config.enableClaims = true
+      firebase._.config.userProfile = null
       watchUserProfile(dispatch, firebase)
-      expect(firebase._.fetchToken).to.be.a.function
+      expect(firebase._.profileWatch).to.be.a.function
     })
 
     describe('populates -', () => {
