@@ -196,7 +196,6 @@ describe('Actions: Auth -', () => {
 
     afterEach(() => {
       firebase._.config.profileParamsToPopulate = undefined
-      firebase._.config.enableClaims = undefined
     })
 
     it('sets profile watch function', () => {
@@ -205,9 +204,8 @@ describe('Actions: Auth -', () => {
     })
 
     it('for only the custom claims token', () => {
-      firebase._.config.enableClaims = true
-      firebase._.config.userProfile = null
-      watchUserProfile(dispatch, firebase)
+      const fb = firebaseWithConfig({ userProfile: null, enableClaims: true })
+      watchUserProfile(dispatch, fb)
       expect(firebase._.profileWatch).to.be.a.function
     })
 
