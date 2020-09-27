@@ -363,11 +363,9 @@ export function errorsReducer(state = [], action) {
 /**
  * Reducer for listeners ids. Changed by `SET_LISTENER` and `UNSET_LISTENER`
  * actions.
- * @param {object} [state={}] - Current listenersById redux state
- * @param {object} action - Object containing the action that was dispatched
- * @param {string} action.type - Type of action that was dispatched
- * @param action.path
- * @param action.payload
+ * @param  {object} [state={}] - Current listenersById redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
  * @returns {object} listenersById state after reduction (used in listeners)
  * @private
  */
@@ -391,13 +389,9 @@ function listenersById(state = {}, { type, path, payload }) {
 /**
  * Reducer for listeners state. Changed by `UNAUTHORIZED_ERROR`
  * and `LOGOUT` actions.
- * @param {object} [state=[]] - Current allListeners redux state
- * @param {object} action - Object containing the action that was dispatched
- * @param {string} action.type - Type of action that was dispatched
- * @param action.path
- * @param action.payload
- * @param action.path
- * @param action.payload
+ * @param  {object} [state=[]] - Current allListeners redux state
+ * @param  {object} action - Object containing the action that was dispatched
+ * @param  {string} action.type - Type of action that was dispatched
  * @returns {object} allListeners state after reduction (used in listeners)
  * @private
  */
