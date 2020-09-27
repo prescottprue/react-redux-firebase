@@ -196,6 +196,7 @@ describe('Actions: Auth -', () => {
 
     afterEach(() => {
       firebase._.config.profileParamsToPopulate = undefined
+      firebase._.config.enableClaims = undefined
     })
 
     it('sets profile watch function', () => {
