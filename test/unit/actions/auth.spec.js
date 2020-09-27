@@ -205,20 +205,18 @@ describe('Actions: Auth -', () => {
 
     it('for only the custom claims token', () => {
       const fb = firebaseWithConfig({ userProfile: null, enableClaims: true })
-
       fb.auth = () => ({
         currentUser: {
           getIdTokenResult: (bool) => ({
-            then: (func) => func('test')
+            then: (func) => func('testToken')
           })
         }
       })
-
       watchUserProfile(functionSpy, fb)
       expect(firebase._.profileWatch).to.be.a.function
       expect(functionSpy).to.be.calledWith({
         type: actionTypes.SET_PROFILE,
-        profile: { token: 'test' }
+        profile: { token: 'testToken' }
       })
     })
 
