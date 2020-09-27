@@ -80,7 +80,7 @@ describe('Actions: Auth -', () => {
 
   describe('unWatchUserProfile -', () => {
     it('calls profile unwatch', () => {
-      fakeFirebase._.profileWatch = () => {}
+      fakeFirebase._.profileWatch = () => { }
       unWatchUserProfile(fakeFirebase)
       expect(fakeFirebase._.profileWatch).to.be.null
     })
@@ -176,7 +176,7 @@ describe('Actions: Auth -', () => {
 
       it('Any when useFirestoreForProfile: true - calls console.warn', () => {
         const currentFake = cloneDeep(fakeFirebase)
-        currentFake._.profileWatch = () => {}
+        currentFake._.profileWatch = () => { }
         currentFake._.config.useFirestoreForProfile = true
         currentFake._.config.profileParamsToPopulate = ['some']
         currentFake.firestore = {}
@@ -201,6 +201,12 @@ describe('Actions: Auth -', () => {
     it('sets profile watch function', () => {
       watchUserProfile(dispatch, firebase)
       expect(firebase._.profileWatch).to.be.a.function
+    })
+
+    it('for only the custom claims token', () => {
+      firebase._.config.config = { enableClaims: true }
+      watchUserProfile(dispatch, firebase)
+      expect(firebase._.fetchToken).to.be.a.function
     })
 
     describe('populates -', () => {
