@@ -213,22 +213,22 @@ export const watchUserProfile = (dispatch, firebase) => {
         .onSnapshot((userProfileSnap) => {
           return enableClaims
             ? firebase
-              .auth()
-              .currentUser.getIdTokenResult(true)
-              .then((token) =>
-                handleProfileWatchResponse(
-                  dispatch,
-                  firebase,
-                  userProfileSnap,
-                  token
+                .auth()
+                .currentUser.getIdTokenResult(true)
+                .then((token) =>
+                  handleProfileWatchResponse(
+                    dispatch,
+                    firebase,
+                    userProfileSnap,
+                    token
+                  )
                 )
-              )
             : handleProfileWatchResponse(
-              dispatch,
-              firebase,
-              userProfileSnap,
-              null
-            )
+                dispatch,
+                firebase,
+                userProfileSnap,
+                null
+              )
         }, createProfileWatchErrorHandler(dispatch, firebase))
     } else if (firebase.database) {
       firebase._.profileWatch = firebase // eslint-disable-line no-param-reassign
@@ -240,22 +240,22 @@ export const watchUserProfile = (dispatch, firebase) => {
           (userProfileSnap) => {
             enableClaims
               ? firebase
-                .auth()
-                .currentUser.getIdTokenResult(true)
-                .then((token) =>
-                  handleProfileWatchResponse(
-                    dispatch,
-                    firebase,
-                    userProfileSnap,
-                    token
+                  .auth()
+                  .currentUser.getIdTokenResult(true)
+                  .then((token) =>
+                    handleProfileWatchResponse(
+                      dispatch,
+                      firebase,
+                      userProfileSnap,
+                      token
+                    )
                   )
-                )
               : handleProfileWatchResponse(
-                dispatch,
-                firebase,
-                userProfileSnap,
-                null
-              )
+                  dispatch,
+                  firebase,
+                  userProfileSnap,
+                  null
+                )
           },
           createProfileWatchErrorHandler(dispatch, firebase)
         )
@@ -334,8 +334,8 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
               ? userData.toJSON()
               : userData
             : userData.user.toJSON
-              ? userData.user.toJSON()
-              : userData.user
+            ? userData.user.toJSON()
+            : userData.user
           // Remove unnecessary auth params (configurable) and preserve types of timestamps
           newProfile = {
             ...omit(userDataObject, config.keysToRemoveFromAuth),
@@ -369,7 +369,7 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
     .ref()
     .child(
       `${config.userProfile}/${
-      userData.user ? userData.user.uid : userData.uid
+        userData.user ? userData.user.uid : userData.uid
       }`
     )
     .once('value')
@@ -535,7 +535,7 @@ export const login = (dispatch, firebase, credentials) => {
 
   return firebase
     .auth()
-  [method](...params)
+    [method](...params)
     .then((userData) => {
       // Handle null response from getRedirectResult before redirect has happened
       if (!userData) return Promise.resolve(null)
