@@ -205,14 +205,21 @@ describe('Actions: Auth -', () => {
 
     it('for only the custom claims token', () => {
       const fb = firebaseWithConfig({ userProfile: null, enableClaims: true })
-      try {
-        watchUserProfile(dispatch, fb)
-      } catch (err) {
-        expect(err.message).to.equal(
-          "Cannot read property 'getIdTokenResult' of null"
-        )
-      }
+
+      fb.auth = () => ({
+        currentUser: {
+          getIdTokenResult: (bool) => ({
+            then: (func) => func('test')
+          })
+        }
+      })
+
+      watchUserProfile(functionSpy, fb)
       expect(firebase._.profileWatch).to.be.a.function
+      expect(functionSpy).to.be.calledWith({
+        type: actionTypes.SET_PROFILE,
+        profile: { token: 'test' }
+      })
     })
 
     describe('populates -', () => {
