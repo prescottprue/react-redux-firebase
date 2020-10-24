@@ -1046,7 +1046,7 @@ interface ReactReduxFirebaseConfig {
   enableRedirectHandling: boolean
   firebaseStateName: string
   logErrors: boolean
-  onAuthStateChanged: (user: AuthTypes.User | null) => void
+  onAuthStateChanged: (user: AuthTypes.User | null, _firebase: any, dispatch: Dispatch) => void
   presence: any
   preserveOnEmptyAuthChange: any
   preserveOnLogout: any
