@@ -203,6 +203,23 @@ describe('Actions: Auth -', () => {
       expect(firebase._.profileWatch).to.be.a.function
     })
 
+    it('for only the custom claims token', () => {
+      const fb = firebaseWithConfig({ userProfile: null, enableClaims: true })
+      fb.auth = () => ({
+        currentUser: {
+          getIdTokenResult: (bool) => ({
+            then: (func) => func('testToken')
+          })
+        }
+      })
+      watchUserProfile(functionSpy, fb)
+      expect(firebase._.profileWatch).to.be.a.function
+      expect(functionSpy).to.be.calledWith({
+        type: actionTypes.SET_PROFILE,
+        profile: { token: 'testToken' }
+      })
+    })
+
     describe('populates -', () => {
       it('skips populating data into profile by default', () => {
         firebase._.config.profileParamsToPopulate = 'role:roles'

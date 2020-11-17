@@ -264,6 +264,16 @@ export const watchUserProfile = (dispatch, firebase) => {
         'Real Time Database or Firestore must be included to enable user profile'
       )
     }
+  } else if (enableClaims) {
+    firebase._.profileWatch = firebase
+      .auth()
+      .currentUser.getIdTokenResult(true)
+      .then((token) => {
+        dispatch({
+          type: actionTypes.SET_PROFILE,
+          profile: { token }
+        })
+      })
   }
 }
 
