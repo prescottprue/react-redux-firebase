@@ -309,6 +309,26 @@ props.firebase.verifyPasswordResetCode('some reset code')
 
 [**Promise**][promise-url] - Email associated with reset code
 
+## applyActionCode(code)
+
+Applies action code
+
+Calls Firebase's `firebase.auth().applyActionCode()`. If there is an error, it is added into redux state under `state.firebase.authError`.
+
+##### Examples
+
+```js
+props.firebase.applyActionCode('some verification code')
+```
+
+##### Parameters
+
+- `code` [**String**][string-url] - Verification code
+
+##### Returns
+
+[**Promise**][promise-url] - Resolves on end
+
 ## signInWithPhoneNumber(code)
 
 Signs in using a phone number in an async pattern (i.e. requires calling a second method). Calls Firebase's [`firebase.auth().signInWithPhoneNumber()`](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#signInWithPhoneNumber). If there is an error, it is added into redux state under `state.firebase.authError`.
