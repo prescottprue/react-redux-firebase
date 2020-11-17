@@ -168,7 +168,7 @@ interface BaseExtendedFirebaseInstance
   ExtendedStorageInstance {
   initializeAuth: VoidFunction
 
-  firestore: () => ExtendedFirestoreInstance
+  firestore: (() => ExtendedFirestoreInstance) & FirestoreStatics
 
   dispatch: Dispatch
 
@@ -479,8 +479,7 @@ export type ReduxFirestoreQueriesFunction = (
  * @see https://github.com/prescottprue/redux-firestore#api
  */
 interface ExtendedFirestoreInstance
-  extends FirestoreTypes.FirebaseFirestore,
-  FirestoreStatics {
+  extends FirestoreTypes.FirebaseFirestore {
   /**
    * Get data from firestore.
    * @see https://github.com/prescottprue/redux-firestore#get
