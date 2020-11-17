@@ -748,10 +748,10 @@ export const resetPassword = (dispatch, firebase, email) => {
       if (err) {
         switch (err.code) {
           case 'auth/user-not-found':
-            dispatchLoginError(
-              dispatch,
-              new Error('The specified user account does not exist.')
-            )
+            dispatchLoginError(dispatch, {
+              ...err,
+              message: 'The specified user account does not exist.'
+            })
             break
           default:
             dispatchLoginError(dispatch, err)
