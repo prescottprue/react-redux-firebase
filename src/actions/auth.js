@@ -264,6 +264,16 @@ export const watchUserProfile = (dispatch, firebase) => {
         'Real Time Database or Firestore must be included to enable user profile'
       )
     }
+  } else if (enableClaims) {
+    firebase._.profileWatch = firebase
+      .auth()
+      .currentUser.getIdTokenResult(true)
+      .then((token) => {
+        dispatch({
+          type: actionTypes.SET_PROFILE,
+          profile: { token }
+        })
+      })
   }
 }
 
@@ -738,10 +748,10 @@ export const resetPassword = (dispatch, firebase, email) => {
       if (err) {
         switch (err.code) {
           case 'auth/user-not-found':
-            dispatchLoginError(
-              dispatch,
-              new Error('The specified user account does not exist.')
-            )
+            dispatchLoginError(dispatch, {
+              ...err,
+              message: 'The specified user account does not exist.'
+            })
             break
           default:
             dispatchLoginError(dispatch, err)
