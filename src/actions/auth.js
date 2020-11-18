@@ -264,6 +264,16 @@ export const watchUserProfile = (dispatch, firebase) => {
         'Real Time Database or Firestore must be included to enable user profile'
       )
     }
+  } else if (enableClaims) {
+    firebase._.profileWatch = firebase
+      .auth()
+      .currentUser.getIdTokenResult(true)
+      .then((token) => {
+        dispatch({
+          type: actionTypes.SET_PROFILE,
+          profile: { token }
+        })
+      })
   }
 }
 
@@ -738,10 +748,10 @@ export const resetPassword = (dispatch, firebase, email) => {
       if (err) {
         switch (err.code) {
           case 'auth/user-not-found':
-            dispatchLoginError(
-              dispatch,
-              new Error('The specified user account does not exist.')
-            )
+            dispatchLoginError(dispatch, {
+              ...err,
+              message: 'The specified user account does not exist.'
+            })
             break
           default:
             dispatchLoginError(dispatch, err)
@@ -813,6 +823,27 @@ export const verifyPasswordResetCode = (dispatch, firebase, code) => {
   return firebase
     .auth()
     .verifyPasswordResetCode(code)
+    .catch((err) => {
+      if (err) {
+        dispatchLoginError(dispatch, err)
+      }
+      return Promise.reject(err)
+    })
+}
+
+/**
+ * Apply a verification code sent via email or other mechanism
+ * @param {Function} dispatch - Action dispatch function
+ * @param {object} firebase - Internal firebase object
+ * @param {string} code - Verification code
+ * @returns {Promise} Resolves after applying verification code
+ * @private
+ */
+export const applyActionCode = (dispatch, firebase, code) => {
+  dispatchLoginError(dispatch, null)
+  return firebase
+    .auth()
+    .applyActionCode(code)
     .catch((err) => {
       if (err) {
         dispatchLoginError(dispatch, err)

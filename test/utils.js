@@ -364,6 +364,12 @@ export const fakeFirebase = {
               email: 'test@test.com',
               providerData: [{}]
             })
+        : Promise.resolve('success'),
+    applyActionCode: (code) =>
+      code === 'error'
+        ? Promise.reject(new Error('some'))
+          ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
+          : Promise.resolve()
         : Promise.resolve('success')
   }),
   storage: () => ({

@@ -594,13 +594,34 @@ describe('createFirebaseInstance', () => {
       )
 
       expect(firebaseInstance.verifyPasswordResetCode).to.be.a.function
-      const email = 'test@test.com'
-      const password = 'asdfasdf1'
+      const code = 'asdfasdf1'
       await firebaseInstance.verifyPasswordResetCode({
-        email,
-        password
+        code
       })
       expect(verifyPasswordResetCodeSpy).to.have.been.calledOnce
+    })
+  })
+
+  describe('applyActionCode method', () => {
+    it('calls firebase auth applyActionCode', async () => {
+      const dispatchSpy = sinon.spy(() => {})
+      const applyActionCodeSpy = sinon.spy(() => Promise.resolve({}))
+      const firebaseStub = {
+        auth: () => ({ applyActionCode: applyActionCodeSpy }),
+        _: firebase._
+      }
+      const firebaseInstance = createFirebaseInstance(
+        firebaseStub,
+        {},
+        dispatchSpy
+      )
+
+      expect(firebaseInstance.applyActionCode).to.be.a.function
+      const code = 'asdfasdf1'
+      await firebaseInstance.applyActionCode({
+        code
+      })
+      expect(applyActionCodeSpy).to.have.been.calledOnce
     })
   })
 
