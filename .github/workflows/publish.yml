@@ -54,7 +54,7 @@ jobs:
         run: |
           gitBranch=${GITHUB_REF##*/}
           publishFlag=$(if [ "$GITHUB_REF" != 'refs/heads/master' ]; then eval echo '--tag $gitBranch'; else echo ''; fi;)
-          echo "::set-env name=PACKAGE_VERSION::$(cat package.json | jq -r '.version')"
+          echo "PACKAGE_VERSION=$(cat package.json | jq -r '.version')" >> $GITHUB_ENV
           npm publish $publishFlag
 
       - name: Upload Coverage
