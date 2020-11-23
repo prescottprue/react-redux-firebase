@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FirebaseNamespace } from "@firebase/app-types";
+import { FirebaseNamespace } from '@firebase/app-types'
 import * as FirestoreTypes from '@firebase/firestore-types'
 import * as DatabaseTypes from '@firebase/database-types'
 import * as StorageTypes from '@firebase/storage-types'
@@ -343,7 +343,7 @@ interface BaseExtendedFirebaseInstance
  * OptionalOverride is left here in the event that any of the optional properties below need to be extended in the future.
  * Example: OptionalOverride<FirebaseNamespace, 'messaging', { messaging: ExtendedMessagingInstance }>
  */
-type OptionalOverride<T, b extends string, P> = b extends keyof T ? P : {};
+type OptionalOverride<T, b extends string, P> = b extends keyof T ? P : {}
 type OptionalPick<T, b extends string> = Pick<T, b & keyof T>
 
 type ExtendedFirebaseInstance = BaseExtendedFirebaseInstance & OptionalPick<FirebaseNamespace, 'messaging' | 'performance' | 'functions' | 'analytics' | 'remoteConfig'>
@@ -360,8 +360,7 @@ export function createFirebaseInstance(
   firebase: any,
   configs: Partial<ReduxFirestoreConfig>,
   dispatch: Dispatch
-): ExtendedFirebaseInstance;
-
+): ExtendedFirebaseInstance
 
 export type QueryParamOption =
   | 'orderByKey'
@@ -389,7 +388,7 @@ export interface ReactReduxFirebaseQuerySetting {
   | 'child_moved'
   queryParams?: QueryParamOptions
   storeAs?: string
-  populates?: any[]
+  populates?: { child: string; root: string }[]
 }
 
 /**
@@ -476,7 +475,7 @@ export interface ReduxFirestoreQuerySetting {
   /**
    * @see https://github.com/prescottprue/redux-firestore#population
    */
-  populates?: any[]
+  populates?: { child: string; root: string }[]
 }
 
 /**
