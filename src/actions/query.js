@@ -218,7 +218,7 @@ export function watchEvents(firebase, dispatch, events) {
  * @param {Array} events - List of events for which to remove watchers
  */
 export function unWatchEvents(firebase, dispatch, events) {
-  events.forEach((event) => unWatchEvent(firebase, dispatch, event))
+  events?.forEach((event) => unWatchEvent(firebase, dispatch, event))
 }
 
 /**
