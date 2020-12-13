@@ -41,7 +41,7 @@ export function unWatchUserProfile(firebase) {
     if (useFirestoreForProfile && firebase.firestore) {
       // Call profile onSnapshot unsubscribe stored on profileWatch
       firebase._.profileWatch()
-    } else {
+    } else if (firebase.database) {
       firebase
         .database()
         .ref()
