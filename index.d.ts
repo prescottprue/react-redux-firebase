@@ -617,7 +617,9 @@ type Credentials =
     type: 'popup' | 'redirect'
     scopes?: string[]
   }
-  | AuthTypes.AuthCredential
+  | {
+    credential: AuthTypes.AuthCredential
+  }
   | {
     token: string
     profile: Object
