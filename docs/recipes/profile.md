@@ -10,7 +10,22 @@ Include the `userProfile` parameter in config passed to react-redux-firebase:
 
 ```js
 const config = {
-  userProfile: 'users', // where profiles are stored in database
+  userProfile: 'users' // where profiles are stored in database
+}
+```
+
+Make sure to set your database rules to work with user profiles being stored under the `users` path of Real Time Database:
+
+```json
+{
+  "rules": {
+    "users": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
+    }
+  }
 }
 ```
 
@@ -24,7 +39,7 @@ Then later `connect` (from [react-redux](https://github.com/reactjs/react-redux/
 import { useSelector } from 'react-redux'
 
 function SomeComponent() {
-  const profile = useSelector(state => state.firebase.profile)
+  const profile = useSelector((state) => state.firebase.profile)
   return <div>{JSON.stringify(profile, null, 2)}</div>
 }
 
@@ -42,13 +57,11 @@ Then later `connect` (from [react-redux](https://github.com/reactjs/react-redux/
 import { connect } from 'react-redux'
 
 // grab profile from redux with connect
-connect(
-  (state) => {
-    return {
-      profile: state.firebase.profile // profile passed as props.profile
-    }
+connect((state) => {
+  return {
+    profile: state.firebase.profile // profile passed as props.profile
   }
-)(SomeComponent) // pass component to be wrapped
+})(SomeComponent) // pass component to be wrapped
 
 // or with some shorthand:
 connect(({ firebase: { profile } }) => ({ profile }))(SomeComponent)
@@ -65,6 +78,19 @@ const config = {
 }
 ```
 
+Make sure to set your firestore rules to work with user profiles being stored under the `users` collection of Firestore:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+  }
+}
+```
+
 ## Update Profile
 
 The current users profile can be updated by using the `updateProfile` method:
@@ -78,7 +104,7 @@ import { useFirebase, isLoaded } from 'react-redux-firebase'
 
 export default function UpdateProfilePage() {
   const firebase = useFirebase()
-  const profile = useSelector(state => state.firebase.profile)
+  const profile = useSelector((state) => state.firebase.profile)
 
   function updateUserProfile() {
     return firebase.updateProfile({ role: 'admin' })
@@ -87,18 +113,10 @@ export default function UpdateProfilePage() {
   return (
     <div>
       <h2>Update User Profile</h2>
-      <span>
-        Click the button to update profile to include role parameter
-      </span>
-      <button onClick={updateUserProfile}>
-        Add Role To User
-      </button>
+      <span>Click the button to update profile to include role parameter</span>
+      <button onClick={updateUserProfile}>Add Role To User</button>
       <div>
-        {
-          isLoaded(profile)
-            ? JSON.stringify(profile, null, 2)
-            : 'Loading...'
-        }
+        {isLoaded(profile) ? JSON.stringify(profile, null, 2) : 'Loading...'}
       </div>
     </div>
   )
@@ -113,7 +131,8 @@ The way user profiles are written to the database can be modified by passing the
 // within your createStore.js or store.js file include the following config
 const config = {
   userProfile: 'users', // where profiles are stored in database
-  profileFactory: (userData, profileData, firebase) => { // how profiles are stored in database
+  profileFactory: (userData, profileData, firebase) => {
+    // how profiles are stored in database
     const { user } = userData
     return {
       email: user.email
@@ -152,9 +171,7 @@ Setting config like this:
 ```js
 const config = {
   userProfile: 'users', // where profiles are stored in database
-  profileParamsToPopulate: [
-    'contacts:users'
-  ]
+  profileParamsToPopulate: ['contacts:users']
 }
 ```
 
