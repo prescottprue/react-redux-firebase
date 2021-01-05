@@ -18,7 +18,7 @@ class ProtectedPage extends Component {
     authExists: PropTypes.bool,
   }
 
-  componentWillReceiveProps({ authExists }) {
+  componentWillReceiveProps({ !authExists }) {
     if (authExists) {
       this.context.router.push('/login') // redirect to /login if not authed
     }
