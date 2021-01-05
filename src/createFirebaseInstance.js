@@ -19,11 +19,18 @@ let firebaseInstance
 export default function createFirebaseInstance(firebase, configs, dispatch) {
   /* istanbul ignore next: Logging is external */
   // Enable Logging based on config (handling instances without i.e RNFirebase)
+  // NOTE: This will be removed in a future version
   if (
+    configs &&
     configs.enableLogging &&
     firebase.database &&
     typeof firebase.database.enableLogging === 'function'
   ) {
+    /* eslint-disable no-console */
+    console.warn(
+      'The enableLogging config option is disabled and will be removed in a future version of react-redux-firebase. Enable logging as part of instance initialization.'
+    )
+    /* eslint-enable no-console */
     firebase.database.enableLogging(configs.enableLogging)
   }
 

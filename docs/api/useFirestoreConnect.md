@@ -16,7 +16,7 @@ Populate is supported for Firestore as of v0.6.0 of redux-firestore (added
 
 ### Parameters
 
-- `queriesConfigs` **([object][6] \| [string][7] \| [Array][8] \| [Function][9])** An object, string,
+- `queriesConfigs` **([Array][6] \| [Function][7])** An object, string,
   or array of object or string for paths to sync from firestore. Can also be
   a function that returns the object, string, or array of object or string.
 
@@ -72,7 +72,5 @@ export default function TodoItem({ todoId }) {
 [3]: #examples
 [4]: https://react-redux-firebase.com/docs/api/useFirestoreConnect.html
 [5]: https://github.com/prescottprue/redux-firestore/issues/48
-[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
-[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
-[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
-[9]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function

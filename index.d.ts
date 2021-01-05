@@ -443,7 +443,6 @@ export interface ReduxFirestoreQuerySetting {
    * @see https://github.com/prescottprue/redux-firestore#where
    */
   where?: WhereOptions | WhereOptions[]
-  endBefore?: FirestoreTypes.DocumentSnapshot | any | any[]
   /**
    * @see https://github.com/prescottprue/redux-firestore#orderby
    */
@@ -498,7 +497,7 @@ export type ReduxFirestoreQueriesFunction = (
  * @see https://github.com/prescottprue/redux-firestore#api
  */
 interface ExtendedFirestoreInstance
-  extends FirestoreTypes.FirebaseFirestore {
+  extends FirestoreTypes.FirebaseFirestore, FirestoreStatics {
   /**
    * Get data from firestore.
    * @see https://github.com/prescottprue/redux-firestore#get
@@ -618,7 +617,9 @@ type Credentials =
     type: 'popup' | 'redirect'
     scopes?: string[]
   }
-  | AuthTypes.AuthCredential
+  | {
+    credential: AuthTypes.AuthCredential
+  }
   | {
     token: string
     profile: Object
@@ -713,7 +714,7 @@ interface ExtendedAuthInstance {
    * @param credential - The auth credential
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#reloadauth
    */
-  reloadAuth: (credential?: firebase.auth.AuthCredential | any) => Promise<void>
+  reloadAuth: (credential?: AuthTypes.AuthCredential | any) => Promise<void>
 
   /**
    * Links the user account with the given credentials. Internally
@@ -1086,6 +1087,9 @@ interface ReactReduxFirebaseConfig {
   dispatchOnUnsetListener: boolean
   dispatchRemoveAction: boolean
   enableEmptyAuthChanges: boolean
+  /**
+   * @deprecated
+   */ 
   enableLogging: boolean
   enableRedirectHandling: boolean
   firebaseStateName: string
@@ -1117,7 +1121,7 @@ interface ReactReduxFirebaseConfig {
   fileMetadataFactory?: (
     uploadRes: StorageTypes.UploadTaskSnapshot,
     firebase: WithFirebaseProps<ProfileType>['firebase'],
-    metadata: StorageTypes.UploadTaskSnapshot.metadata,
+    metadata: StorageTypes.FullMetadata,
     downloadURL: string
   ) => object
 }
@@ -1127,6 +1131,9 @@ interface ReactReduxFirebaseConfig {
  * @see https://github.com/prescottprue/redux-firestore#config-options
  */
 export interface ReduxFirestoreConfig {
+  /**
+   * @deprecated
+   */
   enableLogging: boolean
 
   helpersNamespace: string | null

@@ -115,7 +115,7 @@ export const actionTypes = {
  * @property {string|Function} sessions - `sessions` Location on Firebase where user
  * sessions are stored (only if presense is set). Often set to `'sessions'` or
  * `'userSessions'`. If a function is passed, the arguments are: `(currentUser, firebase)`.
- * @property {boolean} enableLogging - `false` Whether or not firebase
+ * @property {boolean} enableLogging - `false` (*deprecated*) Whether or not firebase
  * database logging is enabled. Providing `true` turns on error logging
  * (enabled by itself through `logErrors`).
  * @property {boolean} logErrors - `true` Whether or not to log internal

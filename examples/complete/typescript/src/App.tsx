@@ -9,8 +9,7 @@ import { firebase as fbConfig, reduxFirebase as rfConfig } from "./config";
 import Home from "./Home";
 import configureStore from "./store";
 
-const initialState = {};
-const store = configureStore(initialState);
+const store = configureStore();
 // Initialize Firebase instance
 firebase.initializeApp(fbConfig);
 

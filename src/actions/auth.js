@@ -37,19 +37,20 @@ export function unWatchUserProfile(firebase) {
     authUid,
     config: { userProfile, useFirestoreForProfile }
   } = firebase._
-  if (firebase._.profileWatch) {
-    if (useFirestoreForProfile && firebase.firestore) {
-      // Call profile onSnapshot unsubscribe stored on profileWatch
-      firebase._.profileWatch()
-    } else {
-      firebase
-        .database()
-        .ref()
-        .child(`${userProfile}/${authUid}`)
-        .off('value', firebase._.profileWatch)
-    }
-    firebase._.profileWatch = null
+  if (!firebase._.profileWatch) {
+    return
   }
+  if (useFirestoreForProfile && firebase.firestore) {
+    // Call profile onSnapshot unsubscribe stored on profileWatch
+    firebase._.profileWatch()
+  } else if (userProfile && firebase.database) {
+    firebase
+      .database()
+      .ref()
+      .child(`${userProfile}/${authUid}`)
+      .off('value', firebase._.profileWatch)
+  }
+  firebase._.profileWatch = null
 }
 
 /**

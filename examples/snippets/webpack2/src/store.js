@@ -8,7 +8,6 @@ export default function configureStore (initialState, history) {
     reactReduxFirebase(fbConfig,
       {
         userProfile: 'users',
-        enableLogging: false
       }
     ),
     typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
