@@ -497,7 +497,7 @@ export type ReduxFirestoreQueriesFunction = (
  * @see https://github.com/prescottprue/redux-firestore#api
  */
 interface ExtendedFirestoreInstance
-  extends FirestoreTypes.FirebaseFirestore {
+  extends FirestoreTypes.FirebaseFirestore, FirestoreStatics {
   /**
    * Get data from firestore.
    * @see https://github.com/prescottprue/redux-firestore#get
