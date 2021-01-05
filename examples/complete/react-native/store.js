@@ -15,7 +15,6 @@ export default function configureStore(initialState, history) {
     reactReduxFirebase(firebase, {
       userProfile: 'users',
       useFirestoreForProfile: true, // Store in Firestore instead of Real Time DB
-      enableLogging: false
     })
   )(createStore)
 

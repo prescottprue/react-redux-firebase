@@ -1087,6 +1087,9 @@ interface ReactReduxFirebaseConfig {
   dispatchOnUnsetListener: boolean
   dispatchRemoveAction: boolean
   enableEmptyAuthChanges: boolean
+  /**
+   * @deprecated
+   */ 
   enableLogging: boolean
   enableRedirectHandling: boolean
   firebaseStateName: string
@@ -1128,6 +1131,9 @@ interface ReactReduxFirebaseConfig {
  * @see https://github.com/prescottprue/redux-firestore#config-options
  */
 export interface ReduxFirestoreConfig {
+  /**
+   * @deprecated
+   */
   enableLogging: boolean
 
   helpersNamespace: string | null
