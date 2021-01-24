@@ -43,7 +43,7 @@ export default compose(
   firestoreConnect(() => ['todos']), // sync todos collection from Firestore into redux
   connect((state) => ({
     todosList: state.firestore.data.todos
-  })
+  }))
 )(SomeComponent)
 ```
 
