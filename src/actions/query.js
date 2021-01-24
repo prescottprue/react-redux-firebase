@@ -51,6 +51,10 @@ export function watchEvent(firebase, dispatch, options) {
 
   setWatcher(firebase, dispatch, type, watchPath, id)
 
+  if (counter > 0) {
+    return
+  }
+
   if (type === 'first_child') {
     return firebase
       .database()
