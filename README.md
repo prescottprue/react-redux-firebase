@@ -12,6 +12,10 @@
 
 > Redux bindings for Firebase. Includes Higher Order Component (HOC) for use with React.
 
+## Usage Note
+
+If you are starting a new project and/or are not required to have your Firebase data loaded into redux, you might want to give [reactfire](https://github.com/FirebaseExtended/reactfire) a try before trying react-redux-firebase. I wrote up [a quick medium article](http://bit.ly/3d2XPsS) explaining a bit about how, why, and showing how to start a new project with these tools.
+
 ## [Simple Example](https://codesandbox.io/s/zrr0n5m2zp)
 
 [![Edit Simple Example](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/zrr0n5m2zp)
