@@ -456,6 +456,30 @@ describe('createFirebaseInstance', () => {
       // signInWithEmailAndPassword is called on login with email
       expect(loginSpy).to.have.been.calledOnce
     })
+
+    it('calls firebase auth signInWithEmailLink', async () => {
+      const dispatchSpy = sinon.spy(() => {})
+      const loginSpy = sinon.spy(() => Promise.resolve({}))
+      const firebaseStub = {
+        auth: () => ({ signInWithEmailLink: loginSpy }),
+        _: firebase._
+      }
+      const firebaseInstance = createFirebaseInstance(
+        firebaseStub,
+        {},
+        dispatchSpy
+      )
+
+      expect(firebaseInstance.login).to.be.a.function
+      const email = 'test@test.com'
+      const emailLink = 'https://example.com'
+      await firebaseInstance.login({
+        email,
+        emailLink
+      })
+      // signInWithEmailLink is called on passwordless sign-in
+      expect(loginSpy).to.have.been.calledOnce
+    })
   })
 
   describe('handleRedirectResult method', () => {

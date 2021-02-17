@@ -545,7 +545,8 @@ export const login = (dispatch, firebase, credentials) => {
       if (
         [
           'signInWithEmailAndPassword',
-          'signInAndRetrieveDataWithEmailAndPassword'
+          'signInAndRetrieveDataWithEmailAndPassword',
+          'signInWithEmailLink'
         ].includes(method)
       ) {
         return { user: userData }
