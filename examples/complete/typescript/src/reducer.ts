@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import { firebaseReducer, FirebaseReducer } from 'react-redux-firebase'
+import { firestoreReducer, FirestoreReducer } from 'redux-firestore'
 
 interface UserProfile {
   email: string
@@ -16,12 +17,13 @@ interface DBSchema {
   [name: string]: any
 }
 interface RootState {
-  firebase: FirebaseReducer.Reducer<UserProfile, DBSchema>
-  // firestore: FirestoreReducer.Reducer;
+  firebase: FirebaseReducer.Reducer<DBSchema>
+  firestore: FirestoreReducer.Reducer;
 }
 
 const rootReducer = combineReducers<RootState>({
-  firebase: firebaseReducer
+  firebase: firebaseReducer,
+  firestore: firestoreReducer
 })
 
 export type AppState = ReturnType<typeof rootReducer>

@@ -5,7 +5,7 @@ import Todo from './Todo'
 import { useSelector } from "react-redux";
 
 function Todos() {
-  useFirebaseConnect([{ path: 'todos', queryParams: ['limitToLast=10'] }])
+  useFirebaseConnect([{ path: 'public_todos', queryParams: ['limitToLast=10'], storeAs: 'todos' }])
   const todos = useSelector((state: AppState) => {
     return state.firebase.ordered.todos
   })

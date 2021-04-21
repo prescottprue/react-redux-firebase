@@ -1,8 +1,8 @@
+import React from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore"; // make sure you add this for firestore
-import React from "react";
 import { Provider } from "react-redux";
 import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 import { firebase as fbConfig, reduxFirebase as rfConfig } from "./config";

@@ -5,7 +5,7 @@ function AddTodo() {
   const firebase: ExtendedFirebaseInstance = useFirebase();
 
   function handleAddClick() {
-    firebase.push("todos", { done: false, text: "Example todo" });
+    firebase.push("public_todos", { done: false, text: "Example todo" });
   }
   return (
     <div className="Add Todo">

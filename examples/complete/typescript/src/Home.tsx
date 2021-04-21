@@ -2,7 +2,6 @@ import React from "react";
 import Todos from "./Todos";
 import AddTodo from "./AddTodo";
 import "./App.css";
-import logo from "./logo.svg";
 
 function Home() {
   return (
