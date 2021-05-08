@@ -1339,15 +1339,15 @@ export namespace FirebaseReducer {
 }
 
 export namespace FirestoreReducer {
-  export interface Reducer {
+  export interface Reducer<Schema extends Record<string, any> = { [key: string]: any }> {
     composite?: Data<any | Dictionary<any>>
-    data: Data<any | Dictionary<any>>
+    data: { [key in keyof Schema]: Schema[key] };
     errors: {
       allIds: string[]
       byQuery: any[]
     }
     listeners: Listeners
-    ordered: Ordered<any>
+    ordered: { [key in keyof Schema]: Schema[key][] };
     queries: Data<ReduxFirestoreQuerySetting & (Dictionary<any> | any)>
     status: {
       requested: Dictionary<boolean>
