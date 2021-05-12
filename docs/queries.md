@@ -421,7 +421,7 @@ Start query at a specific location by providing the specific number or value
 3. Non-number values
 ```js
 firebaseConnect([
-  { path: '/todos', queryParams: [ 'startAt=5', 'limitToFirst=10' ] }
+  { path: '/todos', queryParams: [ 'startAt=val1', 'limitToFirst=10' ] }
   // 'todos#startAt=val1&limitToFirst=10' // string notation
 ])
 ```
