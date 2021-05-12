@@ -99,7 +99,8 @@ export function getLoginMethodAndParams(firebase, credentials) {
     scopes,
     phoneNumber,
     applicationVerifier,
-    credential
+    credential,
+    emailLink
   } = credentials
   // Credential Auth
   if (credential) {
@@ -156,6 +157,11 @@ export function getLoginMethodAndParams(firebase, credentials) {
       method: 'signInWithPhoneNumber',
       params: [phoneNumber, applicationVerifier]
     }
+  }
+
+  // Passwordless sign-in
+  if (emailLink && email) {
+    return { method: 'signInWithEmailLink', params: [email, emailLink] }
   }
 
   // Check for new sign in method (see #484 for more info)

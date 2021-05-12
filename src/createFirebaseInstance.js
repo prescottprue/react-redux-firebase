@@ -380,6 +380,7 @@ export default function createFirebaseInstance(firebase, configs, dispatch) {
    * (popup | redirect) (only used with provider)
    * @param {string} credentials.email - Credentials for authenticating
    * @param {string} credentials.password - Credentials for authenticating (only used with email)
+   * @param {string} credentials.emailLink - emailLink for authenticating (only used with passwordless sign-in)
    * @returns {Promise} Containing user's auth data
    * @see https://react-redux-firebase.com/docs/auth.html#logincredentials
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#login
