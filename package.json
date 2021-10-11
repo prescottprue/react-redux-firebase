@@ -58,7 +58,7 @@
   ],
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2"
   },
   "peerDependencies": {
@@ -105,7 +105,7 @@
     "eslint-plugin-react-hooks": "^4.0.8",
     "eslint-plugin-standard": "^4.0.1",
     "firebase": "7.14.6",
-    "firebase-server": "^1.0.2",
+    "firebase-server": "^1.1.0",
     "gitbook-cli": "^2.3.2",
     "husky": "^4.3.8",
     "jsdom": "^11.10.0",
