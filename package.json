@@ -1,6 +1,6 @@
 {
   "name": "react-redux-firebase",
-  "version": "3.10.1",
+  "version": "3.11.0",
   "description": "Redux integration for Firebase. Comes with a Higher Order Components for use with React.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -16,13 +16,13 @@
     "test:cov": "nyc --reporter=lcov npm run test",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib --source-maps",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es --source-maps",
-    "build:umd": "cross-env BABEL_ENV=commonjs webpack --mode development src/index.js -o dist/react-redux-firebase.js",
-    "build:umd:min": "cross-env NODE_ENV=production BABEL_ENV=commonjs webpack --mode production src/index.js -o dist/react-redux-firebase.min.js",
+    "build:umd": "cross-env BABEL_ENV=commonjs webpack --mode development ./src/index.js -o dist/react-redux-firebase.js",
+    "build:umd:min": "cross-env NODE_ENV=production BABEL_ENV=commonjs webpack --mode production ./src/index.js -o dist/react-redux-firebase.min.js",
     "build:size": "cross-env SIZE=true npm run build:umd:min",
     "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
     "watch": "npm run build:commonjs -- --watch",
     "watch:es": "npm run build:es -- --watch",
-    "prepare": "npm run clean && npm run build",
+    "prepare": "husky install && npm run clean && npm run build",
     "docs:clean": "rimraf _book",
     "docs:prepare": "gitbook install",
     "docs:api": "node bin/api-docs-generate",
@@ -76,6 +76,7 @@
     "@babel/preset-react": "^7.16.0",
     "@babel/register": "^7.16.0",
     "@babel/runtime": "^7.16.3",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.5",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-add-module-exports": "^1.0.4",
@@ -90,7 +91,6 @@
     "documentation": "^12.1.2",
     "documentation-markdown-api-theme": "^1.0.2",
     "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.14.0",
     "eslint": "^7.5.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^14.1.1",
@@ -107,15 +107,15 @@
     "firebase": "7.14.6",
     "firebase-server": "^1.1.0",
     "gitbook-cli": "^2.3.2",
-    "husky": "^4.3.8",
+    "husky": "^7.0.4",
     "jsdom": "^11.10.0",
-    "lint-staged": "^10.5.3",
-    "lodash-webpack-plugin": "^0.11.5",
+    "lint-staged": "^12.1.2",
+    "lodash-webpack-plugin": "^0.11.6",
     "mocha": "^3.5.3",
     "nyc": "^15.0.0",
     "prettier": "2.0.5",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-redux": "^6.0.0",
     "recompose": "^0.30.0",
     "redux": "4.0.0",
@@ -134,11 +134,6 @@
     "type": "opencollective",
     "url": "https://opencollective.com/react-redux-firebase",
     "logo": "https://opencollective.com/opencollective/logo.txt"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{json,md}": [

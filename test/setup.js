@@ -13,7 +13,7 @@ require('firebase/firestore')
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
 const WebSocket = require('ws')
 const Enzyme = require('enzyme')
-const Adapter = require('enzyme-adapter-react-16')
+const Adapter = require('@wojtekmaj/enzyme-adapter-react-17')
 
 Enzyme.configure({ adapter: new Adapter() })
 

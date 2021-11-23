@@ -40,6 +40,8 @@ export function deleteFile(firebase, { path, dbPath }) {
  * @param {object} settings - Settings object
  * @param {object} settings.fileData - File data which was uploaded
  * @param {object} settings.uploadTaskSnapshot - Snapshot from storage upload task
+ * @param {object} settings.firebase - Firebase instance
+ * @param {string} settings.downloadURL - Download url
  * @returns {Function} Function for handling upload result
  */
 function createUploadMetaResponseHandler({
@@ -109,6 +111,7 @@ function getDownloadURLFromUploadTaskSnapshot(uploadTaskSnapshot) {
  * @param {object} settings.uploadTaskSnapshot - Snapshot from upload task
  * @param {string} settings.dbPath - Path of meta data with Database (Real Time Or
  * Firestore depnding on config)
+ * @param {object} settings.options - Options object
  * @returns {Promise} Resolves with payload (includes snapshot, File, and
  * metaDataSnapshot)
  */
@@ -186,6 +189,7 @@ export function writeMetadataToDb({
  * @param {object} opts.path - Location within Firebase Stroage at which to upload file.
  * @param {Blob} opts.file - File to upload
  * @param {object} opts.fileMetadata - Metadata to pass along to storageRef.put call
+ * @param {object} opts.meta - Meta object
  * @returns {Promise} Promise which resolves after file upload
  * @private
  */

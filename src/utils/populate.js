@@ -72,10 +72,12 @@ export function getPopulates(queryParams) {
  * @returns {Promise} Resolves with populate child
  */
 export function getPopulateChild(firebase, populate, id) {
+  const childPath = populate.childParam ? `/${populate.childParam}` : ''
+  const path = `${populate.root}/${id}${childPath}`
   return firebase
     .database()
     .ref()
-    .child(`${populate.root}/${id}`)
+    .child(path)
     .once('value')
     .then((snap) =>
       // Return id if population value does not exist
