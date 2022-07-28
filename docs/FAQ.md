@@ -6,7 +6,7 @@
     * [populate functionality](http://react-redux-firebase.com/docs/populate) (similar to mongoose's `populate` or SQL's `JOIN`)
     * `react-native` support ([web/js](http://react-redux-firebase.com/docs/recipes/react-native.html) or native modules through [`react-native-firebase`](http://docs.react-redux-firebase.com/history/v2.0.0/docs/recipes/react-native.html#native-modules))
     * tons of [integrations](#integrations)
-    * [`profileFactory`](http://react-redux-firebase.com/docs/config) - change format of profile stored on Firebase
+    * [`profileFactory`](https://react-redux-firebase.com/docs/recipes/profile) - change format of profile stored on Firebase
     * [access to firebase's `storage`](http://react-redux-firebase.com/docs/storage) and `messaging` services
     * `uniqueSet` method helper for only setting if location doesn't already exist
     * Object or String notation for paths (`[{ path: '/todos' }]` equivalent to `['/todos']`)
