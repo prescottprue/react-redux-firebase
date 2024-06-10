@@ -104,7 +104,7 @@
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "^4.0.8",
     "eslint-plugin-standard": "^4.0.1",
-    "firebase": "7.14.6",
+    "firebase": "7.24.0",
     "firebase-server": "^1.1.0",
     "gitbook-cli": "^2.3.2",
     "husky": "^7.0.4",
