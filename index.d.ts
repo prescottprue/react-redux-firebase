@@ -276,7 +276,7 @@ interface BaseExtendedFirebaseInstance
 
   /**
    * Removes data from Firebase at a given path. **NOTE** A
-   * seperate action is not dispatched unless `dispatchRemoveAction: true` is
+   * separate action is not dispatched unless `dispatchRemoveAction: true` is
    * provided to config on store creation. That means that a listener must
    * be attached in order for state to be updated when calling remove.
    * @param path - Path to location on Firebase which to remove
@@ -294,7 +294,7 @@ interface BaseExtendedFirebaseInstance
   /**
    * Sets data to Firebase only if the path does not already
    * exist, otherwise it rejects. Internally uses a Firebase transaction to
-   * prevent a race condition between seperate clients calling uniqueSet.
+   * prevent a race condition between separate clients calling uniqueSet.
    * @param path - Path to location on Firebase which to set
    * @param value - Value to write to Firebase
    * @param onComplete - Function to run on complete (`not required`)
@@ -968,7 +968,7 @@ export function getVal(firebase: any, path: string, notSetValue?: any): any
 
 /**
  * Detect whether items are empty or not
- * @param item - Item to check loaded status of. A comma seperated list
+ * @param item - Item to check loaded status of. A comma separated list
  * is also acceptable.
  * @returns Whether or not item is empty
  * @see https://react-redux-firebase.com/docs/api/helpers.html#isempty
