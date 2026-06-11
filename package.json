@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "typings": "./index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "clean": "rimraf es lib coverage",
     "check": "biome check .",
