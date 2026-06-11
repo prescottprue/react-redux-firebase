@@ -69,7 +69,7 @@ function getFileNames() {
   })
 }
 
-;(async function () {
+;(async () => {
   console.log(
     'Generating API documentation (docs/api) from JSDoc comments within src...\n'
   )
