@@ -373,9 +373,7 @@ describe('Actions: Auth -', () => {
         expect(err.message)
           // message indicates firebase's internal auth method called
           // invalid key is intentionally provided
-          .to.equal(
-            'Invalid assertion format. 3 dot separated segments required.'
-          )
+          .to.contain('Invalid assertion format')
       }
     })
   })
@@ -1119,9 +1117,10 @@ describe('Actions: Auth -', () => {
       try {
         res = await signInWithPhoneNumber(firebase, dispatch, '1234567891', {})
       } catch (err) {
-        expect(err).to.have.property(
-          'message',
-          'signInWithPhoneNumber failed: Second argument "applicationVerifier" must be an implementation of firebase.auth.ApplicationVerifier.'
+        // firebase v9+ rejects phone auth in non-browser environments before
+        // validating arguments
+        expect(err.message).to.contain(
+          'auth/operation-not-supported-in-this-environment'
         )
       }
     })

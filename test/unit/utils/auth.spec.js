@@ -102,7 +102,7 @@ describe('Utils: Auth', () => {
     it('throws if path is not defined', () => {
       expect(() => setupPresence(() => {}, firebase)).to.Throw(
         Error,
-        `Reference.child failed: First argument was an invalid path = "undefined". Paths must be non-empty strings and can't contain ".", "#", "$", "[", or "]"`
+        /invalid path = "undefined"/
       )
     })
 

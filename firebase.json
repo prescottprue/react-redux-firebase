@@ -1,0 +1,19 @@
+{
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "emulators": {
+    "database": {
+      "port": 9000
+    },
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": false
+    }
+  }
+}

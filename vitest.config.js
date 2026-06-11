@@ -28,8 +28,8 @@ export default defineConfig({
     include: ['test/unit/**/*.spec.js'],
     setupFiles: ['./test/setup.js'],
     globalSetup: ['./test/globalSetup.js'],
-    // tests share one firebase app instance connected to the firebase-server
-    // booted in globalSetup, so everything must run in a single process
+    // tests share one firebase app instance connected to the emulator suite
+    // (seeded in globalSetup), so everything must run in a single process
     pool: 'forks',
     maxWorkers: 1,
     isolate: false,

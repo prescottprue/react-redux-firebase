@@ -1,6 +1,5 @@
 import React from 'react'
-import TestUtils from 'react-dom/test-utils'
-import { firebaseWithConfig } from '../utils'
+import { render, firebaseWithConfig } from '../utils'
 import ReactReduxFirebaseProvider from '../../src/ReactReduxFirebaseProvider'
 import useFirebase from '../../src/useFirebase'
 
@@ -13,7 +12,7 @@ describe('useFirebase', () => {
       spy(firebase)
       return null
     }
-    TestUtils.renderIntoDocument(
+    render(
       <ReactReduxFirebaseProvider
         dispatch={dispatchSpy}
         firebase={firebaseWithConfig()}
