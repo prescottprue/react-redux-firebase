@@ -6,6 +6,12 @@
   "module": "es/index.js",
   "typings": "./index.d.ts",
   "sideEffects": false,
+  "files": [
+    "lib",
+    "es",
+    "src",
+    "index.d.ts"
+  ],
   "scripts": {
     "clean": "rimraf es lib coverage",
     "check": "biome check .",
