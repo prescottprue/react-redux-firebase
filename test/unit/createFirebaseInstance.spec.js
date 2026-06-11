@@ -12,11 +12,11 @@ describe('createFirebaseInstance', () => {
       dispatchSpy
     )
 
-    expect(firebaseInstance).to.have.deep.property('_.watchers')
-    expect(firebaseInstance).to.have.deep.property('_.listeners')
-    expect(firebaseInstance).to.have.deep.property('_.callbacks')
-    expect(firebaseInstance).to.have.deep.property('_.queries')
-    expect(firebaseInstance).to.have.deep.property('_.authUid')
+    expect(firebaseInstance).to.have.nested.property('_.watchers')
+    expect(firebaseInstance).to.have.nested.property('_.listeners')
+    expect(firebaseInstance).to.have.nested.property('_.callbacks')
+    expect(firebaseInstance).to.have.nested.property('_.queries')
+    expect(firebaseInstance).to.have.nested.property('_.authUid')
   })
 
   describe('ref method', () => {
@@ -30,7 +30,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.ref).to.be.a.function
+      expect(firebaseInstance.ref).to.be.a('function')
       const writePath = 'test/test/test'
       firebaseInstance.ref(writePath)
     })
@@ -47,7 +47,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.set).to.be.a.function
+      expect(firebaseInstance.set).to.be.a('function')
       const writePath = 'test/test/test'
       const writeData = {
         some: 'value'
@@ -70,7 +70,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.setWithMeta).to.be.a.function
+      expect(firebaseInstance.setWithMeta).to.be.a('function')
       const writePath = 'test/test/test'
       const writeData = {
         some: 'value'
@@ -94,7 +94,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.setWithMeta).to.be.a.function
+      expect(firebaseInstance.setWithMeta).to.be.a('function')
       const writePath = 'test/test/test'
       const writeData = 'some'
       const setPromise = firebaseInstance.setWithMeta(writePath, writeData)
@@ -118,7 +118,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.push).to.be.a.function
+      expect(firebaseInstance.push).to.be.a('function')
       const writePath = 'test/test/test'
       const writeData = {
         some: 'value'
@@ -144,7 +144,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.push).to.be.a.function
+      expect(firebaseInstance.push).to.be.a('function')
       const writePath = 'test/test/test'
       const writeData = {
         some: 'value'
@@ -173,7 +173,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.update).to.be.a.function
+      expect(firebaseInstance.update).to.be.a('function')
       const writePath = 'test/test/test'
       const writeData = {
         some: 'value'
@@ -199,7 +199,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.update).to.be.a.function
+      expect(firebaseInstance.update).to.be.a('function')
       const writePath = 'test/test/test'
       const writeData = {
         some: 'value'
@@ -231,7 +231,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.remove).to.be.a.function
+      expect(firebaseInstance.remove).to.be.a('function')
       const writePath = 'test/test/test'
       const removePromise = firebaseInstance.remove(writePath)
       expect(removePromise).to.have.property('then')
@@ -255,7 +255,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.uniqueSet).to.be.a.function
+      expect(firebaseInstance.uniqueSet).to.be.a('function')
       const writePath = 'test/test/test'
       expect(firebaseInstance.uniqueSet(writePath)).to.be.rejectedWith(
         'Path already exists.'
@@ -281,7 +281,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.uniqueSet).to.be.a.function
+      expect(firebaseInstance.uniqueSet).to.be.a('function')
       const writePath = 'test/test/test'
       const returnedVal = await firebaseInstance.uniqueSet(writePath, {
         some: 'value'
@@ -307,7 +307,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.uploadFiles).to.be.a.function
+      expect(firebaseInstance.uploadFiles).to.be.a('function')
       const writePath = 'test/test/test'
       const fileName = 'somefile.png'
       await firebaseInstance.uploadFiles(writePath, [{ name: fileName }])
@@ -331,7 +331,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.uploadFiles).to.be.a.function
+      expect(firebaseInstance.uploadFiles).to.be.a('function')
       const writePath = 'test/test/test'
       const fileName = 'somefile.png'
       await firebaseInstance.uploadFile(writePath, { name: fileName })
@@ -355,7 +355,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.deleteFile).to.be.a.function
+      expect(firebaseInstance.deleteFile).to.be.a('function')
       const writePath = 'test/test/test'
       await firebaseInstance.deleteFile(writePath)
       expect(refSpy).to.have.been.calledWith(writePath)
@@ -379,7 +379,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.watchEvent).to.be.a.function
+      expect(firebaseInstance.watchEvent).to.be.a('function')
       const writePath = 'test/test/test'
       await firebaseInstance.watchEvent('once', writePath)
       expect(childSpy).to.have.been.calledWith(writePath)
@@ -404,7 +404,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.unWatchEvent).to.be.a.function
+      expect(firebaseInstance.unWatchEvent).to.be.a('function')
       await firebaseInstance.unWatchEvent('value', writePath)
     })
   })
@@ -426,7 +426,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.promiseEvents).to.be.a.function
+      expect(firebaseInstance.promiseEvents).to.be.a('function')
       await firebaseInstance.promiseEvents([writePath])
       expect(onSpy).to.have.been.calledOnce
     })
@@ -446,7 +446,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.login).to.be.a.function
+      expect(firebaseInstance.login).to.be.a('function')
       const email = 'test@test.com'
       const password = 'asdfasdf1'
       await firebaseInstance.login({
@@ -470,7 +470,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.login).to.be.a.function
+      expect(firebaseInstance.login).to.be.a('function')
       const email = 'test@test.com'
       const emailLink = 'https://example.com'
       await firebaseInstance.login({
@@ -496,7 +496,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.login).to.be.a.function
+      expect(firebaseInstance.login).to.be.a('function')
       const email = 'test@test.com'
       const password = 'asdfasdf1'
       await firebaseInstance.handleRedirectResult({
@@ -523,7 +523,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.logout).to.be.a.function
+      expect(firebaseInstance.logout).to.be.a('function')
       await firebaseInstance.logout()
       // signInWithEmailAndPassword is called on login with email
       expect(signoutSpy).to.have.been.calledOnce
@@ -544,7 +544,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.createUser).to.be.a.function
+      expect(firebaseInstance.createUser).to.be.a('function')
       const email = 'test@test.com'
       const password = 'asdfasdf1'
       await firebaseInstance.createUser({
@@ -570,7 +570,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.resetPassword).to.be.a.function
+      expect(firebaseInstance.resetPassword).to.be.a('function')
       const email = 'test@test.com'
       await firebaseInstance.resetPassword(email)
       // signInWithEmailAndPassword is called on resetPassword with email
@@ -592,7 +592,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.confirmPasswordReset).to.be.a.function
+      expect(firebaseInstance.confirmPasswordReset).to.be.a('function')
       const email = 'test@test.com'
       const password = 'asdfasdf1'
       await firebaseInstance.confirmPasswordReset({
@@ -617,7 +617,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.verifyPasswordResetCode).to.be.a.function
+      expect(firebaseInstance.verifyPasswordResetCode).to.be.a('function')
       const code = 'asdfasdf1'
       await firebaseInstance.verifyPasswordResetCode({
         code
@@ -640,7 +640,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.applyActionCode).to.be.a.function
+      expect(firebaseInstance.applyActionCode).to.be.a('function')
       const code = 'asdfasdf1'
       await firebaseInstance.applyActionCode({
         code
@@ -665,7 +665,7 @@ describe('createFirebaseInstance', () => {
         {},
         dispatchSpy
       )
-      expect(firebaseInstance.updateProfile).to.be.a.function
+      expect(firebaseInstance.updateProfile).to.be.a('function')
       const email = 'test@test.com'
       const password = 'asdfasdf1'
       await firebaseInstance.updateProfile({
@@ -691,7 +691,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.updateAuth).to.be.a.function
+      expect(firebaseInstance.updateAuth).to.be.a('function')
       const email = 'test@test.com'
       const password = 'asdfasdf1'
       try {
@@ -722,7 +722,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.updateEmail).to.be.a.function
+      expect(firebaseInstance.updateEmail).to.be.a('function')
       const email = 'test@test.com'
       const password = 'asdfasdf1'
       try {
@@ -753,7 +753,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.reloadAuth).to.be.a.function
+      expect(firebaseInstance.reloadAuth).to.be.a('function')
       const email = 'test@test.com'
       const password = 'asdfasdf1'
       try {
@@ -784,7 +784,7 @@ describe('createFirebaseInstance', () => {
         dispatchSpy
       )
 
-      expect(firebaseInstance.linkWithCredential).to.be.a.function
+      expect(firebaseInstance.linkWithCredential).to.be.a('function')
       const email = 'test@test.com'
       const password = 'asdfasdf1'
       try {

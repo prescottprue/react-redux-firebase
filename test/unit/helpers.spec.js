@@ -69,25 +69,25 @@ describe('Helpers:', () => {
       it('returns unpopulated data for invalid populate', () => {
         path = 'profile'
         populates = [{ child: 'role', root: 'users' }]
-        expect(helpers.populate(exampleData, path, populates)).to.deep.property(
-          'role',
-          'tester'
-        )
+        expect(
+          helpers.populate(exampleData, path, populates)
+        ).to.nested.property('role', 'tester')
       })
 
       it('populates a single parameter', () => {
         path = 'profile'
         populates = [{ child: 'role', root: 'roles' }]
-        expect(helpers.populate(exampleData, path, populates)).to.deep.property(
-          'role.somePermission',
-          true
-        )
+        expect(
+          helpers.populate(exampleData, path, populates)
+        ).to.nested.property('role.somePermission', true)
       })
 
       it('populates a list parameter', () => {
         path = 'profile'
         populates = [{ child: 'notes', root: 'notes' }]
-        expect(helpers.populate(exampleData, path, populates)).to.deep.property(
+        expect(
+          helpers.populate(exampleData, path, populates)
+        ).to.nested.property(
           'notes.123.text',
           get(exampleData, 'data.notes.123.text')
         )
@@ -135,7 +135,7 @@ describe('Helpers:', () => {
             helpers.populate(exampleData, path, [
               { child, root: rootName, childAlias }
             ])
-          ).to.have.deep.property(`${childAlias}.displayName`, 'scott')
+          ).to.have.nested.property(`${childAlias}.displayName`, 'scott')
         })
 
         it('keeps non-existant children', () => {
@@ -157,7 +157,7 @@ describe('Helpers:', () => {
           path = 'projects/OKF'
           populates = [{ child: 'collaborators', root: rootName }]
           const populatedData = helpers.populate(exampleData, path, populates)
-          expect(populatedData).to.have.deep.property(
+          expect(populatedData).to.have.nested.property(
             `collaborators.ABC.displayName`,
             exampleData.data[rootName].ABC.displayName
           )
@@ -168,7 +168,7 @@ describe('Helpers:', () => {
           populates = [{ child: 'userRank', root: rootName }]
           const populatedData = helpers.populate(exampleData, path, populates)
           expect(populatedData.userRank).to.be.instanceof(Array)
-          expect(populatedData).to.have.deep.property(
+          expect(populatedData).to.have.nested.property(
             `userRank.0.displayName`,
             exampleData.data[rootName].user2.displayName
           )
@@ -191,7 +191,7 @@ describe('Helpers:', () => {
         path = 'ordered/projects/0'
         populates = [{ child: 'owner', root: rootName }]
         const populated = helpers.populate(exampleData, path, populates)
-        expect(populated).to.have.deep.property(
+        expect(populated).to.have.nested.property(
           `value.owner.displayName`,
           get(exampleData, `data.${rootName}.ABC.displayName`)
         )
@@ -223,7 +223,7 @@ describe('Helpers:', () => {
           ]
           expect(
             helpers.populate(exampleData, path, populates)
-          ).to.have.deep.property(`${valName}.owner.displayName`, 'scott')
+          ).to.have.nested.property(`${valName}.owner.displayName`, 'scott')
         })
 
         it('populates childParam', () => {
@@ -234,7 +234,7 @@ describe('Helpers:', () => {
             helpers.populate(exampleData, path, [
               { child, root: rootName, childParam }
             ])
-          ).to.have.deep.property(`${valName}.${child}`, 'scott')
+          ).to.have.nested.property(`${valName}.${child}`, 'scott')
         })
 
         it('populates childAlias', () => {
@@ -245,7 +245,7 @@ describe('Helpers:', () => {
             helpers.populate(exampleData, path, [
               { child, root: rootName, childAlias }
             ])
-          ).to.have.deep.property(
+          ).to.have.nested.property(
             `${valName}.${childAlias}.displayName`,
             'scott'
           )
@@ -262,7 +262,7 @@ describe('Helpers:', () => {
         it('populates values', () => {
           populates = [{ child: 'collaborators', root: rootName }]
           const populatedData = helpers.populate(exampleData, path, populates)
-          expect(populatedData).to.have.deep.property(
+          expect(populatedData).to.have.nested.property(
             `${valName}.collaborators.ABC.displayName`,
             exampleData.data[rootName].ABC.displayName
           )
@@ -273,11 +273,11 @@ describe('Helpers:', () => {
           // Non matching collaborator
           expect(
             helpers.populate(exampleData, path, populates)
-          ).to.have.deep.property(`${valName}.collaborators.abc`, true)
+          ).to.have.nested.property(`${valName}.collaborators.abc`, true)
           // Matching collaborator
           expect(
             helpers.populate(exampleData, path, populates)
-          ).to.have.deep.property(
+          ).to.have.nested.property(
             `${valName}.collaborators.ABC.displayName`,
             exampleData.data[rootName].ABC.displayName
           )
@@ -294,11 +294,11 @@ describe('Helpers:', () => {
           // Non matching collaborator
           expect(
             helpers.populate(exampleData, path, populates)
-          ).to.have.deep.property(`${valName}.collaborators.abc`, true)
+          ).to.have.nested.property(`${valName}.collaborators.abc`, true)
           // Matching collaborator
           expect(
             helpers.populate(exampleData, path, populates)
-          ).to.have.deep.property(
+          ).to.have.nested.property(
             `${valName}.collaborators.ABC`,
             exampleData.data[rootName].ABC.displayName
           )
@@ -320,14 +320,14 @@ describe('Helpers:', () => {
             // Non matching collaborator
             expect(
               helpers.populate(exampleData, path, populates)
-            ).to.have.deep.property(
+            ).to.have.nested.property(
               `${valName}.${child}.abc`,
               exampleData.data[path][valName][child].abc
             )
             // Matching collaborator
             expect(
               helpers.populate(exampleData, path, populates)
-            ).to.have.deep.property(
+            ).to.have.nested.property(
               `${valName}.${child}.ABC.displayName`,
               exampleData.data[rootName].ABC.displayName
             )
@@ -348,14 +348,14 @@ describe('Helpers:', () => {
             // Non matching collaborator
             expect(
               helpers.populate(exampleData, path, populates)
-            ).to.have.deep.property(
+            ).to.have.nested.property(
               `${valName}.${child}.abc`,
               exampleData.data[path][valName][child].abc
             )
             // Matching collaborator
             expect(
               helpers.populate(exampleData, path, populates)
-            ).to.have.deep.property(
+            ).to.have.nested.property(
               `${valName}.${child}.ABC`,
               exampleData.data[path][valName][child].ABC
             )
@@ -373,7 +373,7 @@ describe('Helpers:', () => {
             { child: 'collaborators', root: rootName }
           ]
           const populatedData = helpers.populate(exampleData, path, populates)
-          expect(populatedData).to.have.deep.property(
+          expect(populatedData).to.have.nested.property(
             `${valName}.collaborators.ABC.displayName`,
             get(exampleData, `data.${rootName}.ABC.displayName`)
           )
@@ -389,7 +389,7 @@ describe('Helpers:', () => {
         it('with list child', () => {
           populates = [{ child: 'collaborators', root: rootName }]
           const populatedArr = helpers.populate(exampleData, path, populates)
-          expect(populatedArr[0]).to.have.deep.property(
+          expect(populatedArr[0]).to.have.nested.property(
             `value.collaborators.ABC.displayName`,
             get(exampleData, `data.${rootName}.ABC.displayName`)
           )
@@ -401,7 +401,7 @@ describe('Helpers:', () => {
             { child: 'collaborators', root: rootName }
           ]
           const populatedArr = helpers.populate(exampleData, path, populates)
-          expect(populatedArr[0]).to.have.deep.property(
+          expect(populatedArr[0]).to.have.nested.property(
             `value.collaborators.ABC.displayName`,
             get(exampleData, `data.${rootName}.ABC.displayName`)
           )
@@ -410,7 +410,7 @@ describe('Helpers:', () => {
         it('with none existing child', () => {
           populates = [{ child: 'random' }]
           const populatedArr = helpers.populate(exampleData, path, populates)
-          expect(populatedArr[0]).to.have.deep.property(
+          expect(populatedArr[0]).to.have.nested.property(
             `value.collaborators.ABC`,
             true
           )
@@ -433,14 +433,14 @@ describe('Helpers:', () => {
         // check that notes are populated
         expect(
           helpers.populate(exampleData, `/${path}`, populates)
-        ).to.have.deep.property(
+        ).to.have.nested.property(
           `${valName}.notes.123.text`,
           exampleData.data.notes['123'].text
         )
         // check that owner is populated
         expect(
           helpers.populate(exampleData, `/${path}`, populates)
-        ).to.have.deep.property(
+        ).to.have.nested.property(
           `${valName}.owner.displayName`,
           exampleData.data.users.ABC.displayName
         )
@@ -454,13 +454,13 @@ describe('Helpers:', () => {
         // TODO: Test both children are populated
         expect(
           helpers.populate(exampleData, `/${path}`, populates)
-        ).to.have.deep.property(
+        ).to.have.nested.property(
           `${valName}.owner.displayName`,
           exampleData.data[rootName].ABC.displayName
         )
         expect(
           helpers.populate(exampleData, `/${path}`, populates)
-        ).to.have.deep.property(
+        ).to.have.nested.property(
           `${valName}.collaborators.ABC.displayName`,
           exampleData.data[rootName].ABC.displayName
         )

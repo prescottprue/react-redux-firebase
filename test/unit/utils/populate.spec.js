@@ -77,7 +77,7 @@ describe('Utils: Populate', () => {
     it('populates single property containing a single item', async () => {
       populates = [{ child: 'uid', root: 'users' }]
       res = await promisesForPopulate(Firebase, '', { uid }, populates)
-      expect(res).to.have.deep.property(`users.${uid}`)
+      expect(res).to.have.nested.property(`users.${uid}`)
     })
 
     it('populates single property containing a list', async () => {
@@ -88,7 +88,7 @@ describe('Utils: Populate', () => {
         { collaborators: { [uid]: true, ABC123: true } },
         populates
       )
-      expect(res).to.have.deep.property(`users.${uid}`)
+      expect(res).to.have.nested.property(`users.${uid}`)
     })
 
     it('populates all existing children even if one populates child does not exist', async () => {
@@ -102,7 +102,7 @@ describe('Utils: Populate', () => {
         { collaborators: { [uid]: true, ABC123: true } },
         populates
       )
-      expect(res).to.have.deep.property(`users.${uid}`)
+      expect(res).to.have.nested.property(`users.${uid}`)
     })
 
     describe('populates list', () => {
@@ -114,7 +114,7 @@ describe('Utils: Populate', () => {
           { 1: { owner: uid } },
           populates
         )
-        expect(res).to.have.deep.property(`users.${uid}`)
+        expect(res).to.have.nested.property(`users.${uid}`)
       })
 
       it('with property containing array property', async () => {
@@ -125,7 +125,7 @@ describe('Utils: Populate', () => {
           { 1: { collaborators: [uid, 'ABC123'] } },
           populates
         )
-        expect(res).to.have.deep.property(`users.${uid}`)
+        expect(res).to.have.nested.property(`users.${uid}`)
       })
 
       it('with property containing key/true list', async () => {
@@ -136,7 +136,7 @@ describe('Utils: Populate', () => {
           { 1: { collaborators: { [uid]: true, ABC123: true } } },
           populates
         )
-        expect(res).to.have.deep.property(`users.${uid}`)
+        expect(res).to.have.nested.property(`users.${uid}`)
       })
     })
   })

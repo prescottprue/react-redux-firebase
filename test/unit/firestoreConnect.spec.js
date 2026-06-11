@@ -11,11 +11,11 @@ const withFirestoreConnect = firestoreConnect((props) => [
 
 describe('firestoreConnect', () => {
   it('should render if Firestore does not exist', () => {
-    const { component } = createContainer({
+    const { leaf } = createContainer({
       withFirestore: false,
       hoc: withFirestoreConnect
     })
-    expect(component).to.have.lengthOf(1)
+    expect(leaf.prop('firebase')).to.exist
   })
 
   // it('disables watchers on unmount', () => {

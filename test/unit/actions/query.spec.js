@@ -16,7 +16,7 @@ describe('Actions: Query', () => {
 
   describe('watchEvent', () => {
     it('is exported', () => {
-      expect(watchEvent).to.be.a.function
+      expect(watchEvent).to.be.a('function')
     })
 
     it('throws if Firebase database has not been included', () => {
@@ -26,25 +26,25 @@ describe('Actions: Query', () => {
     })
 
     it('runs given basic params', () => {
-      expect(
+      return expect(
         watchEvent(
           firebase,
           dispatch,
           { type: 'once', path: 'projects' },
           'projects'
         )
-      ).to.eventually.be.an.object
+      ).to.be.fulfilled
     })
 
     it('runs given first_child', () => {
-      expect(
+      return expect(
         watchEvent(
           firebase,
           dispatch,
           { type: 'first_child', path: 'projects' },
           'projects'
         )
-      ).to.eventually.be.an.object
+      ).to.eventually.be.an('object')
     })
 
     it('runs value query', () => {
@@ -95,19 +95,19 @@ describe('Actions: Query', () => {
 
   describe('unWatchEvent', () => {
     it('is exported', () => {
-      expect(unWatchEvent).to.be.a.function
+      expect(unWatchEvent).to.be.a('function')
     })
 
     it('runs given basic params', () => {
-      expect(
+      expect(() =>
         unWatchEvent(firebase, dispatch, { type: 'once', path: 'projects' })
-      ).to.be.a.function
+      ).to.not.throw()
     })
   })
 
   describe('watchEvents', () => {
     it('is exported', () => {
-      expect(watchEvents).to.be.a.function
+      expect(watchEvents).to.be.a('function')
     })
 
     it('runs given basic params', () => {
@@ -126,7 +126,7 @@ describe('Actions: Query', () => {
 
   describe('unWatchEvents', () => {
     it('is exported', () => {
-      expect(unWatchEvents).to.be.a.function
+      expect(unWatchEvents).to.be.a('function')
     })
 
     it('runs given basic params', () => {

@@ -26,15 +26,8 @@ export function watchEvent(firebase, dispatch, options) {
   if (!firebase.database || typeof firebase.database !== 'function') {
     throw new Error('Firebase database is required to create watchers')
   }
-  const {
-    type,
-    path,
-    populates,
-    queryParams,
-    queryId,
-    isQuery,
-    storeAs
-  } = options
+  const { type, path, populates, queryParams, queryId, isQuery, storeAs } =
+    options
   const {
     config: { logErrors }
   } = firebase._

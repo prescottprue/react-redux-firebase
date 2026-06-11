@@ -47,13 +47,14 @@ export function wrapInDispatch(dispatch, { meta, method, args = [], types }) {
  * and dispatch.
  */
 function createWithFirebaseAndDispatch(firebase, dispatch, dispatchFirst) {
-  return (func) => (...args) =>
-    func.apply(
-      firebase,
-      dispatchFirst
-        ? [dispatch, firebase, ...args]
-        : [firebase, dispatch, ...args]
-    )
+  return (func) =>
+    (...args) =>
+      func.apply(
+        firebase,
+        dispatchFirst
+          ? [dispatch, firebase, ...args]
+          : [firebase, dispatch, ...args]
+      )
 }
 
 /**

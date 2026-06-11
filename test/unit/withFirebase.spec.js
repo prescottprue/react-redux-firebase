@@ -19,7 +19,7 @@ describe('withFirebase', () => {
 
   it('adds dispatch as prop', () => {
     expect(leaf.prop('dispatch')).to.exist
-    expect(leaf.prop('dispatch')).to.be.a.function
+    expect(leaf.prop('dispatch')).to.be.a('function')
   })
 
   describe('sets displayName static as', () => {
@@ -45,6 +45,7 @@ describe('withFirebase', () => {
   })
 
   it('sets WrappedComponent static as component which was wrapped', () => {
-    expect(leaf).to.match(TestLeaf)
+    const containerPrime = withFirebase(TestLeaf)
+    expect(containerPrime.wrappedComponent).to.equal(TestLeaf)
   })
 })

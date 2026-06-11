@@ -18,12 +18,12 @@ const getFirebaseWatchers = (firebase) => {
 describe('firebaseConnect', () => {
   it('passes firebase prop to child', () => {
     const { leaf } = createContainer({ hoc: withFirebaseConnect })
-    expect(leaf).to.have.prop('firebase')
+    expect(leaf.prop('firebase')).to.exist
   })
 
   it('passes dispatch prop to child', () => {
     const { leaf } = createContainer({ hoc: withFirebaseConnect })
-    expect(leaf).to.have.prop('dispatch')
+    expect(leaf.prop('dispatch')).to.exist
   })
 
   it('passes through existing props', () => {
@@ -31,7 +31,7 @@ describe('firebaseConnect', () => {
       hoc: withFirebaseConnect,
       additionalComponentProps: { pass: 'through' }
     })
-    expect(leaf).to.have.prop('pass', 'through')
+    expect(leaf.prop('pass')).to.equal('through')
   })
 
   it('enables watchers on mount', async () => {

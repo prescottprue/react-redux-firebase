@@ -44,7 +44,7 @@ const profile = { email: 'test@test.com' }
 
 describe('reducer', () => {
   it('is a function', () => {
-    expect(firebaseReducer).to.be.a.function
+    expect(firebaseReducer).to.be.a('function')
   })
 
   describe('throws for invalid initial state', () => {
@@ -87,21 +87,21 @@ describe('reducer', () => {
   describe('START action', () => {
     it('sets requested state for path', () => {
       action = { type: actionTypes.START, path: 'some' }
-      expect(firebaseReducer({}, action)).to.have.deep.property(
+      expect(firebaseReducer({}, action)).to.have.nested.property(
         `requested.${action.path}`
       )
     })
 
     it('sets requesting state for path', () => {
       action = { type: actionTypes.START, path: 'some' }
-      expect(firebaseReducer({}, action)).to.have.deep.property(
+      expect(firebaseReducer({}, action)).to.have.nested.property(
         `requesting.${action.path}`
       )
     })
 
     it('sets timestamps state for path', () => {
       action = { type: actionTypes.START, path: 'some' }
-      expect(firebaseReducer({}, action)).to.have.deep.property(
+      expect(firebaseReducer({}, action)).to.have.nested.property(
         `timestamps.${action.path}`
       )
     })
@@ -355,8 +355,8 @@ describe('reducer', () => {
     it('clears auth state', () => {
       action = { type: actionTypes.LOGOUT }
       const res = firebaseReducer({ auth: { isEmpty: false } }, action)
-      expect(res).to.have.deep.property('auth.isLoaded', true)
-      expect(res).to.have.deep.property('auth.isEmpty', true)
+      expect(res).to.have.nested.property('auth.isLoaded', true)
+      expect(res).to.have.nested.property('auth.isEmpty', true)
     })
 
     describe('preserve parameter preserves', () => {
@@ -367,7 +367,7 @@ describe('reducer', () => {
           initialData = { data: { [preservePath]: todos } }
           action = { type: actionTypes.LOGOUT, preserve: [preservePath] }
           // load todos into state and confirm they are kept on logout
-          expect(firebaseReducer(initialData, action)).to.have.deep.property(
+          expect(firebaseReducer(initialData, action)).to.have.nested.property(
             `data.${preservePath}`,
             todos
           )
@@ -382,7 +382,7 @@ describe('reducer', () => {
             preserve: { data: (state) => state }
           }
           // load todos into state and confirm they are kept on logout
-          expect(firebaseReducer(initialData, action)).to.have.deep.property(
+          expect(firebaseReducer(initialData, action)).to.have.nested.property(
             `data.${preservePath}`,
             todos
           )
@@ -399,7 +399,7 @@ describe('reducer', () => {
             preserve: { ordered: [preservePath] }
           }
           // load todos into state and confirm they are kept on logout
-          expect(firebaseReducer(initialData, action)).to.have.deep.property(
+          expect(firebaseReducer(initialData, action)).to.have.nested.property(
             `ordered.${preservePath}`,
             todos
           )
@@ -414,7 +414,7 @@ describe('reducer', () => {
             preserve: { ordered: (state) => state }
           }
           // load todos into state and confirm they are kept on logout
-          expect(firebaseReducer(initialData, action)).to.have.deep.property(
+          expect(firebaseReducer(initialData, action)).to.have.nested.property(
             `ordered.${preservePath}`,
             todos
           )
@@ -432,10 +432,9 @@ describe('reducer', () => {
               preserve: { auth: [preservePath] }
             }
             // load todos into state and confirm they are kept on logout
-            expect(firebaseReducer(initialData, action)).to.have.deep.property(
-              `auth.${preservePath}`,
-              displayName
-            )
+            expect(
+              firebaseReducer(initialData, action)
+            ).to.have.nested.property(`auth.${preservePath}`, displayName)
           })
 
           it('it is a function', () => {
@@ -447,10 +446,9 @@ describe('reducer', () => {
               preserve: { auth: (state, nextState) => state }
             }
             // load todos into state and confirm they are kept on logout
-            expect(firebaseReducer(initialData, action)).to.have.deep.property(
-              `auth.${preservePath}`,
-              displayName
-            )
+            expect(
+              firebaseReducer(initialData, action)
+            ).to.have.nested.property(`auth.${preservePath}`, displayName)
           })
 
           it('it is a boolean', () => {
@@ -462,10 +460,9 @@ describe('reducer', () => {
               preserve: { auth: true }
             }
             // load todos into state and confirm they are kept on logout
-            expect(firebaseReducer(initialData, action)).to.have.deep.property(
-              `auth.${preservePath}`,
-              displayName
-            )
+            expect(
+              firebaseReducer(initialData, action)
+            ).to.have.nested.property(`auth.${preservePath}`, displayName)
           })
         })
       })
@@ -481,10 +478,9 @@ describe('reducer', () => {
               preserve: { profile: [preservePath] }
             }
             // load todos into state and confirm they are kept on logout
-            expect(firebaseReducer(initialData, action)).to.have.deep.property(
-              `profile.${preservePath}`,
-              displayName
-            )
+            expect(
+              firebaseReducer(initialData, action)
+            ).to.have.nested.property(`profile.${preservePath}`, displayName)
           })
 
           it('it is a function', () => {
@@ -496,10 +492,9 @@ describe('reducer', () => {
               preserve: { profile: [preservePath] }
             }
             // load todos into state and confirm they are kept on logout
-            expect(firebaseReducer(initialData, action)).to.have.deep.property(
-              `profile.${preservePath}`,
-              displayName
-            )
+            expect(
+              firebaseReducer(initialData, action)
+            ).to.have.nested.property(`profile.${preservePath}`, displayName)
           })
 
           it('it is a boolean', () => {
@@ -511,10 +506,9 @@ describe('reducer', () => {
               preserve: { profile: true }
             }
             // load todos into state and confirm they are kept on logout
-            expect(firebaseReducer(initialData, action)).to.have.deep.property(
-              `profile.${preservePath}`,
-              displayName
-            )
+            expect(
+              firebaseReducer(initialData, action)
+            ).to.have.nested.property(`profile.${preservePath}`, displayName)
           })
         })
       })
@@ -536,7 +530,7 @@ describe('reducer', () => {
       const payload = { some: 'value' }
       action = { type: actionTypes.PROFILE_UPDATE_SUCCESS, payload }
       const currentState = firebaseReducer({}, action)
-      expect(currentState).to.have.deep.property('profile.some', payload.some)
+      expect(currentState).to.have.nested.property('profile.some', payload.some)
     })
   })
 
@@ -545,8 +539,8 @@ describe('reducer', () => {
       const auth = { some: 'value' }
       action = { type: actionTypes.LOGIN, auth }
       const currentState = firebaseReducer({}, action)
-      expect(currentState).to.have.deep.property('auth.isLoaded', true)
-      expect(currentState).to.have.deep.property('auth.isEmpty', false)
+      expect(currentState).to.have.nested.property('auth.isLoaded', true)
+      expect(currentState).to.have.nested.property('auth.isEmpty', false)
     })
 
     // For details view https://github.com/prescottprue/react-redux-firebase/issues/301
@@ -554,13 +548,13 @@ describe('reducer', () => {
       const auth = { some: 'value' }
       action = { type: actionTypes.LOGIN, auth }
       const currentState = firebaseReducer({}, action)
-      expect(currentState).to.have.deep.property('profile.isLoaded', false)
-      expect(currentState).to.have.deep.property('profile.isEmpty', true)
+      expect(currentState).to.have.nested.property('profile.isLoaded', false)
+      expect(currentState).to.have.nested.property('profile.isEmpty', true)
     })
 
     it('sets empty if auth not provided', () => {
       action = { type: actionTypes.LOGIN }
-      expect(firebaseReducer({}, action)).to.have.deep.property(
+      expect(firebaseReducer({}, action)).to.have.nested.property(
         'auth.isEmpty',
         true
       )
@@ -576,7 +570,7 @@ describe('reducer', () => {
             preserve: { profile: ['some'] },
             payload
           }
-          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+          expect(firebaseReducer(initialState, action)).to.have.nested.property(
             'profile.some',
             'value'
           )
@@ -590,7 +584,7 @@ describe('reducer', () => {
             preserve: { profile: true },
             payload
           }
-          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+          expect(firebaseReducer(initialState, action)).to.have.nested.property(
             'profile.some',
             'value'
           )
@@ -606,7 +600,7 @@ describe('reducer', () => {
             preserve: { profile: true },
             payload
           }
-          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+          expect(firebaseReducer(initialState, action)).to.have.nested.property(
             'profile.some',
             'value'
           )
@@ -622,7 +616,7 @@ describe('reducer', () => {
             preserve: { auth: ['some'] },
             auth: payload
           }
-          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+          expect(firebaseReducer(initialState, action)).to.have.nested.property(
             'auth.some',
             'value'
           )
@@ -635,7 +629,7 @@ describe('reducer', () => {
             preserve: { auth: true },
             auth: {}
           }
-          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+          expect(firebaseReducer(initialState, action)).to.have.nested.property(
             'auth.some',
             'value'
           )
@@ -651,11 +645,11 @@ describe('reducer', () => {
             preserve: { auth: true },
             auth: payload
           }
-          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+          expect(firebaseReducer(initialState, action)).to.have.nested.property(
             'auth.some',
             payload.some
           )
-          expect(firebaseReducer(initialState, action)).to.have.deep.property(
+          expect(firebaseReducer(initialState, action)).to.have.nested.property(
             'auth.another',
             payload.another
           )
@@ -672,7 +666,7 @@ describe('reducer', () => {
         { ...initialState, data: testData },
         action
       )
-      expect(afterState).to.not.have.deep.property('data.level0')
+      expect(afterState).to.not.have.nested.property('data.level0')
     })
     it('removes parent properties from state if parent property is empty', () => {
       const path = 'level0/level1_item0/level2_item0/level3_item0'
@@ -681,7 +675,7 @@ describe('reducer', () => {
         { ...initialState, data: testData },
         action
       )
-      expect(afterState).to.not.have.deep.property(
+      expect(afterState).to.not.have.nested.property(
         'data.level0.level1_item0.level2_item0'
       )
     })
@@ -692,7 +686,7 @@ describe('reducer', () => {
         { ...initialState, data: testData },
         action
       )
-      expect(afterState).to.have.deep.property('data.level0.level1_item1')
+      expect(afterState).to.have.nested.property('data.level0.level1_item1')
     })
     it('ordered state is untouched', () => {
       const path = 'level0/level1_item0/level2_item0/level3_item0'
@@ -708,7 +702,7 @@ describe('reducer', () => {
   describe('AUTH_EMPTY_CHANGE action -', () => {
     it('sets auth.isLoaded: true (matches v1 LOGOUT action)', () => {
       action = { type: actionTypes.AUTH_EMPTY_CHANGE }
-      expect(firebaseReducer({}, action)).to.have.deep.property(
+      expect(firebaseReducer({}, action)).to.have.nested.property(
         'auth.isLoaded',
         true
       )
@@ -716,7 +710,7 @@ describe('reducer', () => {
 
     it('sets profile.isLoaded: true (matches v1 LOGOUT action)', () => {
       action = { type: actionTypes.AUTH_EMPTY_CHANGE }
-      expect(firebaseReducer({}, action)).to.have.deep.property(
+      expect(firebaseReducer({}, action)).to.have.nested.property(
         'profile.isLoaded',
         true
       )
@@ -725,7 +719,7 @@ describe('reducer', () => {
     it('removes existing auth state', () => {
       const auth = { some: 'value', isLoaded: true, isEmpty: false }
       action = { type: actionTypes.AUTH_EMPTY_CHANGE }
-      expect(firebaseReducer({ auth }, action)).to.not.have.deep.property(
+      expect(firebaseReducer({ auth }, action)).to.not.have.nested.property(
         'auth.some'
       )
     })
@@ -737,12 +731,12 @@ describe('reducer', () => {
         action = { type: actionTypes.AUTH_LINK_SUCCESS, payload: { uid } }
         expect(
           firebaseReducer({ auth: { isEmpty: true } }, action)
-        ).to.have.deep.property('auth.isEmpty', false)
+        ).to.have.nested.property('auth.isEmpty', false)
       })
 
       it('sets auth data', () => {
         action = { type: actionTypes.AUTH_LINK_SUCCESS, payload: { uid } }
-        expect(firebaseReducer({}, action)).to.have.deep.property(
+        expect(firebaseReducer({}, action)).to.have.nested.property(
           'auth.uid',
           uid
         )
@@ -751,7 +745,7 @@ describe('reducer', () => {
       it('calls .toJSON() if it exists', () => {
         const toJSON = sinon.spy(() => ({ email: 'test' }))
         action = { type: actionTypes.AUTH_LINK_SUCCESS, payload: { toJSON } }
-        expect(firebaseReducer({}, action)).to.have.deep.property(
+        expect(firebaseReducer({}, action)).to.have.nested.property(
           'auth.email',
           'test'
         )
@@ -763,7 +757,7 @@ describe('reducer', () => {
       it('removes existing auth state', () => {
         const auth = { uid: 'value', isLoaded: true, isEmpty: false }
         action = { type: actionTypes.AUTH_LINK_SUCCESS }
-        expect(firebaseReducer({ auth }, action)).to.not.have.deep.property(
+        expect(firebaseReducer({ auth }, action)).to.not.have.nested.property(
           'auth.uid'
         )
       })
@@ -772,7 +766,7 @@ describe('reducer', () => {
         action = { type: actionTypes.AUTH_LINK_SUCCESS }
         expect(
           firebaseReducer({ auth: { isEmpty: false } }, action)
-        ).to.have.deep.property('auth.isEmpty', true)
+        ).to.have.nested.property('auth.isEmpty', true)
       })
     })
   })
@@ -829,7 +823,7 @@ describe('reducer', () => {
       it('sets auth.isLoaded: true', () => {
         const authUpdate = { email: 'newEmail' }
         action = { type: actionTypes.AUTH_UPDATE_SUCCESS, auth: authUpdate }
-        expect(firebaseReducer({}, action)).to.have.deep.property(
+        expect(firebaseReducer({}, action)).to.have.nested.property(
           'auth.isLoaded',
           true
         )
@@ -838,7 +832,7 @@ describe('reducer', () => {
       it('sets data to auth state', () => {
         const authUpdate = { email: 'newEmail' }
         action = { type: actionTypes.AUTH_UPDATE_SUCCESS, auth: authUpdate }
-        expect(firebaseReducer({}, action)).to.have.deep.property(
+        expect(firebaseReducer({}, action)).to.have.nested.property(
           'auth.email',
           authUpdate.email
         )
@@ -847,7 +841,7 @@ describe('reducer', () => {
       it('calls .toJSON() if it exists', () => {
         const toJSON = sinon.spy(() => ({ email: 'test' }))
         action = { type: actionTypes.AUTH_UPDATE_SUCCESS, auth: { toJSON } }
-        expect(firebaseReducer({}, action)).to.have.deep.property(
+        expect(firebaseReducer({}, action)).to.have.nested.property(
           'auth.email',
           'test'
         )
@@ -860,7 +854,7 @@ describe('reducer', () => {
         action = { type: actionTypes.AUTH_UPDATE_SUCCESS }
         expect(
           firebaseReducer({ auth: { isEmpty: false } }, action)
-        ).to.have.deep.property('auth.isEmpty', true)
+        ).to.have.nested.property('auth.isEmpty', true)
       })
     })
   })
@@ -872,7 +866,7 @@ describe('reducer', () => {
         path: 'test',
         payload: { id: 'asdf' }
       }
-      expect(firebaseReducer({}, action)).to.have.deep.property(
+      expect(firebaseReducer({}, action)).to.have.nested.property(
         'listeners.allIds.0',
         'asdf'
       )
@@ -882,7 +876,7 @@ describe('reducer', () => {
       const path = 'test'
       const id = 'asdf'
       action = { type: actionTypes.SET_LISTENER, path, payload: { id } }
-      expect(firebaseReducer({}, action)).to.have.deep.property(
+      expect(firebaseReducer({}, action)).to.have.nested.property(
         `listeners.byId.${id}.path`,
         path
       )

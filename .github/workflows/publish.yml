@@ -3,47 +3,57 @@ name: NPM Package Publish
 on:
   push:
     branches:
-      - master
+      - main
       - next
       - alpha
 
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
       - name: Check if version has been updated
         id: check
-        uses: EndBug/version-check@v1
+        uses: EndBug/version-check@095362f3cd50f690c8fa0e6afeea81834bd8d320 # v3.0.0
 
-      - name: Setup Node 10
+      - name: Setup Node
         if: steps.check.outputs.changed == 'true'
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: 10
+          node-version: 24
           registry-url: https://registry.npmjs.org/
+          cache: npm
 
-      # Setup dependency caching
-      - uses: actions/cache@v1
+      - name: Setup Java (required by Firebase emulators)
         if: steps.check.outputs.changed == 'true'
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          distribution: zulu
+          java-version: 26
+
+      - name: Cache Firebase Emulators
+        if: steps.check.outputs.changed == 'true'
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: ~/.cache/firebase/emulators
+          key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-firebase-emulators-
 
       - name: Install Dependencies
         if: steps.check.outputs.changed == 'true'
         run: npm ci
 
-      - name: Check For Lint
+      - name: Lint + Format Check
         if: steps.check.outputs.changed == 'true'
-        run: npm run lint
+        run: npm run check
 
       - name: Run Unit Tests + Coverage
         if: steps.check.outputs.changed == 'true'
-        env:
-          CODE_CLIMATE: ${{ secrets.CODE_CLIMATE }}
         run: npm run test:cov
 
       - name: Publish
@@ -53,26 +63,21 @@ jobs:
           GITHUB_REF: ${{ github.ref }}
         run: |
           gitBranch=${GITHUB_REF##*/}
-          publishFlag=$(if [ "$GITHUB_REF" != 'refs/heads/master' ]; then eval echo '--tag $gitBranch'; else echo ''; fi;)
+          publishFlag=$(if [ "$GITHUB_REF" != 'refs/heads/main' ]; then eval echo '--tag $gitBranch'; else echo ''; fi;)
           echo "PACKAGE_VERSION=$(cat package.json | jq -r '.version')" >> $GITHUB_ENV
           npm publish $publishFlag
 
       - name: Upload Coverage
         if: steps.check.outputs.changed == 'true'
-        env:
-          CODE_COV: ${{ secrets.CODE_COV }}
-        # Upload to Code Cover. Curl used in place of codecov/codecov-action
-        # due to long build time. See https://github.com/codecov/codecov-action/issues/21
-        run: curl -s https://codecov.io/bash | bash -s -- -t $CODE_COV
-      
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.CODE_COV }}
+
       - name: Create Release
-        if: github.ref == 'refs/heads/master' && steps.check.outputs.changed == 'true'
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+        if: github.ref == 'refs/heads/main' && steps.check.outputs.changed == 'true'
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
         with:
           tag_name: v${{ env.PACKAGE_VERSION }}
-          release_name: v${{ env.PACKAGE_VERSION }}
+          name: v${{ env.PACKAGE_VERSION }}
           draft: false
           prerelease: false

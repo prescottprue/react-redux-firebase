@@ -205,8 +205,8 @@ export function getReauthenticateMethodAndParams(firebase, credentials) {
   // Credential Auth
   if (credential) {
     // Attempt to use signInAndRetrieveDataWithCredential if it exists (see #467 for more info)
-    const credentialAuth = firebase.auth()
-      .reauthenticateAndRetrieveDataWithCredential
+    const credentialAuth =
+      firebase.auth().reauthenticateAndRetrieveDataWithCredential
 
     if (credentialAuth) {
       return {

@@ -211,26 +211,29 @@ export const watchUserProfile = (dispatch, firebase) => {
         .firestore()
         .collection(userProfile)
         .doc(authUid)
-        .onSnapshot((userProfileSnap) => {
-          return enableClaims
-            ? firebase
-                .auth()
-                .currentUser.getIdTokenResult(true)
-                .then((token) =>
-                  handleProfileWatchResponse(
-                    dispatch,
-                    firebase,
-                    userProfileSnap,
-                    token
+        .onSnapshot(
+          (userProfileSnap) => {
+            return enableClaims
+              ? firebase
+                  .auth()
+                  .currentUser.getIdTokenResult(true)
+                  .then((token) =>
+                    handleProfileWatchResponse(
+                      dispatch,
+                      firebase,
+                      userProfileSnap,
+                      token
+                    )
                   )
+              : handleProfileWatchResponse(
+                  dispatch,
+                  firebase,
+                  userProfileSnap,
+                  null
                 )
-            : handleProfileWatchResponse(
-                dispatch,
-                firebase,
-                userProfileSnap,
-                null
-              )
-        }, createProfileWatchErrorHandler(dispatch, firebase))
+          },
+          createProfileWatchErrorHandler(dispatch, firebase)
+        )
     } else if (firebase.database) {
       firebase._.profileWatch = firebase // eslint-disable-line no-param-reassign
         .database()
@@ -335,8 +338,8 @@ export const createUserProfile = (dispatch, firebase, userData, profile) => {
               ? userData.toJSON()
               : userData
             : userData.user.toJSON
-            ? userData.user.toJSON()
-            : userData.user
+              ? userData.user.toJSON()
+              : userData.user
           // Remove unnecessary auth params (configurable) and preserve types of timestamps
           newProfile = {
             ...omit(userDataObject, config.keysToRemoveFromAuth),

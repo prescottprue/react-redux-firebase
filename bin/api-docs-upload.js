@@ -73,7 +73,7 @@ function uploadList(files) {
   )
 }
 
-;(function () {
+;(() => {
   runCommand('gsutil') // check for existence of gsutil
     .then(() => uploadList(first))
     .then(() => uploadList(second))

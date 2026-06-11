@@ -1,14 +1,39 @@
-import React, { Children, Component, cloneElement } from 'react'
+import React, { Component } from 'react'
+import { createRoot } from 'react-dom/client'
 import PropTypes from 'prop-types'
-import { createSink } from 'recompose'
 import { isObject, identity } from 'lodash'
 import { createStore, combineReducers } from 'redux'
 import {
   reducer as firestoreReducer,
   createFirestoreInstance
 } from 'redux-firestore'
-import { mount } from 'enzyme'
 import ReactReduxFirebaseProvider from '../src/ReactReduxFirebaseProvider'
+
+const { act } = React
+
+/**
+ * Render a React element into the document inside act(),
+ * replacing enzyme's mount / TestUtils.renderIntoDocument.
+ *
+ * @param {React.Element} element - Element to render
+ * @returns {object} Handle with an unmount method
+ */
+export function render(element) {
+  const mountNode = document.createElement('div')
+  document.body.appendChild(mountNode)
+  const root = createRoot(mountNode)
+  act(() => {
+    root.render(element)
+  })
+  return {
+    unmount: () => {
+      act(() => {
+        root.unmount()
+      })
+      mountNode.remove()
+    }
+  }
+}
 
 export const storeWithFirebase = () => {
   return createStore(combineReducers({ test: (state = {}) => state }))
@@ -22,6 +47,13 @@ export const storeWithFirestore = () => {
     })
   )
 }
+
+// Renders nothing (inlined replacement for recompose's createSink)
+const createSink = (callback) =>
+  function Sink(props) {
+    if (callback) callback(props)
+    return null
+  }
 
 export const TestContainer = () => createSink()
 export class Container extends Component {
@@ -53,32 +85,6 @@ export class ErrorBoundary extends Component {
 
 ErrorBoundary.propTypes = {
   children: PropTypes.node.isRequired
-}
-
-export class ProviderMock extends Component {
-  getChildContext() {
-    return { store: this.props.store }
-  }
-
-  state = { test: null, dynamic: '' }
-
-  render() {
-    return Children.only(
-      cloneElement(this.props.children, {
-        testProp: this.state.test,
-        dynamicProp: this.state.dynamic
-      })
-    )
-  }
-}
-
-ProviderMock.childContextTypes = {
-  store: PropTypes.object.isRequired
-}
-
-ProviderMock.propTypes = {
-  store: PropTypes.object,
-  children: PropTypes.node
 }
 
 export const onAuthStateChangedSpy = sinon.spy((f) => {
@@ -318,12 +324,12 @@ export const fakeFirebase = {
       email.indexOf('error') !== -1
         ? Promise.reject(new Error('auth/user-not-found'))
         : email === 'error'
-        ? Promise.reject(new Error('asdfasdf'))
-        : Promise.resolve({
-            uid: '123',
-            email: 'test@test.com',
-            providerData: [{}]
-          }),
+          ? Promise.reject(new Error('asdfasdf'))
+          : Promise.resolve({
+              uid: '123',
+              email: 'test@test.com',
+              providerData: [{}]
+            }),
     signInAndRetrieveDataWithCustomToken: () => {
       return Promise.resolve({
         toJSON: () => ({
@@ -339,37 +345,29 @@ export const fakeFirebase = {
       email.indexOf('error2') !== -1
         ? Promise.reject(new Error('asdfasdf'))
         : email === 'error3'
-        ? Promise.reject(new Error('auth/user-not-found'))
-        : Promise.resolve({
-            uid: '123',
-            email: 'test@test.com',
-            providerData: [{}]
-          }),
+          ? Promise.reject(new Error('auth/user-not-found'))
+          : Promise.resolve({
+              uid: '123',
+              email: 'test@test.com',
+              providerData: [{}]
+            }),
     sendPasswordResetEmail: (email) =>
       email === 'error'
         ? Promise.reject({ code: 'auth/user-not-found' }) // eslint-disable-line prefer-promise-reject-errors
         : email === 'error2'
-        ? Promise.reject(new Error('asdfasdf'))
-        : Promise.resolve({ some: 'val' }),
+          ? Promise.reject(new Error('asdfasdf'))
+          : Promise.resolve({ some: 'val' }),
     confirmPasswordReset: (code, password) =>
       password === 'error'
         ? Promise.reject({ code: code }) // eslint-disable-line prefer-promise-reject-errors
         : Promise.resolve(),
     verifyPasswordResetCode: (code) =>
       code === 'error'
-        ? Promise.reject(new Error('some'))
-          ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
-          : Promise.resolve({
-              uid: '123',
-              email: 'test@test.com',
-              providerData: [{}]
-            })
+        ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
         : Promise.resolve('success'),
     applyActionCode: (code) =>
       code === 'error'
-        ? Promise.reject(new Error('some'))
-          ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
-          : Promise.resolve()
+        ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
         : Promise.resolve('success')
   }),
   storage: () => ({
@@ -392,9 +390,7 @@ export const TestLeaf = () => <div id="leaf" />
 
 export const createContainer = ({
   additionalComponentProps,
-  listeners,
   withFirestore = true,
-  withFirebase = true,
   withErrorBoundary = false,
   hoc = identity,
   component = TestLeaf
@@ -403,13 +399,24 @@ export const createContainer = ({
   const store = storeWithFirestore()
   sinon.spy(store, 'dispatch')
 
-  const WrappedComponent = hoc(component)
+  // Records the props the leaf component receives so tests can read
+  // injected props (previously enzyme's wrapper.find(component).prop())
+  let leafProps = null
+  const LeafComponent = component
+  function RecordingLeaf(props) {
+    leafProps = props
+    return <LeafComponent {...props} />
+  }
+  const WrappedComponent = hoc(RecordingLeaf)
+
+  let containerInstance = null
 
   class Container extends Component {
     state = { test: 'testing', dynamic: '' }
 
     constructor(props) {
       super(props)
+      containerInstance = this
       // eslint-disable-next-line react/prop-types
       this.state.dynamic = props.dynamic
       // remove rrf specific setting initialization
@@ -432,18 +439,31 @@ export const createContainer = ({
           dispatch={store.dispatch}
           firebase={firebase}
           {...(withFirestore ? { createFirestoreInstance } : {})}
-          config={{}}>
+          config={{}}
+        >
           {children}
         </ReactReduxFirebaseProvider>
       )
     }
   }
-  const wrapper = mount(<Container {...additionalComponentProps} />)
+
+  const rendered = render(<Container {...additionalComponentProps} />)
+
+  // Mimics the subset of the enzyme wrapper API the specs use
+  const wrapper = {
+    setState: (partialState) => {
+      act(() => {
+        containerInstance.setState(partialState)
+      })
+    },
+    unmount: () => rendered.unmount()
+  }
 
   return {
     wrapper,
-    leaf: wrapper.find(component),
-    component: wrapper.find(WrappedComponent),
+    leaf: {
+      prop: (name) => (leafProps ? leafProps[name] : undefined)
+    },
     dispatch: store.dispatch,
     firebase,
     store
