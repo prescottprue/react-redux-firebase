@@ -19,6 +19,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
+      - name: Cache Firebase Emulators
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: ~/.cache/firebase/emulators
+          key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-firebase-emulators-
+
       - name: Install Dependencies
         run: npm ci
 
