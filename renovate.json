@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "pinVersions": false,
+  "rangeStrategy": "replace",
+  "extends": [
+    "github>prescottprue/renovate-config:library",
+    "customManagers:biomeVersions",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Legacy dev-only test island pinned for enzyme + firebase-server compat on the v3 test suite; update manually",
+      "matchPackageNames": [
+        "firebase",
+        "firebase-server",
+        "ws",
+        "xmlhttprequest",
+        "enzyme",
+        "@wojtekmaj/enzyme-adapter-react-17",
+        "react",
+        "react-dom",
+        "redux",
+        "redux-firestore",
+        "chai",
+        "chai-as-promised",
+        "sinon",
+        "sinon-chai",
+        "cheerio"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Examples are stale v3-era apps; update manually",
+      "matchFileNames": ["examples/**"],
+      "enabled": false
+    }
+  ]
+}
