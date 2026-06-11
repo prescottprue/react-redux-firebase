@@ -12,14 +12,8 @@
       "minimumReleaseAge": "7 days"
     },
     {
-      "description": "chai 5+ is ESM-only and couples chai-as-promised/sinon-chai majors; redux 4 / redux-firestore pins match the v3-era test store. Update manually.",
-      "matchPackageNames": [
-        "chai",
-        "chai-as-promised",
-        "sinon-chai",
-        "redux",
-        "redux-firestore"
-      ],
+      "description": "redux-firestore 2.x peer-requires firebase ^9 (we test against firebase 12); update manually if a compatible release lands",
+      "matchPackageNames": ["redux-firestore"],
       "enabled": false
     },
     {

@@ -1,14 +1,19 @@
-/* eslint-disable no-unused-vars */
-process.env.NODE_ENV = 'test'
+// chai 5+ is ESM-only, so this setup file uses ESM imports
+import * as chai from 'chai'
+import sinon from 'sinon'
+import chaiAsPromised from 'chai-as-promised'
+import sinonChai from 'sinon-chai'
+import Firebase from 'firebase/compat/app'
+import 'firebase/compat/database'
+import 'firebase/compat/firestore'
+import 'firebase/compat/auth'
+import {
+  initializeAuth,
+  connectAuthEmulator,
+  inMemoryPersistence
+} from 'firebase/auth'
 
-const chai = require('chai')
-const sinon = require('sinon')
-const chaiAsPromised = require('chai-as-promised')
-const sinonChai = require('sinon-chai')
-const Firebase = require('firebase/compat/app').default
-require('firebase/compat/database')
-require('firebase/compat/firestore')
-require('firebase/compat/auth')
+process.env.NODE_ENV = 'test'
 
 // Tell React that act() is supported in this environment
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
@@ -50,11 +55,6 @@ try {
 // layer's environment detection sees jsdom's window and would otherwise wire
 // browser-only popup support that doesn't exist in this environment. The
 // compat Firebase.auth() wraps this already-initialized instance.
-const {
-  initializeAuth,
-  connectAuthEmulator,
-  inMemoryPersistence
-} = require('firebase/auth')
 const modernAuth = initializeAuth(Firebase.app(), {
   persistence: inMemoryPersistence
 })
