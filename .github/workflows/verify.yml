@@ -22,11 +22,8 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Check For Lint
-        run: npm run lint
-
-      - name: Check Formatting
-        run: npm run format:check
+      - name: Lint + Format Check
+        run: npm run check
 
       - name: Run Unit Tests + Coverage
         run: npm run test:cov

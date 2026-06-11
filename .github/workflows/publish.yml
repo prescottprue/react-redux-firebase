@@ -32,9 +32,9 @@ jobs:
         if: steps.check.outputs.changed == 'true'
         run: npm ci
 
-      - name: Check For Lint
+      - name: Lint + Format Check
         if: steps.check.outputs.changed == 'true'
-        run: npm run lint
+        run: npm run check
 
       - name: Run Unit Tests + Coverage
         if: steps.check.outputs.changed == 'true'

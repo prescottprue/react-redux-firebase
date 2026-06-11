@@ -7,6 +7,8 @@
   "typings": "./index.d.ts",
   "scripts": {
     "clean": "rimraf es lib coverage",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write .",
     "format": "biome format --write .",
