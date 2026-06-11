@@ -3,7 +3,7 @@ import { getEventsFromInput } from 'utils/events'
 describe('Utils: Events', () => {
   describe('getEventsFromInput', () => {
     it('handles null path array', () => {
-      expect(getEventsFromInput()).to.be.an.array
+      expect(getEventsFromInput()).to.be.an('array')
     })
 
     describe('path types', () => {

@@ -24,7 +24,7 @@ describe('withFirestore', () => {
 
   it('adds dispatch as prop', () => {
     expect(leaf.prop('dispatch')).to.exist
-    expect(leaf.prop('dispatch')).to.be.a.function
+    expect(leaf.prop('dispatch')).to.be.a('function')
   })
 
   describe('sets displayName static as', () => {
@@ -50,6 +50,7 @@ describe('withFirestore', () => {
   })
 
   it('sets WrappedComponent static as component which was wrapped', () => {
-    expect(leaf).to.match(TestLeaf)
+    const containerPrime = withFirestore(TestLeaf)
+    expect(containerPrime.wrappedComponent).to.equal(TestLeaf)
   })
 })

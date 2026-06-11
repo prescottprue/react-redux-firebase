@@ -62,8 +62,8 @@ export function getQueryIdFromPath(path, event) {
       ? `${event}:/${queryId}`
       : queryId[0]
     : isQuery
-    ? origPath
-    : undefined
+      ? origPath
+      : undefined
 }
 
 /**

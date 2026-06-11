@@ -21,7 +21,7 @@ type FileOrBlob<T> = T extends File ? File : Blob
 export interface InferableComponentEnhancerWithProps<
   TInjectedProps,
   TNeedsProps
-  > {
+> {
   <P extends TInjectedProps>(
     component: React.ComponentType<P>
   ): React.ComponentType<Omit<P, keyof TInjectedProps> & TNeedsProps>
@@ -163,9 +163,9 @@ interface FirebaseDatabaseService {
  */
 interface BaseExtendedFirebaseInstance
   extends DatabaseTypes.FirebaseDatabase,
-  FirebaseDatabaseService,
-  ExtendedAuthInstance,
-  ExtendedStorageInstance {
+    FirebaseDatabaseService,
+    ExtendedAuthInstance,
+    ExtendedStorageInstance {
   initializeAuth: VoidFunction
 
   firestore: (() => ExtendedFirestoreInstance) & FirestoreStatics
@@ -346,7 +346,11 @@ interface BaseExtendedFirebaseInstance
 type OptionalOverride<T, b extends string, P> = b extends keyof T ? P : {}
 type OptionalPick<T, b extends string> = Pick<T, b & keyof T>
 
-type ExtendedFirebaseInstance = BaseExtendedFirebaseInstance & OptionalPick<FirebaseNamespace, 'messaging' | 'performance' | 'functions' | 'analytics' | 'remoteConfig'>
+type ExtendedFirebaseInstance = BaseExtendedFirebaseInstance &
+  OptionalPick<
+    FirebaseNamespace,
+    'messaging' | 'performance' | 'functions' | 'analytics' | 'remoteConfig'
+  >
 
 /**
  * Create an extended firebase instance that has methods attached
@@ -380,12 +384,12 @@ export type QueryParamOptions = QueryParamOption | string[]
 export interface ReactReduxFirebaseQuerySetting {
   path: string
   type?:
-  | 'value'
-  | 'once'
-  | 'child_added'
-  | 'child_removed'
-  | 'child_changed'
-  | 'child_moved'
+    | 'value'
+    | 'once'
+    | 'child_added'
+    | 'child_removed'
+    | 'child_changed'
+    | 'child_moved'
   queryParams?: QueryParamOptions
   storeAs?: string
   populates?: { child: string; root: string }[]
@@ -497,7 +501,8 @@ export type ReduxFirestoreQueriesFunction = (
  * @see https://github.com/prescottprue/redux-firestore#api
  */
 interface ExtendedFirestoreInstance
-  extends FirestoreTypes.FirebaseFirestore, FirestoreStatics {
+  extends FirestoreTypes.FirebaseFirestore,
+    FirestoreStatics {
   /**
    * Get data from firestore.
    * @see https://github.com/prescottprue/redux-firestore#get
@@ -613,21 +618,28 @@ interface CreateUserCredentials {
 type Credentials =
   | CreateUserCredentials
   | {
-    provider: 'facebook' | 'google' | 'twitter' | 'github' | 'microsoft.com' | 'apple.com' | 'yahoo.com'
-    type: 'popup' | 'redirect'
-    scopes?: string[]
-  }
+      provider:
+        | 'facebook'
+        | 'google'
+        | 'twitter'
+        | 'github'
+        | 'microsoft.com'
+        | 'apple.com'
+        | 'yahoo.com'
+      type: 'popup' | 'redirect'
+      scopes?: string[]
+    }
   | {
-    credential: AuthTypes.AuthCredential
-  }
+      credential: AuthTypes.AuthCredential
+    }
   | {
-    token: string
-    profile: Object
-  }
+      token: string
+      profile: Object
+    }
   | {
-    phoneNumber: string
-    applicationVerifier: AuthTypes.ApplicationVerifier
-  }
+      phoneNumber: string
+      applicationVerifier: AuthTypes.ApplicationVerifier
+    }
 
 type UserProfile<P extends object = {}> = P
 
@@ -756,7 +768,10 @@ interface ExtendedAuthInstance {
    * @see https://react-redux-firebase.com/docs/api/firebaseInstance.html#updateprofile
    * @see https://react-redux-firebase.com/docs/recipes/profile.html#update-profile
    */
-  updateProfile: (profile: Partial<ProfileType>, options?: Object) => Promise<void>
+  updateProfile: (
+    profile: Partial<ProfileType>,
+    options?: Object
+  ) => Promise<void>
 
   /**
    * Logs user into Firebase using external.
@@ -847,25 +862,25 @@ interface ExtendedStorageInstance {
  */
 export interface UploadFileOptions<T extends File | Blob> {
   name?:
-  | string
-  | ((
-    file: FileOrBlob<T>,
-    internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
-    uploadConfig: {
-      path: string
-      file: FileOrBlob<T>
-      dbPath?: string
-      options?: UploadFileOptions<T>
-    }
-  ) => string)
+    | string
+    | ((
+        file: FileOrBlob<T>,
+        internalFirebase: WithFirebaseProps<ProfileType>['firebase'],
+        uploadConfig: {
+          path: string
+          file: FileOrBlob<T>
+          dbPath?: string
+          options?: UploadFileOptions<T>
+        }
+      ) => string)
   documentId?:
-  | string
-  | ((
-    uploadRes: StorageTypes.UploadTaskSnapshot,
-    firebase: WithFirebaseProps<ProfileType>['firebase'],
-    metadata: StorageTypes.UploadTaskSnapshot['metadata'],
-    downloadURL: string
-  ) => string)
+    | string
+    | ((
+        uploadRes: StorageTypes.UploadTaskSnapshot,
+        firebase: WithFirebaseProps<ProfileType>['firebase'],
+        metadata: StorageTypes.UploadTaskSnapshot['metadata'],
+        downloadURL: string
+      ) => string)
   useSetForMetadata?: boolean
   metadata?: StorageTypes.UploadMetadata
   metadataFactory?: (
@@ -1089,12 +1104,16 @@ interface ReactReduxFirebaseConfig {
   enableEmptyAuthChanges: boolean
   /**
    * @deprecated
-   */ 
+   */
   enableLogging: boolean
   enableRedirectHandling: boolean
   firebaseStateName: string
   logErrors: boolean
-  onAuthStateChanged: (user: AuthTypes.User | null, _firebase: any, dispatch: Dispatch) => void
+  onAuthStateChanged: (
+    user: AuthTypes.User | null,
+    _firebase: any,
+    dispatch: Dispatch
+  ) => void
   presence: any
   preserveOnEmptyAuthChange: any
   preserveOnLogout: any
@@ -1152,8 +1171,8 @@ export interface ReduxFirestoreConfig {
    * @see https://github.com/prescottprue/redux-firestore#allowmultiplelisteners
    */
   allowMultipleListeners:
-  | ((listenerToAttach: any, currentListeners: any) => boolean)
-  | boolean
+    | ((listenerToAttach: any, currentListeners: any) => boolean)
+    | boolean
 
   /**
    * @see https://github.com/prescottprue/redux-firestore#preserveondelete
@@ -1169,8 +1188,8 @@ export interface ReduxFirestoreConfig {
    * @see https://github.com/prescottprue/redux-firestore#onattemptcollectiondelete
    */
   onAttemptCollectionDelete:
-  | null
-  | ((queryOption: any, dispatch: any, firebase: any) => void)
+    | null
+    | ((queryOption: any, dispatch: any, firebase: any) => void)
 
   /**
    * @see https://github.com/prescottprue/redux-firestore#mergeordered
@@ -1269,7 +1288,7 @@ export namespace FirebaseReducer {
   export interface Reducer<
     ProfileType extends Record<string, any> = {},
     Schema extends Record<string, any> = {}
-    > {
+  > {
     auth: AuthState
     profile: Profile<ProfileType>
     authError: any
@@ -1329,7 +1348,7 @@ export namespace FirebaseReducer {
         email: string
         email_verified: boolean
         [key: string]: any
-      };
+      }
     }
   } & ProfileType
 

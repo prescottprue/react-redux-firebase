@@ -1,0 +1,96 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/coverage",
+      "!**/lib",
+      "!**/es",
+      "!**/dist",
+      "!**/examples",
+      "!**/docs",
+      "!**/_book",
+      "!**/package-lock.json"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space"
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        // keep existing import order; sorting would churn every file
+        "organizeImports": "off"
+      }
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        // v3 src is frozen: hook dep arrays and reducer switch-case
+        // declarations are intentional legacy patterns
+        "useExhaustiveDependencies": "off",
+        "noSwitchDeclarations": "off"
+      },
+      "suspicious": {
+        // authIsReady intentionally exposes a thenable API
+        "noThenProperty": "off",
+        "useIterableCallbackReturn": "off",
+        // src/utils/query.js shadows `length` knowingly
+        "noShadowRestrictedNames": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      // Matches the previous prettier config (.prettierrc):
+      // singleQuote: true, semi: false, trailingComma: 'none'
+      "quoteStyle": "single",
+      "semicolons": "asNeeded",
+      "trailingCommas": "none"
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/package.json"],
+      "formatter": {
+        "lineWidth": 1
+      }
+    },
+    {
+      // hand-written v3 typings predate stricter typing conventions
+      "includes": ["index.d.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          },
+          "complexity": {
+            "noBannedTypes": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["test/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            // describe blocks use literal '${...}' strings in names
+            "noTemplateCurlyInString": "off"
+          }
+        }
+      }
+    }
+  ]
+}

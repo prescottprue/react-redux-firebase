@@ -1,6 +1,5 @@
 import React, { Children, Component, cloneElement } from 'react'
 import PropTypes from 'prop-types'
-import { createSink } from 'recompose'
 import { isObject, identity } from 'lodash'
 import { createStore, combineReducers } from 'redux'
 import {
@@ -22,6 +21,13 @@ export const storeWithFirestore = () => {
     })
   )
 }
+
+// Renders nothing (inlined replacement for recompose's createSink)
+const createSink = (callback) =>
+  function Sink(props) {
+    if (callback) callback(props)
+    return null
+  }
 
 export const TestContainer = () => createSink()
 export class Container extends Component {
@@ -318,12 +324,12 @@ export const fakeFirebase = {
       email.indexOf('error') !== -1
         ? Promise.reject(new Error('auth/user-not-found'))
         : email === 'error'
-        ? Promise.reject(new Error('asdfasdf'))
-        : Promise.resolve({
-            uid: '123',
-            email: 'test@test.com',
-            providerData: [{}]
-          }),
+          ? Promise.reject(new Error('asdfasdf'))
+          : Promise.resolve({
+              uid: '123',
+              email: 'test@test.com',
+              providerData: [{}]
+            }),
     signInAndRetrieveDataWithCustomToken: () => {
       return Promise.resolve({
         toJSON: () => ({
@@ -339,37 +345,29 @@ export const fakeFirebase = {
       email.indexOf('error2') !== -1
         ? Promise.reject(new Error('asdfasdf'))
         : email === 'error3'
-        ? Promise.reject(new Error('auth/user-not-found'))
-        : Promise.resolve({
-            uid: '123',
-            email: 'test@test.com',
-            providerData: [{}]
-          }),
+          ? Promise.reject(new Error('auth/user-not-found'))
+          : Promise.resolve({
+              uid: '123',
+              email: 'test@test.com',
+              providerData: [{}]
+            }),
     sendPasswordResetEmail: (email) =>
       email === 'error'
         ? Promise.reject({ code: 'auth/user-not-found' }) // eslint-disable-line prefer-promise-reject-errors
         : email === 'error2'
-        ? Promise.reject(new Error('asdfasdf'))
-        : Promise.resolve({ some: 'val' }),
+          ? Promise.reject(new Error('asdfasdf'))
+          : Promise.resolve({ some: 'val' }),
     confirmPasswordReset: (code, password) =>
       password === 'error'
         ? Promise.reject({ code: code }) // eslint-disable-line prefer-promise-reject-errors
         : Promise.resolve(),
     verifyPasswordResetCode: (code) =>
       code === 'error'
-        ? Promise.reject(new Error('some'))
-          ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
-          : Promise.resolve({
-              uid: '123',
-              email: 'test@test.com',
-              providerData: [{}]
-            })
+        ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
         : Promise.resolve('success'),
     applyActionCode: (code) =>
       code === 'error'
-        ? Promise.reject(new Error('some'))
-          ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
-          : Promise.resolve()
+        ? Promise.reject({ code: 'asdfasdf' }) // eslint-disable-line prefer-promise-reject-errors
         : Promise.resolve('success')
   }),
   storage: () => ({
@@ -432,7 +430,8 @@ export const createContainer = ({
           dispatch={store.dispatch}
           firebase={firebase}
           {...(withFirestore ? { createFirestoreInstance } : {})}
-          config={{}}>
+          config={{}}
+        >
           {children}
         </ReactReduxFirebaseProvider>
       )

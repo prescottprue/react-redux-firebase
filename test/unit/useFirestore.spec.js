@@ -19,7 +19,8 @@ describe('useFirestore', () => {
         dispatch={dispatchSpy}
         firebase={firebaseWithConfig()}
         createFirestoreInstance={createFirestoreInstance}
-        config={{}}>
+        config={{}}
+      >
         <InnerComponent spy={spy} />
       </ReactReduxFirebaseProvider>
     )

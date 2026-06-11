@@ -5,9 +5,6 @@ const chai = require('chai')
 const sinon = require('sinon')
 const chaiAsPromised = require('chai-as-promised')
 const sinonChai = require('sinon-chai')
-const JSDOM = require('jsdom').JSDOM
-const chaiEnzyme = require('chai-enzyme')
-const FirebaseServer = require('firebase-server')
 const Firebase = require('firebase')
 require('firebase/firestore')
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
@@ -30,32 +27,15 @@ const fbConfig = {
 // UID for fake user profile
 const uid = 'Iq5b0qK2NtgggT6U3bU6iZRGyma2'
 
-// Setup dom for window/document objects
-const dom = new JSDOM('<!doctype html><html><body></body></html>')
-
-/* eslint-disable no-new */
-new FirebaseServer(5000, 'localhost.firebaseio.test', {
-  users: {
-    [uid]: {
-      displayName: 'Tester'
-    }
-  }
-})
-/* eslint-enable no-new */
-
 // Chai Plugins
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
-chai.use(chaiEnzyme())
 
-// globals
+// globals (window/document/navigator come from the vitest jsdom environment)
 global.Firebase = Firebase
 global.expect = chai.expect
 global.sinon = sinon
 global.chai = chai
-global.window = dom.window
-global.document = global.window.document
-global.navigator = global.window.navigator
 // needed to fix "Error: The XMLHttpRequest compatibility library was not found." from Firebase auth
 global.XMLHttpRequest = XMLHttpRequest
 // needed to fix: "FIREBASE WARNING: wss:// URL used, but browser isn't known to support websockets.  Trying anyway."
