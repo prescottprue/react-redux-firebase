@@ -19,6 +19,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
+      - name: Setup Java (required by Firebase emulators)
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
+        with:
+          distribution: zulu
+          java-version: 26
+
       - name: Cache Firebase Emulators
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
