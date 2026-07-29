@@ -85,7 +85,7 @@
     "firebase-tools": "^15.20.0",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
-    "lint-staged": "^17.0.7",
+    "lint-staged": "^17.1.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "redux": "^5.0.1",
