@@ -74,7 +74,7 @@
     "@babel/plugin-transform-class-properties": "^7.29.7",
     "@babel/preset-env": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
-    "@biomejs/biome": "^2.4.16",
+    "@biomejs/biome": "^2.5.11",
     "@vitest/coverage-v8": "^4.1.10",
     "babel-plugin-add-module-exports": "^1.0.4",
     "babel-plugin-lodash": "^3.3.4",
