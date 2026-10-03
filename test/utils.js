@@ -392,6 +392,7 @@ export const createContainer = ({
   additionalComponentProps,
   withFirestore = true,
   withErrorBoundary = false,
+  strict = false,
   hoc = identity,
   component = TestLeaf
 } = {}) => {
@@ -447,7 +448,11 @@ export const createContainer = ({
     }
   }
 
-  const rendered = render(<Container {...additionalComponentProps} />)
+  const container = <Container {...additionalComponentProps} />
+  // StrictMode (React 18+) mounts, unmounts, then remounts effects in dev
+  const rendered = render(
+    strict ? <React.StrictMode>{container}</React.StrictMode> : container
+  )
 
   // Mimics the subset of the enzyme wrapper API the specs use
   const wrapper = {

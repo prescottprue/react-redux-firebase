@@ -132,3 +132,41 @@ describe('useFirestoreConnect', () => {
     ).to.have.lengthOf(1)
   })
 })
+
+describe('useFirestoreConnect in StrictMode', () => {
+  const listenerActionsFor = (dispatch, collection) =>
+    filter(
+      dispatch.args,
+      (arg) =>
+        /@@reduxFirestore\/(UN)?SET_LISTENER/.test(arg[0].type) &&
+        arg[0].meta &&
+        arg[0].meta.collection === collection
+    )
+
+  it('leaves watchers active after StrictMode remounts effects', async () => {
+    const { dispatch } = createContainer({
+      component: TestComponent,
+      strict: true
+    })
+    await sleep()
+    const listenerActions = listenerActionsFor(dispatch, 'test')
+    expect(listenerActions).to.not.be.empty
+    expect(listenerActions[listenerActions.length - 1][0].type).to.equal(
+      '@@reduxFirestore/SET_LISTENER'
+    )
+  })
+
+  it('disables watchers on unmount', async () => {
+    const { wrapper, dispatch } = createContainer({
+      component: TestComponent,
+      strict: true
+    })
+    await sleep()
+    wrapper.unmount()
+    await sleep()
+    const listenerActions = listenerActionsFor(dispatch, 'test')
+    expect(listenerActions[listenerActions.length - 1][0].type).to.equal(
+      '@@reduxFirestore/UNSET_LISTENER'
+    )
+  })
+})
