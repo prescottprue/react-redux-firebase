@@ -101,3 +101,24 @@ describe('firestoreConnect', () => {
     expect(containerPrime.wrappedComponent).to.equal(TestLeaf)
   })
 })
+
+describe('firestoreConnect in StrictMode', () => {
+  it('leaves watchers active after StrictMode remounts', async () => {
+    const { dispatch } = createContainer({
+      hoc: withFirestoreConnect,
+      strict: true
+    })
+    await sleep()
+    const listenerActions = filter(
+      dispatch.args,
+      (arg) =>
+        /@@reduxFirestore\/(UN)?SET_LISTENER/.test(arg[0].type) &&
+        arg[0].meta &&
+        arg[0].meta.collection === 'test'
+    )
+    expect(listenerActions).to.not.be.empty
+    expect(listenerActions[listenerActions.length - 1][0].type).to.equal(
+      '@@reduxFirestore/SET_LISTENER'
+    )
+  })
+})

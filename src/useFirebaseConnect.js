@@ -79,6 +79,9 @@ export default function useFirebaseConnect(queriesConfig) {
   useEffect(() => {
     return () => {
       unWatchEvents(firebase, firebase.dispatch, eventRef.current)
+      // Reset so a remount (e.g. React 18+ StrictMode) re-attaches listeners
+      eventRef.current = undefined
+      dataRef.current = undefined
     }
   }, [])
 }

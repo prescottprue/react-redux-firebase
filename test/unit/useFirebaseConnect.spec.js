@@ -121,3 +121,42 @@ describe('useFirebaseConnect', () => {
     ).to.have.lengthOf(1)
   })
 })
+
+describe('useFirebaseConnect in StrictMode', () => {
+  it('leaves watchers active after StrictMode remounts effects', async () => {
+    const { dispatch } = createContainer({
+      component: TestComponent,
+      strict: true
+    })
+    await sleep(3)
+    const listenerActions = filter(
+      dispatch.args,
+      (arg) =>
+        arg[0].path === 'test/start' &&
+        /@@reactReduxFirebase\/(UN)?SET_LISTENER/.test(arg[0].type)
+    )
+    expect(listenerActions).to.not.be.empty
+    expect(listenerActions[listenerActions.length - 1][0].type).to.equal(
+      '@@reactReduxFirebase/SET_LISTENER'
+    )
+  })
+
+  it('disables watchers on unmount', async () => {
+    const { wrapper, dispatch } = createContainer({
+      component: TestComponent,
+      strict: true
+    })
+    await sleep()
+    wrapper.unmount()
+    await sleep()
+    const listenerActions = filter(
+      dispatch.args,
+      (arg) =>
+        arg[0].path === 'test/start' &&
+        /@@reactReduxFirebase\/(UN)?SET_LISTENER/.test(arg[0].type)
+    )
+    expect(listenerActions[listenerActions.length - 1][0].type).to.equal(
+      '@@reactReduxFirebase/UNSET_LISTENER'
+    )
+  })
+})
