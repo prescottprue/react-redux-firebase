@@ -74,6 +74,8 @@ export default function useFirestoreConnect(queriesConfigs) {
       if (firestoreIsEnabled && queryRef.current) {
         firestore.unsetListeners(queryRef.current)
       }
+      // Reset so a remount (e.g. React 18+ StrictMode) re-attaches listeners
+      queryRef.current = undefined
     }
   }, [])
 }

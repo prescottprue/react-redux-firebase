@@ -201,3 +201,24 @@ describe('firebaseConnect', () => {
     expect(containerPrime.wrappedComponent).to.equal(TestContainer)
   })
 })
+
+describe('firebaseConnect in StrictMode', () => {
+  it('leaves watchers active after StrictMode remounts', async () => {
+    const { dispatch } = createContainer({
+      hoc: withFirebaseConnect,
+      additionalComponentProps: { dynamic: 'start' },
+      strict: true
+    })
+    await sleep()
+    const listenerActions = filter(
+      dispatch.args,
+      (arg) =>
+        arg[0].path === 'test/start' &&
+        /@@reactReduxFirebase\/(UN)?SET_LISTENER/.test(arg[0].type)
+    )
+    expect(listenerActions).to.not.be.empty
+    expect(listenerActions[listenerActions.length - 1][0].type).to.equal(
+      '@@reactReduxFirebase/SET_LISTENER'
+    )
+  })
+})
