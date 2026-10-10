@@ -103,9 +103,13 @@ export function recursiveUnset(path, obj, isRecursiveCall = false) {
   // The object does not have any other properties at this level.  Remove the
   // property.
   const objectWithRemovedKey = unset(path, obj)
+
+  // Top-level path: there is no parent left to prune, so stop here instead of
+  // recursing with an empty path.
   if (!path.includes('.')) {
     return objectWithRemovedKey
   }
-  const newPath = path.match(/\./) ? path.replace(/\.[^.]*$/, '') : ''
+
+  const newPath = path.replace(/\.[^.]*$/, '')
   return recursiveUnset(newPath, objectWithRemovedKey, true)
 }
