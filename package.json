@@ -70,9 +70,9 @@
   },
   "devDependencies": {
     "@babel/cli": "^8.0.5",
-    "@babel/core": "^8.0.5",
+    "@babel/core": "^8.0.6",
     "@babel/plugin-transform-class-properties": "^8.0.0",
-    "@babel/preset-env": "^8.0.5",
+    "@babel/preset-env": "^8.0.6",
     "@babel/preset-react": "^8.0.0",
     "@biomejs/biome": "^2.5.11",
     "@vitest/coverage-v8": "^5.0.0",
