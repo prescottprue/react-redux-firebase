@@ -1,7 +1,7 @@
 import { setWith } from 'lodash/fp'
 import { actionTypes } from '../../src/constants'
 import firebaseReducer from '../../src/reducer'
-import { getDotStrPath } from '../../src/utils/reducers'
+import { getDotStrPath, recursiveUnset } from '../../src/utils/reducers'
 
 const initialState = {
   auth: { isLoaded: false, isEmpty: true },
@@ -696,6 +696,37 @@ describe('reducer', () => {
         action
       )
       expect(afterState.ordered).to.deep.equal(testData)
+    })
+  })
+
+  describe('recursiveUnset -', () => {
+    const source = {
+      top: { child: { leaf: 1 }, sibling: 2 },
+      other: { child: { leaf: 1 } }
+    }
+
+    it('removes a top-level property', () => {
+      const result = recursiveUnset('top', { ...source })
+      expect(result).to.not.have.property('top')
+      expect(result).to.deep.equal({ other: { child: { leaf: 1 } } })
+    })
+    it('removes a top-level property that only holds an empty object', () => {
+      expect(recursiveUnset('empty', { empty: {}, keep: 1 })).to.deep.equal({
+        keep: 1
+      })
+    })
+    it('removes nested properties and prunes the emptied parents', () => {
+      expect(recursiveUnset('other.child.leaf', { ...source })).to.deep.equal({
+        top: { child: { leaf: 1 }, sibling: 2 }
+      })
+    })
+    it('keeps a parent that still has other children', () => {
+      const result = recursiveUnset('top.child.leaf', { ...source })
+      expect(result).to.have.nested.property('top.sibling', 2)
+      expect(result).to.not.have.nested.property('top.child')
+    })
+    it('returns the object untouched for an empty path', () => {
+      expect(recursiveUnset('', { ...source })).to.deep.equal(source)
     })
   })
 
